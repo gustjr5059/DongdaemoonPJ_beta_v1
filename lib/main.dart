@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Firebase 초기화 코드(Firebase와 Flutter 프로젝트가 통합되어 Firebase 서비스를 사용가능)
 void main() async {
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
     );
   }
+
+
 }
 
 /// 로그인 페이지
@@ -37,6 +40,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance; // FirebaseAuth 객체 초기화
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -77,21 +81,39 @@ class _LoginPageState extends State<LoginPage> {
             /// 로그인 버튼
             ElevatedButton(
               child: Text("로그인", style: TextStyle(fontSize: 21)),
-              onPressed: () {
-                // 로그인 성공시 HomePage로 이동
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => HomePage()),
-                );
+              onPressed: () async {
+                try {
+                  // 이메일과 비밀번호로 로그인 시도
+                  await _auth.signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  // 로그인 성공 시 HomePage로 이동
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => HomePage()),
+                  );
+                } on FirebaseAuthException catch (e) {
+                  // 로그인 실패 시 오류 메시지 처리
+                  // 예를 들어, Toast 메시지로 오류 표시
+                }
               },
             ),
 
             /// 회원가입 버튼
             ElevatedButton(
               child: Text("회원가입", style: TextStyle(fontSize: 21)),
-              onPressed: () {
-                // 회원가입
-                print("sign up");
+              onPressed: () async {
+                try {
+                  // 이메일과 비밀번호를 사용하여 회원가입 시도
+                  await _auth.createUserWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  // 회원가입 성공 시, 예를 들어 로그인 화면으로 이동 또는 성공 메시지 표시
+                } on FirebaseAuthException catch (e) {
+                  // 회원가입 실패 시 오류 메시지 처리
+                }
               },
             ),
           ],
@@ -125,9 +147,10 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
             ),
-            onPressed: () {
-              print("sign out");
-              // 로그인 페이지로 이동
+            onPressed: () async {
+              // FirebaseAuth 인스턴스를 사용하여 로그아웃 처리
+              await FirebaseAuth.instance.signOut();
+              // 로그아웃 후 로그인 페이지로 이동
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),
