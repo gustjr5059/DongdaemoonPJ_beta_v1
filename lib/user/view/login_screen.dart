@@ -70,8 +70,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     try {
                       // 이메일과 비밀번호를 사용하여 Firebase에서 로그인 시도
                       await _auth.signInWithEmailAndPassword(
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
+                        email: username, // username을 이용해 이메일 전달
+                        password: password, // password를 이용해 비밀번호 전달
                       );
                       // 로그인 성공 후 처리, 예를 들어 다음 페이지로 이동
                       Navigator.of(context).pushReplacement(
@@ -80,18 +80,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
                     } on FirebaseAuthException catch (e) {
                       // 로그인 실패 시 처리, 예를 들어 사용자에게 오류 메시지 표시
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("로그인 실패: ${e.message}"),
+                        ),
+                      );
                     }
                   },
                 ),
-                TextButton(
-                  onPressed: () async {},
+                  // 회원가입 버튼
+                  TextButton(
+                  onPressed: () async {
+                    try {
+                      // Firebase에서 이메일과 비밀번호로 사용자 생성 시도
+                      await _auth.createUserWithEmailAndPassword(
+                      email: username, // username을 이용해 이메일 전달
+                      password: password, // password를 이용해 비밀번호 전달
+                      );
+                      // 회원가입 성공 후 처리, 예를 들어 로그인 페이지로 이동
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    } on FirebaseAuthException catch (e) {
+                      // 회원가입 실패 시 알림 메시지 표시
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("회원가입 실패: ${e.message}"),
+                        ),
+                      );
+                    }
+                  },
                   style: TextButton.styleFrom(
                     primary: Colors.black,
                   ),
                   child: Text(
                     '회원가입',
                   ),
-                ),
+                )
               ],
             ),
           ),
