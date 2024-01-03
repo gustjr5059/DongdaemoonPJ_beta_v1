@@ -6,6 +6,7 @@ class DefaultLayout extends StatelessWidget {
   final String? title;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
+  final AppBar? appBar;
 
   const DefaultLayout({
     required this.child,
@@ -13,6 +14,7 @@ class DefaultLayout extends StatelessWidget {
     this.title,
     this.bottomNavigationBar,
     this.floatingActionButton,
+    this.appBar,
     Key? key,
   }) : super(key: key);
 
@@ -20,7 +22,7 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? Colors.white,
-      appBar: renderAppBar(),
+      appBar: appBar,
       body: child,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,

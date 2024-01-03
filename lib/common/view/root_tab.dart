@@ -1,7 +1,5 @@
 
-
 import 'package:flutter/material.dart';
-
 import '../const/colors.dart';
 import '../layout/default_layout.dart';
 
@@ -25,14 +23,12 @@ class _RootTabState extends State<RootTab>
     super.initState();
 
     controller = TabController(length: 4, vsync: this);
-
     controller.addListener(tabListener);
   }
 
   @override
   void dispose() {
     controller.removeListener(tabListener);
-
     super.dispose();
   }
 
@@ -45,12 +41,30 @@ class _RootTabState extends State<RootTab>
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title: '코팩 딜리버리',
+      appBar: AppBar(
+        title: Text('Dongdaemoon'), // Title of the app bar
+        leading: IconButton(
+          icon: Icon(Icons.menu), // Hamburger icon for the toggle button
+          onPressed: () {
+            // Logic to open drawer or perform other actions
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search), // Search icon
+            onPressed: () {
+              // Logic for search action
+            },
+          ),
+        ],
+      ),
+      title: 'Dongdaemoon',
       child: TabBarView(
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          // RestaurantScreen(),
+          // Screens here
+          // HomeScreen(),
           // ProductScreen(),
           // OrderScreen(),
           // ProfileScreen(),
@@ -72,8 +86,8 @@ class _RootTabState extends State<RootTab>
             label: '홈',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fastfood_outlined),
-            label: '음식',
+            icon: Icon(Icons.checkroom_outlined),
+            label: '옷',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.receipt_long_outlined),
