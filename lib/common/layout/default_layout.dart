@@ -6,8 +6,9 @@ class DefaultLayout extends StatelessWidget {
   final String? title;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  const DefaultLayout({
+  DefaultLayout({
     required this.child,
     this.backgroundColor,
     this.title,
@@ -19,43 +20,114 @@ class DefaultLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey, // Scaffold에 key 할당
       backgroundColor: backgroundColor ?? Colors.white,
-      appBar: renderAppBar(), // renderAppBar 메서드를 호출하여 앱바 생성
+      appBar: AppBar(
+        title: title != null ? Text(title!) : null,
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () => scaffoldKey.currentState!.openDrawer(), // 드로워 열기
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // 검색 버튼 로직
+            },
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Dongdaemoon',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+            ),
+            ListTile(
+              leading: Icon(Icons.group),
+              title: Text('Communities'),
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Q&A'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+            ),
+          ],
+        ),
+      ),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
     );
   }
 
-  AppBar? renderAppBar(){
-    if(title != null){
-      return AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          title!,
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            // 메뉴 버튼 클릭 시 로직
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // 검색 버튼 클릭시 로직
-            },
-          ),
-        ],
-        foregroundColor: Colors.black,
-      );
-    }
-    return null;
-  }
+  // AppBar buildAppBar(BuildContext context) {
+  //   return AppBar(
+  //     title: title != null ? Text(title!) : null,
+  //     leading: IconButton(
+  //       icon: Icon(Icons.menu),
+  //       onPressed: () { Scaffold.of(context).openDrawer();
+  //         },
+  //     ),
+  //     actions: [
+  //       IconButton(
+  //         icon: Icon(Icons.search),
+  //         onPressed: () {
+  //           // Logic for search action
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
+  //
+  // Drawer buildDrawer() {
+  //   return Drawer(
+  //     child: ListView(
+  //       padding: EdgeInsets.zero,
+  //       children: <Widget>[
+  //         DrawerHeader(
+  //           decoration: BoxDecoration(
+  //             color: Colors.blue,
+  //           ),
+  //           child: Text(
+  //             'Drawer Header',
+  //             style: TextStyle(
+  //               color: Colors.white,
+  //               fontSize: 24,
+  //             ),
+  //           ),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.message),
+  //           title: Text('Messages'),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.account_circle),
+  //           title: Text('Profile'),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.settings),
+  //           title: Text('Settings'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
