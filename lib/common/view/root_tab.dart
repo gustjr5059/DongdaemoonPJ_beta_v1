@@ -1,6 +1,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../home/view/home_screen.dart';
+import '../../order/view/order_screen.dart';
+import '../../product/view/product_screen.dart';
+import '../../user/view/profile_screen.dart';
 import '../const/colors.dart';
 import '../layout/default_layout.dart';
 
@@ -50,10 +54,10 @@ class _RootTabState extends State<RootTab>
         controller: controller,
         children: [
           // Screens here
-          // HomeScreen(),
-          // ProductScreen(),
-          // OrderScreen(),
-          // ProfileScreen(),
+          HomeScreen(),
+          ProductScreen(),
+          OrderScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

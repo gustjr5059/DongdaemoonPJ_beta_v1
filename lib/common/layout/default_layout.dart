@@ -1,3 +1,4 @@
+import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class DefaultLayout extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: BUTTON_COLOR,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
