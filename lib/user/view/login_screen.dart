@@ -86,15 +86,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: BUTTON_COLOR, // 버튼 색상 설정
+                    onPrimary: Colors.white, // 텍스트 색상 설정
+                  ),
                 ),
                   // 회원가입 버튼
-                  TextButton(
+                  // 기존 TextButton 대신 ElevatedButton 사용
+                ElevatedButton(
+                  child: Text('회원가입'),
                   onPressed: () async {
                     try {
                       // Firebase에서 이메일과 비밀번호로 사용자 생성 시도
                       await _auth.createUserWithEmailAndPassword(
-                      email: username, // username을 이용해 이메일 전달
-                      password: password, // password를 이용해 비밀번호 전달
+                        email: username, // username을 이용해 이메일 전달
+                        password: password, // password를 이용해 비밀번호 전달
                       );
                       // 회원가입 성공 후 처리, 예를 들어 로그인 페이지로 이동
                       Navigator.of(context).pushReplacement(
@@ -109,13 +115,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
                     }
                   },
-                  style: TextButton.styleFrom(
-                    primary: Colors.black,
+                  style: ElevatedButton.styleFrom(
+                    primary: BUTTON_COLOR, // 버튼 색상 설정
+                    onPrimary: Colors.white, // 텍스트 색상 설정
                   ),
-                  child: Text(
-                    '회원가입',
-                  ),
-                )
+                ),
               ],
             ),
           ),
