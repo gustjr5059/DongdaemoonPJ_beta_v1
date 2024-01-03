@@ -29,9 +29,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(userMeProvider);
+    // final state = ref.watch(userMeProvider);
+    String userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email'; // Get the current user's email
 
     return DefaultLayout(
+      userEmail: userEmail, // Pass the userEmail to DefaultLayout
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(

@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../const/colors.dart';
 import '../layout/default_layout.dart';
@@ -40,7 +41,9 @@ class _RootTabState extends State<RootTab>
 
   @override
   Widget build(BuildContext context) {
+    String userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email'; // Get the current user's email
     return DefaultLayout(
+      userEmail: userEmail, // Pass the userEmail to DefaultLayout
       title: 'Dongdaemoon',// Title of the app bar
       child: TabBarView(
         physics: NeverScrollableScrollPhysics(),

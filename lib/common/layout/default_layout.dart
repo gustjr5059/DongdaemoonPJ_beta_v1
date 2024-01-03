@@ -10,7 +10,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final String? userEmail; // Added to accept user email
+  final String userEmail; // Added to accept user email
 
   DefaultLayout({
     required this.child,
@@ -18,7 +18,7 @@ class DefaultLayout extends StatelessWidget {
     this.title,
     this.bottomNavigationBar,
     this.floatingActionButton,
-    this.userEmail, // Added user email to constructor
+    required this.userEmail, // Make userEmail required
     Key? key,
   }) : super(key: key);
 
@@ -61,8 +61,9 @@ class DefaultLayout extends StatelessWidget {
                       fontSize: 24,
                     ),
                   ),
+                  SizedBox(height: 10),
                   Text(
-                    userEmail ?? 'No Email', // Display user email
+                    userEmail, // Display user email
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -105,57 +106,4 @@ class DefaultLayout extends StatelessWidget {
       floatingActionButton: floatingActionButton,
     );
   }
-
-  // AppBar buildAppBar(BuildContext context) {
-  //   return AppBar(
-  //     title: title != null ? Text(title!) : null,
-  //     leading: IconButton(
-  //       icon: Icon(Icons.menu),
-  //       onPressed: () { Scaffold.of(context).openDrawer();
-  //         },
-  //     ),
-  //     actions: [
-  //       IconButton(
-  //         icon: Icon(Icons.search),
-  //         onPressed: () {
-  //           // Logic for search action
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
-  //
-  // Drawer buildDrawer() {
-  //   return Drawer(
-  //     child: ListView(
-  //       padding: EdgeInsets.zero,
-  //       children: <Widget>[
-  //         DrawerHeader(
-  //           decoration: BoxDecoration(
-  //             color: Colors.blue,
-  //           ),
-  //           child: Text(
-  //             'Drawer Header',
-  //             style: TextStyle(
-  //               color: Colors.white,
-  //               fontSize: 24,
-  //             ),
-  //           ),
-  //         ),
-  //         ListTile(
-  //           leading: Icon(Icons.message),
-  //           title: Text('Messages'),
-  //         ),
-  //         ListTile(
-  //           leading: Icon(Icons.account_circle),
-  //           title: Text('Profile'),
-  //         ),
-  //         ListTile(
-  //           leading: Icon(Icons.settings),
-  //           title: Text('Settings'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
