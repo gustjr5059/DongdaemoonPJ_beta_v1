@@ -24,14 +24,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance; // FirebaseAuth 객체 초기화
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
   String username = '';
   String password = '';
+
+  @override
+  void initState() {
+    super.initState();
+    emailFocusNode.addListener(() {
+      if (emailFocusNode.hasFocus) {
+        // 텍스트 필드에 포커스가 있을 때 키보드가 활성화되도록 함
+      }
+    });
+    passwordFocusNode.addListener(() {
+      if (passwordFocusNode.hasFocus) {
+        // 텍스트 필드에 포커스가 있을 때 키보드가 활성화되도록 함
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(
           top: true,
           bottom: false,
@@ -49,13 +72,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 12.0),
                 CustomTextFormField(
+                  controller: emailController,
+                  focusNode: emailFocusNode, // FocusNode 할당
                   hintText: '이메일을 입력해주세요.',
+                  keyboardType: TextInputType.emailAddress, // Keyboard type for email input
                   onChanged: (String value) {
                     username = value;
                   },
                 ),
                 const SizedBox(height: 12.0),
                 CustomTextFormField(
+                  controller: passwordController,
+                  focusNode: passwordFocusNode,
                   hintText: '비밀번호를 입력해주세요.',
                   onChanged: (String value) {
                     password = value;
@@ -125,7 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
-    );
+   );
   }
 }
 

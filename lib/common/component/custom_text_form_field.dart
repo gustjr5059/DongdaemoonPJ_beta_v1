@@ -9,13 +9,19 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final FocusNode? focusNode;
 
   const CustomTextFormField({
+    this.controller,
     required this.onChanged,
     this.autofocus = false,
     this.obscureText = false,
     this.hintText,
     this.errorText,
+    this.keyboardType,
+    this.focusNode, // FocusNode 초기화
     Key? key,
   }) : super(key: key);
 
@@ -29,10 +35,13 @@ class CustomTextFormField extends StatelessWidget {
     );
 
     return TextFormField(
+      controller: controller,
+      focusNode: focusNode, // FocusNode 할당
       cursorColor: PRIMARY_COLOR,
       // 비밀번호 입력할때
       obscureText: obscureText,
       autofocus: autofocus,
+      keyboardType: keyboardType,
       onChanged: onChanged,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(20),
