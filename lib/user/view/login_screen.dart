@@ -22,19 +22,15 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance; // FirebaseAuth 객체 초기화
-  final TextEditingController emailController = TextEditingController(); // 추가
-  final TextEditingController passwordController = TextEditingController(); // 추가
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   String username = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
-    // final state = ref.watch(userMeProvider);
-    String userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email'; // Get the current user's email
-
-    return DefaultLayout(
-      userEmail: userEmail, // Pass the userEmail to DefaultLayout
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(
           top: true,
@@ -48,16 +44,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 16.0),
                 _SubTitle(),
                 Image.asset(
-                  'asset/img/misc/logo.png',
-                  width: MediaQuery.of(context).size.width / 3 * 2,
+                  'asset/img/misc/main_image.jpg',
+                  width: MediaQuery.of(context).size.width / 2 * 3,
                 ),
+                const SizedBox(height: 12.0),
                 CustomTextFormField(
                   hintText: '이메일을 입력해주세요.',
                   onChanged: (String value) {
                     username = value;
                   },
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0),
                 CustomTextFormField(
                   hintText: '비밀번호를 입력해주세요.',
                   onChanged: (String value) {
@@ -65,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   obscureText: true,
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 12.0),
                 ElevatedButton(
                   child: Text('로그인'),
                   onPressed: () async {
@@ -134,9 +131,10 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '환영합니다!',
+      'Dongdaemoon Shop 🛍️',
+      textAlign: TextAlign.center, // 텍스트를 중앙 정렬
       style: TextStyle(
-        fontSize: 34,
+        fontSize: 28,
         fontWeight: FontWeight.w500,
         color: Colors.black,
       ),
@@ -150,7 +148,7 @@ class _SubTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '이메일과 비밀번호를 입력해서 로그인 해주세요!\n오늘도 성공적인 주문이 되길 :)',
+      '오늘도 나만의 옷을 PICK!!\n 이메일과 비밀번호를 입력해서 로그인 해주세요! :)',
       style: TextStyle(
         fontSize: 16,
         color: BODY_TEXT_COLOR,
