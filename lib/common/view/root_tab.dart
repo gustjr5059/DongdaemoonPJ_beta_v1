@@ -41,24 +41,7 @@ class _RootTabState extends State<RootTab>
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      appBar: AppBar(
-        title: Text('Dongdaemoon'), // Title of the app bar
-        leading: IconButton(
-          icon: Icon(Icons.menu), // Hamburger icon for the toggle button
-          onPressed: () {
-            // Logic to open drawer or perform other actions
-          },
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search), // Search icon
-            onPressed: () {
-              // Logic for search action
-            },
-          ),
-        ],
-      ),
-      title: 'Dongdaemoon',
+      title: 'Dongdaemoon',// Title of the app bar
       child: TabBarView(
         physics: NeverScrollableScrollPhysics(),
         controller: controller,

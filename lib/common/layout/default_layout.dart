@@ -6,7 +6,6 @@ class DefaultLayout extends StatelessWidget {
   final String? title;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
-  final AppBar? appBar;
 
   const DefaultLayout({
     required this.child,
@@ -14,7 +13,6 @@ class DefaultLayout extends StatelessWidget {
     this.title,
     this.bottomNavigationBar,
     this.floatingActionButton,
-    this.appBar,
     Key? key,
   }) : super(key: key);
 
@@ -22,7 +20,7 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? Colors.white,
-      appBar: appBar,
+      appBar: renderAppBar(), // renderAppBar 메서드를 호출하여 앱바 생성
       body: child,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
@@ -30,21 +28,34 @@ class DefaultLayout extends StatelessWidget {
   }
 
   AppBar? renderAppBar(){
-    if(title == null){
-      return null;
-    }else{
+    if(title != null){
       return AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
           title!,
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 20.0,
             fontWeight: FontWeight.w500,
           ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            // 메뉴 버튼 클릭 시 로직
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // 검색 버튼 클릭시 로직
+            },
+          ),
+        ],
         foregroundColor: Colors.black,
       );
     }
+    return null;
   }
 }
