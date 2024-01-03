@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../user/view/login_screen.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
@@ -7,6 +10,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final String? userEmail; // Added to accept user email
 
   DefaultLayout({
     required this.child,
@@ -14,6 +18,7 @@ class DefaultLayout extends StatelessWidget {
     this.title,
     this.bottomNavigationBar,
     this.floatingActionButton,
+    this.userEmail, // Added user email to constructor
     Key? key,
   }) : super(key: key);
 
@@ -45,13 +50,36 @@ class DefaultLayout extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text(
-                'Dongdaemoon',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dongdaemoon',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  Text(
+                    userEmail ?? 'No Email', // Display user email
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut(); // Sign out from Firebase
+                Navigator.of(context).pushReplacement( // Navigate to login screen
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.account_circle),
