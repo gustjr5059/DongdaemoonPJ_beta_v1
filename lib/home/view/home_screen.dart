@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/const/colors.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -8,6 +10,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // 페이지 컨트롤러 초기화
   final PageController _controller = PageController();
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      // 페이지가 변경될 때마다 현재 페이지를 업데이트
+      setState(() {
+        _currentPage = _controller.page?.round() ?? 0;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +73,23 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
+            // 페이지 번호 표시
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4), // 좌우 여백 설정
+                child: Text(
+                '${index + 1}',
+                style: TextStyle(
+                fontSize: 16,
+                color: _currentPage == index ? PRIMARY_COLOR : BODY_TEXT_COLOR,
+                // 현재 페이지는 PRIMARY_COLOR, 아니면 BODY_TEXT_COLOR
+                ),
+               ),
+              );
+             }),
+           ),
         ],
       ),
     );
