@@ -13,7 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentPage = 0;
 
   // 가상의 카테고리 데이터 (실제 애플리케이션에서는 이 부분을 데이터 소스로 대체해야 함)
-  final List<String> categories = List.generate(10, (index) => '카테고리 ${index + 1}');
+  final List<String> categories = List.generate(12, (index) => '카테고리 ${index + 1}');
   String _selectedCategory = '카테고리 1';
 
   @override
@@ -101,19 +101,50 @@ class _HomeScreenState extends State<HomeScreen> {
               );
              }),
            ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: categories.map((category) {
-                return CategoryButton(
-                  category: category,
-                  isSelected: category == _selectedCategory,
-                  onSelected: _onCategorySelected,
-                );
-              }).toList(),
+
+          // 카테고리 버튼들 (2줄로 구성)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: categories.take(4).map((category) {
+                  return Flexible(
+                   child: CategoryButton(
+                    category: category,
+                    isSelected: category == _selectedCategory,
+                    onSelected: _onCategorySelected,
+                   ),
+                  );
+                 }).toList(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: categories.skip(4).take(4).map((category) {
+                    return Flexible(
+                     child: CategoryButton(
+                      category: category,
+                      isSelected: category == _selectedCategory,
+                      onSelected: _onCategorySelected,
+                    ),
+                   );
+                  }).toList(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: categories.skip(8).take(4).map((category) {
+                    return Flexible(
+                     child: CategoryButton(
+                      category: category,
+                      isSelected: category == _selectedCategory,
+                      onSelected: _onCategorySelected,
+                    ),
+                  );
+                }).toList(),
+              ),
+              ],
             ),
-          ),
+
+          // 선택된 카테고리의 콘텐츠를 표시하는 영역
           Expanded(
             child: Center(
               child: Text(_selectedCategory, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
