@@ -102,47 +102,39 @@ class _HomeScreenState extends State<HomeScreen> {
              }),
            ),
 
-          // 카테고리 버튼들 (2줄로 구성)
+      // 카테고리 버튼들
           Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: categories.take(4).map((category) {
-                  return Flexible(
-                   child: CategoryButton(
-                    category: category,
-                    isSelected: category == _selectedCategory,
-                    onSelected: _onCategorySelected,
-                   ),
-                  );
-                 }).toList(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: categories.skip(4).take(4).map((category) {
-                    return Flexible(
-                     child: CategoryButton(
-                      category: category,
-                      isSelected: category == _selectedCategory,
-                      onSelected: _onCategorySelected,
+              for (var i = 0; i < categories.length; i += 4)
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: categories.skip(i).take(4).map((category) {
+                        return Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                right: i % 4 != 3
+                                    ? BorderSide(color: Colors.grey)
+                                    : BorderSide.none,
+                              ),
+                            ),
+                            child: CategoryButton(
+                              category: category,
+                              isSelected: category == _selectedCategory,
+                              onSelected: _onCategorySelected,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                   );
-                  }).toList(),
+                    // 각 라인 아래에 구분선 추가
+                    if (i < 8) Container(height: 1, color: Colors.grey)
+                  ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: categories.skip(8).take(4).map((category) {
-                    return Flexible(
-                     child: CategoryButton(
-                      category: category,
-                      isSelected: category == _selectedCategory,
-                      onSelected: _onCategorySelected,
-                    ),
-                  );
-                }).toList(),
+               ],
               ),
-              ],
-            ),
 
           // 선택된 카테고리의 콘텐츠를 표시하는 영역
           Expanded(
@@ -171,13 +163,16 @@ class CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => onSelected(category),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Text(
-          category,
-          style: TextStyle(
-            color: isSelected ? PRIMARY_COLOR : BODY_TEXT_COLOR,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            category,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isSelected ? PRIMARY_COLOR : BODY_TEXT_COLOR,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ),
       ),
