@@ -138,7 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
           // 선택된 카테고리의 콘텐츠를 표시하는 영역
-          Expanded(
+          Container(
+            height: 300, // 특정 높이 지정
             child: Center(
               child: Text(_selectedCategory, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
