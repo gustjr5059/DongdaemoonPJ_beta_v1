@@ -2,6 +2,7 @@ import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../home/layout/category1_layout.dart';
 import '../../user/view/login_screen.dart';
 
 class DefaultLayout extends StatelessWidget {
@@ -46,27 +47,45 @@ class DefaultLayout extends StatelessWidget {
 
       body: Column(
         children: [
-          // 카테고리 리스트
-          Container(
-            height: 60, // 높이 설정
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal, // 수평 스크롤 설정
-              itemCount: 12, // 카테고리 수
-              itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('카테고리 ${index + 1}'),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            child: child, // 나머지 화면 콘텐츠
-          ),
+          _buildCategoryList(context),
+          Expanded(child: child),
         ],
       ),
+      drawer: _buildDrawer(),
+      bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: floatingActionButton,
+    );
+  }
 
+  Widget _buildCategoryList(BuildContext context) {
+    return Container(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 12,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              if (index == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Category1Layout()),
+                );
+              }
+              // 추가 카테고리에 대한 로직 구현 필요
+            },
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text('카테고리 ${index + 1}'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDrawer() {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -125,9 +144,8 @@ class DefaultLayout extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: bottomNavigationBar,
-      floatingActionButton: floatingActionButton,
+      );
+    }
     );
   }
 }
