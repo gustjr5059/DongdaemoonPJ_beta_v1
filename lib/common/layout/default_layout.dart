@@ -43,6 +43,30 @@ class DefaultLayout extends StatelessWidget {
           ),
         ],
       ),
+
+      body: Column(
+        children: [
+          // 카테고리 리스트
+          Container(
+            height: 60, // 높이 설정
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal, // 수평 스크롤 설정
+              itemCount: 12, // 카테고리 수
+              itemBuilder: (context, index) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text('카테고리 ${index + 1}'),
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: child, // 나머지 화면 콘텐츠
+          ),
+        ],
+      ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -102,7 +126,6 @@ class DefaultLayout extends StatelessWidget {
           ],
         ),
       ),
-      body: child,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
     );
