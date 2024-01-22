@@ -43,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: SingleChildScrollView( // 전체를 스크롤 가능하게 만듦
+       child: Column(
         children: [
           SizedBox(
             height: 200, // 페이지 뷰의 높이를 200으로 설정
@@ -144,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+     ),
     );
   }
 }
