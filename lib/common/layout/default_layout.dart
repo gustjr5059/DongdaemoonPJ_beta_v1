@@ -1,3 +1,5 @@
+
+
 import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +53,7 @@ class DefaultLayout extends StatelessWidget {
           Expanded(child: child),
         ],
       ),
-      drawer: _buildDrawer(),
+      drawer: _buildDrawer(context),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
     );
@@ -85,8 +87,8 @@ class DefaultLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawer() {
-      drawer: Drawer(
+  Widget _buildDrawer(BuildContext context) {
+      return Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -146,6 +148,5 @@ class DefaultLayout extends StatelessWidget {
         ),
       );
     }
-    );
   }
-}
+
