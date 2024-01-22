@@ -12,6 +12,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _controller = PageController();
   int _currentPage = 0;
 
+  // 가상의 카테고리 데이터 (실제 애플리케이션에서는 이 부분을 데이터 소스로 대체해야 함)
+  final List<String> categories = List.generate(10, (index) => '카테고리 ${index + 1}');
+  String _selectedCategory = '카테고리 1';
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onCategorySelected(String category) {
+    setState(() {
+      _selectedCategory = category;
+    });
+    // 여기서 카테고리에 따른 데이터 로드 로직을 구현
   }
 
   @override
@@ -90,8 +101,56 @@ class _HomeScreenState extends State<HomeScreen> {
               );
              }),
            ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: categories.map((category) {
+                return CategoryButton(
+                  category: category,
+                  isSelected: category == _selectedCategory,
+                  onSelected: _onCategorySelected,
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(_selectedCategory, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            ),
+          ),
         ],
       ),
     );
   }
 }
+class CategoryButton extends StatelessWidget {
+  final String category;
+  final bool isSelected;
+  final ValueChanged<String> onSelected;
+
+  const CategoryButton({
+    required this.category,
+    required this.isSelected,
+    required this.onSelected,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onSelected(category),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Text(
+          category,
+          style: TextStyle(
+            color: isSelected ? PRIMARY_COLOR : BODY_TEXT_COLOR,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
