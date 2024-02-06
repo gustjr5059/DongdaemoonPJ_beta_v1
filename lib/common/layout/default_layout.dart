@@ -47,10 +47,12 @@ class DefaultLayout extends StatelessWidget {
         ],
       ),
 
-      body: Column(
+      body: Column( // Column 위젯으로 body의 자식들을 감싸줍니다.
         children: [
-          _buildCategoryList(context),
-          Expanded(child: child),
+          _buildCategoryList(context), // 카테고리 리스트를 body의 첫 번째 자식으로 추가
+          Expanded( // 나머지 공간을 차지하도록 child를 Expanded로 감싸줍니다.
+            child: child,
+          ),
         ],
       ),
       drawer: _buildDrawer(context),

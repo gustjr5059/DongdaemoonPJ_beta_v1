@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/const/colors.dart';
+import '../../common/layout/default_layout.dart';
 
 class Category1Layout extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class _Category1LayoutState extends State<Category1Layout> {
   // 페이지 컨트롤러 초기화
   final PageController _controller = PageController();
   int _currentPage = 0;
+  String userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
 
   @override
   void initState() {
@@ -31,8 +34,10 @@ class _Category1LayoutState extends State<Category1Layout> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView( // 전체를 스크롤 가능하게 만듦
+    return DefaultLayout(
+      title: '카테고리 1',
+      userEmail: userEmail, // userEmail 매개변수에 사용자 이메일 제공
+      child: SingleChildScrollView( // 전체를 스크롤 가능하게 만듦
         child: Column(
           children: [
             SizedBox(
