@@ -4,7 +4,7 @@ import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../home/layout/category1_layout.dart';
+import 'category1_layout.dart';
 import '../../user/view/login_screen.dart';
 
 class DefaultLayout extends StatelessWidget {
