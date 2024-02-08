@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase_options.dart';
+import 'home/view/home_screen.dart';
 
 // Firebase 초기화 코드(Firebase와 Flutter 프로젝트가 통합되어 Firebase 서비스를 사용가능)
 void main() async {
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // 사용자가 로그인한 경우, 홈페이지로 이동
-            return RootTab();
+            return HomeScreen();
           } else {
             // 사용자가 로그아웃한 경우 또는 로그인하지 않은 경우, 로그인 페이지로 이동
             return LoginScreen();
