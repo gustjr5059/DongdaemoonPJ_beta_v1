@@ -20,8 +20,9 @@ class Category1Layout extends ConsumerWidget {
     }
 
     return Scaffold(
-      key: scaffoldKey,
-      appBar: buildCommonAppBar('카테고리 1'),
+      // GlobalKey 제거
+      // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
+      appBar: buildCommonAppBar('카테고리 1', context),// common_parts.dart의 AppBar 재사용
       // body에 카테고리 리스트 포함
       body: Column(
         children: [
@@ -32,7 +33,8 @@ class Category1Layout extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref),
+      // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
+      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref, context),
       drawer: buildCommonDrawer(context),
     );
   }

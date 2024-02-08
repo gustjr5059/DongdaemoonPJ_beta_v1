@@ -5,7 +5,7 @@ import '../../common/layout/category1_layout.dart';
 import '../../common/provider/tab_index_provider.dart';
 import '../../common/view/common_parts.dart';
 
-
+// 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -31,8 +31,9 @@ class HomeScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
-      appBar: buildCommonAppBar('홈'), // common_parts.dart의 AppBar 재사용
+      // GlobalKey 제거
+      // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
+      appBar: buildCommonAppBar('홈', context),// common_parts.dart의 AppBar 재사용
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -60,8 +61,9 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref), // common_parts.dart의 BottomNavigationBar 재사용
-      drawer: buildCommonDrawer(context), // common_parts.dart의 Drawer 재사용
+      // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
+      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref, context),
+      drawer: buildCommonDrawer(context),
     );
   }
 }

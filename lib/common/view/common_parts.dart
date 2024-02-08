@@ -1,21 +1,28 @@
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../home/view/home_screen.dart';
+import '../../order/view/order_screen.dart';
+import '../../product/view/product_screen.dart';
+import '../../user/view/profile_screen.dart';
 import '../const/colors.dart';
 import '../provider/tab_index_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// GlobalKey 선언
-final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+// GlobalKey 사용 제거
+// final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-// AppBar 생성 함수
-AppBar buildCommonAppBar(String title) {
+// AppBar 생성 함수에서 GlobalKey 사용 제거
+AppBar buildCommonAppBar(String title, BuildContext context) {
   return AppBar(
     title: Text(title),
-    leading: IconButton(
-      icon: Icon(Icons.menu),
-      // GlobalKey를 사용하여 Scaffold의 상태에 접근
-      onPressed: () => scaffoldKey.currentState?.openDrawer(),
+    leading: Builder( // Builder 위젯 사용
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        );
+      },
     ),
     actions: [
       IconButton(
@@ -28,13 +35,33 @@ AppBar buildCommonAppBar(String title) {
   );
 }
 
+
+
 // BottomNavigationBar 생성 함수
-Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref) {
+Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context) {
   return BottomNavigationBar(
     type: BottomNavigationBarType.fixed,
     currentIndex: selectedIndex,
-    onTap: (index) => ref.read(tabIndexProvider.notifier).state = index,
-    items: [
+    onTap: (index) {
+      // 상태 업데이트
+      ref.read(tabIndexProvider.notifier).state = index;
+      // 화면 전환 로직
+      switch (index) {
+        case 0:
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+          break;
+        case 1:
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProductScreen()));
+          break;
+        case 2:
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderScreen()));
+          break;
+        case 3:
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileScreen()));
+          break;
+      }
+    },
+    items: const [
       BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'),
       BottomNavigationBarItem(icon: Icon(Icons.checkroom_outlined), label: '옷'),
       BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: '주문'),
