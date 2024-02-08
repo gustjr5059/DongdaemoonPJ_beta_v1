@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
+import '../../home/view/home_screen.dart';
 import '../provider/user_me_provider.dart';
 
 
@@ -103,7 +104,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // 로그인 성공 후 처리, 예를 들어 다음 페이지로 이동
                       Navigator.of(context).pushReplacement(
                         // MainScreen : 여기에 메인 화면 뷰를 넣어줘야 함
-                        MaterialPageRoute(builder: (context) => RootTab()),
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
                       );
                     } on FirebaseAuthException catch (e) {
                       // 로그인 실패 시 처리, 예를 들어 사용자에게 오류 메시지 표시
