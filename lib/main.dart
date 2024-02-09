@@ -1,4 +1,3 @@
-import 'package:dongdaemoon_beta_v1/common/view/root_tab.dart';
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
