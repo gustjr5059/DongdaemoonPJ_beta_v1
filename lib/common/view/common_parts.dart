@@ -103,7 +103,7 @@ Widget buildCommonDrawer(BuildContext context) {
       padding: EdgeInsets.zero,
       children: <Widget>[
         DrawerHeader(
-          decoration: BoxDecoration(color: BUTTON_COLOR),
+          decoration: BoxDecoration(color: DRAWER_COLOR),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

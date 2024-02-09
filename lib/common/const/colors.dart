@@ -8,5 +8,7 @@ const BODY_TEXT_COLOR = Color(0xFF868686);
 const INPUT_BG_COLOR = Color(0xFFFBFBFB);
 // 텍스트필드 테두리 색상
 const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
+// 드로워 색상
+const DRAWER_COLOR = Color(0xFFC77AA1);
 // 버튼 색상
-const BUTTON_COLOR = Color(0xFF8DB600); // Hexadecimal representation of Apple Green
+const BUTTON_COLOR = Color(0xFFD5A4C2);// Hexadecimal representation of Apple Green

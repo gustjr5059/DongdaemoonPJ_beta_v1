@@ -15,7 +15,11 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PageController pageController = PageController();
-    final List<String> categories = List.generate(12, (index) => '카테고리 ${index + 1}');
+    final categories = [
+      "전체", "상의", "하의", "아우터",
+      "니트", "원피스", "티셔츠", "블라우스",
+      "스커트", "팬츠", "언더웨어", "악세사리"
+    ];
     final currentPage = ref.watch(currentPageProvider);
 
     void onCategoryTap(int index) {
@@ -32,50 +36,9 @@ class HomeScreen extends ConsumerWidget {
             // 사용자 정의 화살표 버튼이 있는 PageView
             SizedBox(
               height: 200,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  PageView.builder(
-                    controller: pageController,
-                    itemCount: 5,
-                    onPageChanged: (index) => ref.read(currentPageProvider.notifier).state = index,
-                    itemBuilder: (context, index) => Center(child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
-                  ),
-                  Positioned(
-                    left: 10,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      color: currentPage > 0 ? Colors.black : Colors.grey, // currentPage 변수 사용
-                      onPressed: currentPage > 0 ? () {
-                        pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                      } : null,
-                    ),
-                  ),
-                  Positioned(
-                    right: 10,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_forward_ios),
-                      color: currentPage < 4 ? Colors.black : Colors.grey, // currentPage 변수 사용
-                      onPressed: currentPage < 4 ? () {
-                        pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                      } : null,
-                    ),
-                  ),
-                ],
-              ),
+              child: pageViewWithArrows(pageController, ref, currentPage),
             ),
-            // 동적으로 생성된 카테고리 버튼
-            Wrap(
-              children: List.generate(categories.length, (index) {
-                return Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: OutlinedButton(
-                    onPressed: () => onCategoryTap(index),
-                    child: Text(categories[index]),
-                  ),
-                );
-              }),
-            ),
+            categoryButtonsGrid(categories, onCategoryTap),
             SizedBox(height: 20),
             Text('선택된 카테고리의 콘텐츠', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
@@ -84,6 +47,71 @@ class HomeScreen extends ConsumerWidget {
       // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
       bottomNavigationBar: buildCommonBottomNavigationBar(ref.watch(tabIndexProvider), ref, context),
       drawer: buildCommonDrawer(context),
+    );
+  }
+
+  Widget pageViewWithArrows(PageController pageController, WidgetRef ref, int currentPage) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        PageView.builder(
+          controller: pageController,
+          itemCount: 5,
+          onPageChanged: (index) => ref.read(currentPageProvider.notifier).state = index,
+          itemBuilder: (context, index) => Center(child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
+        ),
+        arrowButton(
+          Icons.arrow_back_ios,
+          currentPage > 0,
+          currentPage > 0 ? () => pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut) : null,
+        ),
+        arrowButton(
+          Icons.arrow_forward_ios,
+          currentPage < 4,
+          currentPage < 4 ? () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut) : null,
+        ),
+      ],
+    );
+  }
+
+
+  Widget arrowButton(IconData icon, bool isActive, VoidCallback? onPressed) {
+    return Positioned(
+      left: icon == Icons.arrow_back_ios ? 10 : null,
+      right: icon == Icons.arrow_forward_ios ? 10 : null,
+      child: IconButton(
+        icon: Icon(icon),
+        color: isActive ? Colors.black : Colors.grey,
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+
+  Widget categoryButtonsGrid(List<String> categories, void Function(int) onCategoryTap) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 1,
+        mainAxisSpacing: 1,
+        childAspectRatio: 3,
+      ),
+      itemCount: categories.length,
+      itemBuilder: (context, index) {
+        return GridTile(
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+            ),
+            child: TextButton(
+              onPressed: () => onCategoryTap(index),
+              child: Text(categories[index], style: TextStyle(color: Colors.black)),
+            ),
+          ),
+        );
+      },
     );
   }
 }
