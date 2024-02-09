@@ -3,6 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/layout/category1_layout.dart';
 import '../../common/provider/tab_index_provider.dart';
 import '../../common/view/common_parts.dart';
+import '../layout/accessory_layout.dart';
+import '../layout/all_layout.dart';
+import '../layout/blouse_layout.dart';
+import '../layout/bottom_layout.dart';
+import '../layout/neat_layout.dart';
+import '../layout/onepiece_layout.dart';
+import '../layout/outer_layout.dart';
+import '../layout/pants_layout.dart';
+import '../layout/shirt_layout.dart';
+import '../layout/skirt_layout.dart';
+import '../layout/top_layout.dart';
+import '../layout/underwear_layout.dart';
 
 // 상태 관리를 위한 StateProvider 정의
 final currentPageProvider = StateProvider<int>((ref) => 0);
@@ -18,13 +30,60 @@ class HomeScreen extends ConsumerWidget {
     final categories = [
       "전체", "상의", "하의", "아우터",
       "니트", "원피스", "티셔츠", "블라우스",
-      "스커트", "팬츠", "언더웨어", "악세사리"
+      "스커트", "팬츠", "언더웨어", "악세서리"
     ];
     final currentPage = ref.watch(currentPageProvider);
 
-    void onCategoryTap(int index) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Category1Layout()));
+    // 카테고리 선택 시 실행될 함수
+    void _onCategorySelected(int index) {
+      // Navigator를 사용하여 Category1Layout으로 화면 전환
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Category1Layout()),
+      );
     }
+
+    void onCategoryTap(int index) {
+      switch (index) {
+        case 0: // "전체" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AllLayout()));
+          break;
+        case 1: // "상의" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const TopLayout()));
+          break;
+        case 2: // "하의" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomLayout()));
+          break;
+        case 3: // "아우터" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const OuterLayout()));
+          break;
+        case 4: // "니트" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const NeatLayout()));
+          break;
+        case 5: // "원피스" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const OnepieceLayout()));
+          break;
+        case 6: // "티셔츠" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const ShirtLayout()));
+          break;
+        case 7: // "블라우스" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const BlouseLayout()));
+          break;
+        case 8: // "스커트" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const SkirtLayout()));
+          break;
+        case 9: // "팬츠" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const PantsLayout()));
+          break;
+        case 10: // "언더웨어" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const UnderwearLayout()));
+          break;
+        case 11: // "악세서리" 버튼에 대응하는 경우
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AccessoryLayout()));
+          break;
+      }
+    }
+
 
     return Scaffold(
       appBar: buildCommonAppBar('홈', context),
