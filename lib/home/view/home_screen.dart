@@ -4,7 +4,11 @@ import '../../common/layout/category1_layout.dart';
 import '../../common/provider/tab_index_provider.dart';
 import '../../common/view/common_parts.dart';
 
+// 상태 관리를 위한 StateProvider 정의
+final currentPageProvider = StateProvider<int>((ref) => 0);
+
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
+// GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -12,6 +16,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final PageController pageController = PageController();
     final List<String> categories = List.generate(12, (index) => '카테고리 ${index + 1}');
+    final currentPage = ref.watch(currentPageProvider);
 
     void onCategoryTap(int index) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const Category1Layout()));
@@ -33,28 +38,27 @@ class HomeScreen extends ConsumerWidget {
                   PageView.builder(
                     controller: pageController,
                     itemCount: 5,
+                    onPageChanged: (index) => ref.read(currentPageProvider.notifier).state = index,
                     itemBuilder: (context, index) => Center(child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
                   ),
                   Positioned(
                     left: 10,
                     child: IconButton(
                       icon: Icon(Icons.arrow_back_ios),
-                      onPressed: () {
-                        if (pageController.page != 0) {
-                          pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                        }
-                      },
+                      color: currentPage > 0 ? Colors.black : Colors.grey, // currentPage 변수 사용
+                      onPressed: currentPage > 0 ? () {
+                        pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      } : null,
                     ),
                   ),
                   Positioned(
                     right: 10,
                     child: IconButton(
                       icon: Icon(Icons.arrow_forward_ios),
-                      onPressed: () {
-                        if (pageController.page != 4) {
-                          pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                        }
-                      },
+                      color: currentPage < 4 ? Colors.black : Colors.grey, // currentPage 변수 사용
+                      onPressed: currentPage < 4 ? () {
+                        pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      } : null,
                     ),
                   ),
                 ],
