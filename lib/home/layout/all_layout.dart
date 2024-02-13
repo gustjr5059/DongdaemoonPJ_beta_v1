@@ -21,14 +21,14 @@ class AllLayout extends ConsumerWidget {
     //   print("카테고리 ${index+1} 선택됨");
     // }
 
-    // 카테고리 선택 시 실행될 함수
-    void _onCategorySelected(int index) {
-      // Navigator를 사용하여 Category1Layout으로 화면 전환
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Category1Layout()),
-      );
-    }
+    // // 카테고리 선택 시 실행될 함수
+    // void _onCategorySelected(int index) {
+    //   // Navigator를 사용하여 Category1Layout으로 화면 전환
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const Category1Layout()),
+    //   );
+    // }
 
     return Scaffold(
       // GlobalKey 제거
@@ -37,8 +37,11 @@ class AllLayout extends ConsumerWidget {
       // body에 카테고리 리스트 포함
       body: Column(
         children: [
-          // 카테고리 리스트 추가
-          buildCategoryList(_onCategorySelected),
+          // common_parts.dart의 buildTopBarList 함수를 호출하여 TopBar 카테고리 리스트를 생성합니다.
+          Container(
+            height: 50, // TopBar의 높이 설정
+            child: buildTopBarList(context), // TopBar 리스트를 생성하는 함수 호출
+          ),
           Expanded(
             child: Center(child: Text('전체 옷 내용')),
           ),

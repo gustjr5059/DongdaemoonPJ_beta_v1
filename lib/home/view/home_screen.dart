@@ -27,7 +27,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PageController pageController = PageController();
-    final categories = [
+    final homeCategories = [
       "전체", "상의", "하의", "아우터",
       "니트", "원피스", "티셔츠", "블라우스",
       "스커트", "팬츠", "언더웨어", "악세서리"
@@ -43,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
-    void onCategoryTap(int index) {
+    void onHomeCategoryTap(int index) {
       switch (index) {
         case 0: // "전체" 버튼에 대응하는 경우
           Navigator.push(context, MaterialPageRoute(builder: (context) => const AllLayout()));
@@ -91,13 +91,13 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           children: [
             // common_parts.dart에서 가져온 카테고리 리스트
-            buildCategoryList(onCategoryTap),
+            buildTopBarList(onTopBarTap),
             // 사용자 정의 화살표 버튼이 있는 PageView
             SizedBox(
               height: 200,
               child: pageViewWithArrows(pageController, ref, currentPage),
             ),
-            categoryButtonsGrid(categories, onCategoryTap),
+            homeCategoryButtonsGrid(homeCategories, onHomeCategoryTap),
             SizedBox(height: 20),
             Text('선택된 카테고리의 콘텐츠', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
@@ -147,7 +147,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
 
-  Widget categoryButtonsGrid(List<String> categories, void Function(int) onCategoryTap) {
+  Widget homeCategoryButtonsGrid(List<String> homeCategories, void Function(int) onHomeCategoryTap) {
     return GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -157,7 +157,7 @@ class HomeScreen extends ConsumerWidget {
         mainAxisSpacing: 1,
         childAspectRatio: 3,
       ),
-      itemCount: categories.length,
+      itemCount: homeCategories.length,
       itemBuilder: (context, index) {
         return GridTile(
           child: Container(
@@ -165,8 +165,8 @@ class HomeScreen extends ConsumerWidget {
               border: Border.all(color: Colors.grey),
             ),
             child: TextButton(
-              onPressed: () => onCategoryTap(index),
-              child: Text(categories[index], style: TextStyle(color: Colors.black)),
+              onPressed: () => onHomeCategoryTap(index),
+              child: Text(homeCategories[index], style: TextStyle(color: Colors.black)),
             ),
           ),
         );

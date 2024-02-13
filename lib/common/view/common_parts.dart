@@ -6,6 +6,14 @@ import '../../order/view/order_screen.dart';
 import '../../product/view/product_screen.dart';
 import '../../user/view/profile_screen.dart';
 import '../const/colors.dart';
+import '../layout/best_layout.dart';
+import '../layout/concept1_layout.dart';
+import '../layout/concept2_layout.dart';
+import '../layout/concept3_layout.dart';
+import '../layout/couple_layout.dart';
+import '../layout/new_layout.dart';
+import '../layout/sale_layout.dart';
+import '../layout/season_layout.dart';
 import '../provider/tab_index_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,6 +40,58 @@ AppBar buildCommonAppBar(String title, BuildContext context) {
         },
       ),
     ],
+  );
+}
+
+// TopBar의 카테고리 리스트를 생성하는 함수를 재작성
+Widget buildTopBarList(BuildContext context) {
+  final List<String> topBarCategories = [
+    "NEW", "BEST", "SALE", "시즌룩", "커플룩", "컨셉1", "컨셉2", "컨셉3"
+  ];
+
+  void onTopBarTap(int index) {
+    switch (index) {
+      case 0:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const NewLayout()));
+        break;
+      case 1:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const BestLayout()));
+        break;
+      case 2:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const SaleLayout()));
+        break;
+      case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const SeasonLayout()));
+        break;
+      case 4:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const CoupleLayout()));
+        break;
+      case 5:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Concept1Layout()));
+        break;
+      case 6:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Concept2Layout()));
+        break;
+      case 7:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Concept3Layout()));
+        break;
+    }
+  }
+
+  return ListView.builder(
+    scrollDirection: Axis.horizontal,
+    itemCount: topBarCategories.length,
+    itemBuilder: (BuildContext context, int index) {
+      return GestureDetector(
+        onTap: () => onTopBarTap(index),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Center(
+            child: Text(topBarCategories[index], style: TextStyle(color: Colors.white)),
+          ),
+        ),
+      );
+    },
   );
 }
 
@@ -71,27 +131,6 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
     unselectedItemColor: BODY_TEXT_COLOR,
     selectedFontSize: 10,
     unselectedFontSize: 10,
-  );
-}
-
-// 카테고리 리스트 생성 함수
-Widget buildCategoryList(Function(int) onCategoryTap) {
-  return Container(
-    height: 60,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: 12, // 예시 카테고리 수
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () => onCategoryTap(index),
-          child: Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('카테고리 ${index + 1}'),
-          ),
-        );
-      },
-    ),
   );
 }
 

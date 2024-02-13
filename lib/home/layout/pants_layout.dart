@@ -13,12 +13,12 @@ class PantsLayout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tabIndex = ref.watch(tabIndexProvider);
 
-    // 카테고리를 탭했을 때 실행할 함수
-    void onCategoryTap(int index) {
-      // 여기에서 원하는 동작을 구현합니다.
-      // 예: 특정 카테고리 페이지로 이동
-      print("카테고리 ${index+1} 선택됨");
-    }
+    // // 카테고리를 탭했을 때 실행할 함수
+    // void onCategoryTap(int index) {
+    //   // 여기에서 원하는 동작을 구현합니다.
+    //   // 예: 특정 카테고리 페이지로 이동
+    //   print("카테고리 ${index+1} 선택됨");
+    // }
 
     return Scaffold(
       // GlobalKey 제거
@@ -27,8 +27,11 @@ class PantsLayout extends ConsumerWidget {
       // body에 카테고리 리스트 포함
       body: Column(
         children: [
-          // 카테고리 리스트 추가
-          buildCategoryList(onCategoryTap),
+          // common_parts.dart의 buildTopBarList 함수를 호출하여 TopBar 카테고리 리스트를 생성합니다.
+          Container(
+            height: 50, // TopBar의 높이 설정
+            child: buildTopBarList(context), // TopBar 리스트를 생성하는 함수 호출
+          ),
           Expanded(
             child: Center(child: Text('팬츠 옷 내용')),
           ),

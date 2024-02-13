@@ -21,14 +21,14 @@ class ProductScreen extends ConsumerWidget {
     final List<String> categories = List.generate(12, (index) => '카테고리 ${index + 1}');
     String _selectedCategory = '카테고리 1';
 
-    // 카테고리 선택 시 실행될 함수
-    void _onCategorySelected(int index) {
-      // Navigator를 사용하여 Category1Layout으로 화면 전환
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Category1Layout()),
-      );
-    }
+    // // 카테고리 선택 시 실행될 함수
+    // void _onCategorySelected(int index) {
+    //   // Navigator를 사용하여 Category1Layout으로 화면 전환
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const Category1Layout()),
+    //   );
+    // }
 
     return Scaffold(
       // GlobalKey 제거
@@ -37,7 +37,11 @@ class ProductScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            buildCategoryList(_onCategorySelected), // common_parts.dart에서 정의한 카테고리 리스트 사용
+            // common_parts.dart의 buildTopBarList 함수를 호출하여 TopBar 카테고리 리스트를 생성합니다.
+            Container(
+              height: 50, // TopBar의 높이 설정
+              child: buildTopBarList(context), // TopBar 리스트를 생성하는 함수 호출
+            ),
             SizedBox(
               height: 200, // 페이지 뷰의 높이를 200으로 설정
               child: PageView.builder(
