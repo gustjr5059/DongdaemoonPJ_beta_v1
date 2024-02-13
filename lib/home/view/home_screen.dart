@@ -34,14 +34,21 @@ class HomeScreen extends ConsumerWidget {
     ];
     final currentPage = ref.watch(currentPageProvider);
 
-    // 카테고리 선택 시 실행될 함수
-    void _onCategorySelected(int index) {
-      // Navigator를 사용하여 Category1Layout으로 화면 전환
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Category1Layout()),
-      );
-    }
+    // // 카테고리 선택 시 실행될 함수
+    // void _onCategorySelected(int index) {
+    //   // Navigator를 사용하여 Category1Layout으로 화면 전환
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const Category1Layout()),
+    //   );
+    // }
+
+    // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의합니다.
+    Widget topBarList = buildTopBarList(context, (index) {
+      // 각 카테고리 인덱스에 따른 동작을 여기에 정의합니다.
+      // 예: Navigator.push(context, MaterialPageRoute(builder: (context) => const NewLayout()));
+      // 위에서 정의한 switch-case 로직을 여기에 포함시킵니다.
+    });
 
     void onHomeCategoryTap(int index) {
       switch (index) {
@@ -91,7 +98,10 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           children: [
             // common_parts.dart에서 가져온 카테고리 리스트
-            buildTopBarList(onTopBarTap),
+            Container(
+              height: 100, // TopBar의 높이 설정
+              child: topBarList, // 수정된 buildTopBarList 함수 호출
+            ),
             // 사용자 정의 화살표 버튼이 있는 PageView
             SizedBox(
               height: 200,

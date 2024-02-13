@@ -44,7 +44,7 @@ AppBar buildCommonAppBar(String title, BuildContext context) {
 }
 
 // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
-Widget buildTopBarList(BuildContext context) {
+Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
   final List<String> topBarCategories = [
     "NEW", "BEST", "SALE", "시즌룩", "커플룩", "컨셉1", "컨셉2", "컨셉3"
   ];
