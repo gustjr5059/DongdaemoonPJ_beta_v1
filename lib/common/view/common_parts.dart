@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../home/view/home_screen.dart';
 import '../../order/view/order_screen.dart';
-import '../../product/view/product_screen.dart';
+import '../../product/view/cart_screen.dart';
 import '../../user/view/profile_screen.dart';
 import '../const/colors.dart';
 import '../layout/best_layout.dart';
@@ -112,7 +112,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
           break;
         case 1:
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProductScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartScreen()));
           break;
         case 2:
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderScreen()));
@@ -124,9 +124,9 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
     },
     items: const [
       BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'),
-      BottomNavigationBarItem(icon: Icon(Icons.checkroom_outlined), label: '옷'),
+      BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: '장바구니'),
       BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: '주문'),
-      BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '프로필'),
+      BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '마이페이지'),
     ],
     selectedItemColor: PRIMARY_COLOR,
     unselectedItemColor: BODY_TEXT_COLOR,

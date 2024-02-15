@@ -4,8 +4,8 @@ import '../../common/provider/state_provider.dart';
 import '../../common/view/common_parts.dart';
 
 
-class ProductScreen extends ConsumerWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+class CartScreen extends ConsumerWidget {
+  const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +30,7 @@ class ProductScreen extends ConsumerWidget {
     return Scaffold(
       // GlobalKey 제거
       // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
-      appBar: buildCommonAppBar('옷', context),// common_parts.dart의 AppBar 재사용
+      appBar: buildCommonAppBar('장바구니', context),// common_parts.dart의 AppBar 재사용
       body: SingleChildScrollView(
         child: Column(
           children: [
