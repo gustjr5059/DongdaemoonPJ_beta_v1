@@ -37,7 +37,21 @@ class HomeScreen extends ConsumerWidget {
     // state_provider.dart에 정의한 selectedTabIndexProvider 활용한 선택된 탭의 인덱스를 가져옴
     final selectedIndex = ref.watch(selectedTabIndexProvider.state).state;
 
+    // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
+    // 탭을 탭했을 때 호출될 함수
+    void onTopBarTap(int index) {
+      // 선택된 탭의 인덱스를 업데이트합니다.
+      selectedIndex;
+      // ref.read(selectedTabIndexProvider.state).state = index;
+      // 필요한 경우 여기에서 추가적인 로직을 구현할 수 있습니다.
+    }
 
+    // 상단 탭 바를 구성하는 리스트 뷰를 가져옵니다.
+    Widget topBarList = buildTopBarList(context, onTopBarTap);
+
+    // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
+
+    // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
     void onHomeCategoryTap(int index) {
       switch (index) {
         case 0: // "전체" 버튼에 대응하는 경우
@@ -78,19 +92,9 @@ class HomeScreen extends ConsumerWidget {
           break;
       }
     }
+    // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
-    // 탭을 탭했을 때 호출될 함수
-    void onTopBarTap(int index) {
-      // 선택된 탭의 인덱스를 업데이트합니다.
-      selectedIndex;
-      // ref.read(selectedTabIndexProvider.state).state = index;
-      // 필요한 경우 여기에서 추가적인 로직을 구현할 수 있습니다.
-    }
-
-    // 상단 탭 바를 구성하는 리스트 뷰를 가져옵니다.
-    Widget topBarList = buildTopBarList(context, onTopBarTap);
-
-    // 화면 구성
+    // ------ 화면 구성 시작
     return Scaffold(
       appBar: buildCommonAppBar('홈', context),
       body: SingleChildScrollView(
@@ -117,8 +121,10 @@ class HomeScreen extends ConsumerWidget {
       // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
       bottomNavigationBar: buildCommonBottomNavigationBar(ref.watch(tabIndexProvider), ref, context),
       drawer: buildCommonDrawer(context),
-    );
+    ); // ------ 화면구성 끝
   }
+
+  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
 
   Widget pageViewWithArrows(PageController pageController, WidgetRef ref, int currentPage) {
     return Stack(
@@ -144,7 +150,6 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-
   Widget arrowButton(IconData icon, bool isActive, VoidCallback? onPressed) {
     return Positioned(
       left: icon == Icons.arrow_back_ios ? 10 : null,
@@ -156,7 +161,6 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
-
 
   Widget homeCategoryButtonsGrid(List<String> homeCategories, void Function(int) onHomeCategoryTap) {
     return GridView.builder(
@@ -184,6 +188,8 @@ class HomeScreen extends ConsumerWidget {
       },
     );
   }
+// ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
+
 }
 
 
