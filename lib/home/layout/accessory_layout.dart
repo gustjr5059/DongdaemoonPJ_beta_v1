@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../common/provider/tab_index_provider.dart';
+import '../../common/provider/state_provider.dart';
 import '../../common/view/common_parts.dart';
 
 

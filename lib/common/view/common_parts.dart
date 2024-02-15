@@ -14,7 +14,7 @@ import '../layout/couple_layout.dart';
 import '../layout/new_layout.dart';
 import '../layout/sale_layout.dart';
 import '../layout/season_layout.dart';
-import '../provider/tab_index_provider.dart';
+import '../provider/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // GlobalKey 사용 제거
@@ -78,20 +78,21 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
     }
   }
 
-  return ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: topBarCategories.length,
-    itemBuilder: (BuildContext context, int index) {
-      return GestureDetector(
-        onTap: () => onTopBarTap(index),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Center(
-            child: Text(topBarCategories[index], style: TextStyle(color: Colors.white)),
+  return SizedBox(
+    height: 60, // 적절한 높이 설정
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: topBarCategories.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => onTopBarTap(index),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Center(child: Text(topBarCategories[index])),
           ),
-        ),
-      );
-    },
+        );
+      },
+    ),
   );
 }
 

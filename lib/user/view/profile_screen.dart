@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../common/const/colors.dart';
-import '../../common/layout/category1_layout.dart';
-import '../../common/provider/tab_index_provider.dart';
+import '../../common/provider/state_provider.dart';
 import '../../common/view/common_parts.dart';
 
 
@@ -21,14 +19,6 @@ class ProfileScreen extends ConsumerWidget {
     final List<String> categories = List.generate(12, (index) => '카테고리 ${index + 1}');
     String _selectedCategory = '카테고리 1';
 
-    // // 카테고리 선택 시 실행될 함수
-    // void _onCategorySelected(int index) {
-    //   // Navigator를 사용하여 Category1Layout으로 화면 전환
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => const Category1Layout()),
-    //   );
-    // }
 
     // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의합니다.
     Widget topBarList = buildTopBarList(context, (index) {
