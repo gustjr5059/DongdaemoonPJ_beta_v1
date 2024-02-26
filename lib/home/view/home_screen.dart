@@ -124,6 +124,8 @@ class HomeScreen extends ConsumerWidget {
     ); // ------ 화면구성 끝
   }
 
+
+
   // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
 
   Widget pageViewWithArrows(PageController pageController, WidgetRef ref, int currentPage) {
