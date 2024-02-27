@@ -92,7 +92,6 @@ class HomeScreen extends ConsumerWidget {
           break;
       }
     }
-
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
     // ------ 화면 구성 시작
