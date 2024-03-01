@@ -126,34 +126,52 @@ class HomeScreen extends ConsumerWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData && snapshot.data != null) {
-                    // 문서 조회 성공 시 화면에 표시
                     Map<String, dynamic>? data = snapshot.data!.data() as Map<String, dynamic>?;
-                    if (data != null) { // 데이터가 null이 아닌지 체크
-                      String thumbnail = data['thumbnail'] as String? ?? ''; // null일 경우 기본값 할당
-                      String briefIntroduction = data['brief_introduction'] as String? ?? ''; // null일 경우 기본값 할당
+                    if (data != null) {
+                      // 여기에서 지정한 변수명과 파이어스토어 내 필드명이 동일하여, 해당 필드 url을 못 잡던 문제였음
+                      // 서로 이름을 변경하여 해당 문제해결!!
+                      String thumbnail = data['thumbnails'] ?? '';
+                      // URL 출력을 위한 로그 추가
+                      print('Thumbnail URL: $thumbnail');
+                      String briefIntroduction = data['brief_introduction'] ?? '';
                       return Column(
                         children: [
-                          Image.network(thumbnail), // thumbnail 이미지 표시
-                          Text(briefIntroduction), // brief_introduction 텍스트 표시
+                          if (thumbnail.isNotEmpty) // 이미지 URL이 있는 경우에만 이미지 위젯을 생성합니다.
+                            Image.network(
+                              thumbnail,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(child: CircularProgressIndicator());
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Text('이미지를 로드할 수 없습니다: $error');
+                              },
+                            )
+                          else
+                            Text('이미지 URL이 비어 있습니다.'), // 이미지 URL이 비어 있을 경우 메시지를 표시합니다.
+                          if (briefIntroduction.isNotEmpty) // 간략한 소개가 있는 경우에만 텍스트 위젯을 생성합니다.
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                briefIntroduction,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            )
+                          else
+                            Text('간략한 소개가 없습니다.'), // 간략한 소개가 비어 있을 경우 메시지를 표시합니다.
                         ],
                       );
                     } else {
-                      // 데이터가 null인 경우 처리
-                      return Text('No data available.');
+                      return Text('데이터가 없습니다.');
                     }
                   } else if (snapshot.hasError) {
-                    // 조회 중 에러 발생 시 에러 메시지 표시
                     return Text('Error: ${snapshot.error}');
-                  } else {
-                    // 데이터 없음
-                    return Text('No data available.');
                   }
-                } else {
-                  // 데이터 로딩 중
-                  return CircularProgressIndicator();
                 }
+                // 로딩 중이거나 기타 상태...
+                return CircularProgressIndicator();
               },
-            ),
+            )
 
           ],
         ),
