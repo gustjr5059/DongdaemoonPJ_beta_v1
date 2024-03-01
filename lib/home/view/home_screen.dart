@@ -14,6 +14,8 @@ import '../layout/shirt_layout.dart';
 import '../layout/skirt_layout.dart';
 import '../layout/top_layout.dart';
 import '../layout/underwear_layout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 사용을 위한 import
+
 
 // 상태 관리를 위한 StateProvider 정의
 final currentPageProvider = StateProvider<int>((ref) => 0);
@@ -95,6 +97,7 @@ class HomeScreen extends ConsumerWidget {
 
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
+    // Firestore에서 alpha 문서의 데이터를 조회하여 화면에 표시하는 코드 추가
     // ------ 화면 구성 시작
     return Scaffold(
       appBar: buildCommonAppBar('홈', context),
@@ -116,6 +119,42 @@ class HomeScreen extends ConsumerWidget {
             homeCategoryButtonsGrid(homeCategories, onHomeCategoryTap),
             SizedBox(height: 20),
             Text('선택된 카테고리의 콘텐츠', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+
+            // Firestore 데이터를 조회하는 FutureBuilder 추가
+            FutureBuilder<DocumentSnapshot>(
+              future: FirebaseFirestore.instance.collection('item').doc('alpha').get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    // 문서 조회 성공 시 화면에 표시
+                    Map<String, dynamic>? data = snapshot.data!.data() as Map<String, dynamic>?;
+                    if (data != null) { // 데이터가 null이 아닌지 체크
+                      String thumbnail = data['thumbnail'] as String? ?? ''; // null일 경우 기본값 할당
+                      String briefIntroduction = data['brief_introduction'] as String? ?? ''; // null일 경우 기본값 할당
+                      return Column(
+                        children: [
+                          Image.network(thumbnail), // thumbnail 이미지 표시
+                          Text(briefIntroduction), // brief_introduction 텍스트 표시
+                        ],
+                      );
+                    } else {
+                      // 데이터가 null인 경우 처리
+                      return Text('No data available.');
+                    }
+                  } else if (snapshot.hasError) {
+                    // 조회 중 에러 발생 시 에러 메시지 표시
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // 데이터 없음
+                    return Text('No data available.');
+                  }
+                } else {
+                  // 데이터 로딩 중
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+
           ],
         ),
       ),

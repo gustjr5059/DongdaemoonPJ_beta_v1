@@ -113,8 +113,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: BUTTON_COLOR, // 버튼 색상 설정
-                    onPrimary: Colors.white, // 텍스트 색상 설정
+                    backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
+                    foregroundColor: Colors.white, // 버튼 텍스트(전경) 색상 설정
                   ),
                 ),
                   // 회원가입 버튼
@@ -142,8 +142,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: BUTTON_COLOR, // 버튼 색상 설정
-                    onPrimary: Colors.white, // 텍스트 색상 설정
+                    backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
+                    foregroundColor: Colors.white, // 버튼 텍스트(전경) 색상 설정
                   ),
                 ),
               ],
