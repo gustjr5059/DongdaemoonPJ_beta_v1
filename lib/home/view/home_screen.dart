@@ -94,10 +94,8 @@ class HomeScreen extends ConsumerWidget {
           break;
       }
     }
-
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
-    // Firestore에서 alpha 문서의 데이터를 조회하여 화면에 표시하는 코드 추가
     // ------ 화면 구성 시작
     return Scaffold(
       appBar: buildCommonAppBar('홈', context),
@@ -120,6 +118,7 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(height: 20),
             Text('선택된 카테고리의 콘텐츠', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
 
+            // Firestore에서 alpha 문서의 데이터를 조회하여 화면에 표시하는 코드 추가
             // Firestore 데이터를 조회하는 FutureBuilder 추가
             FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance.collection('item').doc('alpha').get(),
