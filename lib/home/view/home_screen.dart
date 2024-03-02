@@ -133,7 +133,8 @@ class HomeScreen extends ConsumerWidget {
             Text('🛍️ 이벤트 상품',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildDocumentWidgetsRow(),
+            buildDocumentWidgetsRow1(), // 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현되도록 하는 위젯
+            buildDocumentWidgetsRow2(), // 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현되도록 하는 위젯
           ],
         ),
       ),
@@ -144,22 +145,33 @@ class HomeScreen extends ConsumerWidget {
     ); // ------ 화면구성 끝
   }
 
-  Widget buildDocumentWidgetsRow() {
-    List<String> docNames = [
-      'alpha',
-      'apple',
-      'cat'
-    ]; // Firestore에서 불러올 문서 이름 목록
+  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
+
+  // 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현되도록 하는 위젯
+  Widget buildDocumentWidgetsRow1() {
+    List<String> docNames1 = ['alpha', 'apple', 'cat']; // Firestore에서 불러올 문서 이름 목록
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: docNames.map((docName) => buildDocumentWidget(docName))
+        children: docNames1.map((docName) => buildDetailDocumentWidget(docName))
             .toList(),
       ),
     );
   }
 
-  Widget buildDocumentWidget(String docName) {
+  // 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현되도록 하는 위젯
+  Widget buildDocumentWidgetsRow2() {
+    List<String> docNames2 = ['flutter', 'github', 'samsung']; // 추가로 불러올 문서 이름 목록
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: docNames2.map((docName) => buildDetailDocumentWidget(docName)).toList(),
+      ),
+    );
+  }
+
+  // buildDocumentWidgetsRow1(), buildDocumentWidgetsRow2() 위젯에 세부적인 컬렉션 데이터를 조회 후 화면에 구현되도록 하는 위젯
+  Widget buildDetailDocumentWidget(String docName) {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance.collection('item').doc(docName).get(),
       builder: (context, snapshot) {
@@ -176,10 +188,12 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     if (data['thumbnails'] != null)
                       Center( // thumbnails 이미지를 중앙에 배치
-                        child: Image.network(data['thumbnails'], height: 100, fit: BoxFit.cover),
+                        child: Image.network(data['thumbnails'], width: 90, fit: BoxFit.cover),// width: 90 : 전체인 Container 180 너비 중 thumbnails가 90 차지하도록 설정
                       ),
+                      SizedBox(height: 10), // thumbnails와 clothes_color 사이의 간격 설정
                     // 색상 이미지 URL 처리
-                    Row(
+                    // 색상 이미지 URL 처리
+                      Row(
                       mainAxisAlignment: MainAxisAlignment.start, // 색상 이미지들을 왼쪽으로 정렬
                       children: List.generate(5, (index) => index + 1) // 1부터 5까지의 숫자 생성
                           .map((i) => data['clothes_color$i'] != null
@@ -194,31 +208,45 @@ class HomeScreen extends ConsumerWidget {
                       )
                           : Container())
                           .toList(),
-                    ),
+                      ),
                     if (data['brief_introduction'] != null)
-                      Text(data['brief_introduction']),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          data['brief_introduction'],
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
                     if (data['original_price'] != null)
-                      Text("원가: ${data['original_price']}"),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          "${data['original_price']}",
+                          style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
+                        ),
+                      ),
                     if (data['discount_price'] != null)
-                      Text("할인가: ${data['discount_price']}"),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          "${data['discount_price']}",
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                   ],
                 ),
               );
             } else {
               return Text('데이터가 없습니다.');
-            }
+            } // 실제 데이터가 없을 시, 표현되는 반환값 (에러를 확인하기 위한 방법)
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
-          }
+          } // 로직 상 에러가 발생 시, 표현되는 반환값 (에러를 확인하기 위한 방법)
         }
-        return CircularProgressIndicator(); // 로딩 중 표시
+        return CircularProgressIndicator(); // 로딩 중 표시 (로딩될 때, 동그라미로 표시되는 부분)
       },
     );
   }
-
-
-
-  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
 
   Widget pageViewWithArrows(PageController pageController, WidgetRef ref,
       int currentPage) {
