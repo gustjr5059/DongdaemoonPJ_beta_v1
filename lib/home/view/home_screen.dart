@@ -37,7 +37,9 @@ class HomeScreen extends ConsumerWidget {
     final currentPage = ref.watch(currentPageProvider);
 
     // state_provider.dart에 정의한 selectedTabIndexProvider 활용한 선택된 탭의 인덱스를 가져옴
-    final selectedIndex = ref.watch(selectedTabIndexProvider.state).state;
+    final selectedIndex = ref
+        .watch(selectedTabIndexProvider.state)
+        .state;
 
     // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
@@ -57,40 +59,52 @@ class HomeScreen extends ConsumerWidget {
     void onHomeCategoryTap(int index) {
       switch (index) {
         case 0: // "전체" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AllLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AllLayout()));
           break;
         case 1: // "상의" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const TopLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const TopLayout()));
           break;
         case 2: // "하의" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const BottomLayout()));
           break;
         case 3: // "아우터" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const OuterLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const OuterLayout()));
           break;
         case 4: // "니트" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const NeatLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const NeatLayout()));
           break;
         case 5: // "원피스" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const OnepieceLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const OnepieceLayout()));
           break;
         case 6: // "티셔츠" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const ShirtLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ShirtLayout()));
           break;
         case 7: // "블라우스" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const BlouseLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const BlouseLayout()));
           break;
         case 8: // "스커트" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SkirtLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const SkirtLayout()));
           break;
         case 9: // "팬츠" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const PantsLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const PantsLayout()));
           break;
         case 10: // "언더웨어" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const UnderwearLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const UnderwearLayout()));
           break;
         case 11: // "악세서리" 버튼에 대응하는 경우
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AccessoryLayout()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AccessoryLayout()));
           break;
       }
     }
@@ -116,94 +130,124 @@ class HomeScreen extends ConsumerWidget {
             ),
             homeCategoryButtonsGrid(homeCategories, onHomeCategoryTap),
             SizedBox(height: 20),
-            Text('선택된 카테고리의 콘텐츠', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-
-            // Firestore에서 alpha 문서의 데이터를 조회하여 화면에 표시하는 코드 추가
-            // Firestore 데이터를 조회하는 FutureBuilder 추가
-            FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance.collection('item').doc('alpha').get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasData && snapshot.data != null) {
-                    Map<String, dynamic>? data = snapshot.data!.data() as Map<String, dynamic>?;
-                    if (data != null) {
-                      // 여기에서 지정한 변수명과 파이어스토어 내 필드명이 동일하여, 해당 필드 url을 못 잡던 문제였음
-                      // 서로 이름을 변경하여 해당 문제해결!!
-                      String thumbnail = data['thumbnails'] ?? '';
-                      // URL 출력을 위한 로그 추가
-                      print('Thumbnail URL: $thumbnail');
-                      String briefIntroduction = data['brief_introduction'] ?? '';
-                      return Column(
-                        children: [
-                          if (thumbnail.isNotEmpty) // 이미지 URL이 있는 경우에만 이미지 위젯을 생성합니다.
-                            Image.network(
-                              thumbnail,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(child: CircularProgressIndicator());
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Text('이미지를 로드할 수 없습니다: $error');
-                              },
-                            )
-                          else
-                            Text('이미지 URL이 비어 있습니다.'), // 이미지 URL이 비어 있을 경우 메시지를 표시합니다.
-                          if (briefIntroduction.isNotEmpty) // 간략한 소개가 있는 경우에만 텍스트 위젯을 생성합니다.
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                briefIntroduction,
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            )
-                          else
-                            Text('간략한 소개가 없습니다.'), // 간략한 소개가 비어 있을 경우 메시지를 표시합니다.
-                        ],
-                      );
-                    } else {
-                      return Text('데이터가 없습니다.');
-                    }
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                }
-                // 로딩 중이거나 기타 상태...
-                return CircularProgressIndicator();
-              },
-            )
-
+            Text('🛍️ 이벤트 상품',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+            buildDocumentWidgetsRow(),
           ],
         ),
       ),
       // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
-      bottomNavigationBar: buildCommonBottomNavigationBar(ref.watch(tabIndexProvider), ref, context),
+      bottomNavigationBar: buildCommonBottomNavigationBar(
+          ref.watch(tabIndexProvider), ref, context),
       drawer: buildCommonDrawer(context),
     ); // ------ 화면구성 끝
+  }
+
+  Widget buildDocumentWidgetsRow() {
+    List<String> docNames = [
+      'alpha',
+      'apple',
+      'cat'
+    ]; // Firestore에서 불러올 문서 이름 목록
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: docNames.map((docName) => buildDocumentWidget(docName))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget buildDocumentWidget(String docName) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('item').doc(docName).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData && snapshot.data != null) {
+            Map<String, dynamic>? data = snapshot.data!.data() as Map<String, dynamic>?;
+            if (data != null) {
+              //Container: 파이어스토어의 각 doc 데이터 한 묶음씩을 의미
+              return Container(
+                width: 180, // 각 문서의 UI 컨테이너 너비 설정
+                margin: EdgeInsets.all(8), // 주변 여백 설정
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 텍스트와 색상 이미지들을 왼쪽으로 정렬
+                  children: [
+                    if (data['thumbnails'] != null)
+                      Center( // thumbnails 이미지를 중앙에 배치
+                        child: Image.network(data['thumbnails'], height: 100, fit: BoxFit.cover),
+                      ),
+                    // 색상 이미지 URL 처리
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start, // 색상 이미지들을 왼쪽으로 정렬
+                      children: List.generate(5, (index) => index + 1) // 1부터 5까지의 숫자 생성
+                          .map((i) => data['clothes_color$i'] != null
+                          ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Image.network(
+                          data['clothes_color$i'],
+                          width: 13,
+                          height: 13,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                          : Container())
+                          .toList(),
+                    ),
+                    if (data['brief_introduction'] != null)
+                      Text(data['brief_introduction']),
+                    if (data['original_price'] != null)
+                      Text("원가: ${data['original_price']}"),
+                    if (data['discount_price'] != null)
+                      Text("할인가: ${data['discount_price']}"),
+                  ],
+                ),
+              );
+            } else {
+              return Text('데이터가 없습니다.');
+            }
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+        }
+        return CircularProgressIndicator(); // 로딩 중 표시
+      },
+    );
   }
 
 
 
   // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
 
-  Widget pageViewWithArrows(PageController pageController, WidgetRef ref, int currentPage) {
+  Widget pageViewWithArrows(PageController pageController, WidgetRef ref,
+      int currentPage) {
     return Stack(
       alignment: Alignment.center,
       children: [
         PageView.builder(
           controller: pageController,
           itemCount: 5,
-          onPageChanged: (index) => ref.read(currentPageProvider.notifier).state = index,
-          itemBuilder: (context, index) => Center(child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
+          onPageChanged: (index) =>
+          ref
+              .read(currentPageProvider.notifier)
+              .state = index,
+          itemBuilder: (context, index) => Center(child: Text(
+              '페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
         ),
         arrowButton(
           Icons.arrow_back_ios,
           currentPage > 0,
-          currentPage > 0 ? () => pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut) : null,
+          currentPage > 0 ? () => pageController.previousPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut) : null,
         ),
         arrowButton(
           Icons.arrow_forward_ios,
           currentPage < 4,
-          currentPage < 4 ? () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut) : null,
+          currentPage < 4 ? () => pageController.nextPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut) : null,
         ),
       ],
     );
@@ -221,7 +265,8 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget homeCategoryButtonsGrid(List<String> homeCategories, void Function(int) onHomeCategoryTap) {
+  Widget homeCategoryButtonsGrid(List<String> homeCategories,
+      void Function(int) onHomeCategoryTap) {
     return GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -240,7 +285,8 @@ class HomeScreen extends ConsumerWidget {
             ),
             child: TextButton(
               onPressed: () => onHomeCategoryTap(index),
-              child: Text(homeCategories[index], style: TextStyle(color: Colors.black)),
+              child: Text(
+                  homeCategories[index], style: TextStyle(color: Colors.black)),
             ),
           ),
         );
@@ -248,9 +294,7 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
-
 }
-
 
 
 
