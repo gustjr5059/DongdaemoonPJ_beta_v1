@@ -185,6 +185,40 @@ Widget buildCommonDrawer(BuildContext context) {
   );
 }
 
+// PageView와 화살표 버튼을 포함하는 위젯
+Widget pageViewWithArrows(BuildContext context, PageController pageController, WidgetRef ref, StateProvider<int> currentPageProvider) {
+  int currentPage = ref.watch(currentPageProvider);
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      PageView.builder(
+        controller: pageController,
+        itemCount: 5,
+        onPageChanged: (index) => ref.read(currentPageProvider.notifier).state = index,
+        itemBuilder: (_, index) => Center(child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
+      ),
+      arrowButton(context, Icons.arrow_back_ios, currentPage > 0,
+              () => pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut), currentPageProvider, ref),
+      arrowButton(context, Icons.arrow_forward_ios, currentPage < 4,
+              () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut), currentPageProvider, ref),
+    ],
+  );
+}
+
+// 화살표 버튼을 생성하는 위젯(함수)
+Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallback onPressed, StateProvider<int> currentPageProvider, WidgetRef ref) {
+  return Positioned(
+    left: icon == Icons.arrow_back_ios ? 10 : null,
+    right: icon == Icons.arrow_forward_ios ? 10 : null,
+    child: IconButton(
+      icon: Icon(icon),
+      color: isActive ? Colors.black : Colors.grey,
+      onPressed: isActive ? onPressed : null,
+    ),
+  );
+}
+
+
 // firestore 데이터별 세부 UI 구현 위젯
 Widget buildFirestoreDetailDocument(WidgetRef ref, String docId) {
   final asyncValue = ref.watch(firestoreDataProvider(docId));

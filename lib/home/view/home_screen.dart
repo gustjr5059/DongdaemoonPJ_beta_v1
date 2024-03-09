@@ -14,7 +14,7 @@ import '../layout/shirt_layout.dart';
 import '../layout/skirt_layout.dart';
 import '../layout/top_layout.dart';
 import '../layout/underwear_layout.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 사용을 위한 import
+
 
 
 // 상태 관리를 위한 StateProvider 정의
@@ -116,6 +116,10 @@ class HomeScreen extends ConsumerWidget {
     }
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
+    // common_part.dart 재사용하여 pageViewWithArrows를 구현한 위젯
+    Widget pageViewSection = pageViewWithArrows(context, pageController, ref, currentPageProvider);
+
+
     // ------ 화면 구성 시작
     return Scaffold(
       appBar: buildCommonAppBar('홈', context),
@@ -129,13 +133,13 @@ class HomeScreen extends ConsumerWidget {
               height: 100, // TopBar의 높이 설정
               child: topBarList, // 수정된 buildTopBarList 함수 호출
             ),
-            // 사용자 정의 화살표 버튼이 있는 PageView
-            SizedBox(
-              height: 200,
-              child: pageViewWithArrows(pageController, ref, currentPage),
-            ),
+            // 화살표 버튼이 있는 PageView
+            SizedBox(height: 200, child: pageViewSection),
+            // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             homeCategoryButtonsGrid(homeCategories, onHomeCategoryTap),
+            // 높이 20으로 간격 설정
             SizedBox(height: 20),
+            // 이벤트 상품 텍스트 표현
             Text('🛍️ 이벤트 상품',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
@@ -151,51 +155,7 @@ class HomeScreen extends ConsumerWidget {
     ); // ------ 화면구성 끝
   }
 
-  Widget pageViewWithArrows(PageController pageController, WidgetRef ref,
-      int currentPage) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        PageView.builder(
-          controller: pageController,
-          itemCount: 5,
-          onPageChanged: (index) =>
-          ref
-              .read(currentPageProvider.notifier)
-              .state = index,
-          itemBuilder: (context, index) => Center(child: Text(
-              '페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
-        ),
-        arrowButton(
-          Icons.arrow_back_ios,
-          currentPage > 0,
-          currentPage > 0 ? () => pageController.previousPage(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut) : null,
-        ),
-        arrowButton(
-          Icons.arrow_forward_ios,
-          currentPage < 4,
-          currentPage < 4 ? () => pageController.nextPage(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut) : null,
-        ),
-      ],
-    );
-  }
-
-  Widget arrowButton(IconData icon, bool isActive, VoidCallback? onPressed) {
-    return Positioned(
-      left: icon == Icons.arrow_back_ios ? 10 : null,
-      right: icon == Icons.arrow_forward_ios ? 10 : null,
-      child: IconButton(
-        icon: Icon(icon),
-        color: isActive ? Colors.black : Colors.grey,
-        onPressed: onPressed,
-      ),
-    );
-  }
-
+  // home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯
   Widget homeCategoryButtonsGrid(List<String> homeCategories,
       void Function(int) onHomeCategoryTap) {
     return GridView.builder(
