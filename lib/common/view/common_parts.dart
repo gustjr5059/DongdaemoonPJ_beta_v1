@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -183,3 +184,88 @@ Widget buildCommonDrawer(BuildContext context) {
     ),
   );
 }
+
+// firestore 데이터별 세부 UI 구현 위젯
+Widget buildFirestoreDetailDocument(WidgetRef ref, String docId) {
+  final asyncValue = ref.watch(firestoreDataProvider(docId));
+
+  return asyncValue.when(
+    data: (DocumentSnapshot snapshot) {
+      Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+      if (data != null) {
+        // 데이터를 사용하여 UI 위젯 구성
+        return Container(
+          width: 180, // 각 문서의 UI 컨테이너 너비 설정
+          margin: EdgeInsets.all(8), // 주변 여백 설정
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트와 색상 이미지들을 왼쪽으로 정렬
+            children: [
+              if (data['thumbnails'] != null)
+                Center( // thumbnails 이미지를 중앙에 배치
+                  child: Image.network(data['thumbnails'], width: 90, fit: BoxFit.cover),// width: 90 : 전체인 Container 180 너비 중 thumbnails가 90 차지하도록 설정
+                ),
+              SizedBox(height: 10), // thumbnails와 clothes_color 사이의 간격 설정
+              // 색상 이미지 URL 처리
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start, // 색상 이미지들을 왼쪽으로 정렬
+                children: List.generate(5, (index) => index + 1) // 1부터 5까지의 숫자 생성
+                    .map((i) => data['clothes_color$i'] != null
+                    ? Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Image.network(
+                    data['clothes_color$i'],
+                    width: 13,
+                    height: 13,
+                    fit: BoxFit.cover,
+                  ),
+                )
+                    : Container())
+                    .toList(),
+              ),
+              if (data['brief_introduction'] != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    data['brief_introduction'],
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
+              if (data['original_price'] != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    "${data['original_price']}",
+                    style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
+                  ),
+                ),
+              if (data['discount_price'] != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: Text(
+                    "${data['discount_price']}",
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                ),
+            ],
+          ),
+        );
+      } else {
+        return Text("데이터 없음");
+      }
+    },
+    loading: () => CircularProgressIndicator(),
+    error: (error, stack) => Text("오류 발생: $error"),
+  );
+}
+
+// firestore 데이터의 문서를 가로로 배열하여 구현되도록 하는 위젯
+Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: documentIds.map((docId) => buildFirestoreDetailDocument(ref, docId)).toList(),
+    ),
+  );
+}
+
+
