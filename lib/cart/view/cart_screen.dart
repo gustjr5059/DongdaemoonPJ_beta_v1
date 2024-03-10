@@ -1,44 +1,43 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../common/provider/state_provider.dart';
-import '../../common/view/common_parts.dart';
+import 'package:flutter/cupertino.dart'; // Cupertino 디자인 시스템을 위한 Flutter 패키지
+import 'package:flutter/material.dart'; // Material 디자인 시스템을 위한 Flutter 패키지
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
+import '../../common/provider/state_provider.dart'; // 공통 상태 관리자(provider) 파일
+import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트가 정의된 파일
 
-
+// 장바구니 화면을 나타내는 위젯, Riverpod의 ConsumerWidget을 활용하여 상태 관리
 class CartScreen extends ConsumerWidget {
   const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 현재 선택된 탭 인덱스를 Riverpod를 통해 관찰
     final tabIndex = ref.watch(tabIndexProvider);
 
-    // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의합니다.
+    // 상단 탭 바(카테고리 리스트)와 사용자의 탭 동작을 정의
     Widget topBarList = buildTopBarList(context, (index) {
-      // 각 카테고리 인덱스에 따른 동작을 여기에 정의합니다.
-      // 예: Navigator.push(context, MaterialPageRoute(builder: (context) => const NewLayout()));
-      // 위에서 정의한 switch-case 로직을 여기에 포함시킵니다.
+      // 여기에 각 카테고리별 탭했을 때의 동작을 정의합니다.
+      // 예시: Navigator.push(context, MaterialPageRoute(builder: (context) => const NewLayout()));
+      // 사용자가 탭했을 때 필요한 화면으로 전환되도록 로직을 구현합니다.
     });
 
     return Scaffold(
-      // GlobalKey 제거
-      // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
-      appBar: buildCommonAppBar('CART', context),// common_parts.dart의 AppBar 재사용
-      // body에 카테고리 리스트 포함
+      // Scaffold의 key 설정은 제거되었습니다.
+      appBar: buildCommonAppBar('CART', context), // 공통 AppBar 사용, 장바구니 화면 제목 설정
       body: Column(
         children: [
-          // common_parts.dart에서 가져온 카테고리 리스트
           Container(
             height: 100, // TopBar의 높이 설정
-            child: topBarList, // 수정된 buildTopBarList 함수 호출
+            child: topBarList, // 상단 탭 바(카테고리 리스트)를 표시
           ),
           Expanded(
+            // 장바구니 내용을 여기에 구현
+            // 현재는 단순 텍스트로 'CART 내용'을 중앙에 표시
             child: Center(child: Text('CART 내용')),
           ),
         ],
       ),
-      // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
-      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref, context),
-      drawer: buildCommonDrawer(context),
+      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref, context), // 하단 네비게이션 바
+      drawer: buildCommonDrawer(context), // 공통 드로어 메뉴
     );
   }
 }
