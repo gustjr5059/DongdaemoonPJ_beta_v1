@@ -240,11 +240,33 @@ Widget buildFirestoreDetailDocument(WidgetRef ref, String docId, BuildContext co
         // 데이터가 있는 경우 UI 구성
         return GestureDetector(
             onTap: () {
-          // 문서 클릭 시 동작 정의
-          // 'alpha' 문서를 클릭했을 때 detail_product_screen.dart로 이동
-          if (docId == 'alpha') {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
-          }
+              // 모든 문서 클릭 시 DetailProductScreen으로 이동하되, 특정 문서에 대한 다른 동작이 필요한 경우 아래에 조건문 추가
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // // 문서 클릭 시 동작 정의
+          // // 'alpha' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          // if (docId == 'alpha') {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // }
+          // // 'apple' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          // if (docId == 'apple') {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // }
+          // // 'cat' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          // if (docId == 'cat') {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // }
+          // // 'flutter' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          // if (docId == 'flutter') {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // }
+          // // 'github' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          // if (docId == 'github') {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // }
+          // // 'samsung' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          // if (docId == 'samsung') {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          // }
         },
       child: Container(
       width: 180,
