@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../cart/view/cart_screen.dart';
 import '../../home/view/home_screen.dart';
 import '../../order/view/order_screen.dart';
-import '../../product/view/cart_screen.dart';
 import '../../user/view/profile_screen.dart';
 import '../const/colors.dart';
 import '../layout/best_layout.dart';
@@ -15,6 +15,7 @@ import '../layout/couple_layout.dart';
 import '../layout/new_layout.dart';
 import '../layout/sale_layout.dart';
 import '../layout/season_layout.dart';
+import '../provider/future_provider.dart';
 import '../provider/state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
