@@ -1,19 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
+import '../../common/provider/future_provider.dart';
 import '../../common/provider/state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
 import '../../common/view/common_parts.dart'; // 공통 UI 부품을 위한 파일
 
 
 // 제품 상세 페이지를 나타내는 위젯 클래스, Riverpod의 ConsumerWidget을 상속받아 상태 관리 가능
 class DetailProductScreen extends ConsumerWidget {
-  const DetailProductScreen({Key? key}) : super(key: key);
+  final String docId; // 문서 ID를 저장할 변수 선언
+  const DetailProductScreen({Key? key, required this.docId}) : super(key: key); // 생성자 수정
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 선택된 탭 인덱스를 관찰합니다.
     final tabIndex = ref.watch(tabIndexProvider);
     final PageController pageController = PageController(); // PageView 컨트롤을 위한 컨트롤러
+
+    // Firestore에서 문서 데이터를 조회하는 로직 추가
+    final docData = ref.watch(firestoreDataProvider(docId)); // 예시로 사용된 Provider, 실제 구현 필요
 
     // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의
     Widget topBarList = buildTopBarList(context, (index) {
@@ -46,6 +51,12 @@ class DetailProductScreen extends ConsumerWidget {
           // 제품 상세 내용을 표시할 부분
           Expanded(
             child: Center(child: Text('DETAIL PRODUCT 내용')), // 상세 내용 텍스트를 중앙에 표시
+          ),
+          // 문서 데이터를 기반으로 한 UI 구성
+          docData.when(
+            data: (data) => Text(data['brief_introduction']),
+            loading: () => CircularProgressIndicator(),
+            error: (error, stack) => Text('오류 발생: $error'),
           ),
         ],
       ),
