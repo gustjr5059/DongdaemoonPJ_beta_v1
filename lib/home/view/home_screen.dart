@@ -35,8 +35,6 @@ class HomeScreen extends ConsumerWidget {
       "니트", "원피스", "티셔츠", "블라우스",
       "스커트", "팬츠", "언더웨어", "악세서리"
     ];
-    // state_provider.dart에 정의한 currentPageProvider 활용한 현재 페이지 인덱스를 가져옴
-    final currentPage = ref.watch(currentPageProvider);
 
     // state_provider.dart에 정의한 selectedTabIndexProvider 활용한 선택된 탭의 인덱스를 가져옴
     final selectedIndex = ref
@@ -60,6 +58,9 @@ class HomeScreen extends ConsumerWidget {
     Widget topBarList = buildTopBarList(context, onTopBarTap);
 
     // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
+
+    // common_part.dart 재사용하여 pageViewWithArrows를 구현한 위젯
+    Widget pageViewSection = pageViewWithArrows(context, pageController, ref, currentPageProvider);
 
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
     void onHomeCategoryTap(int index) {
@@ -116,10 +117,6 @@ class HomeScreen extends ConsumerWidget {
     }
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
-    // common_part.dart 재사용하여 pageViewWithArrows를 구현한 위젯
-    Widget pageViewSection = pageViewWithArrows(context, pageController, ref, currentPageProvider);
-
-
     // ------ 화면 구성 시작
     return Scaffold(
       appBar: buildCommonAppBar('홈', context),
@@ -143,8 +140,8 @@ class HomeScreen extends ConsumerWidget {
             Text('🛍️ 이벤트 상품',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            buildHorizontalDocumentsList(ref, docIds2),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),

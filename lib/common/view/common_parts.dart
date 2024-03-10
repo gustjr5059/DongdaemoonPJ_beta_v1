@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../cart/view/cart_screen.dart';
 import '../../home/view/home_screen.dart';
 import '../../order/view/order_screen.dart';
+import '../../product/view/detail_product_screen.dart';
 import '../../user/view/profile_screen.dart';
 import '../const/colors.dart';
 import '../layout/best_layout.dart';
@@ -221,17 +222,23 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 
 
 // firestore 데이터별 세부 UI 구현 위젯
-Widget buildFirestoreDetailDocument(WidgetRef ref, String docId) {
+Widget buildFirestoreDetailDocument(WidgetRef ref, String docId, BuildContext context) {
   final asyncValue = ref.watch(firestoreDataProvider(docId));
 
   return asyncValue.when(
     data: (DocumentSnapshot snapshot) {
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
       if (data != null) {
-        // 데이터를 사용하여 UI 위젯 구성
-        return Container(
-          width: 180, // 각 문서의 UI 컨테이너 너비 설정
-          margin: EdgeInsets.all(8), // 주변 여백 설정
+        return GestureDetector(
+            onTap: () {
+          // 'alpha' 문서를 클릭했을 때 detail_product_screen.dart로 이동
+          if (docId == 'alpha') {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailProductScreen()));
+          }
+        },
+      child: Container(
+      width: 180,
+      margin: EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, // 텍스트와 색상 이미지들을 왼쪽으로 정렬
             children: [
@@ -283,6 +290,7 @@ Widget buildFirestoreDetailDocument(WidgetRef ref, String docId) {
                 ),
             ],
           ),
+        ),
         );
       } else {
         return Text("데이터 없음");
@@ -293,12 +301,12 @@ Widget buildFirestoreDetailDocument(WidgetRef ref, String docId) {
   );
 }
 
-// firestore 데이터의 문서를 가로로 배열하여 구현되도록 하는 위젯
-Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds) {
+// buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
+Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds, BuildContext context) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
-      children: documentIds.map((docId) => buildFirestoreDetailDocument(ref, docId)).toList(),
+      children: documentIds.map((docId) => buildFirestoreDetailDocument(ref, docId, context)).toList(),
     ),
   );
 }
