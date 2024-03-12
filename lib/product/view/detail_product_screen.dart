@@ -64,23 +64,49 @@ class DetailProductScreen extends ConsumerWidget {
       // 공통 AppBar 구성 함수 호출
       appBar: buildCommonAppBar('DETAIL PRODUCT', context),// common_parts.dart의 AppBar 재사용
       // body에 카테고리 리스트 포함
-      body: Column(
-        children: [
-          // common_parts.dart에서 가져온 카테고리 리스트
-          // 상단에 카테고리 리스트를 표시하는 컨테이너
-          Container(
-            height: 100, // TopBar의 높이 설정
-            child: topBarList, // 수정된 buildTopBarList 함수 호출
-          ),
-          // 화살표 버튼이 있는 PageView 섹션
-          SizedBox(height: 300, child: pageViewSection),
-          // 문서 데이터를 기반으로 한 UI 구성
-          docData.when(
-            data: (data) => Text(data['brief_introduction']),
-            loading: () => CircularProgressIndicator(),
-            error: (error, stack) => Text('오류 발생: $error'),
-          ),
-        ],
+      body: SingleChildScrollView( // 스크롤 가능한 뷰로 컨텐츠를 감싸기
+        child: Column( // 세로로 배열되는 위젯들
+          crossAxisAlignment: CrossAxisAlignment.start, // 자식들을 시작 지점(왼쪽)으로 정렬
+          children: [
+            Container(
+              height: 100,
+              child: topBarList, // 카테고리 리스트 표시
+            ),
+            SizedBox(height: 300, child: pageViewSection), // 이미지 슬라이더 섹션
+            SizedBox(height: 20), // 간격 추가
+            // 각 텍스트 정보를 Padding으로 감싸서 좌우 여백 추가
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: docData.when(
+                data: (data) => Text(data['brief_introduction'], style: TextStyle(fontSize: 30)),
+                loading: () => CircularProgressIndicator(),
+                error: (error, stack) => Text('오류 발생: $error'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: docData.when(
+                data: (data) => Text(
+                  "${data['original_price']}",
+                  style: TextStyle(fontSize: 20, decoration: TextDecoration.lineThrough),
+                ),
+                loading: () => CircularProgressIndicator(),
+                error: (error, stack) => Text('오류 발생: $error'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: docData.when(
+                data: (data) => Text(
+                  "${data['discount_price']}",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                loading: () => CircularProgressIndicator(),
+                error: (error, stack) => Text('오류 발생: $error'),
+              ),
+            ),
+          ],
+        ),
       ),
       // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
       bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref, context),
