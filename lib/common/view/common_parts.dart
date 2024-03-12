@@ -136,7 +136,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
       BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: '주문'),
       BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '마이페이지'),
     ],
-    selectedItemColor: PRIMARY_COLOR,
+    selectedItemColor: DRAWER_COLOR,
     unselectedItemColor: BODY_TEXT_COLOR,
     selectedFontSize: 10,
     unselectedFontSize: 10,
