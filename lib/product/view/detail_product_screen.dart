@@ -15,9 +15,7 @@ class DetailProductScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 선택된 탭 인덱스를 관찰합니다.
     final tabIndex = ref.watch(tabIndexProvider);
-    final PageController pageController = PageController(); // PageView 컨트롤을 위한 컨트롤러
-
-    // Firestore에서 문서 데이터를 조회하는 로직 추가
+    // Firestore에서 문서 데이터를 조회하는 로직 추가(비동기 방식으로 데이터 조회)
     final docData = ref.watch(firestoreDataProvider(docId)); // 예시로 사용된 Provider, 실제 구현 필요
 
     // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의
@@ -27,9 +25,37 @@ class DetailProductScreen extends ConsumerWidget {
       // 위에서 정의한 switch-case 로직을 여기에 포함시킵니다.
     });
 
-    // common_part.dart 재사용하여 pageViewWithArrows를 구현한 위젯
-    // 페이지 뷰와 화살표 버튼을 포함하는 섹션, 공통 부품을 재사용
-    Widget pageViewSection = pageViewWithArrows(context, pageController, ref, currentPageProvider);
+// pageViewWithArrows 위젯을 사용하여 이미지 슬라이더 섹션을 생성하는 코드
+// Firestore에서 가져온 데이터를 기반으로 이미지 URL 리스트를 생성하고,
+// 해당 URL 리스트를 사용하여 이미지 슬라이더를 구성함.
+    Widget pageViewSection = docData.when(
+      // 데이터가 성공적으로 로드되었을 때
+      data: (data) {
+        // Firestore 문서에서 이미지 URL을 추출하여 String 리스트로 변환
+        // 'detail_page_imageX' 필드에서 X는 1부터 5까지의 숫자로, 각 이미지의 URL을 나타냄
+        // 비어 있지 않은 URL만 필터링하여 최종 리스트를 생성합니다.
+        List<String> imageUrls = [
+          for (int i = 1; i <= 5; i++) data['detail_page_image$i'] ?? '',
+        ].where((url) => url.isNotEmpty).map<String>((url) => url).toList(); // 비어있지 않은 URL만 선택하여 리스트를 생성
+
+        // pageViewWithArrows 위젯을 반환하고, 이 위젯은 이미지 슬라이더 기능을 제공함.
+        return pageViewWithArrows(
+          context, // 현재 context
+          PageController(), // 페이지 컨트롤러를 새로 생성
+          ref, // Riverpod의 WidgetRef, 상태 관리를 위해 사용
+          currentPageProvider, // 현재 페이지의 인덱스를 관리하는 StateProvider
+          itemCount: imageUrls.length, // 이미지 URL 리스트의 길이, 즉 총 슬라이드 개수를 나타냄
+          itemBuilder: (BuildContext context, int index) {
+            // itemBuilder는 각 슬라이드를 구성하는 위젯을 반환합니다.
+            // 여기서는 NetworkImage를 사용하여 각 URL로부터 이미지를 로드하고 표시합니다.
+            return Image.network(imageUrls[index], fit: BoxFit.cover); // 각 이미지 URL에 대한 네트워크 이미지 위젯
+          },
+        );
+      },
+      loading: () => CircularProgressIndicator(), // 데이터 로딩 중 표시할 위젯
+      error: (error, stack) => Text('오류 발생: $error'), // 에러 발생 시 표시할 위젯
+    );
+
 
     return Scaffold(
       // GlobalKey 제거
@@ -47,11 +73,7 @@ class DetailProductScreen extends ConsumerWidget {
             child: topBarList, // 수정된 buildTopBarList 함수 호출
           ),
           // 화살표 버튼이 있는 PageView 섹션
-          SizedBox(height: 200, child: pageViewSection),
-          // 제품 상세 내용을 표시할 부분
-          Expanded(
-            child: Center(child: Text('DETAIL PRODUCT 내용')), // 상세 내용 텍스트를 중앙에 표시
-          ),
+          SizedBox(height: 300, child: pageViewSection),
           // 문서 데이터를 기반으로 한 UI 구성
           docData.when(
             data: (data) => Text(data['brief_introduction']),

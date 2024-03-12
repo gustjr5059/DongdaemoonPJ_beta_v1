@@ -195,20 +195,32 @@ Widget buildCommonDrawer(BuildContext context) {
 
 // PageView와 화살표 버튼을 포함하는 위젯
 // 사용자가 페이지를 넘길 수 있도록 함.
-Widget pageViewWithArrows(BuildContext context, PageController pageController, WidgetRef ref, StateProvider<int> currentPageProvider) {
-  int currentPage = ref.watch(currentPageProvider);
+Widget pageViewWithArrows(
+    BuildContext context,
+    PageController pageController, // 페이지 전환을 위한 컨트롤러
+    WidgetRef ref, // Riverpod 상태 관리를 위한 ref
+    StateProvider<int> currentPageProvider, { // 현재 페이지 인덱스를 관리하기 위한 StateProvider
+      required IndexedWidgetBuilder itemBuilder, // 각 페이지를 구성하기 위한 함수
+      required int itemCount, // 전체 페이지 수
+    }) {
+  int currentPage = ref.watch(currentPageProvider); // 현재 페이지 인덱스를 관찰
   return Stack(
     alignment: Alignment.center,
     children: [
       PageView.builder(
-        controller: pageController,
-        itemCount: 5, // 총 페이지 수
-        onPageChanged: (index) => ref.read(currentPageProvider.notifier).state = index, // 페이지 변경 시 상태 업데이트
-        itemBuilder: (_, index) => Center(child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24))),
+        controller: pageController, // 페이지 컨트롤러 할당
+        itemCount: itemCount, // 페이지 수 설정
+        onPageChanged: (index) {
+          ref.read(currentPageProvider.notifier).state = index; // 페이지가 변경될 때마다 인덱스 업데이트
+        },
+        itemBuilder: itemBuilder, // 페이지를 구성하는 위젯을 생성
       ),
+      // 왼쪽 화살표 버튼. 첫 페이지가 아닐 때만 활성화됩니다.
       arrowButton(context, Icons.arrow_back_ios, currentPage > 0,
               () => pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut), currentPageProvider, ref),
-      arrowButton(context, Icons.arrow_forward_ios, currentPage < 4,
+      // 오른쪽 화살표 버튼. 마지막 페이지가 아닐 때만 활성화됩니다.
+      // 현재 페이지 < 전체 페이지 수 - 1 의 조건으로 변경하여 마지막 페이지 검사를 보다 정확하게 합니다.
+      arrowButton(context, Icons.arrow_forward_ios, currentPage < itemCount - 1,
               () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut), currentPageProvider, ref),
     ],
   );

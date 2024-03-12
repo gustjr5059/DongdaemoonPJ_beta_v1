@@ -30,6 +30,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // PageController를 초기화, 이 컨트롤러는 PageView 위젯의 페이지 전환을 관리함.
     final PageController pageController = PageController();
 
     // home_screen.dart에 표시된 카테고리 12개 변수 정의
@@ -39,10 +40,6 @@ class HomeScreen extends ConsumerWidget {
       "니트", "원피스", "티셔츠", "블라우스",
       "스커트", "팬츠", "언더웨어", "악세서리"
     ];
-
-    // state_provider.dart에 정의한 selectedTabIndexProvider 활용한 선택된 탭의 인덱스를 가져옴
-    // 선택된 탭의 인덱스를 관리하는 Provider를 사용
-    final selectedIndex = ref.watch(selectedTabIndexProvider.state).state;
 
     // common_part.dart에 정의한 buildHorizontalDocumentsList에 불러올 문서 ID 리스트 변수 정의
     // 문서 ID 목록을 정의함, 실제 애플리케이션에서는 이런 ID를 사용하여 데이터베이스에서 정보를 가져올 수 있음.
@@ -64,7 +61,20 @@ class HomeScreen extends ConsumerWidget {
 
     // common_part.dart 재사용하여 pageViewWithArrows를 구현한 위젯
     // 페이지 뷰와 좌우 화살표를 포함한 섹션
-    Widget pageViewSection = pageViewWithArrows(context, pageController, ref, currentPageProvider);
+    Widget pageViewSection = pageViewWithArrows(context,
+      pageController,
+      ref,
+      currentPageProvider,
+      itemCount: 5, // 예시로 5개의 페이지를 가정
+      itemBuilder: (BuildContext context, int index) {
+        // 여기서 실제 페이지를 구성하는 위젯을 반환
+        // 예를 들어, Firestore에서 가져온 이미지 URL 리스트를 기반으로 이미지를 표시할 수 있음
+        // 아래 코드는 간단한 텍스트 위젯을 페이지로 사용하는 예시
+        return Center(
+          child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24)),
+        );
+      },
+    );
 
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
     // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
