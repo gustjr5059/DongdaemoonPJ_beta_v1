@@ -146,6 +146,8 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context) {
+  // FirebaseAuth의 현재 사용자 인스턴스를 사용하여 사용자의 로그인 상태 확인
+  final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email'; // 현재 로그인한 사용자의 이메일 표시
   return Drawer(
     child: ListView(
@@ -165,10 +167,17 @@ Widget buildCommonDrawer(BuildContext context) {
         ),
         ListTile(
           leading: Icon(Icons.logout),
-          title: Text('Logout'),
+          title: Text(isLoggedIn ? 'Logout' : 'Login'),
           onTap: () async {
-            await FirebaseAuth.instance.signOut(); // 로그아웃 처리
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+            if (isLoggedIn) {
+              // 로그인 상태일 때 로그아웃 처리
+              await FirebaseAuth.instance.signOut();
+              // 로그아웃 후 홈 화면으로 이동
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+            } else {
+              // 로그아웃 상태일 때 로그인 화면으로 이동
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+            }
           },
         ),
         ListTile(
