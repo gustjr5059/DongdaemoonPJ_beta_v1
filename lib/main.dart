@@ -28,18 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(), // Firebase 인증 상태 변화를 수신하는 스트림
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // 사용자가 로그인한 경우, HomeScreen (홈 화면)으로 이동
-            return HomeScreen();
-          } else {
-            // 사용자가 로그아웃한 경우 또는 로그인하지 않은 경우, LoginScreen (로그인 화면)으로 이동
-            return LoginScreen();
-          }
-        },
-      ),
+      home: SplashScreen(), // 첫 화면으로 SplashScreen을 설정
     );
   }
 }
