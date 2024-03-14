@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
+import '../../common/provider/state_provider.dart';
 import '../../home/view/home_screen.dart';
 
 
@@ -86,10 +87,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   controller: passwordController, // 비밀번호 입력을 위한 컨트롤러 연결
                   focusNode: passwordFocusNode, // 비밀번호 입력 필드 포커스 노드
                   hintText: '비밀번호를 입력해주세요.',
+                  obscureText: true, // 비밀번호 가리기
                   onChanged: (String value) {
                     password = value; // 입력된 비밀번호 저장
                   },
-                  obscureText: true, // 비밀번호 가리기
                 ),
                 const SizedBox(height: 12.0),
                 ElevatedButton(
@@ -102,7 +103,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         email: username, // username을 이용해 이메일 전달
                         password: password, // password를 이용해 비밀번호 전달
                       );
-                      // 로그인 성공 후 처리, 예를 들어 다음 페이지로 이동
+                      // 로그인 성공 후 처리
+                      ref.read(tabIndexProvider.notifier).state = 0; // tabIndex를 0으로 설정
                       Navigator.of(context).pushReplacement(
                         // MainScreen : 여기에 메인 화면 뷰를 넣어줘야 함
                         MaterialPageRoute(builder: (context) => HomeScreen()),
