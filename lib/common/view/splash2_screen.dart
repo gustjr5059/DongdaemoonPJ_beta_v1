@@ -13,8 +13,8 @@ class _SplashScreenState extends State<SplashScreen2> {
   @override
   void initState() {
     super.initState();
-    // 앱 시작 후 3초 후에 홈 화면으로 자동으로 이동함.
-    Timer(Duration(seconds: 3), () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => HomeScreen())));
+    // 앱 시작 후 1초 후에 홈 화면으로 자동으로 이동함.
+    Timer(Duration(seconds: 1), () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => HomeScreen())));
   }
 
   @override
@@ -23,42 +23,60 @@ class _SplashScreenState extends State<SplashScreen2> {
     return Scaffold(
       backgroundColor: LOGO_COLOR, // 배경색상으로 LOGO_COLOR 사용
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // 세로축 중앙 정렬
-          crossAxisAlignment: CrossAxisAlignment.start, // 가로축 시작점 정렬
-          children: <Widget>[
-            Text('당신도',
-              style: TextStyle(
-                fontSize: 30.0, // 글자 크기
-                height: 2.0, // 줄 높이
-                color: INPUT_BORDER_COLOR, // 글자 색상으로 INPUT_BORDER_COLOR 사용
-              ),
-            ),
-            SizedBox(height: 20), // "당신도"와 "쇼핑몰 창업자" 사이의 공간
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0), // 왼쪽으로 40의 패딩
-              child: Text('쇼핑몰 창업자',
-                style: TextStyle(
-                  fontSize: 30.0, // 글자 크기
-                  height: 2.0, // 줄 높이
-                  color: GOLD_COLOR, // 글자 색상으로 GOLD_COLOR 사용
-                ),
-              ),
-            ),
-            SizedBox(height: 20), // "쇼핑몰 창업자"와 "될 수 있어" 사이의 공간
-            Padding(
-              padding: const EdgeInsets.only(left: 130.0), // 왼쪽으로 130의 패딩
-              child: Text('될 수 있어',
-                style: TextStyle(
-                  fontSize: 30.0, // 글자 크기
-                  height: 2.0, // 줄 높이
-                  color: INPUT_BORDER_COLOR, // 글자 색상으로 INPUT_BORDER_COLOR 사용
-                ),
-              ),
-            ),
-          ],
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 180.0), // 상하 여백만 추가
+          child: Image.asset(
+            'asset/img/misc/splash2_image.png', // 이미지 파일 경로를 설정하세요.
+            fit: BoxFit.contain, // 이미지 비율을 유지하면서 화면에 맞게 조절
+          ),
         ),
       ),
     );
   }
 }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // 스플래시 화면 UI 구성
+//     return Scaffold(
+//       backgroundColor: LOGO_COLOR, // 배경색상으로 LOGO_COLOR 사용
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center, // 세로축 중앙 정렬
+//           crossAxisAlignment: CrossAxisAlignment.start, // 가로축 시작점 정렬
+//           children: <Widget>[
+//             Text('당신도',
+//               style: TextStyle(
+//                 fontSize: 30.0, // 글자 크기
+//                 height: 2.0, // 줄 높이
+//                 color: INPUT_BORDER_COLOR, // 글자 색상으로 INPUT_BORDER_COLOR 사용
+//               ),
+//             ),
+//             SizedBox(height: 20), // "당신도"와 "쇼핑몰 창업자" 사이의 공간
+//             Padding(
+//               padding: const EdgeInsets.only(left: 40.0), // 왼쪽으로 40의 패딩
+//               child: Text('쇼핑몰 창업자',
+//                 style: TextStyle(
+//                   fontSize: 30.0, // 글자 크기
+//                   height: 2.0, // 줄 높이
+//                   color: GOLD_COLOR, // 글자 색상으로 GOLD_COLOR 사용
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 20), // "쇼핑몰 창업자"와 "될 수 있어" 사이의 공간
+//             Padding(
+//               padding: const EdgeInsets.only(left: 130.0), // 왼쪽으로 130의 패딩
+//               child: Text('될 수 있어',
+//                 style: TextStyle(
+//                   fontSize: 30.0, // 글자 크기
+//                   height: 2.0, // 줄 높이
+//                   color: INPUT_BORDER_COLOR, // 글자 색상으로 INPUT_BORDER_COLOR 사용
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

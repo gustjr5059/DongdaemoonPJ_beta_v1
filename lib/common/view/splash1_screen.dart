@@ -10,9 +10,11 @@ class SplashScreen1 extends StatefulWidget {
 }
 
 // _SplashScreenState 클래스에서 SingleTickerProviderStateMixin을 사용하여 애니메이션 컨트롤러를 생성함.
-class _SplashScreenState extends State<SplashScreen1> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMixin {
   late AnimationController _controller; // 애니메이션 컨트롤러를 선언함.
   late Animation<double> _animation; // 애니메이션 값을 저장할 변수를 선언함.
+  late AnimationController _loadingController; // 로딩 인디케이터의 회전을 제어하기 위한 컨트롤러
+  late Animation<double> _rotationAnimation; // 회전 속도를 조절하기 위한 애니메이션
 
   @override
   void initState() {
@@ -35,8 +37,22 @@ class _SplashScreenState extends State<SplashScreen1> with SingleTickerProviderS
 
     _controller.forward(); // 애니메이션을 시작함.
 
-    // 3초 후에 SplashScreen2로 화면을 전환함.
-    Timer(Duration(seconds: 3), () {
+    // 로딩 인디케이터의 회전 속도를 제어하는 컨트롤러를 초기화.
+    _loadingController = AnimationController(
+      duration: const Duration(seconds: 100), // 회전 속도를 조절함.
+      vsync: this,
+    );
+
+    // CurvedAnimation을 사용하여 회전 속도의 곡선을 조절함
+    _rotationAnimation = CurvedAnimation(
+      parent: _loadingController,
+      curve: Curves.decelerate, // 시작은 빠르고 점점 느려지는 효과
+    );
+
+    _loadingController.repeat();
+
+    // 1초 후에 SplashScreen2로 화면을 전환함.
+    Timer(Duration(seconds: 1), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen2()));
     });
   }
@@ -69,9 +85,18 @@ class _SplashScreenState extends State<SplashScreen1> with SingleTickerProviderS
           Align(
             alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
             child: Padding(
-              padding: EdgeInsets.only(bottom: 100), // 하단에서부터 100의 여백을 줌.
-              child: CircularProgressIndicator( // 로딩 인디케이터를 표시함.
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white), // 인디케이터의 색상을 흰색으로 설정함.
+              padding: EdgeInsets.only(bottom: 180), // 하단에서부터 100의 여백을 줌.
+              child: AnimatedBuilder(
+                animation: _rotationAnimation,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: _rotationAnimation.value * 2 * 3.14,
+                    child: child,
+                  );
+                },
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
               ),
             ),
           ),
@@ -84,6 +109,7 @@ class _SplashScreenState extends State<SplashScreen1> with SingleTickerProviderS
   void dispose() {
     // 위젯이 제거될 때 애니메이션 컨트롤러를 정리함.
     _controller.dispose();
+    _loadingController.dispose(); // 새로 추가한 컨트롤러도 정리함.
     super.dispose();
   }
 }
