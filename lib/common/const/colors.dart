@@ -12,3 +12,7 @@ const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
 const DRAWER_COLOR = Color(0xFFC77AA1);
 // 버튼 색상
 const BUTTON_COLOR = Color(0xFFD5A4C2);// Hexadecimal representation of Apple Green
+// 로고 색상
+const LOGO_COLOR = Color(0xFF483A4D);
+// 금색 색상
+const GOLD_COLOR = Color(0xFFFFD700);
