@@ -1,34 +1,89 @@
-import 'package:dongdaemoon_beta_v1/common/view/splash2_screen.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import '../const/colors.dart';
+import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리를 가져옴.
+import 'package:dongdaemoon_beta_v1/common/view/splash2_screen.dart'; // 다음 화면으로 전환하기 위해 SplashScreen2를 가져옴.
+import '../const/colors.dart'; // 앱에서 사용할 색상 상수를 정의한 파일을 가져옴.
 
-// 스플래시 화면에 대한 StatefulWidget을 생성함.
+// 스플래시 스크린의 StatefulWidget을 정의함.
 class SplashScreen1 extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-// _SplashScreenState 클래스는 SplashScreen1의 상태를 관리함.
-class _SplashScreenState extends State<SplashScreen1> {
+// _SplashScreenState 클래스에서 SingleTickerProviderStateMixin을 사용하여 애니메이션 컨트롤러를 생성함.
+class _SplashScreenState extends State<SplashScreen1> with SingleTickerProviderStateMixin {
+  late AnimationController _controller; // 애니메이션 컨트롤러를 선언함.
+  late Animation<double> _animation; // 애니메이션 값을 저장할 변수를 선언함.
 
   @override
   void initState() {
-    super.initState(); // 상위 클래스의 initState() 함수를 호출함.
+    super.initState();
+    // initState에서 애니메이션 컨트롤러와 애니메이션 값을 초기화함.
+    _controller = AnimationController(
+      vsync: this, // 현재 클래스가 애니메이션의 vsync를 담당함.
+      duration: Duration(milliseconds: 2000), // 애니메이션 지속 시간을 2초로 설정함.
+    );
+
+    // Tween을 사용하여 애니메이션의 시작과 끝 값을 설정함.
+    _animation = Tween(begin: 1.0, end: 0.5).animate(_controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse(); // 애니메이션이 완료되면 반대 방향으로 실행함.
+        } else if (status == AnimationStatus.dismissed) {
+          _controller.forward(); // 애니메이션이 종료되면 다시 시작함.
+        }
+      });
+
+    _controller.forward(); // 애니메이션을 시작함.
+
     // 3초 후에 SplashScreen2로 화면을 전환함.
-    Timer(Duration(seconds: 3), () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen2())));
+    Timer(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen2()));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold를 사용하여 기본 머티리얼 디자인 레이아웃을 제공함.
+    // 화면의 UI를 구성함.
     return Scaffold(
-      backgroundColor: LOGO_COLOR, // 배경색상으로 LOGO_COLOR를 사용함.
-      body: Center(
-        // body에서는 중앙에 이미지를 배치함.
-        // asset/img/misc 디렉토리의 logo_image.jpg를 로드하여 표시함.
-        child: Image.asset('asset/img/misc/logo_image.jpg'),
+      backgroundColor: LOGO_COLOR, // 배경색을 설정함.
+      body: Stack( // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter, // 상단 중앙에 배치함.
+            child: Padding(
+              padding: EdgeInsets.only(top: 150), // 상단에서부터 150의 여백을 줌.
+              child: AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) => Opacity(
+                  opacity: _animation.value, // 애니메이션 값에 따라 투명도를 조절함.
+                  child: child,
+                ),
+                child: Container(
+                  width: 130, // 이미지의 너비를 130으로 설정함.
+                  height: 130, // 이미지의 높이를 130으로 설정함.
+                  child: Image.asset('asset/img/misc/logo_image.jpg'), // 로고 이미지를 배치함.
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 100), // 하단에서부터 100의 여백을 줌.
+              child: CircularProgressIndicator( // 로딩 인디케이터를 표시함.
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white), // 인디케이터의 색상을 흰색으로 설정함.
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // 위젯이 제거될 때 애니메이션 컨트롤러를 정리함.
+    _controller.dispose();
+    super.dispose();
   }
 }
