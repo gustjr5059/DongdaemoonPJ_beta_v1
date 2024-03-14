@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/provider/state_provider.dart';
 import '../../common/view/common_parts.dart';
+import 'login_screen.dart';
 
 
 class ProfileScreen extends ConsumerWidget {
@@ -11,6 +13,8 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tabIndex = ref.watch(tabIndexProvider);
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 확인
+
 
     // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의합니다.
     Widget topBarList = buildTopBarList(context, (index) {
@@ -19,6 +23,9 @@ class ProfileScreen extends ConsumerWidget {
       // 위에서 정의한 switch-case 로직을 여기에 포함시킵니다.
     });
 
+    // 로그인 상태에 따라 버튼 텍스트 변경
+    String loginButtonText = user != null ? '로그아웃' : '로그인';
+
     return Scaffold(
       // GlobalKey 제거
       // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
@@ -26,13 +33,39 @@ class ProfileScreen extends ConsumerWidget {
       // body에 카테고리 리스트 포함
       body: Column(
         children: [
-          // common_parts.dart에서 가져온 카테고리 리스트
-          Container(
-            height: 100, // TopBar의 높이 설정
-            child: topBarList, // 수정된 buildTopBarList 함수 호출
-          ),
+          Container(height: 100, child: topBarList),
           Expanded(
-            child: Center(child: Text('PROFILE 내용')),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('PROFILE 내용'),
+                  // 로그인/로그아웃 버튼
+                  ElevatedButton(
+                    onPressed: () {
+                      if (user != null) {
+                        // 로그아웃 처리
+                        FirebaseAuth.instance.signOut();
+                        // 로그아웃 후 현재 페이지 갱신
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileScreen()));
+                      } else {
+                        // 로그인 페이지로 이동
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginScreen()));
+                      }
+                    },
+                    child: Text(loginButtonText),
+                  ),
+                  // 항상 표시되는 회원가입 버튼
+                  ElevatedButton(
+                    onPressed: () {
+                      // 회원가입 페이지로 이동
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginScreen())); // 여기에 회원가입 화면 경로 필요
+                    },
+                    child: Text('회원가입'),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
