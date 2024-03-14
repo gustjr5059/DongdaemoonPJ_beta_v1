@@ -24,9 +24,11 @@ class _SplashScreenState extends State<SplashScreen2> {
       backgroundColor: LOGO_COLOR, // 배경색상으로 LOGO_COLOR 사용
       body: Center(
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 180.0), // 상하 여백만 추가
+          margin: EdgeInsets.symmetric(vertical: 60.0), // 상하 여백만 추가
           child: Image.asset(
-            'asset/img/misc/splash2_image.png', // 이미지 파일 경로를 설정하세요.
+            // 'asset/img/misc/splash2_image.png',
+            // 'asset/img/misc/ssamjang.png',
+            'asset/img/misc/douna.png',// 이미지 파일 경로를 설정하세요.
             fit: BoxFit.contain, // 이미지 비율을 유지하면서 화면에 맞게 조절
           ),
         ),

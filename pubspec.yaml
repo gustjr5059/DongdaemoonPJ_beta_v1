@@ -73,6 +73,8 @@ flutter:
     - asset/img/misc/main_image.jpg
     - asset/img/misc/logo_image.jpg
     - asset/img/misc/splash2_image.png
+    - asset/img/misc/ssamjang.png
+    - asset/img/misc/douna.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
