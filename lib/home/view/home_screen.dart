@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 통한 상태 관리를 위해 import 합니다.
-import '../../common/provider/state_provider.dart'; // 공통 상태 관리자 파일
+import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리자 파일
 import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트 모듈
 // 아래 import된 파일들은 각 카테고리 별로 상세 페이지를 보여주기 위한 레이아웃 파일들입니다.
 import '../layout/accessory_layout.dart';

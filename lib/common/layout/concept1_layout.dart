@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart'; // iOS 스타일의 디자인 위젯 �
 import 'package:flutter/material.dart'; // Material 디자인 위젯 사용을 위한 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 패키지
 import '../../common/view/common_parts.dart'; // 앱 전반에 걸쳐 재사용 가능한 공통 UI 컴포넌트들
-import '../provider/state_provider.dart'; // 상태 관리를 위한 state provider들을 정의한 파일
+import '../provider/common_state_provider.dart'; // 상태 관리를 위한 state provider들을 정의한 파일
 
 // 컨셉1 카테고리 레이아웃을 구성하는 위젯. Riverpod의 ConsumerWidget을 상속받아 상태 관리가 가능함.
 class Concept1Layout extends ConsumerWidget {

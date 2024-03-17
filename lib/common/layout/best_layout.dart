@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart'; // iOS 스타일 위젯을 사용하기
 import 'package:flutter/material.dart'; // Material 디자인 위젯을 사용하기 위한 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 import '../../common/view/common_parts.dart'; // 공통으로 사용되는 UI 컴포넌트 모음
-import '../provider/state_provider.dart'; // 상태 관리를 위한 provider 파일
+import '../provider/common_state_provider.dart'; // 상태 관리를 위한 provider 파일
 
 // 'BEST' 카테고리의 레이아웃을 나타내는 위젯, Riverpod의 ConsumerWidget을 상속받음
 class BestLayout extends ConsumerWidget {

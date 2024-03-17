@@ -16,3 +16,5 @@ const BUTTON_COLOR = Color(0xFFD5A4C2);// Hexadecimal representation of Apple Gr
 const LOGO_COLOR = Color(0xFF3A2D4C);
 // 금색 색상
 const GOLD_COLOR = Color(0xFFFFD700);
+// 할인가 색상
+const DISCOUNT_COLOR = Color(0xFFFF0000);

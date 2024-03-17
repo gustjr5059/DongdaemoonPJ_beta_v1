@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart'; // iOS 스타일 위젯을 사용하기 위한 패키지
 import 'package:flutter/material.dart'; // Material 디자인 위젯을 사용하기 위한 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 패키지
-import '../../common/provider/state_provider.dart'; // 앱 전반의 상태 관리를 위한 provider 파일
+import '../../common/provider/common_state_provider.dart'; // 앱 전반의 상태 관리를 위한 provider 파일
 import '../../common/view/common_parts.dart'; // 앱에서 재사용 가능한 공통 UI 컴포넌트 파일
 
 // '팬츠' 카테고리의 레이아웃을 나타내는 위젯, Riverpod의 ConsumerWidget을 상속받음

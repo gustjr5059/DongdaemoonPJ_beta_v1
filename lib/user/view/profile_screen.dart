@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../common/provider/state_provider.dart';
+import '../../common/provider/common_state_provider.dart';
 import '../../common/view/common_parts.dart';
 import 'login_screen.dart';
 

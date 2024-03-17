@@ -16,8 +16,8 @@ import '../layout/couple_layout.dart'; // 커플룩 카테고리 레이아웃
 import '../layout/new_layout.dart'; // NEW 카테고리 레이아웃
 import '../layout/sale_layout.dart'; // SALE 카테고리 레이아웃
 import '../layout/season_layout.dart'; // 시즌룩 카테고리 레이아웃
-import '../provider/future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
-import '../provider/state_provider.dart'; // 상태 관리를 위한 StateProvider
+import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
+import '../provider/common_state_provider.dart'; // 상태 관리를 위한 StateProvider
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 
 // GlobalKey 사용 제거

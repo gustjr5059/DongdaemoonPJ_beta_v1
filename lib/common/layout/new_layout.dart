@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart'; // iOS 스타일의 디자인 위젯을
 import 'package:flutter/material.dart'; // Material 디자인 위젯을 사용하기 위한 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 패키지
 import '../../common/view/common_parts.dart'; // 앱 전반에서 사용할 공통 UI 컴포넌트 파일
-import '../provider/state_provider.dart'; // 상태 관리를 위한 state provider 파일
+import '../provider/common_state_provider.dart'; // 상태 관리를 위한 state provider 파일
 
 // 'NEW' 카테고리의 레이아웃을 구성하는 위젯, Riverpod의 ConsumerWidget을 상속받음
 class NewLayout extends ConsumerWidget {

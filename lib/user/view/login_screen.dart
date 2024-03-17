@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
-import '../../common/provider/state_provider.dart';
+import '../../common/provider/common_state_provider.dart';
 import '../../home/view/home_screen.dart';
 
 

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
-import '../../common/provider/future_provider.dart';
-import '../../common/provider/state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
+import '../../common/const/colors.dart';
+import '../../common/provider/common_future_provider.dart';
+import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
 import '../../common/view/common_parts.dart'; // 공통 UI 부품을 위한 파일
 
 
@@ -76,31 +77,64 @@ class DetailProductScreen extends ConsumerWidget {
             SizedBox(height: 20), // 간격 추가
             // 각 텍스트 정보를 Padding으로 감싸서 좌우 여백 추가
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: docData.when(
-                data: (data) => Text(data['brief_introduction'], style: TextStyle(fontSize: 30)),
-                loading: () => CircularProgressIndicator(),
-                error: (error, stack) => Text('오류 발생: $error'),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우로 20의 간격을 줌
               child: docData.when(
                 data: (data) => Text(
-                  "${data['original_price']}",
-                  style: TextStyle(fontSize: 20, decoration: TextDecoration.lineThrough),
+                  data['brief_introduction'] ?? '', // null 안전성 체크
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold), // 텍스트 스타일 적용
                 ),
                 loading: () => CircularProgressIndicator(),
                 error: (error, stack) => Text('오류 발생: $error'),
               ),
             ),
+            SizedBox(height: 10), // brief_introduction 아래에 간격 추가
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(horizontal: 20), // 선의 좌우 간격을 20으로 설정
+              child: Divider(), // 선 추가
+            ),
+            SizedBox(height: 20), // 선 아래에 간격 추가
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 간격 20으로 설정
               child: docData.when(
-                data: (data) => Text(
-                  "${data['discount_price']}",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                data: (data) {
+                  final originalPrice = data['original_price'] ?? ''; // null 체크
+                  return Row( // Row 위젯을 사용하여 가로로 배열
+                    children: [
+                      Text(
+                        '판매가', // '판매가' 텍스트
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      SizedBox(width: 72), // '판매가'와 가격 사이에 10의 간격 추가
+                      Text(
+                        '$originalPrice', // 가격 데이터
+                        style: TextStyle(fontSize: 14, decoration: TextDecoration.lineThrough, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  );
+                },
+                loading: () => CircularProgressIndicator(),
+                error: (error, stack) => Text('오류 발생: $error'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 간격 20으로 설정
+              child: docData.when(
+                data: (data) {
+                  final discountPrice = data['discount_price'] ?? ''; // null 체크
+                  return Row( // Row 위젯을 사용하여 가로로 배열
+                    children: [
+                      Text(
+                        '할인판매가', // '할인판매가' 텍스트
+                        style: TextStyle(fontSize: 14, color: DISCOUNT_COLOR),
+                      ),
+                      SizedBox(width: 50), // '판매가'와 가격 사이에 10의 간격 추가
+                      Text(
+                        '$discountPrice', // 가격 데이터
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: DISCOUNT_COLOR),
+                      ),
+                    ],
+                  );
+                },
                 loading: () => CircularProgressIndicator(),
                 error: (error, stack) => Text('오류 발생: $error'),
               ),

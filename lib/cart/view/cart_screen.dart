@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart'; // Cupertino 디자인 시스템을 위한 Flutter 패키지
 import 'package:flutter/material.dart'; // Material 디자인 시스템을 위한 Flutter 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
-import '../../common/provider/state_provider.dart'; // 공통 상태 관리자(provider) 파일
+import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리자(provider) 파일
 import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트가 정의된 파일
 
 // 장바구니 화면을 나타내는 위젯, Riverpod의 ConsumerWidget을 활용하여 상태 관리
