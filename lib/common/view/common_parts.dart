@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증 사용을 
 import '../../cart/view/cart_screen.dart'; // 장바구니 화면
 import '../../home/view/home_screen.dart'; // 홈 화면
 import '../../order/view/order_screen.dart'; // 주문 화면
+import '../../product/provider/product_state_provider.dart';
 import '../../product/view/detail_product_screen.dart'; // 제품 상세 화면
 import '../../user/view/profile_screen.dart'; // 사용자 프로필 화면
 import '../const/colors.dart'; // 앱 전반에 사용되는 색상 상수
@@ -263,7 +264,12 @@ Widget buildFirestoreDetailDocument(WidgetRef ref, String docId, BuildContext co
             onTap: () {
               // 모든 문서 클릭 시 DetailProductScreen으로 이동하되, 특정 문서에 대한 다른 동작이 필요한 경우 아래에 조건문 추가
               // Navigator를 사용하여 DetailProductScreen으로 이동하면서 문서 ID 전달
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailProductScreen(docId: docId)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailProductScreen(docId: docId)))
+                  .then((_) {
+                // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                ref.read(colorSelectionIndexProvider.state).state = null;
+                ref.read(sizeSelectionProvider.state).state = null;
+              });
         },
       child: Container(
       width: 180,
