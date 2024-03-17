@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
 import '../../common/const/colors.dart';
 import '../../common/provider/common_future_provider.dart';
 import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
-import '../../common/view/common_parts.dart'; // 공통 UI 부품을 위한 파일
+import '../../common/view/common_parts.dart';
+import '../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 파일
 
 
 // 제품 상세 페이지를 나타내는 위젯 클래스, Riverpod의 ConsumerWidget을 상속받아 상태 관리 가능
@@ -14,10 +15,13 @@ class DetailProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 현재 선택된 탭 인덱스를 관찰합니다.
+    // 현재 선택된 탭 인덱스를 관찰함.
     final tabIndex = ref.watch(tabIndexProvider);
     // Firestore에서 문서 데이터를 조회하는 로직 추가(비동기 방식으로 데이터 조회)
     final docData = ref.watch(firestoreDataProvider(docId)); // 예시로 사용된 Provider, 실제 구현 필요
+
+    // 상태 관리를 위한 StateProvider
+    final selectedSize = ref.watch(sizeSelectionProvider.state);
 
     // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의
     Widget topBarList = buildTopBarList(context, (index) {
@@ -131,6 +135,87 @@ class DetailProductScreen extends ConsumerWidget {
                       Text(
                         '$discountPrice', // 가격 데이터
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: DISCOUNT_COLOR),
+                      ),
+                    ],
+                  );
+                },
+                loading: () => CircularProgressIndicator(),
+                error: (error, stack) => Text('오류 발생: $error'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: docData.when(
+                data: (data) {
+                  // Firestore로부터 색상 옵션을 가져옴
+                  List<Map<String, dynamic>> colorOptions = [];
+                  for (int i = 1; i <= 5; i++) {
+                    String? colorText = data['color${i}_text'];
+                    String? colorUrl = data['clothes_color$i'];
+                    if (colorText != null && colorUrl != null) {
+                      colorOptions.add({'text': colorText, 'url': colorUrl});
+                    }
+                  }
+
+                  // Firestore로부터 사이즈 데이터를 가져옴
+                  List<String> sizes = [];
+                  for (int i = 1; i <= 4; i++) {
+                    String? size = data['clothes_size$i'];
+                    if (size != null) {
+                      sizes.add(size);
+                    }
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 색상 드롭다운 메뉴
+                            Text('색상', style: TextStyle(fontSize: 14)),
+                            DropdownButton<int>(
+                              isExpanded: true,
+                              value: ref.watch(colorSelectionIndexProvider.state).state,
+                              hint: Text('- [필수] 옵션을 선택해 주세요 -'),
+                              onChanged: (int? newValue) {
+                                ref.read(colorSelectionIndexProvider.state).state = newValue;
+                              },
+                              items: colorOptions.asMap().entries.map((entry) {
+                                int idx = entry.key;
+                                Map<String, dynamic> color = entry.value;
+                                return DropdownMenuItem<int>(
+                                  value: idx,
+                                  child: Row(
+                                    children: [
+                                      Image.network(color['url'], width: 30, height: 30),
+                                      SizedBox(width: 8),
+                                      Text(color['text']),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: 20),
+                            Text('사이즈', style: TextStyle(fontSize: 14)),
+                            DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedSize.state,
+                              hint: Text('- [필수] 옵션을 선택해 주세요 -'),
+                              onChanged: (newValue) {
+                                selectedSize.state = newValue;
+                              },
+                              items: sizes.map<DropdownMenuItem<String>>((String size) {
+                                return DropdownMenuItem<String>(
+                                  value: size,
+                                  child: Text(size),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   );
