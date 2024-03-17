@@ -107,7 +107,7 @@ class DetailProductScreen extends ConsumerWidget {
                         '판매가', // '판매가' 텍스트
                         style: TextStyle(fontSize: 14),
                       ),
-                      SizedBox(width: 72), // '판매가'와 가격 사이에 10의 간격 추가
+                      SizedBox(width: 50), // '판매가'와 가격 사이에 10의 간격 추가
                       Text(
                         '$originalPrice', // 가격 데이터
                         style: TextStyle(fontSize: 14, decoration: TextDecoration.lineThrough, fontWeight: FontWeight.bold),
@@ -119,6 +119,7 @@ class DetailProductScreen extends ConsumerWidget {
                 error: (error, stack) => Text('오류 발생: $error'),
               ),
             ),
+            SizedBox(height: 10), // '판매가'와 '색상' 할인판매가 사이의 간격
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 간격 20으로 설정
               child: docData.when(
@@ -130,7 +131,7 @@ class DetailProductScreen extends ConsumerWidget {
                         '할인판매가', // '할인판매가' 텍스트
                         style: TextStyle(fontSize: 14, color: DISCOUNT_COLOR),
                       ),
-                      SizedBox(width: 50), // '판매가'와 가격 사이에 10의 간격 추가
+                      SizedBox(width: 25), // '판매가'와 가격 사이에 10의 간격 추가
                       Text(
                         '$discountPrice', // 가격 데이터
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: DISCOUNT_COLOR),
@@ -142,6 +143,7 @@ class DetailProductScreen extends ConsumerWidget {
                 error: (error, stack) => Text('오류 발생: $error'),
               ),
             ),
+            SizedBox(height: 10), // '할인판매가'와 '색상' 드롭다운 사이의 간격
             // Firestore로부터 가져온 문서 데이터를 사용하여 UI를 동적으로 구성하는 부분
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정함.
@@ -156,7 +158,6 @@ class DetailProductScreen extends ConsumerWidget {
                       colorOptions.add({'text': colorText, 'url': colorUrl}); // 유효한 데이터만 리스트에 추가함.
                     }
                   }
-
                   // Firestore 문서로부터 '사이즈' 옵션 데이터를 가져옴.
                   List<String> sizes = [];
                   for (int i = 1; i <= 4; i++) {
@@ -165,62 +166,68 @@ class DetailProductScreen extends ConsumerWidget {
                       sizes.add(size); // 유효한 데이터만 리스트에 추가함.
                     }
                   }
-
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부의 항목들을 왼쪽으로 정렬함.
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정함.
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부의 항목들을 왼쪽으로 정렬함.
-                          children: [
+                        children: [
+                         Row( // '색상' 텍스트와 DropdownButton을 가로로 배열하기 위해 Row 위젯 사용
+                           mainAxisAlignment: MainAxisAlignment.start, // 항목들을 시작 지점(왼쪽)으로 정렬
+                           children: [
                             // '색상' 선택을 위한 드롭다운 메뉴입니다.
                             Text('색상', style: TextStyle(fontSize: 14)), // '색상' 라벨을 표시함.
-                            DropdownButton<int>(
-                              isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤.
-                              value: ref.watch(colorSelectionIndexProvider.state).state, // 현재 선택된 '색상'의 인덱스
-                              hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
-                              onChanged: (int? newValue) {
-                                ref.read(colorSelectionIndexProvider.state).state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
-                              },
-                              items: colorOptions.asMap().entries.map((entry) {
-                                int idx = entry.key; // 색상 옵션의 인덱스
-                                Map<String, dynamic> color = entry.value; // 색상 옵션의 데이터
-                                return DropdownMenuItem<int>(
-                                  value: idx,
-                                  child: Row(
-                                    children: [
-                                      Image.network(color['url'], width: 30, height: 30), // 색상을 나타내는 이미지
-                                      SizedBox(width: 8), // 이미지와 텍스트 사이의 간격
-                                      Text(color['text']), // 색상의 텍스트 설명
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                            SizedBox(height: 20), // '색상' 드롭다운과 '사이즈' 드롭다운 사이의 간격
-                            // '사이즈' 선택을 위한 드롭다운 메뉴
+                            SizedBox(width: 63), // '색상' 텍스트와 DropdownButton 사이에 50의 간격 추가
+                            Expanded( // DropdownButton을 확장하여 나머지 공간을 차지하도록 함.
+                              child: DropdownButton<int>(
+                                isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤.
+                                value: ref.watch(colorSelectionIndexProvider.state).state, // 현재 선택된 '색상'의 인덱스
+                                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
+                                onChanged: (int? newValue) {
+                                  ref.read(colorSelectionIndexProvider.state).state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
+                                },
+                                items: colorOptions.asMap().entries.map((entry) {
+                                  int idx = entry.key; // 색상 옵션의 인덱스
+                                  Map<String, dynamic> color = entry.value; // 색상 옵션의 데이터
+                                  return DropdownMenuItem<int>(
+                                    value: idx,
+                                    child: Row(
+                                      children: [
+                                        Image.network(color['url'], width: 20, height: 20), // 색상을 나타내는 이미지
+                                        SizedBox(width: 8), // 이미지와 텍스트 사이의 간격
+                                        Text(color['text']), // 색상의 텍스트 설명
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                               ),
+                              ),
+                             ],
+                           ),
+                            SizedBox(height: 10), // '색상' 드롭다운과 '사이즈' 드롭다운 사이의 간격
+                        // '사이즈' 선택을 위한 드롭다운 메뉴
+                        Row( // '색상' 텍스트와 DropdownButton을 가로로 배열하기 위해 Row 위젯 사용
+                          mainAxisAlignment: MainAxisAlignment.start, // 항목들을 시작 지점(왼쪽)으로 정렬
+                          children: [
                             Text('사이즈', style: TextStyle(fontSize: 14)), // '사이즈' 라벨을 표시함.
-                            DropdownButton<String>(
-                              isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤
-                              value: selectedSize.state, // 현재 선택된 '사이즈'
-                              hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
-                              onChanged: (newValue) {
-                                selectedSize.state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
-                              },
-                              items: sizes.map<DropdownMenuItem<String>>((String size) {
-                                return DropdownMenuItem<String>(
-                                  value: size, // 사이즈 옵션의 값
-                                  child: Text(size), // 사이즈 옵션을 표시하는 텍스트
-                                );
-                              }).toList(),
-                            ),
+                            SizedBox(width: 52), // '색상' 텍스트와 DropdownButton 사이에 50의 간격 추가
+                            Expanded( // DropdownButton을 확장하여 나머지 공간을 차지하도록 함.
+                              child: DropdownButton<String>(
+                                isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤
+                                value: selectedSize.state, // 현재 선택된 '사이즈'
+                                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
+                                onChanged: (newValue) {
+                                  selectedSize.state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
+                                },
+                                items: sizes.map<DropdownMenuItem<String>>((String size) {
+                                  return DropdownMenuItem<String>(
+                                    value: size, // 사이즈 옵션의 값
+                                    child: Text(size), // 사이즈 옵션을 표시하는 텍스트
+                                  );
+                                }).toList(),
+                              ),
+                             ),
+                            ],
+                           ),
                           ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                    );
+                  },
                 loading: () => CircularProgressIndicator(), // 데이터를 로딩 중일 때 표시할 위젯
                 error: (error, stack) => Text('오류 발생: $error'), // 오류가 발생했을 때 표시할 위젯
               ),
