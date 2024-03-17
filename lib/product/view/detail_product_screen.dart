@@ -1,3 +1,5 @@
+
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
@@ -12,6 +14,22 @@ import '../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 
 class DetailProductScreen extends ConsumerWidget {
   final String docId; // 문서 ID를 저장할 변수 선언
   const DetailProductScreen({Key? key, required this.docId}) : super(key: key); // 생성자 수정
+
+  // 이미지의 크기를 비동기적으로 가져오는 함수
+  Future<Size> _getImageSize(String imageUrl) async {
+    Image image = Image.network(imageUrl);
+    Completer<Size> completer = Completer<Size>();
+
+    image.image.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener((ImageInfo image, bool synchronousCall) {
+        var myImage = image.image;
+        Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
+        completer.complete(size);
+      }),
+    );
+
+    return completer.future;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,15 +69,32 @@ class DetailProductScreen extends ConsumerWidget {
           itemCount: imageUrls.length, // 이미지 URL 리스트의 길이, 즉 총 슬라이드 개수를 나타냄
           itemBuilder: (BuildContext context, int index) {
             // itemBuilder는 각 슬라이드를 구성하는 위젯을 반환합니다.
-            // 여기서는 NetworkImage를 사용하여 각 URL로부터 이미지를 로드하고 표시합니다.
-            return Image.network(imageUrls[index], fit: BoxFit.cover); // 각 이미지 URL에 대한 네트워크 이미지 위젯
+            // 여기서는 Image.network를 사용하여 각 URL로부터 이미지를 로드하고 표시합니다.
+            // AspectRatio를 사용하여 이미지의 원본 비율을 유지합니다.
+            // FutureBuilder를 사용하여 이미지의 비율을 동적으로 계산
+            return FutureBuilder<Size>(
+              future: _getImageSize(imageUrls[index]),
+              builder: (BuildContext context, AsyncSnapshot<Size> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                  // 이미지 로드 완료 및 크기 데이터가 있는 경우
+                  // 이미지의 실제 비율에 맞게 AspectRatio 위젯을 사용
+                  // BoxFit.contain을 사용하여 이미지가 공간에 꽉 차게 나오면서도 원본 비율이 유지되도록 함
+                  return AspectRatio(
+                    aspectRatio: snapshot.data!.width / snapshot.data!.height,
+                    child: Image.network(imageUrls[index], fit: BoxFit.contain),
+                  );
+                } else {
+                  // 이미지 로딩 중 표시할 위젯
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            );
           },
         );
       },
-      loading: () => CircularProgressIndicator(), // 데이터 로딩 중 표시할 위젯
-      error: (error, stack) => Text('오류 발생: $error'), // 에러 발생 시 표시할 위젯
+      loading: () => CircularProgressIndicator(),
+      error: (error, stack) => Text('오류 발생: $error'),
     );
-
 
     return Scaffold(
       // GlobalKey 제거
@@ -231,7 +266,46 @@ class DetailProductScreen extends ConsumerWidget {
                 loading: () => CircularProgressIndicator(), // 데이터를 로딩 중일 때 표시할 위젯
                 error: (error, stack) => Text('오류 발생: $error'), // 오류가 발생했을 때 표시할 위젯
               ),
+            ),
+            SizedBox(height: 30), // '사이즈' 드롭다운과 '장바구니 및 구매' 버튼 사이의 간격
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백 설정
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 버튼을 화면 양쪽 끝으로 정렬
+                children: [
+                  Expanded( // '장바구니에 추가' 버튼
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // '장바구니에 추가' 버튼 클릭 시 수행될 로직
+                        // 예: 장바구니에 제품 추가 로직 구현
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
+                        foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
+                      ),
+                      child: Text('장바구니'),
+                    ),
+                  ),
+                  SizedBox(width: 10), // 버튼 사이의 간격 설정
+                  Expanded( // '바로 구매' 버튼
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // '바로 구매' 버튼 클릭 시 수행될 로직
+                        // 예: 결제 페이지로 이동하는 로직 구현
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
+                        foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
+                      ),
+                      child: Text('주문'),
+                    ),
+                  ),
+                ],
+              ),
             )
+
+
+
           ],
         ),
       ),
