@@ -26,9 +26,9 @@ class _SplashScreenState extends State<SplashScreen2> {
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 60.0), // 상하 여백만 추가
           child: Image.asset(
-            // 'asset/img/misc/splash2_image.png',
+            'asset/img/misc/splash2_image.png',
             // 'asset/img/misc/ssamjang.png',
-            'asset/img/misc/douna.png',// 이미지 파일 경로를 설정하세요.
+            // 'asset/img/misc/douna.png',// 이미지 파일 경로를 설정하세요.
             fit: BoxFit.contain, // 이미지 비율을 유지하면서 화면에 맞게 조절
           ),
         ),

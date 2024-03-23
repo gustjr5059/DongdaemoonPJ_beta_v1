@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
@@ -40,9 +39,6 @@ class DetailProductScreen extends ConsumerWidget {
     final docData = ref.watch(firestoreDataProvider(docId)); // 예시로 사용된 Provider, 실제 구현 필요
     // 파이어스토어 내 '사이즈' 데이터를 선택할 때마다 그에 해당하는 데이터로 변경용 상태 관리를 위한 StateProvider
     final selectedSize = ref.watch(sizeSelectionProvider.state);
-
-    // Consumer 위젯에서 사용될 colorOptions을 저장할 변수
-    List<Map<String, dynamic>> colorOptions = [];
 
     // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의
     Widget topBarList = buildTopBarList(context, (index) {
@@ -99,61 +95,6 @@ class DetailProductScreen extends ConsumerWidget {
       loading: () => CircularProgressIndicator(),
       error: (error, stack) => Text('오류 발생: $error'),
     );
-
-    // 페이지 내용 구성
-    Widget pageContent = docData.when(
-        data: (data) {
-      // colorOptions와 sizes를 여기서 초기화합니다.
-      colorOptions = List<Map<String, dynamic>>.generate(5, (int i) {
-        String? colorText = data['color${i + 1}_text'];
-        String? colorUrl = data['clothes_color${i + 1}'];
-        return {'text': colorText, 'url': colorUrl};
-      }).where((option) => option['text'] != null && option['url'] != null).toList();
-
-      // // sizes 리스트를 초기화합니다.
-      // List<String> sizes = List<String>.generate(4, (int i) => data['clothes_size${i + 1}']).where((size) => size != null).toList();
-
-      // Consumer 위젯으로 이동될 부분
-      return Consumer(
-        builder: (context, ref, child) {
-          final selectedColorIndex = ref.watch(colorSelectionIndexProvider.state).state;
-          final selectedSize = ref.watch(sizeSelectionProvider.state).state;
-          final quantity = ref.watch(quantityProvider.state).state;
-          final totalPrice = ref.watch(totalPriceProvider(docId));
-
-
-          return Column(
-            children: [
-              // 선택된 색상과 사이즈를 보여줄 텍스트
-              Text('선택 색상: ${selectedColorIndex != null ? colorOptions[selectedColorIndex]['text'] : '선택 안됨'}'),
-              Text('선택 사이즈: ${selectedSize != null ? selectedSize['size'] : '선택 안됨'}'),
-
-              // 수량 조절 부분
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () => ref.read(quantityProvider.state).state = max(1, quantity - 1),
-                  ),
-                  Text(' $quantity '),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () => ref.read(quantityProvider.state).state = quantity + 1,
-                  ),
-                ],
-              ),
-
-              // 총 결제 금액 표시
-              Text('총 결제 금액: $totalPrice원'),
-            ],
-          );
-        },
-      );
-        },
-      loading: () => CircularProgressIndicator(),
-      error: (error, stack) => Text('오류 발생: $error'),
-    );
-
 
     return Scaffold(
       // GlobalKey 제거
@@ -261,79 +202,67 @@ class DetailProductScreen extends ConsumerWidget {
                     }
                   }
                   return Column(
+                    children: [
+                      Row( // '색상' 텍스트와 DropdownButton을 가로로 배열하기 위해 Row 위젯 사용
+                        mainAxisAlignment: MainAxisAlignment.start, // 항목들을 시작 지점(왼쪽)으로 정렬
                         children: [
-                         Row( // '색상' 텍스트와 DropdownButton을 가로로 배열하기 위해 Row 위젯 사용
-                           mainAxisAlignment: MainAxisAlignment.start, // 항목들을 시작 지점(왼쪽)으로 정렬
-                           children: [
-                            // '색상' 선택을 위한 드롭다운 메뉴입니다.
-                            Text('색상', style: TextStyle(fontSize: 14)), // '색상' 라벨을 표시함.
-                            SizedBox(width: 63), // '색상' 텍스트와 DropdownButton 사이에 50의 간격 추가
-                            Expanded( // DropdownButton을 확장하여 나머지 공간을 차지하도록 함.
-                              child: DropdownButton<int>(
-                                isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤.
-                                value: ref.watch(colorSelectionIndexProvider.state).state, // 현재 선택된 '색상'의 인덱스
-                                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
-                                onChanged: (int? newValue) {
-                                  ref.read(colorSelectionIndexProvider.state).state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
-                                },
-                                items: colorOptions.asMap().entries.map((entry) {
-                                  int idx = entry.key; // 색상 옵션의 인덱스
-                                  Map<String, dynamic> color = entry.value; // 색상 옵션의 데이터
-                                  return DropdownMenuItem<int>(
-                                    value: idx,
-                                    child: Row(
-                                      children: [
-                                        Image.network(color['url'], width: 20, height: 20), // 색상을 나타내는 이미지
-                                        SizedBox(width: 8), // 이미지와 텍스트 사이의 간격
-                                        Text(color['text']), // 색상의 텍스트 설명
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                               ),
-                              ),
-                             ],
-                           ),
-                            SizedBox(height: 10), // '색상' 드롭다운과 '사이즈' 드롭다운 사이의 간격
-                        // '사이즈' 선택을 위한 드롭다운 메뉴
-                        Row( // '색상' 텍스트와 DropdownButton을 가로로 배열하기 위해 Row 위젯 사용
-                          mainAxisAlignment: MainAxisAlignment.start, // 항목들을 시작 지점(왼쪽)으로 정렬
-                          children: [
-                            Text('사이즈', style: TextStyle(fontSize: 14)), // '사이즈' 라벨을 표시함.
-                            SizedBox(width: 52), // '색상' 텍스트와 DropdownButton 사이에 50의 간격 추가
-                            Expanded( // DropdownButton을 확장하여 나머지 공간을 차지하도록 함.
-                              child: DropdownButton<String>(
-                                isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤
-                                value: selectedSize.state != null ? selectedSize.state!['size'] : null, // 'size' 는 선택된 사이즈의 식별자
-                                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
-                                onChanged: (String? newValue) {
-                                  if (newValue != null) {
-                                    // Firestore 문서에서 선택된 사이즈에 해당하는 추가 정보를 조회합니다.
-                                    // 여기서는 'price'라는 키로 가격 정보를 가져온다고 가정합니다.
-                                    // 실제로는 Firestore 문서나 다른 데이터 소스에서 해당 정보를 가져와야 합니다.
-                                    var newSizeData = {
-                                      'size': newValue,
-                                      // // 사이즈에 해당하는 가격 정보를 데이터에서 조회합니다.
-                                      // 선택된 사이즈에 따른 가격 정보를 가져오는 역할
-                                      // 'price': fetchPriceFromSize(newValue),
-                                    };
-                                    // 선택된 사이즈 상태를 업데이트합니다.
-                                    ref.read(sizeSelectionProvider.state).state = newSizeData;
-                                  }
-                                },
-                                items: sizes.map<DropdownMenuItem<String>>((String size) {
-                                  return DropdownMenuItem<String>(
-                                    value: size, // 사이즈 옵션의 값
-                                    child: Text(size), // 사이즈 옵션을 표시하는 텍스트
-                                  );
-                                }).toList(),
-                              ),
-                             ),
-                            ],
-                           ),
-                          ],
-                    );
-                  },
+                          // '색상' 선택을 위한 드롭다운 메뉴입니다.
+                          Text('색상', style: TextStyle(fontSize: 14)), // '색상' 라벨을 표시함.
+                          SizedBox(width: 63), // '색상' 텍스트와 DropdownButton 사이에 50의 간격 추가
+                          Expanded( // DropdownButton을 확장하여 나머지 공간을 차지하도록 함.
+                            child: DropdownButton<int>(
+                              isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤.
+                              value: ref.watch(colorSelectionIndexProvider.state).state, // 현재 선택된 '색상'의 인덱스
+                              hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
+                              onChanged: (int? newValue) {
+                                ref.read(colorSelectionIndexProvider.state).state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
+                              },
+                              items: colorOptions.asMap().entries.map((entry) {
+                                int idx = entry.key; // 색상 옵션의 인덱스
+                                Map<String, dynamic> color = entry.value; // 색상 옵션의 데이터
+                                return DropdownMenuItem<int>(
+                                  value: idx,
+                                  child: Row(
+                                    children: [
+                                      Image.network(color['url'], width: 20, height: 20), // 색상을 나타내는 이미지
+                                      SizedBox(width: 8), // 이미지와 텍스트 사이의 간격
+                                      Text(color['text']), // 색상의 텍스트 설명
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10), // '색상' 드롭다운과 '사이즈' 드롭다운 사이의 간격
+                      // '사이즈' 선택을 위한 드롭다운 메뉴
+                      Row( // '색상' 텍스트와 DropdownButton을 가로로 배열하기 위해 Row 위젯 사용
+                        mainAxisAlignment: MainAxisAlignment.start, // 항목들을 시작 지점(왼쪽)으로 정렬
+                        children: [
+                          Text('사이즈', style: TextStyle(fontSize: 14)), // '사이즈' 라벨을 표시함.
+                          SizedBox(width: 52), // '색상' 텍스트와 DropdownButton 사이에 50의 간격 추가
+                          Expanded( // DropdownButton을 확장하여 나머지 공간을 차지하도록 함.
+                            child: DropdownButton<String>(
+                              isExpanded: true, // 드롭다운의 너비를 부모 컨테이너에 맞춤
+                              value: selectedSize.state, // 현재 선택된 '사이즈'
+                              hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 보이는 안내 메시지
+                              onChanged: (newValue) {
+                                selectedSize.state = newValue; // 새로운 선택값으로 상태를 업데이트 함.
+                              },
+                              items: sizes.map<DropdownMenuItem<String>>((String size) {
+                                return DropdownMenuItem<String>(
+                                  value: size, // 사이즈 옵션의 값
+                                  child: Text(size), // 사이즈 옵션을 표시하는 텍스트
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
                 loading: () => CircularProgressIndicator(), // 데이터를 로딩 중일 때 표시할 위젯
                 error: (error, stack) => Text('오류 발생: $error'), // 오류가 발생했을 때 표시할 위젯
               ),
@@ -344,7 +273,7 @@ class DetailProductScreen extends ConsumerWidget {
               child: Divider(), // 선 추가
             ),
             SizedBox(height: 10), // '수량 체크 및 가격'과 '결제금액' 사이의 간격
-            pageContent,  // 이전에 docData.when에서 반환된 위젯
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20), // 선의 좌우 간격을 20으로 설정
               child: Divider(), // 선 추가
@@ -385,7 +314,10 @@ class DetailProductScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ),
+            )
+
+
+
           ],
         ),
       ),
