@@ -16,21 +16,16 @@ import '../layout/skirt_layout.dart';
 import '../layout/top_layout.dart';
 import '../layout/underwear_layout.dart';
 
-
-
-// 상태 관리를 위한 StateProvider 정의
-// 현재 페이지 인덱스를 관리하기 위한 StateProvider를 정의
-final currentPageProvider = StateProvider<int>((ref) => 0);
-
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // GlobalKey 대신 로컬 context를 사용하는 방법에 대해 설명하는 클래스
+// HomeScreen 클래스는 ConsumerWidget을 상속받아, Riverpod를 통한 상태 관리를 지원함.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // PageController를 초기화, 이 컨트롤러는 PageView 위젯의 페이지 전환을 관리함.
+    // PageController는 페이지뷰를 컨트롤함.
     final PageController pageController = PageController();
 
     // home_screen.dart에 표시된 카테고리 12개 변수 정의
@@ -59,22 +54,29 @@ class HomeScreen extends ConsumerWidget {
 
     // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
-    // common_part.dart 재사용하여 pageViewWithArrows를 구현한 위젯
-    // 페이지 뷰와 좌우 화살표를 포함한 섹션
-    Widget pageViewSection = pageViewWithArrows(context,
-      pageController,
-      ref,
-      currentPageProvider,
-      itemCount: 5, // 예시로 5개의 페이지를 가정
+
+    // 배너용 페이지뷰 섹션을 구성함.
+    Widget bannerPageViewSection = buildBannerPageView(
+      ref: ref, // 여기에 ref를 인자로 전달
+      pageController: pageController,
+      itemCount: 10,
       itemBuilder: (BuildContext context, int index) {
-        // 여기서 실제 페이지를 구성하는 위젯을 반환
-        // 예를 들어, Firestore에서 가져온 이미지 URL 리스트를 기반으로 이미지를 표시할 수 있음
-        // 아래 코드는 간단한 텍스트 위젯을 페이지로 사용하는 예시
+        // 페이지뷰의 각 페이지를 구성하는 위젯
         return Center(
           child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24)),
         );
       },
+      currentPageProvider: currentPageProvider,
     );
+
+    // 5초마다 페이지를 자동으로 전환하는 기능을 구현함.
+    startAutoScrollTimer(
+      ref: ref, // 이렇게 ref를 전달합니다.
+      pageController: pageController,
+      itemCount: 10, // 총 페이지 수 설정
+      currentPageProvider: currentPageProvider,
+    );
+
 
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
     // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
@@ -152,7 +154,8 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(
             // 페이지 뷰 섹션을 표시
               height: 200, // 페이지 뷰의 높이 설정
-              child: pageViewSection, // pageViewSection 호출
+              // child: pageViewSection, // pageViewSection 호출
+              child: bannerPageViewSection, // 배너 페이지뷰 위젯 사용
             ),
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             homeCategoryButtonsGrid(

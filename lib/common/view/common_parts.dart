@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 데이터베이스 사용을 위한 패키지
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart'; // 로그인 화면
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
@@ -249,6 +251,74 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
     ),
   );
 }
+
+// 자동 페이지 전환 기능을 포함하는 페이지뷰 위젯을 만들어주는 함수
+Widget buildBannerPageView({
+  required WidgetRef ref, // BuildContext 대신 WidgetRef를 사용하여 ref를 매개변수로 받습니다.
+  required PageController pageController,
+  required int itemCount,
+  required IndexedWidgetBuilder itemBuilder,
+  required StateProvider<int> currentPageProvider,
+}) {
+  return Stack(
+    children: [
+      PageView.builder(
+        controller: pageController,
+        itemCount: itemCount,
+        onPageChanged: (index) {
+          // 이 부분에서 상태를 업데이트합니다.
+          ref.read(currentPageProvider.notifier).state = index;
+        },
+        itemBuilder: itemBuilder,
+      ),
+      Positioned(
+        right: 10,
+        bottom: 10,
+        child: Consumer(
+          builder: (context, ref, child) {
+            final currentPage = ref.watch(currentPageProvider);
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                '${currentPage + 1} / $itemCount',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+// 5초마다 페이지를 자동으로 넘기는 기능을 가진 타이머를 설정하는 함수
+void startAutoScrollTimer({
+  required WidgetRef ref, // 이 부분을 추가합니다.
+  required PageController pageController,
+  required int itemCount,
+  required StateProvider<int> currentPageProvider,
+}) {
+  Timer.periodic(Duration(seconds: 5), (timer) {
+    final currentPage = pageController.page?.round() ?? 0;
+    final nextPage = currentPage + 1 < itemCount ? currentPage + 1 : 0;
+    pageController.animateToPage(
+      nextPage,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    ).then((_) => {
+    // 페이지 전환 애니메이션 완료 후 상태를 업데이트합니다.
+    // 현재 상태를 업데이트하지 않으면 Consumer가 변경사항을 감지하지 못합니다.
+    if(ref.read(currentPageProvider) != nextPage){
+        ref.read(currentPageProvider.notifier).state = nextPage
+  }
+    });
+  });
+}
+
 
 // Firestore 데이터를 기반으로 세부 정보를 표시하는 위젯.
 // 각 문서의 세부 정보를 UI에 표시함.
