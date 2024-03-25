@@ -23,8 +23,8 @@ class ProfileScreen extends ConsumerWidget {
       // 위에서 정의한 switch-case 로직을 여기에 포함시킵니다.
     });
 
-    // 로그인 상태에 따라 버튼 텍스트 변경
-    String loginButtonText = user != null ? '로그아웃' : '로그인';
+    // // 로그인 상태에 따라 버튼 텍스트 변경
+    // String loginButtonText = user != null ? '로그아웃' : '로그인';
 
     return Scaffold(
       // GlobalKey 제거
@@ -42,18 +42,13 @@ class ProfileScreen extends ConsumerWidget {
                   Text('PROFILE 내용'),
                   // 로그인/로그아웃 버튼
                   ElevatedButton(
-                    onPressed: () {
-                      if (user != null) {
+                    onPressed: () async {
                         // 로그아웃 처리
                         FirebaseAuth.instance.signOut();
-                        // 로그아웃 후 현재 페이지 갱신
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileScreen()));
-                      } else {
-                        // 로그인 페이지로 이동
-                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginScreen()));
-                      }
+                        // 로그아웃 후 로그인 화면으로 이동
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
                     },
-                    child: Text(loginButtonText),
+                    child: Text('로그아웃'),
                   ),
                   // 항상 표시되는 회원가입 버튼
                   ElevatedButton(

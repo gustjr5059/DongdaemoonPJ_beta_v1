@@ -169,17 +169,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
           ),
           ListTile(
             leading: Icon(Icons.logout),
-            title: Text(isLoggedIn ? 'Logout' : 'Login'),
+            title: Text('Logout'),
             onTap: () async {
-              if (isLoggedIn) {
-                // 로그인 상태일 때 로그아웃 처리
+                // 로그아웃 후 로그인 화면으로 이동
                 await FirebaseAuth.instance.signOut();
-                // 로그아웃 후 홈 화면으로 이동
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-              } else {
-                // 로그아웃 상태일 때 로그인 화면으로 이동
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
-              }
+                // (context) -> (_) 로 변경 : 매개변수를 정의해야 하지만 실제로 내부 로직에서 사용하지 않을 때 표기방법
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
             },
           ),
           ListTile(

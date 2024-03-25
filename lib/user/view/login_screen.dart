@@ -106,8 +106,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // 로그인 성공 후 처리
                       ref.read(tabIndexProvider.notifier).state = 0; // tabIndex를 0으로 설정
                       Navigator.of(context).pushReplacement(
-                        // MainScreen : 여기에 메인 화면 뷰를 넣어줘야 함
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                        // (context) -> (_) 로 변경 : 매개변수를 정의해야 하지만 실제로 내부 로직에서 사용하지 않을 때 표기방법
+                        MaterialPageRoute(builder: (_) => HomeScreen()),
                       );
                     } on FirebaseAuthException catch (e) {
                       // 로그인 실패 시 처리, 예를 들어 사용자에게 오류 메시지 표시
