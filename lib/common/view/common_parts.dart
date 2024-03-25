@@ -303,19 +303,24 @@ void startAutoScrollTimer({
   required StateProvider<int> currentPageProvider,
 }) {
   Timer.periodic(Duration(seconds: 5), (timer) {
-    final currentPage = pageController.page?.round() ?? 0;
-    final nextPage = currentPage + 1 < itemCount ? currentPage + 1 : 0;
-    pageController.animateToPage(
-      nextPage,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    ).then((_) => {
-    // 페이지 전환 애니메이션 완료 후 상태를 업데이트합니다.
-    // 현재 상태를 업데이트하지 않으면 Consumer가 변경사항을 감지하지 못합니다.
-    if(ref.read(currentPageProvider) != nextPage){
-        ref.read(currentPageProvider.notifier).state = nextPage
-  }
-    });
+   if (pageController.hasClients) { // 페이지 컨트롤러가 페이지 뷰와 연결되었는지 확인
+     final currentPage = pageController.page?.round() ?? 0;
+     final nextPage = currentPage + 1 < itemCount ? currentPage + 1 : 0;
+     pageController.animateToPage(
+       nextPage,
+       duration: Duration(milliseconds: 300),
+       curve: Curves.easeInOut,
+     ).then((_) =>
+     {
+       // 페이지 전환 애니메이션 완료 후 상태를 업데이트합니다.
+       // 현재 상태를 업데이트하지 않으면 Consumer가 변경사항을 감지하지 못합니다.
+       if(ref.read(currentPageProvider) != nextPage){
+         ref
+             .read(currentPageProvider.notifier)
+             .state = nextPage
+       }
+     });
+   }
   });
 }
 
