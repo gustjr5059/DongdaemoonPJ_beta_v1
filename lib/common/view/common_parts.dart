@@ -317,7 +317,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
      }
     });
   }
-
+// 페이지 컨트롤러가 페이지 뷰와 연결되었는지 확인
 
   // Firestore 데이터를 기반으로 세부 정보를 표시하는 위젯.
   // 각 문서의 세부 정보를 UI에 표시함.

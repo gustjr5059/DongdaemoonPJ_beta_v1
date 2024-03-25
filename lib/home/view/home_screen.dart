@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 통한 상태 관리를 위해 import 합니다.
+import '../../common/provider/common_future_provider.dart';
 import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리자 파일
 import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트 모듈
 // 아래 import된 파일들은 각 카테고리 별로 상세 페이지를 보여주기 위한 레이아웃 파일들입니다.
@@ -20,13 +21,35 @@ import '../layout/underwear_layout.dart';
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // GlobalKey 대신 로컬 context를 사용하는 방법에 대해 설명하는 클래스
 // HomeScreen 클래스는 ConsumerWidget을 상속받아, Riverpod를 통한 상태 관리를 지원함.
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // PageController는 페이지뷰를 컨트롤함.
-    final PageController pageController = PageController();
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
+  late PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기 페이지 설정을 위해 ref를 사용합니다.
+    pageController = PageController(
+      initialPage: ref.read(currentPageProvider), // 초기 페이지 설정
+    );
+
+    // 생명주기 감지를 위해 현재 State 객체를 옵저버에 추가합니다.
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    // // PageController는 페이지뷰를 컨트롤함.
+    // final PageController pageController = PageController(
+    //   initialPage: ref.read(currentPageProvider), // 초기 페이지 설정
+    // );
 
     // home_screen.dart에 표시된 카테고리 12개 변수 정의
     // 홈 화면에 표시될 카테고리 목록
@@ -54,26 +77,49 @@ class HomeScreen extends ConsumerWidget {
 
     // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
+    WidgetsBinding.instance.addObserver(this); // 생명주기 감지를 위해 옵저버 추가
 
-    // 배너용 페이지뷰 섹션을 구성함.
-    Widget bannerPageViewSection = buildBannerPageView(
-      ref: ref, // 여기에 ref를 인자로 전달
-      pageController: pageController,
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
-        // 페이지뷰의 각 페이지를 구성하는 위젯
-        return Center(
-          child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24)),
-        );
-      },
-      currentPageProvider: currentPageProvider,
-    );
+    // // 배너용 페이지뷰 섹션을 구성함.
+    // Widget bannerPageViewSection = buildBannerPageView(
+    //   ref: ref, // 여기에 ref를 인자로 전달
+    //   pageController: pageController,
+    //   itemCount: 10,
+    //   itemBuilder: (BuildContext context, int index) {
+    //     // 페이지뷰의 각 페이지를 구성하는 위젯
+    //     return Center(
+    //       child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24)),
+    //     );
+    //   },
+    //   currentPageProvider: currentPageProvider,
+    // );
+
+    // 배너 이미지를 보여주는 페이지뷰 섹션
+    Widget buildBannerPageViewSection() {
+      // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴
+      final asyncBannerImages = ref.watch(bannerImagesProvider);
+
+      return asyncBannerImages.when(
+        data: (List<String> imageUrls) {
+          // 페이지 뷰를 구성하는 `buildBannerPageView` 함수 호출
+          return buildBannerPageView(
+            ref: ref, // 상태 관리를 위한 ref 전달
+            pageController: pageController,
+            itemCount: imageUrls.length, // 이미지 URL 리스트의 길이를 전달
+            itemBuilder: (context, index) => Image.network(imageUrls[index], fit: BoxFit.cover),
+            currentPageProvider: currentPageProvider, // 현재 페이지 상태 관리를 위한 provider
+          );
+        },
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')),
+      );
+    }
+
 
     // 5초마다 페이지를 자동으로 전환하는 기능을 구현함.
     startAutoScrollTimer(
       ref: ref, // 이렇게 ref를 전달합니다.
       pageController: pageController,
-      itemCount: 10, // 총 페이지 수 설정
+      itemCount: 3, // 총 페이지 수 설정
       currentPageProvider: currentPageProvider,
     );
 
@@ -155,7 +201,7 @@ class HomeScreen extends ConsumerWidget {
             // 페이지 뷰 섹션을 표시
               height: 200, // 페이지 뷰의 높이 설정
               // child: pageViewSection, // pageViewSection 호출
-              child: bannerPageViewSection, // 배너 페이지뷰 위젯 사용
+              child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
             ),
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             homeCategoryButtonsGrid(
@@ -211,6 +257,23 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // 앱이 다시 활성화될 때 실행할 로직
+      // 마지막 페이지 번호를 기반으로 PageController를 업데이트할 수 있음
+      // 이 예시에서는 구체적인 PageController 업데이트 로직을 추가하지 않았음
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // 옵저버 제거
+    super.dispose();
+  }
+
 }
 
 
