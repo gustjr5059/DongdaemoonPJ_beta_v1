@@ -79,40 +79,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
 
     WidgetsBinding.instance.addObserver(this); // 생명주기 감지를 위해 옵저버 추가
 
-    // // 배너용 페이지뷰 섹션을 구성함.
-    // Widget bannerPageViewSection = buildBannerPageView(
-    //   ref: ref, // 여기에 ref를 인자로 전달
-    //   pageController: pageController,
-    //   itemCount: 10,
-    //   itemBuilder: (BuildContext context, int index) {
-    //     // 페이지뷰의 각 페이지를 구성하는 위젯
-    //     return Center(
-    //       child: Text('페이지 ${index + 1}', style: TextStyle(fontSize: 24)),
-    //     );
-    //   },
-    //   currentPageProvider: currentPageProvider,
-    // );
-
-    // 배너 이미지를 보여주는 페이지뷰 섹션
+// 배너 이미지를 보여주는 페이지뷰 섹션
     Widget buildBannerPageViewSection() {
-      // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴
+      // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
+      // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
       final asyncBannerImages = ref.watch(bannerImagesProvider);
 
+      // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
       return asyncBannerImages.when(
         data: (List<String> imageUrls) {
-          // 페이지 뷰를 구성하는 `buildBannerPageView` 함수 호출
+          // 이미지 URL 리스트를 성공적으로 가져온 경우,
+          // 페이지 뷰를 구성하는 `buildBannerPageView` 함수를 호출함.
+          // 이 함수는 페이지뷰 위젯과, 각 페이지를 구성하는 아이템 빌더, 현재 페이지 인덱스를 관리하기 위한 provider 등을 인자로 받음.
           return buildBannerPageView(
-            ref: ref, // 상태 관리를 위한 ref 전달
-            pageController: pageController,
-            itemCount: imageUrls.length, // 이미지 URL 리스트의 길이를 전달
-            itemBuilder: (context, index) => Image.network(imageUrls[index], fit: BoxFit.cover),
-            currentPageProvider: currentPageProvider, // 현재 페이지 상태 관리를 위한 provider
+            ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
+            pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
+            itemCount: imageUrls.length, // 이미지 URL 리스트의 길이를 전달하여 전체 페이지 수를 정의함.
+            itemBuilder: (context, index) => Image.network(imageUrls[index], fit: BoxFit.cover), // 각 페이지를 구성할 위젯을 정의하고, 여기서는 네트워크 이미지를 사용함.
+            currentPageProvider: currentPageProvider, // 현재 페이지 인덱스를 관리하기 위한 StateProvider를 전달함.
           );
         },
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')),
+        loading: () => Center(child: CircularProgressIndicator()), // 데이터 로딩 중에는 로딩 인디케이터를 표시함.
+        error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')), // 오류 발생 시 오류 메시지를 표시함.
       );
     }
+
 
 
     // 5초마다 페이지를 자동으로 전환하는 기능을 구현함.

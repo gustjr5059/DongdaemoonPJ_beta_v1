@@ -296,28 +296,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
     required int itemCount,
     required StateProvider<int> currentPageProvider,
   }) {
+    // 페이지 전환 중인지 추적하는 플래그
+    bool isAnimating = false;
+
     Timer.periodic(Duration(seconds: 5), (timer) {
-     if (pageController.hasClients) { // 페이지 컨트롤러가 페이지 뷰와 연결되었는지 확인
-       final currentPage = pageController.page?.round() ?? 0;
-       final nextPage = currentPage + 1 < itemCount ? currentPage + 1 : 0;
+     if (pageController.hasClients && !isAnimating) { // 페이지 컨트롤러가 페이지 뷰와 연결되었는지 확인
+       int currentPage = pageController.page?.round() ?? 0; // 현재 페이지 인덱스를 가져옴.
+       int nextPage = (currentPage + 1) % itemCount; // 다음 페이지 인덱스를 계산. 마지막 페이지 다음에는 첫 페이지로 돌아감.
+
+       // 페이지 전환 시작을 추적
+       isAnimating = true;
+
        pageController.animateToPage(
          nextPage,
          duration: Duration(milliseconds: 300),
          curve: Curves.easeInOut,
-       ).then((_) =>
-       {
-         // 페이지 전환 애니메이션 완료 후 상태를 업데이트합니다.
-         // 현재 상태를 업데이트하지 않으면 Consumer가 변경사항을 감지하지 못합니다.
-         if(ref.read(currentPageProvider) != nextPage){
-           ref
-               .read(currentPageProvider.notifier)
-               .state = nextPage
-         }
+       ).then((_) => {
+         // 페이지 전환 완료 후 상태 업데이트 및 애니메이션 플래그 재설정
+         if (ref.read(currentPageProvider) != nextPage) {
+           ref.read(currentPageProvider.notifier).state = nextPage,
+         },
+         isAnimating = false, // 페이지 전환 상태 업데이트
        });
      }
     });
   }
-// 페이지 컨트롤러가 페이지 뷰와 연결되었는지 확인
 
   // Firestore 데이터를 기반으로 세부 정보를 표시하는 위젯.
   // 각 문서의 세부 정보를 UI에 표시함.
