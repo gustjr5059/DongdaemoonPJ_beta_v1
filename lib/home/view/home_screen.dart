@@ -139,9 +139,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
             itemBuilder: (context, index) => Image.network(
               imageUrls[index],
               width: screenWidth, // 이미지의 너비를 화면 너비에 맞춤.
-              fit: BoxFit.fill, // 이미지가 화면에 꽉 차도록 조정함.
+              fit: BoxFit.contain, // 이미지가 화면에 꽉 차도록 조정함.
             ),
             currentPageProvider: currentPageProvider,
+            context: context,
           );
         },
         loading: () => Center(child: CircularProgressIndicator()), // 데이터 로딩 중에는 로딩 인디케이터를 표시함.

@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 데이터베
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart'; // 로그인 화면
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증 사용을 위한 패키지
+import 'package:url_launcher/url_launcher.dart';
 import '../../cart/view/cart_screen.dart'; // 장바구니 화면
+import '../../home/layout/accessory_layout.dart';
 import '../../home/view/home_screen.dart'; // 홈 화면
 import '../../order/view/order_screen.dart'; // 주문 화면
 import '../../product/provider/product_state_provider.dart';
@@ -292,25 +294,53 @@ class BannerAutoScrollClass {
   }
   // ------ arrowButton 위젯 내용 구현 끝
 
-  // ------ buildBannerPageView 위젯 내용 구현 시작
-  // 배너 페이지뷰 UI 관련 위젯
-  Widget buildBannerPageView({
-    required WidgetRef ref, // BuildContext 대신 WidgetRef를 사용하여 ref를 매개변수로 받습니다.
-    required PageController pageController,
-    required int itemCount,
-    required IndexedWidgetBuilder itemBuilder,
-    required StateProvider<int> currentPageProvider,
-  }) {
-    return Stack(
+Widget buildBannerPageView({
+  required WidgetRef ref, // BuildContext 대신 WidgetRef를 사용, ref를 매개변수(인자)로 받음.
+  required PageController pageController, // 페이지 컨트롤러
+  required int itemCount, // 배너 아이템(이미지)의 총 개수
+  required IndexedWidgetBuilder itemBuilder, // 각 배너 아이템을 구성하는 위젯 빌더
+  required StateProvider<int> currentPageProvider, // 현재 페이지 인덱스를 관리하는 상태 프로바이더
+  required BuildContext context, // 현재 컨텍스트
+}) {
+  // 배너 클릭 시 이동할 URL 리스트
+  final List<String> bannerLinks = [
+    'https://www.naver.com',
+    'https://www.youtube.com',
+    // 여기서는 'https://www.coupang.com' 주석 처리되어 있음
+  ];
+
+  return Stack(
       children: [
-        PageView.builder(
-          controller: pageController,
-          itemCount: itemCount,
-          onPageChanged: (index) {
-            // 이 부분에서 상태를 업데이트합니다.
-            ref.read(currentPageProvider.notifier).state = index; // 페이지 변경 시 현재 페이지 상태 업데이트
+      PageView.builder(
+      controller: pageController, // 페이지 뷰 컨트롤러 할당
+      itemCount: itemCount, // 아이템(배너)의 총 개수 설정
+      onPageChanged: (index) {
+        // 페이지가 변경될 때 호출되는 콜백 함수
+        // 여기서 현재 페이지 상태를 업데이트합니다.
+        ref.read(currentPageProvider.notifier).state = index; // 현재 페이지 인덱스 업데이트
+      },
+      itemBuilder: (context, index) => GestureDetector(
+          onTap: () async {
+            // 각 배너를 탭(클릭)했을 때의 동작
+            if (index == 2) {
+              // 인덱스 2(세 번째 배너)의 경우 특별한 페이지로 이동
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AccessoryLayout()));
+            } else {
+              // 나머지 배너는 지정된 URL로 이동
+              final url = bannerLinks[index]; // 해당 인덱스의 URL 가져오기
+              if (await canLaunchUrl(Uri.parse(url))) {
+                // URL을 실행할 수 있는지 확인 후 실행
+                await launchUrl(Uri.parse(url));
+              } else {
+                // 실행할 수 없는 경우 에러 메시지 표시
+                throw 'Could not launch $url';
+              }
+            }
           },
-          itemBuilder: itemBuilder,
+          child: itemBuilder(context, index), // 원래 정의된 아이템 빌더를 사용하여 배너 아이템 위젯 생성
+  // ------ buildBannerPageView 위젯 내용 구현 시작
+// 배너 페이지뷰 UI 위젯
+          ),
         ),
         Positioned(
           right: 40,
@@ -359,75 +389,75 @@ class BannerAutoScrollClass {
                   ref.read(sizeSelectionProvider.state).state = null;
                 });
           },
-        child: Container(
-        width: 180,
-        margin: EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // 텍스트와 색상 이미지들을 왼쪽으로 정렬
-              children: [
-                // 썸네일 이미지 표시
-                if (data['thumbnails'] != null)
-                  Center( // thumbnails 이미지를 중앙에 배치
-                    child: Image.network(data['thumbnails'], width: 90, fit: BoxFit.cover),// width: 90 : 전체인 Container 180 너비 중 thumbnails가 90 차지하도록 설정
-                  ),
-                SizedBox(height: 10), // thumbnails와 clothes_color 사이의 간격 설정
-                // 색상 이미지 URL 처리
-                // 색상 정보 표시
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start, // 색상 이미지들을 왼쪽으로 정렬
-                  children: List.generate(5, (index) => index + 1) // 1부터 5까지의 숫자 생성
-                      .map((i) => data['clothes_color$i'] != null
-                      ? Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Image.network(
-                      data['clothes_color$i'],
-                      width: 13,
-                      height: 13,
-                      fit: BoxFit.cover,
+            child: Container(
+            width: 180,
+            margin: EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 텍스트와 색상 이미지들을 왼쪽으로 정렬
+                  children: [
+                    // 썸네일 이미지 표시
+                    if (data['thumbnails'] != null)
+                      Center( // thumbnails 이미지를 중앙에 배치
+                        child: Image.network(data['thumbnails'], width: 90, fit: BoxFit.cover),// width: 90 : 전체인 Container 180 너비 중 thumbnails가 90 차지하도록 설정
+                      ),
+                    SizedBox(height: 10), // thumbnails와 clothes_color 사이의 간격 설정
+                    // 색상 이미지 URL 처리
+                    // 색상 정보 표시
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start, // 색상 이미지들을 왼쪽으로 정렬
+                      children: List.generate(5, (index) => index + 1) // 1부터 5까지의 숫자 생성
+                          .map((i) => data['clothes_color$i'] != null
+                          ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Image.network(
+                          data['clothes_color$i'],
+                          width: 13,
+                          height: 13,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                          : Container()) // 색상 정보가 없으면 표시하지 않음
+                          .toList(),
                     ),
-                  )
-                      : Container()) // 색상 정보가 없으면 표시하지 않음
-                      .toList(),
+                    // 짧은 소개 텍스트
+                    if (data['brief_introduction'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          data['brief_introduction'],
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    // 원가 표시
+                    if (data['original_price'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          "${data['original_price']}",
+                          style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
+                        ),
+                      ),
+                    // 할인가 표시
+                    if (data['discount_price'] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          "${data['discount_price']}",
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                  ],
                 ),
-                // 짧은 소개 텍스트
-                if (data['brief_introduction'] != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      data['brief_introduction'],
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                // 원가 표시
-                if (data['original_price'] != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      "${data['original_price']}",
-                      style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
-                    ),
-                  ),
-                // 할인가 표시
-                if (data['discount_price'] != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: Text(
-                      "${data['discount_price']}",
-                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          );
-        } else {
-          return Text("데이터 없음"); // 데이터가 없는 경우 표시
-        }
-      },
-      loading: () => CircularProgressIndicator(), // 로딩 중 표시
-      error: (error, stack) => Text("오류 발생: $error"), // 오류 발생 시 표시
-    );
-  }
+              ),
+              );
+            } else {
+              return Text("데이터 없음"); // 데이터가 없는 경우 표시
+            }
+          },
+          loading: () => CircularProgressIndicator(), // 로딩 중 표시
+          error: (error, stack) => Text("오류 발생: $error"), // 오류 발생 시 표시
+        );
+      }
   // ------ buildFirestoreDetailDocument 위젯 내용 구현 끝
 
   // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
