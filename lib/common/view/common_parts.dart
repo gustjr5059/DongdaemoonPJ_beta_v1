@@ -313,7 +313,7 @@ class BannerAutoScrollClass {
           itemBuilder: itemBuilder,
         ),
         Positioned(
-          right: 10,
+          right: 40,
           bottom: 10,
           child: Consumer(
             builder: (context, ref, child) {
