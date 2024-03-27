@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 통한 상태 관리를 위해 import 합니다.
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
 import '../../common/provider/common_future_provider.dart';
-import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리자 파일
-import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트 모듈
-// 아래 import된 파일들은 각 카테고리 별로 상세 페이지를 보여주기 위한 레이아웃 파일들입니다.
+import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
+import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트 파일
+// 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
 import '../layout/accessory_layout.dart';
 import '../layout/all_layout.dart';
 import '../layout/blouse_layout.dart';
@@ -21,19 +21,70 @@ import '../layout/underwear_layout.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
-// GlobalKey 대신 로컬 context를 사용하는 방법에 대해 설명하는 클래스
-// HomeScreen 클래스는 ConsumerWidget을 상속받아, Riverpod를 통한 상태 관리를 지원함.
+// Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
+// GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
+// GlobalKey 대신 local context 사용 방법 설명 클래스
+// HomeScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+// _HomeScreenState 클래스 시작
 class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
   late PageController pageController;
-  Timer? _timer; // 자동 스크롤을 위한 타이머 추가
-  int bannerImageCount = 0; // 배너 이미지의 총 개수를 저장할 변수
+  late BannerAutoScrollClass bannerAutoScrollClass;
+  int bannerImageCount = 3; // 배너 이미지 총 개수 저장 변수
+
+  // ------ 앱 실행 생명주기 관리 관련 함수 시작
+  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(
+      initialPage: ref.read(currentPageProvider),
+    );
+    bannerAutoScrollClass = BannerAutoScrollClass(
+      pageController: pageController,
+      currentPageProvider: currentPageProvider,
+      itemCount: bannerImageCount,
+    );
+    WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
+
+    // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
+    Future.delayed(Duration.zero, () {
+      bannerAutoScrollClass.startAutoScroll();
+    });
+  }
+  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
+
+  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
+  // didChangeAppLifecycleState 함수 관련 구현 내용 시작
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // 앱이 다시 활성화되면 자동 스크롤 재시작
+      bannerAutoScrollClass.startAutoScroll();
+    } else if (state == AppLifecycleState.paused) {
+      // 앱이 백그라운드로 이동하면 자동 스크롤 중지
+      bannerAutoScrollClass.stopAutoScroll();
+    }
+  }
+  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
+  // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    pageController.dispose();
+    bannerAutoScrollClass.stopAutoScroll();
+    super.dispose();
+  }
+  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
+  // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
@@ -47,6 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
       "스커트", "팬츠", "언더웨어", "악세서리"
     ];
 
+    // 문서 ID 리스트, 실제 앱에서는 DB에서 정보를 가져올 때 사용
     // common_part.dart에 정의한 buildHorizontalDocumentsList에 불러올 문서 ID 리스트 변수 정의
     // 문서 ID 목록을 정의함, 실제 애플리케이션에서는 이런 ID를 사용하여 데이터베이스에서 정보를 가져올 수 있음.
     List<String> docIds1 = ['alpha', 'apple', 'cat'];
@@ -75,12 +127,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
       return asyncBannerImages.when(
         data: (List<String> imageUrls) {
           bannerImageCount = imageUrls.length; // 이미지 URL 리스트의 길이를 업데이트
-
-          // 타이머를 여기서 시작하지만, 중복 시작을 방지함.
-          if (_timer == null) {
-            startAutoScrollTimer();
-          }
-
           // 이미지 URL 리스트를 성공적으로 가져온 경우,
           // 페이지 뷰를 구성하는 `buildBannerPageView` 함수를 호출함.
           // 이 함수는 페이지뷰 위젯과, 각 페이지를 구성하는 아이템 빌더, 현재 페이지 인덱스를 관리하기 위한 provider 등을 인자로 받음.
@@ -204,6 +250,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   }
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 
+  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
   // ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
   // 카테고리 버튼들을 그리드 형태로 표시하는 위젯
   Widget homeCategoryButtonsGrid(List<String> homeCategories, void Function(int) onHomeCategoryTap) {
@@ -234,72 +281,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     );
   }
   // ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
-
-  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
-  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 주기 관련 함수)
-  @override
-  void initState() {
-    super.initState();
-    // 초기 페이지 설정을 위해 ref를 사용합니다.
-    pageController = PageController(
-      initialPage: ref.read(currentPageProvider), // 초기 페이지 설정
-    );
-    WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
-  }
-  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 주기 관련 함수)
-
-  // ------ 페이지 뷰 자동 스크롤 타이머 기능인 startAutoScrollTimer() 함수 관련 구현 내용 시작
-  // 자동 스크롤 타이머 시작 함수
-  // 타이머 설정 부분에서 이 변수를 사용
-  void startAutoScrollTimer() {
-    _timer?.cancel(); // 이전 타이머가 있으면 취소
-    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-      if (pageController.hasClients && bannerImageCount > 0) {
-        int nextPage = (pageController.page?.round() ?? 0) + 1;
-        if (nextPage >= bannerImageCount) {
-          nextPage = 0; // 마지막 페이지면 첫 페이지로
-        }
-        pageController.animateToPage(
-          nextPage,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-  // ------ 페이지 뷰 자동 스크롤 타이머 기능인 startAutoScrollTimer() 함수 관련 구현 내용 끝
-
-  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
-  // didChangeAppLifecycleState 함수 관련 구현 내용 시작
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      // 앱이 다시 활성화되면 타이머 재시작
-      if (bannerImageCount > 0 && _timer == null) {
-        startAutoScrollTimer();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      // 앱이 백그라운드로 이동하면 타이머 정지
-      _timer?.cancel();
-      _timer = null;
-    }
-  }
-  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
-  // didChangeAppLifecycleState 함수 관련 구현 내용 끝
-
-  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 주기 관련 함수)
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this); // 옵저버 제거
-    pageController.dispose();
-    _timer?.cancel(); // 페이지 컨트롤러 및 타이머 정리
-    super.dispose();
-  }
-// ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 주기 관련 함수)
-
-// ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
+  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
 }
-
+// _HomeScreenState 클래스 끝
 
 

@@ -25,6 +25,45 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
   // GlobalKey 사용 제거
   // final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+// ------ 배너 페이지 뷰 자동 스크롤 기능 구현 위한 클래스 시작
+class BannerAutoScrollClass {
+  final PageController pageController;
+  final StateProvider<int> currentPageProvider;
+  Timer? _timer;
+  int itemCount;
+
+  BannerAutoScrollClass({
+    required this.pageController,
+    required this.currentPageProvider,
+    required this.itemCount,
+  });
+
+  void startAutoScroll() {
+    _timer?.cancel(); // 이전 타이머가 있으면 취소
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      if (pageController.hasClients && itemCount > 0) {
+        int nextPage = (pageController.page?.round() ?? 0) + 1;
+        if (nextPage >= itemCount) {
+          nextPage = 0; // 마지막 페이지면 첫 페이지로 이동
+        }
+        pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  void stopAutoScroll() {
+    _timer?.cancel();
+    _timer = null;
+  }
+}
+// ------ 배너 페이지 뷰 자동 스크롤 기능 구현 위한 클래스 끝
+
+  // ------ AppBar 생성 함수 내용 구현 시작
+  // 상단 탭 바 생성 함수
   // AppBar 생성 함수에서 GlobalKey 사용 제거
   // 공통 AppBar 생성 함수. GlobalKey 사용을 제거하고 context를 활용하여 Drawer를 열 수 있게 함.
   AppBar buildCommonAppBar(String title, BuildContext context) {
@@ -48,7 +87,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       ],
     );
   }
+  // ------ AppBar 생성 함수 내용 구현 끝
 
+  // ------ buildTopBarList 위젯 내용 구현 시작
   // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
   // TopBar의 카테고리 리스트 생성 함수. 각 카테고리를 탭했을 때의 동작을 정의함.
   Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
@@ -93,19 +134,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
         itemCount: topBarCategories.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => onTopBarTap(index),
+            onTap: () => onTopBarTap(index), // 해당 인덱스의 카테고리를 탭했을 때 실행될 함수
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Center(child: Text(topBarCategories[index])),
+              child: Center(child: Text(topBarCategories[index])), // 카테고리 이름을 표시
             ),
           );
         },
       ),
     );
   }
+  // ------ buildTopBarList 위젯 내용 구현 끝
 
-
-
+  // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
   // BottomNavigationBar 생성 함수
   // 공통 BottomNavigationBar 생성 함수. 선택된 항목에 따라 다른 화면으로 이동하도록 구현함.
   Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context) {
@@ -115,9 +156,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       onTap: (index) {
         // 상태 업데이트
         // 선택된 인덱스에 따라 상태 업데이트 및 화면 전환 로직
-        ref.read(tabIndexProvider.notifier).state = index;
+        ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭에 따라 상태 업데이트
         // 화면 전환 로직
-        switch (index) {
+        switch (index) { // 선택된 인덱스에 따라 다른 화면으로 이동
           case 0:
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
             break;
@@ -144,12 +185,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       unselectedFontSize: 10,
     );
   }
+  // ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
 
+  // ------ buildCommonDrawer 위젯 내용 구현 시작
   // 드로워 생성 함수
   // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
   Widget buildCommonDrawer(BuildContext context) {
-    // FirebaseAuth의 현재 사용자 인스턴스를 사용하여 사용자의 로그인 상태 확인
-    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
     final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email'; // 현재 로그인한 사용자의 이메일 표시
     return Drawer(
       child: ListView(
@@ -172,7 +213,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
             title: Text('Logout'),
             onTap: () async {
                 // 로그아웃 후 로그인 화면으로 이동
-                await FirebaseAuth.instance.signOut();
+                await FirebaseAuth.instance.signOut(); // 로그아웃 처리
                 // (context) -> (_) 로 변경 : 매개변수를 정의해야 하지만 실제로 내부 로직에서 사용하지 않을 때 표기방법
                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
             },
@@ -198,7 +239,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       ),
     );
   }
+  // ------ buildCommonDrawer 위젯 내용 구현 끝
 
+  // ------ pageViewWithArrows 위젯 내용 구현 시작
   // PageView와 화살표 버튼을 포함하는 위젯
   // 사용자가 페이지를 넘길 수 있도록 함.
   Widget pageViewWithArrows(
@@ -231,7 +274,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       ],
     );
   }
+  // ------ pageViewWithArrows 위젯 내용 구현 끝
 
+  // ------ arrowButton 위젯 내용 구현 시작
   // 화살표 버튼을 생성하는 위젯(함수)
   // 화살표 버튼을 통해 사용자는 페이지를 앞뒤로 넘길 수 있음.
   Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallback onPressed, StateProvider<int> currentPageProvider, WidgetRef ref) {
@@ -245,8 +290,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       ),
     );
   }
+  // ------ arrowButton 위젯 내용 구현 끝
 
-  // 자동 페이지 전환 기능을 포함하는 페이지뷰 위젯을 만들어주는 함수
+  // ------ buildBannerPageView 위젯 내용 구현 시작
+  // 배너 페이지뷰 UI 관련 위젯
   Widget buildBannerPageView({
     required WidgetRef ref, // BuildContext 대신 WidgetRef를 사용하여 ref를 매개변수로 받습니다.
     required PageController pageController,
@@ -261,7 +308,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
           itemCount: itemCount,
           onPageChanged: (index) {
             // 이 부분에서 상태를 업데이트합니다.
-            ref.read(currentPageProvider.notifier).state = index;
+            ref.read(currentPageProvider.notifier).state = index; // 페이지 변경 시 현재 페이지 상태 업데이트
           },
           itemBuilder: itemBuilder,
         ),
@@ -270,7 +317,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
           bottom: 10,
           child: Consumer(
             builder: (context, ref, child) {
-              final currentPage = ref.watch(currentPageProvider);
+              final currentPage = ref.watch(currentPageProvider); // 현재 페이지 인덱스를 감시
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
@@ -278,7 +325,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '${currentPage + 1} / $itemCount',
+                  '${currentPage + 1} / $itemCount', // 현재 페이지 번호와 총 페이지 수 표시
                   style: TextStyle(color: Colors.white),
                 ),
               );
@@ -288,7 +335,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       ],
     );
   }
+  // ------ buildBannerPageView 위젯 내용 구현 끝
 
+  // ------ buildFirestoreDetailDocument 위젯 내용 구현 시작
   // Firestore 데이터를 기반으로 세부 정보를 표시하는 위젯.
   // 각 문서의 세부 정보를 UI에 표시함.
   Widget buildFirestoreDetailDocument(WidgetRef ref, String docId, BuildContext context) {
@@ -379,7 +428,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       error: (error, stack) => Text("오류 발생: $error"), // 오류 발생 시 표시
     );
   }
+  // ------ buildFirestoreDetailDocument 위젯 내용 구현 끝
 
+  // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
   // buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
   // 가로로 스크롤 가능한 문서 리스트를 생성하는 함수. 문서 클릭 시 설정된 동작을 실행함.
   Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds, BuildContext context) {
@@ -390,5 +441,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
       ),
     );
   }
+  // ------ buildHorizontalDocumentsList 위젯 내용 구현 끝
 
 
