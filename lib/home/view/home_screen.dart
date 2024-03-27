@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 통한 상태 관리를 위해 import 합니다.
 import '../../common/provider/common_future_provider.dart';
@@ -30,26 +32,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
   late PageController pageController;
+  Timer? _timer; // 자동 스크롤을 위한 타이머 추가
+  int bannerImageCount = 0; // 배너 이미지의 총 개수를 저장할 변수
 
-  @override
-  void initState() {
-    super.initState();
-    // 초기 페이지 설정을 위해 ref를 사용합니다.
-    pageController = PageController(
-      initialPage: ref.read(currentPageProvider), // 초기 페이지 설정
-    );
-
-    // 생명주기 감지를 위해 현재 State 객체를 옵저버에 추가합니다.
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-
+  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // // PageController는 페이지뷰를 컨트롤함.
-    // final PageController pageController = PageController(
-    //   initialPage: ref.read(currentPageProvider), // 초기 페이지 설정
-    // );
 
     // home_screen.dart에 표시된 카테고리 12개 변수 정의
     // 홈 화면에 표시될 카테고리 목록
@@ -67,19 +55,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
+    // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
     void onTopBarTap(int index) {
-      // 여기서 탭 선택 로직을 구현할 수 있습니다.
-      // 예를 들어, ref.read(selectedTabIndexProvider.state).state = index; 와 같이 사용할 수 있습니다.
     }
-
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
+    // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
     Widget topBarList = buildTopBarList(context, onTopBarTap);
-
     // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
-    WidgetsBinding.instance.addObserver(this); // 생명주기 감지를 위해 옵저버 추가
-
-// 배너 이미지를 보여주는 페이지뷰 섹션
+    // ------ common_parts.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
+    // banner 페이지 뷰의 조건에 따른 동작 구현 내용 시작
+    // 배너 이미지를 보여주는 페이지뷰 섹션
     Widget buildBannerPageViewSection() {
       // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
       // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
@@ -88,13 +74,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
       // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
       return asyncBannerImages.when(
         data: (List<String> imageUrls) {
+          bannerImageCount = imageUrls.length; // 이미지 URL 리스트의 길이를 업데이트
+
+          // 타이머를 여기서 시작하지만, 중복 시작을 방지함.
+          if (_timer == null) {
+            startAutoScrollTimer();
+          }
+
           // 이미지 URL 리스트를 성공적으로 가져온 경우,
           // 페이지 뷰를 구성하는 `buildBannerPageView` 함수를 호출함.
           // 이 함수는 페이지뷰 위젯과, 각 페이지를 구성하는 아이템 빌더, 현재 페이지 인덱스를 관리하기 위한 provider 등을 인자로 받음.
           return buildBannerPageView(
             ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
             pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
-            itemCount: imageUrls.length, // 이미지 URL 리스트의 길이를 전달하여 전체 페이지 수를 정의함.
+            itemCount: bannerImageCount, // 업데이트된 이미지 URL 리스트 길이를 사용 / 이미지 URL 리스트의 길이를 전달하여 전체 페이지 수를 정의함.
             itemBuilder: (context, index) => Image.network(imageUrls[index], fit: BoxFit.cover), // 각 페이지를 구성할 위젯을 정의하고, 여기서는 네트워크 이미지를 사용함.
             currentPageProvider: currentPageProvider, // 현재 페이지 인덱스를 관리하기 위한 StateProvider를 전달함.
           );
@@ -103,17 +96,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
         error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')), // 오류 발생 시 오류 메시지를 표시함.
       );
     }
-
-
-
-    // 5초마다 페이지를 자동으로 전환하는 기능을 구현함.
-    startAutoScrollTimer(
-      ref: ref, // 이렇게 ref를 전달합니다.
-      pageController: pageController,
-      itemCount: 3, // 총 페이지 수 설정
-      currentPageProvider: currentPageProvider,
-    );
-
+    // ------ common_parts.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
+    // banner 페이지 뷰의 조건에 따른 동작 구현 내용 끝
 
     // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
     // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
@@ -215,10 +199,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
-    ); // ------ 화면구성 끝
+    );
+    // ------ 화면구성 끝
   }
+  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 
-  // home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯
+  // ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
   // 카테고리 버튼들을 그리드 형태로 표시하는 위젯
   Widget homeCategoryButtonsGrid(List<String> homeCategories, void Function(int) onHomeCategoryTap) {
     return GridView.builder(
@@ -247,24 +233,72 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
       },
     );
   }
-// ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
+  // ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
 
+  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
+  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 주기 관련 함수)
+  @override
+  void initState() {
+    super.initState();
+    // 초기 페이지 설정을 위해 ref를 사용합니다.
+    pageController = PageController(
+      initialPage: ref.read(currentPageProvider), // 초기 페이지 설정
+    );
+    WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
+  }
+  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 주기 관련 함수)
+
+  // ------ 페이지 뷰 자동 스크롤 타이머 기능인 startAutoScrollTimer() 함수 관련 구현 내용 시작
+  // 자동 스크롤 타이머 시작 함수
+  // 타이머 설정 부분에서 이 변수를 사용
+  void startAutoScrollTimer() {
+    _timer?.cancel(); // 이전 타이머가 있으면 취소
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      if (pageController.hasClients && bannerImageCount > 0) {
+        int nextPage = (pageController.page?.round() ?? 0) + 1;
+        if (nextPage >= bannerImageCount) {
+          nextPage = 0; // 마지막 페이지면 첫 페이지로
+        }
+        pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+  // ------ 페이지 뷰 자동 스크롤 타이머 기능인 startAutoScrollTimer() 함수 관련 구현 내용 끝
+
+  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
+  // didChangeAppLifecycleState 함수 관련 구현 내용 시작
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      // 앱이 다시 활성화될 때 실행할 로직
-      // 마지막 페이지 번호를 기반으로 PageController를 업데이트할 수 있음
-      // 이 예시에서는 구체적인 PageController 업데이트 로직을 추가하지 않았음
+      // 앱이 다시 활성화되면 타이머 재시작
+      if (bannerImageCount > 0 && _timer == null) {
+        startAutoScrollTimer();
+      }
+    } else if (state == AppLifecycleState.paused) {
+      // 앱이 백그라운드로 이동하면 타이머 정지
+      _timer?.cancel();
+      _timer = null;
     }
   }
+  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
+  // didChangeAppLifecycleState 함수 관련 구현 내용 끝
 
+  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 주기 관련 함수)
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this); // 옵저버 제거
+    pageController.dispose();
+    _timer?.cancel(); // 페이지 컨트롤러 및 타이머 정리
     super.dispose();
   }
+// ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 주기 관련 함수)
 
+// ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
 }
 
 
