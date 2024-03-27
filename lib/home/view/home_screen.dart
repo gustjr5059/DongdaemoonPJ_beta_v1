@@ -125,24 +125,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
 
       // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
       return asyncBannerImages.when(
+        // 데이터 상태인 경우, 이미지 URL 리스트를 바탕으로 페이지뷰를 구성함.
         data: (List<String> imageUrls) {
-          bannerImageCount = imageUrls.length; // 이미지 URL 리스트의 길이를 업데이트
-          double screenWidth = MediaQuery.of(context).size.width;
-
           // 이미지 URL 리스트를 성공적으로 가져온 경우,
           // 페이지 뷰를 구성하는 `buildBannerPageView` 함수를 호출함.
           // 이 함수는 페이지뷰 위젯과, 각 페이지를 구성하는 아이템 빌더, 현재 페이지 인덱스를 관리하기 위한 provider 등을 인자로 받음.
           return buildBannerPageView(
             ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
             pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
-            itemCount: bannerImageCount, // 업데이트된 이미지 URL 리스트 길이를 사용 / 이미지 URL 리스트의 길이를 전달하여 전체 페이지 수를 정의함.
-            itemBuilder: (context, index) => Image.network(
-              imageUrls[index],
-              width: screenWidth, // 이미지의 너비를 화면 너비에 맞춤.
-              fit: BoxFit.contain, // 이미지가 화면에 꽉 차도록 조정함.
+            itemCount: imageUrls.length, // 페이지 개수를 정의합니다. 이미지 리스트의 길이에 해당함.
+            itemBuilder: (context, index) => BannerImage(
+              imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: currentPageProvider,
-            context: context,
+            currentPageProvider: currentPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider
+            context: context, // 현재의 BuildContext를 전달함.
           );
         },
         loading: () => Center(child: CircularProgressIndicator()), // 데이터 로딩 중에는 로딩 인디케이터를 표시함.

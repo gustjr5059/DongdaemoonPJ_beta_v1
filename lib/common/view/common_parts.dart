@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 데이터베이스 사용을 위한 패키지
 import 'package:dongdaemoon_beta_v1/user/view/login_screen.dart'; // 로그인 화면
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
@@ -63,6 +64,30 @@ class BannerAutoScrollClass {
   }
 }
 // ------ 배너 페이지 뷰 자동 스크롤 기능 구현 위한 클래스 끝
+
+// ------ 배너 페이지 뷰에 사용되는 파이어베이스의 이미지 데이터를 캐시에 임시 저장하기 위한 클래스 시작
+// StatelessWidget를 상속받아 상태가 없는 위젯 BannerImage를 정의함.
+class BannerImage extends StatelessWidget {
+  // imageUrl은 네트워크 이미지의 URL을 저장하는 문자열 변수
+  final String imageUrl;
+
+  // 생성자에서는 imageUrl을 필수적으로 받으며, key는 선택적으로 받음.
+  // super(key: key)를 통해 부모 클래스의 생성자에 key를 전달함.
+  const BannerImage({Key? key, required this.imageUrl}) : super(key: key);
+
+  // build 메소드는 위젯의 UI를 구성함.
+  @override
+  Widget build(BuildContext context) {
+    // CachedNetworkImage 위젯을 사용하여 네트워크 이미지를 로딩하고 캐싱함.
+    return CachedNetworkImage(
+      imageUrl: imageUrl, // imageUrl 프로퍼티를 통해 이미지 URL을 지정함.
+      fit: BoxFit.contain, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
+      // 이미지 로딩 중 에러가 발생한 경우 errorWidget을 통해 에러 아이콘을 표시함.
+      errorWidget: (context, url, error) => Icon(Icons.error),
+    );
+  }
+}
+// ------ 배너 페이지 뷰에 사용되는 파이어베이스의 이미지 데이터를 캐시에 임시 저장하기 위한 클래스 끝
 
   // ------ AppBar 생성 함수 내용 구현 시작
   // 상단 탭 바 생성 함수
