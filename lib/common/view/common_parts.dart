@@ -247,8 +247,10 @@ class BannerImage extends StatelessWidget {
           ),
 
           ListTile(
+            // ListTile의 앞부분에는 네이버 카페 로고 이미지를 표시함.
             leading: Image.asset('asset/img/misc/navercafe.logo.png', width: 24),
             title: Text('네이버 카페'),
+            // 사용자가 ListTile을 탭할 때 실행될 코드, 네이버 카페의 URL로 이동하는 코드
             onTap: () async {
               const url = 'https://cafe.naver.com/ottbayo';
               if (await canLaunchUrl(Uri.parse(url))) {
@@ -257,8 +259,10 @@ class BannerImage extends StatelessWidget {
             },
           ),
           ListTile(
+            // ListTile의 앞부분에는 유튜브 로고 이미지를 표시함.
             leading: Image.asset('asset/img/misc/youtube.logo.png', width: 24),
             title: Text('유튜브'),
+            // 사용자가 ListTile을 탭할 때 실행될 코드, 유튜브의 URL로 이동하는 코드
             onTap: () async {
               const url = 'https://www.youtube.com/@OTTBAYO';
               if (await canLaunchUrl(Uri.parse(url))) {
@@ -267,8 +271,10 @@ class BannerImage extends StatelessWidget {
             },
           ),
           ListTile(
+            // ListTile의 앞부분에는 인스타그램 로고 이미지를 표시함.
             leading: Image.asset('asset/img/misc/instagram.logo.png', width: 24),
             title: Text('인스타그램'),
+            // 사용자가 ListTile을 탭할 때 실행될 코드, 인스타그램의 URL로 이동하는 코드
             onTap: () async {
               const url = 'https://www.instagram.com/ottbayo';
               if (await canLaunchUrl(Uri.parse(url))) {
@@ -277,8 +283,10 @@ class BannerImage extends StatelessWidget {
             },
           ),
           ListTile(
+            // ListTile의 앞부분에는 카카오 로고 이미지를 표시함.
             leading: Image.asset('asset/img/misc/kakao.logo.png', width: 24),
             title: Text('카카오'),
+            // 사용자가 ListTile을 탭할 때 실행될 코드, 카카오의 URL로 이동하는 코드
             onTap: () async {
               const url = 'https://pf.kakao.com/_xjVrbG';
               if (await canLaunchUrl(Uri.parse(url))) {
