@@ -43,8 +43,10 @@ class ProfileScreen extends ConsumerWidget {
                   // 로그인/로그아웃 버튼
                   ElevatedButton(
                     onPressed: () async {
-                        // 로그아웃 처리
-                        FirebaseAuth.instance.signOut();
+                      // 로그아웃 처리
+                      await FirebaseAuth.instance.signOut();
+                      // 페이지 인덱스를 0으로 초기화
+                      ref.read(currentPageProvider.notifier).state = 0;
                         // 로그아웃 후 로그인 화면으로 이동
                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
                     },

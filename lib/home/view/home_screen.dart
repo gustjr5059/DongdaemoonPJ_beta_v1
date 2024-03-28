@@ -43,8 +43,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   @override
   void initState() {
     super.initState();
-    // PageController를 초기 페이지로 설정함.
-    pageController = PageController(initialPage: 0);
+    // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
+    pageController = PageController(initialPage: ref.read(currentPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
@@ -55,13 +55,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user != null) {
-        // 사용자가 로그인한 경우, 페이지 인덱스를 초기화하지 않음.
-        // 이는 사용자가 앱 내에서 로그아웃하고 재로그인하는 경우를 대비한 것
-      } else {
-        // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정함.
+      if (user == null) {
+        // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(currentPageProvider.notifier).state = 0;
-        pageController.jumpToPage(0);
       }
     });
 
