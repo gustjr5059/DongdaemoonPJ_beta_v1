@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
 import '../../common/provider/common_future_provider.dart';
@@ -42,14 +43,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   @override
   void initState() {
     super.initState();
-    pageController = PageController(
-      initialPage: ref.read(currentPageProvider),
-    );
+    // PageController를 초기 페이지로 설정함.
+    pageController = PageController(initialPage: 0);
+
+    // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
       currentPageProvider: currentPageProvider,
       itemCount: bannerImageCount,
     );
+
+    // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        // 사용자가 로그인한 경우, 페이지 인덱스를 초기화하지 않음.
+        // 이는 사용자가 앱 내에서 로그아웃하고 재로그인하는 경우를 대비한 것
+      } else {
+        // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정함.
+        ref.read(currentPageProvider.notifier).state = 0;
+        pageController.jumpToPage(0);
+      }
+    });
+
+    // WidgetsBindingObserver를 추가하여 앱의 생명주기를 관리함.
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
@@ -78,6 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void dispose() {
+    // 앱 종료 시 리소스를 해제함.
     WidgetsBinding.instance.removeObserver(this);
     pageController.dispose();
     bannerAutoScrollClass.stopAutoScroll();
