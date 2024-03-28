@@ -245,6 +245,47 @@ class BannerImage extends StatelessWidget {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
             },
           ),
+
+          ListTile(
+            leading: Image.asset('asset/img/misc/navercafe.logo.png', width: 24),
+            title: Text('네이버 카페'),
+            onTap: () async {
+              const url = 'https://cafe.naver.com/ottbayo';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            },
+          ),
+          ListTile(
+            leading: Image.asset('asset/img/misc/youtube.logo.png', width: 24),
+            title: Text('유튜브'),
+            onTap: () async {
+              const url = 'https://www.youtube.com/@OTTBAYO';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            },
+          ),
+          ListTile(
+            leading: Image.asset('asset/img/misc/instagram.logo.png', width: 24),
+            title: Text('인스타그램'),
+            onTap: () async {
+              const url = 'https://www.instagram.com/ottbayo';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            },
+          ),
+          ListTile(
+            leading: Image.asset('asset/img/misc/kakao.logo.png', width: 24),
+            title: Text('카카오'),
+            onTap: () async {
+              const url = 'https://pf.kakao.com/_xjVrbG';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            },
+          ),
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text('Profile'),
