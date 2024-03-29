@@ -7,6 +7,7 @@ import '../../common/provider/common_future_provider.dart';
 import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
 import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트 파일
 // 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
+import '../../product/provider/product_state_provider.dart';
 import '../layout/accessory_layout.dart';
 import '../layout/all_layout.dart';
 import '../layout/blouse_layout.dart';
@@ -44,12 +45,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   void initState() {
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
-    pageController = PageController(initialPage: ref.read(currentPageProvider));
+    pageController = PageController(initialPage: ref.read(allBannerPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
-      currentPageProvider: currentPageProvider,
+      currentPageProvider: allBannerPageProvider,
       itemCount: bannerImageCount,
     );
 
@@ -57,7 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(currentPageProvider.notifier).state = 0;
+        ref.read(allBannerPageProvider.notifier).state = 0;
       }
     });
 
@@ -150,7 +151,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
             itemBuilder: (context, index) => BannerImage(
               imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: currentPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider
+            currentPageProvider: allBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             context: context, // 현재의 BuildContext를 전달함.
           );
         },
