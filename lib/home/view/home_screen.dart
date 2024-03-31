@@ -34,10 +34,19 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 // _HomeScreenState 클래스 시작
+// _HomeScreenState 클래스는 HomeScreen 위젯의 상태를 관리함.
+// WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
+  // 페이지 컨트롤러 인스턴스를 늦게 초기화함.
+  // 이 컨트롤러를 사용하여 페이지뷰를 프로그래매틱하게 제어할 수 있음.
   late PageController pageController;
+  // 배너 자동 스크롤 기능을 관리하는 클래스 인스턴스를 늦게 초기화함.
+  // 이 클래스를 통해 배너 이미지가 자동으로 스크롤되는 기능을 구현할 수 있음.
   late BannerAutoScrollClass bannerAutoScrollClass;
   int bannerImageCount = 3; // 배너 이미지 총 개수 저장 변수
+  // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
+  // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
+  StreamSubscription<User?>? authStateChangesSubscription;
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -56,6 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(allBannerPageProvider.notifier).state = 0;
@@ -91,10 +101,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void dispose() {
-    // 앱 종료 시 리소스를 해제함.
+    // WidgetsBinding 인스턴스에서 현재 객체를 옵저버 목록에서 제거함.
+    // 이는 앱 생명주기 이벤트를 더 이상 수신하지 않겠다는 것을 의미함.
     WidgetsBinding.instance.removeObserver(this);
+    // 페이지 컨트롤러를 사용하여 생성된 리소스를 해제함.
     pageController.dispose();
+    // 배너 자동 스크롤 클래스를 사용하여 자동 스크롤을 중지함.
+    // 배너가 자동으로 스크롤되는 기능을 사용할 때, 해당 기능을 중지하고 리소스를 정리함.
     bannerAutoScrollClass.stopAutoScroll();
+    // Firebase 같은 백엔드 서비스를 사용하여 인증 상태가 변경될 때마다 알림을 받는 경우,
+    // 위젯이 제거될 때 이러한 알림을 더 이상 받지 않도록 구독을 취소함.
+    authStateChangesSubscription?.cancel();
+    // 위젯의 기본 dispose 메서드를 호출하여 추가적인 정리 작업을 수행함.
     super.dispose();
   }
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
