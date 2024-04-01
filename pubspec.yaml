@@ -81,6 +81,9 @@ flutter:
     - asset/img/misc/navercafe.logo.png
     - asset/img/misc/instagram.logo.png
     - asset/img/misc/kakao.logo.png
+    - asset/img/misc/bestSeller_v1.png
+    - asset/img/misc/new_v1.png
+    - asset/img/misc/sale_v1.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

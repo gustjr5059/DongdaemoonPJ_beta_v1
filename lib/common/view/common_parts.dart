@@ -119,10 +119,16 @@ class BannerImage extends StatelessWidget {
   // ------ buildTopBarList 위젯 내용 구현 시작
   // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
   // TopBar의 카테고리 리스트 생성 함수. 각 카테고리를 탭했을 때의 동작을 정의함.
-  Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
-    final List<String> topBarCategories = [
-      "NEW", "BEST", "SALE", "시즌룩", "커플룩", "컨셉1", "컨셉2", "컨셉3"
-    ];
+Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
+  final List<dynamic> topBarCategories = [
+    {"type": "image", "data": "asset/img/misc/new_v1.png"}, // "NEW" 대신 이미지 사용
+    {"type": "image", "data": "asset/img/misc/bestSeller_v1.png"}, // "BEST" 대신 이미지 사용
+    {"type": "image", "data": "asset/img/misc/sale_v1.png"}, // "SALE" 대신 이미지 사용
+    {"type": "text", "data": "봄"},
+    {"type": "text", "data": "여름"},
+    {"type": "text", "data": "가을"},
+    {"type": "text", "data": "겨울"},
+  ];
 
     void onTopBarTap(int index) {
       switch (index) {
@@ -160,17 +166,22 @@ class BannerImage extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: topBarCategories.length,
         itemBuilder: (context, index) {
+          final category = topBarCategories[index];
           return GestureDetector(
             onTap: () => onTopBarTap(index), // 해당 인덱스의 카테고리를 탭했을 때 실행될 함수
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Center(child: Text(topBarCategories[index])), // 카테고리 이름을 표시
+              child: Center(
+                child: category["type"] == "text"
+                    ? Text(category["data"]) // 텍스트 타입인 경우 텍스트 표시
+                    : Image.asset(category["data"], width: 60, height: 60), // 이미지 타입인 경우 이미지 표시
+              ),
             ),
           );
         },
       ),
     );
-  }
+}
   // ------ buildTopBarList 위젯 내용 구현 끝
 
   // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
