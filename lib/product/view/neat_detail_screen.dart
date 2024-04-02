@@ -6,14 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
 import '../../common/const/colors.dart';
 import '../../common/provider/common_future_provider.dart';
 import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
-import '../../common/view/common_parts.dart';
+import '../../common/layout/common_parts_layout.dart';
 import '../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 파일
 
 
 // 제품 상세 페이지를 나타내는 위젯 클래스, Riverpod의 ConsumerWidget을 상속받아 상태 관리 가능
-class DetailProductScreen extends ConsumerWidget {
+class NeatDetailProductScreen extends ConsumerWidget {
   final String docId; // 문서 ID를 저장할 변수 선언
-  const DetailProductScreen({Key? key, required this.docId}) : super(key: key); // 생성자 수정
+  const NeatDetailProductScreen({Key? key, required this.docId}) : super(key: key); // 생성자 수정
 
   // 이미지의 크기를 비동기적으로 가져오는 함수
   Future<Size> _getImageSize(String imageUrl) async {
@@ -65,7 +65,7 @@ class DetailProductScreen extends ConsumerWidget {
           context, // 현재 context
           PageController(), // 페이지 컨트롤러를 새로 생성
           ref, // Riverpod의 WidgetRef, 상태 관리를 위해 사용
-          detailBannerPageProvider, // 현재 페이지의 인덱스를 관리하는 StateProvider(allBannerPageProvider와 분리하여 홈 화면의 배너 페이지 뷰의 페이지 인덱스와 따로 관리)
+          allDetailBannerPageProvider, // 현재 페이지의 인덱스를 관리하는 StateProvider(allBannerPageProvider와 분리하여 홈 화면의 배너 페이지 뷰의 페이지 인덱스와 따로 관리)
           itemCount: imageUrls.length, // 이미지 URL 리스트의 길이, 즉 총 슬라이드 개수를 나타냄
           itemBuilder: (BuildContext context, int index) {
             // itemBuilder는 각 슬라이드를 구성하는 위젯을 반환합니다.
@@ -101,7 +101,7 @@ class DetailProductScreen extends ConsumerWidget {
       // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
       // 기존 GlobalKey의 사용은 제거됨.
       // 공통 AppBar 구성 함수 호출
-      appBar: buildCommonAppBar('DETAIL PRODUCT', context),// common_parts.dart의 AppBar 재사용
+      appBar: buildCommonAppBar('니트 상세', context),// common_parts.dart의 AppBar 재사용
       // body에 카테고리 리스트 포함
       body: SingleChildScrollView( // 스크롤 가능한 뷰로 컨텐츠를 감싸기
         child: Column( // 세로로 배열되는 위젯들

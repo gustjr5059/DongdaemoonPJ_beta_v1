@@ -5,38 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
 import '../../common/provider/common_future_provider.dart';
 import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
-import '../../common/view/common_parts.dart'; // 공통 UI 컴포넌트 파일
+import '../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
 // 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
 import '../../product/provider/product_state_provider.dart';
-import '../layout/accessory_layout.dart';
-import '../layout/all_layout.dart';
-import '../layout/blouse_layout.dart';
-import '../layout/bottom_layout.dart';
-import '../layout/neat_layout.dart';
-import '../layout/onepiece_layout.dart';
-import '../layout/outer_layout.dart';
-import '../layout/pants_layout.dart';
-import '../layout/shirt_layout.dart';
-import '../layout/skirt_layout.dart';
-import '../layout/top_layout.dart';
-import '../layout/underwear_layout.dart';
+
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// HomeScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+// TopMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class TopMainScreen extends ConsumerStatefulWidget {
+  const TopMainScreen({Key? key}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _TopMainScreenState createState() => _TopMainScreenState();
 }
 
-// _HomeScreenState 클래스 시작
-// _HomeScreenState 클래스는 HomeScreen 위젯의 상태를 관리함.
+// _TopMainScreenState 클래스 시작
+// _TopMainScreenState 클래스는 TopMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
+class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindingObserver {
   // 페이지 컨트롤러 인스턴스를 늦게 초기화함.
   // 이 컨트롤러를 사용하여 페이지뷰를 프로그래매틱하게 제어할 수 있음.
   late PageController pageController;
@@ -54,12 +43,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   void initState() {
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
-    pageController = PageController(initialPage: ref.read(allBannerPageProvider));
+    pageController = PageController(initialPage: ref.read(topMainBannerPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
-      currentPageProvider: allBannerPageProvider,
+      currentPageProvider: topMainBannerPageProvider,
       itemCount: bannerImageCount,
     );
 
@@ -68,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(allBannerPageProvider.notifier).state = 0;
+        ref.read(topMainBannerPageProvider.notifier).state = 0;
       }
     });
 
@@ -127,7 +116,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     List<String> docIds1 = ['alpha', 'apple', 'cat'];
     List<String> docIds2 = ['flutter', 'github', 'samsung'];
 
-    // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
+    // ------ common_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
@@ -136,9 +125,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
     Widget topBarList = buildTopBarList(context, onTopBarTap);
-    // ------ common_parts.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
+    // ------ common_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
-    // ------ common_parts.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
+    // ------ common_parts_layout.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
     // banner 페이지 뷰의 조건에 따른 동작 구현 내용 시작
     // 배너 이미지를 보여주는 페이지뷰 섹션
     Widget buildBannerPageViewSection() {
@@ -160,7 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
             itemBuilder: (context, index) => BannerImage(
               imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: allBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
+            currentPageProvider: topMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             context: context, // 현재의 BuildContext를 전달함.
           );
         },
@@ -168,13 +157,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
         error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')), // 오류 발생 시 오류 메시지를 표시함.
       );
     }
-    // ------ common_parts.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
+    // ------ common_parts_layout.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
     // banner 페이지 뷰의 조건에 따른 동작 구현 내용 끝
 
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('홈', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('상의', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -189,7 +178,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
             SizedBox(height: 20), // 높이 20으로 간격 설정
             // 화살표 버튼이 있는 PageView
             SizedBox(
-            // 페이지 뷰 섹션을 표시
+              // 페이지 뷰 섹션을 표시
               height: 200, // 페이지 뷰의 높이 설정
               // child: pageViewSection, // pageViewSection 호출
               child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
@@ -203,8 +192,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
             Text('🛍️ 이벤트 상품',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            buildHorizontalDocumentsList(ref, docIds2, context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '상의', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '상의', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),
@@ -215,7 +204,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     );
     // ------ 화면구성 끝
   }
-  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 }
 // _HomeScreenState 클래스 끝
 
