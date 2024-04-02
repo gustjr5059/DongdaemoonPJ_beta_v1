@@ -121,15 +121,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
-    // // home_screen.dart에 표시된 카테고리 12개 변수 정의
-    // // 홈 화면에 표시될 카테고리 목록
-    // final homeCategories = [
-    //   "전체", "상의", "하의", "아우터",
-    //   "니트", "원피스", "티셔츠", "블라우스",
-    //   "스커트", "팬츠", "언더웨어", "악세서리"
-    // ];
-
     // 문서 ID 리스트, 실제 앱에서는 DB에서 정보를 가져올 때 사용
     // common_part.dart에 정의한 buildHorizontalDocumentsList에 불러올 문서 ID 리스트 변수 정의
     // 문서 ID 목록을 정의함, 실제 애플리케이션에서는 이런 ID를 사용하여 데이터베이스에서 정보를 가져올 수 있음.
@@ -180,63 +171,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     // ------ common_parts.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
     // banner 페이지 뷰의 조건에 따른 동작 구현 내용 끝
 
-    // // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
-    // // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
-    // void onHomeCategoryTap(int index) {
-    //   // 여기서 각 카테고리에 맞는 페이지로 이동하는 로직을 구현
-    //   switch (index) {
-    //     case 0: // "전체" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const AllLayout()));
-    //       break;
-    //     case 1: // "상의" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const TopLayout()));
-    //       break;
-    //     case 2: // "하의" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const BottomLayout()));
-    //       break;
-    //     case 3: // "아우터" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const OuterLayout()));
-    //       break;
-    //     case 4: // "니트" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const NeatLayout()));
-    //       break;
-    //     case 5: // "원피스" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const OnepieceLayout()));
-    //       break;
-    //     case 6: // "티셔츠" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const ShirtLayout()));
-    //       break;
-    //     case 7: // "블라우스" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const BlouseLayout()));
-    //       break;
-    //     case 8: // "스커트" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const SkirtLayout()));
-    //       break;
-    //     case 9: // "팬츠" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const PantsLayout()));
-    //       break;
-    //     case 10: // "언더웨어" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const UnderwearLayout()));
-    //       break;
-    //     case 11: // "악세서리" 버튼에 대응하는 경우
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => const AccessoryLayout()));
-    //       break;
-    //   }
-    // }
-    // // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
-
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
@@ -249,9 +183,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
             // 여기에 Container보다 SizedBox 사용을 더 선호함(알아두기)
             SizedBox(
               // 상단 탭 바를 표시
-              height: 100, // TopBar의 높이 설정
+              height: 20, // TopBar의 높이 설정
               child: topBarList, // 수정된 buildTopBarList 함수 호출
             ),
+            SizedBox(height: 20), // 높이 20으로 간격 설정
             // 화살표 버튼이 있는 PageView
             SizedBox(
             // 페이지 뷰 섹션을 표시

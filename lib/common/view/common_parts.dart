@@ -131,10 +131,10 @@ class BannerImage extends StatelessWidget {
   // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
   // TopBar의 카테고리 리스트 생성 함수. 각 카테고리를 탭했을 때의 동작을 정의함.
 Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
-  final List<dynamic> topBarCategories = [
-    {"type": "image", "data": "asset/img/misc/new_v1.png"}, // "NEW" 대신 이미지 사용
-    {"type": "image", "data": "asset/img/misc/bestSeller_v1.png"}, // "BEST" 대신 이미지 사용
-    {"type": "image", "data": "asset/img/misc/sale_v1.png"}, // "SALE" 대신 이미지 사용
+  final List<Map<String, String>> topBarCategories = [
+    {"type": "text", "data": "신상"},
+    {"type": "text", "data": "최고"},
+    {"type": "text", "data": "할인"},
     {"type": "text", "data": "봄"},
     {"type": "text", "data": "여름"},
     {"type": "text", "data": "가을"},
@@ -174,18 +174,44 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
     return SizedBox(
       height: 60, // 적절한 높이 설정
       child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: topBarCategories.length,
+        scrollDirection: Axis.horizontal, // 리스트뷰의 스크롤 방향을 가로로 설정함.
+        itemCount: topBarCategories.length, // 리스트뷰에 표시될 항목의 개수를 상단 바 카테고리 배열의 길이로 설정함.
         itemBuilder: (context, index) {
-          final category = topBarCategories[index];
+          final category = topBarCategories[index]["data"] ?? ""; // 안전하게 문자열 추출
+
           return GestureDetector(
             onTap: () => onTopBarTap(index), // 해당 인덱스의 카테고리를 탭했을 때 실행될 함수
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Center(
-                child: category["type"] == "text"
-                    ? Text(category["data"]) // 텍스트 타입인 경우 텍스트 표시
-                    : Image.asset(category["data"], width: 60, height: 60), // 이미지 타입인 경우 이미지 표시
+              child: Text(
+                category,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: INPUT_BORDER_COLOR, // 글자 본연의 색상
+                  shadows: [
+                    Shadow( // 하단 그림자
+                      offset: Offset(0, 2),
+                      color: LOGO_COLOR,
+                      blurRadius: 0,
+                    ),
+                    Shadow( // 오른쪽 그림자
+                      offset: Offset(2, 0),
+                      color: LOGO_COLOR,
+                      blurRadius: 0,
+                    ),
+                    Shadow( // 상단 그림자
+                      offset: Offset(0, -2),
+                      color: LOGO_COLOR,
+                      blurRadius: 0,
+                    ),
+                    Shadow( // 왼쪽 그림자
+                      offset: Offset(-2, 0),
+                      color: LOGO_COLOR,
+                      blurRadius: 0,
+                    ),
+                  ],
+                ),
               ),
             ),
           );
