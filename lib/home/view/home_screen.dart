@@ -122,13 +122,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
   @override
   Widget build(BuildContext context) {
 
-    // home_screen.dart에 표시된 카테고리 12개 변수 정의
-    // 홈 화면에 표시될 카테고리 목록
-    final homeCategories = [
-      "전체", "상의", "하의", "아우터",
-      "니트", "원피스", "티셔츠", "블라우스",
-      "스커트", "팬츠", "언더웨어", "악세서리"
-    ];
+    // // home_screen.dart에 표시된 카테고리 12개 변수 정의
+    // // 홈 화면에 표시될 카테고리 목록
+    // final homeCategories = [
+    //   "전체", "상의", "하의", "아우터",
+    //   "니트", "원피스", "티셔츠", "블라우스",
+    //   "스커트", "팬츠", "언더웨어", "악세서리"
+    // ];
 
     // 문서 ID 리스트, 실제 앱에서는 DB에서 정보를 가져올 때 사용
     // common_part.dart에 정의한 buildHorizontalDocumentsList에 불러올 문서 ID 리스트 변수 정의
@@ -180,62 +180,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     // ------ common_parts.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
     // banner 페이지 뷰의 조건에 따른 동작 구현 내용 끝
 
-    // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
-    // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
-    void onHomeCategoryTap(int index) {
-      // 여기서 각 카테고리에 맞는 페이지로 이동하는 로직을 구현
-      switch (index) {
-        case 0: // "전체" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AllLayout()));
-          break;
-        case 1: // "상의" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const TopLayout()));
-          break;
-        case 2: // "하의" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const BottomLayout()));
-          break;
-        case 3: // "아우터" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const OuterLayout()));
-          break;
-        case 4: // "니트" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const NeatLayout()));
-          break;
-        case 5: // "원피스" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const OnepieceLayout()));
-          break;
-        case 6: // "티셔츠" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ShirtLayout()));
-          break;
-        case 7: // "블라우스" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const BlouseLayout()));
-          break;
-        case 8: // "스커트" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SkirtLayout()));
-          break;
-        case 9: // "팬츠" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const PantsLayout()));
-          break;
-        case 10: // "언더웨어" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const UnderwearLayout()));
-          break;
-        case 11: // "악세서리" 버튼에 대응하는 경우
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AccessoryLayout()));
-          break;
-      }
-    }
-    // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
+    // // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 시작
+    // // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
+    // void onHomeCategoryTap(int index) {
+    //   // 여기서 각 카테고리에 맞는 페이지로 이동하는 로직을 구현
+    //   switch (index) {
+    //     case 0: // "전체" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const AllLayout()));
+    //       break;
+    //     case 1: // "상의" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const TopLayout()));
+    //       break;
+    //     case 2: // "하의" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const BottomLayout()));
+    //       break;
+    //     case 3: // "아우터" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const OuterLayout()));
+    //       break;
+    //     case 4: // "니트" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const NeatLayout()));
+    //       break;
+    //     case 5: // "원피스" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const OnepieceLayout()));
+    //       break;
+    //     case 6: // "티셔츠" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const ShirtLayout()));
+    //       break;
+    //     case 7: // "블라우스" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const BlouseLayout()));
+    //       break;
+    //     case 8: // "스커트" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const SkirtLayout()));
+    //       break;
+    //     case 9: // "팬츠" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const PantsLayout()));
+    //       break;
+    //     case 10: // "언더웨어" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const UnderwearLayout()));
+    //       break;
+    //     case 11: // "악세서리" 버튼에 대응하는 경우
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => const AccessoryLayout()));
+    //       break;
+    //   }
+    // }
+    // // ------ home_screen.dart에만 사용되는 onHomeCategoryTap 내용 끝
 
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
@@ -259,14 +259,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
               // child: pageViewSection, // pageViewSection 호출
               child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
             ),
-            SizedBox(height: 20), // 간격을 추가
+            SizedBox(height: 20), // 높이 20으로 간격 설정
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
-            homeCategoryButtonsGrid(
-              // 카테고리 버튼 그리드를 표시
-              homeCategories,
-              onHomeCategoryTap,
-            ), // homeCategoryButtonsGrid
-            // 높이 20으로 간격 설정
+            // 카테고리 버튼 그리드를 표시 관련 위젯
+            buildCommonMidCategoryButtonsGrid(context, onMidCategoryTap),
             SizedBox(height: 20), // 간격을 추가
             // 이벤트 상품 섹션 제목을 표시
             Text('🛍️ 이벤트 상품',
@@ -285,39 +281,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
     // ------ 화면구성 끝
   }
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-
-  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
-  // ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
-  // 카테고리 버튼들을 그리드 형태로 표시하는 위젯
-  Widget homeCategoryButtonsGrid(List<String> homeCategories, void Function(int) onHomeCategoryTap) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(), // 스크롤이 불필요한 곳에서의 스크롤 방지
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 한 줄에 표시될 아이템의 개수
-        crossAxisSpacing: 1, // 가로 간격
-        mainAxisSpacing: 1, // 세로 간격
-        childAspectRatio: 3, // 아이템의 가로 세로 비율
-      ),
-      itemCount: homeCategories.length, // 전체 카테고리 수
-      itemBuilder: (context, index) {
-        // 각 카테고리에 해당하는 버튼을 생성
-        return GridTile(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey), // 테두리 색상 설정
-            ),
-            child: TextButton(
-              onPressed: () => onHomeCategoryTap(index), // 버튼 탭 시 처리
-              child: Text(homeCategories[index], style: TextStyle(color: Colors.black)), // 카테고리 이름 표시
-            ),
-          ),
-        );
-      },
-    );
-  }
-  // ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
-  // ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
 }
 // _HomeScreenState 클래스 끝
 

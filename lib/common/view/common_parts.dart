@@ -7,6 +7,17 @@ import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증 사용을 
 import 'package:url_launcher/url_launcher.dart';
 import '../../cart/view/cart_screen.dart'; // 장바구니 화면
 import '../../home/layout/accessory_layout.dart';
+import '../../home/layout/all_layout.dart';
+import '../../home/layout/blouse_layout.dart';
+import '../../home/layout/bottom_layout.dart';
+import '../../home/layout/neat_layout.dart';
+import '../../home/layout/onepiece_layout.dart';
+import '../../home/layout/outer_layout.dart';
+import '../../home/layout/pants_layout.dart';
+import '../../home/layout/shirt_layout.dart';
+import '../../home/layout/skirt_layout.dart';
+import '../../home/layout/top_layout.dart';
+import '../../home/layout/underwear_layout.dart';
 import '../../home/view/home_screen.dart'; // 홈 화면
 import '../../order/view/order_screen.dart'; // 주문 화면
 import '../../product/provider/product_state_provider.dart';
@@ -183,6 +194,64 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
     );
 }
   // ------ buildTopBarList 위젯 내용 구현 끝
+
+// 홈 화면에 표시될 카테고리 목록
+final List<String> midCategories = [
+  "전체", "상의", "하의", "아우터",
+  "니트", "원피스", "티셔츠", "블라우스",
+  "스커트", "팬츠", "언더웨어", "악세서리"
+];
+
+// 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
+void onMidCategoryTap(BuildContext context, int index) {
+  final List<Widget> midcategoryPages = [
+    // 각 카테고리에 해당하는 페이지 위젯들을 리스트로 정의함.
+    AllLayout(), TopLayout(), BottomLayout(), OuterLayout(),
+    NeatLayout(), OnepieceLayout(), ShirtLayout(), BlouseLayout(),
+    SkirtLayout(), PantsLayout(), UnderwearLayout(), AccessoryLayout(),
+  ];
+
+  // 네비게이터를 사용하여, 사용자가 선택한 카테고리에 해당하는 페이지로 화면을 전환함.
+  // 여기서는 MaterialApp의 Navigator 기능을 사용하여 새로운 페이지로 이동함.
+  Navigator.push(
+    context, // 현재 컨텍스트
+    MaterialPageRoute(builder: (context) => midcategoryPages[index]), // 선택된 카테고리에 해당하는 페이지로의 루트를 생성함.
+  );
+}
+
+// ------ home_screen.dart 내부에서만 사용되는 위젯 내용 시작
+// ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
+// 카테고리 버튼들을 그리드 형태로 표시하는 위젯
+Widget buildCommonMidCategoryButtonsGrid(BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
+  return GridView.builder(
+    shrinkWrap: true,
+    physics: NeverScrollableScrollPhysics(), // 스크롤이 불필요한 곳에서의 스크롤 방지
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 3, // 한 줄에 표시될 아이템의 개수
+      crossAxisSpacing: 1, // 가로 간격
+      mainAxisSpacing: 1, // 세로 간격
+      childAspectRatio: 3, // 아이템의 가로 세로 비율
+    ),
+    itemCount: midCategories.length, // 전체 카테고리 수
+    itemBuilder: (context, index) {
+      // 각 카테고리에 해당하는 버튼을 생성
+      return GridTile(
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey), // 테두리 색상 설정
+          ),
+          child: TextButton(
+            onPressed: () => onMidCategoryTap(context, index), // 버튼 탭 시 처리
+            child: Text(midCategories[index], style: TextStyle(color: Colors.black)), // 카테고리 이름 표시
+          ),
+        ),
+      );
+    },
+  );
+}
+// ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
+// ------ home_screen.dart 내부에서만 사용되는 위젯 내용 끝
+
 
   // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
   // BottomNavigationBar 생성 함수
