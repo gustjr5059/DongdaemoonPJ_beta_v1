@@ -84,6 +84,18 @@ flutter:
     - asset/img/misc/bestSeller_v1.png
     - asset/img/misc/new_v1.png
     - asset/img/misc/sale_v1.png
+    - asset/img/misc/shirt_button.png
+    - asset/img/misc/blouse_button.png
+    - asset/img/misc/mtm_button.png
+    - asset/img/misc/neat_button.png
+    - asset/img/misc/pola_button.png
+    - asset/img/misc/onepiece_button.png
+    - asset/img/misc/pants_button.png
+    - asset/img/misc/jean_button.png
+    - asset/img/misc/skirt_button.png
+    - asset/img/misc/paeding_button.png
+    - asset/img/misc/coat_button.png
+    - asset/img/misc/cardigan_button.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

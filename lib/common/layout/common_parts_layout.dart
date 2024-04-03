@@ -196,12 +196,28 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
 }
   // ------ buildTopBarList 위젯 내용 구현 끝
 
-// 홈 화면에 표시될 카테고리 목록
+// buildCommonMidScrollCategoryButtons인 중간 카테고리 버튼 화면에 표시될 카테고리명 변수
 final List<String> midCategories = [
   "티셔츠", "블라우스", "맨투맨", "니트",
   "폴라티", "원피스", "팬츠", "청바지",
   "스커트", "패딩", "코트", "가디건"
 ];
+
+// 카테고리명과 해당하는 이미지 파일명을 매핑하는 변수
+final Map<String, String> midCategoryImageMap = {
+  "티셔츠": "shirt_button.png",
+  "블라우스": "blouse_button.png",
+  "맨투맨": "mtm_button.png",
+  "니트": "neat_button.png",
+  "폴라티": "pola_button.png",
+  "원피스": "onepiece_button.png",
+  "팬츠": "pants_button.png",
+  "청바지": "jean_button.png",
+  "스커트": "skirt_button.png",
+  "패딩": "paeding_button.png",
+  "코트": "coat_button.png",
+  "가디건": "cardigan_button.png"
+};
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
 void onMidCategoryTap(BuildContext context, int index) {
@@ -261,7 +277,7 @@ Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(B
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정함.
     child: Container(
-      height: 160, // 컨테이너의 높이를 160으로 설정하여 버튼 2줄을 담을 수 있도록 힘.
+      height: 200, // 컨테이너의 높이를 160으로 설정하여 버튼 2줄을 담을 수 있도록 힘.
       child: Column( // Column 위젯을 사용하여 버튼들을 세로로 배치함.
         children: [
           // 첫 번째 줄의 버튼들을 생성함.
@@ -291,22 +307,42 @@ Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(B
 Widget buildDetailMidCategoryButton(MapEntry<int, String> entry, BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
   int idx = entry.key; // 현재 버튼의 인덱스를 저장함.
   String category = entry.value; // 현재 카테고리의 이름을 저장함.
+  // 카테고리 이름을 기반으로 영어로 된 이미지 파일명을 찾아서 imageAsset 경로에 설정함.
+  String imageAsset = 'asset/img/misc/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로임.
 
-  // 각 카테고리 버튼을 위한 Padding 및 ElevatedButton 위젯을 반환함.
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4), // 버튼 간의 간격을 조정하기 위한 패딩을 적용함.
-    child: Container(
-      width: 82, // 버튼의 가로 크기를 82로 고정함.
-      height: 65, // 버튼의 세로 크기를 65로 고정함.
+  // SizedBox를 사용하여 버튼의 크기를 제한함.
+  return SizedBox(
+    width: 98, // 버튼의 가로 크기를 지정
+    height: 90, // 버튼의 세로 크기를 지정
+    child: Padding(
+      padding: EdgeInsets.all(6.0), // 내부 여백을 모든 방향으로 6.0만큼 줌.
       child: ElevatedButton(
-        onPressed: () => onMidCategoryTap(context, idx), // 버튼을 누르면 onMidCategoryTap 함수를 호출함.
-        child: Text(category, style: TextStyle(color: Colors.black)), // 버튼 안에 카테고리 이름을 표시함.
+        onPressed: () => onMidCategoryTap(context, idx), // 버튼을 눌렀을 때 실행될 함수를 지정함.
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.black, // 글자 색상을 검은색으로 설정함.
-          backgroundColor: Colors.grey[200], // 배경 색상을 회색으로 설정함.
+          backgroundColor: Colors.white, // 버튼의 배경색을 흰색으로 설정함.
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), // 버튼의 모서리를 둥글게 처리함.
+            borderRadius: BorderRadius.circular(20), // 버튼의 모서리를 둥글게 처리함. (반지름 20)
           ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // 컬럼 내부의 아이템들을 중앙에 위치시킴.
+          children: <Widget>[
+            AspectRatio( // 이미지의 원본 비율을 유지하는 AspectRatio 위젯 사용
+              aspectRatio: 1, // 너비와 높이의 비율을 1:1로 설정
+              child: Image.asset(
+                imageAsset,
+                fit: BoxFit.contain, // 이미지가 컨테이너에 맞게 조정되도록 함.
+              ),
+            ),
+            SizedBox(height: 8), // 이미지와 텍스트 사이의 공간을 8로 설정함.
+            Text(
+              category, // 카테고리 이름을 표시함.
+              style: TextStyle(
+                color: Colors.black, // 텍스트 색상을 검정색으로 설정함.
+                fontSize: 10, // 텍스트 크기를 10으로 설정함.
+              ),
+            ),
+          ],
         ),
       ),
     ),
