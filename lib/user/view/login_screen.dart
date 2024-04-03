@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/provider/common_state_provider.dart';
-import '../../home/view/all_main_screen.dart';
+import '../../home/view/shirt_main_screen.dart';
 
 
 
@@ -107,7 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ref.read(tabIndexProvider.notifier).state = 0; // tabIndex를 0으로 설정
                       Navigator.of(context).pushReplacement(
                         // (context) -> (_) 로 변경 : 매개변수를 정의해야 하지만 실제로 내부 로직에서 사용하지 않을 때 표기방법
-                        MaterialPageRoute(builder: (_) => AllMainScreen()),
+                        MaterialPageRoute(builder: (_) => ShirtMainScreen()),
                       );
                     } on FirebaseAuthException catch (e) {
                       // 로그인 실패 시 처리, 예를 들어 사용자에게 오류 메시지 표시

@@ -15,17 +15,17 @@ import '../../product/provider/product_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// AccessoryMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class AccessoryMainScreen extends ConsumerStatefulWidget {
-  const AccessoryMainScreen({Key? key}) : super(key: key);
+// CardiganMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class CardiganMainScreen extends ConsumerStatefulWidget {
+  const CardiganMainScreen({Key? key}) : super(key: key);
   @override
-  _AccessoryMainScreenState createState() => _AccessoryMainScreenState();
+  _CardiganMainScreenState createState() => _CardiganMainScreenState();
 }
 
-// _AccessoryMainScreenState 클래스 시작
-// _AccessoryMainScreenState 클래스는 AccessoryMainScreen 위젯의 상태를 관리함.
+// _CardiganMainScreenState 클래스 시작
+// _CardiganMainScreenState 클래스는 CardiganMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _AccessoryMainScreenState extends ConsumerState<AccessoryMainScreen> with WidgetsBindingObserver {
+class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with WidgetsBindingObserver {
   // 페이지 컨트롤러 인스턴스를 늦게 초기화함.
   // 이 컨트롤러를 사용하여 페이지뷰를 프로그래매틱하게 제어할 수 있음.
   late PageController pageController;
@@ -164,7 +164,7 @@ class _AccessoryMainScreenState extends ConsumerState<AccessoryMainScreen> with 
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('악세서리', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('가디건 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
         child: Column(
           children: [

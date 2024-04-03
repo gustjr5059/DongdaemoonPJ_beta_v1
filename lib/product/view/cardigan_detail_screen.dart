@@ -11,9 +11,9 @@ import '../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 
 
 
 // 제품 상세 페이지를 나타내는 위젯 클래스, Riverpod의 ConsumerWidget을 상속받아 상태 관리 가능
-class AllDetailProductScreen extends ConsumerWidget {
+class CardiganDetailProductScreen extends ConsumerWidget {
   final String docId; // 문서 ID를 저장할 변수 선언
-  const AllDetailProductScreen({Key? key, required this.docId}) : super(key: key); // 생성자 수정
+  const CardiganDetailProductScreen({Key? key, required this.docId}) : super(key: key); // 생성자 수정
 
   // 이미지의 크기를 비동기적으로 가져오는 함수
   Future<Size> _getImageSize(String imageUrl) async {
@@ -101,7 +101,7 @@ class AllDetailProductScreen extends ConsumerWidget {
       // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
       // 기존 GlobalKey의 사용은 제거됨.
       // 공통 AppBar 구성 함수 호출
-      appBar: buildCommonAppBar('전체 상세', context),// common_parts.dart의 AppBar 재사용
+      appBar: buildCommonAppBar('가디건 상세', context),// common_parts.dart의 AppBar 재사용
       // body에 카테고리 리스트 포함
       body: SingleChildScrollView( // 스크롤 가능한 뷰로 컨텐츠를 감싸기
         child: Column( // 세로로 배열되는 위젯들

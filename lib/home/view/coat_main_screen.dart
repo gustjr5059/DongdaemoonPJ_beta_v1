@@ -15,17 +15,17 @@ import '../../product/provider/product_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// TopMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class TopMainScreen extends ConsumerStatefulWidget {
-  const TopMainScreen({Key? key}) : super(key: key);
+// CoatMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class CoatMainScreen extends ConsumerStatefulWidget {
+  const CoatMainScreen({Key? key}) : super(key: key);
   @override
-  _TopMainScreenState createState() => _TopMainScreenState();
+  _CoatMainScreenState createState() => _CoatMainScreenState();
 }
 
-// _TopMainScreenState 클래스 시작
-// _TopMainScreenState 클래스는 TopMainScreen 위젯의 상태를 관리함.
+// _CoatMainScreenState 클래스 시작
+// _CoatMainScreenState 클래스는 CoatMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindingObserver {
+class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBindingObserver {
   // 페이지 컨트롤러 인스턴스를 늦게 초기화함.
   // 이 컨트롤러를 사용하여 페이지뷰를 프로그래매틱하게 제어할 수 있음.
   late PageController pageController;
@@ -43,12 +43,12 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
   void initState() {
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
-    pageController = PageController(initialPage: ref.read(topMainBannerPageProvider));
+    pageController = PageController(initialPage: ref.read(allMainBannerPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
-      currentPageProvider: topMainBannerPageProvider,
+      currentPageProvider: allMainBannerPageProvider,
       itemCount: bannerImageCount,
     );
 
@@ -57,7 +57,7 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(topMainBannerPageProvider.notifier).state = 0;
+        ref.read(allMainBannerPageProvider.notifier).state = 0;
       }
     });
 
@@ -149,7 +149,7 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
             itemBuilder: (context, index) => BannerImage(
               imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: topMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
+            currentPageProvider: allMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             context: context, // 현재의 BuildContext를 전달함.
           );
         },
@@ -163,7 +163,7 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('상의', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('코트 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -178,7 +178,7 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
             SizedBox(height: 20), // 높이 20으로 간격 설정
             // 화살표 버튼이 있는 PageView
             SizedBox(
-              // 페이지 뷰 섹션을 표시
+            // 페이지 뷰 섹션을 표시
               height: 200, // 페이지 뷰의 높이 설정
               // child: pageViewSection, // pageViewSection 호출
               child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
@@ -187,13 +187,14 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             // 카테고리 버튼 그리드를 표시 관련 위젯
             buildCommonMidScrollCategoryButtons(context, onMidCategoryTap),
+            // buildCommonMidCategoryButtonsGrid(context, onMidCategoryTap),
             SizedBox(height: 20), // 간격을 추가
             // 이벤트 상품 섹션 제목을 표시
             Text('🛍️ 이벤트 상품',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '상의', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            buildHorizontalDocumentsList(ref, docIds2, '상의', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '전체', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '전체', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),
@@ -204,7 +205,7 @@ class _TopMainScreenState extends ConsumerState<TopMainScreen> with WidgetsBindi
     );
     // ------ 화면구성 끝
   }
-// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 }
 // _HomeScreenState 클래스 끝
 

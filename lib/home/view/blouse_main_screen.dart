@@ -163,7 +163,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('블라우스', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('블라우스 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -6,32 +6,33 @@ import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증 사용을 위한 패키지
 import 'package:url_launcher/url_launcher.dart';
 import '../../cart/view/cart_screen.dart'; // 장바구니 화면
-import '../../home/view/accessory_main_screen.dart'; // 악세서리 화면
-import '../../home/view/all_main_screen.dart'; // 전체 옷 화면
 import '../../home/view/blouse_main_screen.dart'; // 블라우스 화면
-import '../../home/view/bottom_main_screen.dart'; // 하의 화면
+import '../../home/view/cardigan_main_screen.dart'; // 가디건 화면
+import '../../home/view/coat_main_screen.dart'; // 코트 화면
+import '../../home/view/jean_main_screen.dart'; // 청바지 화면
 import '../../home/view/neat_main_screen.dart'; // 니트 화면
 import '../../home/view/onepiece_main_screen.dart'; // 원피스 화면
-import '../../home/view/outer_main_screen.dart'; // 아우터 화면
+import '../../home/view/paeding_main_screen.dart'; // 패딩 화면
 import '../../home/view/pants_main_screen.dart'; // 팬츠 화면
 import '../../home/view/shirt_main_screen.dart'; // 셔츠 화면
 import '../../home/view/skirt_main_screen.dart'; // 스커트 화면
-import '../../home/view/top_main_screen.dart'; // 상의 화면
-import '../../home/view/underwear_main_screen.dart'; // 언더웨어 화면
+import '../../home/view/pola_main_screen.dart'; // 상의 화면
+import '../../home/view/mtm_main_screen.dart'; // 언더웨어 화면
 import '../../order/view/order_screen.dart'; // 주문 화면
 import '../../product/provider/product_state_provider.dart';
-import '../../product/view/accessory_detail_screen.dart';
-import '../../product/view/all_detail_screen.dart'; // 제품 상세 화면
+// 제품 상세 화면
 import '../../product/view/blouse_detail_screen.dart';
-import '../../product/view/bottom_detail_screen.dart';
+import '../../product/view/cardigan_detail_screen.dart';
+import '../../product/view/coat_detail_screen.dart';
+import '../../product/view/jean_detail_screen.dart';
 import '../../product/view/neat_detail_screen.dart';
 import '../../product/view/onepiece_detail_screen.dart';
-import '../../product/view/outer_detail_screen.dart';
+import '../../product/view/paeding_detail_screen.dart';
 import '../../product/view/pants_detail_screen.dart';
 import '../../product/view/shirt_detail_screen.dart';
 import '../../product/view/skirt_detail_screen.dart';
-import '../../product/view/top_detail_screen.dart';
-import '../../product/view/underwear_detail_screen.dart';
+import '../../product/view/pola_detail_screen.dart';
+import '../../product/view/mtm_detail_screen.dart';
 import '../../user/view/profile_screen.dart'; // 사용자 프로필 화면
 import '../const/colors.dart'; // 앱 전반에 사용되는 색상 상수
 import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
@@ -197,18 +198,18 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
 
 // 홈 화면에 표시될 카테고리 목록
 final List<String> midCategories = [
-  "전체", "상의", "하의", "아우터",
-  "니트", "원피스", "티셔츠", "블라우스",
-  "스커트", "팬츠", "언더웨어", "악세서리"
+  "티셔츠", "블라우스", "맨투맨", "니트",
+  "폴라티", "원피스", "팬츠", "청바지",
+  "스커트", "패딩", "코트", "가디건"
 ];
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
 void onMidCategoryTap(BuildContext context, int index) {
   final List<Widget> midcategoryPages = [
     // 각 카테고리에 해당하는 페이지 위젯들을 리스트로 정의함.
-    AllMainScreen(), TopMainScreen(), BottomMainScreen(), OuterMainScreen(),
-    NeatMainScreen(), OnepieceMainScreen(), ShirtMainScreen(), BlouseMainScreen(),
-    SkirtMainScreen(), PantsMainScreen(), UnderwearMainScreen(), AccessoryMainScreen(),
+    ShirtMainScreen(), BlouseMainScreen(), MtmMainScreen(), NeatMainScreen(),
+    PolaMainScreen(), OnepieceMainScreen(), PantsMainScreen(), JeanMainScreen(),
+    SkirtMainScreen(), PaedingMainScreen(), CoatMainScreen(), CardiganMainScreen(),
   ];
 
   // 네비게이터를 사용하여, 사용자가 선택한 카테고리에 해당하는 페이지로 화면을 전환함.
@@ -328,7 +329,7 @@ Widget buildDetailMidCategoryButton(MapEntry<int, String> entry, BuildContext co
         // 화면 전환 로직
         switch (index) { // 선택된 인덱스에 따라 다른 화면으로 이동
           case 0:
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => AllMainScreen()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ShirtMainScreen()));
             break;
           case 1:
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartScreen()));
@@ -539,7 +540,7 @@ Widget buildBannerPageView({
             // 각 배너를 탭(클릭)했을 때의 동작
             if (index == 2) {
               // 인덱스 2(세 번째 배너)의 경우 특별한 페이지로 이동
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AccessoryMainScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const BlouseMainScreen()));
             } else {
               // 나머지 배너는 지정된 URL로 이동
               final url = bannerLinks[index]; // 해당 인덱스의 URL 가져오기
@@ -599,90 +600,6 @@ Widget buildBannerPageView({
                 // Navigator를 사용하여 DetailProductScreen으로 이동하면서 문서 ID 전달
                 // 카테고리에 따라 다른 상세 화면으로 이동
                 switch (category) {
-                  case '전체':
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) =>
-                            AllDetailProductScreen(docId: docId)))
-                        .then((_) {
-                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                      ref
-                          .read(colorSelectionIndexProvider.state)
-                          .state = null;
-                      ref
-                          .read(sizeSelectionProvider.state)
-                          .state = null;
-                    });
-                    break;
-                  case '상의':
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) =>
-                            TopDetailProductScreen(docId: docId)))
-                        .then((_) {
-                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                      ref
-                          .read(colorSelectionIndexProvider.state)
-                          .state = null;
-                      ref
-                          .read(sizeSelectionProvider.state)
-                            .state = null;
-                    });
-                    break;
-                  case '하의':
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) =>
-                            BottomDetailProductScreen(docId: docId)))
-                        .then((_) {
-                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                      ref
-                          .read(colorSelectionIndexProvider.state)
-                          .state = null;
-                      ref
-                          .read(sizeSelectionProvider.state)
-                          .state = null;
-                    });
-                    break;
-                  case '아우터':
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) =>
-                            OuterDetailProductScreen(docId: docId)))
-                        .then((_) {
-                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                      ref
-                          .read(colorSelectionIndexProvider.state)
-                          .state = null;
-                      ref
-                          .read(sizeSelectionProvider.state)
-                          .state = null;
-                    });
-                    break;
-                  case '니트':
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) =>
-                            NeatDetailProductScreen(docId: docId)))
-                        .then((_) {
-                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                      ref
-                          .read(colorSelectionIndexProvider.state)
-                          .state = null;
-                      ref
-                          .read(sizeSelectionProvider.state)
-                          .state = null;
-                    });
-                    break;
-                  case '원피스':
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) =>
-                            OnepieceDetailProductScreen(docId: docId)))
-                        .then((_) {
-                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                      ref
-                          .read(colorSelectionIndexProvider.state)
-                          .state = null;
-                      ref
-                          .read(sizeSelectionProvider.state)
-                          .state = null;
-                    });
-                    break;
                   case '티셔츠':
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) =>
@@ -708,13 +625,55 @@ Widget buildBannerPageView({
                           .state = null;
                       ref
                           .read(sizeSelectionProvider.state)
+                            .state = null;
+                    });
+                    break;
+                  case '맨투맨':
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            MtmDetailProductScreen(docId: docId)))
+                        .then((_) {
+                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                      ref
+                          .read(colorSelectionIndexProvider.state)
+                          .state = null;
+                      ref
+                          .read(sizeSelectionProvider.state)
                           .state = null;
                     });
                     break;
-                  case '스커트':
+                  case '니트':
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) =>
-                            SkirtDetailProductScreen(docId: docId)))
+                            NeatDetailProductScreen(docId: docId)))
+                        .then((_) {
+                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                      ref
+                          .read(colorSelectionIndexProvider.state)
+                          .state = null;
+                      ref
+                          .read(sizeSelectionProvider.state)
+                          .state = null;
+                    });
+                    break;
+                  case '폴라티':
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            PolaDetailProductScreen(docId: docId)))
+                        .then((_) {
+                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                      ref
+                          .read(colorSelectionIndexProvider.state)
+                          .state = null;
+                      ref
+                          .read(sizeSelectionProvider.state)
+                          .state = null;
+                    });
+                    break;
+                  case '원피스':
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            OnepieceDetailProductScreen(docId: docId)))
                         .then((_) {
                       // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
                       ref
@@ -739,10 +698,10 @@ Widget buildBannerPageView({
                           .state = null;
                     });
                     break;
-                  case '언더웨어':
+                  case '청바지':
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) =>
-                            UnderwearDetailProductScreen(docId: docId)))
+                            JeanDetailProductScreen(docId: docId)))
                         .then((_) {
                       // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
                       ref
@@ -753,10 +712,52 @@ Widget buildBannerPageView({
                           .state = null;
                     });
                     break;
-                  case '악세서리':
+                  case '스커트':
                     Navigator.push(context, MaterialPageRoute(
                         builder: (context) =>
-                            AccessoryDetailProductScreen(docId: docId)))
+                            SkirtDetailProductScreen(docId: docId)))
+                        .then((_) {
+                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                      ref
+                          .read(colorSelectionIndexProvider.state)
+                          .state = null;
+                      ref
+                          .read(sizeSelectionProvider.state)
+                          .state = null;
+                    });
+                    break;
+                  case '패딩':
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            PaedingDetailProductScreen(docId: docId)))
+                        .then((_) {
+                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                      ref
+                          .read(colorSelectionIndexProvider.state)
+                          .state = null;
+                      ref
+                          .read(sizeSelectionProvider.state)
+                          .state = null;
+                    });
+                    break;
+                  case '코트':
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            CoatDetailProductScreen(docId: docId)))
+                        .then((_) {
+                      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
+                      ref
+                          .read(colorSelectionIndexProvider.state)
+                          .state = null;
+                      ref
+                          .read(sizeSelectionProvider.state)
+                          .state = null;
+                    });
+                    break;
+                  case '가디건':
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            CardiganDetailProductScreen(docId: docId)))
                         .then((_) {
                       // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
                       ref
