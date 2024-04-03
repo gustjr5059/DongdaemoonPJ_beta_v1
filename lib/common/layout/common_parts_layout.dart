@@ -277,7 +277,7 @@ Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(B
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정함.
     child: Container(
-      height: 200, // 컨테이너의 높이를 160으로 설정하여 버튼 2줄을 담을 수 있도록 힘.
+      height: 190, // 컨테이너의 높이를 160으로 설정하여 버튼 2줄을 담을 수 있도록 힘.
       child: Column( // Column 위젯을 사용하여 버튼들을 세로로 배치함.
         children: [
           // 첫 번째 줄의 버튼들을 생성함.
