@@ -186,7 +186,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             SizedBox(height: 20), // 높이 20으로 간격 설정
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             // 카테고리 버튼 그리드를 표시 관련 위젯
-            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap),
+            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap, "원피스"),
             SizedBox(height: 20), // 간격을 추가
             // 이벤트 상품 섹션 제목을 표시
             Text('🛍️ 이벤트 상품',

@@ -186,15 +186,15 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
             SizedBox(height: 20), // 높이 20으로 간격 설정
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             // 카테고리 버튼 그리드를 표시 관련 위젯
-            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap),
+            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap, "코트"),
             // buildCommonMidCategoryButtonsGrid(context, onMidCategoryTap),
             SizedBox(height: 20), // 간격을 추가
             // 이벤트 상품 섹션 제목을 표시
             Text('🛍️ 이벤트 상품',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '전체', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            buildHorizontalDocumentsList(ref, docIds2, '전체', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '코트', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '코트', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),

@@ -272,7 +272,7 @@ Widget buildCommonMidGridCategoryButtons(BuildContext context, void Function(Bui
 // ------ 카테고리 12개를 버튼 형식의 두줄로 표시한 부분 관련 위젯 구현 내용 시작
 // ------ buildCommonMidScrollCategoryButtons 위젯 내용 시작
 // 가로 스크롤 가능하며 한 줄에 6개씩, 총 2줄로 구성된 카테고리 버튼을 생성하는 위젯을 구현함.
-Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
+Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(BuildContext, int) onMidCategoryTap, String currentCategory) {
   // SingleChildScrollView를 사용하여 가로로 스크롤 가능하게 만듦.
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정함.
@@ -284,7 +284,7 @@ Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(B
           Row(
             children: midCategories.getRange(0, 6).toList().asMap().entries.map((entry) {
               // midCategories 리스트에서 앞 6개의 카테고리를 가져와서 첫 번째 줄을 구성함.
-              return buildDetailMidCategoryButton(entry, context, onMidCategoryTap);
+              return buildDetailMidCategoryButton(entry, context, onMidCategoryTap, currentCategory);
             }).toList(),
           ),
           // 두 번째 줄의 버튼들을 생성함.
@@ -292,7 +292,7 @@ Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(B
             children: midCategories.getRange(6, 12).toList().asMap().entries.map((entry) {
               // midCategories 리스트에서 뒤 6개의 카테고리를 가져와서 두 번째 줄을 구성함.
               // 여기서 entry.key에 6을 더해주어 인덱스를 조정함.
-              return buildDetailMidCategoryButton(MapEntry(entry.key + 6, entry.value), context, onMidCategoryTap);
+              return buildDetailMidCategoryButton(MapEntry(entry.key + 6, entry.value), context, onMidCategoryTap, currentCategory);
             }).toList(),
           ),
         ],
@@ -304,11 +304,12 @@ Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(B
 
 // ------ buildDetailMidCategoryButton 위젯 내용 시작
 // 각 카테고리 버튼을 생성하는 위젯
-Widget buildDetailMidCategoryButton(MapEntry<int, String> entry, BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
+Widget buildDetailMidCategoryButton(MapEntry<int, String> entry, BuildContext context, void Function(BuildContext, int) onMidCategoryTap, String currentCategory) {
   int idx = entry.key; // 현재 버튼의 인덱스를 저장함.
   String category = entry.value; // 현재 카테고리의 이름을 저장함.
   // 카테고리 이름을 기반으로 영어로 된 이미지 파일명을 찾아서 imageAsset 경로에 설정함.
   String imageAsset = 'asset/img/misc/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로임.
+  bool isCurrentCategory = category == currentCategory; // 현재 카테고리 여부 판단
 
   // SizedBox를 사용하여 버튼의 크기를 제한함.
   return SizedBox(
@@ -322,6 +323,7 @@ Widget buildDetailMidCategoryButton(MapEntry<int, String> entry, BuildContext co
           backgroundColor: Colors.white, // 버튼의 배경색을 흰색으로 설정함.
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20), // 버튼의 모서리를 둥글게 처리함. (반지름 20)
+            side: BorderSide(color: isCurrentCategory ? LOGO_COLOR : Colors.transparent, width: 2), // 현재 카테고리면 LOGO_COLOR로 테두리 설정
           ),
         ),
         child: Column(
