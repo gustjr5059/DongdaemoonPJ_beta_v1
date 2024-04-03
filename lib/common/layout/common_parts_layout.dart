@@ -134,6 +134,7 @@ class BannerImage extends StatelessWidget {
   // TopBar의 카테고리 리스트 생성 함수. 각 카테고리를 탭했을 때의 동작을 정의함.
 Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
   final List<Map<String, String>> topBarCategories = [
+    {"type": "text", "data": "전체"},
     {"type": "text", "data": "신상"},
     {"type": "text", "data": "최고"},
     {"type": "text", "data": "할인"},
@@ -218,10 +219,10 @@ void onMidCategoryTap(BuildContext context, int index) {
   );
 }
 
-// ------ all_main_screen.dart 내부에서만 사용되는 위젯 내용 시작
-// ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
+// ------ buildCommonMidGridCategoryButtons 위젯 내용 시작
+// ------ 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
 // 카테고리 버튼들을 그리드 형태로 표시하는 위젯
-Widget buildCommonMidCategoryButtonsGrid(BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
+Widget buildCommonMidGridCategoryButtons(BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
   return GridView.builder(
     shrinkWrap: true,
     physics: NeverScrollableScrollPhysics(), // 스크롤이 불필요한 곳에서의 스크롤 방지
@@ -248,9 +249,70 @@ Widget buildCommonMidCategoryButtonsGrid(BuildContext context, void Function(Bui
     },
   );
 }
-// ------ home_Screen.dart에서 구현된 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
-// ------ all_main_screen.dart 내부에서만 사용되는 위젯 내용 끝
+// ------ 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
+// ------ buildCommonMidGridCategoryButtons 위젯 내용 끝
 
+// ------ 카테고리 12개를 버튼 형식의 두줄로 표시한 부분 관련 위젯 구현 내용 시작
+// ------ buildCommonMidScrollCategoryButtons 위젯 내용 시작
+// 가로 스크롤 가능하며 한 줄에 6개씩, 총 2줄로 구성된 카테고리 버튼을 생성하는 위젯을 구현함.
+Widget buildCommonMidScrollCategoryButtons(BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
+  // SingleChildScrollView를 사용하여 가로로 스크롤 가능하게 만듦.
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정함.
+    child: Container(
+      height: 160, // 컨테이너의 높이를 160으로 설정하여 버튼 2줄을 담을 수 있도록 힘.
+      child: Column( // Column 위젯을 사용하여 버튼들을 세로로 배치함.
+        children: [
+          // 첫 번째 줄의 버튼들을 생성함.
+          Row(
+            children: midCategories.getRange(0, 6).toList().asMap().entries.map((entry) {
+              // midCategories 리스트에서 앞 6개의 카테고리를 가져와서 첫 번째 줄을 구성함.
+              return buildDetailMidCategoryButton(entry, context, onMidCategoryTap);
+            }).toList(),
+          ),
+          // 두 번째 줄의 버튼들을 생성함.
+          Row(
+            children: midCategories.getRange(6, 12).toList().asMap().entries.map((entry) {
+              // midCategories 리스트에서 뒤 6개의 카테고리를 가져와서 두 번째 줄을 구성함.
+              // 여기서 entry.key에 6을 더해주어 인덱스를 조정함.
+              return buildDetailMidCategoryButton(MapEntry(entry.key + 6, entry.value), context, onMidCategoryTap);
+            }).toList(),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+// ------ buildCommonMidScrollCategoryButtons 위젯 내용 끝
+
+// ------ buildDetailMidCategoryButton 위젯 내용 시작
+// 각 카테고리 버튼을 생성하는 위젯
+Widget buildDetailMidCategoryButton(MapEntry<int, String> entry, BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
+  int idx = entry.key; // 현재 버튼의 인덱스를 저장함.
+  String category = entry.value; // 현재 카테고리의 이름을 저장함.
+
+  // 각 카테고리 버튼을 위한 Padding 및 ElevatedButton 위젯을 반환함.
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4), // 버튼 간의 간격을 조정하기 위한 패딩을 적용함.
+    child: Container(
+      width: 82, // 버튼의 가로 크기를 82로 고정함.
+      height: 65, // 버튼의 세로 크기를 65로 고정함.
+      child: ElevatedButton(
+        onPressed: () => onMidCategoryTap(context, idx), // 버튼을 누르면 onMidCategoryTap 함수를 호출함.
+        child: Text(category, style: TextStyle(color: Colors.black)), // 버튼 안에 카테고리 이름을 표시함.
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.black, // 글자 색상을 검은색으로 설정함.
+          backgroundColor: Colors.grey[200], // 배경 색상을 회색으로 설정함.
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // 버튼의 모서리를 둥글게 처리함.
+          ),
+        ),
+      ),
+    ),
+  );
+}
+// ------ buildDetailMidCategoryButton 위젯 내용 끝
+// ------ 카테고리 12개를 버튼 형식의 두줄로 표시한 부분 관련 위젯 구현 내용 끝
 
   // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
   // BottomNavigationBar 생성 함수

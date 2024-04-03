@@ -163,7 +163,7 @@ class _AllMainScreenState extends ConsumerState<AllMainScreen> with WidgetsBindi
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('홈', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('전체', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -186,7 +186,8 @@ class _AllMainScreenState extends ConsumerState<AllMainScreen> with WidgetsBindi
             SizedBox(height: 20), // 높이 20으로 간격 설정
             // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
             // 카테고리 버튼 그리드를 표시 관련 위젯
-            buildCommonMidCategoryButtonsGrid(context, onMidCategoryTap),
+            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap),
+            // buildCommonMidCategoryButtonsGrid(context, onMidCategoryTap),
             SizedBox(height: 20), // 간격을 추가
             // 이벤트 상품 섹션 제목을 표시
             Text('🛍️ 이벤트 상품',
