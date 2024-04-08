@@ -9,6 +9,17 @@ import '../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트
 // 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
 import '../../product/provider/product_state_provider.dart';
 
+// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+// // GlobalKey 선언
+// GlobalKey newProductsKey = GlobalKey();
+// GlobalKey bestProductsKey = GlobalKey();
+// GlobalKey discountProductsKey = GlobalKey();
+// GlobalKey springProductsKey = GlobalKey();
+// GlobalKey summerProductsKey = GlobalKey();
+// GlobalKey autumnProductsKey = GlobalKey();
+// GlobalKey winterProductsKey = GlobalKey();
+// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -37,6 +48,8 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
+  late ScrollController scrollController; // ScrollController 추가
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -44,6 +57,10 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
     pageController = PageController(initialPage: ref.read(shirtMainBannerPageProvider));
+
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+    scrollController = ScrollController(); // ScrollController 인스턴스 초기화
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
@@ -102,6 +119,11 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     // 위젯이 제거될 때 이러한 알림을 더 이상 받지 않도록 구독을 취소함.
     authStateChangesSubscription?.cancel();
     // 위젯의 기본 dispose 메서드를 호출하여 추가적인 정리 작업을 수행함.
+
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+    // scrollController.dispose(); // ScrollController 해제
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+
     super.dispose();
   }
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -121,6 +143,38 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
     void onTopBarTap(int index) {
+      // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+      // GlobalKey? selectedKey;
+      // switch (index) {
+      //   case 0:
+      //     selectedKey = newProductsKey;
+      //     break;
+      //   case 1:
+      //     selectedKey = bestProductsKey;
+      //     break;
+      //   case 2:
+      //     selectedKey = discountProductsKey;
+      //     break;
+      //   case 3:
+      //     selectedKey = springProductsKey;
+      //     break;
+      //   case 4:
+      //     selectedKey = summerProductsKey;
+      //     break;
+      //   case 5:
+      //     selectedKey = autumnProductsKey;
+      //     break;
+      //   case 6:
+      //     selectedKey = winterProductsKey;
+      //     break;
+      // }
+      //
+      // if (selectedKey != null) {
+      //   // Scrollable.ensureVisible을 호출하여 해당 섹션으로 스크롤합니다.
+      //   Scrollable.ensureVisible(selectedKey.currentContext!, duration: Duration(milliseconds: 500));
+      // }
+      // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
@@ -160,11 +214,121 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     // ------ common_parts_layout.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의하고,
     // banner 페이지 뷰의 조건에 따른 동작 구현 내용 끝
 
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildNewProductsSection() {
+    //   return Align(
+    //     key: newProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '신상',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    //
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildBestProductsSection() {
+    //   return Align(
+    //     key: bestProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '최고',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    //
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildDiscountProductsSection() {
+    //   return Align(
+    //     key: discountProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '할인',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    //
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildSpringProductsSection() {
+    //   return Align(
+    //     key: springProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '봄',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    //
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildSummerProductsSection() {
+    //   return Align(
+    //     key: summerProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '여름',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    //
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildAutumnProductsSection() {
+    //   return Align(
+    //     key: autumnProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '가을',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    //
+    // // 신상 섹션을 위젯으로 구현합니다. 이 부분에서 GlobalKey를 할당합니다.
+    // Align buildWinterProductsSection() {
+    //   return Align(
+    //     key: winterProductsKey, // 여기에 GlobalKey를 할당합니다.
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       padding: EdgeInsets.only(left: 16),
+    //       child: Text(
+    //         '겨울',
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    //       ),
+    //     ),
+    //   );
+    // }
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
       appBar: buildCommonAppBar('티셔츠 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
+        // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+        // controller: scrollController, // 스크롤 컨트롤러 연결
+        // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
         child: Column(
           children: [
             // common_parts.dart에서 가져온 카테고리 리스트
@@ -193,18 +357,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '신상',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds1, '티셔츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -215,18 +368,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '최고',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -237,18 +379,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '할인',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -259,18 +390,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '봄',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -281,18 +401,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '여름',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -303,18 +412,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '가을',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -325,18 +423,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '겨울',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
             buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
@@ -353,5 +440,3 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 }
 // _HomeScreenState 클래스 끝
-
-

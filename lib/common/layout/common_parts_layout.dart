@@ -892,4 +892,104 @@ Widget buildBannerPageView({
   }
   // ------ buildHorizontalDocumentsList 위젯 내용 구현 끝
 
+// ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 시작
+// 신상 섹션을 위젯으로 구현한 부분
+Align buildNewProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '신상',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
+// 최고 섹션을 위젯으로 구현한 부분
+Align buildBestProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '최고',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
+// 할인 섹션을 위젯으로 구현한 부분
+Align buildDiscountProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '할인',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
+// 봄 섹션을 위젯으로 구현한 부분.
+Align buildSpringProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '봄',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
+// 여름 섹션을 위젯으로 구현한 부분
+Align buildSummerProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '여름',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
+// 가을 섹션을 위젯으로 구현한 부분
+Align buildAutumnProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '가을',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
+// 겨울 섹션을 위젯으로 구현한 부분
+Align buildWinterProductsSection() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Container(
+      padding: EdgeInsets.only(left: 16),
+      child: Text(
+        '겨울',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+// ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 끝
+
 

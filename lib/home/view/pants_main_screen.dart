@@ -207,7 +207,7 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
             ),
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '티셔츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '팬츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -229,7 +229,7 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
             ),
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -237,21 +237,10 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '할인',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '팬츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -259,21 +248,10 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '봄',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -281,21 +259,10 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '여름',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -303,21 +270,10 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '가을',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -325,21 +281,32 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            // 이벤트 상품 섹션 제목을 표시
-            // '신상' 텍스트를 왼쪽으로 정렬
-            Align(
-              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
-              child: Container(
-                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
-                child: Text(
-                  '겨울',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            SizedBox(height: 20), // 간격을 추가
+            // 텍스트 위에 회색선을 추가
+            Divider(
+              color: Colors.grey, // 선의 색상을 회색으로 지정
+              thickness: 1, // 선의 두께를 1로 지정
+            ),
+            SizedBox(height: 10), // 높이 10으로 간격 설정
+            buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
+            SizedBox(height: 20), // 간격을 추가
+            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            SizedBox(height: 20), // 간격을 추가
+            // 텍스트 위에 회색선을 추가
+            Divider(
+              color: Colors.grey, // 선의 색상을 회색으로 지정
+              thickness: 1, // 선의 두께를 1로 지정
+            ),
+            SizedBox(height: 10), // 높이 10으로 간격 설정
+            buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
+            SizedBox(height: 20), // 간격을 추가
+            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),
