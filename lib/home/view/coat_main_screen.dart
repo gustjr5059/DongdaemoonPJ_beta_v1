@@ -184,10 +184,8 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
               child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
             ),
             SizedBox(height: 20), // 높이 20으로 간격 설정
-            // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
-            // 카테고리 버튼 그리드를 표시 관련 위젯
-            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap, "코트"),
-            // buildCommonMidCategoryButtonsGrid(context, onMidCategoryTap),
+            // '더보기' 기능이 포함된 카테고리 버튼 목록을 표시함.
+            MidCategoryButtonList(onCategoryTap: onMidCategoryTap),
             // 텍스트 위에 회색선을 추가
             Divider(
               color: Colors.grey, // 선의 색상을 회색으로 지정

@@ -348,9 +348,8 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
             ),
             SizedBox(height: 20), // 높이 20으로 간격 설정
-            // 카테고리 12개를 표현한 homeCategoryButtonsGrid 버튼 뷰
-            // 카테고리 버튼 그리드를 표시 관련 위젯
-            buildCommonMidScrollCategoryButtons(context, onMidCategoryTap, "티셔츠"),
+            // 카테고리 버튼 목록을 표시하는 위젯 재사용으로 구현
+            MidCategoryButtonList(onCategoryTap: onMidCategoryTap),
             // 텍스트 위에 회색선을 추가
             Divider(
               color: Colors.grey, // 선의 색상을 회색으로 지정
