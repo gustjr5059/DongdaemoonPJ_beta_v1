@@ -65,7 +65,7 @@ class ShirtDetailProductScreen extends ConsumerWidget {
           context, // 현재 context
           PageController(), // 페이지 컨트롤러를 새로 생성
           ref, // Riverpod의 WidgetRef, 상태 관리를 위해 사용
-          allDetailBannerPageProvider, // 현재 페이지의 인덱스를 관리하는 StateProvider(allBannerPageProvider와 분리하여 홈 화면의 배너 페이지 뷰의 페이지 인덱스와 따로 관리)
+          shirtDetailBannerPageProvider, // 현재 페이지의 인덱스를 관리하는 StateProvider(shirtDetailBannerPageProvider와 분리하여 홈 화면의 배너 페이지 뷰의 페이지 인덱스와 따로 관리)
           itemCount: imageUrls.length, // 이미지 URL 리스트의 길이, 즉 총 슬라이드 개수를 나타냄
           itemBuilder: (BuildContext context, int index) {
             // itemBuilder는 각 슬라이드를 구성하는 위젯을 반환합니다.

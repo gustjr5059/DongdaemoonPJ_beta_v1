@@ -43,12 +43,12 @@ class _JeanMainScreenState extends ConsumerState<JeanMainScreen> with WidgetsBin
   void initState() {
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
-    pageController = PageController(initialPage: ref.read(outerMainBannerPageProvider));
+    pageController = PageController(initialPage: ref.read(jeanMainBannerPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
-      currentPageProvider: outerMainBannerPageProvider,
+      currentPageProvider: jeanMainBannerPageProvider,
       itemCount: bannerImageCount,
     );
 
@@ -57,7 +57,7 @@ class _JeanMainScreenState extends ConsumerState<JeanMainScreen> with WidgetsBin
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(outerMainBannerPageProvider.notifier).state = 0;
+        ref.read(jeanMainBannerPageProvider.notifier).state = 0;
       }
     });
 
@@ -149,7 +149,7 @@ class _JeanMainScreenState extends ConsumerState<JeanMainScreen> with WidgetsBin
             itemBuilder: (context, index) => BannerImage(
               imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: outerMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
+            currentPageProvider: jeanMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             context: context, // 현재의 BuildContext를 전달함.
           );
         },
