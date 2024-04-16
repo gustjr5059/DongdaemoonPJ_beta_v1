@@ -55,3 +55,27 @@ final coatDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 // 가디건 디테일 상품 화면의 페이지 인덱스를 관리하기 위한 StateProvider
 final cardiganDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 
+// // 티셔츠 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final shirtSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 블라우스 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final blouseSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 맨투맨 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final mtmSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 니트 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final neatSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 폴라티 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final polaSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 원피스 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final onepieceSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 팬츠 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final pantsSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 청바지 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final jeanSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 스커트 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final skirtSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 패딩 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final paedingSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 코트 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final coatSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// // 가디건 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
+// final cardiganSelectedCategoryProvider = StateProvider<int?>((ref) => 0);

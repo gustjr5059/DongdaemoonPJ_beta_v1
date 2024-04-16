@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/provider/common_state_provider.dart';
+import '../../home/view/main_screen.dart';
 import '../../home/view/shirt_main_screen.dart';
 
 

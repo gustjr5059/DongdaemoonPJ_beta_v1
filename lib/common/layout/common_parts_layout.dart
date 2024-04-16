@@ -168,7 +168,15 @@ class MidCategoryButtonList extends ConsumerWidget {
 // 공통 AppBar 생성 함수. GlobalKey 사용을 제거하고 context를 활용하여 Drawer를 열 수 있게 함.
 AppBar buildCommonAppBar(String title, BuildContext context) {
   return AppBar(
-    title: Text(title),
+    // AppBar의 높이에 맞게 이미지를 조정. 이미지의 원본 비율을 유지하면서 최대 높이를 AppBar의 높이에 맞춤.
+    title: Container(
+      height: kToolbarHeight, // AppBar의 기본 높이인 kToolbarHeight를 사용하여 이미지 높이를 AppBar 높이로 제한함.
+      child: Image.asset(
+        'asset/img/misc/logo_image.jpg', // 로고 이미지 경로를 지정합니다.
+        fit: BoxFit.scaleDown, // 이미지가 컨테이너에 맞추어 스케일을 조정함.(원본 비율을 유지한 채 이미지 크기 줄이는 부분)
+      ),
+    ),
+    centerTitle: true,
     leading: Builder( // Builder 위젯을 사용하여 context를 전달함.
       builder: (BuildContext context) {
         return IconButton(
