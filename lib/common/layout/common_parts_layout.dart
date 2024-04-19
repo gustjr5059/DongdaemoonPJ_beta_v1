@@ -119,7 +119,7 @@ class BannerImage extends StatelessWidget {
 // ------ midCategories 부분의 버튼을 화면 크기에 동적으로 한 열당 버튼 갯수를 정해서 열로 정렬하기 위한 클래스 시작
 // MidCategoryButtonList 위젯 정의
 class MidCategoryButtonList extends ConsumerWidget {
-  // 카테고리 버튼 클릭시 실행할 함수를 정의
+  // 카테고리 버튼 클릭시 실행할 함수를 정의 (이 함수는 BuildContext와 카테고리의 인덱스를 매개변수로 받음)
   final void Function(BuildContext context, int index) onCategoryTap;
 
   // 생성자에서 필수적으로 클릭 이벤트 함수를 받음
@@ -128,35 +128,70 @@ class MidCategoryButtonList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 선택된 카테고리의 인덱스를 상태 관리 도구에서 가져옴
-    final selectedCategoryIndex = ref.watch(selectedCategoryProvider);
+    final selectedMidCategoryIndex = ref.watch(selectedMidCategoryProvider);
+    // 카테고리 확장 상태를 관리하는 상태 변수를 가져옴.
+    final boolExpanded = ref.watch(midCategoryViewBoolExpandedProvider.state).state;
+
     // 현재 화면의 너비를 MediaQuery를 통해 얻음
     final screenWidth = MediaQuery.of(context).size.width;
     // 화면의 너비에 따라 한 줄에 표시할 카테고리 버튼의 수를 결정
-    int itemsPerRow = screenWidth > 600 ? 6 : screenWidth > 400 ? 5 : 4;
+    int midCategoryPerRow = screenWidth > 600 ? 6 : screenWidth > 400 ? 5 : 4;
     // 전체적인 좌우 패딩 값을 설정
-    double padding = 16.0;
+    double totalPadding = 16.0;
     // 버튼들 사이의 간격을 설정
-    double spacing = 8.0;
+    double spacingBetweenButtons = 8.0;
     // 버튼의 너비를 계산 (화면 너비에서 좌우 패딩과 버튼 사이 간격을 제외한 너비를 버튼 수로 나눔)
-    double buttonWidth = (screenWidth - padding * 2 - (itemsPerRow - 1) * spacing) / itemsPerRow;
+    double buttonWidth = (screenWidth - totalPadding * 2 - (midCategoryPerRow - 1) * spacingBetweenButtons) / midCategoryPerRow;
 
-    // Wrap 위젯을 사용하여 화면 너비에 따라 자동으로 줄바꿈을 처리
-    return Wrap(
-      spacing: spacing, // 버튼 사이의 가로 간격
-      runSpacing: spacing, // 버튼 사이의 세로 간격
-      children: List.generate(midCategories.length, (index) {
-        // midCategories 배열의 길이만큼 버튼을 생성
-        // 각 카테고리의 정보와 인덱스를 이용하여 버튼을 생성하는 함수를 호출
-        return buildDetailMidCategoryButton(
-          context: context,
-          index: index,
-          category: midCategories[index],
-          onCategoryTap: onCategoryTap,
-          selectedCategoryIndex: selectedCategoryIndex,
-          buttonWidth: buttonWidth,
-          ref: ref,  // 상태 관리를 위해 ref 전달
-        );
-      }),
+    // 지퍼 버튼의 높이 설정
+    final zipperButtonHeight = 80.0;
+    // 전체 카테고리의 행 수를 계산함.
+    final rowCount = (midCategories.length / midCategoryPerRow).ceil();
+    // 확장 시 카테고리의 전체 줄 높이를 계산함.
+    double expandedCategoryRowsHeight = (rowCount * zipperButtonHeight) + (rowCount - 1) * spacingBetweenButtons;
+    // 축소 시 카테고리의 두 줄 높이를 계산함.
+    double compressedCategoryRowsHeight = zipperButtonHeight * 2 + spacingBetweenButtons;
+
+    // 카테고리 확장/축소 상태를 토글하는 함수
+    void toggleCategoryView() {
+      ref.read(midCategoryViewBoolExpandedProvider.state).state = !boolExpanded;
+    }
+
+    // 카테고리 버튼을 포함하는 애니메이션 컨테이너를 반환하고, 이 컨테이너는 확장/축소 시 높이가 변경됨.
+    return Column(
+        children: [
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            // 축소 시, 노출 범위에 들어오지 않는 열의 버튼은 화면에 잘라서 보이지 않도록 하는 위젯
+            child: ClipRect(
+              // Wrap 위젯을 사용하여 화면 너비에 따라 자동으로 줄바꿈을 처리
+              child: Wrap(
+                spacing: spacingBetweenButtons, // 버튼 사이의 가로 간격
+                runSpacing: spacingBetweenButtons, // 버튼 사이의 세로 간격
+                // midCategories 배열의 길이만큼 버튼을 생성
+                children: List.generate(midCategories.length, (index) {
+                  // 각 카테고리의 정보와 인덱스를 이용하여 버튼을 생성하는 함수를 호출
+                  return buildDetailMidCategoryButton(
+                    context: context,
+                    index: index,
+                    category: midCategories[index],
+                    onCategoryTap: onCategoryTap,
+                    selectedCategoryIndex: selectedMidCategoryIndex,
+                    buttonWidth: buttonWidth,
+                    ref: ref,  // 상태 관리를 위해 ref 전달
+              );
+            }),
+          ),
+         ),
+            // 높이 조건을 추가하여 축소 상태일 때는 compressedHeight만큼만 보여줌
+            height: boolExpanded ? expandedCategoryRowsHeight : compressedCategoryRowsHeight,
+       ),
+          // 지퍼 아이콘(확장/축소 아이콘)을 위한 버튼이며, 클릭 시 카테고리 뷰가 토글됨.
+          IconButton(
+            icon: Icon(boolExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+            onPressed: toggleCategoryView,
+          ),
+      ],
     );
   }
 }
@@ -349,12 +384,12 @@ Widget buildDetailMidCategoryButton({
 }) {
   // 카테고리 이름을 기반으로 영어로 된 이미지 파일명을 찾아서 imageAsset 경로에 설정함.
   String imageAsset = 'asset/img/misc/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로.
-  // 선택된 카테고리 인덱스와 현재 인덱스를 비교하여 선택 상태 결정
-  bool isSelected = index ==selectedCategoryIndex ;
+  // // 선택된 카테고리 인덱스와 현재 인덱스를 비교하여 선택 상태 결정
+  // bool isSelected = index ==selectedCategoryIndex ;
 
   return GestureDetector(
     onTap: () {
-      ref.read(selectedCategoryProvider.notifier).state = index; // 클릭된 인덱스로 선택된 카테고리 인덱스를 업데이트
+      // ref.read(selectedCategoryProvider.notifier).state = index; // 클릭된 인덱스로 선택된 카테고리 인덱스를 업데이트
       onCategoryTap(context, index); // 해당 카테고리를 탭했을 때 실행할 함수 호출
     },
     child: Container(
@@ -363,7 +398,8 @@ Widget buildDetailMidCategoryButton({
         decoration: BoxDecoration(
           color: Colors.white, // 배경색을 흰색으로 설정
           borderRadius: BorderRadius.circular(20), // 테두리를 둥글게 처리
-          border: Border.all(color: isSelected ? LOGO_COLOR : Colors.grey, width: 2), // 선택 상태에 따라 테두리 색상 변경
+          border: Border.all(color: Colors.grey, width: 2), // 선택 상태에 따라 테두리 색상 변경
+          // border: Border.all(color: isSelected ? LOGO_COLOR : Colors.grey, width: 2), // 선택 상태에 따라 테두리 색상 변경
         ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // 컬럼 내부의 아이템들을 중앙에 위치시킴.
