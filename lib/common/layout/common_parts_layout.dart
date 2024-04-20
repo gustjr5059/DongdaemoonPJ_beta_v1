@@ -188,11 +188,11 @@ class MidCategoryButtonList extends ConsumerWidget {
        ),
           // 지퍼 아이콘(확장/축소 아이콘)을 위한 버튼이며, 클릭 시 카테고리 뷰가 토글됨.
           IconButton(
-            iconSize: 24, // 아이콘 크기 설정
+            iconSize: 28, // 아이콘 크기 설정
             icon: Image.asset(
               boolExpanded ? 'asset/img/misc/button_img/compressed_button_3.png' : 'asset/img/misc/button_img/expand_button_3.png', // 확장일 때와 축소일 때의 이미지 경로
-              width: 24, // 아이콘 너비 설정
-              height: 24, // 아이콘 높이 설정
+              width: 28, // 아이콘 너비 설정
+              height: 28, // 아이콘 높이 설정
             ),
             onPressed: toggleCategoryView,
           ),
@@ -334,7 +334,6 @@ void onMidCategoryTap(BuildContext context, WidgetRef ref, int index ) {
     PolaMainScreen(), OnepieceMainScreen(), PantsMainScreen(), JeanMainScreen(),
     SkirtMainScreen(), PaedingMainScreen(), CoatMainScreen(), CardiganMainScreen(),
   ];
-
   // 네비게이터를 사용하여, 사용자가 선택한 카테고리에 해당하는 페이지로 화면을 전환함.
   // 여기서는 MaterialApp의 Navigator 기능을 사용하여 새로운 페이지로 이동함.
   Navigator.push(
@@ -345,43 +344,11 @@ void onMidCategoryTap(BuildContext context, WidgetRef ref, int index ) {
     resetCategoryView(ref);
   });
 }
+
 // 페이지 전환 시 카테고리 버튼 열 노출 관련 뷰를 항상 축소된 상태로 초기화하는 함수
 void resetCategoryView(WidgetRef ref) {
   ref.read(midCategoryViewBoolExpandedProvider.state).state = false;
 }
-
-// ------ buildCommonMidGridCategoryButtons 위젯 내용 시작
-// ------ 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 시작
-// 카테고리 버튼들을 그리드 형태로 표시하는 위젯
-Widget buildCommonMidGridCategoryButtons(BuildContext context, void Function(BuildContext, int) onMidCategoryTap) {
-  return GridView.builder(
-    shrinkWrap: true,
-    physics: NeverScrollableScrollPhysics(), // 스크롤이 불필요한 곳에서의 스크롤 방지
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 3, // 한 줄에 표시될 아이템의 개수
-      crossAxisSpacing: 1, // 가로 간격
-      mainAxisSpacing: 1, // 세로 간격
-      childAspectRatio: 3, // 아이템의 가로 세로 비율
-    ),
-    itemCount: midCategories.length, // 전체 카테고리 수
-    itemBuilder: (context, index) {
-      // 각 카테고리에 해당하는 버튼을 생성
-      return GridTile(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey), // 테두리 색상 설정
-          ),
-          child: TextButton(
-            onPressed: () => onMidCategoryTap(context, index), // 버튼 탭 시 처리
-            child: Text(midCategories[index], style: TextStyle(color: Colors.black)), // 카테고리 이름 표시
-          ),
-        ),
-      );
-    },
-  );
-}
-// ------ 카테고리 12개를 선으로 구획나누고 표시한 부분 관련 위젯 구현 내용 끝
-// ------ buildCommonMidGridCategoryButtons 위젯 내용 끝
 
 // ------ buildDetailMidCategoryButton 위젯 내용 시작
 // 각 카테고리 버튼을 생성하는 위젯
@@ -396,12 +363,9 @@ Widget buildDetailMidCategoryButton({
 }) {
   // 카테고리 이름을 기반으로 영어로 된 이미지 파일명을 찾아서 imageAsset 경로에 설정함.
   String imageAsset = 'asset/img/misc/button_img/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로.
-  // // 선택된 카테고리 인덱스와 현재 인덱스를 비교하여 선택 상태 결정
-  // bool isSelected = index ==selectedCategoryIndex ;
 
   return GestureDetector(
     onTap: () {
-      // ref.read(selectedCategoryProvider.notifier).state = index; // 클릭된 인덱스로 선택된 카테고리 인덱스를 업데이트
       onCategoryTap(context, ref, index); // 해당 카테고리를 탭했을 때 실행할 함수 호출
     },
     child: Container(
@@ -411,13 +375,12 @@ Widget buildDetailMidCategoryButton({
           color: Colors.white, // 배경색을 흰색으로 설정
           borderRadius: BorderRadius.circular(20), // 테두리를 둥글게 처리
           border: Border.all(color: Colors.grey, width: 2), // 선택 상태에 따라 테두리 색상 변경
-          // border: Border.all(color: isSelected ? LOGO_COLOR : Colors.grey, width: 2), // 선택 상태에 따라 테두리 색상 변경
         ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // 컬럼 내부의 아이템들을 중앙에 위치시킴.
         children: <Widget>[
           AspectRatio( // 이미지의 원본 비율을 유지하는 AspectRatio 위젯 사용
-            aspectRatio: 1.8, // 너비와 높이의 비율을 1:1로 설정
+            aspectRatio: 1.8, // 너비와 높이의 비율을 1:1.8로 설정
             child: Image.asset(imageAsset, fit: BoxFit.contain), // 이미지 파일을 보여줌
           ),
           SizedBox(height: 8), // 이미지와 텍스트 사이의 공간을 8로 설정함.
@@ -667,7 +630,7 @@ Widget buildBannerPageView({
         itemCount: itemCount, // 아이템(배너)의 총 개수 설정
         onPageChanged: (index) {
           // 페이지가 변경될 때 호출되는 콜백 함수
-          // 여기서 현재 페이지 상태를 업데이트합니다.
+          // 여기서 현재 페이지 상태를 업데이트함.
           ref.read(currentPageProvider.notifier).state = index; // 현재 페이지 인덱스 업데이트
         },
         itemBuilder: (context, index) => GestureDetector(
@@ -690,7 +653,7 @@ Widget buildBannerPageView({
           },
           child: itemBuilder(context, index), // 원래 정의된 아이템 빌더를 사용하여 배너 아이템 위젯 생성
           // ------ buildBannerPageView 위젯 내용 구현 시작
-// 배너 페이지뷰 UI 위젯
+          // 배너 페이지뷰 UI 위젯
         ),
       ),
       Positioned(
@@ -721,187 +684,66 @@ Widget buildBannerPageView({
 // ------ buildFirestoreDetailDocument 위젯 내용 구현 시작
 // Firestore 데이터를 기반으로 세부 정보를 표시하는 위젯.
 // 각 문서의 세부 정보를 UI에 표시함.
+// 위젯 생성 함수, 필요한 매개변수로 WidgetRef, 문서 ID, 카테고리, 그리고 BuildContext를 받음.
 Widget buildFirestoreDetailDocument(WidgetRef ref, String docId, String category, BuildContext context) {
-  final asyncValue = ref.watch(firestoreDataProvider(docId)); // 비동기 데이터 로드
+  // ref를 사용하여 Firestore에서 문서 ID에 해당하는 데이터를 비동기적으로 로드
+  final asyncValue = ref.watch(firestoreDataProvider(docId));
 
+  // 상세 화면으로 이동하고, 화면 반환 시 선택된 색상과 사이즈 상태를 초기화하는 함수 정의함.
+  void navigateToDetailScreen(Widget screen) {
+    // Navigator를 사용하여 새로운 화면으로 이동. 이동 후 콜백에서 색상과 사이즈 선택 상태 초기화함.
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen)).then((_) {
+      // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 초기화
+      ref.read(colorSelectionIndexProvider.state).state = null;
+      ref.read(sizeSelectionProvider.state).state = null;
+    });
+  }
+  // 비동기 데이터 로드 결과에 따른 UI 처리
   return asyncValue.when(
     data: (DocumentSnapshot snapshot) {
+      // Firestore에서 데이터를 Map 형태로 변환함.
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+      // 데이터가 존재할 경우 UI 구성함.
       if (data != null) {
-        // 데이터가 있는 경우 UI 구성
         return GestureDetector(
           onTap: () {
-            // 모든 문서 클릭 시 DetailProductScreen으로 이동하되, 특정 문서에 대한 다른 동작이 필요한 경우 아래에 조건문 추가
-            // Navigator를 사용하여 DetailProductScreen으로 이동하면서 문서 ID 전달
             // 카테고리에 따라 다른 상세 화면으로 이동
             switch (category) {
               case '티셔츠':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        ShirtDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(ShirtDetailProductScreen(docId: docId));
                 break;
               case '블라우스':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        BlouseDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(BlouseDetailProductScreen(docId: docId));
                 break;
               case '맨투맨':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        MtmDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(MtmDetailProductScreen(docId: docId));
                 break;
               case '니트':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        NeatDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(NeatDetailProductScreen(docId: docId));
                 break;
               case '폴라티':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        PolaDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(PolaDetailProductScreen(docId: docId));
                 break;
               case '원피스':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        OnepieceDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(OnepieceDetailProductScreen(docId: docId));
                 break;
               case '팬츠':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        PantsDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(PantsDetailProductScreen(docId: docId));
                 break;
               case '청바지':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        JeanDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(JeanDetailProductScreen(docId: docId));
                 break;
               case '스커트':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        SkirtDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(SkirtDetailProductScreen(docId: docId));
                 break;
               case '패딩':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        PaedingDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(PaedingDetailProductScreen(docId: docId));
                 break;
               case '코트':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        CoatDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(CoatDetailProductScreen(docId: docId));
                 break;
               case '가디건':
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>
-                        CardiganDetailProductScreen(docId: docId)))
-                    .then((_) {
-                  // 디테일 화면에서 선택한 '색상'과 '사이즈' 데이터 상태를 다른 화면에 갔다가 다시 돌아올 시, 초기화하는 로직을 실행
-                  ref
-                      .read(colorSelectionIndexProvider.state)
-                      .state = null;
-                  ref
-                      .read(sizeSelectionProvider.state)
-                      .state = null;
-                });
+                navigateToDetailScreen(CardiganDetailProductScreen(docId: docId));
                 break;
             }
           },
