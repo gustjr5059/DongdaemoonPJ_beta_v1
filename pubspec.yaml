@@ -74,28 +74,34 @@ flutter:
   assets:
     - asset/img/misc/main_image.jpg
     - asset/img/misc/logo_image.jpg
-    - asset/img/misc/splash2_image.png
-    - asset/img/misc/ssamjang.png
-    - asset/img/misc/douna.png
-    - asset/img/misc/youtube.logo.png
-    - asset/img/misc/navercafe.logo.png
-    - asset/img/misc/instagram.logo.png
-    - asset/img/misc/kakao.logo.png
+    - asset/img/misc/splash_img/splash2_image.png
+    - asset/img/misc/splash_img/ssamjang.png
+    - asset/img/misc/splash_img/douna.png
+    - asset/img/misc/drawer_img/youtube.logo.png
+    - asset/img/misc/drawer_img/navercafe.logo.png
+    - asset/img/misc/drawer_img/instagram.logo.png
+    - asset/img/misc/drawer_img/kakao.logo.png
     - asset/img/misc/bestSeller_v1.png
     - asset/img/misc/new_v1.png
     - asset/img/misc/sale_v1.png
-    - asset/img/misc/shirt_button.png
-    - asset/img/misc/blouse_button.png
-    - asset/img/misc/mtm_button.png
-    - asset/img/misc/neat_button.png
-    - asset/img/misc/pola_button.png
-    - asset/img/misc/onepiece_button.png
-    - asset/img/misc/pants_button.png
-    - asset/img/misc/jean_button.png
-    - asset/img/misc/skirt_button.png
-    - asset/img/misc/paeding_button.png
-    - asset/img/misc/coat_button.png
-    - asset/img/misc/cardigan_button.png
+    - asset/img/misc/button_img/shirt_button.png
+    - asset/img/misc/button_img/blouse_button.png
+    - asset/img/misc/button_img/mtm_button.png
+    - asset/img/misc/button_img/neat_button.png
+    - asset/img/misc/button_img/pola_button.png
+    - asset/img/misc/button_img/onepiece_button.png
+    - asset/img/misc/button_img/pants_button.png
+    - asset/img/misc/button_img/jean_button.png
+    - asset/img/misc/button_img/skirt_button.png
+    - asset/img/misc/button_img/paeding_button.png
+    - asset/img/misc/button_img/coat_button.png
+    - asset/img/misc/button_img/cardigan_button.png
+    - asset/img/misc/button_img/expand_button_1.png
+    - asset/img/misc/button_img/compressed_button_1.png
+    - asset/img/misc/button_img/expand_button_2.png
+    - asset/img/misc/button_img/compressed_button_2.png
+    - asset/img/misc/button_img/expand_button_3.png
+    - asset/img/misc/button_img/compressed_button_3.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

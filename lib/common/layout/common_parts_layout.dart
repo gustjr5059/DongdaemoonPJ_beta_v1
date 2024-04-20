@@ -120,7 +120,7 @@ class BannerImage extends StatelessWidget {
 // MidCategoryButtonList 위젯 정의
 class MidCategoryButtonList extends ConsumerWidget {
   // 카테고리 버튼 클릭시 실행할 함수를 정의 (이 함수는 BuildContext와 카테고리의 인덱스를 매개변수로 받음)
-  final void Function(BuildContext context, int index) onCategoryTap;
+  final void Function(BuildContext context, WidgetRef ref, int index) onCategoryTap;
 
   // 생성자에서 필수적으로 클릭 이벤트 함수를 받음
   MidCategoryButtonList({Key? key, required this.onCategoryTap}) : super(key: key);
@@ -188,7 +188,12 @@ class MidCategoryButtonList extends ConsumerWidget {
        ),
           // 지퍼 아이콘(확장/축소 아이콘)을 위한 버튼이며, 클릭 시 카테고리 뷰가 토글됨.
           IconButton(
-            icon: Icon(boolExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+            iconSize: 24, // 아이콘 크기 설정
+            icon: Image.asset(
+              boolExpanded ? 'asset/img/misc/button_img/compressed_button_3.png' : 'asset/img/misc/button_img/expand_button_3.png', // 확장일 때와 축소일 때의 이미지 경로
+              width: 24, // 아이콘 너비 설정
+              height: 24, // 아이콘 높이 설정
+            ),
             onPressed: toggleCategoryView,
           ),
       ],
@@ -322,7 +327,7 @@ final Map<String, String> midCategoryImageMap = {
 };
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
-void onMidCategoryTap(BuildContext context, int index) {
+void onMidCategoryTap(BuildContext context, WidgetRef ref, int index ) {
   final List<Widget> midcategoryPages = [
     // 각 카테고리에 해당하는 페이지 위젯들을 리스트로 정의함.
     ShirtMainScreen(), BlouseMainScreen(), MtmMainScreen(), NeatMainScreen(),
@@ -334,8 +339,15 @@ void onMidCategoryTap(BuildContext context, int index) {
   // 여기서는 MaterialApp의 Navigator 기능을 사용하여 새로운 페이지로 이동함.
   Navigator.push(
     context, // 현재 컨텍스트
-    MaterialPageRoute(builder: (context) => midcategoryPages[index]), // 선택된 카테고리에 해당하는 페이지로의 루트를 생성함.
-  );
+    MaterialPageRoute(builder: (context) => midcategoryPages[index]) // 선택된 카테고리에 해당하는 페이지로의 루트를 생성함.
+  ).then((_) {
+    // 페이지 이동 후 카테고리 버튼 열 노출 관련 상태를 초기화함.
+    resetCategoryView(ref);
+  });
+}
+// 페이지 전환 시 카테고리 버튼 열 노출 관련 뷰를 항상 축소된 상태로 초기화하는 함수
+void resetCategoryView(WidgetRef ref) {
+  ref.read(midCategoryViewBoolExpandedProvider.state).state = false;
 }
 
 // ------ buildCommonMidGridCategoryButtons 위젯 내용 시작
@@ -377,20 +389,20 @@ Widget buildDetailMidCategoryButton({
   required BuildContext context, // 위젯 빌드에 필요한 컨텍스트
   required int index, // 카테고리의 인덱스
   required String category, // 카테고리 이름
-  required void Function(BuildContext, int) onCategoryTap, // 카테고리 탭 시 실행될 함수
+  required void Function(BuildContext, WidgetRef, int) onCategoryTap, // 카테고리 탭 시 실행될 함수
   required int? selectedCategoryIndex, // 선택된 카테고리 인덱스
   required double buttonWidth, // 버튼의 너비
   required WidgetRef ref,  // 상태 관리를 위한 WidgetRef 매개변수
 }) {
   // 카테고리 이름을 기반으로 영어로 된 이미지 파일명을 찾아서 imageAsset 경로에 설정함.
-  String imageAsset = 'asset/img/misc/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로.
+  String imageAsset = 'asset/img/misc/button_img/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로.
   // // 선택된 카테고리 인덱스와 현재 인덱스를 비교하여 선택 상태 결정
   // bool isSelected = index ==selectedCategoryIndex ;
 
   return GestureDetector(
     onTap: () {
       // ref.read(selectedCategoryProvider.notifier).state = index; // 클릭된 인덱스로 선택된 카테고리 인덱스를 업데이트
-      onCategoryTap(context, index); // 해당 카테고리를 탭했을 때 실행할 함수 호출
+      onCategoryTap(context, ref, index); // 해당 카테고리를 탭했을 때 실행할 함수 호출
     },
     child: Container(
         width: buttonWidth, // 매개변수로 받은 너비를 사용
@@ -437,6 +449,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
       // 탭이 클릭되었을 때 실행할 로직
       // 선택된 인덱스에 따라 상태 업데이트
       ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭의 인덱스를 상태 관리자에 저장
+      resetCategoryView(ref); // 카테고리 뷰를 초기화하는 함수를 호출
       // 화면 전환 로직
       switch (index) { // 클릭된 탭의 인덱스에 따라 각기 다른 화면으로 이동
         case 0:
@@ -512,7 +525,7 @@ Widget buildCommonDrawer(BuildContext context) {
 
         ListTile(
           // ListTile의 앞부분에는 네이버 카페 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/navercafe.logo.png', width: 24),
+          leading: Image.asset('asset/img/misc/drawer_img/navercafe.logo.png', width: 24),
           title: Text('네이버 카페'),
           // 사용자가 ListTile을 탭할 때 실행될 코드, 네이버 카페의 URL로 이동하는 코드
           onTap: () async {
@@ -524,7 +537,7 @@ Widget buildCommonDrawer(BuildContext context) {
         ),
         ListTile(
           // ListTile의 앞부분에는 유튜브 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/youtube.logo.png', width: 24),
+          leading: Image.asset('asset/img/misc/drawer_img/youtube.logo.png', width: 24),
           title: Text('유튜브'),
           // 사용자가 ListTile을 탭할 때 실행될 코드, 유튜브의 URL로 이동하는 코드
           onTap: () async {
@@ -536,7 +549,7 @@ Widget buildCommonDrawer(BuildContext context) {
         ),
         ListTile(
           // ListTile의 앞부분에는 인스타그램 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/instagram.logo.png', width: 24),
+          leading: Image.asset('asset/img/misc/drawer_img/instagram.logo.png', width: 24),
           title: Text('인스타그램'),
           // 사용자가 ListTile을 탭할 때 실행될 코드, 인스타그램의 URL로 이동하는 코드
           onTap: () async {
@@ -548,7 +561,7 @@ Widget buildCommonDrawer(BuildContext context) {
         ),
         ListTile(
           // ListTile의 앞부분에는 카카오 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/kakao.logo.png', width: 24),
+          leading: Image.asset('asset/img/misc/drawer_img/kakao.logo.png', width: 24),
           title: Text('카카오'),
           // 사용자가 ListTile을 탭할 때 실행될 코드, 카카오의 URL로 이동하는 코드
           onTap: () async {
@@ -671,7 +684,7 @@ Widget buildBannerPageView({
                 await launchUrl(Uri.parse(url));
               } else {
                 // 실행할 수 없는 경우 에러 메시지 표시
-                throw 'Could not launch $url';
+                throw '네트워크 오류';
               }
             }
           },
