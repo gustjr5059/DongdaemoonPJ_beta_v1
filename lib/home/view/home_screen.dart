@@ -242,7 +242,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
             ),
             SizedBox(height: 20), // 높이 20으로 간격 설정
             // 카테고리 버튼 목록을 표시하는 위젯 재사용으로 구현
-            MidCategoryButtonList(onCategoryTap: onMidCategoryTap),
+            MidCategoryCardView(onCategoryTap: onMidCategoryTap),
             // 텍스트 위에 회색선을 추가
             Divider(
               color: Colors.grey, // 선의 색상을 회색으로 지정

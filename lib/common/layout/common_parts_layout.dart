@@ -135,7 +135,7 @@ class MidCategoryButtonList extends ConsumerWidget {
     // 현재 화면의 너비를 MediaQuery를 통해 얻음
     final screenWidth = MediaQuery.of(context).size.width;
     // 화면의 너비에 따라 한 줄에 표시할 카테고리 버튼의 수를 결정
-    int midCategoryPerRow = screenWidth > 600 ? 6 : screenWidth > 400 ? 5 : 4;
+    int midCategoryPerRow = screenWidth > 900 ? 6 : screenWidth > 600 ? 5 : screenWidth > 300 ? 4 : 3;
     // 전체적인 좌우 패딩 값을 설정
     double totalPadding = 16.0;
     // 버튼들 사이의 간격을 설정
@@ -201,6 +201,35 @@ class MidCategoryButtonList extends ConsumerWidget {
   }
 }
 // ------ midCategories 부분의 버튼을 화면 크기에 동적으로 한 열당 버튼 갯수를 정해서 열로 정렬하기 위한 클래스 끝
+
+// ------ MidCategoryButtonList 클래스를 포함하여 구현하는 카드뷰 관련 클래스 시작
+class MidCategoryCardView extends StatelessWidget {
+  // 카테고리 탭 이벤트를 처리하기 위한 콜백 함수
+  final void Function(BuildContext context, WidgetRef ref, int index) onCategoryTap;
+  // 생성자를 통해 필수적으로 onCategoryTap 함수를 받아오도록 설정함.
+  MidCategoryCardView({required this.onCategoryTap});
+
+  @override
+  Widget build(BuildContext context) {
+    // MediaQuery를 사용하여 현재 화면의 크기를 가져옴.
+    final screenSize = MediaQuery.of(context).size;
+
+    return Card(
+      elevation: 4, // 카드의 그림자 깊이를 4로 설정하여 입체감을 부여함.
+      margin: EdgeInsets.all(2), // 모든 방향으로 2의 여백을 설정하여 카드 주변에 작은 여백을 줌.
+      child: ConstrainedBox(
+        // ConstrainedBox를 사용하여 카드뷰의 최소 높이를 제한함.
+        constraints: BoxConstraints(minHeight: screenSize.height * 0.3), // 화면 높이의 30%를 최소 높이로 설정함.
+        child: Padding(
+          padding: const EdgeInsets.all(8.0), // 카드 내부의 모든 방향에 8의 패딩을 적용함.
+          child: MidCategoryButtonList(onCategoryTap: onCategoryTap), // MidCategoryButtonList 위젯을 자식으로 추가하고 onCategoryTap 이벤트를 전달함.
+        ),
+      ),
+    );
+  }
+}
+// ------ MidCategoryButtonList 클래스를 포함하여 구현하는 카드뷰 관련 클래스 끝
+
 
 // ------ AppBar 생성 함수 내용 구현 시작
 // 상단 탭 바 생성 함수
