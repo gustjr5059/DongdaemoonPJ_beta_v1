@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
-import '../../common/provider/common_future_provider.dart';
-import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
-import '../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
+import '../../../common/provider/common_future_provider.dart';
+import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
+import '../../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
 // 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
-import '../../product/provider/product_state_provider.dart';
+import '../../provider/product_state_provider.dart';
 
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -15,17 +15,17 @@ import '../../product/provider/product_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// OnepieceMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class OnepieceMainScreen extends ConsumerStatefulWidget {
-  const OnepieceMainScreen({Key? key}) : super(key: key);
+// CardiganMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class CardiganMainScreen extends ConsumerStatefulWidget {
+  const CardiganMainScreen({Key? key}) : super(key: key);
   @override
-  _OnepieceMainScreenState createState() => _OnepieceMainScreenState();
+  _CardiganMainScreenState createState() => _CardiganMainScreenState();
 }
 
-// _OnepieceMainScreenState 클래스 시작
-// _OnepieceMainScreenState 클래스는 OnepieceMainScreen 위젯의 상태를 관리함.
+// _CardiganMainScreenState 클래스 시작
+// _CardiganMainScreenState 클래스는 CardiganMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with WidgetsBindingObserver {
+class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with WidgetsBindingObserver {
   // 페이지 컨트롤러 인스턴스를 늦게 초기화함.
   // 이 컨트롤러를 사용하여 페이지뷰를 프로그래매틱하게 제어할 수 있음.
   late PageController pageController;
@@ -37,18 +37,19 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
-    pageController = PageController(initialPage: ref.read(onepieceMainBannerPageProvider));
+    pageController = PageController(initialPage: ref.read(cardiganMainBannerPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
-      currentPageProvider: onepieceMainBannerPageProvider,
+      currentPageProvider: cardiganMainBannerPageProvider,
       itemCount: bannerImageCount,
     );
 
@@ -57,7 +58,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(onepieceMainBannerPageProvider.notifier).state = 0;
+        ref.read(cardiganMainBannerPageProvider.notifier).state = 0;
       }
     });
 
@@ -149,7 +150,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             itemBuilder: (context, index) => BannerImage(
               imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: onepieceMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
+            currentPageProvider: cardiganMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             context: context, // 현재의 BuildContext를 전달함.
           );
         },
@@ -163,7 +164,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('원피스 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('가디건 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -195,7 +196,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '원피스', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '가디건', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -206,7 +207,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '원피스', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -217,7 +218,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '원피스', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -228,7 +229,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '원피스', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -239,7 +240,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '원피스', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -250,7 +251,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '원피스', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -261,7 +262,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
             buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '원피스', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),

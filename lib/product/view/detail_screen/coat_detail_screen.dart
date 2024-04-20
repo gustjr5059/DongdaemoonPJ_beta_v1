@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
-import '../../common/const/colors.dart';
-import '../../common/provider/common_future_provider.dart';
-import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
-import '../../common/layout/common_parts_layout.dart';
-import '../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 파일
+import '../../../common/const/colors.dart';
+import '../../../common/provider/common_future_provider.dart';
+import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
+import '../../../common/layout/common_parts_layout.dart';
+import '../../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 파일
 
 
 // 제품 상세 페이지를 나타내는 위젯 클래스, Riverpod의 ConsumerWidget을 상속받아 상태 관리 가능

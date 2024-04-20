@@ -7,33 +7,33 @@ import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증 사용을 위한 패키지
 import 'package:url_launcher/url_launcher.dart';
 import '../../cart/view/cart_screen.dart'; // 장바구니 화면
-import '../../home/view/blouse_main_screen.dart'; // 블라우스 화면
-import '../../home/view/cardigan_main_screen.dart'; // 가디건 화면
-import '../../home/view/coat_main_screen.dart'; // 코트 화면
-import '../../home/view/jean_main_screen.dart'; // 청바지 화면
-import '../../home/view/neat_main_screen.dart'; // 니트 화면
-import '../../home/view/onepiece_main_screen.dart'; // 원피스 화면
-import '../../home/view/paeding_main_screen.dart'; // 패딩 화면
-import '../../home/view/pants_main_screen.dart'; // 팬츠 화면
-import '../../home/view/shirt_main_screen.dart'; // 셔츠 화면
-import '../../home/view/skirt_main_screen.dart'; // 스커트 화면
-import '../../home/view/pola_main_screen.dart'; // 상의 화면
-import '../../home/view/mtm_main_screen.dart'; // 언더웨어 화면
+import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
+import '../../product/view/main_screen/cardigan_main_screen.dart'; // 가디건 화면
+import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
+import '../../product/view/main_screen/jean_main_screen.dart'; // 청바지 화면
+import '../../product/view/main_screen/neat_main_screen.dart'; // 니트 화면
+import '../../product/view/main_screen/onepiece_main_screen.dart'; // 원피스 화면
+import '../../product/view/main_screen/paeding_main_screen.dart'; // 패딩 화면
+import '../../product/view/main_screen/pants_main_screen.dart'; // 팬츠 화면
+import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
+import '../../product/view/main_screen/skirt_main_screen.dart'; // 스커트 화면
+import '../../product/view/main_screen/pola_main_screen.dart'; // 상의 화면
+import '../../product/view/main_screen/mtm_main_screen.dart'; // 언더웨어 화면
 import '../../order/view/order_screen.dart'; // 주문 화면
 import '../../product/provider/product_state_provider.dart';
 // 제품 상세 화면
-import '../../product/view/blouse_detail_screen.dart';
-import '../../product/view/cardigan_detail_screen.dart';
-import '../../product/view/coat_detail_screen.dart';
-import '../../product/view/jean_detail_screen.dart';
-import '../../product/view/neat_detail_screen.dart';
-import '../../product/view/onepiece_detail_screen.dart';
-import '../../product/view/paeding_detail_screen.dart';
-import '../../product/view/pants_detail_screen.dart';
-import '../../product/view/shirt_detail_screen.dart';
-import '../../product/view/skirt_detail_screen.dart';
-import '../../product/view/pola_detail_screen.dart';
-import '../../product/view/mtm_detail_screen.dart';
+import '../../product/view/detail_screen/blouse_detail_screen.dart';
+import '../../product/view/detail_screen/cardigan_detail_screen.dart';
+import '../../product/view/detail_screen/coat_detail_screen.dart';
+import '../../product/view/detail_screen/jean_detail_screen.dart';
+import '../../product/view/detail_screen/neat_detail_screen.dart';
+import '../../product/view/detail_screen/onepiece_detail_screen.dart';
+import '../../product/view/detail_screen/paeding_detail_screen.dart';
+import '../../product/view/detail_screen/pants_detail_screen.dart';
+import '../../product/view/detail_screen/shirt_detail_screen.dart';
+import '../../product/view/detail_screen/skirt_detail_screen.dart';
+import '../../product/view/detail_screen/pola_detail_screen.dart';
+import '../../product/view/detail_screen/mtm_detail_screen.dart';
 import '../../user/view/profile_screen.dart'; // 사용자 프로필 화면
 import '../const/colors.dart'; // 앱 전반에 사용되는 색상 상수
 import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
@@ -161,7 +161,7 @@ class MidCategoryButtonList extends ConsumerWidget {
     return Column(
         children: [
           AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: 200),
             // 축소 시, 노출 범위에 들어오지 않는 열의 버튼은 화면에 잘라서 보이지 않도록 하는 위젯
             child: ClipRect(
               // Wrap 위젯을 사용하여 화면 너비에 따라 자동으로 줄바꿈을 처리

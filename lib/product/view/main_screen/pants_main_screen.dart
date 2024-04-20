@@ -3,22 +3,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
-import '../../common/provider/common_future_provider.dart';
-import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
-import '../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
+import '../../../common/provider/common_future_provider.dart';
+import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
+import '../../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
 // 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
-import '../../product/provider/product_state_provider.dart';
-
-// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-// // GlobalKey 선언
-// GlobalKey newProductsKey = GlobalKey();
-// GlobalKey bestProductsKey = GlobalKey();
-// GlobalKey discountProductsKey = GlobalKey();
-// GlobalKey springProductsKey = GlobalKey();
-// GlobalKey summerProductsKey = GlobalKey();
-// GlobalKey autumnProductsKey = GlobalKey();
-// GlobalKey winterProductsKey = GlobalKey();
-// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+import '../../provider/product_state_provider.dart';
 
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -26,17 +15,17 @@ import '../../product/provider/product_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// ShirtMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class ShirtMainScreen extends ConsumerStatefulWidget {
-  const ShirtMainScreen({Key? key}) : super(key: key);
+// PantsMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class PantsMainScreen extends ConsumerStatefulWidget {
+  const PantsMainScreen({Key? key}) : super(key: key);
   @override
-  _ShirtMainScreenState createState() => _ShirtMainScreenState();
+  _PantsMainScreenState createState() => _PantsMainScreenState();
 }
 
-// _ShirtMainScreenState 클래스 시작
-// _ShirtMainScreenState 클래스는 ShirtMainScreen 위젯의 상태를 관리함.
+// _PantsMainScreenState 클래스 시작
+// _PantsMainScreenState 클래스는 PantsMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsBindingObserver {
+class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsBindingObserver {
   // 페이지 컨트롤러 인스턴스를 늦게 초기화함.
   // 이 컨트롤러를 사용하여 페이지뷰를 프로그래매틱하게 제어할 수 있음.
   late PageController pageController;
@@ -48,24 +37,18 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  late ScrollController scrollController; // ScrollController 추가
-
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
     super.initState();
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
-    pageController = PageController(initialPage: ref.read(shirtMainBannerPageProvider));
-
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    scrollController = ScrollController(); // ScrollController 인스턴스 초기화
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+    pageController = PageController(initialPage: ref.read(pantsMainBannerPageProvider));
 
     // 배너의 자동 스크롤 기능을 초기화함.
     bannerAutoScrollClass = BannerAutoScrollClass(
       pageController: pageController,
-      currentPageProvider: shirtMainBannerPageProvider,
+      currentPageProvider: pantsMainBannerPageProvider,
       itemCount: bannerImageCount,
     );
 
@@ -74,7 +57,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(shirtMainBannerPageProvider.notifier).state = 0;
+        ref.read(pantsMainBannerPageProvider.notifier).state = 0;
       }
     });
 
@@ -119,11 +102,6 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     // 위젯이 제거될 때 이러한 알림을 더 이상 받지 않도록 구독을 취소함.
     authStateChangesSubscription?.cancel();
     // 위젯의 기본 dispose 메서드를 호출하여 추가적인 정리 작업을 수행함.
-
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    // scrollController.dispose(); // ScrollController 해제
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
-
     super.dispose();
   }
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -143,38 +121,6 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
     void onTopBarTap(int index) {
-      // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-      // GlobalKey? selectedKey;
-      // switch (index) {
-      //   case 0:
-      //     selectedKey = newProductsKey;
-      //     break;
-      //   case 1:
-      //     selectedKey = bestProductsKey;
-      //     break;
-      //   case 2:
-      //     selectedKey = discountProductsKey;
-      //     break;
-      //   case 3:
-      //     selectedKey = springProductsKey;
-      //     break;
-      //   case 4:
-      //     selectedKey = summerProductsKey;
-      //     break;
-      //   case 5:
-      //     selectedKey = autumnProductsKey;
-      //     break;
-      //   case 6:
-      //     selectedKey = winterProductsKey;
-      //     break;
-      // }
-      //
-      // if (selectedKey != null) {
-      //   // Scrollable.ensureVisible을 호출하여 해당 섹션으로 스크롤합니다.
-      //   Scrollable.ensureVisible(selectedKey.currentContext!, duration: Duration(milliseconds: 500));
-      // }
-      // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
-
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
@@ -203,7 +149,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             itemBuilder: (context, index) => BannerImage(
               imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
             ),
-            currentPageProvider: shirtMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
+            currentPageProvider: pantsMainBannerPageProvider, // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             context: context, // 현재의 BuildContext를 전달함.
           );
         },
@@ -217,11 +163,8 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
     // ------ 화면 구성 시작
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      appBar: buildCommonAppBar('티셔츠 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
+      appBar: buildCommonAppBar('팬츠 메인', context), // 공통으로 사용되는 AppBar를 가져옴.
       body: SingleChildScrollView(
-        // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-        // controller: scrollController, // 스크롤 컨트롤러 연결
-        // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
         child: Column(
           children: [
             // common_parts.dart에서 가져온 카테고리 리스트
@@ -241,8 +184,52 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               child: buildBannerPageViewSection(), // 배너 페이지뷰 위젯 사용
             ),
             SizedBox(height: 20), // 높이 20으로 간격 설정
-            // 카테고리 버튼 목록을 표시하는 위젯 재사용으로 구현
+            // '더보기' 기능이 포함된 카테고리 버튼 목록을 표시함.
             MidCategoryButtonList(onCategoryTap: onMidCategoryTap),
+            // 텍스트 위에 회색선을 추가
+            Divider(
+              color: Colors.grey, // 선의 색상을 회색으로 지정
+              thickness: 1, // 선의 두께를 1로 지정
+            ),
+            SizedBox(height: 10), // 높이 10으로 간격 설정
+            // 이벤트 상품 섹션 제목을 표시
+            // '신상' 텍스트를 왼쪽으로 정렬
+            Align(
+              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
+              child: Container(
+                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
+                child: Text(
+                  '신상',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            SizedBox(height: 20), // 간격을 추가
+            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+            buildHorizontalDocumentsList(ref, docIds1, '팬츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            SizedBox(height: 20), // 간격을 추가
+            // 텍스트 위에 회색선을 추가
+            Divider(
+              color: Colors.grey, // 선의 색상을 회색으로 지정
+              thickness: 1, // 선의 두께를 1로 지정
+            ),
+            SizedBox(height: 10), // 높이 10으로 간격 설정
+            // 이벤트 상품 섹션 제목을 표시
+            // '신상' 텍스트를 왼쪽으로 정렬
+            Align(
+              alignment: Alignment.centerLeft, // 왼쪽 정렬을 위해 Alignment.centerLeft 사용
+              child: Container(
+                padding: EdgeInsets.only(left: 16), // 텍스트와 화면 왼쪽 가장자리 사이에 일정한 여백을 줍니다.
+                child: Text(
+                  '최고',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            SizedBox(height: 20), // 간격을 추가
+            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
               color: Colors.grey, // 선의 색상을 회색으로 지정
@@ -252,7 +239,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '티셔츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds1, '팬츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -263,7 +250,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -274,7 +261,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -285,7 +272,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -296,7 +283,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -307,7 +294,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
             SizedBox(height: 20), // 간격을 추가
             // 텍스트 위에 회색선을 추가
             Divider(
@@ -318,7 +305,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
             buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
             SizedBox(height: 20), // 간격을 추가
             // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildHorizontalDocumentsList(ref, docIds2, '팬츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
           ],
         ),
       ),
@@ -332,3 +319,5 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 }
 // _HomeScreenState 클래스 끝
+
+

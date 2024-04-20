@@ -1,9 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// 색상 선택을 위한 상태 관리용 StateProvider
-final colorSelectionIndexProvider = StateProvider<int?>((ref) => null);
-// 사이즈 선택을 위한 상태 관리용 StateProvider
-final sizeSelectionProvider = StateProvider<String?>((ref) => null);
 
 // 티셔츠 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final shirtMainBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -54,6 +50,11 @@ final paedingDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 final coatDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 // 가디건 디테일 상품 화면의 페이지 인덱스를 관리하기 위한 StateProvider
 final cardiganDetailBannerPageProvider = StateProvider<int>((ref) => 0);
+
+// 색상 선택을 위한 상태 관리용 StateProvider
+final colorSelectionIndexProvider = StateProvider<int?>((ref) => null);
+// 사이즈 선택을 위한 상태 관리용 StateProvider
+final sizeSelectionProvider = StateProvider<String?>((ref) => null);
 
 // // 티셔츠 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
 // final shirtSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
