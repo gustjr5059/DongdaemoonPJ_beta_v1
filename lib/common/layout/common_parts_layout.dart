@@ -188,11 +188,11 @@ class MidCategoryButtonList extends ConsumerWidget {
        ),
           // 지퍼 아이콘(확장/축소 아이콘)을 위한 버튼이며, 클릭 시 카테고리 뷰가 토글됨.
           IconButton(
-            iconSize: 28, // 아이콘 크기 설정
+            iconSize: 30, // 아이콘 크기 설정
             icon: Image.asset(
               boolExpanded ? 'asset/img/misc/button_img/compressed_button_3.png' : 'asset/img/misc/button_img/expand_button_3.png', // 확장일 때와 축소일 때의 이미지 경로
-              width: 28, // 아이콘 너비 설정
-              height: 28, // 아이콘 높이 설정
+              width: 30, // 아이콘 너비 설정
+              height: 30, // 아이콘 높이 설정
             ),
             onPressed: toggleCategoryView,
           ),
@@ -211,23 +211,23 @@ class MidCategoryCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery를 사용하여 현재 화면의 크기를 가져옴.
-    final screenSize = MediaQuery.of(context).size;
-
     return Card(
+      color: CARD_VIEW_BG_COLOR, // 카드의 배경색을 CARD_VIEW_BG_COLOR로 설정
       elevation: 4, // 카드의 그림자 깊이를 4로 설정하여 입체감을 부여함.
       margin: EdgeInsets.all(2), // 모든 방향으로 2의 여백을 설정하여 카드 주변에 작은 여백을 줌.
-      child: ConstrainedBox(
-        // ConstrainedBox를 사용하여 카드뷰의 최소 높이를 제한함.
-        constraints: BoxConstraints(minHeight: screenSize.height * 0.3), // 화면 높이의 30%를 최소 높이로 설정함.
-        child: Padding(
-          padding: const EdgeInsets.all(8.0), // 카드 내부의 모든 방향에 8의 패딩을 적용함.
-          child: MidCategoryButtonList(onCategoryTap: onCategoryTap), // MidCategoryButtonList 위젯을 자식으로 추가하고 onCategoryTap 이벤트를 전달함.
+      child: Padding(
+      // Column 위젯 전체에 적용될 패딩을 설정함.
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 위쪽, 왼쪽, 오른쪽에 8 / 아래쪽에 4의 패딩을 적용함.
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // 카드 안의 내용물 크기에 맞게 최소화
+            children: [
+            MidCategoryButtonList(onCategoryTap: onCategoryTap), // 카테고리 버튼 리스트 위젯 추가함.
+            ]
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
-}
 // ------ MidCategoryButtonList 클래스를 포함하여 구현하는 카드뷰 관련 클래스 끝
 
 
@@ -409,7 +409,7 @@ Widget buildDetailMidCategoryButton({
         mainAxisAlignment: MainAxisAlignment.center, // 컬럼 내부의 아이템들을 중앙에 위치시킴.
         children: <Widget>[
           AspectRatio( // 이미지의 원본 비율을 유지하는 AspectRatio 위젯 사용
-            aspectRatio: 1.8, // 너비와 높이의 비율을 1:1.8로 설정
+            aspectRatio: 1.8, // 너비와 높이의 비율을 1.8:1로 설정
             child: Image.asset(imageAsset, fit: BoxFit.contain), // 이미지 파일을 보여줌
           ),
           SizedBox(height: 8), // 이미지와 텍스트 사이의 공간을 8로 설정함.
