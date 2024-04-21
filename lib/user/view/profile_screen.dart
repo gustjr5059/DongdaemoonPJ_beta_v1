@@ -22,7 +22,7 @@ class ProfileScreen extends ConsumerWidget {
     return Scaffold(
       // GlobalKey 제거
       // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
-      appBar: buildCommonAppBar('PROFILE', context),// common_parts.dart의 AppBar 재사용
+      appBar: buildCommonAppBar(context: context, title: '마이페이지', pageBackButton: false),// common_parts.dart의 AppBar 재사용
       // body에 카테고리 리스트 포함
       body: Column(
         children: [

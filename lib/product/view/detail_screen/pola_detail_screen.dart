@@ -101,7 +101,7 @@ class PolaDetailProductScreen extends ConsumerWidget {
       // key: scaffoldKey, // common_parts.dart에서 정의한 GlobalKey 사용
       // 기존 GlobalKey의 사용은 제거됨.
       // 공통 AppBar 구성 함수 호출
-      appBar: buildCommonAppBar('폴라티 상세', context),// common_parts.dart의 AppBar 재사용
+      appBar: buildCommonAppBar(context: context, title: '폴라티 상세', pageBackButton: true),// common_parts.dart의 AppBar 재사용
       // body에 카테고리 리스트 포함
       body: SingleChildScrollView( // 스크롤 가능한 뷰로 컨텐츠를 감싸기
         child: Column( // 세로로 배열되는 위젯들
@@ -321,9 +321,6 @@ class PolaDetailProductScreen extends ConsumerWidget {
           ],
         ),
       ),
-      // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
-      bottomNavigationBar: buildCommonBottomNavigationBar(tabIndex, ref, context),
-      drawer: buildCommonDrawer(context), // 드로어 메뉴, 공통 구성 함수 호출
     );
   }
 }

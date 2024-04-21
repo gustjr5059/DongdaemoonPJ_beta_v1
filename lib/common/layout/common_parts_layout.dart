@@ -231,35 +231,47 @@ class MidCategoryCardView extends StatelessWidget {
   }
 // ------ MidCategoryButtonList 클래스를 포함하여 구현하는 카드뷰 관련 클래스 끝
 
-
 // ------ AppBar 생성 함수 내용 구현 시작
 // 상단 탭 바 생성 함수
-// AppBar 생성 함수에서 GlobalKey 사용 제거
-// 공통 AppBar 생성 함수. GlobalKey 사용을 제거하고 context를 활용하여 Drawer를 열 수 있게 함.
-AppBar buildCommonAppBar(String title, BuildContext context) {
-  return AppBar(
-    // AppBar의 높이에 맞게 이미지를 조정. 이미지의 원본 비율을 유지하면서 최대 높이를 AppBar의 높이에 맞춤.
-    title: Container(
-      height: kToolbarHeight, // AppBar의 기본 높이인 kToolbarHeight를 사용하여 이미지 높이를 AppBar 높이로 제한함.
-      child: Image.asset(
-        'asset/img/misc/logo_image.jpg', // 로고 이미지 경로를 지정합니다.
-        fit: BoxFit.scaleDown, // 이미지가 컨테이너에 맞추어 스케일을 조정함.(원본 비율을 유지한 채 이미지 크기 줄이는 부분)
-      ),
-    ),
-    centerTitle: true,
-    leading: Builder( // Builder 위젯을 사용하여 context를 전달함.
+AppBar buildCommonAppBar({
+  required BuildContext context, // BuildContext를 필수 인자로 받고, 각종 위젯에서 위치 정보 등을 제공받음.
+  required String title, // AppBar에 표시될 제목을 문자열로 받음.
+  bool pageBackButton = false, // 이전 화면으로 돌아가는 버튼을 표시할지 여부를 결정하는 플래그, 기본값은 false암.
+}) {
+  // AppBar의 'leading' 위젯을 조건에 따라 설정함.
+  Widget leadingWidget; // 앱 바 왼쪽 상단에 표시될 위젯을 저장할 변수임.
+  if (pageBackButton) {
+    // pageBackButton이 true일 경우, 이전 화면으로 돌아가는 버튼을 생성함.
+    leadingWidget = IconButton(
+      icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘을 사용함.
+      onPressed: () => Navigator.of(context).pop(), // 버튼을 누르면 현재 화면을 종료하고 이전 화면으로 돌아감.
+    );
+  } else {
+    // pageBackButton이 false일 경우, 드로어를 여는 버튼을 생성함.
+    leadingWidget = Builder(
       builder: (BuildContext context) {
         return IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () => Scaffold.of(context).openDrawer(), // 현재 context의 Scaffold를 찾아서 Drawer를 열음.
+          icon: Icon(Icons.menu), // 메뉴 아이콘을 사용함.
+          onPressed: () => Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
         );
       },
+    );
+  }
+  return AppBar(
+    title: Container(
+      height: kToolbarHeight, // AppBar의 높이를 kToolbarHeight로 설정하여 로고 이미지의 높이를 제한함.
+      child: Image.asset(
+        'asset/img/misc/logo_image.jpg', // 로고 이미지 파일 경로를 지정함.
+        fit: BoxFit.scaleDown, // 이미지가 컨테이너 안에서 원본 비율을 유지하며 축소되도록 설정함.
+      ),
     ),
+    centerTitle: true, // 제목을 AppBar의 중앙에 위치시킴.
+    leading: leadingWidget, // 위에서 설정한 leading 위젯을 AppBar의 leading 위치에 배치함.
     actions: [
       IconButton(
-        icon: Icon(Icons.search),
+        icon: Icon(Icons.search), // 검색 아이콘을 사용함.
         onPressed: () {
-          // 검색 기능 구현 위치
+          // 검색 기능을 여기에 구현할 수 있음.
         },
       ),
     ],

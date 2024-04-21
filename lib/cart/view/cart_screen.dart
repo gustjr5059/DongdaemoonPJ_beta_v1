@@ -22,7 +22,7 @@ class CartScreen extends ConsumerWidget {
 
     return Scaffold(
       // Scaffold의 key 설정은 제거되었습니다.
-      appBar: buildCommonAppBar('CART', context), // 공통 AppBar 사용, 장바구니 화면 제목 설정
+      appBar: buildCommonAppBar(context: context, title: '장바구니', pageBackButton: false), // 공통 AppBar 사용, 장바구니 화면 제목 설정
       body: Column(
         children: [
           Container(

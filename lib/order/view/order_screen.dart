@@ -19,7 +19,7 @@ class OrderScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: buildCommonAppBar('ORDER', context), // 'ORDER' 페이지의 공통 앱 바
+      appBar: buildCommonAppBar(context: context, title: '주문', pageBackButton: false), // 'ORDER' 페이지의 공통 앱 바
       body: Column(
         children: [
           Container(
