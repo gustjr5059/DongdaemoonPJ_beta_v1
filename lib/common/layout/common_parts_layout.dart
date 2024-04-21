@@ -710,6 +710,44 @@ Widget buildBannerPageView({
 }
 // ------ buildBannerPageView 위젯 내용 구현 끝
 
+// ------ common_parts_layout.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의
+// banner 페이지 뷰의 조건에 따른 동작 구현 내용 시작
+// 배너 이미지를 보여주는 페이지뷰 섹션
+Widget buildBannerPageViewSection(BuildContext context, WidgetRef ref, StateProvider<int> currentPageProvider, PageController pageController, BannerAutoScrollClass bannerAutoScroll// 현재 페이지 인덱스를 관리하기 위한 프로바이더를 인자로 받습니다.
+  ) {
+  // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
+  // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
+  final asyncBannerImages = ref.watch(bannerImagesProvider);
+
+  // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
+  return asyncBannerImages.when(
+    // 데이터 상태인 경우, 이미지 URL 리스트를 바탕으로 페이지뷰를 구성함.
+    data: (List<String> imageUrls) {
+      bannerAutoScroll.itemCount = imageUrls.length; // 실제 이미지 개수로 업데이트
+      bannerAutoScroll.startAutoScroll(); // 데이터 로드 완료 후 자동 스크롤 시작
+
+      // 이미지 URL 리스트를 성공적으로 가져온 경우,
+      // 페이지 뷰를 구성하는 `buildBannerPageView` 함수를 호출함.
+      // 이 함수는 페이지뷰 위젯과, 각 페이지를 구성하는 아이템 빌더, 현재 페이지 인덱스를 관리하기 위한 provider 등을 인자로 받음.
+      return buildBannerPageView(
+        ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
+        pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
+        itemCount: imageUrls.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
+        itemBuilder: (context, index) => BannerImage(
+          imageUrl: imageUrls[index], // 이미지 URL을 통해 각 페이지에 배너 이미지를 구성함.
+        ),
+        // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
+        currentPageProvider: currentPageProvider, // 외부에서 받은 currentPageProvider를 사용함.
+        context: context, // 현재의 BuildContext를 전달함.
+      );
+    },
+    loading: () => Center(child: CircularProgressIndicator()), // 데이터 로딩 중에는 로딩 인디케이터를 표시함.
+    error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')), // 오류 발생 시 오류 메시지를 표시함.
+  );
+}
+// ------ common_parts_layout.dart 내 buildBannerPageView 재사용 후 buildBannerPageViewSection 위젯으로 재정의
+// banner 페이지 뷰의 조건에 따른 동작 구현 내용 끝
+
 // ------ buildFirestoreDetailDocument 위젯 내용 구현 시작
 // Firestore 데이터를 기반으로 세부 정보를 표시하는 위젯.
 // 각 문서의 세부 정보를 UI에 표시함.
