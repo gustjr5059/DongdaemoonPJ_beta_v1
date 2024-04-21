@@ -47,7 +47,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  late ScrollController scrollController; // ScrollController 추가
+  // late ScrollController scrollController; // ScrollController 추가
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -57,9 +57,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // PageController를 현재 페이지로 설정함.(다른 화면 이동 후 다시 홈 화면으로 오는 경우에 이동하기 직전의 페이지로 시작)
     _pageController = PageController(initialPage: ref.read(homeMainBannerPageProvider));
 
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    scrollController = ScrollController(); // ScrollController 인스턴스 초기화
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+    // scrollController = ScrollController(); // ScrollController 인스턴스 초기화
+    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     // 배너의 자동 스크롤 기능을 초기화함.
     _bannerAutoScroll = BannerAutoScrollClass(

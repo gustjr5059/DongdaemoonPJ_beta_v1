@@ -7,6 +7,7 @@ import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증 사용을 위한 패키지
 import 'package:url_launcher/url_launcher.dart';
 import '../../cart/view/cart_screen.dart'; // 장바구니 화면
+import '../../home/view/home_screen.dart';
 import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 가디건 화면
 import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
@@ -438,6 +439,9 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
     type: BottomNavigationBarType.fixed, // 네비게이션 바의 유형을 고정된 유형으로 설정
     currentIndex: selectedIndex, // 현재 선택된 인덱스
     onTap: (index) {
+      if(ref.read(tabIndexProvider) == index) {
+        return; // 이미 선택된 탭이면 아무 동작도 하지 않음
+      }
       // 탭이 클릭되었을 때 실행할 로직
       // 선택된 인덱스에 따라 상태 업데이트
       ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭의 인덱스를 상태 관리자에 저장
@@ -446,7 +450,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
       switch (index) { // 클릭된 탭의 인덱스에 따라 각기 다른 화면으로 이동
         case 0:
         // '홈' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ShirtMainScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeMainScreen()));
           break;
         case 1:
         // '장바구니' 화면으로 이동
