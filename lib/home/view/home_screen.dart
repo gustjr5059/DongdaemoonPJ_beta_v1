@@ -187,121 +187,129 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
       appBar: buildCommonAppBar(context: context, title: '홈', pageBackButton: false), // 공통으로 사용되는 AppBar를 가져옴.
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),  // 전체 바디에 좌우 패딩: 4.0으로 구성함.
+        child: SingleChildScrollView(
         // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
         // controller: scrollController, // 스크롤 컨트롤러 연결
         // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
-        child: Column(
-          children: [
-            // common_parts.dart에서 가져온 카테고리 리스트
-            // 상단 탭 바
-            // 여기에 Container보다 SizedBox 사용을 더 선호함(알아두기)
-            SizedBox(
-              // 상단 탭 바를 표시
-              height: 20, // TopBar의 높이 설정
-              child: topBarList, // 수정된 buildTopBarList 함수 호출
+          child: Column(
+            children: [
+              // common_parts.dart에서 가져온 카테고리 리스트
+              // 상단 탭 바
+              // 여기에 Container보다 SizedBox 사용을 더 선호함(알아두기)
+              SizedBox(
+                // 상단 탭 바를 표시
+                height: 20, // TopBar의 높이 설정
+                child: topBarList, // 수정된 buildTopBarList 함수 호출
+              ),
+              SizedBox(height: 20), // 높이 20으로 간격 설정
+              CommonCardView(
+                content: SizedBox(
+                  // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                  height: 200,
+                  // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+                  child: buildBannerPageViewSection(context, ref, homeMainBannerPageProvider, _pageController, _bannerAutoScroll),
+                ),
+                backgroundColor: LIGHT_PURPLE_COLOR, // 카드뷰 배경 색상 : CARD_VIEW_BG_COLOR
+                elevation: 4, // 카드뷰 그림자 깊이
+                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+              ),
+              SizedBox(height: 10), // 높이 20으로 간격 설정
+              // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
+              CommonCardView(
+                content: MidCategoryButtonList(onCategoryTap: onMidCategoryTap), // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
+                backgroundColor: CARD_VIEW_BG_COLOR, // 카드뷰 배경 색상 : CARD_VIEW_BG_COLOR
+                elevation: 4, // 카드뷰 그림자 깊이
+                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+              ),
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds1, '티셔츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              SizedBox(height: 20), // 간격을 추가
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              SizedBox(height: 20), // 간격을 추가
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              SizedBox(height: 20), // 간격을 추가
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              SizedBox(height: 20), // 간격을 추가
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              SizedBox(height: 20), // 간격을 추가
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              SizedBox(height: 20), // 간격을 추가
+              // 텍스트 위에 회색선을 추가
+              Divider(
+                color: Colors.grey, // 선의 색상을 회색으로 지정
+                thickness: 1, // 선의 두께를 1로 지정
+              ),
+              SizedBox(height: 10), // 높이 10으로 간격 설정
+              buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
+              SizedBox(height: 20), // 간격을 추가
+              // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
+              buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+              ],
             ),
-            SizedBox(height: 20), // 높이 20으로 간격 설정
-            // 화살표 버튼이 있는 PageView
-            SizedBox(
-              // 페이지 뷰 섹션을 표시
-              height: 200, // 페이지 뷰의 높이 설정
-              child: buildBannerPageViewSection(context, ref, homeMainBannerPageProvider, _pageController, _bannerAutoScroll), // 배너 페이지뷰 위젯 재사용하여 구현
-            ),
-            SizedBox(height: 20), // 높이 20으로 간격 설정
-            // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
-            CommonCardView(
-              content: MidCategoryButtonList(onCategoryTap: onMidCategoryTap), // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
-              backgroundColor: CARD_VIEW_BG_COLOR, // 카드뷰 배경 색상 : CARD_VIEW_BG_COLOR
-              elevation: 4, // 카드뷰 그림자 깊이
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-            ),
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '티셔츠', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
-            SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '티셔츠', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-          ],
+          ),
         ),
-      ),
-      // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
-    );
-    // ------ 화면구성 끝
+        // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
+        bottomNavigationBar: buildCommonBottomNavigationBar(
+            ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+        drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
+      );
+      // ------ 화면구성 끝
+    }
+  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
   }
-// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-}
-// _HomeScreenState 클래스 끝
+  // _HomeScreenState 클래스 끝

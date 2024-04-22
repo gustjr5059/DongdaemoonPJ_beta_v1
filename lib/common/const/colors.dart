@@ -20,3 +20,5 @@ const GOLD_COLOR = Color(0xFFFFD700);
 const DISCOUNT_COLOR = Color(0xFFFF0000);
 // 카드뷰 배경 색상
 const CARD_VIEW_BG_COLOR = Color(0xFFFFFBF0);
+// 연보라 색상
+const LIGHT_PURPLE_COLOR = Color(0xFFD6CDEA);
