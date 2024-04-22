@@ -44,6 +44,15 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
   // 이 클래스를 통해 배너 이미지가 자동으로 스크롤되는 기능을 구현할 수 있음.
   late BannerAutoScrollClass _bannerAutoScroll;
   int bannerImageCount = 3; // 배너 이미지 총 개수 저장 변수
+
+  // 배너 클릭 시 이동할 URL 리스트를 정의합니다.
+// 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리합니다.
+  final List<String> bannerLinks = [
+    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
+    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
+    // 'https://www.coupang.com' // 세 번째 배너의 URL은 현재 주석 처리되어 사용되지 않음
+  ];
+
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -206,7 +215,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
               // 페이지 뷰 섹션을 표시
               height: 200, // 페이지 뷰의 높이 설정
               // child: pageViewSection, // pageViewSection 호출
-              child: buildBannerPageViewSection(context, ref, shirtMainBannerPageProvider, _pageController, _bannerAutoScroll), // 배너 페이지뷰 위젯 재사용하여 구현
+              child: buildLargeBannerPageViewSection(context, ref, shirtMainBannerPageProvider, _pageController, _bannerAutoScroll, bannerLinks), // 배너 페이지뷰 위젯 재사용하여 구현
             ),
             SizedBox(height: 110), // 높이 20으로 간격 설정
 

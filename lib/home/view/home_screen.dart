@@ -44,6 +44,15 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // 이 클래스를 통해 배너 이미지가 자동으로 스크롤되는 기능을 구현할 수 있음.
   late BannerAutoScrollClass _bannerAutoScroll;
   int bannerImageCount = 3; // 배너 이미지 총 개수 저장 변수
+
+  // 배너 클릭 시 이동할 URL 리스트를 정의합니다.
+// 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리합니다.
+  final List<String> bannerLinks = [
+    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
+    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
+    // 'https://www.coupang.com' // 세 번째 배너의 URL은 현재 주석 처리되어 사용되지 않음
+  ];
+
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -209,7 +218,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                   // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
                   height: 200,
                   // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                  child: buildBannerPageViewSection(context, ref, homeMainBannerPageProvider, _pageController, _bannerAutoScroll),
+                  child: buildLargeBannerPageViewSection(context, ref, homeMainBannerPageProvider, _pageController, _bannerAutoScroll, bannerLinks),
                 ),
                 backgroundColor: LIGHT_PURPLE_COLOR, // 카드뷰 배경 색상 : CARD_VIEW_BG_COLOR
                 elevation: 4, // 카드뷰 그림자 깊이
@@ -222,11 +231,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 backgroundColor: CARD_VIEW_BG_COLOR, // 카드뷰 배경 색상 : CARD_VIEW_BG_COLOR
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              // 텍스트 위에 회색선을 추가
-              Divider(
-                color: Colors.grey, // 선의 색상을 회색으로 지정
-                thickness: 1, // 선의 두께를 1로 지정
               ),
               SizedBox(height: 10), // 높이 10으로 간격 설정
               buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
