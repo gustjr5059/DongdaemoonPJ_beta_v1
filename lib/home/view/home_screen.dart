@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용�
 import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
 import '../../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
 // 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
+import '../../common/const/colors.dart';
 import '../provider/home_state_provider.dart';
 
 // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
@@ -208,8 +209,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
               child: buildBannerPageViewSection(context, ref, homeMainBannerPageProvider, _pageController, _bannerAutoScroll), // 배너 페이지뷰 위젯 재사용하여 구현
             ),
             SizedBox(height: 20), // 높이 20으로 간격 설정
-            // 카테고리 버튼 목록을 표시하는 위젯 재사용으로 구현
-            MidCategoryCardView(onCategoryTap: onMidCategoryTap),
+            // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
+            CommonCardView(
+              content: MidCategoryButtonList(onCategoryTap: onMidCategoryTap), // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
+              backgroundColor: CARD_VIEW_BG_COLOR, // 카드뷰 배경 색상 : CARD_VIEW_BG_COLOR
+              elevation: 4, // 카드뷰 그림자 깊이
+              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+            ),
             // 텍스트 위에 회색선을 추가
             Divider(
               color: Colors.grey, // 선의 색상을 회색으로 지정

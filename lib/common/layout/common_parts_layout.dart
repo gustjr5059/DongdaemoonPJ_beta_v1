@@ -160,6 +160,7 @@ class MidCategoryButtonList extends ConsumerWidget {
 
     // 카테고리 버튼을 포함하는 애니메이션 컨테이너를 반환하고, 이 컨테이너는 확장/축소 시 높이가 변경됨.
     return Column(
+        mainAxisSize: MainAxisSize.min, // 카드 안의 내용물 크기에 맞게 최소화
         children: [
           AnimatedContainer(
             duration: Duration(milliseconds: 200),
@@ -203,33 +204,49 @@ class MidCategoryButtonList extends ConsumerWidget {
 }
 // ------ midCategories 부분의 버튼을 화면 크기에 동적으로 한 열당 버튼 갯수를 정해서 열로 정렬하기 위한 클래스 끝
 
-// ------ MidCategoryButtonList 클래스를 포함하여 구현하는 카드뷰 관련 클래스 시작
-class MidCategoryCardView extends StatelessWidget {
-  // 카테고리 탭 이벤트를 처리하기 위한 콜백 함수
-  final void Function(BuildContext context, WidgetRef ref, int index) onCategoryTap;
-  // 생성자를 통해 필수적으로 onCategoryTap 함수를 받아오도록 설정함.
-  MidCategoryCardView({required this.onCategoryTap});
+// ------ 범용성으로 재사용가능한 카드뷰인 CommonCardView 클래스 시작
+class CommonCardView extends StatelessWidget {
+  // 'content'는 카드 내부에 표시될 위젯을 정의함.
+  final Widget content;
+  // 'backgroundColor'는 카드의 배경색을 정의함. 기본값은 흰색임.
+  final Color backgroundColor;
+  // 'elevation'는 카드의 그림자 깊이를 정의함. 기본값은 4.0임.
+  final double elevation;
+  // 'margin'은 카드의 외부 여백을 정의함. 기본값은 모든 방향으로 2의 여백임.
+  final EdgeInsets margin;
+  // 'padding'은 카드 내부의 여백을 정의함. 기본값은 모든 방향으로 8의 여백임.
+  final EdgeInsets padding;
+
+  // 생성자에서는 위에서 정의한 필드들을 초기화함.
+  // 필요한 'content'는 반드시 제공되어야 하며, 나머지는 선택적으로 제공될 수 있음.
+  CommonCardView({
+    required this.content,
+    this.backgroundColor = Colors.white,
+    this.elevation = 4.0,
+    this.margin = const EdgeInsets.all(2),
+    this.padding = const EdgeInsets.all(8),
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Card 위젯을 사용하여 시각적 표현을 구현함.
     return Card(
-      color: CARD_VIEW_BG_COLOR, // 카드의 배경색을 CARD_VIEW_BG_COLOR로 설정
-      elevation: 4, // 카드의 그림자 깊이를 4로 설정하여 입체감을 부여함.
-      margin: EdgeInsets.all(2), // 모든 방향으로 2의 여백을 설정하여 카드 주변에 작은 여백을 줌.
+      // 카드의 배경색 설정
+      color: backgroundColor,
+      // 카드의 그림자 깊이 설정
+      elevation: elevation,
+      // 카드의 외부 여백 설정
+      margin: margin,
+      // Padding 위젯을 사용하여 카드 내부에 여백을 설정
       child: Padding(
-      // Column 위젯 전체에 적용될 패딩을 설정함.
-      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 위쪽, 왼쪽, 오른쪽에 8 / 아래쪽에 4의 패딩을 적용함.
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // 카드 안의 내용물 크기에 맞게 최소화
-            children: [
-            MidCategoryButtonList(onCategoryTap: onCategoryTap), // 카테고리 버튼 리스트 위젯 추가함.
-            ]
-          ),
-        ),
-      );
-    }
+        padding: padding,
+        // 'content'를 카드 내부에 배치
+        child: content,
+      ),
+    );
   }
-// ------ MidCategoryButtonList 클래스를 포함하여 구현하는 카드뷰 관련 클래스 끝
+}
+// ------ 범용성으로 재사용가능한 카드뷰인 CommonCardView 클래스 끝
 
 // ------ AppBar 생성 함수 내용 구현 시작
 // 상단 탭 바 생성 함수
