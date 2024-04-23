@@ -928,100 +928,184 @@ Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds, Str
 
 // ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 시작
 // 신상 섹션을 위젯으로 구현한 부분
-Align buildNewProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '신상',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 신상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 신상품 문서 ID 리스트를 가져옴.
+  List<String> newProductDocumentIds = [
+    'alpha', 'apple', 'cat'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '신상' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '신상',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "신상"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, newProductDocumentIds, "신상", context),
+    ],
   );
 }
 
 // 최고 섹션을 위젯으로 구현한 부분
-Align buildBestProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '최고',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 최고상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 최고상품 문서 ID 리스트를 가져옴.
+  List<String> bestProductDocumentIds = [
+    'flutter', 'github', 'samsung'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '최고' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '최고',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "최고"는 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, bestProductDocumentIds, "최고", context),
+    ],
   );
 }
 
 // 할인 섹션을 위젯으로 구현한 부분
-Align buildDiscountProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '할인',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 할인상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildDiscountProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 할인상품 문서 ID 리스트를 가져옴.
+  List<String> discountProductDocumentIds = [
+    'flutter', 'github', 'samsung'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '할인' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '할인',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "할인"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, discountProductDocumentIds, "할인", context),
+    ],
   );
 }
 
 // 봄 섹션을 위젯으로 구현한 부분.
-Align buildSpringProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '봄',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 봄상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 봄상품 문서 ID 리스트를 가져옴.
+  List<String> springProductDocumentIds = [
+    'flutter', 'github', 'samsung'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '봄' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '봄',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "봄"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, springProductDocumentIds, "봄", context),
+    ],
   );
 }
 
 // 여름 섹션을 위젯으로 구현한 부분
-Align buildSummerProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '여름',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 여름상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 여름상품 문서 ID 리스트를 가져옴.
+  List<String> summerProductDocumentIds = [
+    'flutter', 'github', 'samsung'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '여름' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '여름',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "여름"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, summerProductDocumentIds, "여름", context),
+    ],
   );
 }
 
 // 가을 섹션을 위젯으로 구현한 부분
-Align buildAutumnProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '가을',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 가을상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 가을상품 문서 ID 리스트를 가져옴.
+  List<String> autumnProductDocumentIds = [
+    'flutter', 'github', 'samsung'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '가을' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '가을',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "가을"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, autumnProductDocumentIds, "가을", context),
+    ],
   );
 }
 
 // 겨울 섹션을 위젯으로 구현한 부분
-Align buildWinterProductsSection() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Text(
-        '겨울',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+// 겨울상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
+  // Firestore에서 겨울상품 문서 ID 리스트를 가져옴.
+  List<String> winterProductDocumentIds = [
+    'flutter', 'github', 'samsung'
+  ];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 16),
+        // '겨울' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
+        child: Text(
+          '겨울',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-    ),
+      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
+      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
+      // 여기서 "겨울"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
+      buildHorizontalDocumentsList(ref, winterProductDocumentIds, "겨울", context),
+    ],
   );
 }
 // ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 끝

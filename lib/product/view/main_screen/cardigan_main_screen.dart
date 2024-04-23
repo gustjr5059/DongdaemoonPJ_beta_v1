@@ -120,12 +120,6 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with Wi
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // 문서 ID 리스트, 실제 앱에서는 DB에서 정보를 가져올 때 사용
-    // common_part.dart에 정의한 buildHorizontalDocumentsList에 불러올 문서 ID 리스트 변수 정의
-    // 문서 ID 목록을 정의함, 실제 애플리케이션에서는 이런 ID를 사용하여 데이터베이스에서 정보를 가져올 수 있음.
-    List<String> docIds1 = ['alpha', 'apple', 'cat'];
-    List<String> docIds2 = ['flutter', 'github', 'samsung'];
-
     // ------ common_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
@@ -158,7 +152,6 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with Wi
             SizedBox(
               // 페이지 뷰 섹션을 표시
               height: 200, // 페이지 뷰의 높이 설정
-              // child: pageViewSection, // pageViewSection 호출
               child: buildLargeBannerPageViewSection(context, ref, cardiganMainBannerPageProvider, _pageController, _bannerAutoScroll, bannerLinks), // 배너 페이지뷰 위젯 재사용하여 구현
             ),
             SizedBox(height: 20), // 높이 20으로 간격 설정
@@ -169,76 +162,19 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with Wi
               thickness: 1, // 선의 두께를 1로 지정
             ),
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildNewProductsSection(), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds1, '가디건', context),// 'alpha', 'apple', 'cat' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
+            buildNewProductsSection(ref, context), // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildBestProductsSection(), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
+            buildBestProductsSection(ref, context), // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildDiscountProductsSection(), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
+            buildDiscountProductsSection(ref, context), // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildSpringProductsSection(), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
+            buildSpringProductsSection(ref, context), // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildSummerProductsSection(), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
+            buildSummerProductsSection(ref, context), // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildAutumnProductsSection(), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
-            SizedBox(height: 20), // 간격을 추가
-            // 텍스트 위에 회색선을 추가
-            Divider(
-              color: Colors.grey, // 선의 색상을 회색으로 지정
-              thickness: 1, // 선의 두께를 1로 지정
-            ),
+            buildAutumnProductsSection(ref, context), // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
             SizedBox(height: 10), // 높이 10으로 간격 설정
-            buildWinterProductsSection(), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
-            SizedBox(height: 20), // 간격을 추가
-            // Firestore 문서 데이터를 가로로 배열하여 표시하는 부분
-            buildHorizontalDocumentsList(ref, docIds2, '가디건', context),// 'flutter', 'github', 'samsung' 관련 데이터를 가로로 한줄 표시되도록 정렬하여 구현
+            buildWinterProductsSection(ref, context), // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
           ],
         ),
       ),
