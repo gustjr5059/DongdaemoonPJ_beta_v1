@@ -25,3 +25,5 @@ const BEIGE_COLOR = Color(0xFFFFFBF0);
 const LIGHT_PURPLE_COLOR = Color(0xFFD6CDEA);
 // 연노랑 색상
 const LIGHT_YELLOW_COLOR = Color(0xFFFFFBD0);
+// 연한 하늘색 색상
+const LIGHT_SKY_BLUE_COLOR = Color(0xFFB0F2FF);
