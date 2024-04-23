@@ -439,7 +439,7 @@ Widget buildDetailMidCategoryButton({
         decoration: BoxDecoration(
           color: Colors.white, // 배경색을 흰색으로 설정
           borderRadius: BorderRadius.circular(20), // 테두리를 둥글게 처리
-          border: Border.all(color: Colors.grey, width: 2), // 선택 상태에 따라 테두리 색상 변경
+          border: Border.all(color: GOLD_COLOR, width: 2), // 선택 상태에 따라 테두리 색상 변경
         ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // 컬럼 내부의 아이템들을 중앙에 위치시킴.
@@ -802,43 +802,43 @@ Widget buildFirestoreDetailDocument(WidgetRef ref, String docId, String category
       if (data != null) {
         return GestureDetector(
           onTap: () {
-            // 카테고리에 따라 다른 상세 화면으로 이동
-            switch (category) {
-              case '티셔츠':
-                navigateToDetailScreen(ShirtDetailProductScreen(docId: docId));
-                break;
-              case '블라우스':
-                navigateToDetailScreen(BlouseDetailProductScreen(docId: docId));
-                break;
-              case '맨투맨':
-                navigateToDetailScreen(MtmDetailProductScreen(docId: docId));
-                break;
-              case '니트':
-                navigateToDetailScreen(NeatDetailProductScreen(docId: docId));
-                break;
-              case '폴라티':
-                navigateToDetailScreen(PolaDetailProductScreen(docId: docId));
-                break;
-              case '원피스':
-                navigateToDetailScreen(OnepieceDetailProductScreen(docId: docId));
-                break;
-              case '팬츠':
-                navigateToDetailScreen(PantsDetailProductScreen(docId: docId));
-                break;
-              case '청바지':
-                navigateToDetailScreen(JeanDetailProductScreen(docId: docId));
-                break;
-              case '스커트':
-                navigateToDetailScreen(SkirtDetailProductScreen(docId: docId));
-                break;
-              case '패딩':
-                navigateToDetailScreen(PaedingDetailProductScreen(docId: docId));
-                break;
-              case '코트':
+            // 문서 ID에 따른 상세 페이지로 이동
+            switch (docId) {
+              case 'alpha':
                 navigateToDetailScreen(CoatDetailProductScreen(docId: docId));
                 break;
-              case '가디건':
+              case 'apple':
+                navigateToDetailScreen(BlouseDetailProductScreen(docId: docId));
+                break;
+              case 'cat':
+                navigateToDetailScreen(JeanDetailProductScreen(docId: docId));
+                break;
+              case 'flutter':
+                navigateToDetailScreen(ShirtDetailProductScreen(docId: docId));
+                break;
+              case 'github':
+                navigateToDetailScreen(PaedingDetailProductScreen(docId: docId));
+                break;
+              case 'samsung':
+                navigateToDetailScreen(SkirtDetailProductScreen(docId: docId));
+                break;
+              case 'alpha1':
                 navigateToDetailScreen(CardiganDetailProductScreen(docId: docId));
+                break;
+              case 'apple1':
+                navigateToDetailScreen(MtmDetailProductScreen(docId: docId));
+                break;
+              case 'cat1':
+                navigateToDetailScreen(NeatDetailProductScreen(docId: docId));
+                break;
+              case 'flutter1':
+                navigateToDetailScreen(OnepieceDetailProductScreen(docId: docId));
+                break;
+              case 'github1':
+                navigateToDetailScreen(PolaDetailProductScreen(docId: docId));
+                break;
+              case 'samsung1':
+                navigateToDetailScreen(PantsDetailProductScreen(docId: docId));
                 break;
             }
           },
@@ -984,7 +984,7 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
 Widget buildDiscountProductsSection(WidgetRef ref, BuildContext context) {
   // Firestore에서 할인상품 문서 ID 리스트를 가져옴.
   List<String> discountProductDocumentIds = [
-    'flutter', 'github', 'samsung'
+    'cat1', 'github', 'samsung1'
   ];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1010,7 +1010,7 @@ Widget buildDiscountProductsSection(WidgetRef ref, BuildContext context) {
 Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
   // Firestore에서 봄상품 문서 ID 리스트를 가져옴.
   List<String> springProductDocumentIds = [
-    'flutter', 'github', 'samsung'
+    'flutter1', 'alpha1', 'samsung1'
   ];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1036,7 +1036,7 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
 Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
   // Firestore에서 여름상품 문서 ID 리스트를 가져옴.
   List<String> summerProductDocumentIds = [
-    'flutter', 'github', 'samsung'
+    'apple1', 'github', 'cat'
   ];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1062,7 +1062,7 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
 Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
   // Firestore에서 가을상품 문서 ID 리스트를 가져옴.
   List<String> autumnProductDocumentIds = [
-    'flutter', 'github', 'samsung'
+    'samsung', 'flutter1', 'samsung1'
   ];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1088,7 +1088,7 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
 Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
   // Firestore에서 겨울상품 문서 ID 리스트를 가져옴.
   List<String> winterProductDocumentIds = [
-    'flutter', 'github', 'samsung'
+    'apple', 'github1', 'apple1'
   ];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
