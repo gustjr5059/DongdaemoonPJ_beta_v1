@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -291,6 +292,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
               // common_parts.dart에서 가져온 카테고리 리스트
               // 상단 탭 바
               // 여기에 Container보다 SizedBox 사용을 더 선호함(알아두기)
+              SizedBox(height: 10), // 높이 10으로 간격 설정
               SizedBox(
                 // 상단 탭 바를 표시
                 height: 20, // TopBar의 높이 설정
@@ -318,12 +320,12 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
+              SizedBox(height: 15), // 높이 15로 간격 설정
               // 첫 번째 작은 배너 섹션
               CommonCardView(
                 content: SizedBox(
                   // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 100,
+                  height: 60,
                   // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
                   child: buildSmall1BannerPageViewSection(context, ref, homeSmall1BannerPageProvider, _small1BannerPageController, _small1BannerAutoScroll, small1BannerLinks),
                 ),
@@ -331,7 +333,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
+              SizedBox(height: 15), // 높이 15로 간격 설정
               // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
               // 신상품 섹션
               CommonCardView(
@@ -358,12 +360,12 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
+              SizedBox(height: 15), // 높이 15로 간격 설정
               // 두 번째 작은 배너 섹션
               CommonCardView(
                 content: SizedBox(
                   // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 100,
+                  height: 60,
                   // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
                   child: buildSmall2BannerPageViewSection(context, ref, homeSmall2BannerPageProvider, _small2BannerPageController, _small2BannerAutoScroll, small2BannerLinks),
                 ),
@@ -371,7 +373,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
+              SizedBox(height: 15), // 높이 15로 간격 설정
               // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
               // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
               CommonCardView(
@@ -388,11 +390,11 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
+              SizedBox(height: 15), // 높이 15로 간격 설정
               CommonCardView(
                 content: SizedBox(
                   // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 100,
+                  height: 60,
                   // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
                   child: buildSmall3BannerPageViewSection(context, ref, homeSmall3BannerPageProvider, _small3BannerPageController, _small3BannerAutoScroll, small3BannerLinks),
                 ),
@@ -400,7 +402,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 elevation: 4, // 카드뷰 그림자 깊이
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
+              SizedBox(height: 15), // 높이 15로 간격 설정
               // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
               CommonCardView(
                 content: buildAutumnProductsSection(ref, context), // 카드뷰 내용으로 buildAutumnProductsSection 재사용하여 구현
