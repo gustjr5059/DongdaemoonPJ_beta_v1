@@ -198,7 +198,7 @@ class MidCategoryButtonList extends ConsumerWidget {
           IconButton(
             iconSize: 30, // 아이콘 크기 설정
             icon: Image.asset(
-              boolExpanded ? 'asset/img/misc/button_img/compressed_button_3.png' : 'asset/img/misc/button_img/expand_button_3.png', // 확장일 때와 축소일 때의 이미지 경로
+              boolExpanded ? 'asset/img/misc/button_img/compressed_button_1.png' : 'asset/img/misc/button_img/expand_button_1.png', // 확장일 때와 축소일 때의 이미지 경로
               width: 30, // 아이콘 너비 설정
               height: 30, // 아이콘 높이 설정
             ),
@@ -404,7 +404,8 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
 
         return GestureDetector(
           onTap: () => onTopBarTap(index), // 해당 인덱스의 카테고리를 탭했을 때 실행될 함수
-          child: Padding(
+          child: Container( // 수정된 부분: Padding을 Container로 변경
+            alignment: Alignment.center, // Container 내부 내용을 중앙 정렬
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               category,
@@ -1423,6 +1424,5 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
   );
 }
 // ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 끝
-
 
 
