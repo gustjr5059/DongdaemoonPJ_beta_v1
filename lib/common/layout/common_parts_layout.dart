@@ -254,6 +254,81 @@ class CommonCardView extends StatelessWidget {
 }
 // ------ 범용성으로 재사용가능한 카드뷰인 CommonCardView 클래스 끝
 
+// ------ SliverAppBar buildCommonSliverAppBar 함수 시작
+// ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
+// 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
+// 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
+// 향후 이슈해결하여 해당 앱 바로 변경작업 진행할 예정!!
+
+// void onTopBarTap(int index) {}
+//
+// // 공통 SliverAppBar 생성 함수
+// SliverAppBar buildCommonSliverAppBar({
+//   required BuildContext context,
+//   required String title,
+//   required bool pageBackButton, // 이전 화면으로 돌아가는 버튼 표시 여부
+// }) {
+//   // 조건에 따라 leadingWidget 결정
+//   Widget leadingWidget;
+//   if (pageBackButton) {
+//     leadingWidget = IconButton(
+//       icon: Icon(Icons.arrow_back),
+//       onPressed: () => Navigator.of(context).pop(),
+//     );
+//   } else {
+//     leadingWidget = Builder(
+//       builder: (BuildContext context) {
+//         return IconButton(
+//           icon: Icon(Icons.menu),
+//           onPressed: () => Scaffold.of(context).openDrawer(),
+//         );
+//       },
+//     );
+//   }
+//
+//   return SliverAppBar(
+//     floating: true,
+//     pinned: true,
+//     expandedHeight: 120.0, // 로고 이미지를 포함할 충분한 높이 제공
+//     flexibleSpace: LayoutBuilder(
+//       builder: (BuildContext context, BoxConstraints constraints) {
+//         return FlexibleSpaceBar(
+//           centerTitle: true,
+//           titlePadding: EdgeInsets.zero, // 로고 이미지의 상하좌우 패딩을 0으로 설정
+//           title: constraints.biggest.height == kToolbarHeight + MediaQuery.of(context).padding.top ? null // 축소된 상태에서는 타이틀을 표시하지 않음
+//             : Container(
+//               alignment: Alignment.center,
+//               height: kToolbarHeight,
+//               child: Image.asset(
+//                 'asset/img/misc/logo_image.jpg',
+//                 fit: BoxFit.scaleDown, // 로고가 AppBar 높이에 맞게 조정됨
+//               ),
+//             ),
+//           );
+//       },
+//     ),
+//     backgroundColor: Colors.white,
+//     leading: leadingWidget,
+//     actions: [
+//       IconButton(
+//         icon: Icon(Icons.search),
+//         onPressed: () {
+//           // 검색 기능 구현
+//         },
+//       ),
+//     ],
+//     bottom: PreferredSize(
+//       preferredSize: Size.fromHeight(60.0), // 여기에 탭 바의 높이를 설정합니다.
+//       child: Container(
+//         color: Colors.white,
+//         alignment: Alignment.center,
+//         child: buildTopBarList(context, onTopBarTap), // 상단 탭바 리스트를 구성하는 함수
+//       ),
+//     ),
+//   );
+// }
+// ------ SliverAppBar buildCommonSliverAppBar 함수 끝
+
 // ------ AppBar 생성 함수 내용 구현 시작
 // 상단 탭 바 생성 함수
 AppBar buildCommonAppBar({
@@ -262,7 +337,7 @@ AppBar buildCommonAppBar({
   bool pageBackButton = false, // 이전 화면으로 돌아가는 버튼을 표시할지 여부를 결정하는 플래그, 기본값은 false암.
 }) {
   // AppBar의 'leading' 위젯을 조건에 따라 설정함.
-  Widget leadingWidget; // 앱 바 왼쪽 상단에 표시될 위젯을 저장할 변수임.
+  Widget? leadingWidget; // 앱 바 왼쪽 상단에 표시될 위젯을 저장할 변수임.
   if (pageBackButton) {
     // pageBackButton이 true일 경우, 이전 화면으로 돌아가는 버튼을 생성함.
     leadingWidget = IconButton(
@@ -281,6 +356,7 @@ AppBar buildCommonAppBar({
     );
   }
   return AppBar(
+    backgroundColor: BUTTON_COLOR, // AppBar 색상 설정
     title: Container(
       height: kToolbarHeight, // AppBar의 높이를 kToolbarHeight로 설정하여 로고 이미지의 높이를 제한함.
       child: Image.asset(

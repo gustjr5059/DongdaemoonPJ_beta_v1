@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
 import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
 import '../../../common/layout/common_parts_layout.dart'; // 공통 UI 컴포넌트 파일
@@ -94,7 +95,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
 
   // late ScrollController scrollController; // ScrollController 추가
 
-  // ------ ㅊ 시작
+  // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
@@ -231,6 +232,17 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+// 상태표시줄의 색상을 변경하고자 할 때,
+// Scaffold가 완전히 빌드된 후에 적용되도록 설정함.
+// 이는 초기 UI 렌더링이 완료된 직후에 추가적인 설정을 적용하기 위해 사용됨.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // SystemChrome.setSystemUIOverlayStyle을 사용하여 시스템 UI의 스타일을 변경함.
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: BUTTON_COLOR, // 상태표시줄의 색상을 여기서 정의한 BUTTON_COLOR로 설정함.
+      ));
+    });
+
     // ------ common_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
@@ -274,162 +286,466 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     Widget topBarList = buildTopBarList(context, onTopBarTap);
     // ------ common_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
+    // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
+    // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
+    // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
+    // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
+    // 향후 이슈해결하여 해당 앱 바로 변경작업 진행할 예정!!
+    // return Scaffold(
+    //   body: Padding(
+    //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
+    //     child: CustomScrollView(
+    //       slivers: <Widget>[
+    //         // SliverAppBar를 사용하여 스크롤 시 동적으로 사라지거나 고정되는 헤더를 구현
+    //         buildCommonSliverAppBar(
+    //           context: context,
+    //           title: '홈',
+    //           pageBackButton: false, // 뒤로 가기 버튼 비활성화
+    //         ),
+    // //         // 상단 탭 바 구현, 스크롤 시 상단에 고정되도록 SliverPersistentHeader 사용
+    // //         SliverPersistentHeader(
+    // //           delegate: _SliverAppBarDelegate(
+    // //             minHeight: 60.0, // 최소 높이
+    // //             maxHeight: 60.0, // 최대 높이
+    // //             child: buildTopBarList(context, onTopBarTap), // 상단 탭 바 리스트
+    // //           ),
+    // //           pinned: true, // 항상 고정
+    // //         ),
+    //         // 스크롤되는 컨텐츠 영역
+    //         SliverList(
+    //           delegate: SliverChildBuilderDelegate(
+    //                 (BuildContext context, int index)  {
+    //                       return Column(
+    //                         children: [
+    //                           SizedBox(height: 15), // 높이 20으로 간격 설정
+    //                           // 큰 배너 섹션을 카드뷰로 구성
+    //                           CommonCardView(
+    //                             content: SizedBox(
+    //                               // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+    //                               height: 200,
+    //                               // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+    //                               child: buildLargeBannerPageViewSection(
+    //                                   context, ref, homeLargeBannerPageProvider,
+    //                                   _largeBannerPageController, _largeBannerAutoScroll,
+    //                                   largeBannerLinks),
+    //                             ),
+    //                             backgroundColor: LIGHT_PURPLE_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 10), // 높이 10으로 간격 설정
+    //                           // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
+    //                           // 중간 카테고리 버튼 리스트를 카드뷰로 구성
+    //                           CommonCardView(
+    //                             content: MidCategoryButtonList(
+    //                                 onCategoryTap: onMidCategoryTap),
+    //                             // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
+    //                             backgroundColor: LIGHT_PURPLE_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 15), // 높이 15로 간격 설정
+    //                           // 첫 번째 작은 배너 섹션
+    //                           CommonCardView(
+    //                             content: SizedBox(
+    //                               // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+    //                               height: 60,
+    //                               // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+    //                               child: buildSmall1BannerPageViewSection(
+    //                                   context, ref, homeSmall1BannerPageProvider,
+    //                                   _small1BannerPageController,
+    //                                   _small1BannerAutoScroll, small1BannerLinks),
+    //                             ),
+    //                             backgroundColor: LIGHT_SKY_BLUE_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 15), // 높이 15로 간격 설정
+    //                           // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
+    //                           // 신상품 섹션
+    //                           CommonCardView(
+    //                             content: buildNewProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildNewProductsSection 재사용하여 구현
+    //                             backgroundColor: BEIGE_COLOR,
+    //                             // 카드뷰 배경 색상 : BEIGE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 10), // 높이 10으로 간격 설정
+    //                           // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
+    //                           // 베스트 제품 섹션
+    //                           CommonCardView(
+    //                             content: buildBestProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildBestProductsSection 재사용하여 구현
+    //                             backgroundColor: LIGHT_YELLOW_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 10), // 높이 10으로 간격 설정
+    //                           // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
+    //                           // 할인 제품 섹션
+    //                           CommonCardView(
+    //                             content: buildDiscountProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildDiscountProductsSection 재사용하여 구현
+    //                             backgroundColor: BEIGE_COLOR,
+    //                             // 카드뷰 배경 색상 : BEIGE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 15), // 높이 15로 간격 설정
+    //                           // 두 번째 작은 배너 섹션
+    //                           CommonCardView(
+    //                             content: SizedBox(
+    //                               // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+    //                               height: 60,
+    //                               // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+    //                               child: buildSmall2BannerPageViewSection(
+    //                                   context, ref, homeSmall2BannerPageProvider,
+    //                                   _small2BannerPageController,
+    //                                   _small2BannerAutoScroll, small2BannerLinks),
+    //                             ),
+    //                             backgroundColor: LIGHT_SKY_BLUE_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 15), // 높이 15로 간격 설정
+    //                           // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
+    //                           // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
+    //                           CommonCardView(
+    //                             content: buildSpringProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildSpringProductsSection 재사용하여 구현
+    //                             backgroundColor: LIGHT_YELLOW_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 10), // 높이 10으로 간격 설정
+    //                           // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
+    //                           CommonCardView(
+    //                             content: buildSummerProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildSummerProductsSection 재사용하여 구현
+    //                             backgroundColor: BEIGE_COLOR,
+    //                             // 카드뷰 배경 색상 : BEIGE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 15), // 높이 15로 간격 설정
+    //                           CommonCardView(
+    //                             content: SizedBox(
+    //                               // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+    //                               height: 60,
+    //                               // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+    //                               child: buildSmall3BannerPageViewSection(
+    //                                   context, ref, homeSmall3BannerPageProvider,
+    //                                   _small3BannerPageController,
+    //                                   _small3BannerAutoScroll, small3BannerLinks),
+    //                             ),
+    //                             backgroundColor: LIGHT_SKY_BLUE_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 15), // 높이 15로 간격 설정
+    //                           // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
+    //                           CommonCardView(
+    //                             content: buildAutumnProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildAutumnProductsSection 재사용하여 구현
+    //                             backgroundColor: LIGHT_YELLOW_COLOR,
+    //                             // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                           SizedBox(height: 10), // 높이 10으로 간격 설정
+    //                           // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
+    //                           CommonCardView(
+    //                             content: buildWinterProductsSection(ref, context),
+    //                             // 카드뷰 내용으로 buildWinterProductsSection 재사용하여 구현
+    //                             backgroundColor: BEIGE_COLOR,
+    //                             // 카드뷰 배경 색상 : BEIGE_COLOR
+    //                             elevation: 4,
+    //                             // 카드뷰 그림자 깊이
+    //                             padding: const EdgeInsets.fromLTRB(
+    //                                 8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+    //                           ),
+    //                         ],
+    //                       );
+    //                     },
+    //                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+    //                   ),
+    //                 ),
+    //              ],
+    //            ),
+    //          ),
+    //          bottomNavigationBar: buildCommonBottomNavigationBar(
+    //           ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+    //          drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
+    //       );
+    //     }
+    // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 
-    // ------ 화면 구성 시작
-    // 앱의 주요 화면을 구성하는 Scaffold 위젯
     return Scaffold(
-      // 공통으로 사용되는 AppBar를 가져옴. '홈' 제목과 페이지 뒤로 가기 버튼 비활성화
-      appBar: buildCommonAppBar(context: context, title: '홈', pageBackButton: false),
-      // 전체 바디에 좌우 패딩: 4.0을 적용한 Padding 위젯
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-        child: SingleChildScrollView(
-        // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-        // controller: scrollController, // 스크롤 컨트롤러 연결
-        // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
-          child: Column(
-            children: [
-              // common_parts.dart에서 가져온 카테고리 리스트
-              // 상단 탭 바
-              // 여기에 Container보다 SizedBox 사용을 더 선호함(알아두기)
-              SizedBox(height: 10), // 높이 10으로 간격 설정
-              SizedBox(
-                // 상단 탭 바를 표시
-                height: 20, // TopBar의 높이 설정
-                child: topBarList, // 상단 탭 바 리스트 빌드
-              ),
-              SizedBox(height: 20), // 높이 20으로 간격 설정
-              // 큰 배너 섹션을 카드뷰로 구성
-              CommonCardView(
-                content: SizedBox(
-                  // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 200,
-                  // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                  child: buildLargeBannerPageViewSection(context, ref, homeLargeBannerPageProvider, _largeBannerPageController, _largeBannerAutoScroll, largeBannerLinks),
+      body: CustomScrollView(
+          slivers: <Widget>[
+            // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
+            SliverAppBar(
+              // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
+              automaticallyImplyLeading: false,
+              floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
+              pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
+              expandedHeight: 120.0, // 확장 높이 설정
+              // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                background: buildCommonAppBar(
+                  context: context,
+                  title: '홈',
+                  pageBackButton: false,  // 페이지 뒤로 가기 버튼 비활성화
                 ),
-                backgroundColor: LIGHT_PURPLE_COLOR, // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
-              // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
-              // 중간 카테고리 버튼 리스트를 카드뷰로 구성
-              CommonCardView(
-                content: MidCategoryButtonList(onCategoryTap: onMidCategoryTap), // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
-                backgroundColor: LIGHT_PURPLE_COLOR, // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 15), // 높이 15로 간격 설정
-              // 첫 번째 작은 배너 섹션
-              CommonCardView(
-                content: SizedBox(
-                  // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 60,
-                  // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                  child: buildSmall1BannerPageViewSection(context, ref, homeSmall1BannerPageProvider, _small1BannerPageController, _small1BannerAutoScroll, small1BannerLinks),
+              leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
+              // backgroundColor: Colors.transparent,  // AppBar 배경을 투명하게 설정
+              backgroundColor: BUTTON_COLOR, // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(60.0), // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
+                child: Container(
+                  color: BUTTON_COLOR, // 상단 탭 바 색상 설정
+                  child: topBarList, // 탭 바에 들어갈 위젯 배열
                 ),
-                backgroundColor: LIGHT_SKY_BLUE_COLOR, // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
               ),
-              SizedBox(height: 15), // 높이 15로 간격 설정
-              // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
-              // 신상품 섹션
-              CommonCardView(
-                content: buildNewProductsSection(ref, context), // 카드뷰 내용으로 buildNewProductsSection 재사용하여 구현
-                backgroundColor: BEIGE_COLOR, // 카드뷰 배경 색상 : BEIGE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
-              // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
-              // 베스트 제품 섹션
-              CommonCardView(
-                content: buildBestProductsSection(ref, context), // 카드뷰 내용으로 buildBestProductsSection 재사용하여 구현
-                backgroundColor: LIGHT_YELLOW_COLOR, // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
-              // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
-              // 할인 제품 섹션
-              CommonCardView(
-                content: buildDiscountProductsSection(ref, context), // 카드뷰 내용으로 buildDiscountProductsSection 재사용하여 구현
-                backgroundColor: BEIGE_COLOR, // 카드뷰 배경 색상 : BEIGE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 15), // 높이 15로 간격 설정
-              // 두 번째 작은 배너 섹션
-              CommonCardView(
-                content: SizedBox(
-                  // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 60,
-                  // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                  child: buildSmall2BannerPageViewSection(context, ref, homeSmall2BannerPageProvider, _small2BannerPageController, _small2BannerAutoScroll, small2BannerLinks),
-                ),
-                backgroundColor: LIGHT_SKY_BLUE_COLOR, // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 15), // 높이 15로 간격 설정
-              // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
-              // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
-              CommonCardView(
-                content: buildSpringProductsSection(ref, context), // 카드뷰 내용으로 buildSpringProductsSection 재사용하여 구현
-                backgroundColor: LIGHT_YELLOW_COLOR, // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
-              // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
-              CommonCardView(
-                content: buildSummerProductsSection(ref, context), // 카드뷰 내용으로 buildSummerProductsSection 재사용하여 구현
-                backgroundColor: BEIGE_COLOR, // 카드뷰 배경 색상 : BEIGE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 15), // 높이 15로 간격 설정
-              CommonCardView(
-                content: SizedBox(
-                  // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
-                  height: 60,
-                  // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                  child: buildSmall3BannerPageViewSection(context, ref, homeSmall3BannerPageProvider, _small3BannerPageController, _small3BannerAutoScroll, small3BannerLinks),
-                ),
-                backgroundColor: LIGHT_SKY_BLUE_COLOR, // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 15), // 높이 15로 간격 설정
-              // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
-              CommonCardView(
-                content: buildAutumnProductsSection(ref, context), // 카드뷰 내용으로 buildAutumnProductsSection 재사용하여 구현
-                backgroundColor: LIGHT_YELLOW_COLOR, // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              SizedBox(height: 10), // 높이 10으로 간격 설정
-              // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
-              CommonCardView(
-                content: buildWinterProductsSection(ref, context), // 카드뷰 내용으로 buildWinterProductsSection 재사용하여 구현
-                backgroundColor: BEIGE_COLOR, // 카드뷰 배경 색상 : BEIGE_COLOR
-                elevation: 4, // 카드뷰 그림자 깊이
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-              ),
-              ],
             ),
-          ),
-        ),
-        // 하단 네비게이션 바 구성
-        // buildCommonBottomNavigationBar 함수 호출 시 context 인자 추가
-        bottomNavigationBar: buildCommonBottomNavigationBar(
-            ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-        drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
-      );
-      // ------ 화면구성 끝
-    }
-  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+          // 실제 컨텐츠를 나타내는 슬리버 리스트
+          // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+          SliverPadding(
+            padding: EdgeInsets.only(top: 5),
+            // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Padding(
+                    // 각 항목의 좌우 간격을 4.0으로 설정함.
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Column(
+                      children: [
+                      SizedBox(height: 15), // 높이 20으로 간격 설정
+                      // 큰 배너 섹션을 카드뷰로 구성
+                      CommonCardView(
+                        content: SizedBox(
+                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          height: 200,
+                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+                          child: buildLargeBannerPageViewSection(
+                              context, ref, homeLargeBannerPageProvider,
+                              _largeBannerPageController, _largeBannerAutoScroll,
+                              largeBannerLinks),
+                        ),
+                        backgroundColor: LIGHT_PURPLE_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 10), // 높이 10으로 간격 설정
+                      // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
+                      // 중간 카테고리 버튼 리스트를 카드뷰로 구성
+                      CommonCardView(
+                        content: MidCategoryButtonList(
+                            onCategoryTap: onMidCategoryTap),
+                        // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
+                        backgroundColor: LIGHT_PURPLE_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 15), // 높이 15로 간격 설정
+                      // 첫 번째 작은 배너 섹션
+                      CommonCardView(
+                        content: SizedBox(
+                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          height: 60,
+                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+                          child: buildSmall1BannerPageViewSection(
+                              context, ref, homeSmall1BannerPageProvider,
+                              _small1BannerPageController,
+                              _small1BannerAutoScroll, small1BannerLinks),
+                        ),
+                        backgroundColor: LIGHT_SKY_BLUE_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 15), // 높이 15로 간격 설정
+                      // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
+                      // 신상품 섹션
+                      CommonCardView(
+                        content: buildNewProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildNewProductsSection 재사용하여 구현
+                        backgroundColor: BEIGE_COLOR,
+                        // 카드뷰 배경 색상 : BEIGE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 10), // 높이 10으로 간격 설정
+                      // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
+                      // 베스트 제품 섹션
+                      CommonCardView(
+                        content: buildBestProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildBestProductsSection 재사용하여 구현
+                        backgroundColor: LIGHT_YELLOW_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 10), // 높이 10으로 간격 설정
+                      // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
+                      // 할인 제품 섹션
+                      CommonCardView(
+                        content: buildDiscountProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildDiscountProductsSection 재사용하여 구현
+                        backgroundColor: BEIGE_COLOR,
+                        // 카드뷰 배경 색상 : BEIGE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 15), // 높이 15로 간격 설정
+                      // 두 번째 작은 배너 섹션
+                      CommonCardView(
+                        content: SizedBox(
+                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          height: 60,
+                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+                          child: buildSmall2BannerPageViewSection(
+                              context, ref, homeSmall2BannerPageProvider,
+                              _small2BannerPageController,
+                              _small2BannerAutoScroll, small2BannerLinks),
+                        ),
+                        backgroundColor: LIGHT_SKY_BLUE_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 15), // 높이 15로 간격 설정
+                      // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
+                      // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
+                      CommonCardView(
+                        content: buildSpringProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildSpringProductsSection 재사용하여 구현
+                        backgroundColor: LIGHT_YELLOW_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 10), // 높이 10으로 간격 설정
+                      // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
+                      CommonCardView(
+                        content: buildSummerProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildSummerProductsSection 재사용하여 구현
+                        backgroundColor: BEIGE_COLOR,
+                        // 카드뷰 배경 색상 : BEIGE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 15), // 높이 15로 간격 설정
+                      CommonCardView(
+                        content: SizedBox(
+                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          height: 60,
+                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
+                          child: buildSmall3BannerPageViewSection(
+                              context, ref, homeSmall3BannerPageProvider,
+                              _small3BannerPageController,
+                              _small3BannerAutoScroll, small3BannerLinks),
+                        ),
+                        backgroundColor: LIGHT_SKY_BLUE_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 15), // 높이 15로 간격 설정
+                      // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
+                      CommonCardView(
+                        content: buildAutumnProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildAutumnProductsSection 재사용하여 구현
+                        backgroundColor: LIGHT_YELLOW_COLOR,
+                        // 카드뷰 배경 색상 : LIGHT_YELLOW_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                      SizedBox(height: 10), // 높이 10으로 간격 설정
+                      // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
+                      CommonCardView(
+                        content: buildWinterProductsSection(ref, context),
+                        // 카드뷰 내용으로 buildWinterProductsSection 재사용하여 구현
+                        backgroundColor: BEIGE_COLOR,
+                        // 카드뷰 배경 색상 : BEIGE_COLOR
+                        elevation: 4,
+                        // 카드뷰 그림자 깊이
+                        padding: const EdgeInsets.fromLTRB(
+                            8.0, 8.0, 8.0, 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                      ),
+                    ],
+                   ),
+                 );
+                },
+                childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+              ),
+            ),
+           ),
+         ],
+       ),
+     bottomNavigationBar: buildCommonBottomNavigationBar(
+      ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+     drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
+    );
+    // ------ 화면구성 끝
   }
-  // _HomeScreenState 클래스 끝
+// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+}
+// _HomeScreenState 클래스 끝
