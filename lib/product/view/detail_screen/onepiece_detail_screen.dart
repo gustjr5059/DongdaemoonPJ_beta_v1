@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
 import '../../../common/const/colors.dart';
-import '../../../common/provider/common_future_provider.dart';
+import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리를 위한 provider 파일
-import '../../../common/layout/common_parts_layout.dart';
+import '../../layout/product_body_parts_layout.dart';
+import '../../provider/product_future_provider.dart';
 import '../../provider/product_state_provider.dart'; // 공통 UI 부품을 위한 파일
 
 
@@ -36,7 +37,7 @@ class OnepieceDetailProductScreen extends ConsumerWidget {
     // 현재 선택된 탭 인덱스를 관찰함.
     final tabIndex = ref.watch(tabIndexProvider);
     // Firestore에서 문서 데이터를 조회하는 로직 추가(비동기 방식으로 데이터 조회)
-    final docData = ref.watch(firestoreDataProvider(docId)); // 예시로 사용된 Provider, 실제 구현 필요
+    final docData = ref.watch(prodFirestoreDataProvider(docId)); // 예시로 사용된 Provider, 실제 구현 필요
     // 파이어스토어 내 '사이즈' 데이터를 선택할 때마다 그에 해당하는 데이터로 변경용 상태 관리를 위한 StateProvider
     final selectedSize = ref.watch(sizeSelectionProvider.state);
 
