@@ -1,3 +1,4 @@
+
 // Firestore의 'Product' 데이터와 상호작용하는 클래스와 프로바이더 설정
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore를 사용하기 위한 라이브러리의 임포트
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이브러리 Riverpod를 사용하기 위한 임포트

@@ -52,7 +52,7 @@ final coatDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 final cardiganDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 
 // 색상 선택을 위한 상태 관리용 StateProvider
-final colorSelectionIndexProvider = StateProvider<int?>((ref) => null);
+final colorSelectionIndexProvider = StateProvider<String?>((ref) => null);
 // 사이즈 선택을 위한 상태 관리용 StateProvider
 final sizeSelectionProvider = StateProvider<String?>((ref) => null);
 

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../common/const/colors.dart';
 import '../../common/provider/common_future_provider.dart';
 import '../model/product_model.dart';
 import '../provider/product_future_provider.dart';
@@ -97,42 +98,42 @@ Widget buildProdFirestoreDetailDocument(WidgetRef ref, String docId, String cate
         onTap: () {
           // 문서 ID에 따라 해당 상세 페이지로 이동함. 각 ID는 다른 상품 카테고리를 나타냄.
           switch (docId) {
-            // case 'alpha':
-            //   navigateToDetailScreen(CoatDetailProductScreen(docId: docId));
-            //   break;
-            // case 'apple':
-            //   navigateToDetailScreen(BlouseDetailProductScreen(docId: docId));
-            //   break;
-            // case 'cat':
-            //   navigateToDetailScreen(JeanDetailProductScreen(docId: docId));
-            //   break;
-            // case 'flutter':
-            //   navigateToDetailScreen(ShirtDetailProductScreen(docId: docId));
-            //   break;
-            // case 'github':
-            //   navigateToDetailScreen(PaedingDetailProductScreen(docId: docId));
-            //   break;
-            // case 'samsung':
-            //   navigateToDetailScreen(SkirtDetailProductScreen(docId: docId));
-            //   break;
-            // case 'alpha1':
-            //   navigateToDetailScreen(CardiganDetailProductScreen(docId: docId));
-            //   break;
-            // case 'apple1':
-            //   navigateToDetailScreen(MtmDetailProductScreen(docId: docId));
-            //   break;
-            // case 'cat1':
-            //   navigateToDetailScreen(NeatDetailProductScreen(docId: docId));
-            //   break;
-            // case 'flutter1':
-            //   navigateToDetailScreen(OnepieceDetailProductScreen(docId: docId));
-            //   break;
-            // case 'github1':
-            //   navigateToDetailScreen(PolaDetailProductScreen(docId: docId));
-            //   break;
-            // case 'samsung1':
-            //   navigateToDetailScreen(PantsDetailProductScreen(docId: docId));
-            //   break;
+            case 'alpha':
+              navigateToDetailScreen(CoatDetailProductScreen(docId: docId));
+              break;
+            case 'apple':
+              navigateToDetailScreen(BlouseDetailProductScreen(docId: docId));
+              break;
+            case 'cat':
+              navigateToDetailScreen(JeanDetailProductScreen(docId: docId));
+              break;
+            case 'flutter':
+              navigateToDetailScreen(ShirtDetailProductScreen(docId: docId));
+              break;
+            case 'github':
+              navigateToDetailScreen(PaedingDetailProductScreen(docId: docId));
+              break;
+            case 'samsung':
+              navigateToDetailScreen(SkirtDetailProductScreen(docId: docId));
+              break;
+            case 'alpha1':
+              navigateToDetailScreen(CardiganDetailProductScreen(docId: docId));
+              break;
+            case 'apple1':
+              navigateToDetailScreen(MtmDetailProductScreen(docId: docId));
+              break;
+            case 'cat1':
+              navigateToDetailScreen(NeatDetailProductScreen(docId: docId));
+              break;
+            case 'flutter1':
+              navigateToDetailScreen(OnepieceDetailProductScreen(docId: docId));
+              break;
+            case 'github1':
+              navigateToDetailScreen(PolaDetailProductScreen(docId: docId));
+              break;
+            case 'samsung1':
+              navigateToDetailScreen(PantsDetailProductScreen(docId: docId));
+              break;
           }
         },
         child: Container(
@@ -202,3 +203,193 @@ Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds, Str
   );
 }
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 끝
+
+// ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 시작
+// ------ buildProductDetails 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
+Widget buildProductDetails(BuildContext context, WidgetRef ref, ProductContent product) {
+  return SingleChildScrollView(
+    // 스크롤이 가능하도록 SingleChildScrollView 위젯을 사용.
+    child: Column(
+      // 세로 방향으로 위젯들을 나열하는 Column 위젯을 사용.
+      crossAxisAlignment: CrossAxisAlignment.start,
+      // 자식 위젯들을 왼쪽 정렬로 배치.
+      children: [
+        SizedBox(height: 10), // 상단 여백을 10으로 설정.
+        buildProductIntroduction(product), // 제품 소개 부분을 표시하는 위젯을 호출.
+        SizedBox(height: 10), // 제품 소개와 다음 섹션 사이의 여백을 10으로 설정.
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
+          child: Divider(), // 세로 구분선을 추가.
+        ),
+        SizedBox(height: 20), // 구분선 아래 여백을 20으로 설정.
+        buildPriceInformation(product), // 가격 정보 부분을 표시하는 위젯을 호출.
+        buildColorAndSizeSelection(context, ref, product), // 색상 및 사이즈 선택 부분을 표시하는 위젯을 호출.
+        SizedBox(height: 30), // 여백을 30으로 설정.
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
+          child: Divider(), // 세로 구분선을 추가.
+        ),
+        SizedBox(height: 10), // 구분선 아래 여백을 10으로 설정.
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
+          child: Divider(), // 세로 구분선을 추가.
+        ),
+        SizedBox(height: 30), // 여백을 30으로 설정.
+        buildPurchaseButtons(context, ref, product), // 구매 버튼 부분을 표시하는 위젯을 호출.
+      ],
+    ),
+  );
+}
+// ------ buildProductDetails 위젯의 구현 끝
+
+// ------ buildProductIntroduction 위젯 시작: 제품 소개 부분을 구현.
+Widget buildProductIntroduction(ProductContent product) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    // 좌우 여백을 20으로 설정.
+    child: Text(
+      product.briefIntroduction ?? '제품 정보가 없습니다.',
+      // 제품 소개 내용을 표시하거나, 내용이 없는 경우 기본 텍스트를 표시.
+      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      // 폰트 크기는 25, 굵은 글씨로 설정.
+    ),
+  );
+}
+// ------ buildProductIntroduction 위젯의 구현 끝
+
+// ------ buildPriceInformation 위젯 시작: 가격 정보 부분을 구현.
+Widget buildPriceInformation(ProductContent product) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      // 자식 위젯들을 왼쪽 정렬로 배치.
+      children: [
+        Row(
+          children: [
+            if (product.originalPrice != null) // 원래 가격이 설정되어 있으면 표시.
+              Text('판매가', style: TextStyle(fontSize: 14)),
+            SizedBox(width: 50), // '판매가'와 가격 사이의 간격을 50으로 설정.
+            Text('${product.originalPrice ?? "정보 없음"}', style: TextStyle(fontSize: 14, decoration: TextDecoration.lineThrough, fontWeight: FontWeight.bold)),
+            // 원래 가격을 표시하고, 정보가 없으면 '정보 없음'을 표시. 가격은 취소선 처리.
+          ],
+        ),
+        SizedBox(height: 10), // 가격 정보 간의 수직 간격을 10으로 설정.
+        Row(
+          children: [
+            if (product.discountPrice != null) // 할인 가격이 설정되어 있으면 표시.
+              Text('할인판매가', style: TextStyle(fontSize: 14, color: DISCOUNT_COLOR)),
+            SizedBox(width: 26), // '할인판매가'와 가격 사이의 간격을 26으로 설정.
+            Text('${product.discountPrice ?? "정보 없음"}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: DISCOUNT_COLOR)),
+            // 할인된 가격을 표시하고, 정보가 없으면 '정보 없음'을 표시. 할인가는 강조된 색상으로 표시.
+          ],
+        ),
+      ],
+    ),
+  );
+}
+// ------ buildPriceInformation 위젯의 구현 끝
+
+// ------ buildColorAndSizeSelection 위젯 시작: 색상 및 사이즈 선택 부분을 구현.
+Widget buildColorAndSizeSelection(BuildContext context, WidgetRef ref, ProductContent product) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          // 자식 위젯들을 왼쪽 정렬로 배치.
+          children: [
+            Text('색상', style: TextStyle(fontSize: 14)), // '색상' 라벨을 표시.
+            SizedBox(width: 63), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 63으로 설정.
+            Expanded(
+              // 드롭다운 버튼을 화면 너비에 맞게 확장.
+              child: DropdownButton<String>(
+                isExpanded: true, // 드롭다운 버튼의 너비를 최대로 확장.
+                value: ref.watch(colorSelectionIndexProvider), // 선택된 색상 값을 가져옴.
+                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 표시되는 텍스트.
+                onChanged: (newValue) {
+                  ref.read(colorSelectionIndexProvider.notifier).state = newValue!;
+                  // 새로운 색상이 선택되면 상태를 업데이트.
+                },
+                items: product.colorOptions?.map((option) => DropdownMenuItem<String>(
+                  value: option['url'], // 각 옵션의 URL을 값으로 사용.
+                  child: Row(
+                    children: [
+                      Image.network(option['url'], width: 20, height: 20), // 색상을 나타내는 이미지를 표시.
+                      SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
+                      Text(option['text']), // 색상의 텍스트 설명을 표시.
+                    ],
+                  ),
+                )).toList(),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10), // 색상 선택과 사이즈 선택 사이의 수직 간격을 10으로 설정.
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          // 자식 위젯들을 왼쪽 정렬로 배치.
+          children: [
+            Text('사이즈', style: TextStyle(fontSize: 14)), // '사이즈' 라벨을 표시.
+            SizedBox(width: 52), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 52로 설정.
+            Expanded(
+              // 드롭다운 버튼을 화면 너비에 맞게 확장.
+              child: DropdownButton<String>(
+                isExpanded: true, // 드롭다운 버튼의 너비를 최대로 확장.
+                value: ref.watch(sizeSelectionProvider), // 선택된 사이즈 값을 가져옴.
+                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 표시되는 텍스트.
+                onChanged: (newValue) {
+                  ref.read(sizeSelectionProvider.notifier).state = newValue!;
+                  // 새로운 사이즈가 선택되면 상태를 업데이트.
+                },
+                items: product.sizes?.map((size) => DropdownMenuItem<String>(
+                  value: size,
+                  child: Text(size),
+                )).toList(),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+// ------ buildColorAndSizeSelection 위젯의 구현 끝
+
+// ------ buildPurchaseButtons 위젯 시작: 구매 관련 버튼을 구현.
+Widget buildPurchaseButtons(BuildContext context, WidgetRef ref, ProductContent product) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 버튼들을 화면 양쪽 끝에 배치.
+      children: [
+        Expanded(
+          // '장바구니' 버튼을 화면 너비에 맞게 확장.
+          child: ElevatedButton(
+            onPressed: () {},  // 장바구니 추가 로직을 구현. (현재는 비어 있음)
+            style: ElevatedButton.styleFrom(
+              backgroundColor: BUTTON_COLOR, // 버튼의 배경색을 설정.
+              foregroundColor: INPUT_BG_COLOR, // 버튼의 글자색을 설정.
+            ),
+            child: Text('장바구니'), // 버튼의 텍스트를 '장바구니'로 설정.
+          ),
+        ),
+        SizedBox(width: 10), // '장바구니'와 '주문' 버튼 사이의 간격을 10으로 설정.
+        Expanded(
+          // '주문' 버튼을 화면 너비에 맞게 확장.
+          child: ElevatedButton(
+            onPressed: () {},  // 주문 로직을 구현. (현재는 비어 있음)
+            style: ElevatedButton.styleFrom(
+              backgroundColor: BUTTON_COLOR, // 버튼의 배경색을 설정.
+              foregroundColor: INPUT_BG_COLOR, // 버튼의 글자색을 설정.
+            ),
+            child: Text('주문'), // 버튼의 텍스트를 '주문'으로 설정.
+          ),
+        ),
+      ],
+    ),
+  );
+}
+// ------ buildPurchaseButtons 위젯의 구현 끝
+// ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 끝
