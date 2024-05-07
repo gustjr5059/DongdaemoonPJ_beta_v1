@@ -345,7 +345,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
               leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
               // iOS에서는 AppBar의 배경색을 사용
               // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-              backgroundColor: Platform.isIOS ? BUTTON_COLOR : Colors.transparent,
+              backgroundColor: BUTTON_COLOR,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(60.0), // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
                 child: Container(

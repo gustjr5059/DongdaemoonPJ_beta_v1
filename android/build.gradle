@@ -7,6 +7,8 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // Multidex는 API 21(Android 5.0 Lollipop) 이상에서 자동으로 활성화되므로, 그 이하 버전에서는 아래와 같은 설정이 필요함.
+        //implementation 'com.android.support:multidex:1.0.3'
     }
 }
 

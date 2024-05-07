@@ -26,8 +26,8 @@ class AuthProvider extends ChangeNotifier {
   String? redirectLogic(BuildContext context, GoRouterState state) {
     final user = FirebaseAuth.instance.currentUser;
 
-    final loggingIn = state.location == '/login';
-    final isSplashScreen = state.location == '/splash';
+    final loggingIn = state.uri.path == '/login';
+    final isSplashScreen = state.uri.path == '/splash';
 
     // 사용자가 로그인하지 않은 경우
     if (user == null) {

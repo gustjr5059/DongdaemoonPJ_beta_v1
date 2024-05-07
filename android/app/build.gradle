@@ -24,7 +24,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.dongdaemoon_beta_v1"
-    compileSdkVersion flutter.compileSdkVersion
+    // compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -45,12 +46,15 @@ android {
         applicationId "com.example.dongdaemoon_beta_v1"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        // minSdkVersion flutter.minSdkVersion
+        // sdk 최소버전을 21로 지정 (Multidex는 최소 sdk 21버전 이상부터 자동으로 활성화되므로 설정)
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        // 64K 메소드 제한을 초과하여 Multidex 지원 활성화 설정
+        multiDexEnabled true
     }
-
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
