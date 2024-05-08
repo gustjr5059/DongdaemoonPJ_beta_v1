@@ -39,6 +39,11 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+//        main {
+//            java.srcDirs = ['src/main/java']
+//            kotlin.srcDirs = ['src/main/kotlin']
+//            res.srcDirs = ['src/main/res']
+//        }
     }
 
     defaultConfig {
@@ -49,7 +54,8 @@ android {
         // minSdkVersion flutter.minSdkVersion
         // sdk 최소버전을 21로 지정 (Multidex는 최소 sdk 21버전 이상부터 자동으로 활성화되므로 설정)
         minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
+        // targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         // 64K 메소드 제한을 초과하여 Multidex 지원 활성화 설정

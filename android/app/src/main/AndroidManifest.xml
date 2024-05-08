@@ -1,8 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:label="dongdaemoon_beta_v1"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
+        <!--android:enableOnBackInvokedCallback="true" 설정을 통해 백 버튼 이벤트가 정상적으로 활성화되었고,
+        사용자가 기기에서 백 버튼을 조작할 때 이벤트가 발생하면 앱이 이를 감지하고 적절히 반응할 수 있도록 준비된 상태-->
+        <!--Android 12(API 레벨 31) 이상에서 새롭게 도입된 OnBackInvokedCallback 기능을 활성화하여,
+        백 버튼을 눌렀을 때 새로운 콜백 메커니즘을 통해 반응하게 하여 사용자가 백 버튼을 눌렀을 때
+        특정 작업을 취소하거나 추가적인 액션을 취할 수 있는 기회를 제공 -->
+        <!--android:icon="@mipmap/ic_launcher" : 사용자가 앱을 다운로드 받을 때,
+        보이는 앱 아이콘 디자인 부분임-추후에 디자이너가 앱 아이콘 모양 그려주면 해당 이미지 추가하면 됨.-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
