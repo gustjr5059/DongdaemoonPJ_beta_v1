@@ -292,74 +292,50 @@ Widget buildCommonDrawer(BuildContext context) {
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
           },
         ),
-
-        ListTile(
-          // ListTile의 앞부분에는 네이버 카페 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/drawer_img/navercafe.logo.png', width: 24),
-          title: Text('네이버 카페'),
-          // 사용자가 ListTile을 탭할 때 실행될 코드, 네이버 카페의 URL로 이동하는 코드
-          onTap: () async {
-            const url = 'https://cafe.naver.com/ottbayo';
-            if (await canLaunchUrl(Uri.parse(url))) {
-              await launchUrl(Uri.parse(url));
-            }
-          },
-        ),
-        ListTile(
-          // ListTile의 앞부분에는 유튜브 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/drawer_img/youtube.logo.png', width: 24),
-          title: Text('유튜브'),
-          // 사용자가 ListTile을 탭할 때 실행될 코드, 유튜브의 URL로 이동하는 코드
-          onTap: () async {
-            const url = 'https://www.youtube.com/@OTTBAYO';
-            if (await canLaunchUrl(Uri.parse(url))) {
-              await launchUrl(Uri.parse(url));
-            }
-          },
-        ),
-        ListTile(
-          // ListTile의 앞부분에는 인스타그램 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/drawer_img/instagram.logo.png', width: 24),
-          title: Text('인스타그램'),
-          // 사용자가 ListTile을 탭할 때 실행될 코드, 인스타그램의 URL로 이동하는 코드
-          onTap: () async {
-            const url = 'https://www.instagram.com/ottbayo';
-            if (await canLaunchUrl(Uri.parse(url))) {
-              await launchUrl(Uri.parse(url));
-            }
-          },
-        ),
-        ListTile(
-          // ListTile의 앞부분에는 카카오 로고 이미지를 표시함.
-          leading: Image.asset('asset/img/misc/drawer_img/kakao.logo.png', width: 24),
-          title: Text('카카오'),
-          // 사용자가 ListTile을 탭할 때 실행될 코드, 카카오의 URL로 이동하는 코드
-          onTap: () async {
-            const url = 'https://pf.kakao.com/_xjVrbG';
-            if (await canLaunchUrl(Uri.parse(url))) {
-              await launchUrl(Uri.parse(url));
-            }
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.account_circle),
-          title: Text('Profile'),
-        ),
-        ListTile(
-          leading: Icon(Icons.group),
-          title: Text('Communities'),
-        ),
-        ListTile(
-          leading: Icon(Icons.message),
-          title: Text('Q&A'),
-        ),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Settings'),
-        ),
-        // 다른 메뉴 아이템 추가 가능
+        // 네이버 카페 항목
+        _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo', 'asset/img/misc/drawer_img/navercafe.logo.png'),
+        // 유튜브 항목
+        _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO', 'asset/img/misc/drawer_img/youtube.logo.png'),
+        // 인스타그램 항목
+        _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo', 'asset/img/misc/drawer_img/instagram.logo.png'),
+        // 카카오 항목
+        _buildListTile(context, '카카오', 'https://pf.kakao.com/_xjVrbG', 'asset/img/misc/drawer_img/kakao.logo.png'),
+        // 프로필 설정 항목
+        ListTile(leading: Icon(Icons.account_circle), title: Text('Profile')),
+        // 커뮤니티 항목
+        ListTile(leading: Icon(Icons.group), title: Text('Communities')),
+        // Q&A 항목
+        ListTile(leading: Icon(Icons.message), title: Text('Q&A')),
+        // 설정 항목
+        ListTile(leading: Icon(Icons.settings), title: Text('Settings')),
       ],
     ),
   );
 }
 // ------ buildCommonDrawer 위젯 내용 구현 끝
+
+// ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
+Widget _buildListTile(BuildContext context, String title, String url, String leadingImage) {
+  // ListTile 위젯 반환
+  return ListTile(
+    // 이미지 리딩
+    leading: Image.asset(leadingImage, width: 24),
+    // 타이틀 텍스트
+    title: Text(title),
+    // 탭 핸들러
+    onTap: () async {
+      try {
+        // URL을 파싱하여 웹 페이지 열기 시도
+        final bool launched = await launchUrl(Uri.parse(url));
+        if (!launched) {
+          // 웹 페이지를 열지 못할 경우 스낵바로 알림
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('웹 페이지를 열 수 없습니다.')));
+        }
+      } catch (e) {
+        // 예외 발생 시 스낵바로 에러 메시지 출력
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('앱 실행에 실패했습니다.')));
+      }
+    },
+  );
+}
+// ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 끝
