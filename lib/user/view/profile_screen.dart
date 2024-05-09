@@ -30,10 +30,11 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tabIndex = ref.watch(tabIndexProvider);
 
+    // 상단 탭 바 클릭 했을 시, 동작을 넣어야하는데 현재는 비어있음
+    void onTopBarTap(int index) {}
 
-    // TopBar 카테고리 리스트를 생성하고 사용자가 탭했을 때의 동작을 정의합니다.
-    Widget topBarList = buildTopBarList(context, (index) {
-    });
+    // 상단 탭 바(카테고리 리스트)와 사용자의 탭 동작을 정의
+    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
 
     return Scaffold(
       // GlobalKey 제거

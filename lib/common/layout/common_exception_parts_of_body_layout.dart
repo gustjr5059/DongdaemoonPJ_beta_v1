@@ -74,11 +74,44 @@ AppBar buildCommonAppBar({
 }
 // ------ AppBar 생성 함수 내용 구현 끝
 
+// ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작
+// 상단 탭 바 텍스트 스타일 설정 함수
+TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
+  return TextStyle(
+    fontSize: 16,  // 텍스트 크기를 16으로 설정
+    fontWeight: FontWeight.bold,  // 텍스트 굵기를 굵게 설정
+    color: currentIndex == buttonIndex ? GOLD_COLOR : INPUT_BORDER_COLOR,  // 현재 선택된 탭과 탭 인덱스가 같다면 금색, 아니면 입력창 테두리 색상으로 설정
+    shadows: [  // 텍스트에 그림자 효과를 추가
+      Shadow(  // 하단에 그림자 설정
+        offset: Offset(0, 2),  // 그림자의 위치를 하단으로 설정
+        color: LOGO_COLOR,  // 그림자 색상을 로고 색상으로 설정
+        blurRadius: 0,  // 흐림 효과 없음
+      ),
+      Shadow(  // 오른쪽에 그림자 설정
+        offset: Offset(2, 0),  // 그림자의 위치를 오른쪽으로 설정
+        color: LOGO_COLOR,  // 그림자 색상을 로고 색상으로 설정
+        blurRadius: 0,  // 흐림 효과 없음
+      ),
+      Shadow(  // 상단에 그림자 설정
+        offset: Offset(0, -2),  // 그림자의 위치를 상단으로 설정
+        color: LOGO_COLOR,  // 그림자 색상을 로고 색상으로 설정
+        blurRadius: 0,  // 흐림 효과 없음
+      ),
+      Shadow(  // 왼쪽에 그림자 설정
+        offset: Offset(-2, 0),  // 그림자의 위치를 왼쪽으로 설정
+        color: LOGO_COLOR,  // 그림자 색상을 로고 색상으로 설정
+        blurRadius: 0,  // 흐림 효과 없음
+      ),
+    ],
+  );
+}
+// ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 끝
+
 // ------ buildTopBarList 위젯 내용 구현 시작
 // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
 // TopBar의 카테고리 리스트 생성 함수. 각 카테고리를 탭했을 때의 동작을 정의함.
-Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
-  final List<Map<String, String>> topBarCategories = [
+Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, StateProvider<int> currentTabProvider) {
+  final List<Map<String, String>> topBarCategories = [ // 카테고리 리스트를 정의
     {"type": "text", "data": "전체"},
     {"type": "text", "data": "신상"},
     {"type": "text", "data": "최고"},
@@ -90,54 +123,32 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap) {
   ];
 
   // 각 카테고리를 탭했을 때 실행될 함수. 카테고리에 따라 다른 페이지로 이동함.
-  return SizedBox(
-    height: 60, // 적절한 높이 설정
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal, // 리스트뷰의 스크롤 방향을 가로로 설정함.
-      itemCount: topBarCategories.length, // 리스트뷰에 표시될 항목의 개수를 상단 바 카테고리 배열의 길이로 설정함.
-      itemBuilder: (context, index) {
-        final category = topBarCategories[index]["data"] ?? ""; // 안전하게 문자열 추출
-
-        return GestureDetector(
-          onTap: () => onTopBarTap(index), // 해당 인덱스의 카테고리를 탭했을 때 실행될 함수
-          child: Container( // 수정된 부분: Padding을 Container로 변경
-            alignment: Alignment.center, // Container 내부 내용을 중앙 정렬
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              category,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: INPUT_BORDER_COLOR, // 글자 본연의 색상
-                shadows: [
-                  Shadow( // 하단 그림자
-                    offset: Offset(0, 2),
-                    color: LOGO_COLOR,
-                    blurRadius: 0,
-                  ),
-                  Shadow( // 오른쪽 그림자
-                    offset: Offset(2, 0),
-                    color: LOGO_COLOR,
-                    blurRadius: 0,
-                  ),
-                  Shadow( // 상단 그림자
-                    offset: Offset(0, -2),
-                    color: LOGO_COLOR,
-                    blurRadius: 0,
-                  ),
-                  Shadow( // 왼쪽 그림자
-                    offset: Offset(-2, 0),
-                    color: LOGO_COLOR,
-                    blurRadius: 0,
-                  ),
-                ],
-              ),
+  return Consumer(
+    builder: (context, ref, child) {
+      int currentIndex = ref.watch(currentTabProvider); // 현재 선택된 탭의 인덱스를 가져옴
+      return SizedBox(
+        height: 60,  // 높이를 60으로 설정
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal, // 리스트뷰의 스크롤 방향을 가로로 설정함.
+          itemCount: topBarCategories.length, // 리스트뷰에 표시될 항목의 개수를 상단 바 카테고리 배열의 길이로 설정함.
+          itemBuilder: (context, index) {
+            final category = topBarCategories[index]["data"] ?? ""; // 안전하게 문자열 추출
+            return GestureDetector(
+              onTap: () {
+                onTopBarTap(index);  // onTopBarTap 함수를 호출하여 처리
+                ref.read(currentTabProvider.notifier).state = index;  // 선택된 탭의 인덱스를 갱신
+              },
+              child: Container( // 수정된 부분: Padding을 Container로 변경
+                alignment: Alignment.center, // Container 내부 내용을 중앙 정렬
+                padding: EdgeInsets.symmetric(horizontal: 20), // 좌우로 패딩 적용
+                child: Text(category, style: topBarTextStyle(currentIndex, index)),
             ),
-          ),
-        );
-      },
-    ),
-  );
+          );
+        },
+      ),
+    );
+  },
+ );
 }
 // ------ buildTopBarList 위젯 내용 구현 끝
 

@@ -19,6 +19,7 @@ import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴포넌트 파일
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
+import '../../../common/provider/common_state_provider.dart';
 import '../../../home/layout/home_body_parts_layout.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
@@ -142,7 +143,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
 

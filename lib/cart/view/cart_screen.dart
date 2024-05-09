@@ -15,12 +15,11 @@ class CartScreen extends ConsumerWidget {
     // 현재 선택된 탭 인덱스를 Riverpod를 통해 관찰
     final tabIndex = ref.watch(tabIndexProvider);
 
+    // 상단 탭 바 클릭 했을 시, 동작을 넣어야하는데 현재는 비어있음
+    void onTopBarTap(int index) {}
+
     // 상단 탭 바(카테고리 리스트)와 사용자의 탭 동작을 정의
-    Widget topBarList = buildTopBarList(context, (index) {
-      // 여기에 각 카테고리별 탭했을 때의 동작을 정의합니다.
-      // 예시: Navigator.push(context, MaterialPageRoute(builder: (context) => const NewLayout()));
-      // 사용자가 탭했을 때 필요한 화면으로 전환되도록 로직을 구현합니다.
-    });
+    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
 
     return Scaffold(
       // Scaffold의 key 설정은 제거되었습니다.

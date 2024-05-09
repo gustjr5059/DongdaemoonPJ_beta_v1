@@ -15,10 +15,11 @@ class OrderScreen extends ConsumerWidget {
     // 현재 탭의 인덱스를 관찰하고 있는 Riverpod Provider
     final tabIndex = ref.watch(tabIndexProvider);
 
+    // 상단 탭 바 클릭 했을 시, 동작을 넣어야하는데 현재는 비어있음
+    void onTopBarTap(int index) {}
+
     // 상단의 카테고리 탭 바를 구성하고, 각 탭 선택 시 수행될 동작을 정의
-    Widget topBarList = buildTopBarList(context, (index) {
-      // 카테고리별 이동 로직 정의. 예를 들어, Navigator.push(context, MaterialPageRoute(builder: (context) => const NewLayout()))로 특정 카테고리 페이지로 이동 가능
-    });
+    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
 
     return Scaffold(
       appBar: buildCommonAppBar(context: context, title: '주문', pageBackButton: false), // 'ORDER' 페이지의 공통 앱 바

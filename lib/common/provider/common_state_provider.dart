@@ -16,3 +16,5 @@ final tabIndexProvider = StateProvider<int>((ref) => 0);
 final selectedMidCategoryProvider = StateProvider<int>((ref) => 0);
 // 중간 카테고리 버튼의 열 수를 확장/축소하여 보이는 상태 관리를 위한 StateProvider
 final midCategoryViewBoolExpandedProvider = StateProvider<bool>((ref) => false); // 기본값은 축소된 상태
+// 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
+final currentTabProvider = StateProvider<int>((ref) => 0);
