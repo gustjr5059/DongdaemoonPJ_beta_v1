@@ -1,22 +1,29 @@
 
+// Cupertino 스타일의 위젯을 사용하기 위한 패키지를 임포트합니다. 주로 iOS 스타일의 디자인을 구현할 때 사용합니다.
 import 'package:flutter/cupertino.dart';
+// Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+// 상태 관리를 위한 Riverpod 패키지를 임포트합니다. Riverpod는 강력하고 유연한 상태 관리 솔루션을 제공합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// 애플리케이션에서 사용될 색상 상수들을 정의한 파일을 임포트합니다.
 import '../../common/const/colors.dart';
+// 공통적으로 사용될 상태 관리 로직을 포함하는 Provider 파일을 임포트합니다.
 import '../../common/provider/common_state_provider.dart';
+// 제품 카테고리별 메인 화면의 레이아웃을 정의하는 파일을 임포트합니다.
 import '../../product/layout/product_body_parts_layout.dart';
-import '../../product/view/main_screen/blouse_main_screen.dart';
-import '../../product/view/main_screen/cardigan_main_screen.dart';
-import '../../product/view/main_screen/coat_main_screen.dart';
-import '../../product/view/main_screen/jean_main_screen.dart';
-import '../../product/view/main_screen/mtm_main_screen.dart';
-import '../../product/view/main_screen/neat_main_screen.dart';
-import '../../product/view/main_screen/onepiece_main_screen.dart';
-import '../../product/view/main_screen/paeding_main_screen.dart';
-import '../../product/view/main_screen/pants_main_screen.dart';
-import '../../product/view/main_screen/pola_main_screen.dart';
-import '../../product/view/main_screen/shirt_main_screen.dart';
-import '../../product/view/main_screen/skirt_main_screen.dart';
+// 다양한 의류 카테고리에 대한 메인 화면 파일들을 임포트합니다.
+import '../../product/view/main_screen/blouse_main_screen.dart';  // 블라우스 카테고리 메인 화면
+import '../../product/view/main_screen/cardigan_main_screen.dart'; // 카디건 카테고리 메인 화면
+import '../../product/view/main_screen/coat_main_screen.dart';     // 코트 카테고리 메인 화면
+import '../../product/view/main_screen/jean_main_screen.dart';    // 청바지 카테고리 메인 화면
+import '../../product/view/main_screen/mtm_main_screen.dart';     // 맨투맨 카테고리 메인 화면
+import '../../product/view/main_screen/neat_main_screen.dart';    // 니트 카테고리 메인 화면
+import '../../product/view/main_screen/onepiece_main_screen.dart';// 원피스 카테고리 메인 화면
+import '../../product/view/main_screen/paeding_main_screen.dart'; // 패딩 카테고리 메인 화면
+import '../../product/view/main_screen/pants_main_screen.dart';   // 바지 카테고리 메인 화면
+import '../../product/view/main_screen/pola_main_screen.dart';    // 폴라(터틀넥) 카테고리 메인 화면
+import '../../product/view/main_screen/shirt_main_screen.dart';   // 셔츠 카테고리 메인 화면
+import '../../product/view/main_screen/skirt_main_screen.dart';   // 스커트 카테고리 메인 화면
 
 
 // ------ midCategories 부분의 버튼을 화면 크기에 동적으로 한 열당 버튼 갯수를 정해서 열로 정렬하기 위한 클래스 시작

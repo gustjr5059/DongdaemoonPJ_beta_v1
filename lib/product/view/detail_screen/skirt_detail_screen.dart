@@ -1,9 +1,21 @@
 
+// iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
+// 이 패키지는 iOS 특유의 시각적 요소와 애니메이션을 제공하여 iOS 사용자에게 친숙한 사용자 경험을 제공합니다.
 import 'package:flutter/cupertino.dart';
+// Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
+// Material 디자인은 Google이 제안하는 디자인 언어로, 효과적인 UI 구성과 일관된 사용자 경험을 제공합니다.
 import 'package:flutter/material.dart';
+// Riverpod는 상태 관리를 위한 현대적인 라이브러리로, 애플리케이션의 다양한 상태를 관리하는데 도움을 줍니다.
+// 이 라이브러리는 앱 전체에 걸쳐 상태를 효과적으로 관리할 수 있게 하며, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리를 위한 패키지
+// 공통으로 사용되는 예외 상황에 대한 UI 레이아웃 파일을 임포트합니다.
+// 이 파일은 에러 발생 시 사용자에게 표시될 화면 구성 요소를 포함하고 있어, 일관된 오류 처리 경험을 제공합니다.
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
+// 제품 정보를 표시하는 데 사용되는 공통 UI 레이아웃 파일을 임포트합니다.
+// 이 레이아웃은 제품 목록이나 상세 페이지 등에서 일관된 디자인과 구성을 유지하도록 돕습니다.
 import '../../layout/product_body_parts_layout.dart';
+// 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
+// 이 제공자는 네트워크 요청이나 데이터베이스 쿼리 등 비동기 작업의 결과를 처리하고, 상태를 관리합니다.
 import '../../provider/product_future_provider.dart';
 
 

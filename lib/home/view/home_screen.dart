@@ -1,15 +1,25 @@
 
-import 'dart:io' show Platform;  // 이 부분을 추가합니다.
+// Dart의 IO 라이브러리에서 Platform 클래스를 가져옵니다. 이 클래스는 운영 체제에 대한 정보를 제공합니다.
+import 'dart:io' show Platform;
+// Dart 비동기 프로그래밍을 위한 라이브러리에서 Future와 Stream 등을 사용할 수 있게 합니다.
 import 'dart:async';
+// Firebase의 사용자 인증 기능을 사용하기 위한 패키지를 임포트합니다.
 import 'package:firebase_auth/firebase_auth.dart';
+// Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+// 플랫폼 특정 기능을 제어하기 위한 서비스 인터페이스를 제공합니다.
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
-import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
-import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴포넌트 파일
-// 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
+// Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// 공통적으로 사용될 상태 관리 로직을 포함하는 파일을 임포트합니다.
+import '../../../common/provider/common_state_provider.dart';
+// 애플리케이션의 공통 UI 컴포넌트를 구성하는 파일을 임포트합니다.
+import '../../../common/layout/common_body_parts_layout.dart';
+// 다양한 색상을 정의하는 파일을 임포트합니다.
 import '../../common/const/colors.dart';
+// 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
+// 각 계절별 및 특별한 상품 카테고리에 대한 하위 페이지를 구현한 파일들을 임포트합니다.
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/new_sub_main_screen.dart';
@@ -17,19 +27,10 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
+// 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
 import '../layout/home_body_parts_layout.dart';
+// 홈 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/home_state_provider.dart';
-
-// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-// // GlobalKey 선언
-// GlobalKey newProductsKey = GlobalKey();
-// GlobalKey bestProductsKey = GlobalKey();
-// GlobalKey discountProductsKey = GlobalKey();
-// GlobalKey springProductsKey = GlobalKey();
-// GlobalKey summerProductsKey = GlobalKey();
-// GlobalKey autumnProductsKey = GlobalKey();
-// GlobalKey winterProductsKey = GlobalKey();
-// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -102,13 +103,20 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // late ScrollController scrollController; // ScrollController 추가
+  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+  late ScrollController scrollController; // 스크롤 컨트롤러 선언
+  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
     super.initState();
+
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+    scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'homeLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _largeBannerPageController = PageController(initialPage: ref.read(homeLargeBannerPageProvider));
@@ -234,7 +242,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     authStateChangesSubscription?.cancel();
 
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    // scrollController.dispose(); // ScrollController 해제
+    scrollController.dispose(); // 스크롤 컨트롤러 자원 해제
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
@@ -242,6 +250,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
+  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
   void _updateStatusBar() {
 
     Color statusBarColor = BUTTON_COLOR;  // 여기서 원하는 색상을 지정
@@ -264,60 +273,80 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   @override
   Widget build(BuildContext context) {
 
-// // 상태표시줄의 색상을 변경하고자 할 때,
-// // Scaffold가 완전히 빌드된 후에 적용되도록 설정함.
-// // 이는 초기 UI 렌더링이 완료된 직후에 추가적인 설정을 적용하기 위해 사용됨.
-//     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       // SystemChrome.setSystemUIOverlayStyle을 사용하여 시스템 UI의 스타일을 변경함.
-//       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-//         statusBarColor: INPUT_BG_COLOR, // 완전 불투명한 색상 // 상태표시줄의 색상을 여기서 정의한 BUTTON_COLOR로 설정함.
-//           statusBarIconBrightness: Brightness.dark // 아이콘 색상을 어둡게 설정
-//       ));
-//     });
+// 각 섹션의 스크롤 위치를 계산하는 함수
+    double calculateScrollOffset(String sectionTitle) {
+      switch (sectionTitle) {
+        case '신상':
+          return 650.0; // '신상품 섹션'의 스크롤 위치
+        case '최고':
+          return 910.0; // '최고의 제품 섹션'의 스크롤 위치
+        case '할인':
+          return 1170.0; // '할인 제품 섹션'의 스크롤 위치
+        case '봄':
+          return 1530.0; // '봄 제품 섹션'의 스크롤 위치
+        case '여름':
+          return 1790.0; // '여름 제품 섹션'의 스크롤 위치
+        case '가을':
+          return 2150.0; // '가을 제품 섹션'의 스크롤 위치
+        case '겨울':
+          return 2410.0; // '겨울 제품 섹션'의 스크롤 위치
+        default:
+          return 0.0;  // 해당하지 않는 섹션의 경우 0.0으로 반환
+      }
+    }
+
 
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     void onTopBarTap(int index) {
-      // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-      // GlobalKey? selectedKey;
-      // switch (index) {
-      //   case 0:
-      //     selectedKey = newProductsKey;
-      //     break;
-      //   case 1:
-      //     selectedKey = bestProductsKey;
-      //     break;
-      //   case 2:
-      //     selectedKey = discountProductsKey;
-      //     break;
-      //   case 3:
-      //     selectedKey = springProductsKey;
-      //     break;
-      //   case 4:
-      //     selectedKey = summerProductsKey;
-      //     break;
-      //   case 5:
-      //     selectedKey = autumnProductsKey;
-      //     break;
-      //   case 6:
-      //     selectedKey = winterProductsKey;
-      //     break;
-      // }
-      //
-      // if (selectedKey != null) {
-      //   // Scrollable.ensureVisible을 호출하여 해당 섹션으로 스크롤합니다.
-      //   Scrollable.ensureVisible(selectedKey.currentContext!, duration: Duration(milliseconds: 500));
-      // }
-      // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
+      String section = '';
+
+      // 탭의 인덱스에 따라 해당하는 섹션 이름을 결정
+      switch (index) {
+        case 0:
+          section = '전체';  // 전체 항목
+          break;
+        case 1:
+          section = '신상';  // 신상품 항목
+          break;
+        case 2:
+          section = '최고';  // 최고의 제품 항목
+          break;
+        case 3:
+          section = '할인';  // 할인 제품 항목
+          break;
+        case 4:
+          section = '봄';    // 봄 제품 항목
+          break;
+        case 5:
+          section = '여름';  // 여름 제품 항목
+          break;
+        case 6:
+          section = '가을';  // 가을 제품 항목
+          break;
+        case 7:
+          section = '겨울';  // 겨울 제품 항목
+          break;
+      }
+
+      // 선택된 섹션에 따라 계산된 스크롤 오프셋으로 스크롤 이동
+      double scrollToPosition = calculateScrollOffset(section);
+      scrollController.animateTo(
+          scrollToPosition,
+          duration: Duration(milliseconds: 500), // 이동에 걸리는 시간: 500 밀리초
+          curve: Curves.easeInOut // 이동하는 동안의 애니메이션 효과: 시작과 끝이 부드럽게
+      );
     }
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
     Widget topBarList = buildTopBarList(context, onTopBarTap);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
-
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -325,6 +354,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
     return Scaffold(
       body: CustomScrollView(
+          controller: scrollController, // 스크롤 컨트롤러 연결
           slivers: <Widget>[
             // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
             SliverAppBar(
@@ -423,7 +453,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
                       // 신상품 섹션
                         _buildSectionCard(context, ref, "신상", buildNewProductsSection, NewSubMainScreen()),
-                        SizedBox(height: 10),
                       SizedBox(height: 10), // 높이 10으로 간격 설정
                       // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
                       // 베스트 제품 섹션

@@ -1,5 +1,10 @@
 
+// Riverpod는 Flutter에서 사용할 수 있는 현대적이고 강력한 상태 관리 라이브러리입니다.
+// 이 라이브러리는 앱의 상태를 전역적으로 관리할 수 있게 해주며, 앱 내에서 필요한 데이터의 흐름과 상태 변화를
+// 효율적으로 관리할 수 있도록 설계되어 있습니다.
+// Riverpod는 Provider 패키지의 기능을 확장하며, 더 유연하고 테스트하기 쉬운 코드를 작성할 수 있게 해 줍니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 // 현재 페이지 인덱스를 관리하는 StateProvider(common_body_parts_layout.dart 내 공통 위젯 내에 구현되는 부분)
 final currentPageProvider = StateProvider<int>((ref) => 0);

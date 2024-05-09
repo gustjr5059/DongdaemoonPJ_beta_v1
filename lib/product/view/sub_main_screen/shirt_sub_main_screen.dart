@@ -1,26 +1,34 @@
 
+// Dart의 비동기 프로그래밍을 지원하는 'dart:async' 라이브러리를 가져옵니다.
+// 이 라이브러리를 사용하여 Future와 Stream을 통한 비동기 작업을 쉽게 처리할 수 있습니다.
 import 'dart:async';
+// Firebase의 사용자 인증 기능을 제공하는 FirebaseAuth 패키지를 임포트합니다.
+// 이 패키지를 통해 이메일, 비밀번호, 소셜 미디어 계정 등 다양한 방법으로 사용자 인증을 처리할 수 있습니다.
 import 'package:firebase_auth/firebase_auth.dart';
+// Flutter의 기본 디자인 및 UI 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
+// 이 패키지는 버튼, 카드, 앱 바 등 다양한 머티리얼 디자인 위젯을 포함하고 있습니다.
 import 'package:flutter/material.dart';
+// 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
+// Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
+// 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
+// 이 파일은 에러 발생 시 사용자에게 보여질 UI 컴포넌트를 정의합니다.
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
+// 비동기 작업의 상태를 관리하기 위한 공통 FutureProvider 파일을 임포트합니다.
+// 이 파일은 네트워크 요청이나 데이터베이스 쿼리 등 비동기 작업의 결과를 처리하고 상태를 관리합니다.
 import '../../../common/provider/common_future_provider.dart';
+// 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 상태 관리 로직을 포함하는 파일을 임포트합니다.
+// 이 파일은 통일된 상태 관리 패턴을 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
 import '../../../common/provider/common_state_provider.dart'; // 공통 상태 관리 파일
+// 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
+// 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
 import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴포넌트 파일
-// 아래는 각 카테고리별 상세 페이지를 위한 레이아웃 파일들
+// 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
+// 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../home/layout/home_body_parts_layout.dart';
+// 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
+// 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../provider/product_state_provider.dart';
-
-// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-// // GlobalKey 선언
-// GlobalKey newProductsKey = GlobalKey();
-// GlobalKey bestProductsKey = GlobalKey();
-// GlobalKey discountProductsKey = GlobalKey();
-// GlobalKey springProductsKey = GlobalKey();
-// GlobalKey summerProductsKey = GlobalKey();
-// GlobalKey autumnProductsKey = GlobalKey();
-// GlobalKey winterProductsKey = GlobalKey();
-// 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용

@@ -1,12 +1,26 @@
 
+// Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
+// 이 패키지는 다양한 머티리얼 디자인 위젯을 포함하여, 사용자 인터페이스를 효과적으로 구성할 수 있게 도와줍니다.
 import 'package:flutter/material.dart';
+// 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
+// Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Firebase의 사용자 인증 기능을 제공하는 FirebaseAuth 패키지를 임포트합니다.
+// FirebaseAuth는 Firebase 플랫폼의 일부로, 사용자 로그인 및 계정 관리 기능을 쉽게 구현할 수 있게 해줍니다.
+// 이를 통해 이메일 및 비밀번호 인증, 소셜 미디어 로그인, 전화번호 인증 등 다양한 인증 방법을 애플리케이션에 통합할 수 있습니다.
 import 'package:firebase_auth/firebase_auth.dart';
+// 애플리케이션 내에서 재사용 가능한 커스텀 텍스트 입력 필드 위젯을 정의한 파일을 임포트합니다.
+// 이 커스텀 위젯은 입력 폼을 보다 효과적으로 관리하고, 일관된 스타일을 유지할 수 있도록 돕습니다.
 import '../../common/component/custom_text_form_field.dart';
+// 애플리케이션에서 사용할 색상의 상수를 정의한 파일을 임포트합니다.
+// 이 파일은 앱 전반에 걸쳐 일관된 색상 팔레트를 제공하며, UI의 시각적 일관성을 유지하는 데 중요합니다.
 import '../../common/const/colors.dart';
+// 애플리케이션의 공통 상태 관리 로직을 포함하는 Provider 파일을 임포트합니다.
+// 이 파일은 앱 전체에서 사용될 상태 관리 로직을 정의하고, 데이터의 상태를 효과적으로 관리합니다.
 import '../../common/provider/common_state_provider.dart';
+// 애플리케이션의 홈 화면 뷰를 정의하는 파일을 임포트합니다.
+// 홈 화면은 사용자가 앱을 열었을 때 처음 보게 되는 화면으로, 앱의 주요 기능을 사용자에게 소개하고 접근성을 제공합니다.
 import '../../home/view/home_screen.dart';
-
 
 
 // 로그인 화면을 위한 StatefulWidget 정의
@@ -113,7 +127,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // 로그인 실패 시 처리, 예를 들어 사용자에게 오류 메시지 표시
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("로그인 실패: ${e.message}"),
+                          content: Text("아이디 혹은 비밀번호가 일치하지 않습니다."),
                         ),
                       );
                     }

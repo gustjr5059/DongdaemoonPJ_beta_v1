@@ -1,25 +1,34 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 import 'package:flutter/cupertino.dart';
+// Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+// 상태 관리를 위해 사용되는 Riverpod 패키지를 임포트합니다.
+// Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
 import '../../common/const/colors.dart';
-import '../../common/provider/common_future_provider.dart';
+// 제품 데이터 모델을 정의한 파일을 임포트합니다.
+// 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
 import '../model/product_model.dart';
+// 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
 import '../provider/product_future_provider.dart';
+// 제품 상태 관리를 위한 StateProvider 파일을 임포트합니다.
 import '../provider/product_state_provider.dart';
-import '../view/detail_screen/blouse_detail_screen.dart';
-import '../view/detail_screen/cardigan_detail_screen.dart';
-import '../view/detail_screen/coat_detail_screen.dart';
-import '../view/detail_screen/jean_detail_screen.dart';
-import '../view/detail_screen/mtm_detail_screen.dart';
-import '../view/detail_screen/neat_detail_screen.dart';
-import '../view/detail_screen/onepiece_detail_screen.dart';
-import '../view/detail_screen/paeding_detail_screen.dart';
-import '../view/detail_screen/pants_detail_screen.dart';
-import '../view/detail_screen/pola_detail_screen.dart';
-import '../view/detail_screen/shirt_detail_screen.dart';
-import '../view/detail_screen/skirt_detail_screen.dart';
+// 각 의류 카테고리에 대한 상세 화면 구현 파일들을 임포트합니다.
+// 이 파일들은 각 카테고리별 제품의 상세 정보를 표시하는 화면을 정의합니다.
+import '../view/detail_screen/blouse_detail_screen.dart'; // 블라우스 상세 화면
+import '../view/detail_screen/cardigan_detail_screen.dart'; // 가디건 상세 화면
+import '../view/detail_screen/coat_detail_screen.dart'; // 코트 상세 화면
+import '../view/detail_screen/jean_detail_screen.dart'; // 청바지 상세 화면
+import '../view/detail_screen/mtm_detail_screen.dart'; // 맨투맨 상세 화면
+import '../view/detail_screen/neat_detail_screen.dart'; // 니트 상세 화면
+import '../view/detail_screen/onepiece_detail_screen.dart'; // 원피스 상세 화면
+import '../view/detail_screen/paeding_detail_screen.dart'; // 패딩 상세 화면
+import '../view/detail_screen/pants_detail_screen.dart'; // 바지 상세 화면
+import '../view/detail_screen/pola_detail_screen.dart'; // 폴라(터틀넥) 상세 화면
+import '../view/detail_screen/shirt_detail_screen.dart'; // 셔츠 상세 화면
+import '../view/detail_screen/skirt_detail_screen.dart'; // 스커트 상세 화면
 
 
 // ------ pageViewWithArrows 위젯 내용 구현 시작

@@ -1,14 +1,22 @@
 
+// Dart의 비동기 프로그래밍 기능을 사용하기 위한 'dart:async' 라이브러리를 임포트합니다.
 import 'dart:async';
+// 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
+// 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
+// Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
+// 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
+// 여러 의류 카테고리 화면을 정의한 파일들을 임포트합니다.
 import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 가디건 화면
 import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
-// 제품 상세 화면
+// 비동기 데이터 로딩을 위해 상태 관리에 사용되는 FutureProvider 파일을 임포트합니다.
+// 이 파일은 네트워크 요청과 같은 비동기 작업 결과를 처리하고 상태 관리에 사용됩니다.
 import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
+// Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 
 

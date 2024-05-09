@@ -1,92 +1,29 @@
 
+// Firebase의 사용자 인증 기능을 사용하기 위한 패키지를 임포트합니다.
 import 'package:firebase_auth/firebase_auth.dart';
+// Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+// Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
+// 애플리케이션 내 쇼핑 카트 화면 관련 파일을 임포트합니다.
 import '../../cart/view/cart_screen.dart';
+// 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 import '../../home/layout/home_body_parts_layout.dart';
+// 애플리케이션의 메인 홈 화면을 구성하는 파일을 임포트합니다.
 import '../../home/view/home_screen.dart';
+// 주문 관련 화면을 구현한 파일을 임포트합니다.
 import '../../order/view/order_screen.dart';
+// 사용자 로그인 화면을 구현한 파일을 임포트합니다.
 import '../../user/view/login_screen.dart';
+// 사용자 프로필 화면을 구현한 파일을 임포트합니다.
 import '../../user/view/profile_screen.dart';
+// 다양한 색상을 정의하는 파일을 임포트합니다.
 import '../const/colors.dart';
+// 애플리케이션의 공통적인 상태 관리 로직을 포함하는 파일을 임포트합니다.
 import '../provider/common_state_provider.dart';
 
-
-// ------ SliverAppBar buildCommonSliverAppBar 함수 시작
-// ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
-// 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
-// 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
-// 향후 이슈해결하여 해당 앱 바로 변경작업 진행할 예정!!
-
-// void onTopBarTap(int index) {}
-//
-// // 공통 SliverAppBar 생성 함수
-// SliverAppBar buildCommonSliverAppBar({
-//   required BuildContext context,
-//   required String title,
-//   required bool pageBackButton, // 이전 화면으로 돌아가는 버튼 표시 여부
-// }) {
-//   // 조건에 따라 leadingWidget 결정
-//   Widget leadingWidget;
-//   if (pageBackButton) {
-//     leadingWidget = IconButton(
-//       icon: Icon(Icons.arrow_back),
-//       onPressed: () => Navigator.of(context).pop(),
-//     );
-//   } else {
-//     leadingWidget = Builder(
-//       builder: (BuildContext context) {
-//         return IconButton(
-//           icon: Icon(Icons.menu),
-//           onPressed: () => Scaffold.of(context).openDrawer(),
-//         );
-//       },
-//     );
-//   }
-//
-//   return SliverAppBar(
-//     floating: true,
-//     pinned: true,
-//     expandedHeight: 120.0, // 로고 이미지를 포함할 충분한 높이 제공
-//     flexibleSpace: LayoutBuilder(
-//       builder: (BuildContext context, BoxConstraints constraints) {
-//         return FlexibleSpaceBar(
-//           centerTitle: true,
-//           titlePadding: EdgeInsets.zero, // 로고 이미지의 상하좌우 패딩을 0으로 설정
-//           title: constraints.biggest.height == kToolbarHeight + MediaQuery.of(context).padding.top ? null // 축소된 상태에서는 타이틀을 표시하지 않음
-//             : Container(
-//               alignment: Alignment.center,
-//               height: kToolbarHeight,
-//               child: Image.asset(
-//                 'asset/img/misc/logo_image.jpg',
-//                 fit: BoxFit.scaleDown, // 로고가 AppBar 높이에 맞게 조정됨
-//               ),
-//             ),
-//           );
-//       },
-//     ),
-//     backgroundColor: Colors.white,
-//     leading: leadingWidget,
-//     actions: [
-//       IconButton(
-//         icon: Icon(Icons.search),
-//         onPressed: () {
-//           // 검색 기능 구현
-//         },
-//       ),
-//     ],
-//     bottom: PreferredSize(
-//       preferredSize: Size.fromHeight(60.0), // 여기에 탭 바의 높이를 설정합니다.
-//       child: Container(
-//         color: Colors.white,
-//         alignment: Alignment.center,
-//         child: buildTopBarList(context, onTopBarTap), // 상단 탭바 리스트를 구성하는 함수
-//       ),
-//     ),
-//   );
-// }
-// ------ SliverAppBar buildCommonSliverAppBar 함수 끝
 
 // ------ AppBar 생성 함수 내용 구현 시작
 // 상단 탭 바 생성 함수
