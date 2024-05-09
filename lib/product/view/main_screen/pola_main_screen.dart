@@ -143,7 +143,7 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, polaCurrentTabProvider);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
 

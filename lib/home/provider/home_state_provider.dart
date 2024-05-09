@@ -16,3 +16,5 @@ final homeSmall2BannerPageProvider = StateProvider<int>((ref) => 0);
 final homeSmall3BannerPageProvider = StateProvider<int>((ref) => 0);
 // 홈 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치를 저장하는 StateProvider
 final scrollPositionProvider = StateProvider<double>((ref) => 0);
+// 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
+final homeCurrentTabProvider = StateProvider<int>((ref) => 0);

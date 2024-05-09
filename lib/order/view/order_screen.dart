@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart'; // iOS 스타일 위젯을 사용하기
 import 'package:flutter/material.dart'; // Material 디자인 위젯을 사용하기 위한 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 패키지
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
-import '../../common/provider/common_state_provider.dart'; // 앱 전반에 걸친 상태 관리를 위한 state provider
+import '../../common/provider/common_state_provider.dart';
+import '../provider/order_state_provider.dart'; // 앱 전반에 걸친 상태 관리를 위한 state provider
 
 
 // 주문 페이지를 구성하는 위젯, Riverpod의 ConsumerWidget을 상속 받음
@@ -19,7 +20,7 @@ class OrderScreen extends ConsumerWidget {
     void onTopBarTap(int index) {}
 
     // 상단의 카테고리 탭 바를 구성하고, 각 탭 선택 시 수행될 동작을 정의
-    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, orderCurrentTabProvider);
 
     return Scaffold(
       appBar: buildCommonAppBar(context: context, title: '주문', pageBackButton: false), // 'ORDER' 페이지의 공통 앱 바

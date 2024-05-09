@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart'; // Cupertino 디자인 시스템을 위
 import 'package:flutter/material.dart'; // Material 디자인 시스템을 위한 Flutter 패키지
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
-import '../../common/provider/common_state_provider.dart'; // 공통 상태 관리자(provider) 파일
+import '../../common/provider/common_state_provider.dart';
+import '../provider/cart_state_provider.dart'; // 공통 상태 관리자(provider) 파일
 
 
 // 장바구니 화면을 나타내는 위젯, Riverpod의 ConsumerWidget을 활용하여 상태 관리
@@ -19,7 +20,7 @@ class CartScreen extends ConsumerWidget {
     void onTopBarTap(int index) {}
 
     // 상단 탭 바(카테고리 리스트)와 사용자의 탭 동작을 정의
-    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, cartCurrentTabProvider);
 
     return Scaffold(
       // Scaffold의 key 설정은 제거되었습니다.

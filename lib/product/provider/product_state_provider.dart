@@ -62,27 +62,16 @@ final colorSelectionIndexProvider = StateProvider<String?>((ref) => null);
 // 사이즈 선택을 위한 상태 관리용 StateProvider
 final sizeSelectionProvider = StateProvider<String?>((ref) => null);
 
-// // 티셔츠 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final shirtSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 블라우스 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final blouseSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 맨투맨 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final mtmSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 니트 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final neatSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 폴라티 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final polaSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 원피스 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final onepieceSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 팬츠 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final pantsSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 청바지 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final jeanSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 스커트 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final skirtSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 패딩 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final paedingSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 코트 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final coatSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
-// // 가디건 카테고리 버튼 클릭 인덱스를 관리하기 위한 StateProvider
-// final cardiganSelectedCategoryProvider = StateProvider<int?>((ref) => 0);
+// 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
+final blouseCurrentTabProvider = StateProvider<int>((ref) => 0);
+final cardiganCurrentTabProvider = StateProvider<int>((ref) => 0);
+final coatCurrentTabProvider = StateProvider<int>((ref) => 0);
+final jeanCurrentTabProvider = StateProvider<int>((ref) => 0);
+final mtmCurrentTabProvider = StateProvider<int>((ref) => 0);
+final neatCurrentTabProvider = StateProvider<int>((ref) => 0);
+final onepieceCurrentTabProvider = StateProvider<int>((ref) => 0);
+final paedingCurrentTabProvider = StateProvider<int>((ref) => 0);
+final pantsCurrentTabProvider = StateProvider<int>((ref) => 0);
+final polaCurrentTabProvider = StateProvider<int>((ref) => 0);
+final shirtCurrentTabProvider = StateProvider<int>((ref) => 0);
+final skirtCurrentTabProvider = StateProvider<int>((ref) => 0);
