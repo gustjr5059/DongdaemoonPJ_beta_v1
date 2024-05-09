@@ -115,6 +115,21 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
 
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+    // initState에서 저장된 스크롤 위치로 이동
+    // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
+    // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
+      if (scrollController.hasClients) {
+        // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
+        // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
+        // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
+        double savedScrollPosition = ref.read(scrollPositionProvider);
+        // scrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
+        // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
+        scrollController.jumpTo(savedScrollPosition);
+      }
+    });
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
@@ -340,6 +355,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
           duration: Duration(milliseconds: 500), // 이동에 걸리는 시간: 500 밀리초
           curve: Curves.easeInOut // 이동하는 동안의 애니메이션 효과: 시작과 끝이 부드럽게
       );
+      // 스크롤 위치를 StateProvider에 저장
+      ref.read(scrollPositionProvider.notifier).state = scrollToPosition;
     }
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
