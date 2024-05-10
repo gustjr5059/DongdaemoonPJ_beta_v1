@@ -94,8 +94,9 @@ Widget buildProdFirestoreDetailDocument(WidgetRef ref, String docId, String cate
   void navigateToDetailScreen(Widget screen) {
     // Navigator를 사용하여 새 화면으로 이동함. 화면 전환 후, 색상과 사이즈 선택 상태를 초기화함.
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen)).then((_) {
-      ref.read(colorSelectionIndexProvider.state).state = null;
-      ref.read(sizeSelectionProvider.state).state = null;
+      // 상태를 수정할 때는 `.notifier`를 사용하여 상태를 조작 (state로 표현된 deprecated된 부분 수정)
+      ref.read(colorSelectionIndexProvider.notifier).update((state) => null);
+      ref.read(sizeSelectionProvider.notifier).update((state) => null);
     });
   }
 
