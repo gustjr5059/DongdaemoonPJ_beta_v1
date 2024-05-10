@@ -15,6 +15,7 @@ import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
 // 비동기 데이터 로딩을 위해 상태 관리에 사용되는 FutureProvider 파일을 임포트합니다.
 // 이 파일은 네트워크 요청과 같은 비동기 작업 결과를 처리하고 상태 관리에 사용됩니다.
+import '../model/banner_model.dart';
 import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
@@ -126,15 +127,15 @@ Widget buildBannerPageView({
 // 큰 배너 이미지를 보여주는 페이지뷰 섹션
 Widget buildLargeBannerPageViewSection(BuildContext context, WidgetRef ref, StateProvider<int> currentPageProvider, PageController pageController, BannerAutoScrollClass bannerAutoScroll, List<String> bannerLinks// 현재 페이지 인덱스를 관리하기 위한 프로바이더를 인자로 받습니다.
     ) {
-  // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
+  // largeBannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
   // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
   final asyncBannerImages = ref.watch(largeBannerImagesProvider);
 
   // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
   return asyncBannerImages.when(
     // 데이터 상태인 경우, 이미지 URL 리스트를 바탕으로 페이지뷰를 구성함.
-    data: (List<String> imageUrls) {
-      bannerAutoScroll.itemCount = imageUrls.length; // 실제 이미지 개수로 업데이트
+    data: (List<LargeBannerImage> LargeBannerImage) {
+      bannerAutoScroll.itemCount = LargeBannerImage.length; // 실제 이미지 개수로 업데이트
       bannerAutoScroll.startAutoScroll(); // 데이터 로드 완료 후 자동 스크롤 시작
 
       // 이미지 URL 리스트를 성공적으로 가져온 경우,
@@ -145,7 +146,7 @@ Widget buildLargeBannerPageViewSection(BuildContext context, WidgetRef ref, Stat
           buildBannerPageView(
             ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
             pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
-            itemCount: imageUrls.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
+            itemCount: LargeBannerImage.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
             itemBuilder: (context, index) => GestureDetector(
               onTap: () async {
                 // 각 배너를 탭(클릭)했을 때의 동작
@@ -164,7 +165,7 @@ Widget buildLargeBannerPageViewSection(BuildContext context, WidgetRef ref, Stat
                   }
                 }
               },
-              child: BannerImageClass(imageUrl: imageUrls[index]),  // 이미지 표시를 위한 위젯
+              child: BannerImageClass(imageUrl: LargeBannerImage[index].imageUrl), // 이미지 표시를 위한 위젯
             ),
             // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             currentPageProvider: currentPageProvider, // 외부에서 받은 currentPageProvider를 사용함.
@@ -183,7 +184,7 @@ Widget buildLargeBannerPageViewSection(BuildContext context, WidgetRef ref, Stat
                     borderRadius: BorderRadius.circular(12), // 모서리는 둥글게 처리
                   ),
                   child: Text(
-                    '${currentPage + 1} / ${imageUrls.length}', // 현재 페이지 번호와 총 페이지 수 표시
+                    '${currentPage + 1} / ${LargeBannerImage.length}', // 현재 페이지 번호와 총 페이지 수 표시
                     style: TextStyle(color: Colors.white), // 텍스트는 흰색으로 표시
                   ),
                 );
@@ -205,15 +206,15 @@ Widget buildLargeBannerPageViewSection(BuildContext context, WidgetRef ref, Stat
 // 작은1 배너 이미지를 보여주는 페이지뷰 섹션
 Widget buildSmall1BannerPageViewSection(BuildContext context, WidgetRef ref, StateProvider<int> currentPageProvider, PageController pageController, BannerAutoScrollClass bannerAutoScroll, List<String> bannerLinks// 현재 페이지 인덱스를 관리하기 위한 프로바이더를 인자로 받습니다.
     ) {
-  // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
+  // small1BannerImagesProvider 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
   // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
   final asyncBannerImages = ref.watch(small1BannerImagesProvider);
 
   // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
   return asyncBannerImages.when(
     // 데이터 상태인 경우, 이미지 URL 리스트를 바탕으로 페이지뷰를 구성함.
-    data: (List<String> imageUrls) {
-      bannerAutoScroll.itemCount = imageUrls.length; // 실제 이미지 개수로 업데이트
+    data: (List<Small1BannerImage> Small1BannerImage) {
+      bannerAutoScroll.itemCount = Small1BannerImage.length; // 실제 이미지 개수로 업데이트
       bannerAutoScroll.startAutoScroll(); // 데이터 로드 완료 후 자동 스크롤 시작
 
       // 이미지 URL 리스트를 성공적으로 가져온 경우,
@@ -224,7 +225,7 @@ Widget buildSmall1BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
           buildBannerPageView(
             ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
             pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
-            itemCount: imageUrls.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
+            itemCount: Small1BannerImage.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
             itemBuilder: (context, index) => GestureDetector(
               onTap: () async {
                 // 각 배너를 탭(클릭)했을 때의 동작
@@ -243,7 +244,7 @@ Widget buildSmall1BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
                   }
                 }
               },
-              child: BannerImageClass(imageUrl: imageUrls[index]),  // 이미지 표시를 위한 위젯
+              child: BannerImageClass(imageUrl: Small1BannerImage[index].imageUrl), // 이미지 표시를 위한 위젯
             ),
             // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             currentPageProvider: currentPageProvider, // 외부에서 받은 currentPageProvider를 사용함.
@@ -262,7 +263,7 @@ Widget buildSmall1BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
                     borderRadius: BorderRadius.circular(12), // 모서리는 둥글게 처리
                   ),
                   child: Text(
-                    '${currentPage + 1} / ${imageUrls.length}', // 현재 페이지 번호와 총 페이지 수 표시
+                    '${currentPage + 1} / ${Small1BannerImage.length}', // 현재 페이지 번호와 총 페이지 수 표시
                     style: TextStyle(color: Colors.white), // 텍스트는 흰색으로 표시
                   ),
                 );
@@ -284,15 +285,15 @@ Widget buildSmall1BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
 // 작은2 배너 이미지를 보여주는 페이지뷰 섹션
 Widget buildSmall2BannerPageViewSection(BuildContext context, WidgetRef ref, StateProvider<int> currentPageProvider, PageController pageController, BannerAutoScrollClass bannerAutoScroll, List<String> bannerLinks// 현재 페이지 인덱스를 관리하기 위한 프로바이더를 인자로 받습니다.
     ) {
-  // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
+  // small2BannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
   // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
   final asyncBannerImages = ref.watch(small2BannerImagesProvider);
 
   // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
   return asyncBannerImages.when(
     // 데이터 상태인 경우, 이미지 URL 리스트를 바탕으로 페이지뷰를 구성함.
-    data: (List<String> imageUrls) {
-      bannerAutoScroll.itemCount = imageUrls.length; // 실제 이미지 개수로 업데이트
+    data: (List<Small2BannerImage> Small2BannerImage) {
+      bannerAutoScroll.itemCount = Small2BannerImage.length; // 실제 이미지 개수로 업데이트
       bannerAutoScroll.startAutoScroll(); // 데이터 로드 완료 후 자동 스크롤 시작
 
       // 이미지 URL 리스트를 성공적으로 가져온 경우,
@@ -303,7 +304,7 @@ Widget buildSmall2BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
           buildBannerPageView(
             ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
             pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
-            itemCount: imageUrls.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
+            itemCount: Small2BannerImage.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
             itemBuilder: (context, index) => GestureDetector(
               onTap: () async {
                 // 각 배너를 탭(클릭)했을 때의 동작
@@ -322,7 +323,7 @@ Widget buildSmall2BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
                   }
                 }
               },
-              child: BannerImageClass(imageUrl: imageUrls[index]),  // 이미지 표시를 위한 위젯
+              child: BannerImageClass(imageUrl: Small2BannerImage[index].imageUrl), // 이미지 표시를 위한 위젯
             ),
             // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             currentPageProvider: currentPageProvider, // 외부에서 받은 currentPageProvider를 사용함.
@@ -341,7 +342,7 @@ Widget buildSmall2BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
                     borderRadius: BorderRadius.circular(12), // 모서리는 둥글게 처리
                   ),
                   child: Text(
-                    '${currentPage + 1} / ${imageUrls.length}', // 현재 페이지 번호와 총 페이지 수 표시
+                    '${currentPage + 1} / ${Small2BannerImage.length}', // 현재 페이지 번호와 총 페이지 수 표시
                     style: TextStyle(color: Colors.white), // 텍스트는 흰색으로 표시
                   ),
                 );
@@ -363,15 +364,15 @@ Widget buildSmall2BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
 // 작은3 배너 이미지를 보여주는 페이지뷰 섹션
 Widget buildSmall3BannerPageViewSection(BuildContext context, WidgetRef ref, StateProvider<int> currentPageProvider, PageController pageController, BannerAutoScrollClass bannerAutoScroll, List<String> bannerLinks// 현재 페이지 인덱스를 관리하기 위한 프로바이더를 인자로 받습니다.
     ) {
-  // bannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
+  // small3BannerImagesProvider를 사용하여 Firestore로부터 이미지 URL 리스트를 가져옴.
   // 이 비동기 작업은 FutureProvider에 의해 관리되며, 데이터가 준비되면 위젯을 다시 빌드함.
   final asyncBannerImages = ref.watch(small3BannerImagesProvider);
 
   // asyncBannerImages의 상태에 따라 다른 위젯을 반환함.
   return asyncBannerImages.when(
     // 데이터 상태인 경우, 이미지 URL 리스트를 바탕으로 페이지뷰를 구성함.
-    data: (List<String> imageUrls) {
-      bannerAutoScroll.itemCount = imageUrls.length; // 실제 이미지 개수로 업데이트
+    data: (List<Small3BannerImage> Small3BannerImage) {
+      bannerAutoScroll.itemCount = Small3BannerImage.length; // 실제 이미지 개수로 업데이트
       bannerAutoScroll.startAutoScroll(); // 데이터 로드 완료 후 자동 스크롤 시작
 
       // 이미지 URL 리스트를 성공적으로 가져온 경우,
@@ -382,7 +383,7 @@ Widget buildSmall3BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
           buildBannerPageView(
             ref: ref, // Riverpod의 WidgetRef를 통해 상태를 관리함.
             pageController: pageController, // 페이지 컨트롤러를 전달하여 페이지간 전환을 관리함.
-            itemCount: imageUrls.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
+            itemCount: Small3BannerImage.length, // 페이지 개수를 정의함. 이미지 리스트의 길이에 해당함.
             itemBuilder: (context, index) => GestureDetector(
               onTap: () async {
                 // 각 배너를 탭(클릭)했을 때의 동작
@@ -401,7 +402,7 @@ Widget buildSmall3BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
                   }
                 }
               },
-              child: BannerImageClass(imageUrl: imageUrls[index]),  // 이미지 표시를 위한 위젯
+              child: BannerImageClass(imageUrl: Small3BannerImage[index].imageUrl), // 이미지 표시를 위한 위젯
             ),
             // 현재 페이지 인덱스를 관리하기 위한 provider(detailBannerPageProvider와 분리하여 디테일 화면의 페이지 뷰의 페이지 인덱스와 따로 관리)
             currentPageProvider: currentPageProvider, // 외부에서 받은 currentPageProvider를 사용함.
@@ -420,7 +421,7 @@ Widget buildSmall3BannerPageViewSection(BuildContext context, WidgetRef ref, Sta
                     borderRadius: BorderRadius.circular(12), // 모서리는 둥글게 처리
                   ),
                   child: Text(
-                    '${currentPage + 1} / ${imageUrls.length}', // 현재 페이지 번호와 총 페이지 수 표시
+                    '${currentPage + 1} / ${Small3BannerImage.length}', // 현재 페이지 번호와 총 페이지 수 표시
                     style: TextStyle(color: Colors.white), // 텍스트는 흰색으로 표시
                   ),
                 );
