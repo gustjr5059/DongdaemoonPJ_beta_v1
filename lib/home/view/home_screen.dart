@@ -115,6 +115,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
 
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -124,7 +125,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(scrollPositionProvider);
+        double savedScrollPosition = ref.read(homeScrollPositionProvider);
         // scrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         scrollController.jumpTo(savedScrollPosition);
@@ -132,13 +133,14 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     });
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
+    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
+    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
+    // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
+    scrollController.addListener(_updateScrollPosition);
+
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'homeLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _largeBannerPageController = PageController(initialPage: ref.read(homeLargeBannerPageProvider));
-
-    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    // scrollController = ScrollController(); // ScrollController 인스턴스 초기화
-    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     // 큰 배너를 자동으로 스크롤하는 기능 초기화
     _largeBannerAutoScroll = BannerAutoScrollClass(
@@ -195,6 +197,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
 
     // WidgetsBindingObserver를 추가하여 앱의 생명주기 변화 감지
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
+
+    // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     _updateStatusBar();
 
     // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
@@ -207,6 +211,20 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
 
   }
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
+
+  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
+  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
+  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
+  void _updateScrollPosition() {
+    // 'scrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
+    double currentScrollPosition = scrollController.offset;
+
+    // 'ref'를 사용하여 'homeScrollPositionProvider'의 notifier를 읽어옴.
+    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
+    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
+    ref.read(homeScrollPositionProvider.notifier).state = currentScrollPosition;
+  }
+  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 시작
@@ -256,6 +274,11 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
+    // 'scrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
+    // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
+    scrollController.removeListener(_updateScrollPosition);
+
+
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     scrollController.dispose(); // 스크롤 컨트롤러 자원 해제
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
@@ -288,7 +311,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   @override
   Widget build(BuildContext context) {
 
-// 각 섹션의 스크롤 위치를 계산하는 함수
+    // 각 섹션의 스크롤 위치를 계산하는 함수
     double calculateScrollOffset(String sectionTitle) {
       switch (sectionTitle) {
         case '신상':
@@ -310,6 +333,20 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
       }
     }
 
+    // 탭의 인덱스에 따라 해당하는 섹션 이름을 결정하는 String 변수 관련 함수
+    String getSectionFromIndex(int index) {
+      switch (index) {
+        case 0: return '전체'; // 전체 항목
+        case 1: return '신상'; // 신상품 항목
+        case 2: return '최고'; // 최고의 제품 항목
+        case 3: return '할인'; // 할인 제품 항목
+        case 4: return '봄'; // 봄 제품 항목
+        case 5: return '여름'; // 여름 제품 항목
+        case 6: return '가을'; // 가을 제품 항목
+        case 7: return '겨울'; // 겨울 제품 항목
+        default: return '';
+      }
+    }
 
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
@@ -318,36 +355,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     void onTopBarTap(int index) {
 
-      String section = '';
-
-      // 탭의 인덱스에 따라 해당하는 섹션 이름을 결정
-      switch (index) {
-        case 0:
-          section = '전체';  // 전체 항목
-          break;
-        case 1:
-          section = '신상';  // 신상품 항목
-          break;
-        case 2:
-          section = '최고';  // 최고의 제품 항목
-          break;
-        case 3:
-          section = '할인';  // 할인 제품 항목
-          break;
-        case 4:
-          section = '봄';    // 봄 제품 항목
-          break;
-        case 5:
-          section = '여름';  // 여름 제품 항목
-          break;
-        case 6:
-          section = '가을';  // 가을 제품 항목
-          break;
-        case 7:
-          section = '겨울';  // 겨울 제품 항목
-          break;
-      }
-
+      String section = getSectionFromIndex(index);
       // 선택된 섹션에 따라 계산된 스크롤 오프셋으로 스크롤 이동
       double scrollToPosition = calculateScrollOffset(section);
       scrollController.animateTo(
@@ -356,7 +364,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
           curve: Curves.easeInOut // 이동하는 동안의 애니메이션 효과: 시작과 끝이 부드럽게
       );
       // 스크롤 위치를 StateProvider에 저장
-      ref.read(scrollPositionProvider.notifier).state = scrollToPosition;
+      ref.read(homeScrollPositionProvider.notifier).state = scrollToPosition;
     }
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
@@ -414,7 +422,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Column(
                       children: [
-                      SizedBox(height: 15), // 높이 20으로 간격 설정
+                      SizedBox(height: 5), // 높이 20으로 간격 설정
                       // 큰 배너 섹션을 카드뷰로 구성
                       CommonCardView(
                         content: SizedBox(
