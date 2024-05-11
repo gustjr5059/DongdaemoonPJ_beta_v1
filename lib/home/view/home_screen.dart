@@ -107,6 +107,50 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   late ScrollController scrollController; // 스크롤 컨트롤러 선언
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
+  // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 시작
+  void _onScroll() {
+    // 현재 스크롤 위치를 scrollController의 offset 값으로부터 가져옴.
+    double currentScroll = scrollController.offset;
+    // 현재 스크롤 위치에 따른 탭 인덱스를 계산함.
+    int currentIndex = _determineCurrentTabIndex(currentScroll);
+    // 계산된 탭 인덱스를 상태 관리 객체를 통해 업데이트 함.
+    ref.read(homeCurrentTabProvider.notifier).state = currentIndex;
+  }
+  // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 끝
+
+  // ------ 스크롤 오프셋을 받아 현재의 탭 인덱스를 결정하는 함수인 _determineCurrentTabIndex 내용 시작
+  int _determineCurrentTabIndex(double scrollOffset) {
+    // 각 섹션의 스크롤 시작 위치를 배열로 정의함.
+    // 이 배열의 각 요소는 각 섹션의 시작 스크롤 위치를 나타냄.
+    const sectionOffsets = [0.0, 650.0, 910.0, 1170.0, 1530.0, 1790.0, 2150.0, 2410.0];
+
+    // 섹션 오프셋 배열의 마지막 요소부터 처음 요소까지 역순으로 검사함.
+    for (int i = sectionOffsets.length - 1; i >= 0; i--) {
+      // 현재 스크롤 오프셋이 검사 중인 섹션의 시작 위치보다 크거나 같다면,
+      if (scrollOffset >= sectionOffsets[i]) {
+        // 현재 섹션의 인덱스를 반환함.
+        return i;
+      }
+    }
+    // 어떤 섹션의 시작 위치보다 현재 스크롤 위치가 작은 경우 첫 번째 섹션의 인덱스인 0을 반환함.
+    return 0;
+  }
+  // ------ 스크롤 오프셋을 받아 현재의 탭 인덱스를 결정하는 함수인 _determineCurrentTabIndex 내용 끝
+
+  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
+  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
+  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
+  void _updateScrollPosition() {
+    // 'scrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
+    double currentScrollPosition = scrollController.offset;
+
+    // 'ref'를 사용하여 'homeScrollPositionProvider'의 notifier를 읽어옴.
+    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
+    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
+    ref.read(homeScrollPositionProvider.notifier).state = currentScrollPosition;
+  }
+  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -137,6 +181,10 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
     scrollController.addListener(_updateScrollPosition);
+
+    // scrollController에 스크롤 이벤트 리스너를 추가함.
+    // 이 리스너는 사용자가 스크롤할 때마다 _onScroll 함수를 호출하도록 설정됨.
+    scrollController.addListener(_onScroll);
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'homeLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
@@ -212,20 +260,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   }
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
-  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-  void _updateScrollPosition() {
-    // 'scrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = scrollController.offset;
-
-    // 'ref'를 사용하여 'homeScrollPositionProvider'의 notifier를 읽어옴.
-    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
-    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(homeScrollPositionProvider.notifier).state = currentScrollPosition;
-  }
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
-
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 시작
   @override
@@ -278,6 +312,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
     scrollController.removeListener(_updateScrollPosition);
 
+    // scrollController에서 _onScroll 함수를 리스너로서 제거함.
+    // 이 작업은 더 이상 스크롤 이벤트에 반응하지 않도록 설정할 때 사용됨.
+    scrollController.removeListener(_onScroll);
 
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     scrollController.dispose(); // 스크롤 컨트롤러 자원 해제
@@ -536,6 +573,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       SizedBox(height: 10), // 높이 10으로 간격 설정
                       // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                         _buildSectionCard(context, ref, "겨울", buildWinterProductsSection, WinterSubMainScreen()),
+                      SizedBox(height: 400), // 높이 15로 간격 설정
                     ],
                    ),
                  );
