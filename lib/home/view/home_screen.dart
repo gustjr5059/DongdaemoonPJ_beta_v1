@@ -410,7 +410,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
     return Scaffold(
-      body: CustomScrollView(
+      body: Stack(
+        children: [
+        CustomScrollView(
           controller: scrollController, // 스크롤 컨트롤러 연결
           slivers: <Widget>[
             // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
@@ -577,14 +579,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
               ),
             ),
            ),
-         ],
-       ),
+          ],
+        ),
+        // buildTopButton 함수는 주어진 context와 scrollController를 사용하여
+        // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+        buildTopButton(context, scrollController),
+       ],
+     ),
      bottomNavigationBar: buildCommonBottomNavigationBar(
       ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
      drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
-    );
+   );
     // ------ 화면구성 끝
-  }
+ }
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 

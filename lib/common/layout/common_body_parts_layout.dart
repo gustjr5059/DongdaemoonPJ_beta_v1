@@ -482,6 +482,32 @@ class CommonCardView extends StatelessWidget {
 }
 // ------ 범용성으로 재사용가능한 카드뷰인 CommonCardView 클래스 끝
 
+// ------ 공통적으로 사용될 'top' 버튼 위젯 내용 시작
+// 'Top' 버튼을 구현하는 위젯
+Widget buildTopButton(BuildContext context, ScrollController scrollController) {
+  return Positioned(
+    top: MediaQuery.of(context).size.height - 200, // 화면 하단에서 200px 위로 위치
+    right: 20, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
+    child: FloatingActionButton(
+      mini: true, // 버튼을 작게 설정
+      backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
+      onPressed: () {
+        scrollController.animateTo(
+          0, // 스크롤을 초기 위치로 이동
+          duration: Duration(milliseconds: 500), // 스크롤 애니메이션 시간
+          curve: Curves.easeInOut, // 스크롤 애니메이션 커브
+        );
+      },
+      child: Text(
+        'Top', // 버튼에 표시할 텍스트
+        style: TextStyle(color: Colors.black), // 텍스트 색상을 검은색으로 설정
+      ),
+    ),
+  );
+}
+// ------ 공통적으로 사용될 'top' 버튼 위젯 내용 끝
+
+
 
 
 
