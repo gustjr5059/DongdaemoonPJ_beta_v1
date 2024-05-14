@@ -157,8 +157,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   void initState() {
     super.initState();
 
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
+    // scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+
+    // 상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동과 하단 탭바의 홈 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동
+    // 관련 scrollController를 home_state_provider 내 ScrollController 프로바이더 추가한 homeScrollControllerProvider
+    // 해당 프로바이더로 두 가지 경우를 상태관리하여 재사용가능하도록 설정
+    scrollController = ref.read(homeScrollControllerProvider);
 
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계

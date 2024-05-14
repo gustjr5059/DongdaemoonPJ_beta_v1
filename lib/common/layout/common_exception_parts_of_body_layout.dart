@@ -12,6 +12,7 @@ import '../../cart/view/cart_screen.dart';
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 import '../../home/layout/home_body_parts_layout.dart';
 // 애플리케이션의 메인 홈 화면을 구성하는 파일을 임포트합니다.
+import '../../home/provider/home_state_provider.dart';
 import '../../home/view/home_screen.dart';
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
 import '../../order/view/order_screen.dart';
@@ -161,9 +162,22 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
     type: BottomNavigationBarType.fixed, // 네비게이션 바의 유형을 고정된 유형으로 설정
     currentIndex: selectedIndex, // 현재 선택된 인덱스
     onTap: (index) {
-      if(ref.read(tabIndexProvider) == index) {
-        return; // 이미 선택된 탭이면 아무 동작도 하지 않음
+      // 선택된 탭의 인덱스가 현재 인덱스와 같은지 확인함.
+      if (ref.read(tabIndexProvider) == index) {
+        // 인덱스가 0인 경우, 즉 '홈' 탭이 선택된 경우
+        if (index == 0) {
+          // homeScrollControllerProvider를 통해 ScrollController를 가져옴.
+          final homeScrollController = ref.read(homeScrollControllerProvider);
+          // ScrollController가 유효한지 확인함.
+          if (homeScrollController.hasClients) {
+            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+            homeScrollController.jumpTo(0);
+          }
+        }
+        // 이미 선택된 탭이면 아무 동작도 하지 않음.
+        return;
       }
+
       // 탭이 클릭되었을 때 실행할 로직
       // 선택된 인덱스에 따라 상태 업데이트
       ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭의 인덱스를 상태 관리자에 저장
