@@ -103,9 +103,14 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-  late ScrollController scrollController; // 스크롤 컨트롤러 선언
-  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+  // homeScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
+  // ref.read(homeScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
+  // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
+  // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동, 2.하단 탭바의 홈 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동,
+  // 3.사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 하는 _updateScrollPosition(),
+  // 4.단순 스크롤을 내리거나 올릴 시, 상단 탭 바 버튼 텍스트 색상이 변경되도록 하는 _onScroll() 관련 것에 사용되는 scrollController를
+  // riverPods인 provider로 상태관리하며 여러가지에 재사용 가능하도록 설정한 부분
+  late ScrollController scrollController = ref.read(homeScrollControllerProvider); // 스크롤 컨트롤러 선언
 
   // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 시작
   void _onScroll() {
@@ -156,15 +161,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   @override
   void initState() {
     super.initState();
-
-    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    // scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
-
-    // 상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동과 하단 탭바의 홈 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동
-    // 관련 scrollController를 home_state_provider 내 ScrollController 프로바이더 추가한 homeScrollControllerProvider
-    // 해당 프로바이더로 두 가지 경우를 상태관리하여 재사용가능하도록 설정
-    scrollController = ref.read(homeScrollControllerProvider);
-
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -180,8 +176,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
         scrollController.jumpTo(savedScrollPosition);
       }
     });
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
-
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -320,10 +314,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // scrollController에서 _onScroll 함수를 리스너로서 제거함.
     // 이 작업은 더 이상 스크롤 이벤트에 반응하지 않도록 설정할 때 사용됨.
     scrollController.removeListener(_onScroll);
-
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    scrollController.dispose(); // 스크롤 컨트롤러 자원 해제
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
