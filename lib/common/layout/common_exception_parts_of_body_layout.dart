@@ -170,8 +170,14 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
           final homeScrollController = ref.read(homeScrollControllerProvider);
           // ScrollController가 유효한지 확인함.
           if (homeScrollController.hasClients) {
+            // ScrollController가 클라이언트를 가지고 있는지 확인함.
+            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-            homeScrollController.jumpTo(0);
+            homeScrollController.animateTo(
+              0, // 스크롤 위치를 최상단(0)으로 설정함.
+              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+            );
           }
         }
         // 이미 선택된 탭이면 아무 동작도 하지 않음.
