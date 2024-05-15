@@ -4,6 +4,7 @@
 // Riverpod는 기존 Provider 라이브러리를 기반으로 하여 더욱 발전된 기능을 제공하며,
 // 각종 상태 관리 요구 사항을 보다 세밀하고 효과적으로 다룰 수 있도록 설계되었습니다.
 // 이를 통해 앱의 상태를 전역적으로 또는 로컬적으로 제어하고, 상태 변화에 따라 UI를 자동으로 업데이트하는 구조를 구현할 수 있습니다.
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
@@ -75,3 +76,236 @@ final pantsCurrentTabProvider = StateProvider<int>((ref) => 0);
 final polaCurrentTabProvider = StateProvider<int>((ref) => 0);
 final shirtCurrentTabProvider = StateProvider<int>((ref) => 0);
 final skirtCurrentTabProvider = StateProvider<int>((ref) => 0);
+
+
+// -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 blouseMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 cardiganMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final cardiganMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 coatMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 jeanMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final jeanMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 mtmMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 neatMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final neatMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 onepieceMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 paedingMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final paedingMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 pantsMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 polaMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final polaMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 shirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+// -------- product_main_screen.dart 관련 ScrollControllerProvider 끝
+
+// -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 시작
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 newSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 bestSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final bestSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 saleSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 springSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final springSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 summerSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 autumnSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final autumnSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+
+// ScrollController를 프로바이더로 추가하는 코드
+// 이 코드는 winterSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
+  // ScrollController 객체를 생성함.
+  final scrollController = ScrollController();
+  // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
+  // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
+  ref.onDispose(scrollController.dispose);
+  // 생성된 ScrollController 객체를 반환함.
+  return scrollController;
+});
+// -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝

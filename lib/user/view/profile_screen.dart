@@ -71,6 +71,9 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
   // riverPods인 provider로 상태관리하며 여러가지에 재사용 가능하도록 설정한 부분
   late ScrollController scrollController = ref.read(profileScrollControllerProvider); // 스크롤 컨트롤러 선언
 
+  // 상단 탭 바 보이지 않는 버튼이 활성화될 시, 자동 스크롤 컨트롤러 선언
+  late ScrollController topBarAutoScrollController = ScrollController();
+
   // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 시작
   void _onScroll() {
     // 현재 스크롤 위치를 scrollController의 offset 값으로부터 가져옴.
@@ -79,6 +82,31 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     int currentIndex = _determineCurrentTabIndex(currentScroll);
     // 계산된 탭 인덱스를 상태 관리 객체를 통해 업데이트 함.
     ref.read(profileCurrentTabProvider.notifier).state = currentIndex;
+
+// '가을'이나 '겨울' 탭이 활성화될 때 자동 스크롤
+    if (currentIndex >= 6) {
+      // currentIndex가 6 이상인 경우 (즉, '가을'이나 '겨울' 탭이 활성화된 경우)
+
+      // 스크롤 컨트롤러의 최대 스크롤 값을 offset에 저장
+      double offset = topBarAutoScrollController.position.maxScrollExtent;
+
+      // 스크롤 애니메이션을 사용하여 topBarAutoScrollController를 offset 위치로 이동
+      topBarAutoScrollController.animateTo(
+        offset, // 이동할 위치 (최대 스크롤 값)
+        duration: Duration(milliseconds: 50), // 애니메이션 시간 (50밀리초)
+        curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
+      );
+    } else if (currentIndex <= 1) {
+      // currentIndex가 1 이하인 경우 (즉, 처음 몇 개의 탭이 활성화된 경우)
+
+      // 스크롤 애니메이션을 사용하여 topBarAutoScrollController를 0.0 위치로 이동 (맨 처음 위치)
+      topBarAutoScrollController.animateTo(
+        0.0, // 이동할 위치 (맨 처음)
+        duration: Duration(milliseconds: 50), // 애니메이션 시간 (50밀리초)
+        curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
+      );
+    }
+
   }
   // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 끝
 
@@ -306,7 +334,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
 
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, profileCurrentTabProvider);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, profileCurrentTabProvider, topBarAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작

@@ -114,7 +114,7 @@ TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
 // ------ buildTopBarList 위젯 내용 구현 시작
 // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
 // TopBar의 카테고리 리스트 생성 함수. 각 카테고리를 탭했을 때의 동작을 정의함.
-Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, StateProvider<int> currentTabProvider) {
+Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, StateProvider<int> currentTabProvider, ScrollController topBarAutoScrollController) {
   final List<Map<String, String>> topBarCategories = [ // 카테고리 리스트를 정의
     {"type": "text", "data": "전체"},
     {"type": "text", "data": "신상"},
@@ -133,6 +133,7 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, Sta
       return SizedBox(
         height: 60,  // 높이를 60으로 설정
         child: ListView.builder(
+          controller: topBarAutoScrollController, // 상단 탭 바 자동 스크롤을 위한 컨트롤러 설정
           scrollDirection: Axis.horizontal, // 리스트뷰의 스크롤 방향을 가로로 설정함.
           itemCount: topBarCategories.length, // 리스트뷰에 표시될 항목의 개수를 상단 바 카테고리 배열의 길이로 설정함.
           itemBuilder: (context, index) {

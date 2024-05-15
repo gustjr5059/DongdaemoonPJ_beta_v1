@@ -67,6 +67,11 @@ class _SaleSubMainScreenState extends ConsumerState<SaleSubMainScreen> with Widg
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
+  late ScrollController scrollController = ref.read(saleSubMainScrollControllerProvider); // 스크롤 컨트롤러 선언
+
+  // 상단 탭 바 보이지 않는 버튼이 활성화될 시, 자동 스크롤 컨트롤러 선언
+  late ScrollController topBarAutoScrollController = ScrollController();
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -148,7 +153,7 @@ class _SaleSubMainScreenState extends ConsumerState<SaleSubMainScreen> with Widg
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, currentTabProvider, topBarAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
 
