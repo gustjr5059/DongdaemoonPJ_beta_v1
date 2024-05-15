@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
 // 애플리케이션 내 쇼핑 카트 화면 관련 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../cart/view/cart_screen.dart';
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 import '../../home/layout/home_body_parts_layout.dart';
@@ -15,8 +16,10 @@ import '../../home/layout/home_body_parts_layout.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../home/view/home_screen.dart';
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
+import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_screen.dart';
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
+import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/login_screen.dart';
 // 사용자 프로필 화면을 구현한 파일을 임포트합니다.
 import '../../user/view/profile_screen.dart';
@@ -180,6 +183,57 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
             );
           }
         }
+
+        // 인덱스가 1인 경우, 즉 '장바구니' 탭이 선택된 경우
+        if (index == 1) {
+          // cartScrollControllerProvider를 통해 ScrollController를 가져옴.
+          final cartScrollController = ref.read(cartScrollControllerProvider);
+          // ScrollController가 유효한지 확인함.
+          if (cartScrollController.hasClients) {
+            // ScrollController가 클라이언트를 가지고 있는지 확인함.
+            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+            cartScrollController.animateTo(
+              0, // 스크롤 위치를 최상단(0)으로 설정함.
+              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+            );
+          }
+        }
+
+        // 인덱스가 2인 경우, 즉 '주문' 탭이 선택된 경우
+        if (index == 2) {
+          // orderScrollControllerProvider를 통해 ScrollController를 가져옴.
+          final orderScrollController = ref.read(orderScrollControllerProvider);
+          // ScrollController가 유효한지 확인함.
+          if (orderScrollController.hasClients) {
+            // ScrollController가 클라이언트를 가지고 있는지 확인함.
+            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+            orderScrollController.animateTo(
+              0, // 스크롤 위치를 최상단(0)으로 설정함.
+              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+            );
+          }
+        }
+
+        // 인덱스가 3인 경우, 즉 '마이페이지' 탭이 선택된 경우
+        if (index == 3) {
+          // profileScrollControllerProvider를 통해 ScrollController를 가져옴.
+          final profileScrollController = ref.read(profileScrollControllerProvider);
+          // ScrollController가 유효한지 확인함.
+          if (profileScrollController.hasClients) {
+            // ScrollController가 클라이언트를 가지고 있는지 확인함.
+            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+            profileScrollController.animateTo(
+              0, // 스크롤 위치를 최상단(0)으로 설정함.
+              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+            );
+          }
+        }
         // 이미 선택된 탭이면 아무 동작도 하지 않음.
         return;
       }
@@ -196,15 +250,15 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
           break;
         case 1:
         // '장바구니' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartMainScreen()));
           break;
         case 2:
         // '주문' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderMainScreen()));
           break;
         case 3:
         // '마이페이지' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileMainScreen()));
           break;
       }
     },

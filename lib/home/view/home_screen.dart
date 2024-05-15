@@ -38,15 +38,15 @@ import '../provider/home_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// ShirtMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+// HomeMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class HomeMainScreen extends ConsumerStatefulWidget {
   const HomeMainScreen({Key? key}) : super(key: key);
   @override
   _HomeMainScreenState createState() => _HomeMainScreenState();
 }
 
-// _ShirtMainScreenState 클래스 시작
-// _ShirtMainScreenState 클래스는 ShirtMainScreen 위젯의 상태를 관리함.
+// _HomeMainScreenState 클래스 시작
+// _HomeMainScreenState 클래스는 HomeMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBindingObserver {
 
