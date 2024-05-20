@@ -8,30 +8,55 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-// 티셔츠 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final shirtMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 블라우스 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final blouseMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 맨투맨 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final mtmMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 니트 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final neatMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 폴라티 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final polaMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 원피스 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final onepieceMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 팬츠 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final pantsMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 청바지 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final jeanMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 스커트 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final skirtMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 패딩 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final paedingMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 코트 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final coatMainBannerPageProvider = StateProvider<int>((ref) => 0);
-// 가디건 카테고리 화면의 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final cardiganMainBannerPageProvider = StateProvider<int>((ref) => 0);
+// 티셔츠 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final shirtMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 블라우스 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final blouseMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 맨투맨 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final mtmMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 니트 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final neatMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 폴라티 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final polaMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 원피스 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final onepieceMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 팬츠 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final pantsMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 청바지 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final jeanMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 스커트 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final skirtMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 패딩 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final paedingMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 코트 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final coatMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 가디건 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final cardiganMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+
+// 티셔츠 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final shirtMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 블라우스 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final blouseMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 맨투맨 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final mtmMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 니트 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final neatMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 폴라티 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final polaMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 원피스 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final onepieceMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 팬츠 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final pantsMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 청바지 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final jeanMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 스커트 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final skirtMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 패딩 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final paedingMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 코트 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final coatMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 가디건 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final cardiganMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 
 // 티셔츠 디테일 상품 화면의 페이지 인덱스를 관리하기 위한 StateProvider
 final shirtDetailBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -76,6 +101,20 @@ final pantsCurrentTabProvider = StateProvider<int>((ref) => 0);
 final polaCurrentTabProvider = StateProvider<int>((ref) => 0);
 final shirtCurrentTabProvider = StateProvider<int>((ref) => 0);
 final skirtCurrentTabProvider = StateProvider<int>((ref) => 0);
+
+// 각 카테고리별 메인화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
+final blouseMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final cardiganMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final coatMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final jeanMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final mtmMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final neatMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final onepieceMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final paedingMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final pantsMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final polaMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final shirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final skirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작

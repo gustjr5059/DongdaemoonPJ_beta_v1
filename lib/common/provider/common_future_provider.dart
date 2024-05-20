@@ -14,70 +14,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/banner_model.dart';
 
 
-// Firestore에서 대형 배너 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
-final largeBannerRepositoryProvider = Provider<LargeBannerRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 LargeBannerRepository 객체를 생성함.
-  // LargeBannerRepository는 Firestore에서 배너 데이터를 가져오는 기능을 담당함.
-  return LargeBannerRepository(FirebaseFirestore.instance);
+// ------- Firestore로부터 공통 배너 데이터 가져오는 로직 관련 provider 시작
+
+// Firestore에서 공통 배너 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
+final commonBannerRepositoryProvider = Provider<CommonBannerRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 CommonBannerRepository 객체를 생성함.
+  // CommonBannerRepository Firestore에서 배너 데이터를 가져오는 기능을 담당함.
+  return CommonBannerRepository(FirebaseFirestore.instance);
 });
 
-// 비동기적으로 대형 배너 이미지를 가져오는 FutureProvider.
+// 비동기적으로 공통 배너 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
-final largeBannerImagesProvider = FutureProvider<List<LargeBannerImage>>((ref) async {
-  // 위에서 정의한 largeBannerRepositoryProvider를 사용하여 리포지토리 인스턴스를 가져옴.
-  final repository = ref.watch(largeBannerRepositoryProvider);
+final commonBannerImagesProvider = FutureProvider<List<CommonBannerImage>>((ref) async {
+  // 위에서 정의한 commonBannerRepositoryProvider를 사용하여 리포지토리 인스턴스를 가져옴.
+  final repository = ref.watch(commonBannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<LargeBannerImage>를 반환함.
+  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<CommonBannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
 
-// Firestore에서 대형 배너 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
-final small1BannerRepositoryProvider = Provider<Small1BannerRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 Small1BannerRepository 객체를 생성함.
-  // Small1BannerRepository Firestore에서 배너 데이터를 가져오는 기능을 담당함.
-  return Small1BannerRepository(FirebaseFirestore.instance);
+// ------- Firestore로부터 공통 배너 데이터 가져오는 로직 관련 provider 끝
+
+// ------- Firestore로부터 큰 배너 데이터 가져오는 로직 관련 provider 시작
+
+// Firestore에서 큰 배너 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
+final allLargeBannerRepositoryProvider = Provider<AllLargeBannerRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 AllLargeBannerRepository 객체를 생성함.
+  // AllLargeBannerRepository Firestore에서 배너 데이터를 가져오는 기능을 담당함.
+  return AllLargeBannerRepository(FirebaseFirestore.instance);
 });
 
-// 비동기적으로 대형 배너 이미지를 가져오는 FutureProvider.
+// 비동기적으로 큰 배너 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
-final small1BannerImagesProvider = FutureProvider<List<Small1BannerImage>>((ref) async {
-  // 위에서 정의한 small1BannerRepositoryProvider를 사용하여 리포지토리 인스턴스를 가져옴.
-  final repository = ref.watch(small1BannerRepositoryProvider);
+final allLargeBannerImagesProvider = FutureProvider<List<AllLargeBannerImage>>((ref) async {
+  // 위에서 정의한 allLargeBannerRepositoryProvider를 사용하여 리포지토리 인스턴스를 가져옴.
+  final repository = ref.watch(allLargeBannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<Small1BannerImage>를 반환함.
+  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<AllLargeBannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
 
-// Firestore에서 대형 배너 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
-final small2BannerRepositoryProvider = Provider<Small2BannerRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 Small2BannerRepository 객체를 생성함.
-  // Small2BannerRepository Firestore에서 배너 데이터를 가져오는 기능을 담당함.
-  return Small2BannerRepository(FirebaseFirestore.instance);
-});
-
-// 비동기적으로 대형 배너 이미지를 가져오는 FutureProvider.
-// 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
-final small2BannerImagesProvider = FutureProvider<List<Small2BannerImage>>((ref) async {
-  // 위에서 정의한 small2BannerRepositoryProvider를 사용하여 리포지토리 인스턴스를 가져옴.
-  final repository = ref.watch(small2BannerRepositoryProvider);
-  // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<Small2BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
-});
-
-// Firestore에서 대형 배너 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
-final small3BannerRepositoryProvider = Provider<Small3BannerRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 Small3BannerRepository 객체를 생성함.
-  // Small3BannerRepository Firestore에서 배너 데이터를 가져오는 기능을 담당함.
-  return Small3BannerRepository(FirebaseFirestore.instance);
-});
-
-// 비동기적으로 대형 배너 이미지를 가져오는 FutureProvider.
-// 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
-final small3BannerImagesProvider = FutureProvider<List<Small3BannerImage>>((ref) async {
-  // 위에서 정의한 small3BannerRepositoryProvider를 사용하여 리포지토리 인스턴스를 가져옴.
-  final repository = ref.watch(small3BannerRepositoryProvider);
-  // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<Small3BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
-});
+// ------- Firestore로부터 큰 배너 데이터 가져오는 로직 관련 provider 끝

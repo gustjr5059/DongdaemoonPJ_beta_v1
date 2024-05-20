@@ -11,6 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// url_launcher 패키지를 가져옵니다.
+// 이 패키지는 URL을 열거나, 이메일, 전화 등을 실행할 수 있는 기능을 제공합니다.
+import 'package:url_launcher/url_launcher.dart';
 // 공통적으로 사용될 상태 관리 로직을 포함하는 파일을 임포트합니다.
 import '../../../common/provider/common_state_provider.dart';
 // 애플리케이션의 공통 UI 컴포넌트를 구성하는 파일을 임포트합니다.
@@ -19,7 +22,13 @@ import '../../../common/layout/common_body_parts_layout.dart';
 import '../../common/const/colors.dart';
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
-// 홈 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+// banner_model.dart 파일을 common 디렉토리의 model 폴더에서 가져옵니다.
+// 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있을 것입니다.
+import '../../common/model/banner_model.dart';
+// common_future_provider.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
+// 이 파일에는 Future Provider와 관련된 기능이 정의되어 있을 것입니다.
+import '../../common/provider/common_future_provider.dart';
+// 장바구니 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/cart_state_provider.dart';
 
 
@@ -335,6 +344,21 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
     Widget topBarList = buildTopBarList(context, onTopBarTap, cartCurrentTabProvider, topBarAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
+    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
+    void _onLargeBannerTap(BuildContext context, int index) async {
+      // largeBannerLinks 리스트에서 index에 해당하는 URL을 가져옴.
+      final url = largeBannerLinks[index];
+
+      // 주어진 URL을 열 수 있는지 확인함.
+      if (await canLaunchUrl(Uri.parse(url))) {
+        // URL을 열 수 있다면, 해당 URL을 염.
+        await launchUrl(Uri.parse(url));
+      } else {
+        // URL을 열 수 없다면 예외를 던짐.
+        throw '네트워크 오류';
+      }
+    }
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -389,14 +413,21 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
                             SizedBox(height: 5), // 높이 20으로 간격 설정
                             // 큰 배너 섹션을 카드뷰로 구성
                             CommonCardView(
+                              // 카드뷰의 내용(content)을 구성
                               content: SizedBox(
-                                // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                                // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함
                                 height: 200,
-                                // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                                child: buildLargeBannerPageViewSection(
-                                    context, ref, cartLargeBannerPageProvider,
-                                    _largeBannerPageController, _largeBannerAutoScroll,
-                                    largeBannerLinks),
+                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함
+                                child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
+                                  context: context, // 현재 빌드 컨텍스트를 전달
+                                  ref: ref, // ref 전달 (Provider나 상태 관리에 사용)
+                                  currentPageProvider: cartLargeBannerPageProvider, // 현재 페이지를 관리하는 Provider
+                                  pageController: _largeBannerPageController, // 페이지 컨트롤러를 전달
+                                  bannerAutoScroll: _largeBannerAutoScroll, // 배너 자동 스크롤 기능 전달
+                                  bannerLinks: largeBannerLinks, // 배너 링크들을 전달
+                                  bannerImagesProvider: allLargeBannerImagesProvider, // 배너 이미지들을 관리하는 Provider
+                                  onPageTap: _onLargeBannerTap, // 배너 탭(클릭) 시 실행할 함수 전달
+                                ),
                               ),
                               backgroundColor: LIGHT_PURPLE_COLOR,
                               // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR

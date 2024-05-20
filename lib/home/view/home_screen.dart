@@ -3,6 +3,10 @@
 import 'dart:io' show Platform;
 // Dart 비동기 프로그래밍을 위한 라이브러리에서 Future와 Stream 등을 사용할 수 있게 합니다.
 import 'dart:async';
+// banner_model.dart 파일을 common 디렉토리에서 가져옵니다.
+// 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있을 것입니다.
+// 'dongdaemoon_beta_v1' 프로젝트의 'common' 디렉토리 내에 위치한 'banner_model.dart' 파일을 가져옵니다.
+import 'package:dongdaemoon_beta_v1/common/model/banner_model.dart';
 // Firebase의 사용자 인증 기능을 사용하기 위한 패키지를 임포트합니다.
 import 'package:firebase_auth/firebase_auth.dart';
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
@@ -11,6 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// url_launcher 패키지를 가져옵니다.
+// 이 패키지는 Flutter 애플리케이션에서 URL을 열거나, 이메일, 전화, 문자 메시지 등을 실행할 수 있는 기능을 제공합니다.
+// 예를 들어, 웹 브라우저에서 특정 웹 페이지를 열거나, 메일 앱을 열어 이메일을 작성하게 할 수 있습니다.
+import 'package:url_launcher/url_launcher.dart';
 // 공통적으로 사용될 상태 관리 로직을 포함하는 파일을 임포트합니다.
 import '../../../common/provider/common_state_provider.dart';
 // 애플리케이션의 공통 UI 컴포넌트를 구성하는 파일을 임포트합니다.
@@ -19,6 +27,10 @@ import '../../../common/layout/common_body_parts_layout.dart';
 import '../../common/const/colors.dart';
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
+// common 디렉토리의 provider 폴더에 있는 common_future_provider.dart 파일을 가져옵니다.
+// 이 파일은 Future Provider와 관련된 기능을 제공하는 파일입니다.
+// 이를 통해 비동기 데이터 호출 및 상태 관리를 할 수 있습니다.
+import '../../common/provider/common_future_provider.dart';
 // 각 계절별 및 특별한 상품 카테고리에 대한 하위 페이지를 구현한 파일들을 임포트합니다.
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/best_sub_main_screen.dart';
@@ -29,6 +41,10 @@ import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
 // 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
 import '../layout/home_body_parts_layout.dart';
+// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 home_future_provider.dart 파일을 가져옵니다.
+// 이 파일은 홈 화면과 관련된 Future Provider 기능을 제공합니다.
+// 이를 통해 홈 화면에서 비동기 데이터를 호출하고 상태를 관리할 수 있습니다.
+import '../provider/home_future_provider.dart';
 // 홈 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/home_state_provider.dart';
 
@@ -433,6 +449,46 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     Widget topBarList = buildTopBarList(context, onTopBarTap, homeCurrentTabProvider, topBarAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
+    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
+    void _onLargeBannerTap(BuildContext context, int index) async {
+      final url = largeBannerLinks[index];
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        throw '네트워크 오류';
+      }
+    }
+
+    // 작은 배너1 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
+    void _onSmall1BannerTap(BuildContext context, int index) async {
+      final url = small1BannerLinks[index];
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        throw '네트워크 오류';
+      }
+    }
+
+    // 작은 배너2 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
+    void _onSmall2BannerTap(BuildContext context, int index) async {
+      final url = small2BannerLinks[index];
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        throw '네트워크 오류';
+      }
+    }
+
+    // 작은 배너3 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
+    void _onSmall3BannerTap(BuildContext context, int index) async {
+      final url = small3BannerLinks[index];
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        throw '네트워크 오류';
+      }
+    }
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -488,13 +544,27 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       // 큰 배너 섹션을 카드뷰로 구성
                       CommonCardView(
                         content: SizedBox(
-                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정함
                           height: 200,
-                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                          child: buildLargeBannerPageViewSection(
-                              context, ref, homeLargeBannerPageProvider,
-                              _largeBannerPageController, _largeBannerAutoScroll,
-                              largeBannerLinks),
+                          // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
+                            // 현재 빌드 컨텍스트를 전달
+                            context: context,
+                            // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                            ref: ref,
+                            // 현재 페이지를 관리하는 Provider를 전달
+                            currentPageProvider: homeLargeBannerPageProvider,
+                            // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
+                            pageController: _largeBannerPageController,
+                            // 배너 자동 스크롤 기능을 전달
+                            bannerAutoScroll: _largeBannerAutoScroll,
+                            // 배너 링크들을 전달
+                            bannerLinks: largeBannerLinks,
+                            // 배너 이미지들을 관리하는 Provider를 전달
+                            bannerImagesProvider: allLargeBannerImagesProvider,
+                            // 배너를 탭했을 때 실행할 함수를 전달
+                            onPageTap: _onLargeBannerTap,
+                          ),
                         ),
                         backgroundColor: LIGHT_PURPLE_COLOR,
                         // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
@@ -521,13 +591,27 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       // 첫 번째 작은 배너 섹션
                       CommonCardView(
                         content: SizedBox(
-                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
                           height: 60,
-                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                          child: buildSmall1BannerPageViewSection(
-                              context, ref, homeSmall1BannerPageProvider,
-                              _small1BannerPageController,
-                              _small1BannerAutoScroll, small1BannerLinks),
+                          // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          child: buildCommonBannerPageViewSection<HomeSmall1BannerImage>(
+                            // 현재 빌드 컨텍스트를 전달
+                            context: context,
+                            // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                            ref: ref,
+                            // 현재 페이지를 관리하는 Provider를 전달
+                            currentPageProvider: homeSmall1BannerPageProvider,
+                            // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
+                            pageController: _small1BannerPageController,
+                            // 배너 자동 스크롤 기능을 전달
+                            bannerAutoScroll: _small1BannerAutoScroll,
+                            // 배너에 사용될 링크들을 전달
+                            bannerLinks: small1BannerLinks,
+                            // 배너 이미지들을 관리하는 Provider를 전달
+                            bannerImagesProvider: homeSmall1BannerImagesProvider,
+                            // 배너를 탭했을 때 실행할 함수를 전달
+                            onPageTap: _onSmall1BannerTap,
+                          ),
                         ),
                         backgroundColor: LIGHT_SKY_BLUE_COLOR,
                         // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
@@ -552,13 +636,27 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       // 두 번째 작은 배너 섹션
                       CommonCardView(
                         content: SizedBox(
-                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
                           height: 60,
-                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                          child: buildSmall2BannerPageViewSection(
-                              context, ref, homeSmall2BannerPageProvider,
-                              _small2BannerPageController,
-                              _small2BannerAutoScroll, small2BannerLinks),
+                          // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          child: buildCommonBannerPageViewSection<HomeSmall2BannerImage>(
+                            // 현재 빌드 컨텍스트를 전달
+                            context: context,
+                            // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                            ref: ref,
+                            // 현재 페이지를 관리하는 Provider를 전달
+                            currentPageProvider: homeSmall2BannerPageProvider,
+                            // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
+                            pageController: _small2BannerPageController,
+                            // 배너 자동 스크롤 기능을 전달
+                            bannerAutoScroll: _small2BannerAutoScroll,
+                            // 배너에 사용될 링크들을 전달
+                            bannerLinks: small2BannerLinks,
+                            // 배너 이미지들을 관리하는 Provider를 전달
+                            bannerImagesProvider: homeSmall2BannerImagesProvider,
+                            // 배너를 탭했을 때 실행할 함수를 전달
+                            onPageTap: _onSmall2BannerTap,
+                          ),
                         ),
                         backgroundColor: LIGHT_SKY_BLUE_COLOR,
                         // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
@@ -577,13 +675,27 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       SizedBox(height: 15), // 높이 15로 간격 설정
                       CommonCardView(
                         content: SizedBox(
-                          // buildBannerPageViewSection 내용의 높이가 200으로 구현함.
+                          // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
                           height: 60,
-                          // 카드뷰 내용으로 buildBannerPageViewSection 재사용하여 구현함.
-                          child: buildSmall3BannerPageViewSection(
-                              context, ref, homeSmall3BannerPageProvider,
-                              _small3BannerPageController,
-                              _small3BannerAutoScroll, small3BannerLinks),
+                          // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          child: buildCommonBannerPageViewSection<HomeSmall3BannerImage>(
+                            // 현재 빌드 컨텍스트를 전달
+                            context: context,
+                            // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                            ref: ref,
+                            // 현재 페이지를 관리하는 Provider를 전달
+                            currentPageProvider: homeSmall3BannerPageProvider,
+                            // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
+                            pageController: _small3BannerPageController,
+                            // 배너 자동 스크롤 기능을 전달
+                            bannerAutoScroll: _small3BannerAutoScroll,
+                            // 배너에 사용될 링크들을 전달
+                            bannerLinks: small3BannerLinks,
+                            // 배너 이미지들을 관리하는 Provider를 전달
+                            bannerImagesProvider: homeSmall3BannerImagesProvider,
+                            // 배너를 탭했을 때 실행할 함수를 전달
+                            onPageTap: _onSmall3BannerTap,
+                          ),
                         ),
                         backgroundColor: LIGHT_SKY_BLUE_COLOR,
                         // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
