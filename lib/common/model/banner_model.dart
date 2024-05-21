@@ -82,7 +82,7 @@ class HomeSmall3BannerImage extends CommonBannerImage {
 // ----- 각 카테고리 메인 화면 작은 배너 관련 클래스 내용 시작
 
 // 'ShirtMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
-// 'ShirtMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'ShirtMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스._
 class ShirtMainSmall1BannerImage extends CommonBannerImage {
 
   ShirtMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);

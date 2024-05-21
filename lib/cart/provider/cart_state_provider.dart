@@ -10,7 +10,6 @@ final cartCurrentTabProvider = StateProvider<int>((ref) => 0);
 // 장바구니 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
 final cartScrollPositionProvider = StateProvider<double>((ref) => 0);
 
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 cartScrollControllerProvider라는 이름의 Provider를 정의함.
 final cartScrollControllerProvider = Provider<ScrollController>((ref) {

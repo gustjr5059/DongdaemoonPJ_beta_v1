@@ -118,6 +118,9 @@ final skirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
+
+// 블라우스 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 blouseMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -129,6 +132,9 @@ final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+
+// 가디건 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 cardiganMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -142,6 +148,9 @@ final cardiganMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+
+// 코트 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 coatMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -153,6 +162,9 @@ final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+
+// 청바지 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 jeanMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -166,6 +178,9 @@ final jeanMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+
+// 맨투맨 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 mtmMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -177,6 +192,9 @@ final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+
+// 니트 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 neatMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -190,6 +208,9 @@ final neatMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+
+// 원피스 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 onepieceMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -201,6 +222,9 @@ final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+
+// 패딩 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 paedingMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -214,6 +238,9 @@ final paedingMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+
+// 팬츠 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 pantsMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -225,6 +252,9 @@ final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+
+// 폴라티 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 polaMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -238,6 +268,9 @@ final polaMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+
+// 티셔츠 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 shirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -250,6 +283,9 @@ final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+
+// 스커트 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -261,11 +297,15 @@ final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 끝
 
 // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 시작
+
+// 신상 서브 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
-// 이 코드는 newSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
+// 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // ScrollController 객체를 생성함.
   final scrollController = ScrollController();
@@ -275,6 +315,9 @@ final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+
+// 최고 서브 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 bestSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -288,6 +331,8 @@ final bestSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+// 할인 서브 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 saleSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -299,6 +344,8 @@ final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+// 봄 서브 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 springSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -312,6 +359,8 @@ final springSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+// 여름 서브 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 summerSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -323,6 +372,8 @@ final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+// 가을 서브 메인
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 autumnSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -336,6 +387,8 @@ final autumnSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
+// 겨울 서브 메인
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 winterSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -347,4 +400,5 @@ final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
 // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝

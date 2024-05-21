@@ -82,17 +82,37 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  late ScrollController scrollController = ref.read(blouseMainScrollControllerProvider); // 스크롤 컨트롤러 선언
+  // autumnSubMainScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
+  // ref.read(autumnSubMainScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
+  // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
+  // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
+  // 2.하단 탭바의 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
+  // 3.사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을때 마지막으로 본 위치로 자동으로 스크롤되도록 하는 기능,
+  // 4.단순 스크롤을 내리거나 올릴 시, 상단 탭 바 버튼 텍스트 색상이 변경되도록 하는 기능,
+  // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
+  // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
 
-  // 상단 탭 바 보이지 않는 버튼이 활성화될 시, 자동 스크롤 컨트롤러 선언
-  late ScrollController topBarAutoScrollController = ScrollController();
+  // autumnSubMainScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
+  // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
+  // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
+  late ScrollController autumnSubMainScreenPointScrollController = ref.read(autumnSubMainScrollControllerProvider); // 스크롤 컨트롤러 선언
+
+  // 상단 탭 바의 보이지 않는 버튼이 활성화될 시 자동으로 스크롤되는 기능만을 담당함.
+  // 그러므로, 특정 조건에서만 사용되므로, 굳이 Provider를 통해 전역적으로 상태를 관리할 필요가 없음.
+  // 즉, 단일 기능만을 담당하며 상태 관리의 필요성이 적기 때문에 단순히 ScrollController()를 직접 사용한 것임.
+  late ScrollController autumnSubMainTopBarPointAutoScrollController = ScrollController();
+
+  // => autumnSubMainScreenPointScrollController는 전체 화면의 스크롤을 제어함 vs autumnSubMainTopBarPointAutoScrollController는 상단 탭 바의 스크롤을 제어함.
+  // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
+  // => autumnSubMainTopBarPointAutoScrollController는 전체 화면의 UI를 담당하는게 아니므로 scaffold의 body 내 컨트롤러에 연결이 안되어도 addListener()에 _onScroll()로 연결해놓은거라 해당 기능 사용이 가능!!
+
 
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
   void _updateScrollPosition() {
-    // 'scrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = scrollController.offset;
+    // 'autumnSubMainScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
+    double currentScrollPosition = autumnSubMainScreenPointScrollController.offset;
 
     // 'ref'를 사용하여 'blouseMainScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
@@ -112,20 +132,20 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
-      if (scrollController.hasClients) {
+      if (autumnSubMainScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
         double savedScrollPosition = ref.read(blouseMainScrollPositionProvider);
-        // scrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
+        // autumnSubMainScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        scrollController.jumpTo(savedScrollPosition);
+        autumnSubMainScreenPointScrollController.jumpTo(savedScrollPosition);
       }
     });
-    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
+    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 autumnSubMainScreenPointScrollController에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    scrollController.addListener(_updateScrollPosition);
+    autumnSubMainScreenPointScrollController.addListener(_updateScrollPosition);
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'blouseMainLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
@@ -212,9 +232,9 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    // 'scrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
+    // 'autumnSubMainScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
     // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    scrollController.removeListener(_updateScrollPosition);
+    autumnSubMainScreenPointScrollController.removeListener(_updateScrollPosition);
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
@@ -251,7 +271,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, blouseCurrentTabProvider, topBarAutoScrollController);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, blouseCurrentTabProvider, autumnSubMainTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     void _onLargeBannerTap(BuildContext context, int index) async {
@@ -280,7 +300,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
       body: Stack(
         children: [
           CustomScrollView(
-            controller: scrollController, // 스크롤 컨트롤러 연결
+            controller: autumnSubMainScreenPointScrollController, // 스크롤 컨트롤러 연결
             slivers: <Widget>[
               // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
               SliverAppBar(
@@ -385,9 +405,9 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
               ),
             ],
           ),
-          // buildTopButton 함수는 주어진 context와 scrollController를 사용하여
+          // buildTopButton 함수는 주어진 context와 autumnSubMainScreenPointScrollController를 사용하여
           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-          buildTopButton(context, scrollController),
+          buildTopButton(context, autumnSubMainScreenPointScrollController),
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(

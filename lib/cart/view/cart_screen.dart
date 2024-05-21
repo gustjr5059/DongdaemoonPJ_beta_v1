@@ -72,19 +72,32 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
   // cartScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
   // ref.read(cartScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
   // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
-  // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동, 2.하단 탭바의 홈 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동,
-  // 3.사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 하는 _updateScrollPosition(),
-  // 4.단순 스크롤을 내리거나 올릴 시, 상단 탭 바 버튼 텍스트 색상이 변경되도록 하는 _onScroll() 관련 것에 사용되는 scrollController를
-  // riverPods인 provider로 상태관리하며 여러가지에 재사용 가능하도록 설정한 부분
-  late ScrollController scrollController = ref.read(cartScrollControllerProvider); // 스크롤 컨트롤러 선언
+  // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
+  // 2.하단 탭바의 장바구니 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
+  // 3.사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을때 마지막으로 본 위치로 자동으로 스크롤되도록 하는 기능,
+  // 4.단순 스크롤을 내리거나 올릴 시, 상단 탭 바 버튼 텍스트 색상이 변경되도록 하는 기능,
+  // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
+  // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
 
-  // 상단 탭 바 보이지 않는 버튼이 활성화될 시, 자동 스크롤 컨트롤러 선언
-  late ScrollController topBarAutoScrollController = ScrollController();
+  // cartScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
+  // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
+  // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
+  late ScrollController cartScreenPointScrollController = ref.read(cartScrollControllerProvider); // 스크롤 컨트롤러 선언
+
+  // 상단 탭 바의 보이지 않는 버튼이 활성화될 시 자동으로 스크롤되는 기능만을 담당함.
+  // 그러므로, 특정 조건에서만 사용되므로, 굳이 Provider를 통해 전역적으로 상태를 관리할 필요가 없음.
+  // 즉, 단일 기능만을 담당하며 상태 관리의 필요성이 적기 때문에 단순히 ScrollController()를 직접 사용한 것임.
+  late ScrollController cartTopBarPointAutoScrollController = ScrollController();
+
+  // => cartScreenPointScrollController는 전체 화면의 스크롤을 제어함 vs cartTopBarPointAutoScrollController는 상단 탭 바의 스크롤을 제어함.
+  // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
+  // => cartTopBarPointAutoScrollController는 전체 화면의 UI를 담당하는게 아니므로 scaffold의 body 내 컨트롤러에 연결이 안되어도 addListener()에 _onScroll()로 연결해놓은거라 해당 기능 사용이 가능!!
+
 
   // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 시작
   void _onScroll() {
-    // 현재 스크롤 위치를 scrollController의 offset 값으로부터 가져옴.
-    double currentScroll = scrollController.offset;
+    // 현재 스크롤 위치를 cartScreenPointScrollController의 offset 값으로부터 가져옴.
+    double currentScroll = cartScreenPointScrollController.offset;
     // 현재 스크롤 위치에 따른 탭 인덱스를 계산함.
     int currentIndex = _determineCurrentTabIndex(currentScroll);
     // 계산된 탭 인덱스를 상태 관리 객체를 통해 업데이트 함.
@@ -95,10 +108,10 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
       // currentIndex가 6 이상인 경우 (즉, '가을'이나 '겨울' 탭이 활성화된 경우)
 
       // 스크롤 컨트롤러의 최대 스크롤 값을 offset에 저장
-      double offset = topBarAutoScrollController.position.maxScrollExtent;
+      double offset = cartTopBarPointAutoScrollController.position.maxScrollExtent;
 
-      // 스크롤 애니메이션을 사용하여 topBarAutoScrollController를 offset 위치로 이동
-      topBarAutoScrollController.animateTo(
+      // 스크롤 애니메이션을 사용하여 cartTopBarPointAutoScrollController를 offset 위치로 이동
+      cartTopBarPointAutoScrollController.animateTo(
         offset, // 이동할 위치 (최대 스크롤 값)
         duration: Duration(milliseconds: 50), // 애니메이션 시간 (50밀리초)
         curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
@@ -106,8 +119,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
     } else if (currentIndex <= 1) {
       // currentIndex가 1 이하인 경우 (즉, 처음 몇 개의 탭이 활성화된 경우)
 
-      // 스크롤 애니메이션을 사용하여 topBarAutoScrollController를 0.0 위치로 이동 (맨 처음 위치)
-      topBarAutoScrollController.animateTo(
+      // 스크롤 애니메이션을 사용하여 cartTopBarPointAutoScrollController를 0.0 위치로 이동 (맨 처음 위치)
+      cartTopBarPointAutoScrollController.animateTo(
         0.0, // 이동할 위치 (맨 처음)
         duration: Duration(milliseconds: 50), // 애니메이션 시간 (50밀리초)
         curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
@@ -140,8 +153,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
   void _updateScrollPosition() {
-    // 'scrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = scrollController.offset;
+    // 'cartScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
+    double currentScrollPosition = cartScreenPointScrollController.offset;
 
     // 'ref'를 사용하여 'cartScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
@@ -160,24 +173,24 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
-      if (scrollController.hasClients) {
+      if (cartScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
         double savedScrollPosition = ref.read(cartScrollPositionProvider);
-        // scrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
+        // cartScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        scrollController.jumpTo(savedScrollPosition);
+        cartScreenPointScrollController.jumpTo(savedScrollPosition);
       }
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    scrollController.addListener(_updateScrollPosition);
+    cartScreenPointScrollController.addListener(_updateScrollPosition);
 
-    // scrollController에 스크롤 이벤트 리스너를 추가함.
+    // cartScreenPointScrollController에 스크롤 이벤트 리스너를 추가함.
     // 이 리스너는 사용자가 스크롤할 때마다 _onScroll 함수를 호출하도록 설정됨.
-    scrollController.addListener(_onScroll);
+    cartScreenPointScrollController.addListener(_onScroll);
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'cartLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
@@ -246,13 +259,13 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    // 'scrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
+    // 'cartScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
     // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    scrollController.removeListener(_updateScrollPosition);
+    cartScreenPointScrollController.removeListener(_updateScrollPosition);
 
-    // scrollController에서 _onScroll 함수를 리스너로서 제거함.
+    // cartScreenPointScrollController에서 _onScroll 함수를 리스너로서 제거함.
     // 이 작업은 더 이상 스크롤 이벤트에 반응하지 않도록 설정할 때 사용됨.
-    scrollController.removeListener(_onScroll);
+    cartScreenPointScrollController.removeListener(_onScroll);
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
@@ -329,7 +342,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
       String section = getSectionFromIndex(index);
       // 선택된 섹션에 따라 계산된 스크롤 오프셋으로 스크롤 이동
       double scrollToPosition = calculateScrollOffset(section);
-      scrollController.animateTo(
+      cartScreenPointScrollController.animateTo(
           scrollToPosition,
           duration: Duration(milliseconds: 500), // 이동에 걸리는 시간: 500 밀리초
           curve: Curves.easeInOut // 이동하는 동안의 애니메이션 효과: 시작과 끝이 부드럽게
@@ -341,7 +354,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
 
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, cartCurrentTabProvider, topBarAutoScrollController);
+    Widget topBarList = buildTopBarList(context, onTopBarTap, cartCurrentTabProvider, cartTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
@@ -367,7 +380,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
       body: Stack(
         children: [
           CustomScrollView(
-            controller: scrollController, // 스크롤 컨트롤러 연결
+            controller: cartScreenPointScrollController, // 스크롤 컨트롤러 연결
             slivers: <Widget>[
               // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
               SliverAppBar(
@@ -449,9 +462,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
               ),
             ],
           ),
-          // buildTopButton 함수는 주어진 context와 scrollController를 사용하여
+          // buildTopButton 함수는 주어진 context와 cartScreenPointScrollController를 사용하여
           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-          buildTopButton(context, scrollController),
+          buildTopButton(context, cartScreenPointScrollController),
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
