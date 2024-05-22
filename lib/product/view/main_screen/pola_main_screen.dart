@@ -112,12 +112,18 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
   // polaMainScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
   // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
   // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
-  late ScrollController polaMainScreenPointScrollController = ref.read(polaMainScrollControllerProvider); // 스크롤 컨트롤러 선언
+  // ScrollController를 late 변수로 선언
+  // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
+  // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
+  late ScrollController polaMainScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   // 상단 탭 바의 보이지 않는 버튼이 활성화될 시 자동으로 스크롤되는 기능만을 담당함.
   // 그러므로, 특정 조건에서만 사용되므로, 굳이 Provider를 통해 전역적으로 상태를 관리할 필요가 없음.
   // 즉, 단일 기능만을 담당하며 상태 관리의 필요성이 적기 때문에 단순히 ScrollController()를 직접 사용한 것임.
-  late ScrollController polaMainTopBarPointAutoScrollController = ScrollController();
+  // ScrollController를 late 변수로 선언
+  // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
+  // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
+  late ScrollController polaMainTopBarPointAutoScrollController;
 
   // => polaMainScreenPointScrollController는 전체 화면의 스크롤을 제어함 vs polaMainTopBarPointAutoScrollController는 상단 탭 바의 스크롤을 제어함.
   // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
@@ -144,6 +150,9 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
   @override
   void initState() {
     super.initState();
+    // ScrollController를 초기화
+    polaMainScreenPointScrollController = ScrollController();
+    polaMainTopBarPointAutoScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -252,6 +261,10 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
     // 'polaMainScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
     // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
     polaMainScreenPointScrollController.removeListener(_updateScrollPosition);
+
+    polaMainScreenPointScrollController.dispose(); // ScrollController 해제
+
+    polaMainTopBarPointAutoScrollController.dispose(); // ScrollController 해제
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
