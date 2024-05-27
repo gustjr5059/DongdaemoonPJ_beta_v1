@@ -656,7 +656,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       SizedBox(height: 10), // 높이 10으로 간격 설정
                       // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
                       // 할인 제품 섹션
-                        _buildSectionCard(context, ref, "할인", buildDiscountProductsSection, SaleSubMainScreen()),
+                        _buildSectionCard(context, ref, "할인", buildSaleProductsSection, SaleSubMainScreen()),
                       SizedBox(height: 15), // 높이 15로 간격 설정
                       // 두 번째 작은 배너 섹션
                       CommonCardView(

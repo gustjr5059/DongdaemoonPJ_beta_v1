@@ -82,141 +82,158 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 }
 // ------ arrowButton 위젯 내용 구현 끝
 
-// ------ buildFirestoreDetailDocument 위젯 내용 구현 시작
-// Firestore에서 상세한 문서 정보를 빌드하는 위젯임.
-// 각 문서의 세부 정보를 UI에 표시함.
-// 위젯 생성 함수, 필요한 매개변수로 WidgetRef, 문서 ID, 카테고리, 그리고 BuildContext를 받음.
-Widget buildProdFirestoreDetailDocument(WidgetRef ref, String docId, String category, BuildContext context) {
-  // 문서 ID를 사용하여 Firestore에서 상품 데이터를 비동기적으로 로드함.
-  final asyncValue = ref.watch(prodFirestoreDataProvider(docId));
-
-  // 상세 화면으로 이동하고 화면을 뒤로 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화하는 함수임.
-  void navigateToDetailScreen(Widget screen) {
-    // Navigator를 사용하여 새 화면으로 이동함. 화면 전환 후, 색상과 사이즈 선택 상태를 초기화함.
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen)).then((_) {
-      // 상태를 수정할 때는 `.notifier`를 사용하여 상태를 조작 (state로 표현된 deprecated된 부분 수정)
-      ref.read(colorSelectionIndexProvider.notifier).update((state) => null);
-      ref.read(sizeSelectionProvider.notifier).update((state) => null);
-    });
-  }
-
-  // 로드된 데이터에 따라 UI를 동적으로 생성함.
-  return asyncValue.when(
-    data: (ProductContent product) {
-      // 데이터 로드 완료 시 실행되는 부분, 제스처 인식 위젯을 사용하여 탭 시 동작을 정의함.
-      return GestureDetector(
-        onTap: () {
-          // 문서 ID에 따라 해당 상세 페이지로 이동함. 각 ID는 다른 상품 카테고리를 나타냄.
-          switch (docId) {
-            case 'alpha':
-              navigateToDetailScreen(CoatDetailProductScreen(docId: docId));
-              break;
-            case 'apple':
-              navigateToDetailScreen(BlouseDetailProductScreen(docId: docId));
-              break;
-            case 'cat':
-              navigateToDetailScreen(JeanDetailProductScreen(docId: docId));
-              break;
-            case 'flutter':
-              navigateToDetailScreen(ShirtDetailProductScreen(docId: docId));
-              break;
-            case 'github':
-              navigateToDetailScreen(PaedingDetailProductScreen(docId: docId));
-              break;
-            case 'samsung':
-              navigateToDetailScreen(SkirtDetailProductScreen(docId: docId));
-              break;
-            case 'alpha1':
-              navigateToDetailScreen(CardiganDetailProductScreen(docId: docId));
-              break;
-            case 'apple1':
-              navigateToDetailScreen(MtmDetailProductScreen(docId: docId));
-              break;
-            case 'cat1':
-              navigateToDetailScreen(NeatDetailProductScreen(docId: docId));
-              break;
-            case 'flutter1':
-              navigateToDetailScreen(OnepieceDetailProductScreen(docId: docId));
-              break;
-            case 'github1':
-              navigateToDetailScreen(PolaDetailProductScreen(docId: docId));
-              break;
-            case 'samsung1':
-              navigateToDetailScreen(PantsDetailProductScreen(docId: docId));
-              break;
-          }
-        },
-        child: Container(
-          width: 180,
-          margin: EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트와 색상 이미지들을 왼쪽으로 정렬
-            children: [
-              if (product.thumbnail != null) // 썸네일이 있는 경우 이미지 표시
-                Center(
-                  child: Image.network(product.thumbnail!, width: 90, fit: BoxFit.cover),
-                ),
-              SizedBox(height: 10),
-              if (product.colors != null) // 제품의 색상 옵션이 있는 경우 표시
-                Row(
-                  children: product.colors!
-                      .map((color) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: Image.network(color, width: 13, height: 13),
-                  ))
-                      .toList(),
-                ),
-              if (product.briefIntroduction != null) // 제품의 간단한 소개가 있는 경우 텍스트로 표시
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    product.briefIntroduction!,
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-              if (product.originalPrice != null) // 원래 가격 표시, 가격 취소선 효과 적용
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    product.originalPrice!,
-                    style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
-                  ),
-                ),
-              if (product.discountPrice != null) // 할인된 가격이 있을 경우 강조하여 표시
-                Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: Text(
-                    product.discountPrice!,
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-    },
-    loading: () => CircularProgressIndicator(), // 데이터 로딩 중 표시
-    error: (error, stack) => Text("오류 발생: $error"), // 오류 발생 시 메시지 표시
-  );
-}
-// ------ buildFirestoreDetailDocument 위젯 내용 구현 끝
-
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
 // 가로로 스크롤 가능한 문서 리스트를 생성하는 함수. 문서 클릭 시 설정된 동작을 실행함.
-Widget buildHorizontalDocumentsList(WidgetRef ref, List<String> documentIds, String category, BuildContext context) {
+Widget buildHorizontalDocumentsList(WidgetRef ref, List<ProductContent> products, BuildContext context, String category) {
+  // ProductInfoDetailScreenNavigation 클래스 인스턴스를 생성하여 제품 정보 상세 화면 네비게이션을 설정함.
+  final productInfo = ProductInfoDetailScreenNavigation(ref, category);
+
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
-      children: documentIds.map((docId) => buildProdFirestoreDetailDocument(ref, docId, category, context)).toList(),
+      // 각 제품에 대해 buildProdFirestoreDetailDocument 함수를 호출하여 가로로 나열된 문서 리스트를 생성함.
+      children: products.map((product) => productInfo.buildProdFirestoreDetailDocument(context, product)).toList(),
     ),
   );
 }
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 끝
 
+// -------- ProductInfoDetailScreenNavigation 클래스 내용 구현 시작
+class ProductInfoDetailScreenNavigation {
+  final WidgetRef ref; // ref 변수는 상태 관리를 위해 사용.
+  final String category; // category 변수는 제품의 카테고리를 나타냄.
+
+  // 생성자에서 ref와 category를 초기화함.
+  ProductInfoDetailScreenNavigation(this.ref, this.category);
+
+  // 상세 화면으로 이동하고 화면을 뒤로 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화하는 함수.
+  void navigateToDetailScreen(BuildContext context, String fullPath) {
+    Widget detailScreen;
+
+    // 카테고리에 따라 적절한 상세 화면 위젯을 선택함.
+    switch (category) {
+      case "티셔츠":
+        detailScreen = ShirtDetailProductScreen(fullPath: fullPath);
+        break;
+      case "블라우스":
+        detailScreen = BlouseDetailProductScreen(fullPath: fullPath);
+        break;
+      case "가디건":
+        detailScreen = CardiganDetailProductScreen(fullPath: fullPath);
+        break;
+      case "코트":
+        detailScreen = CoatDetailProductScreen(fullPath: fullPath);
+        break;
+      case "청바지":
+        detailScreen = JeanDetailProductScreen(fullPath: fullPath);
+        break;
+      case "맨투맨":
+        detailScreen = MtmDetailProductScreen(fullPath: fullPath);
+        break;
+      case "니트":
+        detailScreen = NeatDetailProductScreen(fullPath: fullPath);
+        break;
+      case "원피스":
+        detailScreen = OnepieceDetailProductScreen(fullPath: fullPath);
+        break;
+      case "패딩":
+        detailScreen = PaedingDetailProductScreen(fullPath: fullPath);
+        break;
+      case "팬츠":
+        detailScreen = PantsDetailProductScreen(fullPath: fullPath);
+        break;
+      case "폴라티":
+        detailScreen = PolaDetailProductScreen(fullPath: fullPath);
+        break;
+      case "스커트":
+        detailScreen = SkirtDetailProductScreen(fullPath: fullPath);
+        break;
+      default:
+        detailScreen = ShirtDetailProductScreen(fullPath: fullPath);
+    }
+
+    // 네비게이션을 통해 상세 화면으로 이동하고, 뒤로 돌아왔을 때 색상과 사이즈 선택 상태를 초기화함.
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => detailScreen),
+    ).then((_) {
+      ref.read(colorSelectionIndexProvider.notifier).state = null;
+      ref.read(sizeSelectionProvider.notifier).state = null;
+    });
+  }
+
+  // Firestore에서 상세한 문서 정보를 빌드하는 위젯.
+  Widget buildProdFirestoreDetailDocument(BuildContext context, ProductContent product) {
+    return GestureDetector(
+      // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
+      onTap: () {
+        navigateToDetailScreen(context, product.docId); // product.docId를 사용하여 해당 문서로 이동함.
+      },
+      child: Container(
+        width: 180,
+        margin: EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 제품 썸네일을 표시함.
+            if (product.thumbnail != null)
+              Center(
+                child: Image.network(product.thumbnail!, width: 90, fit: BoxFit.cover),
+              ),
+            SizedBox(height: 10),
+            // 제품 색상 옵션을 표시함.
+            if (product.colors != null)
+              Row(
+                children: product.colors!
+                    .map((color) => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2),
+                  child: Image.network(color, width: 13, height: 13),
+                ))
+                    .toList(),
+              ),
+            // 제품 간단한 소개를 표시함.
+            if (product.briefIntroduction != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  product.briefIntroduction!,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            // 원래 가격을 표시함.
+            if (product.originalPrice != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  product.originalPrice!.toString(),
+                  style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
+                ),
+              ),
+            // 할인된 가격을 표시함.
+            if (product.discountPrice != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 2.0),
+                child: Text(
+                  product.discountPrice!.toString(),
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+// -------- ProductInfoDetailScreenNavigation 클래스 내용 구현 끝
+
+
+
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 시작
 // ------ buildProductDetails 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
 Widget buildProductDetails(BuildContext context, WidgetRef ref, ProductContent product) {
+  // print('buildProductDetails 호출');
+  // print('상품 소개: ${product.briefIntroduction}');
   return SingleChildScrollView(
     // 스크롤이 가능하도록 SingleChildScrollView 위젯을 사용.
     child: Column(

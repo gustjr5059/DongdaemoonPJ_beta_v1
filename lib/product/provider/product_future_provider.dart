@@ -17,23 +17,316 @@ import '../model/product_model.dart'; // 상품 데이터 모델 정의 파일�
 import '../repository/product_repository.dart'; // 상품 데이터를 Firestore에서 가져오는 로직이 구현된 레포지토리 클래스의 임포트
 
 
-// ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 상품 상세 화면에 보여줄 파이어베이스의 데이터를 불러올 때 사용할 provider 시작
+// ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 
+// ----- 신상 부분 시작
 // Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final productRepositoryProvider = Provider<ProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return ProductRepository(FirebaseFirestore.instance);
+final newProductRepositoryProvider = Provider<NewProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 NewProductRepository 객체를 생성
+  return NewProductRepository(FirebaseFirestore.instance);
 });
 
-// 특정 문서 ID를 사용하여 Firestore로부터 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final prodFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, docId) async {
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final newProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // newProductRepositoryProvider로부터 NewProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(newProductRepositoryProvider);
+  // NewProductRepository 인스턴스의 fetchNewProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchNewProductContents();
+});
+// ----- 신상 부분 끝
+
+// ----- 최고 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final bestProductRepositoryProvider = Provider<BestProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 BestProductRepository 객체를 생성
+  return BestProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final bestProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // bestProductRepositoryProvider로부터 BestProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(bestProductRepositoryProvider);
+  // BestProductRepository 인스턴스의 fetchBestProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchBestProductContents();
+});
+// ----- 최고 부분 끝
+
+// ----- 할인 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final saleProductRepositoryProvider = Provider<SaleProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 SaleProductRepository 객체를 생성
+  return SaleProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final saleProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // saleProductRepositoryProvider로부터 SaleProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(saleProductRepositoryProvider);
+  // SaleProductRepository 인스턴스의 fetchSaleProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchSaleProductContents();
+});
+// ----- 할인 부분 끝
+
+// ----- 봄 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final springProductRepositoryProvider = Provider<SpringProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 SpringProductRepository 객체를 생성
+  return SpringProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final springProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // springProductRepositoryProvider로부터 SpringProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(springProductRepositoryProvider);
+  // SpringProductRepository 인스턴스의 fetchSpringProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchSpringProductContents();
+});
+// ----- 봄 부분 끝
+
+// ----- 여름 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final summerProductRepositoryProvider = Provider<SummerProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 SummerProductRepository 객체를 생성
+  return SummerProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final summerProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // summerProductRepositoryProvider로부터 SummerProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(summerProductRepositoryProvider);
+  // SummerProductRepository 인스턴스의 fetchSummerProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchSummerProductContents();
+});
+// ----- 여름 부분 끝
+
+// ----- 가을 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final autumnProductRepositoryProvider = Provider<AutumnProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 AutumnProductRepository 객체를 생성
+  return AutumnProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final autumnProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // autumnProductRepositoryProvider로부터 AutumnProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(autumnProductRepositoryProvider);
+  // AutumnProductRepository 인스턴스의 fetchAutumnProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchAutumnProductContents();
+});
+// ----- 가을 부분 끝
+
+// ----- 겨울 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final winterProductRepositoryProvider = Provider<WinterProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 WinterProductRepository 객체를 생성
+  return WinterProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 여러 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final winterProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductContent>>((ref) async {
+  // winterProductRepositoryProvider로부터 WinterProductRepository 인스턴스를 가져옴
+  final repository = ref.watch(winterProductRepositoryProvider);
+  // WinterProductRepository 인스턴스의 fetchWinterProductContents 메서드를 호출하여 상품 데이터를 가져옴
+  return repository.fetchWinterProductContents();
+});
+// ----- 겨울 부분 끝
+
+// ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 끝
+
+
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상세 화면 부분-파이어베이스의 데이터를 불러올 때 사용할 provider 시작
+// ----- 블라우스 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final blouseProductRepositoryProvider = Provider<BlouseProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return BlouseProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final blouseProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
   // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(productRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서 ID에 해당하는 상품 정보를 가져옴
+  final repository = ref.watch(blouseProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 블라우스 부분 끝
+
+// ----- 가디건 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final cardiganProductRepositoryProvider = Provider<CardiganProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return CardiganProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final cardiganProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(cardiganProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 가디건 부분 끝
+
+// ----- 코트 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final coatProductRepositoryProvider = Provider<CoatProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return CoatProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final coatProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(coatProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 코트 부분 끝
+
+// ----- 청바지 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final jeanProductRepositoryProvider = Provider<JeanProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return JeanProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final jeanProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(jeanProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 청바지 부분 끝
+
+// ----- 맨투맨 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final mtmProductRepositoryProvider = Provider<MtmProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return MtmProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final mtmProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(mtmProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 맨투맨 부분 끝
+
+// ----- 니트 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final neatProductRepositoryProvider = Provider<NeatProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return NeatProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final neatProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(neatProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 니트 부분 끝
+
+// ----- 원피스 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final onepieceProductRepositoryProvider = Provider<OnepieceProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return OnepieceProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final onepieceProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(onepieceProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 원피스 부분 끝
+
+// ----- 패딩 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final paedingProductRepositoryProvider = Provider<PaedingProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return PaedingProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final paedingProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(paedingProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 패딩 부분 끝
+
+// ----- 팬츠 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final pantsProductRepositoryProvider = Provider<PantsProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return PantsProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final pantsProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(pantsProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 팬츠 부분 끝
+
+// ----- 폴라티 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final polaProductRepositoryProvider = Provider<PolaProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return PolaProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final polaProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(polaProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 폴라티 부분 끝
+
+// ----- 티셔츠 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final shirtProductRepositoryProvider = Provider<ShirtProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return ShirtProductRepository(FirebaseFirestore.instance);
+});
+
+// // Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final shirtProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(shirtProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
+  return repository.getProduct(fullPath);
+});
+// ----- 티셔츠 부분 끝
+
+// ----- 스커트 부분 시작
+// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
+final skirtProductRepositoryProvider = Provider<SkirtProductRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
+  return SkirtProductRepository(FirebaseFirestore.instance);
+});
+
+// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
+final skirtProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, docId) async {
+  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
+  final repository = ref.watch(skirtProductRepositoryProvider);
+  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
   return repository.getProduct(docId);
 });
-
-// ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 상품 상세 화면에 보여줄 파이어베이스의 데이터를 불러올 때 사용할 provider 끝
+// ----- 스커트 부분 끝
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상세 화면 부분-파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
 // ------- 티셔츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
 

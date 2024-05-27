@@ -12,6 +12,7 @@ import '../../common/provider/common_state_provider.dart';
 // 제품 카테고리별 메인 화면의 레이아웃을 정의하는 파일을 임포트합니다.
 import '../../product/layout/product_body_parts_layout.dart';
 // 다양한 의류 카테고리에 대한 메인 화면 파일들을 임포트합니다.
+import '../../product/provider/product_future_provider.dart';
 import '../../product/view/main_screen/blouse_main_screen.dart';  // 블라우스 카테고리 메인 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 카디건 카테고리 메인 화면
 import '../../product/view/main_screen/coat_main_screen.dart';     // 코트 카테고리 메인 화면
@@ -214,10 +215,10 @@ Widget buildDetailMidCategoryButton({
 // 신상 섹션을 위젯으로 구현한 부분
 // 신상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
 Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 신상품 문서 ID 리스트를 가져옴.
-  List<String> newProductDocumentIds = [
-    'alpha', 'apple', 'cat'
-  ];
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(newProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -230,9 +231,21 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "신상"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, newProductDocumentIds, "신상", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          print('Products loaded: ${products.length}'); // 로그 추가
+          return buildHorizontalDocumentsList(ref, products, context, '신상');
+        },
+        loading: () {
+          print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
+      ),
     ],
   );
 }
@@ -240,10 +253,10 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
 // 최고 섹션을 위젯으로 구현한 부분
 // 최고상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
 Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 최고상품 문서 ID 리스트를 가져옴.
-  List<String> bestProductDocumentIds = [
-    'flutter', 'github', 'samsung'
-  ];
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(bestProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -256,20 +269,25 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "최고"는 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, bestProductDocumentIds, "최고", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          return buildHorizontalDocumentsList(ref, products, context, '최고');
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (err, stack) => Text('오류 발생: $err'),
+      ),
     ],
   );
 }
 
 // 할인 섹션을 위젯으로 구현한 부분
 // 할인상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
-Widget buildDiscountProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 할인상품 문서 ID 리스트를 가져옴.
-  List<String> discountProductDocumentIds = [
-    'cat1', 'github', 'samsung1'
-  ];
+Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(saleProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -282,9 +300,14 @@ Widget buildDiscountProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "할인"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, discountProductDocumentIds, "할인", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          return buildHorizontalDocumentsList(ref, products, context, '할인');
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (err, stack) => Text('오류 발생: $err'),
+      ),
     ],
   );
 }
@@ -292,10 +315,10 @@ Widget buildDiscountProductsSection(WidgetRef ref, BuildContext context) {
 // 봄 섹션을 위젯으로 구현한 부분.
 // 봄상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
 Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 봄상품 문서 ID 리스트를 가져옴.
-  List<String> springProductDocumentIds = [
-    'flutter1', 'alpha1', 'samsung1'
-  ];
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(springProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -308,9 +331,14 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "봄"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, springProductDocumentIds, "봄", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          return buildHorizontalDocumentsList(ref, products, context, '봄');
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (err, stack) => Text('오류 발생: $err'),
+      ),
     ],
   );
 }
@@ -318,10 +346,10 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
 // 여름 섹션을 위젯으로 구현한 부분
 // 여름상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
 Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 여름상품 문서 ID 리스트를 가져옴.
-  List<String> summerProductDocumentIds = [
-    'apple1', 'github', 'cat'
-  ];
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(summerProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -334,9 +362,14 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "여름"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, summerProductDocumentIds, "여름", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          return buildHorizontalDocumentsList(ref, products, context, '여름');
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (err, stack) => Text('오류 발생: $err'),
+      ),
     ],
   );
 }
@@ -344,10 +377,10 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
 // 가을 섹션을 위젯으로 구현한 부분
 // 가을상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
 Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 가을상품 문서 ID 리스트를 가져옴.
-  List<String> autumnProductDocumentIds = [
-    'samsung', 'flutter1', 'samsung1'
-  ];
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(autumnProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -360,9 +393,14 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "가을"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, autumnProductDocumentIds, "가을", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          return buildHorizontalDocumentsList(ref, products, context, '가을');
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (err, stack) => Text('오류 발생: $err'),
+      ),
     ],
   );
 }
@@ -370,10 +408,10 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
 // 겨울 섹션을 위젯으로 구현한 부분
 // 겨울상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
 Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
-  // Firestore에서 겨울상품 문서 ID 리스트를 가져옴.
-  List<String> winterProductDocumentIds = [
-    'apple', 'github1', 'apple1'
-  ];
+
+  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
+  final productsFuture = ref.watch(winterProdFirestoreDataProvider);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -386,9 +424,14 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
         ),
       ),
       SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // 수평으로 스크롤되는 문서 리스트를 표시하는 위젯을 호출함.
-      // 여기서 "겨울"은 카테고리 명으로 사용되며, Firestore 문서 ID 리스트와 함께 전달됨.
-      buildHorizontalDocumentsList(ref, winterProductDocumentIds, "겨울", context),
+      // FutureProvider에서 데이터를 가져와서 처리함
+      productsFuture.when(
+        data: (products) {
+          return buildHorizontalDocumentsList(ref, products, context, '겨울');
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (err, stack) => Text('오류 발생: $err'),
+      ),
     ],
   );
 }
