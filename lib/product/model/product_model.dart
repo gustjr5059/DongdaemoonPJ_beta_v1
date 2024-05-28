@@ -1,5 +1,5 @@
-// Firestore에서 상품의 상세 정보를 관리하는 클래스를 정의합니다.
-import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore 라이브러리를 임포트합니다.
+
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore 라이브러리를 임포트함.
 
 // 상품의 상세 정보를 관리하는 클래스.
 class ProductContent {
@@ -11,6 +11,7 @@ class ProductContent {
   final double? discountPrice; // 제품의 할인 가격을 저장하는 필드.
   final List<Map<String, dynamic>>? colorOptions; // 추가된 색상 옵션을 저장하는 필드.
   final List<String>? sizes; // 제품의 사이즈 옵션을 저장하는 필드.
+  final DocumentSnapshot? documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
 
   // 클래스의 생성자입니다. 모든 필드를 초기화함.
   ProductContent({
@@ -22,14 +23,14 @@ class ProductContent {
     this.discountPrice,
     this.colorOptions,
     this.sizes,
+    this.documentSnapshot,
   });
 
   // Firestore 문서 스냅샷으로부터 ProductContent 객체를 생성하는 팩토리 생성자임.
   factory ProductContent.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?; // 문서의 데이터를 맵으로 변한함.
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?; // 문서의 데이터를 맵으로 변환함.
     if (data == null) {
       // 데이터가 null일 경우 기본값을 반환함.
-      // print('Firestore 데이터가 없습니다.');
       return ProductContent(
         docId: doc.id,
         thumbnail: null,
@@ -39,9 +40,9 @@ class ProductContent {
         discountPrice: null,
         colorOptions: null,
         sizes: null,
+        documentSnapshot: doc,
       );
     }
-    // print('Firestore 데이터 로드: $data');
 
     // 색상과 색상 옵션을 저장할 리스트를 초기화함.
     List<String> colors = [];
@@ -84,14 +85,15 @@ class ProductContent {
 
     // 모든 필드를 사용하여 ProductContent 객체를 생성 및 반환함.
     return ProductContent(
-      docId: doc.reference.path, // 전체 경로를 포함하는 문서 ID
-      thumbnail: data['thumbnails'] as String?, // 썸네일 URL
-      colors: colors.isEmpty ? null : colors, // 색상 목록
-      colorOptions: colorOptions.isEmpty ? null : colorOptions, // 색상 옵션
-      sizes: sizes.isEmpty ? null : sizes, // 사이즈 목록
-      briefIntroduction: data['brief_introduction'] as String?, // 제품 소개
-      originalPrice: parseDouble(data['original_price']), // 원래 가격
-      discountPrice: parseDouble(data['discount_price']), // 할인 가격
+      docId: doc.reference.path, // 전체 경로를 포함하는 문서 ID.
+      thumbnail: data['thumbnails'] as String?, // 썸네일 URL.
+      colors: colors.isEmpty ? null : colors, // 색상 목록.
+      colorOptions: colorOptions.isEmpty ? null : colorOptions, // 색상 옵션.
+      sizes: sizes.isEmpty ? null : sizes, // 사이즈 목록.
+      briefIntroduction: data['brief_introduction'] as String?, // 제품 소개.
+      originalPrice: parseDouble(data['original_price']), // 원래 가격.
+      discountPrice: parseDouble(data['discount_price']), // 할인 가격.
+      documentSnapshot: doc, // 문서 스냅샷.
     );
   }
 }

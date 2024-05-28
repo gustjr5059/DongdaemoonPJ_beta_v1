@@ -250,6 +250,12 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 이 리스너는 사용자가 스크롤할 때마다 _onScroll 함수를 호출하도록 설정됨.
     homeScreenPointScrollController.addListener(_onScroll);
 
+    // homeScreenPointScrollController.addListener(() {
+    //   debugPrint('Scroll position: ${homeScreenPointScrollController.position.pixels}');
+    //   _updateScrollPosition();
+    //   _onScroll();
+    // });
+
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'homeLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _largeBannerPageController = PageController(initialPage: ref.read(homeLargeBannerPageProvider));
@@ -415,7 +421,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 각 섹션의 스크롤 위치를 계산하는 함수
     double calculateScrollOffset(String sectionTitle) {
       switch (sectionTitle) {
-        case '신상':
+        case '신상':  //260  360
           return 650.0; // '신상품 섹션'의 스크롤 위치
         case '최고':
           return 910.0; // '최고의 제품 섹션'의 스크롤 위치
@@ -735,7 +741,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                       SizedBox(height: 10), // 높이 10으로 간격 설정
                       // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                         _buildSectionCard(context, ref, "겨울", buildWinterProductsSection, WinterSubMainScreen()),
-                      SizedBox(height: 400), // 높이 15로 간격 설정
+                      SizedBox(height: 500), // 높이 15로 간격 설정
                     ],
                    ),
                  );

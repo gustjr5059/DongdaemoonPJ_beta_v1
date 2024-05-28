@@ -1,5 +1,6 @@
 
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 // Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
@@ -82,24 +83,137 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 }
 // ------ arrowButton 위젯 내용 구현 끝
 
+
+// ------- ProductsSectionList 클래스 내용 구현 시작
+// 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
+class ProductsSectionList extends ConsumerStatefulWidget {
+  final String category; // 카테고리 이름을 저장하는 필드
+  final Future<List<ProductContent>> Function(int limit, DocumentSnapshot? startAfter) fetchProducts; // 제품을 가져오는 비동기 함수
+
+  ProductsSectionList({required this.category, required this.fetchProducts}); // 생성자
+
+  @override
+  _ProductsSectionListState createState() => _ProductsSectionListState(); // 상태 객체 생성
+}
+
+class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
+  final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 생성
+  List<ProductContent> _products = []; // 제품 리스트 초기화
+  bool _isFetching = false; // 데이터 가져오기 상태를 나타내는 플래그
+  DocumentSnapshot? _lastDocument; // 마지막으로 가져온 문서 스냅샷
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
+    _fetchInitialProducts(); // 초기 제품 데이터 가져오기 호출
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener); // 스크롤 리스너 제거
+    _scrollController.dispose(); // 스크롤 컨트롤러 해제
+    super.dispose();
+  }
+
+  // 스크롤 리스너 함수
+  void _scrollListener() {
+    // debugPrint('ScrollListener activated. Current scroll position: ${_scrollController.position.pixels}');
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 && !_isFetching) {
+      // debugPrint('Fetching more products...');
+      // 스크롤이 끝에 도달하고 데이터를 가져오는 중이 아닐 때
+      _fetchMoreProducts();  // 추가 제품 데이터 가져오기 호출
+    }
+  }
+
+  // 초기 제품 데이터를 가져오는 함수
+  Future<void> _fetchInitialProducts() async {
+    setState(() {
+      _isFetching = true; // 데이터 가져오는 중 상태로 설정
+    });
+    try {
+      final products = await widget.fetchProducts(4, null); // 초기 4개 제품 데이터 가져오기
+      setState(() {
+        _products = products; // 제품 리스트 업데이트
+        if (products.isNotEmpty) {
+          _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
+        }
+      });
+
+      // debugPrint('Initial products fetched: ${_products.length}');
+    } catch (e) {
+      debugPrint('Error fetching initial products: $e'); // 에러 출력
+    } finally {
+      setState(() {
+        _isFetching = false; // 데이터 가져오기 완료 상태로 설정
+      });
+    }
+  }
+
+  // 추가 제품 데이터를 가져오는 함수
+  Future<void> _fetchMoreProducts() async {
+    if (_isFetching) return; // 이미 데이터를 가져오는 중이면 반환
+    setState(() {
+      _isFetching = true; // 데이터 가져오는 중 상태로 설정
+    });
+    try {
+      final products = await widget.fetchProducts(4, _lastDocument); // 추가 4개 제품 데이터 가져오기
+      setState(() {
+        _products.addAll(products); // 제품 리스트에 추가
+        if (products.isNotEmpty) {
+          _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
+        }
+      });
+      // debugPrint('More products fetched: ${products.length}');
+    } catch (e) {
+      debugPrint('Error fetching more products: $e'); // 에러 출력
+    } finally {
+      setState(() {
+        _isFetching = false; // 데이터 가져오기 완료 상태로 설정
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        buildHorizontalDocumentsList(ref, _products, context, widget.category, _scrollController), // 가로 스크롤 문서 리스트 빌드
+        if (_isFetching) CircularProgressIndicator(), // 데이터 가져오는 중일 때 로딩 인디케이터 표시
+      ],
+    );
+  }
+}
+// ------- ProductsSectionList 클래스 내용 구현 끝
+
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
+// 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직
 // buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
 // 가로로 스크롤 가능한 문서 리스트를 생성하는 함수. 문서 클릭 시 설정된 동작을 실행함.
-Widget buildHorizontalDocumentsList(WidgetRef ref, List<ProductContent> products, BuildContext context, String category) {
+Widget buildHorizontalDocumentsList(WidgetRef ref, List<ProductContent> products, BuildContext context, String category, ScrollController horizontalScrollViewScrollController) {
   // ProductInfoDetailScreenNavigation 클래스 인스턴스를 생성하여 제품 정보 상세 화면 네비게이션을 설정함.
   final productInfo = ProductInfoDetailScreenNavigation(ref, category);
 
-  return SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    child: Row(
-      // 각 제품에 대해 buildProdFirestoreDetailDocument 함수를 호출하여 가로로 나열된 문서 리스트를 생성함.
-      children: products.map((product) => productInfo.buildProdFirestoreDetailDocument(context, product)).toList(),
+  return NotificationListener<ScrollNotification>(
+    onNotification: (scrollNotification) {
+      // debugPrint('Scroll notification: ${scrollNotification.metrics.pixels}');
+      return false; // 스크롤 알림 수신시 false 반환하여 기본 동작 유지
+    },
+    child: SingleChildScrollView(
+      controller: horizontalScrollViewScrollController, // 가로 스크롤 컨트롤러 설정
+      scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정
+      child: Row(
+        // 각 제품에 대해 buildProdFirestoreDetailDocument 함수를 호출하여 가로로 나열된 문서 리스트를 생성함.
+        children: products.map((product) => productInfo.buildProdFirestoreDetailDocument(context, product)).toList(),
+      ),
     ),
   );
 }
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 끝
 
 // -------- ProductInfoDetailScreenNavigation 클래스 내용 구현 시작
+// 홈 화면과 2차 메인화면(1차 카테고리별 메인화면)에 주로 사용될 예정
+// 상품별 간단하게 데이터를 보여주는 UI 부분과 해당 상품 클릭 시, 상품 상세화면으로 이동하도록 하는 로직
 class ProductInfoDetailScreenNavigation {
   final WidgetRef ref; // ref 변수는 상태 관리를 위해 사용.
   final String category; // category 변수는 제품의 카테고리를 나타냄.
@@ -161,9 +275,12 @@ class ProductInfoDetailScreenNavigation {
       ref.read(colorSelectionIndexProvider.notifier).state = null;
       ref.read(sizeSelectionProvider.notifier).state = null;
     });
+
+    // 상품의 문서명을 로그로 출력함. - 해당 로그값으로, 상세화면 내 데이터와 파이어베이스 내 문서의 데이터 일치성을 확인하고자 하는 부분
+    debugPrint('Navigating to detail screen for document: $fullPath');
   }
 
-  // Firestore에서 상세한 문서 정보를 빌드하는 위젯.
+  // Firestore에서 상세한 문서 정보를 빌드하여 UI에 구현하는 위젯.
   Widget buildProdFirestoreDetailDocument(BuildContext context, ProductContent product) {
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
@@ -177,7 +294,7 @@ class ProductInfoDetailScreenNavigation {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 제품 썸네일을 표시함.
-            if (product.thumbnail != null)
+            if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
               Center(
                 child: Image.network(product.thumbnail!, width: 90, fit: BoxFit.cover),
               ),
@@ -226,8 +343,6 @@ class ProductInfoDetailScreenNavigation {
   }
 }
 // -------- ProductInfoDetailScreenNavigation 클래스 내용 구현 끝
-
-
 
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 시작
 // ------ buildProductDetails 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.

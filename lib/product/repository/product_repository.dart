@@ -16,294 +16,273 @@ import '../model/product_model.dart'; // ProductContent 모델 정의 파일의 
 // Firestore 데이터베이스로부터 신상 상품 정보를 조회하는 기능을 제공하는 클래스
 class NewProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b1', 'a2b1', 'a3b1', 'a4b1', 'a5b1', 'a6b1',
+    'a7b1', 'a8b1', 'a9b1', 'a10b1', 'a11b1', 'a12b1'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  NewProductRepository(this.firestore);
+  NewProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 신상 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchNewProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b1 ~ a12b1 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchNewProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching new product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b1 ~ a12b1의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b1/a${i}b1_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 
 // Firestore 데이터베이스로부터 최고 상품 정보를 조회하는 기능을 제공하는 클래스
 class BestProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b2', 'a2b2', 'a3b2', 'a4b2', 'a5b2', 'a6b2',
+    'a7b2', 'a8b2', 'a9b2', 'a10b2', 'a11b2', 'a12b2'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  BestProductRepository(this.firestore);
+  BestProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 최고 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchBestProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b2 ~ a12b2 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchBestProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching best product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b2 ~ a12b2의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b2/a${i}b2_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 
 // Firestore 데이터베이스로부터 할인 상품 정보를 조회하는 기능을 제공하는 클래스
 class SaleProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b3', 'a2b3', 'a3b3', 'a4b3', 'a5b3', 'a6b3',
+    'a7b3', 'a8b3', 'a9b3', 'a10b3', 'a11b3', 'a12b3'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  SaleProductRepository(this.firestore);
+  SaleProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 할인 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchSaleProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b3 ~ a12b3 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchSaleProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching sale product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b3 ~ a12b3의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b3/a${i}b3_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 
 // Firestore 데이터베이스로부터 봄 상품 정보를 조회하는 기능을 제공하는 클래스
 class SpringProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b4', 'a2b4', 'a3b4', 'a4b4', 'a5b4', 'a6b4',
+    'a7b4', 'a8b4', 'a9b4', 'a10b4', 'a11b4', 'a12b4'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  SpringProductRepository(this.firestore);
+  SpringProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 봄 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchSpringProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b4 ~ a12b4 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchSpringProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching spring product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b4 ~ a12b4의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b4/a${i}b4_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 
 // Firestore 데이터베이스로부터 여름 상품 정보를 조회하는 기능을 제공하는 클래스
 class SummerProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b5', 'a2b5', 'a3b5', 'a4b5', 'a5b5', 'a6b5',
+    'a7b5', 'a8b5', 'a9b5', 'a10b5', 'a11b5', 'a12b5'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  SummerProductRepository(this.firestore);
+  SummerProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 여름 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchSummerProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b5 ~ a12b5 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchSummerProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching summer product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b5 ~ a12b5의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b5/a${i}b5_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 
 // Firestore 데이터베이스로부터 가을 상품 정보를 조회하는 기능을 제공하는 클래스
 class AutumnProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b6', 'a2b6', 'a3b6', 'a4b6', 'a5b6', 'a6b6',
+    'a7b6', 'a8b6', 'a9b6', 'a10b6', 'a11b6', 'a12b6'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  AutumnProductRepository(this.firestore);
+  AutumnProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 가을 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchAutumnProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b6 ~ a12b6 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchAutumnProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching autumn product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b6 ~ a12b6의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b6/a${i}b6_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 
 // Firestore 데이터베이스로부터 겨울 상품 정보를 조회하는 기능을 제공하는 클래스
 class WinterProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    // 컬렉션 이름 리스트
+    'a1b7', 'a2b7', 'a3b7', 'a4b7', 'a5b7', 'a6b7',
+    'a7b7', 'a8b7', 'a9b7', 'a10b7', 'a11b7', 'a12b7'
+  ];
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  WinterProductRepository(this.firestore);
+  WinterProductRepository(this.firestore); // 생성자
 
-  // 주어진 문서 ID를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String docId) async {
-    // Firestore에서 특정 문서 ID를 가진 'couturier' 컬렉션의 문서를 조회
-    final snapshot = await firestore.collection('couturier').doc(docId).get();
-    // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-    return ProductContent.fromFirestore(snapshot);
-  }
+  // 겨울 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  Future<List<ProductContent>> fetchWinterProductContents({int limit = 4}) async {
+    List<ProductContent> products = []; // 제품 리스트 초기화
 
-  // a1 ~ a12 문서 하위의 a1b7 ~ a12b7 컬렉션의 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchWinterProductContents() async {
-    List<ProductContent> products = [];
-    // print('Fetching winter product contents...'); // 로그 추가
+    // 필요한 만큼 제품을 가져올 때까지 루프 실행
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
+      }
 
-    // a1 ~ a12 문서의 하위 컬렉션인 a1b7 ~ a12b7의 문서들을 조회
-    for (int i = 1; i <= 12; i++) {
-      for (int j = 1; j <= 15; j++) {
-        String documentPath = 'couturier/a$i/a${i}b7/a${i}b7_$j';
-        try {
-          final snapshot = await firestore.doc(documentPath).get();
-          if (snapshot.exists) {
-            products.add(ProductContent.fromFirestore(snapshot));
-          } else {
-            print('Document not found: $documentPath'); // 로그 추가
-          }
-        } catch (e) {
-          print('Error fetching document: $documentPath, error: $e'); // 에러 로그 추가
-        }
+      final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+      } else {
+        lastDocument = null;
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
-    // print('Fetched ${products.length} products.'); // 로그 추가
-    return products;
+    return products; // 제품 리스트 반환
   }
 }
 

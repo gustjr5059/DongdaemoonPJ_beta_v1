@@ -1,5 +1,6 @@
 
 // Cupertino 스타일의 위젯을 사용하기 위한 패키지를 임포트합니다. 주로 iOS 스타일의 디자인을 구현할 때 사용합니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ import '../../common/provider/common_state_provider.dart';
 // 제품 카테고리별 메인 화면의 레이아웃을 정의하는 파일을 임포트합니다.
 import '../../product/layout/product_body_parts_layout.dart';
 // 다양한 의류 카테고리에 대한 메인 화면 파일들을 임포트합니다.
+import '../../product/model/product_model.dart';
 import '../../product/provider/product_future_provider.dart';
+import '../../product/repository/product_repository.dart';
 import '../../product/view/main_screen/blouse_main_screen.dart';  // 블라우스 카테고리 메인 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 카디건 카테고리 메인 화면
 import '../../product/view/main_screen/coat_main_screen.dart';     // 코트 카테고리 메인 화면
@@ -211,39 +214,28 @@ Widget buildDetailMidCategoryButton({
 // ------ buildDetailMidCategoryButton 위젯 내용 끝
 // ------ 카테고리 12개를 버튼 형식의 두줄로 표시한 부분 관련 위젯 구현 내용 끝
 
-// ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 시작
+// 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 시작
 // 신상 섹션을 위젯으로 구현한 부분
-// 신상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 신상 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(newProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '신상' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '신상',
+          '신상', // 섹션 제목을 '신상'으로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Products loaded: ${products.length}'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '신상');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '신상', // '신상' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 신상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(newProductRepositoryProvider); // newProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchNewProductContents(limit: limit); // 레포지토리에서 신상품 데이터를 가져옴
         },
       ),
     ],
@@ -251,37 +243,26 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
 }
 
 // 최고 섹션을 위젯으로 구현한 부분
-// 최고상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 최고 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(bestProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '최고' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '최고',
+          '최고', // 섹션 제목을 '최고'로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Products loaded: ${products.length}'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '최고');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '최고', // '최고' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 최고 상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(bestProductRepositoryProvider); // bestProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchBestProductContents(limit: limit); // 레포지토리에서 최고 상품 데이터를 가져옴
         },
       ),
     ],
@@ -289,75 +270,53 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
 }
 
 // 할인 섹션을 위젯으로 구현한 부분
-// 할인상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 할인 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(saleProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '할인' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '할인',
+          '할인', // 섹션 제목을 '할인'으로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Products loaded: ${products.length}'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '할인');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '할인', // '할인' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 할인 상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(saleProductRepositoryProvider); // saleProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchSaleProductContents(limit: limit); // 레포지토리에서 할인 상품 데이터를 가져옴
         },
       ),
     ],
   );
 }
 
-// 봄 섹션을 위젯으로 구현한 부분.
-// 봄상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 봄 섹션을 위젯으로 구현한 부분
+// 봄 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(springProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '봄' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '봄',
+          '봄', // 섹션 제목을 '봄'으로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Products loaded: ${products.length}'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '봄');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '봄', // '봄' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 봄 상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(springProductRepositoryProvider); // springProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchSpringProductContents(limit: limit); // 레포지토리에서 봄 상품 데이터를 가져옴
         },
       ),
     ],
@@ -365,37 +324,26 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
 }
 
 // 여름 섹션을 위젯으로 구현한 부분
-// 여름상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 여름 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(summerProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '여름' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '여름',
+          '여름', // 섹션 제목을 '여름'으로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Loading products...'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '여름');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '여름', // '여름' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 여름 상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(summerProductRepositoryProvider); // summerProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchSummerProductContents(limit: limit); // 레포지토리에서 여름 상품 데이터를 가져옴
         },
       ),
     ],
@@ -403,37 +351,26 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
 }
 
 // 가을 섹션을 위젯으로 구현한 부분
-// 가을상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 가을 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(autumnProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '가을' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '가을',
+          '가을', // 섹션 제목을 '가을'로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Loading products...'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '가을');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '가을', // '가을' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 가을 상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(autumnProductRepositoryProvider); // autumnProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchAutumnProductContents(limit: limit); // 레포지토리에서 가을 상품 데이터를 가져옴
         },
       ),
     ],
@@ -441,40 +378,29 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
 }
 
 // 겨울 섹션을 위젯으로 구현한 부분
-// 겨울상품 섹션과 관련된 문서를 가로로 스크롤 가능한 리스트로 표시하는 위젯을 구현함.
+// 겨울 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
-
-  // Firestore에서 상품 데이터를 가져오는 FutureProvider 호출
-  final productsFuture = ref.watch(winterProdFirestoreDataProvider);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
         padding: EdgeInsets.only(left: 16),
-        // '겨울' 제목을 추가함. 텍스트 스타일은 폰트 크기 20, 굵은 글씨체를 사용함.
         child: Text(
-          '겨울',
+          '겨울', // 섹션 제목을 '겨울'로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      SizedBox(height: 8), // 섹션 제목과 문서 리스트 사이의 간격을 추가함.
-      // FutureProvider에서 데이터를 가져와서 처리함
-      productsFuture.when(
-        data: (products) {
-          // print('Loading products...'); // 로그 추가
-          return buildHorizontalDocumentsList(ref, products, context, '겨울');
-        },
-        loading: () {
-          // print('Loading products...'); // 로그 추가
-          return CircularProgressIndicator();
-        },
-        error: (err, stack) {
-          print('Error loading products: $err'); // 로그 추가
-          return Text('오류 발생: $err');
+      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      ProductsSectionList(
+        category: '겨을', // '겨을' 카테고리를 설정
+        fetchProducts: (limit, startAfter) async {
+          // 겨을 상품 데이터를 가져오는 비동기 함수를 설정
+          final repository = ref.watch(winterProductRepositoryProvider); // winterProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+          return await repository.fetchWinterProductContents(limit: limit); // 레포지토리에서 겨을 상품 데이터를 가져옴
         },
       ),
     ],
   );
 }
-// ------- 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 구현 끝
+// 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 끝
