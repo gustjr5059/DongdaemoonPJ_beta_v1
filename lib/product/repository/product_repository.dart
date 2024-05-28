@@ -31,7 +31,7 @@ class NewProductRepository {
   // a1 ~ a12 문서 하위의 a1b1 ~ a12b1 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchNewProductContents() async {
     List<ProductContent> products = [];
-    print('Fetching new product contents...'); // 로그 추가
+    // print('Fetching new product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b1 ~ a12b1의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -50,7 +50,7 @@ class NewProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }
@@ -73,6 +73,7 @@ class BestProductRepository {
   // a1 ~ a12 문서 하위의 a1b2 ~ a12b2 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchBestProductContents() async {
     List<ProductContent> products = [];
+    // print('Fetching best product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b2 ~ a12b2의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -91,7 +92,7 @@ class BestProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }
@@ -114,6 +115,7 @@ class SaleProductRepository {
   // a1 ~ a12 문서 하위의 a1b3 ~ a12b3 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchSaleProductContents() async {
     List<ProductContent> products = [];
+    // print('Fetching sale product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b3 ~ a12b3의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -132,7 +134,7 @@ class SaleProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }
@@ -155,6 +157,7 @@ class SpringProductRepository {
   // a1 ~ a12 문서 하위의 a1b4 ~ a12b4 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchSpringProductContents() async {
     List<ProductContent> products = [];
+    // print('Fetching spring product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b4 ~ a12b4의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -173,7 +176,7 @@ class SpringProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }
@@ -196,6 +199,7 @@ class SummerProductRepository {
   // a1 ~ a12 문서 하위의 a1b5 ~ a12b5 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchSummerProductContents() async {
     List<ProductContent> products = [];
+    // print('Fetching summer product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b5 ~ a12b5의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -214,7 +218,7 @@ class SummerProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }
@@ -237,6 +241,7 @@ class AutumnProductRepository {
   // a1 ~ a12 문서 하위의 a1b6 ~ a12b6 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchAutumnProductContents() async {
     List<ProductContent> products = [];
+    // print('Fetching autumn product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b6 ~ a12b6의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -255,7 +260,7 @@ class AutumnProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }
@@ -278,6 +283,7 @@ class WinterProductRepository {
   // a1 ~ a12 문서 하위의 a1b7 ~ a12b7 컬렉션의 데이터를 가져오는 함수
   Future<List<ProductContent>> fetchWinterProductContents() async {
     List<ProductContent> products = [];
+    // print('Fetching winter product contents...'); // 로그 추가
 
     // a1 ~ a12 문서의 하위 컬렉션인 a1b7 ~ a12b7의 문서들을 조회
     for (int i = 1; i <= 12; i++) {
@@ -296,7 +302,7 @@ class WinterProductRepository {
       }
     }
 
-    print('Fetched ${products.length} products.'); // 로그 추가
+    // print('Fetched ${products.length} products.'); // 로그 추가
     return products;
   }
 }

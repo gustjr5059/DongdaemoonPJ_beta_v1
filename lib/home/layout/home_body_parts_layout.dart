@@ -234,11 +234,11 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
-          print('Products loaded: ${products.length}'); // 로그 추가
+          // print('Products loaded: ${products.length}'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '신상');
         },
         loading: () {
-          print('Loading products...'); // 로그 추가
+          // print('Loading products...'); // 로그 추가
           return CircularProgressIndicator();
         },
         error: (err, stack) {
@@ -272,10 +272,17 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
+          // print('Products loaded: ${products.length}'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '최고');
         },
-        loading: () => CircularProgressIndicator(),
-        error: (err, stack) => Text('오류 발생: $err'),
+        loading: () {
+          // print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
       ),
     ],
   );
@@ -303,10 +310,17 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
+          // print('Products loaded: ${products.length}'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '할인');
         },
-        loading: () => CircularProgressIndicator(),
-        error: (err, stack) => Text('오류 발생: $err'),
+        loading: () {
+          // print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
       ),
     ],
   );
@@ -334,10 +348,17 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
+          // print('Products loaded: ${products.length}'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '봄');
         },
-        loading: () => CircularProgressIndicator(),
-        error: (err, stack) => Text('오류 발생: $err'),
+        loading: () {
+          // print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
       ),
     ],
   );
@@ -365,10 +386,17 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
+          // print('Loading products...'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '여름');
         },
-        loading: () => CircularProgressIndicator(),
-        error: (err, stack) => Text('오류 발생: $err'),
+        loading: () {
+          // print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
       ),
     ],
   );
@@ -396,10 +424,17 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
+          // print('Loading products...'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '가을');
         },
-        loading: () => CircularProgressIndicator(),
-        error: (err, stack) => Text('오류 발생: $err'),
+        loading: () {
+          // print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
       ),
     ],
   );
@@ -427,10 +462,17 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
       // FutureProvider에서 데이터를 가져와서 처리함
       productsFuture.when(
         data: (products) {
+          // print('Loading products...'); // 로그 추가
           return buildHorizontalDocumentsList(ref, products, context, '겨울');
         },
-        loading: () => CircularProgressIndicator(),
-        error: (err, stack) => Text('오류 발생: $err'),
+        loading: () {
+          // print('Loading products...'); // 로그 추가
+          return CircularProgressIndicator();
+        },
+        error: (err, stack) {
+          print('Error loading products: $err'); // 로그 추가
+          return Text('오류 발생: $err');
+        },
       ),
     ],
   );

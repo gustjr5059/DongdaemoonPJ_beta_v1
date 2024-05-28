@@ -29,7 +29,7 @@ class ProductContent {
     Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?; // 문서의 데이터를 맵으로 변한함.
     if (data == null) {
       // 데이터가 null일 경우 기본값을 반환함.
-      print('Firestore 데이터가 없습니다.');
+      // print('Firestore 데이터가 없습니다.');
       return ProductContent(
         docId: doc.id,
         thumbnail: null,
@@ -41,7 +41,7 @@ class ProductContent {
         sizes: null,
       );
     }
-    print('Firestore 데이터 로드: $data');
+    // print('Firestore 데이터 로드: $data');
 
     // 색상과 색상 옵션을 저장할 리스트를 초기화함.
     List<String> colors = [];
