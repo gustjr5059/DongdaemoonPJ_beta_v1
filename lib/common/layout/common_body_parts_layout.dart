@@ -210,18 +210,16 @@ class CommonCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Card 위젯을 사용하여 시각적 표현을 구현함.
-    return Card(
-      // 카드의 배경색 설정
-      color: backgroundColor,
-      // 카드의 그림자 깊이 설정
-      elevation: elevation,
-      // 카드의 외부 여백 설정
-      margin: margin,
-      // Padding 위젯을 사용하여 카드 내부에 여백을 설정
-      child: Padding(
-        padding: padding,
-        // 'content'를 카드 내부에 배치
-        child: content,
+    return Container(
+      width: double.infinity, // 해당 위젯이 가능한 한 최대 너비를 가지도록 설정
+      child: Card(
+        color: backgroundColor,
+        elevation: elevation,
+        margin: margin,
+        child: Padding(
+          padding: padding,
+          child: content,
+        ),
       ),
     );
   }

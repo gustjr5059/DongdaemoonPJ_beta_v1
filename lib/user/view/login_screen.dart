@@ -21,6 +21,7 @@ import '../../common/provider/common_state_provider.dart';
 // 애플리케이션의 홈 화면 뷰를 정의하는 파일을 임포트합니다.
 // 홈 화면은 사용자가 앱을 열었을 때 처음 보게 되는 화면으로, 앱의 주요 기능을 사용자에게 소개하고 접근성을 제공합니다.
 import '../../home/view/home_screen.dart';
+import 'membership_registration_info_screen.dart';
 
 
 // 로그인 화면을 위한 StatefulWidget 정의
@@ -147,26 +148,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   // 기존 TextButton 대신 ElevatedButton 사용
                 ElevatedButton(
                   child: Text('회원가입'),
-                  onPressed: () async {
-                    // 회원가입 버튼 클릭 시 동작
-                    try {
-                      // Firebase에서 이메일과 비밀번호로 사용자 생성 시도
-                      await _auth.createUserWithEmailAndPassword(
-                        email: username, // username을 이용해 이메일 전달
-                        password: password, // password를 이용해 비밀번호 전달
-                      );
-                      // 회원가입 성공 후 처리, 예를 들어 로그인 페이지로 이동
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
-                    } on FirebaseAuthException catch (e) {
-                      // 회원가입 실패 시 알림 메시지 표시
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("회원가입 실패: ${e.message}"),
-                        ),
-                      );
-                    }
+                  onPressed: () {
+                    // 회원가입 버튼 클릭 시, MembershipRegistrationInfoScreen로 이동
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MembershipRegistrationInfoScreen()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
