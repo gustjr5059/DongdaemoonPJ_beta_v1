@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
 // 애플리케이션 내 쇼핑 카트 화면 관련 파일을 임포트합니다.
@@ -280,6 +281,8 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
 // ------ buildCommonDrawer 위젯 내용 구현 시작
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
+// 드로워 생성 함수
+// 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
@@ -305,13 +308,18 @@ Widget buildCommonDrawer(BuildContext context) {
             ],
           ),
         ),
+        // 로그아웃 버튼 항목
         ListTile(
-          leading: Icon(Icons.logout),
-          title: Text('Logout'),
+          leading: Icon(Icons.logout), // 로그아웃 아이콘
+          title: Text('Logout'), // 로그아웃 텍스트
           onTap: () async {
-            // 로그아웃 후 로그인 화면으로 이동
-            await FirebaseAuth.instance.signOut(); // 로그아웃 처리
-            // (context) -> (_) 로 변경 : 매개변수를 정의해야 하지만 실제로 내부 로직에서 사용하지 않을 때 표기방법
+            // 로그아웃 기능 수행
+            await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
+            prefs.remove('username'); // 저장된 사용자명 삭제
+            prefs.remove('password'); // 저장된 비밀번호 삭제
+            // 로그인 화면으로 이동
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
           },
         ),
@@ -335,6 +343,7 @@ Widget buildCommonDrawer(BuildContext context) {
     ),
   );
 }
+
 // ------ buildCommonDrawer 위젯 내용 구현 끝
 
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작

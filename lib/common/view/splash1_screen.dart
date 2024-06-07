@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMi
 
     // 1초 후에 SplashScreen2로 화면을 전환함.
     Timer(Duration(seconds: 1), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen2()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
     });
   }
 
