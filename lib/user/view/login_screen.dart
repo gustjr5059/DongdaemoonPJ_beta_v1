@@ -1,4 +1,3 @@
-
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 // 이 패키지는 다양한 머티리얼 디자인 위젯을 포함하여, 사용자 인터페이스를 효과적으로 구성할 수 있게 도와줍니다.
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // FirebaseAuth는 Firebase 플랫폼의 일부로, 사용자 로그인 및 계정 관리 기능을 쉽게 구현할 수 있게 해줍니다.
 // 이를 통해 이메일 및 비밀번호 인증, 소셜 미디어 로그인, 전화번호 인증 등 다양한 인증 방법을 애플리케이션에 통합할 수 있습니다.
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 // 애플리케이션 내에서 재사용 가능한 커스텀 텍스트 입력 필드 위젯을 정의한 파일을 임포트합니다.
 // 이 커스텀 위젯은 입력 폼을 보다 효과적으로 관리하고, 일관된 스타일을 유지할 수 있도록 돕습니다.
 import '../../common/component/custom_text_form_field.dart';
@@ -22,7 +22,6 @@ import '../../common/provider/common_state_provider.dart';
 // 홈 화면은 사용자가 앱을 열었을 때 처음 보게 되는 화면으로, 앱의 주요 기능을 사용자에게 소개하고 접근성을 제공합니다.
 import '../../home/view/home_screen.dart';
 import 'membership_registration_info_screen.dart';
-
 
 // 로그인 화면을 위한 StatefulWidget 정의
 class LoginScreen extends ConsumerStatefulWidget {
@@ -144,27 +143,65 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     foregroundColor: Colors.white, // 버튼 텍스트(전경) 색상 설정
                   ),
                 ),
-                  // 회원가입 버튼
-                  // 기존 TextButton 대신 ElevatedButton 사용
-                ElevatedButton(
-                  child: Text('회원가입'),
-                  onPressed: () {
-                    // 회원가입 버튼 클릭 시, MembershipRegistrationInfoScreen로 이동
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => MembershipRegistrationInfoScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
-                    foregroundColor: Colors.white, // 버튼 텍스트(전경) 색상 설정
-                  ),
+                // '회원가입' 버튼과 '아이디/비밀번호 찾기' 버튼
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MembershipRegistrationInfoScreen()),
+                          );
+                        },
+                        child: Text('회원가입'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: BUTTON_COLOR, // 텍스트 색상 설정
+                        ),
+                      ),
+                    ),
+                    // 세로로된 회색 구분선
+                    Container(
+                      height: 24.0,
+                      child: VerticalDivider(
+                        color: Colors.grey,
+                        thickness: 1.0,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          // 링크로 이동
+                          const url = 'https://pf.kakao.com/_xjVrbG';
+                          _launchURL(url);
+                        },
+                        child: Text('아이디/비밀번호 찾기'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: BUTTON_COLOR, // 텍스트 색상 설정
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 30), // 버튼 밑에 30 높이의 빈 공간 추가
               ],
             ),
           ),
         ),
       ),
-   );
+    );
+  }
+
+  // URL을 여는 함수 정의
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url); // 주어진 URL을 파싱하여 Uri 객체 생성
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri); // URL을 열 수 있으면 엶
+    } else {
+      throw 'Could not launch $url'; // URL을 열 수 없으면 예외 발생
+    }
   }
 }
 
