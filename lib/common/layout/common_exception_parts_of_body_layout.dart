@@ -20,6 +20,7 @@ import '../../home/view/home_screen.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_screen.dart';
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
+import '../../product/provider/product_future_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/login_screen.dart';
 // 사용자 프로필 화면을 구현한 파일을 임포트합니다.
@@ -283,7 +284,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildCon
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
-Widget buildCommonDrawer(BuildContext context) {
+Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
 
@@ -316,9 +317,20 @@ Widget buildCommonDrawer(BuildContext context) {
             // 로그아웃 기능 수행
             await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
+            // prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
             prefs.remove('username'); // 저장된 사용자명 삭제
             prefs.remove('password'); // 저장된 비밀번호 삭제
+
+            // 로그아웃 시점에 데이터를 초기화하는 로직
+            // 데이터 초기화 (프로바이더 상태를 초기화)
+            ref.read(newProductRepositoryProvider).reset();
+            ref.read(bestProductRepositoryProvider).reset();
+            ref.read(saleProductRepositoryProvider).reset();
+            ref.read(springProductRepositoryProvider).reset();
+            ref.read(summerProductRepositoryProvider).reset();
+            ref.read(autumnProductRepositoryProvider).reset();
+            ref.read(winterProductRepositoryProvider).reset();
+
             // 로그인 화면으로 이동
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
           },

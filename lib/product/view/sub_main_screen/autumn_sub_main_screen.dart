@@ -425,7 +425,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context), // 드로어 메뉴를 추가함.
+      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
     // ------ 화면구성 끝
   }

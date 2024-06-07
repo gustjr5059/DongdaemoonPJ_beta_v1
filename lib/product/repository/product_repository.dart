@@ -50,6 +50,12 @@ class NewProductRepository {
 
     return products; // 제품 리스트 반환
   }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
+  }
 }
 
 // Firestore 데이터베이스로부터 최고 상품 정보를 조회하는 기능을 제공하는 클래스
@@ -88,6 +94,12 @@ class BestProductRepository {
     }
 
     return products; // 제품 리스트 반환
+  }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
   }
 }
 
@@ -128,6 +140,12 @@ class SaleProductRepository {
 
     return products; // 제품 리스트 반환
   }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
+  }
 }
 
 // Firestore 데이터베이스로부터 봄 상품 정보를 조회하는 기능을 제공하는 클래스
@@ -166,6 +184,12 @@ class SpringProductRepository {
     }
 
     return products; // 제품 리스트 반환
+  }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
   }
 }
 
@@ -206,6 +230,12 @@ class SummerProductRepository {
 
     return products; // 제품 리스트 반환
   }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
+  }
 }
 
 // Firestore 데이터베이스로부터 가을 상품 정보를 조회하는 기능을 제공하는 클래스
@@ -245,6 +275,12 @@ class AutumnProductRepository {
 
     return products; // 제품 리스트 반환
   }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
+  }
 }
 
 // Firestore 데이터베이스로부터 겨울 상품 정보를 조회하는 기능을 제공하는 클래스
@@ -283,6 +319,12 @@ class WinterProductRepository {
     }
 
     return products; // 제품 리스트 반환
+  }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null;
+    currentCollectionIndex = 0;
   }
 }
 
