@@ -117,6 +117,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         email: username, // username을 이용해 이메일 전달
                         password: password, // password를 이용해 비밀번호 전달
                       );
+                      // 로그인 성공 시 처리, 로그인 성공 메시지 표시
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("로그인이 되었습니다."),
+                        ),
+                      );
                       // 로그인 성공 후 처리
                       ref.read(tabIndexProvider.notifier).state = 0; // tabIndex를 0으로 설정
                       Navigator.of(context).pushReplacement(
