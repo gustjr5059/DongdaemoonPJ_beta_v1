@@ -20,6 +20,7 @@ import '../../home/view/home_screen.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_screen.dart';
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
+import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/provider/product_future_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/login_screen.dart';
@@ -314,23 +315,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
           leading: Icon(Icons.logout), // 로그아웃 아이콘
           title: Text('Logout'), // 로그아웃 텍스트
           onTap: () async {
-            // 로그아웃 기능 수행
-            await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            // prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
-            prefs.remove('username'); // 저장된 사용자명 삭제
-            prefs.remove('password'); // 저장된 비밀번호 삭제
-
-            // 로그아웃 시점에 데이터를 초기화하는 로직
-            // 데이터 초기화 (프로바이더 상태를 초기화)
-            ref.read(newProductRepositoryProvider).reset();
-            ref.read(bestProductRepositoryProvider).reset();
-            ref.read(saleProductRepositoryProvider).reset();
-            ref.read(springProductRepositoryProvider).reset();
-            ref.read(summerProductRepositoryProvider).reset();
-            ref.read(autumnProductRepositoryProvider).reset();
-            ref.read(winterProductRepositoryProvider).reset();
-
+            // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시 홈 화면 내 섹션의 데이터 초기화를 위한 함수 호출
+            await logoutSectionDateReset(ref);
             // 로그인 화면으로 이동
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
           },

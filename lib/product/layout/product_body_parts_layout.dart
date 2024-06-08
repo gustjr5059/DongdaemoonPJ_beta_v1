@@ -1,16 +1,19 @@
 
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 // Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
 // 상태 관리를 위해 사용되는 Riverpod 패키지를 임포트합니다.
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
 import '../../common/const/colors.dart';
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
+import '../../home/provider/home_state_provider.dart';
 import '../model/product_model.dart';
 // 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
 import '../provider/product_future_provider.dart';
@@ -83,30 +86,43 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 }
 // ------ arrowButton 위젯 내용 구현 끝
 
-
 // ------- ProductsSectionList 클래스 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
 class ProductsSectionList extends ConsumerStatefulWidget {
   final String category; // 카테고리 이름을 저장하는 필드
   final Future<List<ProductContent>> Function(int limit, DocumentSnapshot? startAfter) fetchProducts; // 제품을 가져오는 비동기 함수
 
-  ProductsSectionList({required this.category, required this.fetchProducts}); // 생성자
+  // 생성자
+  ProductsSectionList({required this.category, required this.fetchProducts});
 
   @override
   _ProductsSectionListState createState() => _ProductsSectionListState(); // 상태 객체 생성
 }
 
 class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
-  final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 생성
-  List<ProductContent> _products = []; // 제품 리스트 초기화
-  bool _isFetching = false; // 데이터 가져오기 상태를 나타내는 플래그
-  DocumentSnapshot? _lastDocument; // 마지막으로 가져온 문서 스냅샷
+  final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+  bool _isFetching = false; // 데이터 가져오는 중인지 확인하는 플래그
+  DocumentSnapshot? _lastDocument; // 마지막 문서 스냅샷 저장
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
-    _fetchInitialProducts(); // 초기 제품 데이터 가져오기 호출
+    // 이미 저장된 홈 화면 내 섹션 데이터를 로드
+    final savedProducts = ref.read(homeSectionDataStateProvider.notifier).getSectionProducts(widget.category);
+    if (savedProducts.isNotEmpty) {
+      setState(() {
+        _lastDocument = savedProducts.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
+      });
+    } else {
+      _fetchInitialProducts(); // 초기 데이터를 가져오는 함수 호출
+    }
+
+    // 저장된 홈 화면 내 섹션 스크롤 위치를 설정
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final savedScrollPosition = ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
+      _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
+    });
   }
 
   @override
@@ -118,12 +134,16 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
   // 스크롤 리스너 함수
   void _scrollListener() {
-    // debugPrint('ScrollListener activated. Current scroll position: ${_scrollController.position.pixels}');
+    // 스크롤이 끝에 도달하고 데이터를 가져오는 중이 아닐 때
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 && !_isFetching) {
-      // debugPrint('Fetching more products...');
-      // 스크롤이 끝에 도달하고 데이터를 가져오는 중이 아닐 때
       _fetchMoreProducts();  // 추가 제품 데이터 가져오기 호출
     }
+
+    // 현재 홈 화면 내 섹션 스크롤 위치를 저장
+    ref.read(homeSectionScrollPositionsProvider.notifier).state = {
+      ...ref.read(homeSectionScrollPositionsProvider),
+      widget.category: _scrollController.position.pixels,
+    };
   }
 
   // 초기 제품 데이터를 가져오는 함수
@@ -134,13 +154,11 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
     try {
       final products = await widget.fetchProducts(4, null); // 초기 4개 제품 데이터 가져오기
       setState(() {
-        _products = products; // 제품 리스트 업데이트
+        ref.read(homeSectionDataStateProvider.notifier).updateSection(widget.category, products); // 섹션 내 제품 데이터 상태 업데이트
         if (products.isNotEmpty) {
           _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
         }
       });
-
-      // debugPrint('Initial products fetched: ${_products.length}');
     } catch (e) {
       debugPrint('Error fetching initial products: $e'); // 에러 출력
     } finally {
@@ -159,12 +177,13 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
     try {
       final products = await widget.fetchProducts(4, _lastDocument); // 추가 4개 제품 데이터 가져오기
       setState(() {
-        _products.addAll(products); // 제품 리스트에 추가
+        final currentProducts = ref.read(homeSectionDataStateProvider.notifier).getSectionProducts(widget.category); // 현재 섹션 내 제품 리스트 가져오기
+        final updatedProducts = currentProducts + products; // 새로운 섹션 내 제품 리스트와 병합
+        ref.read(homeSectionDataStateProvider.notifier).updateSection(widget.category, updatedProducts); // 섹션 내 제품 데이터 상태 업데이트
         if (products.isNotEmpty) {
           _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
         }
       });
-      // debugPrint('More products fetched: ${products.length}');
     } catch (e) {
       debugPrint('Error fetching more products: $e'); // 에러 출력
     } finally {
@@ -176,15 +195,40 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
   @override
   Widget build(BuildContext context) {
+    final products = ref.watch(homeSectionDataStateProvider)[widget.category] ?? []; // 현재 카테고리의 제품 리스트 가져오기
     return Column(
       children: [
-        buildHorizontalDocumentsList(ref, _products, context, widget.category, _scrollController), // 가로 스크롤 문서 리스트 빌드
+        buildHorizontalDocumentsList(ref, products, context, widget.category, _scrollController), // 가로 스크롤 문서 리스트 빌드
         if (_isFetching) CircularProgressIndicator(), // 데이터 가져오는 중일 때 로딩 인디케이터 표시
       ],
     );
   }
 }
 // ------- ProductsSectionList 클래스 내용 구현 끝
+
+// 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시 홈 화면 내 섹션의 데이터 초기화를 위한 함수
+Future<void> logoutSectionDateReset(WidgetRef ref) async {
+  // 로그아웃 기능 수행
+  await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
+  prefs.remove('username'); // 저장된 사용자명 삭제
+  prefs.remove('password'); // 저장된 비밀번호 삭제
+
+  // 로그아웃 시점에 데이터를 초기화하는 로직
+  // 데이터 초기화 (프로바이더 상태를 초기화)
+  ref.read(newProductRepositoryProvider).reset();
+  ref.read(bestProductRepositoryProvider).reset();
+  ref.read(saleProductRepositoryProvider).reset();
+  ref.read(springProductRepositoryProvider).reset();
+  ref.read(summerProductRepositoryProvider).reset();
+  ref.read(autumnProductRepositoryProvider).reset();
+  ref.read(winterProductRepositoryProvider).reset();
+
+  // 홈 화면 내 섹션의 스크롤 위치 초기화
+  ref.read(homeSectionScrollPositionsProvider.notifier).state = {};
+}
+
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직

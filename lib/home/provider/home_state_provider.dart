@@ -5,6 +5,7 @@
 // 강력한 타입 안정성을 제공하는 기능을 갖추고 있습니다.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../product/model/product_model.dart';
 
 
 // 홈 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
@@ -20,8 +21,39 @@ final homeScrollPositionProvider = StateProvider<double>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final homeCurrentTabProvider = StateProvider<int>((ref) => 0);
 
+// ------ SectionStateNotifier 클래스 내용 구현 시작
+// SectionDataStateNotifier 클래스는 홈 화면 내 섹션의 불러온 데이터 상태를 관리하는 기능을 함
+class SectionDataStateNotifier extends StateNotifier<Map<String, List<ProductContent>>> {
+  SectionDataStateNotifier() : super({});
+
+  // 카테고리에 해당하는 섹션을 업데이트하는 함수
+  void updateSection(String category, List<ProductContent> products) {
+    state = {...state, category: products}; // 현재 상태를 복사한 후 새로운 데이터를 추가하여 상태를 업데이트
+  }
+
+  // 카테고리에 해당하는 섹션을 초기화하는 함수
+  void resetSection(String category) {
+    state = {...state, category: []}; // 현재 상태를 복사한 후 해당 카테고리의 리스트를 빈 리스트로 초기화
+  }
+
+  // 카테고리에 해당하는 제품 리스트를 반환하는 함수
+  List<ProductContent> getSectionProducts(String category) {
+    return state[category] ?? []; // 해당 카테고리에 데이터가 없으면 빈 리스트를 반환
+  }
+}
+// ------ SectionStateNotifier 클래스 내용 구현 끝
+
+// 홈 화면 내 섹션의 불러온 데이터 저장을 위한 StateNotifierProvider
+final homeSectionDataStateProvider = StateNotifierProvider<SectionDataStateNotifier, Map<String, List<ProductContent>>>((ref) {
+  return SectionDataStateNotifier();
+});
+
+// 홈 화면 내 섹션의 가로 스크롤 위치 저장을 위한 StateProvider
+final homeSectionScrollPositionsProvider = StateProvider<Map<String, double>>((ref) => {});
+
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 homeScrollControllerProvider라는 이름의 Provider를 정의함.
+// 하단 탭 바의 홈 버튼 관련 상태 관리 provider
 final homeScrollControllerProvider = Provider<ScrollController>((ref) {
   // ScrollController 객체를 생성함.
   final scrollController = ScrollController();
