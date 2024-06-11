@@ -216,6 +216,9 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   prefs.remove('username'); // 저장된 사용자명 삭제
   prefs.remove('password'); // 저장된 비밀번호 삭제
 
+  // 스크롤 위치 및 현재 탭 인덱스 초기화
+  ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   // 홈 화면 내 섹션의 스크롤 위치 초기화
   ref.read(homeSectionScrollPositionsProvider.notifier).state = {};
 }

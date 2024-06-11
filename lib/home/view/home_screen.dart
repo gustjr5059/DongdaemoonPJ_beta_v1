@@ -315,6 +315,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
         ref.read(homeSmall2BannerPageProvider.notifier).state = 0;
         ref.read(homeSmall3BannerPageProvider.notifier).state = 0;
         ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
+        ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
       }
     });
 
