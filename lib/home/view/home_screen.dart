@@ -32,6 +32,7 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 // 이를 통해 비동기 데이터 호출 및 상태 관리를 할 수 있습니다.
 import '../../common/provider/common_future_provider.dart';
 // 각 계절별 및 특별한 상품 카테고리에 대한 하위 페이지를 구현한 파일들을 임포트합니다.
+import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/new_sub_main_screen.dart';
@@ -228,19 +229,20 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     homeTopBarPointAutoScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
-    // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
+    // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임 렌더링 후 콜백을 등록.
+    // 스크롤 컨트롤러가 활성 상태인지 확인하고, 로그인 상태에 따라 저장된 스크롤 위치를 읽어 jumpTo 메서드로 이동.
+    // homeScreenPointScrollController.addListener(_updateScrollPosition)를 통해 사용자가 스크롤할 때마다 스크롤 위치를 homeScrollPositionProvider에 저장.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
       if (homeScreenPointScrollController.hasClients) {
-        // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
-        // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
-        // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(homeScrollPositionProvider);
-        // homeScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
-        // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
+        // 로그인 상태에 따라 다른 스크롤 위치로 설정
+        double savedScrollPosition = FirebaseAuth.instance.currentUser != null
+            ? ref.read(homeScrollPositionProvider)
+            : ref.read(homeLoginAndLogoutScrollPositionProvider);
         homeScreenPointScrollController.jumpTo(savedScrollPosition);
       }
     });
+
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -300,8 +302,10 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
       itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
     );
 
-
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
+    // FirebaseAuth.instance.authStateChanges를 통해 로그인 상태 변화를 감지함.
+    // 사용자가 로그아웃하면(user == null), 페이지 인덱스와 스크롤 위치를 초기화함.
+    // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
@@ -310,6 +314,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
         ref.read(homeSmall1BannerPageProvider.notifier).state = 0;
         ref.read(homeSmall2BannerPageProvider.notifier).state = 0;
         ref.read(homeSmall3BannerPageProvider.notifier).state = 0;
+        ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
       }
     });
 

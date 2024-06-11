@@ -206,8 +206,9 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 }
 // ------- ProductsSectionList 클래스 내용 구현 끝
 
-// 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시 홈 화면 내 섹션의 데이터 초기화를 위한 함수
-Future<void> logoutSectionDateReset(WidgetRef ref) async {
+// 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
+// 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 /  화면 자체의 스크롤 위치 초기화 관련 함수
+Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   // 로그아웃 기능 수행
   await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -215,20 +216,9 @@ Future<void> logoutSectionDateReset(WidgetRef ref) async {
   prefs.remove('username'); // 저장된 사용자명 삭제
   prefs.remove('password'); // 저장된 비밀번호 삭제
 
-  // 로그아웃 시점에 데이터를 초기화하는 로직
-  // 데이터 초기화 (프로바이더 상태를 초기화)
-  ref.read(newProductRepositoryProvider).reset();
-  ref.read(bestProductRepositoryProvider).reset();
-  ref.read(saleProductRepositoryProvider).reset();
-  ref.read(springProductRepositoryProvider).reset();
-  ref.read(summerProductRepositoryProvider).reset();
-  ref.read(autumnProductRepositoryProvider).reset();
-  ref.read(winterProductRepositoryProvider).reset();
-
   // 홈 화면 내 섹션의 스크롤 위치 초기화
   ref.read(homeSectionScrollPositionsProvider.notifier).state = {};
 }
-
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직

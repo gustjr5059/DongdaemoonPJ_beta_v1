@@ -16,8 +16,12 @@ final homeSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 final homeSmall2BannerPageProvider = StateProvider<int>((ref) => 0);
 // 홈 화면의 작은 배너3 페이지 인덱스를 관리하기 위한 StateProvider
 final homeSmall3BannerPageProvider = StateProvider<int>((ref) => 0);
+// 다른 화면으로 이동했다가 다시 돌아오는 경우의
 // 홈 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
 final homeScrollPositionProvider = StateProvider<double>((ref) => 0);
+// 로그아웃했다가 다시 재로그인하는 경우의
+// 홈 화면에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
+final homeLoginAndLogoutScrollPositionProvider = StateProvider<double>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final homeCurrentTabProvider = StateProvider<int>((ref) => 0);
 

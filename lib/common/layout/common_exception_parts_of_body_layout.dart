@@ -315,8 +315,9 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
           leading: Icon(Icons.logout), // 로그아웃 아이콘
           title: Text('Logout'), // 로그아웃 텍스트
           onTap: () async {
-            // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시 홈 화면 내 섹션의 데이터 초기화를 위한 함수 호출
-            await logoutSectionDateReset(ref);
+            // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
+            // 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 /  화면 자체의 스크롤 위치 초기화 관련 함수 호출
+            await logoutSecDataAndHomeScrollPointReset(ref);
             // 로그인 화면으로 이동
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
           },
