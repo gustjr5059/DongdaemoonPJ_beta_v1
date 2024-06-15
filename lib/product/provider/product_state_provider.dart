@@ -116,6 +116,19 @@ final polaMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 final shirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 final skirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 
+// 각 카테고리별 상세화면에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
+final blouseDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final cardiganDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final coatDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final jeanDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final mtmDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final neatDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final onepieceDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final paedingDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final pantsDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final polaDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final shirtDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+final skirtDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
 

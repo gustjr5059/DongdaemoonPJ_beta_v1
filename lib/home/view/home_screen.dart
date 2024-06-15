@@ -550,6 +550,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                   context: context,
                   title: '홈',
                   pageBackButton: false,  // 페이지 뒤로 가기 버튼 비활성화
+                  buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
                 ),
               ),
               leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.

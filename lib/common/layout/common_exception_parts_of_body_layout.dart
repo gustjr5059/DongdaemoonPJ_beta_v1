@@ -27,17 +27,19 @@ import '../../user/view/login_screen.dart';
 // 사용자 프로필 화면을 구현한 파일을 임포트합니다.
 import '../../user/view/profile_screen.dart';
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../wishlist/view/wishlist_screen.dart';
 import '../const/colors.dart';
 // 애플리케이션의 공통적인 상태 관리 로직을 포함하는 파일을 임포트합니다.
 import '../provider/common_state_provider.dart';
 
 
 // ------ AppBar 생성 함수 내용 구현 시작
-// 상단 탭 바 생성 함수
+// 공통 앱 바
 AppBar buildCommonAppBar({
   required BuildContext context, // BuildContext를 필수 인자로 받고, 각종 위젯에서 위치 정보 등을 제공받음.
   required String title, // AppBar에 표시될 제목을 문자열로 받음.
   bool pageBackButton = false, // 이전 화면으로 돌아가는 버튼을 표시할지 여부를 결정하는 플래그, 기본값은 false암.
+  int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
 }) {
   // AppBar의 'leading' 위젯을 조건에 따라 설정함.
   Widget? leadingWidget; // 앱 바 왼쪽 상단에 표시될 위젯을 저장할 변수임.
@@ -58,25 +60,101 @@ AppBar buildCommonAppBar({
       },
     );
   }
+
+  // 버튼 구성을 결정하는 로직
+  List<Widget> actions = [];
+  switch (buttonCase) {
+    case 1:
+    // 케이스 1: 아무 내용도 없음
+      break;
+    case 2:
+    // 케이스 2: 찜 목록 버튼만 노출
+      actions.add(
+        IconButton(
+          icon: Icon(Icons.favorite, color: Colors.red),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WishlistMainScreen()));
+          },
+        ),
+      );
+      break;
+    case 3:
+    // 케이스 3: 찜 목록 버튼, 홈 버튼 노출
+      actions.addAll([
+        IconButton(
+          icon: Icon(Icons.favorite, color: Colors.red),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WishlistMainScreen()));
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.home),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeMainScreen()));
+          },
+        ),
+      ]);
+      break;
+    case 4:
+    // 케이스 4: 찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출
+      actions.addAll([
+        IconButton(
+          icon: Icon(Icons.favorite, color: Colors.red),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WishlistMainScreen()));
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.home),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeMainScreen()));
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.shopping_cart),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartMainScreen()));
+          },
+        ),
+      ]);
+      break;
+  }
+
   return AppBar(
     backgroundColor: BUTTON_COLOR, // AppBar 색상 설정
     title: Container(
-      height: kToolbarHeight, // AppBar의 높이를 kToolbarHeight로 설정하여 로고 이미지의 높이를 제한함.
-      child: Image.asset(
-        'asset/img/misc/logo_image.jpg', // 로고 이미지 파일 경로를 지정함.
-        fit: BoxFit.scaleDown, // 이미지가 컨테이너 안에서 원본 비율을 유지하며 축소되도록 설정함.
+      height: kToolbarHeight,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Image.asset(
+                  'asset/img/misc/logo_image.jpg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     ),
-    centerTitle: true, // 제목을 AppBar의 중앙에 위치시킴.
-    leading: leadingWidget, // 위에서 설정한 leading 위젯을 AppBar의 leading 위치에 배치함.
-    actions: [
-      IconButton(
-        icon: Icon(Icons.search), // 검색 아이콘을 사용함.
-        onPressed: () {
-          // 검색 기능을 여기에 구현할 수 있음.
-        },
-      ),
-    ],
+    centerTitle: true,
+    leading: leadingWidget,
+    actions: actions,
   );
 }
 // ------ AppBar 생성 함수 내용 구현 끝
