@@ -47,7 +47,16 @@ AppBar buildCommonAppBar({
     // pageBackButton이 true일 경우, 이전 화면으로 돌아가는 버튼을 생성함.
     leadingWidget = IconButton(
       icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘을 사용함.
-      onPressed: () => Navigator.of(context).pop(), // 버튼을 누르면 현재 화면을 종료하고 이전 화면으로 돌아감.
+      onPressed: () {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
+        } else {
+          // 이동할 수 없을 때 대비한 로직
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('이전 화면으로 이동할 수 없습니다.'))
+          );
+        }
+      },
     );
   } else {
     // pageBackButton이 false일 경우, 드로어를 여는 버튼을 생성함.
@@ -66,15 +75,14 @@ AppBar buildCommonAppBar({
   switch (buttonCase) {
     case 1:
     // 케이스 1: 아무 내용도 없음
+      actions.add(Container(width: 48)); // 빈 공간 추가
       break;
     case 2:
     // 케이스 2: 찜 목록 버튼만 노출
       actions.add(
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WishlistMainScreen()));
-          },
+          onPressed: () => navigateToScreen(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
         ),
       );
       break;
@@ -83,15 +91,11 @@ AppBar buildCommonAppBar({
       actions.addAll([
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WishlistMainScreen()));
-          },
+          onPressed: () => navigateToScreen(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.home),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeMainScreen()));
-          },
+          onPressed: () => navigateToScreen(context, HomeMainScreen()), // 홈 화면으로 이동
         ),
       ]);
       break;
@@ -100,21 +104,15 @@ AppBar buildCommonAppBar({
       actions.addAll([
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => WishlistMainScreen()));
-          },
+          onPressed: () => navigateToScreen(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.home),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeMainScreen()));
-          },
+          onPressed: () => navigateToScreen(context, HomeMainScreen()), // 홈 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.shopping_cart),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartMainScreen()));
-          },
+          onPressed: () => navigateToScreen(context, CartMainScreen()), // 장바구니 화면으로 이동
         ),
       ]);
       break;
@@ -152,12 +150,22 @@ AppBar buildCommonAppBar({
         ],
       ),
     ),
-    centerTitle: true,
-    leading: leadingWidget,
-    actions: actions,
+    centerTitle: true, // 제목을 중앙에 위치시킴.
+    leading: leadingWidget, // 설정된 leading 위젯을 사용함.
+    actions: actions, // 설정된 동작 버튼들을 추가함.
   );
 }
 // ------ AppBar 생성 함수 내용 구현 끝
+
+// 앱 바 버튼 클릭 시, 각 화면으로 이동하는 함수인 navigateToScreen 내용
+void navigateToScreen(BuildContext context, Widget screen) {
+  // 현재 라우트의 타입을 검사하여 중복 열기를 방지
+  if (ModalRoute.of(context)?.settings.name == screen.runtimeType.toString()) {
+    // 이미 해당 화면이면 아무 작업도 수행하지 않음
+    return;
+  }
+  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => screen));
+}
 
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작
 // 상단 탭 바 텍스트 스타일 설정 함수
