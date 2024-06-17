@@ -110,6 +110,7 @@ flutter:
     - asset/img/misc/button_img/compressed_button_3.png
     - asset/img/misc/button_img/plus_button.png
     - asset/img/misc/poster_img/membership_guide_image.png
+    - asset/img/misc/logo_img/couture_logo_image.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

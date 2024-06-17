@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMi
                 child: Container(
                   width: 130, // 이미지의 너비를 130으로 설정함.
                   height: 130, // 이미지의 높이를 130으로 설정함.
-                  child: Image.asset('asset/img/misc/logo_image.jpg'), // 로고 이미지를 배치함.
+                  child: Image.asset('asset/img/misc/logo_img/couture_logo_image.png'), // 로고 이미지를 배치함.
                 ),
               ),
             ),

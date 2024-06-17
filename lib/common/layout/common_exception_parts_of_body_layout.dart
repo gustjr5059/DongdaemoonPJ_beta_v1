@@ -142,7 +142,7 @@ AppBar buildCommonAppBar({
               child: AspectRatio(
                 aspectRatio: 1, // 가로 세로 비율을 1:1로 설정
                 child: Image.asset(
-                  'asset/img/misc/logo_image.jpg', // 로고 이미지 경로 설정
+                  'asset/img/misc/logo_img/couture_logo_image.png', // 로고 이미지 경로 설정
                   fit: BoxFit.contain, // 이미지를 포함하여 맞춤
                 ),
               ),
@@ -333,6 +333,107 @@ void navigateToScreenAndRemoveUntil(BuildContext context, WidgetRef ref, Widget 
   );
 }
 
+Widget buildCustomBottomNavigationBar(WidgetRef ref, BuildContext context) {
+  final allSelected = ref.watch(allItemsSelectedProvider);
+  final totalAmount = ref.watch(totalAmountProvider);
+
+  return BottomAppBar(
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      height: 70.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Checkbox(
+                value: allSelected,
+                onChanged: (bool? value) {
+                  ref.read(allItemsSelectedProvider.notifier).state = value!;
+                  ref.read(cartStateProvider.notifier).updateAllSelected(value);
+                },
+              ),
+              Text('전체 선택'),
+            ],
+          ),
+          Row(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('합계', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  Text('${totalAmount}원', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
+                ],
+              ),
+              SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => OrderMainScreen()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BUTTON_COLOR,
+                ),
+                child: Text('발주하기'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+final allItemsSelectedProvider = StateProvider<bool>((ref) {
+  final cartItems = ref.watch(cartStateProvider);
+  return cartItems.every((item) => item.isSelected);
+});
+
+final totalAmountProvider = Provider<int>((ref) {
+  final cartItems = ref.watch(cartStateProvider);
+  return cartItems.where((item) => item.isSelected).fold(0, (sum, item) => sum + item.discountedPrice);
+});
+
+final cartStateProvider = StateNotifierProvider<CartStateNotifier, List<CartItem>>((ref) {
+  return CartStateNotifier();
+});
+
+class CartStateNotifier extends StateNotifier<List<CartItem>> {
+  CartStateNotifier() : super([]);
+
+  void updateAllSelected(bool isSelected) {
+    state = state.map((item) => item.copyWith(isSelected: isSelected)).toList();
+  }
+}
+
+class CartItem {
+  final String id;
+  final String name;
+  final int price;
+  final int discountedPrice;
+  final bool isSelected;
+
+  CartItem({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.discountedPrice,
+    this.isSelected = false,
+  });
+
+  CartItem copyWith({bool? isSelected}) {
+    return CartItem(
+      id: id,
+      name: name,
+      price: price,
+      discountedPrice: discountedPrice,
+      isSelected: isSelected ?? this.isSelected,
+    );
+  }
+}
+
+
+
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작
 // 상단 탭 바 텍스트 스타일 설정 함수
 TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
@@ -416,62 +517,67 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, Sta
 // ------ buildCommonDrawer 위젯 내용 구현 시작
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
-// 드로워 생성 함수
-// 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
 
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
-    // ListView를 자식으로 사용하며, 드로어 내용물을 스크롤 가능하게 함.
-    child: ListView(
-      padding: EdgeInsets.zero, // ListView의 패딩을 0으로 설정하여 상단 여백을 제거함.
-      children: <Widget>[
-        // 드로어의 헤더 부분을 구성합니다. 헤더는 사용자 정보를 표시하는 영역.
-        DrawerHeader(
-          decoration: BoxDecoration(color: DRAWER_COLOR), // 헤더 배경색을 설정함.
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // 세로 방향으로 중앙 정렬
-            crossAxisAlignment: CrossAxisAlignment.start, // 가로 방향으로 왼쪽 정렬
-            children: [
-              // 사용자가 소속된 동대문이라는 텍스트를 큰 글자로 표시함.
-              Text('Dongdaemoon', style: TextStyle(color: Colors.white, fontSize: 24)),
-              SizedBox(height: 10), // 텍스트 사이의 간격을 위한 SizedBox
-              // 현재 로그인한 사용자의 이메일을 표시함.
-              Text(userEmail, style: TextStyle(color: Colors.white, fontSize: 16)),
-            ],
+    // SingleChildScrollView를 자식으로 사용하여 드로어 내용물을 스크롤 가능하게 함.
+    child: SingleChildScrollView(
+      padding: EdgeInsets.zero, // SingleChildScrollView의 패딩을 0으로 설정하여 상단 여백을 제거함.
+      child: Column(
+        children: <Widget>[
+          // 드로어의 헤더 부분을 구성합니다. 헤더는 사용자 정보를 표시하는 영역.
+          DrawerHeader(
+            decoration: BoxDecoration(color: DRAWER_COLOR), // 헤더 배경색을 설정함.
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // 세로 방향으로 중앙 정렬
+              crossAxisAlignment: CrossAxisAlignment.start, // 가로 방향으로 왼쪽 정렬
+              children: [
+                // Flexible 위젯을 사용하여 로고 이미지가 가변적인 높이를 가질 수 있도록 함.
+                // 이 위젯을 통해서 드로워헤더의 정해진 높이에 맞춰서 내용이 들어가도록 이미지 크기를 동적으로 변경해줌.
+                Flexible(
+                  child: Image.asset('asset/img/misc/logo_img/couture_logo_image.png', width: 100, height: 100),
+                ),
+                SizedBox(height: 10), // 간격을 위한 SizedBox
+                // 현재 로그인한 사용자의 이메일을 표시함.
+                Text(userEmail, style: TextStyle(color: Colors.white, fontSize: 16)),
+                SizedBox(height: 10), // 텍스트 사이의 간격을 위한 SizedBox
+                // 로그아웃 버튼 항목
+                GestureDetector(
+                  onTap: () async {
+                    // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
+                    // 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 / 화면 자체의 스크롤 위치 초기화 관련 함수 호출
+                    await logoutSecDataAndHomeScrollPointReset(ref);
+                    // 로그인 화면으로 이동
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, color: Colors.white), // 로그아웃 아이콘
+                      SizedBox(width: 10), // 아이콘과 텍스트 사이의 간격
+                      Text('Logout', style: TextStyle(color: Colors.white)), // 로그아웃 텍스트
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        // 로그아웃 버튼 항목
-        ListTile(
-          leading: Icon(Icons.logout), // 로그아웃 아이콘
-          title: Text('Logout'), // 로그아웃 텍스트
-          onTap: () async {
-            // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
-            // 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 /  화면 자체의 스크롤 위치 초기화 관련 함수 호출
-            await logoutSecDataAndHomeScrollPointReset(ref);
-            // 로그인 화면으로 이동
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
-          },
-        ),
-        // 네이버 카페 항목
-        _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo', 'asset/img/misc/drawer_img/navercafe.logo.png'),
-        // 유튜브 항목
-        _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO', 'asset/img/misc/drawer_img/youtube.logo.png'),
-        // 인스타그램 항목
-        _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo', 'asset/img/misc/drawer_img/instagram.logo.png'),
-        // 카카오 항목
-        _buildListTile(context, '카카오', 'https://pf.kakao.com/_xjVrbG', 'asset/img/misc/drawer_img/kakao.logo.png'),
-        // 프로필 설정 항목
-        ListTile(leading: Icon(Icons.account_circle), title: Text('Profile')),
-        // 커뮤니티 항목
-        ListTile(leading: Icon(Icons.group), title: Text('Communities')),
-        // Q&A 항목
-        ListTile(leading: Icon(Icons.message), title: Text('Q&A')),
-        // 설정 항목
-        ListTile(leading: Icon(Icons.settings), title: Text('Settings')),
-      ],
+          SizedBox(height: 20), // 간격을 위한 SizedBox
+          // 네이버 카페 항목
+          _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo', 'asset/img/misc/drawer_img/navercafe.logo.png'),
+          SizedBox(height: 20), // 간격을 위한 SizedBox
+          // 유튜브 항목
+          _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO', 'asset/img/misc/drawer_img/youtube.logo.png'),
+          SizedBox(height: 20), // 간격을 위한 SizedBox
+          // 인스타그램 항목
+          _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo', 'asset/img/misc/drawer_img/instagram.logo.png'),
+          SizedBox(height: 20), // 간격을 위한 SizedBox
+          // 카카오 항목
+          _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG', 'asset/img/misc/drawer_img/kakao.logo.png'),
+        ],
+      ),
     ),
   );
 }
@@ -483,7 +589,7 @@ Widget _buildListTile(BuildContext context, String title, String url, String lea
   // ListTile 위젯 반환
   return ListTile(
     // 이미지 리딩
-    leading: Image.asset(leadingImage, width: 24),
+    leading: Image.asset(leadingImage, width: 40),
     // 타이틀 텍스트
     title: Text(title),
     // 탭 핸들러

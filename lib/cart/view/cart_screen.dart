@@ -487,8 +487,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
           buildTopButton(context, cartScreenPointScrollController),
         ],
       ),
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 2), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+      bottomNavigationBar:buildCustomBottomNavigationBar(ref, context), // 새롭게 정의한 하단 탭 바를 사용
     );
     // ------ 화면구성 끝
   }
