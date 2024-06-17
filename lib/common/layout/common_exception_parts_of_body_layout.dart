@@ -268,125 +268,198 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, Sta
 }
 // ------ buildTopBarList 위젯 내용 구현 끝
 
-// ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
-// BottomNavigationBar 생성 함수
-// 공통 BottomNavigationBar 생성 함수. 선택된 항목에 따라 다른 화면으로 이동하도록 구현함.
-Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context) {
-  // 하단 네비게이션 바 위젯을 생성하고 반환
+// // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
+// // BottomNavigationBar 생성 함수
+// // 공통 BottomNavigationBar 생성 함수. 선택된 항목에 따라 다른 화면으로 이동하도록 구현함.
+// Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context) {
+//   // 하단 네비게이션 바 위젯을 생성하고 반환
+//   return BottomNavigationBar(
+//     type: BottomNavigationBarType.fixed, // 네비게이션 바의 유형을 고정된 유형으로 설정
+//     currentIndex: selectedIndex, // 현재 선택된 인덱스
+//     onTap: (index) {
+//       // 선택된 탭의 인덱스가 현재 인덱스와 같은지 확인함.
+//       if (ref.read(tabIndexProvider) == index) {
+//         // 인덱스가 0인 경우, 즉 '홈' 탭이 선택된 경우
+//         if (index == 0) {
+//           // homeScrollControllerProvider를 통해 ScrollController를 가져옴.
+//           final homeScrollController = ref.read(homeScrollControllerProvider);
+//           // ScrollController가 유효한지 확인함.
+//           if (homeScrollController.hasClients) {
+//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
+//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+//             homeScrollController.animateTo(
+//               0, // 스크롤 위치를 최상단(0)으로 설정함.
+//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+//             );
+//           }
+//         }
+//
+//         // 인덱스가 1인 경우, 즉 '장바구니' 탭이 선택된 경우
+//         if (index == 1) {
+//           // cartScrollControllerProvider를 통해 ScrollController를 가져옴.
+//           final cartScrollController = ref.read(cartScrollControllerProvider);
+//           // ScrollController가 유효한지 확인함.
+//           if (cartScrollController.hasClients) {
+//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
+//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+//             cartScrollController.animateTo(
+//               0, // 스크롤 위치를 최상단(0)으로 설정함.
+//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+//             );
+//           }
+//         }
+//
+//         // 인덱스가 2인 경우, 즉 '주문' 탭이 선택된 경우
+//         if (index == 2) {
+//           // orderScrollControllerProvider를 통해 ScrollController를 가져옴.
+//           final orderScrollController = ref.read(orderScrollControllerProvider);
+//           // ScrollController가 유효한지 확인함.
+//           if (orderScrollController.hasClients) {
+//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
+//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+//             orderScrollController.animateTo(
+//               0, // 스크롤 위치를 최상단(0)으로 설정함.
+//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+//             );
+//           }
+//         }
+//
+//         // 인덱스가 3인 경우, 즉 '마이페이지' 탭이 선택된 경우
+//         if (index == 3) {
+//           // profileScrollControllerProvider를 통해 ScrollController를 가져옴.
+//           final profileScrollController = ref.read(profileScrollControllerProvider);
+//           // ScrollController가 유효한지 확인함.
+//           if (profileScrollController.hasClients) {
+//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
+//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
+//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
+//             profileScrollController.animateTo(
+//               0, // 스크롤 위치를 최상단(0)으로 설정함.
+//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
+//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
+//             );
+//           }
+//         }
+//         // 이미 선택된 탭이면 아무 동작도 하지 않음.
+//         return;
+//       }
+//
+//       // 탭이 클릭되었을 때 실행할 로직
+//       // 선택된 인덱스에 따라 상태 업데이트
+//       ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭의 인덱스를 상태 관리자에 저장
+//       resetCategoryView(ref); // 카테고리 뷰를 초기화하는 함수를 호출
+//       // 화면 전환 로직
+//       switch (index) { // 클릭된 탭의 인덱스에 따라 각기 다른 화면으로 이동
+//         case 0:
+//         // '홈' 화면으로 이동
+//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeMainScreen()));
+//           break;
+//         case 1:
+//         // '장바구니' 화면으로 이동
+//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartMainScreen()));
+//           break;
+//         case 2:
+//         // '주문' 화면으로 이동
+//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderMainScreen()));
+//           break;
+//         case 3:
+//         // '마이페이지' 화면으로 이동
+//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileMainScreen()));
+//           break;
+//       }
+//     },
+//     items: const [
+//       BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'), // '홈' 탭 아이콘 및 라벨
+//       BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: '장바구니'), // '장바구니' 탭 아이콘 및 라벨
+//       BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: '발주 내역'), // '발주 내역' 탭 아이콘 및 라벨
+//       BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '마이페이지'), // '마이페이지' 탭 아이콘 및 라벨
+//     ],
+//     selectedItemColor: DRAWER_COLOR, // 선택된 아이템의 색상
+//     unselectedItemColor: BODY_TEXT_COLOR, // 선택되지 않은 아이템의 색상
+//     selectedFontSize: 10, // 선택된 아이템의 폰트 크기
+//     unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
+//   );
+// }
+// // ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
+
+Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context, int colorCase) {
+  Color selectedColor = DRAWER_COLOR;
+  Color unselectedColor = BODY_TEXT_COLOR;
+
+  switch (colorCase) {
+    case 1: // 홈 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 2: // 장바구니 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 3: // 발주 내역 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 4: // 마이페이지 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 5: // 모든 버튼이 선택되지 않은 경우
+      selectedColor = BODY_TEXT_COLOR;
+      break;
+  }
+
   return BottomNavigationBar(
-    type: BottomNavigationBarType.fixed, // 네비게이션 바의 유형을 고정된 유형으로 설정
-    currentIndex: selectedIndex, // 현재 선택된 인덱스
+    type: BottomNavigationBarType.fixed,
+    currentIndex: selectedIndex,
     onTap: (index) {
-      // 선택된 탭의 인덱스가 현재 인덱스와 같은지 확인함.
-      if (ref.read(tabIndexProvider) == index) {
-        // 인덱스가 0인 경우, 즉 '홈' 탭이 선택된 경우
-        if (index == 0) {
-          // homeScrollControllerProvider를 통해 ScrollController를 가져옴.
-          final homeScrollController = ref.read(homeScrollControllerProvider);
-          // ScrollController가 유효한지 확인함.
-          if (homeScrollController.hasClients) {
-            // ScrollController가 클라이언트를 가지고 있는지 확인함.
-            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-            homeScrollController.animateTo(
-              0, // 스크롤 위치를 최상단(0)으로 설정함.
-              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-            );
-          }
-        }
+      if (index != selectedIndex) {
+        // 선택된 인덱스를 상태로 업데이트
+        ref.read(tabIndexProvider.notifier).state = index;
 
-        // 인덱스가 1인 경우, 즉 '장바구니' 탭이 선택된 경우
-        if (index == 1) {
-          // cartScrollControllerProvider를 통해 ScrollController를 가져옴.
-          final cartScrollController = ref.read(cartScrollControllerProvider);
-          // ScrollController가 유효한지 확인함.
-          if (cartScrollController.hasClients) {
-            // ScrollController가 클라이언트를 가지고 있는지 확인함.
-            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-            cartScrollController.animateTo(
-              0, // 스크롤 위치를 최상단(0)으로 설정함.
-              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-            );
+        // 화면 전환
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+          switch (index) {
+            case 0: return HomeMainScreen();
+            case 1: return CartMainScreen();
+            case 2: return OrderMainScreen();
+            case 3: return ProfileMainScreen();
+            default: return HomeMainScreen();
           }
-        }
-
-        // 인덱스가 2인 경우, 즉 '주문' 탭이 선택된 경우
-        if (index == 2) {
-          // orderScrollControllerProvider를 통해 ScrollController를 가져옴.
-          final orderScrollController = ref.read(orderScrollControllerProvider);
-          // ScrollController가 유효한지 확인함.
-          if (orderScrollController.hasClients) {
-            // ScrollController가 클라이언트를 가지고 있는지 확인함.
-            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-            orderScrollController.animateTo(
-              0, // 스크롤 위치를 최상단(0)으로 설정함.
-              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-            );
-          }
-        }
-
-        // 인덱스가 3인 경우, 즉 '마이페이지' 탭이 선택된 경우
-        if (index == 3) {
-          // profileScrollControllerProvider를 통해 ScrollController를 가져옴.
-          final profileScrollController = ref.read(profileScrollControllerProvider);
-          // ScrollController가 유효한지 확인함.
-          if (profileScrollController.hasClients) {
-            // ScrollController가 클라이언트를 가지고 있는지 확인함.
-            // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-            // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-            profileScrollController.animateTo(
-              0, // 스크롤 위치를 최상단(0)으로 설정함.
-              duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-              curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-            );
-          }
-        }
-        // 이미 선택된 탭이면 아무 동작도 하지 않음.
-        return;
-      }
-
-      // 탭이 클릭되었을 때 실행할 로직
-      // 선택된 인덱스에 따라 상태 업데이트
-      ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭의 인덱스를 상태 관리자에 저장
-      resetCategoryView(ref); // 카테고리 뷰를 초기화하는 함수를 호출
-      // 화면 전환 로직
-      switch (index) { // 클릭된 탭의 인덱스에 따라 각기 다른 화면으로 이동
-        case 0:
-        // '홈' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeMainScreen()));
-          break;
-        case 1:
-        // '장바구니' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartMainScreen()));
-          break;
-        case 2:
-        // '주문' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderMainScreen()));
-          break;
-        case 3:
-        // '마이페이지' 화면으로 이동
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileMainScreen()));
-          break;
+        }));
       }
     },
-    items: const [
-      BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'), // '홈' 탭 아이콘 및 라벨
-      BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: '장바구니'), // '장바구니' 탭 아이콘 및 라벨
-      BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: '주문'), // '주문' 탭 아이콘 및 라벨
-      BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '마이페이지'), // '마이페이지' 탭 아이콘 및 라벨
+    items: [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home_outlined),
+        label: '홈',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.shopping_cart_outlined),
+        label: '장바구니',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.receipt_long_outlined),
+        label: '발주내역',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person_outlined),
+        label: '마이페이지',
+      ),
     ],
-    selectedItemColor: DRAWER_COLOR, // 선택된 아이템의 색상
-    unselectedItemColor: BODY_TEXT_COLOR, // 선택되지 않은 아이템의 색상
+    selectedItemColor: selectedColor,
+    unselectedItemColor: unselectedColor,
     selectedFontSize: 10, // 선택된 아이템의 폰트 크기
     unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
   );
 }
-// ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
+
+
+
+
+
+
 
 // ------ buildCommonDrawer 위젯 내용 구현 시작
 // 드로워 생성 함수
