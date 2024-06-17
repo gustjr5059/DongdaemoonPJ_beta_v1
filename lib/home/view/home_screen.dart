@@ -549,7 +549,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 background: buildCommonAppBar(
                   context: context,
                   title: '홈',
-                  pageBackButton: false,  // 페이지 뒤로 가기 버튼 비활성화
+                  leadingType: LeadingType.drawer, // 아무 버튼도 없음.
                   buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
                 ),
               ),

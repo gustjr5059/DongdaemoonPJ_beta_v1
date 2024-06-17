@@ -408,7 +408,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
                   background: buildCommonAppBar(
                     context: context,
                     title: '장바구니',
-                    pageBackButton: true,  // 페이지 뒤로 가기 버튼 비활성화
+                    leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
                     buttonCase: 3, // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
                   ),
                 ),

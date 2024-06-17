@@ -218,7 +218,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen> with Wi
                   background: buildCommonAppBar(
                     context: context,
                     title: '찜 목록',
-                    pageBackButton: true,  // 페이지 뒤로 가기 버튼 활성화
+                    leadingType: LeadingType.none, // 버튼 없음.
+                    buttonCase: 1, // 1번 케이스 (버튼 없음)
                   ),
                 ),
                 leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
@@ -259,7 +260,6 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen> with Wi
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
     // ------ 화면구성 끝
   }

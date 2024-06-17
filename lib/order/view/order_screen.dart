@@ -406,8 +406,9 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen> with WidgetsB
                   collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
                     context: context,
-                    title: '주문',
-                    pageBackButton: false,  // 페이지 뒤로 가기 버튼 비활성화
+                    title: '발주 목록',
+                    leadingType: LeadingType.none, // 아무 버튼도 없음.
+                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
                   ),
                 ),
                 leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
@@ -489,7 +490,6 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen> with WidgetsB
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
     // ------ 화면구성 끝
   }

@@ -341,7 +341,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                   background: buildCommonAppBar(
                     context: context,
                     title: '블라우스 메인',
-                    pageBackButton: true,  // 페이지 뒤로 가기 버튼 활성화
+                    leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
+                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
                   ),
                 ),
                 leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.

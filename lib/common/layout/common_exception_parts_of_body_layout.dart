@@ -38,36 +38,42 @@ import '../provider/common_state_provider.dart';
 AppBar buildCommonAppBar({
   required BuildContext context, // BuildContext를 필수 인자로 받고, 각종 위젯에서 위치 정보 등을 제공받음.
   required String title, // AppBar에 표시될 제목을 문자열로 받음.
-  bool pageBackButton = false, // 이전 화면으로 돌아가는 버튼을 표시할지 여부를 결정하는 플래그, 기본값은 false암.
+  LeadingType leadingType = LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
 }) {
-  // AppBar의 'leading' 위젯을 조건에 따라 설정함.
-  Widget? leadingWidget; // 앱 바 왼쪽 상단에 표시될 위젯을 저장할 변수임.
-  if (pageBackButton) {
-    // pageBackButton이 true일 경우, 이전 화면으로 돌아가는 버튼을 생성함.
-    leadingWidget = IconButton(
-      icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘을 사용함.
-      onPressed: () {
-        if (Navigator.of(context).canPop()) {
-          Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
-        } else {
-          // 이동할 수 없을 때 대비한 로직
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('이전 화면으로 이동할 수 없습니다.'))
+  // 왼쪽 상단에 표시될 위젯을 설정함.
+  Widget? leadingWidget;
+  switch (leadingType) {
+    // 이전 화면으로 이동 버튼인 경우
+    case LeadingType.back:
+      leadingWidget = IconButton(
+        icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘을 사용함.
+        onPressed: () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('이전 화면으로 이동할 수 없습니다.'))
+            );
+          }
+        },
+      );
+      break;
+      // 드로워화면 버튼인 경우
+    case LeadingType.drawer:
+      leadingWidget = Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+            icon: Icon(Icons.menu), // 메뉴 아이콘을 사용함.
+            onPressed: () => Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
           );
-        }
-      },
-    );
-  } else {
-    // pageBackButton이 false일 경우, 드로어를 여는 버튼을 생성함.
-    leadingWidget = Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: Icon(Icons.menu), // 메뉴 아이콘을 사용함.
-          onPressed: () => Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
-        );
-      },
-    );
+        },
+      );
+      break;
+      // 버튼이 없는 경우
+    case LeadingType.none:
+      leadingWidget = null; // 아무런 위젯도 표시하지 않음.
+      break;
   }
 
   // 버튼 구성을 결정하는 로직
@@ -75,14 +81,14 @@ AppBar buildCommonAppBar({
   switch (buttonCase) {
     case 1:
     // 케이스 1: 아무 내용도 없음
-      actions.add(Container(width: 48)); // 빈 공간 추가
+    //   actions.add(Container(width: 48)); // 빈 공간 추가
       break;
     case 2:
     // 케이스 2: 찜 목록 버튼만 노출
       actions.add(
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreen(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
         ),
       );
       break;
@@ -91,11 +97,11 @@ AppBar buildCommonAppBar({
       actions.addAll([
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreen(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.home),
-          onPressed: () => navigateToScreen(context, HomeMainScreen()), // 홈 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, HomeMainScreen()), // 홈 화면으로 이동
         ),
       ]);
       break;
@@ -104,11 +110,11 @@ AppBar buildCommonAppBar({
       actions.addAll([
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreen(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.home),
-          onPressed: () => navigateToScreen(context, HomeMainScreen()), // 홈 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, HomeMainScreen()), // 홈 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.shopping_cart),
@@ -157,6 +163,13 @@ AppBar buildCommonAppBar({
 }
 // ------ AppBar 생성 함수 내용 구현 끝
 
+// 왼쪽 상단 버튼 유형을 정의하는 열거형 관련 함수
+enum LeadingType {
+  drawer, // 드로어 버튼.
+  back, // 이전 화면으로 이동 버튼.
+  none, // 아무 버튼도 없음.
+}
+
 // 앱 바 버튼 클릭 시, 각 화면으로 이동하는 함수인 navigateToScreen 내용
 void navigateToScreen(BuildContext context, Widget screen) {
   // 현재 라우트의 타입을 검사하여 중복 열기를 방지
@@ -165,6 +178,15 @@ void navigateToScreen(BuildContext context, Widget screen) {
     return;
   }
   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => screen));
+}
+
+// 특정 화면으로 이동하면서 기존의 모든 페이지 스택을 제거하는 함수인 navigateToScreenAndRemoveUntil 내용
+void navigateToScreenAndRemoveUntil(BuildContext context, Widget screen) {
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => screen),
+        (Route<dynamic> route) => false,
+  );
 }
 
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작

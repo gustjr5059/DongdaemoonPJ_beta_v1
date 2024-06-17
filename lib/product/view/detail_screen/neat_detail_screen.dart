@@ -194,7 +194,7 @@ class _NeatDetailProductScreenState extends ConsumerState<NeatDetailProductScree
                   background: buildCommonAppBar(
                     context: context,
                     title: '니트 상세',
-                    pageBackButton: true,  // 페이지 뒤로 가기 버튼 활성화
+                    leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
                     buttonCase: 4, // 4번 케이스 (찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출)
                   ),
                 ),
