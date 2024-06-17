@@ -149,6 +149,11 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
         // autumnSubMainScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         autumnSubMainScreenPointScrollController.jumpTo(savedScrollPosition);
+
+        // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
+        // -> 가을 섹션 더보기 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
+        ref.read(tabIndexProvider.notifier).state = -1;
+
       }
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 autumnSubMainScreenPointScrollController에 저장하는 코드
@@ -327,6 +332,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
                   collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
                     context: context,
+                    ref: ref,
                     title: '가을 섹션 더보기',
                     leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)

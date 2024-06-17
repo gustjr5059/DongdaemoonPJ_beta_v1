@@ -241,6 +241,11 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
             : ref.read(homeLoginAndLogoutScrollPositionProvider);
         homeScreenPointScrollController.jumpTo(savedScrollPosition);
       }
+
+      // tabIndexProvider의 상태를 하단 탭 바 내 홈 버튼 인덱스인 0과 매핑
+      // -> 홈 화면 초기화 시, 하단 탭 바 내 홈 버튼을 활성화
+      ref.read(tabIndexProvider.notifier).state = 0;
+
     });
 
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
@@ -548,6 +553,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
                 collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                 background: buildCommonAppBar(
                   context: context,
+                  ref: ref,
                   title: '홈',
                   leadingType: LeadingType.drawer, // 아무 버튼도 없음.
                   buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)

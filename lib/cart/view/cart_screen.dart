@@ -191,6 +191,11 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         cartScreenPointScrollController.jumpTo(savedScrollPosition);
       }
+
+      // tabIndexProvider의 상태를 하단 탭 바 내 장바구니 버튼 인덱스인 1과 매핑
+      // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
+      ref.read(tabIndexProvider.notifier).state = 1;
+
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -407,8 +412,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
                   collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
                     context: context,
+                    ref: ref,
                     title: '장바구니',
-                    leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
+                    leadingType: LeadingType.none, // 버튼 없음.
                     buttonCase: 3, // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
                   ),
                 ),
@@ -483,7 +489,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen> with WidgetsBin
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context, 2), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
     // ------ 화면구성 끝
   }

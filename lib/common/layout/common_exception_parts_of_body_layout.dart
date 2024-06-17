@@ -37,6 +37,7 @@ import '../provider/common_state_provider.dart';
 // 공통 앱 바
 AppBar buildCommonAppBar({
   required BuildContext context, // BuildContext를 필수 인자로 받고, 각종 위젯에서 위치 정보 등을 제공받음.
+  required WidgetRef ref, // WidgetRef를 필수 인자로 받음.
   required String title, // AppBar에 표시될 제목을 문자열로 받음.
   LeadingType leadingType = LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
@@ -44,7 +45,7 @@ AppBar buildCommonAppBar({
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
   switch (leadingType) {
-    // 이전 화면으로 이동 버튼인 경우
+  // 이전 화면으로 이동 버튼인 경우
     case LeadingType.back:
       leadingWidget = IconButton(
         icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘을 사용함.
@@ -53,7 +54,7 @@ AppBar buildCommonAppBar({
             Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('이전 화면으로 이동할 수 없습니다.'))
+                SnackBar(content: Text('이전 화면으로 이동할 수 없습니다.')) // 이전 페이지로 돌아갈 수 없다는 메시지 표시
             );
           }
         },
@@ -87,8 +88,11 @@ AppBar buildCommonAppBar({
     // 케이스 2: 찜 목록 버튼만 노출
       actions.add(
         IconButton(
-          icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreenAndRemoveUntil(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
+          icon: Icon(Icons.favorite, color: Colors.red), // 찜 목록 아이콘을 사용함.
+          // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
+          // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
+          // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
+          onPressed: () => navigateToScreenAndRemoveUntil(context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
         ),
       );
       break;
@@ -97,11 +101,12 @@ AppBar buildCommonAppBar({
       actions.addAll([
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreenAndRemoveUntil(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.home),
-          onPressed: () => navigateToScreenAndRemoveUntil(context, HomeMainScreen()), // 홈 화면으로 이동
+          // HomeMainScreen()을 tabIndex=0으로 한 것은 BottomNavigationBar에서 홈 버튼을 0으로 지정한 것과 일치하게 설정
+          onPressed: () => navigateToScreenAndRemoveUntil(context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
         ),
       ]);
       break;
@@ -110,34 +115,35 @@ AppBar buildCommonAppBar({
       actions.addAll([
         IconButton(
           icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreenAndRemoveUntil(context, WishlistMainScreen()), // 찜 목록 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.home),
-          onPressed: () => navigateToScreenAndRemoveUntil(context, HomeMainScreen()), // 홈 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
         ),
         IconButton(
           icon: Icon(Icons.shopping_cart),
-          onPressed: () => navigateToScreen(context, CartMainScreen()), // 장바구니 화면으로 이동
+          onPressed: () => navigateToScreenAndRemoveUntil(context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
         ),
       ]);
       break;
   }
 
+  // AppBar를 반환
   return AppBar(
     backgroundColor: BUTTON_COLOR, // AppBar 색상 설정
     title: Container(
-      height: kToolbarHeight,
+      height: kToolbarHeight, // AppBar 높이를 설정
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center, // 세로 방향 가운데 정렬
         children: <Widget>[
           Expanded(
             child: Center(
               child: AspectRatio(
-                aspectRatio: 1,
+                aspectRatio: 1, // 가로 세로 비율을 1:1로 설정
                 child: Image.asset(
-                  'asset/img/misc/logo_image.jpg',
-                  fit: BoxFit.contain,
+                  'asset/img/misc/logo_image.jpg', // 로고 이미지 경로 설정
+                  fit: BoxFit.contain, // 이미지를 포함하여 맞춤
                 ),
               ),
             ),
@@ -145,10 +151,10 @@ AppBar buildCommonAppBar({
           Expanded(
             child: Center(
               child: Text(
-                title,
+                title, // 제목 설정
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
+                  color: Colors.black, // 제목 텍스트 색상
+                  fontSize: 20, // 제목 텍스트 크기
                 ),
               ),
             ),
@@ -163,6 +169,139 @@ AppBar buildCommonAppBar({
 }
 // ------ AppBar 생성 함수 내용 구현 끝
 
+// ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
+// BottomNavigationBar 생성 함수
+Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context, int colorCase) {
+  // 선택된 아이템의 색상을 초기화
+  Color selectedColor = DRAWER_COLOR;
+  // 선택되지 않은 아이템의 색상을 초기화
+  Color unselectedColor = BODY_TEXT_COLOR;
+
+  // colorCase 값에 따라 선택된 아이템의 색상을 설정
+  switch (colorCase) {
+    case 1: // 홈 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 2: // 장바구니 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 3: // 발주 내역 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 4: // 마이페이지 버튼만 선택된 경우
+      selectedColor = DRAWER_COLOR;
+      break;
+    case 5: // 모든 버튼이 선택되지 않은 경우
+      selectedColor = BODY_TEXT_COLOR;
+      break;
+  }
+
+  // BottomNavigationBar를 반환
+  return BottomNavigationBar(
+    type: BottomNavigationBarType.fixed, // BottomNavigationBar 타입을 고정형으로 설정
+    currentIndex: selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0, // 현재 선택된 인덱스를 설정, 범위가 벗어나면 0으로 설정
+    onTap: (index) {
+      // 다른 인덱스가 선택된 경우
+      if (index != selectedIndex) {
+        // 선택된 인덱스를 상태로 업데이트
+        ref.read(tabIndexProvider.notifier).state = index;
+
+        // 화면 전환
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) {
+            // 선택된 인덱스에 따라 다른 화면을 반환
+            switch (index) {
+              case 0:
+                return HomeMainScreen();
+              case 1:
+                return CartMainScreen();
+              case 2:
+                return OrderMainScreen();
+              case 3:
+                return ProfileMainScreen();
+              default:
+                return HomeMainScreen();
+            }
+          }),
+              (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
+        );
+      } else {
+        // 현재 화면이 이미 선택된 화면인 경우, 스크롤 위치를 초기화
+        switch (index) {
+          case 0:
+          // 홈 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+            final homeScrollController = ref.read(homeScrollControllerProvider);
+            if (homeScrollController.hasClients) {
+              homeScrollController.animateTo(
+                0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            }
+            break;
+          case 1:
+          // 장바구니 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+            final cartScrollController = ref.read(cartScrollControllerProvider);
+            if (cartScrollController.hasClients) {
+              cartScrollController.animateTo(
+                0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            }
+            break;
+          case 2:
+          // 발주 내역 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+            final orderScrollController = ref.read(orderScrollControllerProvider);
+            if (orderScrollController.hasClients) {
+              orderScrollController.animateTo(
+                0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            }
+            break;
+          case 3:
+          // 마이페이지 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+            final profileScrollController = ref.read(profileScrollControllerProvider);
+            if (profileScrollController.hasClients) {
+              profileScrollController.animateTo(
+                0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            }
+            break;
+        }
+      }
+    },
+    // BottomNavigationBar의 아이템들을 정의
+    items: [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home_outlined), // 홈 아이콘
+        label: '홈', // 홈 라벨
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.shopping_cart_outlined), // 장바구니 아이콘
+        label: '장바구니', // 장바구니 라벨
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.receipt_long_outlined), // 발주 내역 아이콘
+        label: '발주내역', // 발주 내역 라벨
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person_outlined), // 마이페이지 아이콘
+        label: '마이페이지', // 마이페이지 라벨
+      ),
+    ],
+    selectedItemColor: selectedColor, // 선택된 아이템의 색상
+    unselectedItemColor: unselectedColor, // 선택되지 않은 아이템의 색상
+    selectedFontSize: 10, // 선택된 아이템의 폰트 크기
+    unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
+  );
+}
+// ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
+
 // 왼쪽 상단 버튼 유형을 정의하는 열거형 관련 함수
 enum LeadingType {
   drawer, // 드로어 버튼.
@@ -170,22 +309,27 @@ enum LeadingType {
   none, // 아무 버튼도 없음.
 }
 
-// 앱 바 버튼 클릭 시, 각 화면으로 이동하는 함수인 navigateToScreen 내용
-void navigateToScreen(BuildContext context, Widget screen) {
-  // 현재 라우트의 타입을 검사하여 중복 열기를 방지
+// 버튼 클릭하는 경우, 각 화면으로 이동하는 함수인 navigateToScreen 내용 (앱 바, 하단 탭 바에 사용)
+void navigateToScreen(BuildContext context, WidgetRef ref, Widget screen, int tabIndex) {
+  // 현재 경로가 이동하려는 화면과 동일한지 확인
   if (ModalRoute.of(context)?.settings.name == screen.runtimeType.toString()) {
-    // 이미 해당 화면이면 아무 작업도 수행하지 않음
-    return;
+    return; // 동일하면 아무 작업도 하지 않음
   }
+  // 탭 인덱스 업데이트
+  ref.read(tabIndexProvider.notifier).state = tabIndex;
+  // 지정된 화면으로 교체하면서 이동
   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => screen));
 }
 
-// 특정 화면으로 이동하면서 기존의 모든 페이지 스택을 제거하는 함수인 navigateToScreenAndRemoveUntil 내용
-void navigateToScreenAndRemoveUntil(BuildContext context, Widget screen) {
+// 특정 화면으로 이동하면서 기존의 모든 페이지 스택을 제거하는 함수인 navigateToScreenAndRemoveUntil 내용 (앱 바, 하단 탭 바에 사용)
+void navigateToScreenAndRemoveUntil(BuildContext context, WidgetRef ref, Widget screen, int tabIndex) {
+  // 탭 인덱스 업데이트
+  ref.read(tabIndexProvider.notifier).state = tabIndex;
+  // 지정된 화면으로 이동하면서 기존의 모든 페이지 스택을 제거
   Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(builder: (context) => screen),
-        (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
   );
 }
 
@@ -221,6 +365,7 @@ TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
   );
 }
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 끝
+
 
 // ------ buildTopBarList 위젯 내용 구현 시작
 // TopBar의 카테고리 리스트를 생성하는 함수를 재작성
@@ -267,199 +412,6 @@ Widget buildTopBarList(BuildContext context, void Function(int) onTopBarTap, Sta
  );
 }
 // ------ buildTopBarList 위젯 내용 구현 끝
-
-// // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
-// // BottomNavigationBar 생성 함수
-// // 공통 BottomNavigationBar 생성 함수. 선택된 항목에 따라 다른 화면으로 이동하도록 구현함.
-// Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context) {
-//   // 하단 네비게이션 바 위젯을 생성하고 반환
-//   return BottomNavigationBar(
-//     type: BottomNavigationBarType.fixed, // 네비게이션 바의 유형을 고정된 유형으로 설정
-//     currentIndex: selectedIndex, // 현재 선택된 인덱스
-//     onTap: (index) {
-//       // 선택된 탭의 인덱스가 현재 인덱스와 같은지 확인함.
-//       if (ref.read(tabIndexProvider) == index) {
-//         // 인덱스가 0인 경우, 즉 '홈' 탭이 선택된 경우
-//         if (index == 0) {
-//           // homeScrollControllerProvider를 통해 ScrollController를 가져옴.
-//           final homeScrollController = ref.read(homeScrollControllerProvider);
-//           // ScrollController가 유효한지 확인함.
-//           if (homeScrollController.hasClients) {
-//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
-//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-//             homeScrollController.animateTo(
-//               0, // 스크롤 위치를 최상단(0)으로 설정함.
-//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-//             );
-//           }
-//         }
-//
-//         // 인덱스가 1인 경우, 즉 '장바구니' 탭이 선택된 경우
-//         if (index == 1) {
-//           // cartScrollControllerProvider를 통해 ScrollController를 가져옴.
-//           final cartScrollController = ref.read(cartScrollControllerProvider);
-//           // ScrollController가 유효한지 확인함.
-//           if (cartScrollController.hasClients) {
-//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
-//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-//             cartScrollController.animateTo(
-//               0, // 스크롤 위치를 최상단(0)으로 설정함.
-//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-//             );
-//           }
-//         }
-//
-//         // 인덱스가 2인 경우, 즉 '주문' 탭이 선택된 경우
-//         if (index == 2) {
-//           // orderScrollControllerProvider를 통해 ScrollController를 가져옴.
-//           final orderScrollController = ref.read(orderScrollControllerProvider);
-//           // ScrollController가 유효한지 확인함.
-//           if (orderScrollController.hasClients) {
-//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
-//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-//             orderScrollController.animateTo(
-//               0, // 스크롤 위치를 최상단(0)으로 설정함.
-//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-//             );
-//           }
-//         }
-//
-//         // 인덱스가 3인 경우, 즉 '마이페이지' 탭이 선택된 경우
-//         if (index == 3) {
-//           // profileScrollControllerProvider를 통해 ScrollController를 가져옴.
-//           final profileScrollController = ref.read(profileScrollControllerProvider);
-//           // ScrollController가 유효한지 확인함.
-//           if (profileScrollController.hasClients) {
-//             // ScrollController가 클라이언트를 가지고 있는지 확인함.
-//             // 즉, ScrollController가 연결된 Scrollable Widget이 있는지 확인함.
-//             // 스크롤 위치를 0으로 설정하여 초기 위치로 이동함.
-//             profileScrollController.animateTo(
-//               0, // 스크롤 위치를 최상단(0)으로 설정함.
-//               duration: Duration(milliseconds: 500), // 스크롤 애니메이션의 지속 시간을 500밀리초로 설정함.
-//               curve: Curves.easeInOut, // 스크롤 애니메이션의 커브를 easeInOut으로 설정하여 부드럽게 시작하고 끝나도록 함.
-//             );
-//           }
-//         }
-//         // 이미 선택된 탭이면 아무 동작도 하지 않음.
-//         return;
-//       }
-//
-//       // 탭이 클릭되었을 때 실행할 로직
-//       // 선택된 인덱스에 따라 상태 업데이트
-//       ref.read(tabIndexProvider.notifier).state = index; // 선택된 탭의 인덱스를 상태 관리자에 저장
-//       resetCategoryView(ref); // 카테고리 뷰를 초기화하는 함수를 호출
-//       // 화면 전환 로직
-//       switch (index) { // 클릭된 탭의 인덱스에 따라 각기 다른 화면으로 이동
-//         case 0:
-//         // '홈' 화면으로 이동
-//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeMainScreen()));
-//           break;
-//         case 1:
-//         // '장바구니' 화면으로 이동
-//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CartMainScreen()));
-//           break;
-//         case 2:
-//         // '주문' 화면으로 이동
-//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => OrderMainScreen()));
-//           break;
-//         case 3:
-//         // '마이페이지' 화면으로 이동
-//           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ProfileMainScreen()));
-//           break;
-//       }
-//     },
-//     items: const [
-//       BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'), // '홈' 탭 아이콘 및 라벨
-//       BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: '장바구니'), // '장바구니' 탭 아이콘 및 라벨
-//       BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: '발주 내역'), // '발주 내역' 탭 아이콘 및 라벨
-//       BottomNavigationBarItem(icon: Icon(Icons.person_outlined), label: '마이페이지'), // '마이페이지' 탭 아이콘 및 라벨
-//     ],
-//     selectedItemColor: DRAWER_COLOR, // 선택된 아이템의 색상
-//     unselectedItemColor: BODY_TEXT_COLOR, // 선택되지 않은 아이템의 색상
-//     selectedFontSize: 10, // 선택된 아이템의 폰트 크기
-//     unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
-//   );
-// }
-// // ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
-
-Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref, BuildContext context, int colorCase) {
-  Color selectedColor = DRAWER_COLOR;
-  Color unselectedColor = BODY_TEXT_COLOR;
-
-  switch (colorCase) {
-    case 1: // 홈 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 2: // 장바구니 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 3: // 발주 내역 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 4: // 마이페이지 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 5: // 모든 버튼이 선택되지 않은 경우
-      selectedColor = BODY_TEXT_COLOR;
-      break;
-  }
-
-  return BottomNavigationBar(
-    type: BottomNavigationBarType.fixed,
-    currentIndex: selectedIndex,
-    onTap: (index) {
-      if (index != selectedIndex) {
-        // 선택된 인덱스를 상태로 업데이트
-        ref.read(tabIndexProvider.notifier).state = index;
-
-        // 화면 전환
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-          switch (index) {
-            case 0: return HomeMainScreen();
-            case 1: return CartMainScreen();
-            case 2: return OrderMainScreen();
-            case 3: return ProfileMainScreen();
-            default: return HomeMainScreen();
-          }
-        }));
-      }
-    },
-    items: [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home_outlined),
-        label: '홈',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.shopping_cart_outlined),
-        label: '장바구니',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.receipt_long_outlined),
-        label: '발주내역',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person_outlined),
-        label: '마이페이지',
-      ),
-    ],
-    selectedItemColor: selectedColor,
-    unselectedItemColor: unselectedColor,
-    selectedFontSize: 10, // 선택된 아이템의 폰트 크기
-    unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
-  );
-}
-
-
-
-
-
-
 
 // ------ buildCommonDrawer 위젯 내용 구현 시작
 // 드로워 생성 함수

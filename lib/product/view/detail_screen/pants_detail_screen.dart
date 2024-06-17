@@ -193,6 +193,7 @@ class _PantsDetailProductScreenState extends ConsumerState<PantsDetailProductScr
                   collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
                     context: context,
+                    ref: ref,
                     title: '팬츠 상세',
                     leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
                     buttonCase: 4, // 4번 케이스 (찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출)
