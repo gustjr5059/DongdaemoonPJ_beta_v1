@@ -309,8 +309,12 @@ class ProductInfoDetailScreenNavigation {
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
-      ref.read(colorSelectionIndexProvider.notifier).state = null;
-      ref.read(sizeSelectionProvider.notifier).state = null;
+      ref
+          .read(colorSelectionIndexProvider.notifier)
+          .state = null;
+      ref
+          .read(sizeSelectionProvider.notifier)
+          .state = null;
     });
 
     // 상품의 문서명을 로그로 출력함. - 해당 로그값으로, 상세화면 내 데이터와 파이어베이스 내 문서의 데이터 일치성을 확인하고자 하는 부분
@@ -318,14 +322,16 @@ class ProductInfoDetailScreenNavigation {
   }
 
   // Firestore에서 상세한 문서 정보를 빌드하여 UI에 구현하는 위젯.
-  Widget buildProdFirestoreDetailDocument(BuildContext context, ProductContent product) {
+  Widget buildProdFirestoreDetailDocument(BuildContext context,
+      ProductContent product) {
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
       onTap: () {
-        navigateToDetailScreen(context, product.docId); // product.docId를 사용하여 해당 문서로 이동함.
+        navigateToDetailScreen(
+            context, product.docId); // product.docId를 사용하여 해당 문서로 이동함.
       },
       child: Container(
-        width: 180,
+        width: 170,
         margin: EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,45 +339,63 @@ class ProductInfoDetailScreenNavigation {
             // 제품 썸네일을 표시함.
             if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
               Center(
-                child: Image.network(product.thumbnail!, width: 90, fit: BoxFit.cover),
+                child: Image.network(
+                    product.thumbnail!, width: 90, fit: BoxFit.cover),
               ),
             SizedBox(height: 10),
-            // 제품 색상 옵션을 표시함.
-            if (product.colors != null)
-              Row(
-                children: product.colors!
-                    .map((color) => Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2),
-                  child: Image.network(color, width: 13, height: 13),
-                ))
-                    .toList(),
-              ),
             // 제품 간단한 소개를 표시함.
             if (product.briefIntroduction != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   product.briefIntroduction!,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 16),
+                  maxLines: 2, // 최대 2줄까지 표시함.
+                  overflow: TextOverflow.ellipsis, // 넘치는 텍스트는 '...'으로 표시함.
                 ),
               ),
-            // 원래 가격을 표시함.
+            // 원래 가격을 표시함. 소수점은 표시하지 않음.
             if (product.originalPrice != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
-                  product.originalPrice!.toString(),
-                  style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),
+                  '${product.originalPrice!.toStringAsFixed(0)}원',
+                  style: TextStyle(
+                      fontSize: 13, decoration: TextDecoration.lineThrough),
                 ),
               ),
-            // 할인된 가격을 표시함.
+            // 할인된 가격을 표시함. 소수점은 표시하지 않음.
             if (product.discountPrice != null)
               Padding(
                 padding: const EdgeInsets.only(top: 2.0),
-                child: Text(
-                  product.discountPrice!.toString(),
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                child: Row(
+                  children: [
+                    Text(
+                      '${product.discountPrice!.toStringAsFixed(0)}원',
+                      style: TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 6),
+                    // 할인율을 빨간색으로 표시함.
+                    if (product.discountPercent != null)
+                      Text(
+                        '${product.discountPercent!.toStringAsFixed(0)}%',
+                        style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                  ],
                 ),
+              ),
+            SizedBox(height: 10),
+            // 제품 색상 옵션을 표시함.
+            if (product.colors != null)
+              Row(
+                children: product.colors!
+                    .map((color) =>
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: Image.network(color, width: 13, height: 13),
+                    ))
+                    .toList(),
               ),
           ],
         ),

@@ -9,6 +9,7 @@ class ProductContent {
   final String? briefIntroduction; // 제품의 간단한 소개를 저장하는 필드.
   final double? originalPrice; // 제품의 원래 가격을 저장하는 필드.
   final double? discountPrice; // 제품의 할인 가격을 저장하는 필드.
+  final double? discountPercent; // 제품의 할인율을 저장하는 필드.
   final List<Map<String, dynamic>>? colorOptions; // 추가된 색상 옵션을 저장하는 필드.
   final List<String>? sizes; // 제품의 사이즈 옵션을 저장하는 필드.
   final DocumentSnapshot? documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
@@ -21,6 +22,7 @@ class ProductContent {
     this.briefIntroduction,
     this.originalPrice,
     this.discountPrice,
+    this.discountPercent,
     this.colorOptions,
     this.sizes,
     this.documentSnapshot,
@@ -38,6 +40,7 @@ class ProductContent {
         briefIntroduction: null,
         originalPrice: null,
         discountPrice: null,
+        discountPercent: null,
         colorOptions: null,
         sizes: null,
         documentSnapshot: doc,
@@ -93,6 +96,7 @@ class ProductContent {
       briefIntroduction: data['brief_introduction'] as String?, // 제품 소개.
       originalPrice: parseDouble(data['original_price']), // 원래 가격.
       discountPrice: parseDouble(data['discount_price']), // 할인 가격.
+      discountPercent: parseDouble(data['discount_percent']), // 할인율.
       documentSnapshot: doc, // 문서 스냅샷.
     );
   }
