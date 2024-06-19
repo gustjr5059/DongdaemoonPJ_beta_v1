@@ -44,6 +44,7 @@ import '../../../common/model/banner_model.dart';
 import '../../../common/provider/common_future_provider.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_future_provider.dart';
 import '../../provider/product_state_provider.dart';
 
@@ -401,7 +402,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 30), // 높이 임의로 50으로 간격 설정
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: SizedBox(
@@ -426,6 +427,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
+                            SizedBox(height: 10),
+                            PriceAndDiscountPercentSortButtons(), // 가격 높은 순, 가격 낮은 순, 할인율 높은 순, 할인율 낮은 순 버튼 구현 클래스
                             Text('블라우스 메인 내용'),
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],

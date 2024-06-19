@@ -86,6 +86,54 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 }
 // ------ arrowButton 위젯 내용 구현 끝
 
+// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
+class PriceAndDiscountPercentSortButtons extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildExpandedSortButton(context, '가격 높은 순'),
+          _buildExpandedSortButton(context, '가격 낮은 순'),
+          _buildExpandedSortButton(context, '할인율 높은 순'),
+          _buildExpandedSortButton(context, '할인율 낮은 순'),
+        ],
+      ),
+    );
+  }
+// 버튼 세부 내용인 _buildExpandedSortButton 위젯
+  Widget _buildExpandedSortButton(BuildContext context, String title) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: ElevatedButton(
+          onPressed: () {
+            // 정렬 로직을 여기에 추가합니다.
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: BUTTON_COLOR, // 버튼 색상 설정
+            foregroundColor: INPUT_BORDER_COLOR, // 텍스트 색상 설정
+            minimumSize: Size(0, 40), // 최소 버튼 크기 설정
+            padding: EdgeInsets.symmetric(horizontal: 8.0), // 패딩 조정
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              textAlign: TextAlign.center, // 텍스트 가운데 정렬
+              style: TextStyle(fontSize: 14), // 텍스트 크기를 14로 설정
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 끝
+
+
 // ------- ProductsSectionList 클래스 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
 class ProductsSectionList extends ConsumerStatefulWidget {
