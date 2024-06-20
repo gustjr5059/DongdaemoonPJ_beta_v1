@@ -295,6 +295,7 @@ class _BlouseProductListState extends ConsumerState<BlouseProductList> {
         ListView.builder(
           shrinkWrap: true, // 높이 제한
           physics: NeverScrollableScrollPhysics(), // 스크롤 비활성화
+          padding: EdgeInsets.symmetric(vertical: 10.0), // 패딩을 최소화하여 설정
           itemCount: (products.length / 3).ceil(), // 행 개수
           itemBuilder: (context, index) {
             int startIndex = index * 3; // 시작 인덱스
@@ -307,7 +308,10 @@ class _BlouseProductListState extends ConsumerState<BlouseProductList> {
           },
         ),
         if (isFetching)
-          CircularProgressIndicator(), // 가져오는 중이면 로딩 표시
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(), // 가져오는 중이면 로딩 표시
+          ),
       ],
     );
   }
