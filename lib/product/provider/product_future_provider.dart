@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이
 // 제품 모델은 Firestore에서 가져온 데이터를 애플리케이션 내에서 사용하기 쉬운 형태로 변환하는 역할을 합니다.
 import '../../common/model/banner_model.dart';
 import '../../common/repository/banner_repository.dart';
+import '../layout/product_body_parts_layout.dart';
 import '../model/product_model.dart'; // 상품 데이터 모델 정의 파일의 임포트
 // 제품 데이터를 Firestore 데이터베이스에서 가져오는 로직이 구현된 저장소 클래스를 임포트합니다.
 // 이 레포지토리는 Firestore와의 직접적인 상호작용을 캡슐화하며, 데이터를 가져오거나 업데이트하는 메서드를 제공합니다.
@@ -135,7 +136,8 @@ final winterProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductC
 // ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
 
-// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상세 화면 부분-파이어베이스의 데이터를 불러올 때 사용할 provider 시작
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트
+// 관련 상세 화면 부분에 적용-파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 // ----- 블라우스 부분 시작
 // Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
 final blouseProductRepositoryProvider = Provider<BlouseProductRepository>((ref) {
@@ -327,7 +329,8 @@ final skirtProdDetailFirestoreDataProvider = FutureProvider.family<ProductConten
   return repository.getProduct(docId);
 });
 // ----- 스커트 부분 끝
-// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상세 화면 부분-파이어베이스의 데이터를 불러올 때 사용할 provider 끝
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트
+// 관련 상세 화면 부분에 적용-파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
 // ------- 티셔츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
 

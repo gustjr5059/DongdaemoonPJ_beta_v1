@@ -4,8 +4,14 @@
 // Riverpod는 기존 Provider 라이브러리를 기반으로 하여 더욱 발전된 기능을 제공하며,
 // 각종 상태 관리 요구 사항을 보다 세밀하고 효과적으로 다룰 수 있도록 설계되었습니다.
 // 이를 통해 앱의 상태를 전역적으로 또는 로컬적으로 제어하고, 상태 변화에 따라 UI를 자동으로 업데이트하는 구조를 구현할 수 있습니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dongdaemoon_beta_v1/product/provider/product_future_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../home/provider/home_state_provider.dart';
+import '../layout/product_body_parts_layout.dart';
+import '../model/product_model.dart';
 
 
 // 티셔츠 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
@@ -413,5 +419,50 @@ final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
-
 // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝
+
+// ------- BlouseProductListNotifier 클래스 내용 구현 시작
+class BlouseProductListNotifier extends StateNotifier<List<ProductContent>> {
+  BlouseProductListNotifier(this.ref) : super([]); // 초기 상태는 빈 리스트
+
+  final Ref ref; // Provider 참조
+  bool _isFetching = false; // 데이터 가져오는 중인지 여부
+  DocumentSnapshot? _lastDocument; // 마지막 문서 스냅샷
+  bool get isFetching => _isFetching; // 데이터 가져오는 중인지 여부 반환
+
+  // 제품을 가져오는 함수 (초기 로드 여부에 따라 다름)
+  Future<void> _fetchProducts({bool isInitial = false}) async {
+    if (_isFetching) return; // 이미 가져오는 중이면 리턴
+    _isFetching = true; // 가져오는 중으로 설정
+    try {
+      final products = await ref.read(blouseProductRepositoryProvider).fetchBlouseProductContents(
+        limit: 3, // 한 번에 가져올 상품 수
+        startAfter: isInitial ? null : _lastDocument, // 초기 로드면 처음부터, 아니면 마지막 문서 이후부터
+      );
+      state = isInitial ? products : [...state, ...products]; // 초기 로드면 상태를 덮어쓰고, 아니면 추가
+      if (products.isNotEmpty) {
+        _lastDocument = products.last.documentSnapshot; // 마지막 문서 업데이트
+      }
+    } catch (e) {
+      debugPrint('Error fetching products: $e'); // 에러 출력
+    } finally {
+      _isFetching = false; // 가져오는 중 상태 해제
+    }
+  }
+
+  // 초기 제품을 가져오는 함수
+  Future<void> fetchInitialProducts() async {
+    await _fetchProducts(isInitial: true); // 초기 로드로 제품 가져오기
+  }
+
+  // 더 많은 제품을 가져오는 함수
+  Future<void> fetchMoreProducts() async {
+    await _fetchProducts(); // 더 많은 제품 가져오기
+  }
+}
+// ------- BlouseProductListNotifier 클래스 내용 구현 끝
+
+// BlouseProductList 구현 관련 상태관리 StateNotifierProvider
+final blouseProductListProvider = StateNotifierProvider<BlouseProductListNotifier, List<ProductContent>>((ref) {
+  return BlouseProductListNotifier(ref); // Provider 초기화
+});

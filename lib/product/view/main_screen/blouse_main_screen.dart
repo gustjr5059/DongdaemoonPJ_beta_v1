@@ -218,7 +218,6 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       _largeBannerAutoScroll.startAutoScroll();
       _small1BannerAutoScroll.startAutoScroll();
     });
-
   }
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
@@ -291,7 +290,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       ));
     }
   }
-  
+
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
@@ -367,23 +366,18 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우로 4의 패딩을 추가
                         child: Column(
                           children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
-                            // 큰 배너 섹션을 카드뷰로 구성
+                            SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                             CommonCardView(
                               content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함.
-                                height: 200,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
+                                height: 150, // 높이 150의 콘텐츠 박스
                                 child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
                                   context: context,
                                   ref: ref,
@@ -395,20 +389,14 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                                   onPageTap: _onLargeBannerTap,
                                 ),
                               ),
-                              backgroundColor: LIGHT_PURPLE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: LIGHT_PURPLE_COLOR, // 배경색 설정
+                              elevation: 4, // 그림자 높이 설정
+                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
-                            SizedBox(height: 30), // 높이 임의로 50으로 간격 설정
-                            // 첫 번째 작은 배너 섹션
+                            SizedBox(height: 10), // 10의 높이를 가진 간격 추가
                             CommonCardView(
                               content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
-                                height: 60,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
+                                height: 30, // 높이 30의 콘텐츠 박스
                                 child: buildCommonBannerPageViewSection<BlouseMainSmall1BannerImage>(
                                   context: context,
                                   ref: ref,
@@ -420,41 +408,39 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                                   onPageTap: _onSmall1BannerTap,
                                 ),
                               ),
-                              backgroundColor: LIGHT_SKY_BLUE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: LIGHT_SKY_BLUE_COLOR, // 배경색 설정
+                              elevation: 4, // 그림자 높이 설정
+                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
-                            SizedBox(height: 10),
-                            PriceAndDiscountPercentSortButtons(), // 가격 높은 순, 가격 낮은 순, 할인율 높은 순, 할인율 낮은 순 버튼 구현 클래스
-                            Text('블라우스 메인 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            PriceAndDiscountPercentSortButtons(), // 가격 및 할인 정렬 버튼 추가
+                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            BlouseProductList(scrollController: blouseMainScreenPointScrollController), // 블라우스 상품 리스트 추가
+                            SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                           ],
                         ),
                       );
                     },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                    childCount: 1, // 자식 위젯 수 설정
                   ),
                 ),
               ),
             ],
           ),
-          // buildTopButton 함수는 주어진 context와 blouseMainScreenPointScrollController를 사용하여
-          // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+            // buildTopButton 함수는 주어진 context와 blouseMainScreenPointScrollController를 사용하여
+            // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
           buildTopButton(context, blouseMainScreenPointScrollController),
-        ],
-      ),
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
-    );
-    // ------ 화면구성 끝
+         ],
+       ),
+       bottomNavigationBar: buildCommonBottomNavigationBar(
+            ref.watch(tabIndexProvider), ref, context, 5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
+      );
+      // ------ 화면구성 끝
+    }
+  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+  // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
   }
-// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-// ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
-}
-// _CartMainScreenState 클래스 끝
+// _BlouseMainScreenState 클래스 끝
 
 

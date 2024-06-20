@@ -254,6 +254,86 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 }
 // ------- ProductsSectionList 클래스 내용 구현 끝
 
+// ------- BlouseProductList 클래스 내용 구현 시작
+class BlouseProductList extends ConsumerStatefulWidget {
+  final ScrollController scrollController; // 스크롤 컨트롤러
+  BlouseProductList({required this.scrollController}); // 생성자
+
+  @override
+  _BlouseProductListState createState() => _BlouseProductListState(); // 상태 생성
+}
+
+class _BlouseProductListState extends ConsumerState<BlouseProductList> {
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
+    ref.read(blouseProductListProvider.notifier).fetchInitialProducts(); // 초기 제품 가져오기
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_scrollListener); // 스크롤 리스너 제거
+    super.dispose();
+  }
+
+  // 스크롤 리스너 함수
+  void _scrollListener() {
+    if (widget.scrollController.position.pixels >=
+        widget.scrollController.position.maxScrollExtent - 200) {
+      ref.read(blouseProductListProvider.notifier).fetchMoreProducts(); // 스크롤이 끝에 도달하면 더 많은 제품 가져오기
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final products = ref.watch(blouseProductListProvider); // 제품 목록 상태 감시
+    final isFetching = ref.watch(blouseProductListProvider.notifier.select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
+
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true, // 높이 제한
+          physics: NeverScrollableScrollPhysics(), // 스크롤 비활성화
+          itemCount: (products.length / 3).ceil(), // 행 개수
+          itemBuilder: (context, index) {
+            int startIndex = index * 3; // 시작 인덱스
+            int endIndex = startIndex + 3; // 끝 인덱스
+            if (endIndex > products.length) {
+              endIndex = products.length; // 끝 인덱스 조정
+            }
+            List<ProductContent> productRow = products.sublist(startIndex, endIndex); // 행에 들어갈 제품들
+            return buildBlouseProductRow(ref, productRow, context); // 행 빌드
+          },
+        ),
+        if (isFetching)
+          CircularProgressIndicator(), // 가져오는 중이면 로딩 표시
+      ],
+    );
+  }
+}
+// ------- BlouseProductList 클래스 내용 구현 끝
+
+// ------- buildBlouseProductRow 위젯 내용 구현 시작
+Widget buildBlouseProductRow(WidgetRef ref, List<ProductContent> products, BuildContext context) {
+  final productInfo = ProductInfoDetailScreenNavigation(ref, '블라우스'); // 제품 정보 상세 화면 내비게이션
+
+  return Row(
+    children: products.map((product) => Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(2.0), // 패딩
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+          children: [
+            productInfo.buildProdFirestoreDetailDocument(context, product), // 제품 정보 상세 화면 빌드
+          ],
+        ),
+      ),
+    )).toList(), // 각 제품을 확장된 위젯으로 변환
+  );
+}
+// ------- buildBlouseProductRow 위젯 내용 구현 끝
+
 // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
 // 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 /  화면 자체의 스크롤 위치 초기화 관련 함수
 Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
@@ -379,8 +459,22 @@ class ProductInfoDetailScreenNavigation {
             context, product.docId); // product.docId를 사용하여 해당 문서로 이동함.
       },
       child: Container(
-        width: 170,
-        margin: EdgeInsets.all(8),
+        // height: 180, // 항목의 높이를 명시적으로 지정하여 충분한 공간 확보
+        // width: 180,
+        padding: EdgeInsets.all(4.0),
+        margin: EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -388,28 +482,28 @@ class ProductInfoDetailScreenNavigation {
             if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
               Center(
                 child: Image.network(
-                    product.thumbnail!, width: 90, fit: BoxFit.cover),
+                    product.thumbnail!, width: 100, fit: BoxFit.cover),
               ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             // 제품 간단한 소개를 표시함.
             if (product.briefIntroduction != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   product.briefIntroduction!,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 14),
                   maxLines: 2, // 최대 2줄까지 표시함.
-                  overflow: TextOverflow.ellipsis, // 넘치는 텍스트는 '...'으로 표시함.
+                  overflow: TextOverflow.visible, // 넘치는 텍스트는 '...'으로 표시함.
                 ),
               ),
             // 원래 가격을 표시함. 소수점은 표시하지 않음.
             if (product.originalPrice != null)
               Padding(
-                padding: const EdgeInsets.only(top: 4.0),
+                padding: const EdgeInsets.only(top: 2.0),
                 child: Text(
                   '${product.originalPrice!.toStringAsFixed(0)}원',
                   style: TextStyle(
-                      fontSize: 13, decoration: TextDecoration.lineThrough),
+                      fontSize: 12, decoration: TextDecoration.lineThrough),
                 ),
               ),
             // 할인된 가격을 표시함. 소수점은 표시하지 않음.
@@ -421,14 +515,14 @@ class ProductInfoDetailScreenNavigation {
                     Text(
                       '${product.discountPrice!.toStringAsFixed(0)}원',
                       style: TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.bold),
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(width: 6),
+                    SizedBox(width: 8),
                     // 할인율을 빨간색으로 표시함.
                     if (product.discountPercent != null)
                       Text(
                         '${product.discountPercent!.toStringAsFixed(0)}%',
-                        style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 14, color: Colors.red, fontWeight: FontWeight.bold),
                       ),
                   ],
                 ),

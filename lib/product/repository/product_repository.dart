@@ -335,6 +335,11 @@ class WinterProductRepository {
 // Firestore 데이터베이스로부터 블라우스 상품 정보를 조회하는 기능을 제공하는 클래스
 class BlouseProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
+  int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
+  List<String> collections = [
+    'a2b1', 'a2b2', 'a2b3', 'a2b4', 'a2b5', 'a2b6', 'a2b7'
+  ]; // 컬렉션 목록
 
   // 생성자에서 Firestore 인스턴스를 초기화
   BlouseProductRepository(this.firestore);
@@ -342,15 +347,46 @@ class BlouseProductRepository {
   // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
   Future<ProductContent> getProduct(String fullPath) async {
     // fullPath는 전체 Firestore 경로를 포함합니다.
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
+    final docRef = firestore.doc(fullPath); // 경로에 해당하는 문서 참조
+    final snapshot = await docRef.get(); // 문서 스냅샷 가져오기
     if (snapshot.exists) {
       // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
-      return ProductContent.fromFirestore(snapshot);
+      return ProductContent.fromFirestore(snapshot); // 데이터가 존재하면 ProductContent로 변환하여 반환
     } else {
       // 데이터가 없을 경우 예외를 발생시킴
-      throw Exception('Firestore 데이터가 없습니다.');
+      throw Exception('Firestore 데이터가 없습니다.'); // 데이터가 없으면 예외 발생
     }
+  }
+
+  // 2차 메인 화면 내 블라우스 상품 데이터를 가져오는 함수
+  Future<List<ProductContent>> fetchBlouseProductContents({required int limit, DocumentSnapshot? startAfter}) async {
+    List<ProductContent> products = []; // 상품 목록 초기화
+
+    // 필요한 수의 상품을 가져올 때까지 반복
+    while (products.length < limit && currentCollectionIndex < collections.length) {
+      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션
+      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후부터 시작
+      }
+
+      final snapshots = await query.get(); // 쿼리 실행하여 스냅샷 가져오기
+      if (snapshots.docs.isNotEmpty) {
+        lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 상품 목록에 추가
+      } else {
+        lastDocument = null; // 문서가 없으면 마지막 문서 초기화
+        currentCollectionIndex++; // 다음 컬렉션으로 이동
+      }
+    }
+
+    return products; // 가져온 상품 목록 반환
+  }
+
+  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  void reset() {
+    lastDocument = null; // 마지막 문서 초기화
+    currentCollectionIndex = 0; // 컬렉션 인덱스 초기화
   }
 }
 

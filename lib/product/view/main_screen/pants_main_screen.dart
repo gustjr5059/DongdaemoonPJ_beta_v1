@@ -406,7 +406,7 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen> with WidgetsB
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 30), // 높이 임의로 50으로 간격 설정
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: SizedBox(
