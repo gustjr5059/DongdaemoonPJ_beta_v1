@@ -315,6 +315,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
+        // (해당 부분은 logoutSecDataAndHomeScrollPointReset에서 구현한 것과 중복되서 필요없음 - 이후에 없애기!!)
         ref.read(homeLargeBannerPageProvider.notifier).state = 0;
         ref.read(homeSmall1BannerPageProvider.notifier).state = 0;
         ref.read(homeSmall2BannerPageProvider.notifier).state = 0;

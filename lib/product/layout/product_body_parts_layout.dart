@@ -268,7 +268,9 @@ class _BlouseProductListState extends ConsumerState<BlouseProductList> {
   void initState() {
     super.initState();
     widget.scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
-    ref.read(blouseProductListProvider.notifier).fetchInitialProducts(); // 초기 제품 가져오기
+    if (ref.read(blouseProductListProvider).isEmpty) {
+      ref.read(blouseProductListProvider.notifier).fetchInitialProducts(); // 초기 제품 가져오기
+    }
   }
 
   @override
@@ -348,11 +350,19 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   prefs.remove('username'); // 저장된 사용자명 삭제
   prefs.remove('password'); // 저장된 비밀번호 삭제
 
+  // 홈 화면 관련 초기화 부분 시작
   // 스크롤 위치 및 현재 탭 인덱스 초기화
   ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   // 홈 화면 내 섹션의 스크롤 위치 초기화
   ref.read(homeSectionScrollPositionsProvider.notifier).state = {};
+  // 홈 화면 관련 초기화 부분 끝
+
+  // 블라우스 메인 화면 관련 초기화 부분 시작
+  ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(blouseProductListProvider.notifier).reset(); // 블라우스 제품 목록 초기화
+  // 블라우스 메인 화면 관련 초기화 부분 끝
 }
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작

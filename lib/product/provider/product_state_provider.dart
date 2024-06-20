@@ -459,6 +459,11 @@ class BlouseProductListNotifier extends StateNotifier<List<ProductContent>> {
   Future<void> fetchMoreProducts() async {
     await _fetchProducts(); // 더 많은 제품 가져오기
   }
+  // 데이터 초기화 함수
+  void reset() {
+    state = []; // 상태 초기화
+    _lastDocument = null; // 마지막 문서 초기화
+  }
 }
 // ------- BlouseProductListNotifier 클래스 내용 구현 끝
 

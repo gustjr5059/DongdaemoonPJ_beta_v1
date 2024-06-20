@@ -202,8 +202,11 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
+        // (해당 부분은 logoutSecDataAndHomeScrollPointReset에서 구현한 것과 중복되서 필요없음 - 이후에 없애기!!)
         ref.read(blouseMainLargeBannerPageProvider.notifier).state = 0;
         ref.read(blouseMainSmall1BannerPageProvider.notifier).state = 0;
+        ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 blouseMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
+        ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
       }
     });
 
