@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/const/colors.dart';
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
+import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../model/product_model.dart';
 // 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
@@ -354,13 +355,17 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   prefs.remove('username'); // 저장된 사용자명 삭제
   prefs.remove('password'); // 저장된 비밀번호 삭제
 
-  // 로그아웃했다가 재로그인 시, 초가화하려면 여기에 적용시켜야 반영이 됨 (각 UI 화면에 해도 소용없음..)
+  // 로그아웃했다가 재로그인 시, 초가화하려면 여기에 적용시켜야 반영이 됨
+  // 모든 화면에서 로그아웃 버튼을 클릭했을 때 모든 화면의 상태를 초기화하는 로직-앱 종료 후 재실행할 때인 경우에도 여기 포함됨
+  // 각 화면마다의 FirebaseAuth.instance.authStateChanges().listen((user) 여기에도 provider 구현하고, 여기에도 구현하는 두 곳 다 구현해야함.
   // 홈 화면 관련 초기화 부분 시작
   // 스크롤 위치 및 현재 탭 인덱스 초기화
   ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   // 홈 화면 내 섹션의 스크롤 위치 초기화
   ref.read(homeSectionScrollPositionsProvider.notifier).state = {};
+  // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
+  ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false;
   // 홈 화면 관련 초기화 부분 끝
 
   // 블라우스 메인 화면 관련 초기화 부분 시작

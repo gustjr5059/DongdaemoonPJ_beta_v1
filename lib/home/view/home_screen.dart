@@ -242,6 +242,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
         homeScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
+      ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false;
       // tabIndexProvider의 상태를 하단 탭 바 내 홈 버튼 인덱스인 0과 매핑
       // -> 홈 화면 초기화 시, 하단 탭 바 내 홈 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 0;
@@ -311,6 +312,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // FirebaseAuth.instance.authStateChanges를 통해 로그인 상태 변화를 감지함.
     // 사용자가 로그아웃하면(user == null), 페이지 인덱스와 스크롤 위치를 초기화함.
     // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
+    // 홈 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 홈 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
@@ -322,6 +324,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
         ref.read(homeSmall3BannerPageProvider.notifier).state = 0;
         ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
         ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+        ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
       }
     });
 

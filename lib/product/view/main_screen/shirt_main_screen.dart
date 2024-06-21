@@ -206,6 +206,7 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen> with WidgetsB
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
+        // 티셔츠 메인 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 티셔츠 메인 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(shirtMainLargeBannerPageProvider.notifier).state = 0;
         ref.read(shirtMainSmall1BannerPageProvider.notifier).state = 0;
         ref.read(shirtMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 shirtMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.

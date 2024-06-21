@@ -68,7 +68,7 @@ class MidCategoryButtonList extends ConsumerWidget {
 
     // 카테고리 확장/축소 상태를 토글하는 함수
     void toggleCategoryView() {
-      ref.read(midCategoryViewBoolExpandedProvider.state).state = !boolExpanded;
+      ref.read(midCategoryViewBoolExpandedProvider.notifier).state = !boolExpanded;
     }
 
     // 카테고리 버튼을 포함하는 애니메이션 컨테이너를 반환하고, 이 컨테이너는 확장/축소 시 높이가 변경됨.
@@ -181,6 +181,7 @@ Widget buildDetailMidCategoryButton({
   return GestureDetector(
     onTap: () {
       onCategoryTap(context, ref, index); // 해당 카테고리를 탭했을 때 실행할 함수 호출
+      ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
     },
     child: Container(
       width: buttonWidth, // 매개변수로 받은 너비를 사용

@@ -24,6 +24,8 @@ final homeScrollPositionProvider = StateProvider<double>((ref) => 0);
 final homeLoginAndLogoutScrollPositionProvider = StateProvider<double>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final homeCurrentTabProvider = StateProvider<int>((ref) => 0);
+// 홈 화면 내 카테고리 버튼 뷰 확장 유무 상태 관리를 위한 StateProvider
+final homeMidCategoryViewBoolExpandedProvider = StateProvider<bool>((ref) => false);
 
 // ------ SectionStateNotifier 클래스 내용 구현 시작
 // SectionDataStateNotifier 클래스는 홈 화면 내 섹션의 불러온 데이터 상태를 관리하는 기능을 함

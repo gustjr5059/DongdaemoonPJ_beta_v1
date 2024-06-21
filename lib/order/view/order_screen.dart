@@ -221,6 +221,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen> with WidgetsB
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
+        // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderLargeBannerPageProvider.notifier).state = 0;
       }
     });

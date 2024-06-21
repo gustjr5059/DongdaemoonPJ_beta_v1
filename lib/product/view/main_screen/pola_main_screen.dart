@@ -206,6 +206,7 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
+        // 폴라티 메인 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 폴라티 메인 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(polaMainLargeBannerPageProvider.notifier).state = 0;
         ref.read(polaMainSmall1BannerPageProvider.notifier).state = 0;
         ref.read(polaMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 polaMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
