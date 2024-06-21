@@ -418,7 +418,9 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                             PriceAndDiscountPercentSortButtons(), // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            BlouseProductList(scrollController: blouseMainScreenPointScrollController), // 블라우스 상품 리스트 추가
+                            GeneralProductList(
+                              scrollController: blouseMainScreenPointScrollController,
+                              productListProvider: blouseMainProductListProvider,), // 블라우스 상품 리스트 추가
                             SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                           ],
                         ),

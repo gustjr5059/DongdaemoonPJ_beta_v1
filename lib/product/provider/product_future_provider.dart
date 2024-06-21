@@ -20,7 +20,6 @@ import '../repository/product_repository.dart'; // 상품 데이터를 Firestore
 
 // ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 // newProdFirestoreDataProvider 등의 여러 문서 데이터를 가져오는 FutureProvider는 현재 사용 안되고 있음-추후,사용 가능성이 있어 우선 놧두기!!
-
 // ----- 신상 부분 시작
 // Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
 final newProductRepositoryProvider = Provider<NewProductRepository>((ref) {
@@ -132,208 +131,163 @@ final winterProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductC
   return repository.fetchWinterProductContents();
 });
 // ----- 겨울 부분 끝
-
 // ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
+// 2차 메인 화면 부분에 적용 1차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider
+final firebaseFirestoreProvider = Provider<FirebaseFirestore>((ref) {
+  return FirebaseFirestore.instance; // FirebaseFirestore 인스턴스를 반환
+});
+// 2차 메인 화면 부분에 적용 2차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider
+final productRepositoryProvider = Provider.family<GeneralProductRepository<ProductContent>, List<String>>((ref, collections) {
+  return GeneralProductRepository<ProductContent>(ref.watch(firebaseFirestoreProvider), collections); // 주어진 컬렉션 목록을 이용하여 GeneralProductRepository 인스턴스를 반환
+});
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
-// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트
-// 관련 상세 화면 부분에 적용-파이어베이스의 데이터를 불러올 때 사용할 provider 시작
-// ----- 블라우스 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final blouseProductRepositoryProvider = Provider<BlouseProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return BlouseProductRepository(FirebaseFirestore.instance);
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상품 상세 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
+// 상품 상세 화면 데이터를 가져오는 FutureProvider(범용성)
+final productDetailFirestoreDataProvider = FutureProvider.family<ProductContent, Map<String, dynamic>>((ref, params) async {
+  final collections = params['collections'] as List<String>; // 필요한 컬렉션 목록을 설정
+  final fullPath = params['fullPath'] as String; // 전체 경로 설정
+  final repository = ref.watch(productRepositoryProvider(collections)); // repository provider를 통해 인스턴스 생성
+  return repository.getProduct(fullPath); // 지정된 경로의 상품 데이터 반환
 });
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final blouseProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(blouseProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
+// 블라우스 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final blouseDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a2b1', 'a2b2', 'a2b3', 'a2b4', 'a2b5', 'a2b6', 'a2b7'], // 블라우스 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
-// ----- 블라우스 부분 끝
+// 블라우스 끝
 
-// ----- 가디건 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final cardiganProductRepositoryProvider = Provider<CardiganProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return CardiganProductRepository(FirebaseFirestore.instance);
+// 가디건 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final cardiganDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a12b1', 'a12b2', 'a12b3', 'a12b4', 'a12b5', 'a12b6', 'a12b7'], // 가디건 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
+// 가디건 끝
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final cardiganProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(cardiganProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
+// 코트 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final coatDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a11b1', 'a11b2', 'a11b3', 'a11b4', 'a11b5', 'a11b6', 'a11b7'], // 코트 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
-// ----- 가디건 부분 끝
+// 코트 끝
 
-// ----- 코트 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final coatProductRepositoryProvider = Provider<CoatProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return CoatProductRepository(FirebaseFirestore.instance);
+// 청바지 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final jeanDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a8b1', 'a8b2', 'a8b3', 'a8b4', 'a8b5', 'a8b6', 'a8b7'], // 청바지 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
+// 청바지 끝
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final coatProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(coatProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
+// 맨투맨 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final mtmDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a3b1', 'a3b2', 'a3b3', 'a3b4', 'a3b5', 'a3b6', 'a3b7'], // 맨투맨 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
-// ----- 코트 부분 끝
+// 맨투맨 끝
 
-// ----- 청바지 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final jeanProductRepositoryProvider = Provider<JeanProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return JeanProductRepository(FirebaseFirestore.instance);
+// 니트 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final neatDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a4b1', 'a4b2', 'a4b3', 'a4b4', 'a4b5', 'a4b6', 'a4b7'], // 니트 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
+// 니트 끝
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final jeanProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(jeanProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
+// 원피스 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final onepieceDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a6b1', 'a6b2', 'a6b3', 'a6b4', 'a6b5', 'a6b6', 'a6b7'], // 원피스 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
-// ----- 청바지 부분 끝
+// 원피스 끝
 
-// ----- 맨투맨 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final mtmProductRepositoryProvider = Provider<MtmProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return MtmProductRepository(FirebaseFirestore.instance);
+// 패딩 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final paedingDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a10b1', 'a10b2', 'a10b3', 'a10b4', 'a10b5', 'a10b6', 'a10b7'], // 패딩 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
+// 패딩 끝
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final mtmProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(mtmProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
+// 팬츠 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final pantsDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a7b1', 'a7b2', 'a7b3', 'a7b4', 'a7b5', 'a7b6', 'a7b7'], // 팬츠 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
-// ----- 맨투맨 부분 끝
+// 팬츠 끝
 
-// ----- 니트 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final neatProductRepositoryProvider = Provider<NeatProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return NeatProductRepository(FirebaseFirestore.instance);
+// 폴라티 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final polaDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a5b1', 'a5b2', 'a5b3', 'a5b4', 'a5b5', 'a5b6', 'a5b7'], // 폴라티 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
+// 폴라티 끝
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final neatProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(neatProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
+// 티셔츠 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final shirtDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a1b1', 'a1b2', 'a1b3', 'a1b4', 'a1b5', 'a1b6', 'a1b7'], // 티셔츠 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
-// ----- 니트 부분 끝
+// 티셔츠 끝
 
-// ----- 원피스 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final onepieceProductRepositoryProvider = Provider<OnepieceProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return OnepieceProductRepository(FirebaseFirestore.instance);
+// 스커트 시작
+// Firestore로부터 상품 정보를 가져오는 프로바이더
+final skirtDetailProdFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
+  final params = {
+    'collections': ['a9b1', 'a9b2', 'a9b3', 'a9b4', 'a9b5', 'a9b6', 'a9b7'], // 스커트 관련 컬렉션 목록
+    'fullPath': fullPath, // 전체 경로 설정
+  };
+  return ref.watch(productDetailFirestoreDataProvider(params).future); // 상품 상세 데이터를 비동기적으로 반환
 });
+// 스커트 끝
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상품 상세 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final onepieceProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(onepieceProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
-});
-// ----- 원피스 부분 끝
-
-// ----- 패딩 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final paedingProductRepositoryProvider = Provider<PaedingProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return PaedingProductRepository(FirebaseFirestore.instance);
-});
-
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final paedingProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(paedingProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
-});
-// ----- 패딩 부분 끝
-
-// ----- 팬츠 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final pantsProductRepositoryProvider = Provider<PantsProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return PantsProductRepository(FirebaseFirestore.instance);
-});
-
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final pantsProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(pantsProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
-});
-// ----- 팬츠 부분 끝
-
-// ----- 폴라티 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final polaProductRepositoryProvider = Provider<PolaProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return PolaProductRepository(FirebaseFirestore.instance);
-});
-
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final polaProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(polaProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
-});
-// ----- 폴라티 부분 끝
-
-// ----- 티셔츠 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final shirtProductRepositoryProvider = Provider<ShirtProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return ShirtProductRepository(FirebaseFirestore.instance);
-});
-
-// // Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final shirtProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, fullPath) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(shirtProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(fullPath);
-});
-// ----- 티셔츠 부분 끝
-
-// ----- 스커트 부분 시작
-// Firestore로부터 상품 정보를 가져오는 레포지토리의 인스턴스를 생성하는 프로바이더
-final skirtProductRepositoryProvider = Provider<SkirtProductRepository>((ref) {
-  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProductRepository 객체를 생성
-  return SkirtProductRepository(FirebaseFirestore.instance);
-});
-
-// Firestore에서 단일 문서의 상품 데이터를 비동기적으로 가져오는 FutureProvider
-final skirtProdDetailFirestoreDataProvider = FutureProvider.family<ProductContent, String>((ref, docId) async {
-  // 상품 레포지토리 프로바이더를 통해 생성된 레포지토리 객체의 참조를 얻음
-  final repository = ref.watch(skirtProductRepositoryProvider);
-  // 레포지토리의 getProduct 메소드를 사용하여 특정 문서의 상품 정보를 가져옴
-  return repository.getProduct(docId);
-});
-// ----- 스커트 부분 끝
-// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트
-// 관련 상세 화면 부분에 적용-파이어베이스의 데이터를 불러올 때 사용할 provider 끝
-
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 소배너 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 // ------- 티셔츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final shirtMainSmall1BannerRepositoryProvider = Provider<ShirtMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 ShirtMainSmall1BannerRepository 객체를 생성함.
@@ -350,11 +304,9 @@ final shirtMainSmall1BannerImagesProvider = FutureProvider<List<ShirtMainSmall1B
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<ShirtMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 티셔츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 블라우스 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final blouseMainSmall1BannerRepositoryProvider = Provider<BlouseMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 BlouseMainSmall1BannerRepository 객체를 생성함.
@@ -371,11 +323,9 @@ final blouseMainSmall1BannerImagesProvider = FutureProvider<List<BlouseMainSmall
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<BlouseMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 블라우스 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 맨투맨 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final mtmMainSmall1BannerRepositoryProvider = Provider<MtmMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 MtmMainSmall1BannerRepository 객체를 생성함.
@@ -392,11 +342,9 @@ final mtmMainSmall1BannerImagesProvider = FutureProvider<List<MtmMainSmall1Banne
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<MtmMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 맨투맨 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 니트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final neatMainSmall1BannerRepositoryProvider = Provider<NeatMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 NeatMainSmall1BannerRepository 객체를 생성함.
@@ -413,11 +361,9 @@ final neatMainSmall1BannerImagesProvider = FutureProvider<List<NeatMainSmall1Ban
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<NeatMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 니트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 폴라티 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final polaMainSmall1BannerRepositoryProvider = Provider<PolaMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 PolaMainSmall1BannerRepository 객체를 생성함.
@@ -434,11 +380,9 @@ final polaMainSmall1BannerImagesProvider = FutureProvider<List<PolaMainSmall1Ban
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<PolaMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 폴라티 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 원피스 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final onepieceMainSmall1BannerRepositoryProvider = Provider<OnepieceMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 OnepieceMainSmall1BannerRepository 객체를 생성함.
@@ -455,11 +399,9 @@ final onepieceMainSmall1BannerImagesProvider = FutureProvider<List<OnepieceMainS
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<OnepieceMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 원피스 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 팬츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final pantsMainSmall1BannerRepositoryProvider = Provider<PantsMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 PantsMainSmall1BannerRepository 객체를 생성함.
@@ -476,11 +418,9 @@ final pantsMainSmall1BannerImagesProvider = FutureProvider<List<PantsMainSmall1B
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<PantsMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 팬츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 청바지 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final jeanMainSmall1BannerRepositoryProvider = Provider<JeanMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 JeanMainSmall1BannerRepository 객체를 생성함.
@@ -497,11 +437,9 @@ final jeanMainSmall1BannerImagesProvider = FutureProvider<List<JeanMainSmall1Ban
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<JeanMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 청바지 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 스커트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final skirtMainSmall1BannerRepositoryProvider = Provider<SkirtMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 SkirtMainSmall1BannerRepository 객체를 생성함.
@@ -518,11 +456,9 @@ final skirtMainSmall1BannerImagesProvider = FutureProvider<List<SkirtMainSmall1B
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<SkirtMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 스커트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 패딩 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final paedingMainSmall1BannerRepositoryProvider = Provider<PaedingMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 PaedingMainSmall1BannerRepository 객체를 생성함.
@@ -539,11 +475,9 @@ final paedingMainSmall1BannerImagesProvider = FutureProvider<List<PaedingMainSma
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<BlouseMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 패딩 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 코트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final coatMainSmall1BannerRepositoryProvider = Provider<CoatMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 CoatMainSmall1BannerRepository 객체를 생성함.
@@ -560,11 +494,9 @@ final coatMainSmall1BannerImagesProvider = FutureProvider<List<CoatMainSmall1Ban
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<CoatMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 코트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 가디건 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
-
 // Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
 final cardiganMainSmall1BannerRepositoryProvider = Provider<CardiganMainSmall1BannerRepository>((ref) {
   // Firebase Firestore의 인스턴스를 생성자에 전달하여 CardiganMainSmall1BannerRepository 객체를 생성함.
@@ -581,5 +513,5 @@ final cardiganMainSmall1BannerImagesProvider = FutureProvider<List<CardiganMainS
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<CardiganMainSmall1BannerImage>를 반환함.
   return await repository.fetchBannerImages();
 });
-
 // ------- 가디건 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 소배너 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝

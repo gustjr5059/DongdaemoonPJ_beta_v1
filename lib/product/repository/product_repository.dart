@@ -12,7 +12,6 @@ import '../model/product_model.dart'; // ProductContent 모델 정의 파일의 
 
 
 // -------- 2차 카테고리(신상, 최고 ~~) 시작 부분
-
 // Firestore 데이터베이스로부터 신상 상품 정보를 조회하는 기능을 제공하는 클래스
 class NewProductRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스
@@ -327,42 +326,34 @@ class WinterProductRepository {
     currentCollectionIndex = 0;
   }
 }
-
 // -------- 2차 카테고리(신상, 최고 ~~) 끝 부분
 
 // -------- 1차 카테고리(블라우스, 가디건 ~~) 시작 부분
-
-// Firestore 데이터베이스로부터 블라우스 상품 정보를 조회하는 기능을 제공하는 클래스
-class BlouseProductRepository {
+// -------- 파이어스토어 내 데이터를 불러오는 범용성 repositoru (데이터 범위는 provider에서 정함) 시작
+class GeneralProductRepository<T> {
   final FirebaseFirestore firestore; // Firestore 인스턴스
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
-  List<String> collections = [
-    'a2b1', 'a2b2', 'a2b3', 'a2b4', 'a2b5', 'a2b6', 'a2b7'
-  ]; // 컬렉션 목록
+  final List<String> collections; // 컬렉션 목록
 
-  // 생성자에서 Firestore 인스턴스를 초기화
-  BlouseProductRepository(this.firestore);
+  // 생성자에서 Firestore 인스턴스를 초기화하고 컬렉션 목록을 전달받음
+  GeneralProductRepository(this.firestore, this.collections);
 
   // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
   Future<ProductContent> getProduct(String fullPath) async {
-    // fullPath는 전체 Firestore 경로를 포함합니다.
     final docRef = firestore.doc(fullPath); // 경로에 해당하는 문서 참조
     final snapshot = await docRef.get(); // 문서 스냅샷 가져오기
     if (snapshot.exists) {
-      // 조회된 문서 데이터를 ProductContent 모델로 변환하여 반환
       return ProductContent.fromFirestore(snapshot); // 데이터가 존재하면 ProductContent로 변환하여 반환
     } else {
-      // 데이터가 없을 경우 예외를 발생시킴
       throw Exception('Firestore 데이터가 없습니다.'); // 데이터가 없으면 예외 발생
     }
   }
 
-  // 2차 메인 화면 내 블라우스 상품 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchBlouseProductContents({required int limit, DocumentSnapshot? startAfter}) async {
+  // 상품 데이터를 가져오는 함수
+  Future<List<ProductContent>> fetchProductContents({required int limit, DocumentSnapshot? startAfter}) async {
     List<ProductContent> products = []; // 상품 목록 초기화
 
-    // 필요한 수의 상품을 가져올 때까지 반복
     while (products.length < limit && currentCollectionIndex < collections.length) {
       String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션
       Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
@@ -383,220 +374,11 @@ class BlouseProductRepository {
     return products; // 가져온 상품 목록 반환
   }
 
-  // 각 레포지토리에 데이터를 초기화하는 reset 메서드
+  // 각 리포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     lastDocument = null; // 마지막 문서 초기화
     currentCollectionIndex = 0; // 컬렉션 인덱스 초기화
   }
 }
-
-// Firestore 데이터베이스로부터 가디건 상품 정보를 조회하는 기능을 제공하는 클래스
-class CardiganProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  CardiganProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 코트 상품 정보를 조회하는 기능을 제공하는 클래스
-class CoatProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  CoatProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 청바지 상품 정보를 조회하는 기능을 제공하는 클래스
-class JeanProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  JeanProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 맨투맨 상품 정보를 조회하는 기능을 제공하는 클래스
-class MtmProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  MtmProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 니트 상품 정보를 조회하는 기능을 제공하는 클래스
-class NeatProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  NeatProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 원피스 상품 정보를 조회하는 기능을 제공하는 클래스
-class OnepieceProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  OnepieceProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 패딩 상품 정보를 조회하는 기능을 제공하는 클래스
-class PaedingProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  PaedingProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 팬츠 상품 정보를 조회하는 기능을 제공하는 클래스
-class PantsProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  PantsProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 폴라티 상품 정보를 조회하는 기능을 제공하는 클래스
-class PolaProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  PolaProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 셔츠 상품 정보를 조회하는 기능을 제공하는 클래스
-class ShirtProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  ShirtProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
-// Firestore 데이터베이스로부터 스커트 상품 정보를 조회하는 기능을 제공하는 클래스
-class SkirtProductRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스
-
-  // 생성자에서 Firestore 인스턴스를 초기화
-  SkirtProductRepository(this.firestore);
-
-  // 주어진 전체 경로(fullPath)를 사용하여 Firestore에서 상품 데이터를 조회하고 ProductContent 객체로 변환하는 함수
-  Future<ProductContent> getProduct(String fullPath) async {
-    final docRef = firestore.doc(fullPath);
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot);
-    } else {
-      throw Exception('Firestore 데이터가 없습니다.');
-    }
-  }
-}
-
+// -------- 파이어스토어 내 데이터를 불러오는 범용성 repositoru (데이터 범위는 provider에서 정함) 끝
 // -------- 1차 카테고리(블라우스, 가디건 ~~) 끝 부분

@@ -170,7 +170,7 @@ class _BlouseDetailProductScreenState extends ConsumerState<BlouseDetailProductS
   @override
   Widget build(BuildContext context) {
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
-    final productContent = ref.watch(blouseProdDetailFirestoreDataProvider(widget.fullPath));
+    final productContent = ref.watch(blouseDetailProdFirestoreDataProvider(widget.fullPath));
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여

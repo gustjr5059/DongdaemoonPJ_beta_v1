@@ -254,91 +254,95 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 }
 // ------- ProductsSectionList 클래스 내용 구현 끝
 
-// ------- BlouseProductList 클래스 내용 구현 시작
-class BlouseProductList extends ConsumerStatefulWidget {
-  final ScrollController scrollController; // 스크롤 컨트롤러
-  BlouseProductList({required this.scrollController}); // 생성자
+// ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
+// GeneralProductList 클래스 내용 구현 시작
+class GeneralProductList extends ConsumerStatefulWidget {
+  final ScrollController scrollController; // 스크롤 컨트롤러 선언
+  final StateNotifierProvider<ProductMainListNotifier, List<ProductContent>> productListProvider; // 제품 목록 provider 선언
+
+  GeneralProductList({required this.scrollController, required this.productListProvider}); // 생성자 정의
 
   @override
-  _BlouseProductListState createState() => _BlouseProductListState(); // 상태 생성
+  _ProductListState createState() => _ProductListState(); // 상태 생성 메소드 정의
 }
 
-class _BlouseProductListState extends ConsumerState<BlouseProductList> {
+class _ProductListState extends ConsumerState<GeneralProductList> {
   @override
   void initState() {
-    super.initState();
+    super.initState(); // 부모 클래스의 initState 호출
     widget.scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
-    if (ref.read(blouseProductListProvider).isEmpty) {
-      ref.read(blouseProductListProvider.notifier).fetchInitialProducts(); // 초기 제품 가져오기
+    if (ref.read(widget.productListProvider).isEmpty) { // 제품 목록이 비어있다면
+      ref.read(widget.productListProvider.notifier).fetchInitialProducts(); // 초기 제품 가져오기 호출
     }
   }
 
   @override
   void dispose() {
     widget.scrollController.removeListener(_scrollListener); // 스크롤 리스너 제거
-    super.dispose();
+    super.dispose(); // 부모 클래스의 dispose 호출
   }
 
   // 스크롤 리스너 함수
   void _scrollListener() {
     if (widget.scrollController.position.pixels >=
-        widget.scrollController.position.maxScrollExtent - 200) {
-      ref.read(blouseProductListProvider.notifier).fetchMoreProducts(); // 스크롤이 끝에 도달하면 더 많은 제품 가져오기
+        widget.scrollController.position.maxScrollExtent - 200) { // 스크롤이 끝에 가까워지면
+      ref.read(widget.productListProvider.notifier).fetchMoreProducts(); // 더 많은 제품 가져오기 호출
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final products = ref.watch(blouseProductListProvider); // 제품 목록 상태 감시
-    final isFetching = ref.watch(blouseProductListProvider.notifier.select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
+    final products = ref.watch(widget.productListProvider); // 제품 목록 상태 감시
+    final isFetching = ref.watch(widget.productListProvider.notifier.select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
 
     return Column(
       children: [
         ListView.builder(
           shrinkWrap: true, // 높이 제한
           physics: NeverScrollableScrollPhysics(), // 스크롤 비활성화
-          padding: EdgeInsets.symmetric(vertical: 10.0), // 패딩을 최소화하여 설정
-          itemCount: (products.length / 3).ceil(), // 행 개수
+          padding: EdgeInsets.symmetric(vertical: 10.0), // 상하 패딩 설정
+          itemCount: (products.length / 3).ceil(), // 행의 개수 계산
           itemBuilder: (context, index) {
-            int startIndex = index * 3; // 시작 인덱스
-            int endIndex = startIndex + 3; // 끝 인덱스
-            if (endIndex > products.length) {
-              endIndex = products.length; // 끝 인덱스 조정
+            int startIndex = index * 3; // 시작 인덱스 계산
+            int endIndex = startIndex + 3; // 끝 인덱스 계산
+            if (endIndex > products.length) { // 끝 인덱스가 제품 개수보다 많으면
+              endIndex = products.length; // 끝 인덱스를 제품 개수로 조정
             }
-            List<ProductContent> productRow = products.sublist(startIndex, endIndex); // 행에 들어갈 제품들
-            return buildBlouseProductRow(ref, productRow, context); // 행 빌드
+            List<ProductContent> productRow = products.sublist(startIndex, endIndex); // 행에 들어갈 제품들 추출
+            return buildGeneralProductRow(ref, productRow, context); // 행 빌드 함수 호출
           },
         ),
-        if (isFetching)
+        if (isFetching) // 가져오는 중이라면
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(), // 가져오는 중이면 로딩 표시
+            child: CircularProgressIndicator(), // 로딩 표시
           ),
       ],
     );
   }
 }
-// ------- BlouseProductList 클래스 내용 구현 끝
+// ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
+// GeneralProductList 클래스 내용 구현 끝
 
-// ------- buildBlouseProductRow 위젯 내용 구현 시작
-Widget buildBlouseProductRow(WidgetRef ref, List<ProductContent> products, BuildContext context) {
-  final productInfo = ProductInfoDetailScreenNavigation(ref, '블라우스'); // 제품 정보 상세 화면 내비게이션
+// ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 시작
+Widget buildGeneralProductRow(WidgetRef ref, List<ProductContent> products, BuildContext context) {
+  final productInfo = ProductInfoDetailScreenNavigation(ref, '상품'); // 제품 정보 상세 화면 내비게이션 객체 생성
 
   return Row(
-    children: products.map((product) => Expanded(
+    children: products.map((product) => Expanded( // 각 제품을 확장된 위젯으로 변환
       child: Padding(
-        padding: const EdgeInsets.all(2.0), // 패딩
+        padding: const EdgeInsets.all(2.0), // 패딩 설정
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+          crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
           children: [
-            productInfo.buildProdFirestoreDetailDocument(context, product), // 제품 정보 상세 화면 빌드
+            productInfo.buildProdFirestoreDetailDocument(context, product), // 제품 정보 상세 화면 빌드 함수 호출
           ],
         ),
       ),
-    )).toList(), // 각 제품을 확장된 위젯으로 변환
+    )).toList(), // 리스트로 변환
   );
 }
-// ------- buildBlouseProductRow 위젯 내용 구현 끝
+// ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 끝
 
 // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
 // 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 /  화면 자체의 스크롤 위치 초기화 관련 함수
@@ -350,6 +354,7 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   prefs.remove('username'); // 저장된 사용자명 삭제
   prefs.remove('password'); // 저장된 비밀번호 삭제
 
+  // 로그아웃했다가 재로그인 시, 초가화하려면 여기에 적용시켜야 반영이 됨 (각 UI 화면에 해도 소용없음..)
   // 홈 화면 관련 초기화 부분 시작
   // 스크롤 위치 및 현재 탭 인덱스 초기화
   ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
@@ -361,8 +366,62 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   // 블라우스 메인 화면 관련 초기화 부분 시작
   ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(blouseProductListProvider.notifier).reset(); // 블라우스 제품 목록 초기화
   // 블라우스 메인 화면 관련 초기화 부분 끝
+
+  // 가디건 메인 화면 관련 초기화 부분 시작
+  ref.read(cardiganMainScrollPositionProvider.notifier).state = 0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(cardiganCurrentTabProvider.notifier).state = 0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 가디건 메인 화면 관련 초기화 부분 끝
+
+  // 코트 메인 화면 관련 초기화 부분 시작
+  ref.read(coatMainScrollPositionProvider.notifier).state = 0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(coatCurrentTabProvider.notifier).state = 0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 코트 메인 화면 관련 초기화 부분 끝
+
+  // 청바지 메인 화면 관련 초기화 부분 시작
+  ref.read(jeanMainScrollPositionProvider.notifier).state = 0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(jeanCurrentTabProvider.notifier).state = 0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 청바지 메인 화면 관련 초기화 부분 끝
+
+  // 맨투맨 메인 화면 관련 초기화 부분 시작
+  ref.read(mtmMainScrollPositionProvider.notifier).state = 0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(mtmCurrentTabProvider.notifier).state = 0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 맨투맨 메인 화면 관련 초기화 부분 끝
+
+  // 니트 메인 화면 관련 초기화 부분 시작
+  ref.read(neatMainScrollPositionProvider.notifier).state = 0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(neatCurrentTabProvider.notifier).state = 0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 니트 메인 화면 관련 초기화 부분 끝
+
+  // 원피스 메인 화면 관련 초기화 부분 시작
+  ref.read(onepieceMainScrollPositionProvider.notifier).state = 0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(onepieceCurrentTabProvider.notifier).state = 0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 원피스 메인 화면 관련 초기화 부분 끝
+
+  // 패딩 메인 화면 관련 초기화 부분 시작
+  ref.read(paedingMainScrollPositionProvider.notifier).state = 0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(paedingCurrentTabProvider.notifier).state = 0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 패딩 메인 화면 관련 초기화 부분 끝
+
+  // 팬츠 메인 화면 관련 초기화 부분 시작
+  ref.read(pantsMainScrollPositionProvider.notifier).state = 0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(pantsCurrentTabProvider.notifier).state = 0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 팬츠 메인 화면 관련 초기화 부분 끝
+
+  // 폴라티 메인 화면 관련 초기화 부분 시작
+  ref.read(polaMainScrollPositionProvider.notifier).state = 0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(polaCurrentTabProvider.notifier).state = 0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 폴라티 메인 화면 관련 초기화 부분 끝
+
+  // 티셔츠 메인 화면 관련 초기화 부분 시작
+  ref.read(shirtMainScrollPositionProvider.notifier).state = 0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(shirtCurrentTabProvider.notifier).state = 0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 티셔츠 메인 화면 관련 초기화 부분 끝
+
+  // 스커트 메인 화면 관련 초기화 부분 시작
+  ref.read(skirtMainScrollPositionProvider.notifier).state = 0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(skirtCurrentTabProvider.notifier).state = 0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  // 스커트 메인 화면 관련 초기화 부분 끝
 }
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작

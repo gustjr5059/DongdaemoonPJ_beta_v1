@@ -208,6 +208,8 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(polaMainLargeBannerPageProvider.notifier).state = 0;
         ref.read(polaMainSmall1BannerPageProvider.notifier).state = 0;
+        ref.read(polaMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 polaMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
+        ref.read(polaCurrentTabProvider.notifier).state = 0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
       }
     });
 
@@ -386,7 +388,7 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
                             CommonCardView(
                               content: SizedBox(
                                 // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함.
-                                height: 200,
+                                height: 150,
                                 // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
                                 child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
                                   context: context,
@@ -406,12 +408,12 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 30), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 10), // 높이 임의로 10으로 간격 설정
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: SizedBox(
                                 // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
-                                height: 60,
+                                height: 30,
                                 // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
                                 child: buildCommonBannerPageViewSection<PolaMainSmall1BannerImage>(
                                   context: context,
@@ -431,14 +433,17 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen> with WidgetsBin
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 10),
-                            PriceAndDiscountPercentSortButtons(), // 가격 높은 순, 가격 낮은 순, 할인율 높은 순, 할인율 낮은 순 버튼 구현 클래스
-                            Text('폴라티 메인 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            PriceAndDiscountPercentSortButtons(), // 가격 및 할인 정렬 버튼 추가
+                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            GeneralProductList(
+                              scrollController: polaMainScreenPointScrollController,
+                              productListProvider: polaMainProductListProvider,), // 폴라티 상품 리스트 추가
+                            SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                           ],
                         ),
                       );
-                    },
+                        },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                   ),
                 ),

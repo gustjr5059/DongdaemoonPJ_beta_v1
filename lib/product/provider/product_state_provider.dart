@@ -137,9 +137,7 @@ final shirtDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
 final skirtDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
-
-// 블라우스 메인
-
+// 2차 메인 화면-블라우스 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 blouseMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -152,9 +150,7 @@ final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 가디건 메인
-
+// 2차 메인 화면-가디건 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 cardiganMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final cardiganMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -167,9 +163,7 @@ final cardiganMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 코트 메인
-
+// 2차 메인 화면-코트 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 coatMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -182,9 +176,7 @@ final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 청바지 메인
-
+// 2차 메인 화면-청바지 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 jeanMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final jeanMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -197,9 +189,7 @@ final jeanMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 맨투맨 메인
-
+// 2차 메인 화면-맨투맨 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 mtmMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -212,9 +202,7 @@ final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 니트 메인
-
+// 2차 메인 화면-니트 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 neatMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final neatMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -227,9 +215,7 @@ final neatMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 원피스 메인
-
+// 2차 메인 화면-원피스 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 onepieceMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -242,9 +228,7 @@ final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 패딩 메인
-
+// 2차 메인 화면-패딩 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 paedingMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final paedingMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -257,9 +241,7 @@ final paedingMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 팬츠 메인
-
+// 2차 메인 화면-팬츠 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 pantsMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -272,9 +254,7 @@ final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 폴라티 메인
-
+// 2차 메인 화면-폴라티 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 polaMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final polaMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -287,9 +267,7 @@ final polaMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 티셔츠 메인
-
+// 2차 메인 화면-티셔츠 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 shirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -302,9 +280,7 @@ final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
-// 스커트 메인
-
+// 2차 메인 화면-스커트 메인 화면
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -316,13 +292,10 @@ final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
-
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 끝
 
 // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 시작
-
 // 신상 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -337,7 +310,6 @@ final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 
 
 // 최고 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 bestSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final bestSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -351,7 +323,6 @@ final bestSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 
 // 할인 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 saleSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -365,7 +336,6 @@ final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 
 // 봄 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 springSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final springSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -379,7 +349,6 @@ final springSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 
 // 여름 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 summerSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -393,7 +362,6 @@ final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 
 // 가을 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 autumnSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final autumnSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -407,7 +375,6 @@ final autumnSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 
 // 겨울 서브 메인
-
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 winterSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
 final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
@@ -421,11 +388,13 @@ final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝
 
-// ------- BlouseProductListNotifier 클래스 내용 구현 시작
-class BlouseProductListNotifier extends StateNotifier<List<ProductContent>> {
-  BlouseProductListNotifier(this.ref) : super([]); // 초기 상태는 빈 리스트
+// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 시작
+// ------- ProductMainListNotifier 클래스 내용 구현 시작
+class ProductMainListNotifier extends StateNotifier<List<ProductContent>> {
+  ProductMainListNotifier(this.ref, this.collectionNames) : super([]); // 초기 상태는 빈 리스트
 
   final Ref ref; // Provider 참조
+  final List<String> collectionNames; // 컬렉션 이름 목록
   bool _isFetching = false; // 데이터 가져오는 중인지 여부
   DocumentSnapshot? _lastDocument; // 마지막 문서 스냅샷
   bool get isFetching => _isFetching; // 데이터 가져오는 중인지 여부 반환
@@ -435,7 +404,7 @@ class BlouseProductListNotifier extends StateNotifier<List<ProductContent>> {
     if (_isFetching) return; // 이미 가져오는 중이면 리턴
     _isFetching = true; // 가져오는 중으로 설정
     try {
-      final products = await ref.read(blouseProductRepositoryProvider).fetchBlouseProductContents(
+      final products = await ref.read(productRepositoryProvider(collectionNames)).fetchProductContents(
         limit: 3, // 한 번에 가져올 상품 수
         startAfter: isInitial ? null : _lastDocument, // 초기 로드면 처음부터, 아니면 마지막 문서 이후부터
       );
@@ -459,15 +428,74 @@ class BlouseProductListNotifier extends StateNotifier<List<ProductContent>> {
   Future<void> fetchMoreProducts() async {
     await _fetchProducts(); // 더 많은 제품 가져오기
   }
+
   // 데이터 초기화 함수
   void reset() {
     state = []; // 상태 초기화
     _lastDocument = null; // 마지막 문서 초기화
   }
 }
-// ------- BlouseProductListNotifier 클래스 내용 구현 끝
+// ------- ProductMainListNotifier 클래스 내용 구현 끝
 
-// BlouseProductList 구현 관련 상태관리 StateNotifierProvider
-final blouseProductListProvider = StateNotifierProvider<BlouseProductListNotifier, List<ProductContent>>((ref) {
-  return BlouseProductListNotifier(ref); // Provider 초기화
+// 블라우스 제품 목록 프로바이더
+final blouseMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a2b1', 'a2b2', 'a2b3', 'a2b4', 'a2b5', 'a2b6', 'a2b7']);
 });
+
+// 가디건 제품 목록 프로바이더
+final cardiganMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a12b1', 'a12b2', 'a12b3', 'a12b4', 'a12b5', 'a12b6', 'a12b7']);
+});
+
+// 코트 제품 목록 프로바이더
+final coatMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a11b1', 'a11b2', 'a11b3', 'a11b4', 'a11b5', 'a11b6', 'a11b7']);
+});
+
+// 청바지 제품 목록 프로바이더
+final jeanMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a8b1', 'a8b2', 'a8b3', 'a8b4', 'a8b5', 'a8b6', 'a8b7']);
+});
+
+// 맨투맨 제품 목록 프로바이더
+final mtmMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a3b1', 'a3b2', 'a3b3', 'a3b4', 'a3b5', 'a3b6', 'a3b7']);
+});
+
+// 니트 제품 목록 프로바이더
+final neatMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a4b1', 'a4b2', 'a4b3', 'a4b4', 'a4b5', 'a4b6', 'a4b7']);
+});
+
+// 원피스 제품 목록 프로바이더
+final onepieceMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a6b1', 'a6b2', 'a6b3', 'a6b4', 'a6b5', 'a6b6', 'a6b7']);
+});
+
+// 패딩 제품 목록 프로바이더
+final paedingMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a10b1', 'a10b2', 'a10b3', 'a10b4', 'a10b5', 'a10b6', 'a10b7']);
+});
+
+// 팬츠 제품 목록 프로바이더
+final pantsMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a7b1', 'a7b2', 'a7b3', 'a7b4', 'a7b5', 'a7b6', 'a7b7']);
+});
+
+// 폴라티 제품 목록 프로바이더
+final polaMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a5b1', 'a5b2', 'a5b3', 'a5b4', 'a5b5', 'a5b6', 'a5b7']);
+});
+
+// 티셔츠 제품 목록 프로바이더
+final shirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a1b1', 'a1b2', 'a1b3', 'a1b4', 'a1b5', 'a1b6', 'a1b7']);
+});
+
+// 스커트 제품 목록 프로바이더
+final skirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+  return ProductMainListNotifier(ref, ['a9b1', 'a9b2', 'a9b3', 'a9b4', 'a9b5', 'a9b6', 'a9b7']);
+});
+// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 끝
+
+
