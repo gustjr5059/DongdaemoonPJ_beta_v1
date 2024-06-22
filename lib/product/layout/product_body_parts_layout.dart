@@ -355,8 +355,9 @@ Widget buildGeneralProductRow(WidgetRef ref, List<ProductContent> products, Buil
 // ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 끝
 
 // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
-// 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 /  화면 자체의 스크롤 위치 초기화 관련 함수
-Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
+// 홈 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화
+// / 홈,장바구니,발주내역,마이페이지,2차 메인 화면 등 모든 화면화면 자체의 스크롤 위치 초기화 관련 함수
+Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 로그아웃 기능 수행
   await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -380,16 +381,19 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   // 블라우스 메인 화면 관련 초기화 부분 시작
   ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(blouseMainProductListProvider.notifier).reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 블라우스 메인 화면 관련 초기화 부분 끝
 
   // 가디건 메인 화면 관련 초기화 부분 시작
   ref.read(cardiganMainScrollPositionProvider.notifier).state = 0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(cardiganCurrentTabProvider.notifier).state = 0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(cardiganMainProductListProvider.notifier).reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 가디건 메인 화면 관련 초기화 부분 끝
 
   // 코트 메인 화면 관련 초기화 부분 시작
   ref.read(coatMainScrollPositionProvider.notifier).state = 0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(coatCurrentTabProvider.notifier).state = 0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(coatMainProductListProvider.notifier).reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 코트 메인 화면 관련 초기화 부분 끝
 
   // 청바지 메인 화면 관련 초기화 부분 시작
@@ -400,42 +404,52 @@ Future<void> logoutSecDataAndHomeScrollPointReset(WidgetRef ref) async {
   // 맨투맨 메인 화면 관련 초기화 부분 시작
   ref.read(mtmMainScrollPositionProvider.notifier).state = 0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(mtmCurrentTabProvider.notifier).state = 0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(mtmMainProductListProvider.notifier).reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 맨투맨 메인 화면 관련 초기화 부분 끝
 
   // 니트 메인 화면 관련 초기화 부분 시작
   ref.read(neatMainScrollPositionProvider.notifier).state = 0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(neatCurrentTabProvider.notifier).state = 0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(neatMainProductListProvider.notifier).reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 니트 메인 화면 관련 초기화 부분 끝
 
   // 원피스 메인 화면 관련 초기화 부분 시작
   ref.read(onepieceMainScrollPositionProvider.notifier).state = 0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(onepieceCurrentTabProvider.notifier).state = 0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(onepieceMainProductListProvider.notifier).reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 원피스 메인 화면 관련 초기화 부분 끝
 
   // 패딩 메인 화면 관련 초기화 부분 시작
   ref.read(paedingMainScrollPositionProvider.notifier).state = 0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(paedingCurrentTabProvider.notifier).state = 0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(paedingMainProductListProvider.notifier).reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 패딩 메인 화면 관련 초기화 부분 끝
 
   // 팬츠 메인 화면 관련 초기화 부분 시작
   ref.read(pantsMainScrollPositionProvider.notifier).state = 0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(pantsCurrentTabProvider.notifier).state = 0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(pantsMainProductListProvider.notifier).reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 팬츠 메인 화면 관련 초기화 부분 끝
 
   // 폴라티 메인 화면 관련 초기화 부분 시작
   ref.read(polaMainScrollPositionProvider.notifier).state = 0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(polaCurrentTabProvider.notifier).state = 0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(polaMainProductListProvider.notifier).reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 폴라티 메인 화면 관련 초기화 부분 끝
 
   // 티셔츠 메인 화면 관련 초기화 부분 시작
   ref.read(shirtMainScrollPositionProvider.notifier).state = 0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(shirtCurrentTabProvider.notifier).state = 0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(shirtMainProductListProvider.notifier).reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 티셔츠 메인 화면 관련 초기화 부분 끝
 
   // 스커트 메인 화면 관련 초기화 부분 시작
   ref.read(skirtMainScrollPositionProvider.notifier).state = 0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(skirtCurrentTabProvider.notifier).state = 0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(skirtMainProductListProvider.notifier).reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   // 스커트 메인 화면 관련 초기화 부분 끝
+
+
 }
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
@@ -547,7 +561,7 @@ class ProductInfoDetailScreenNavigation {
       },
       child: Container(
         // height: 180, // 항목의 높이를 명시적으로 지정하여 충분한 공간 확보
-        // width: 180,
+        width: 175,
         padding: EdgeInsets.all(4.0),
         margin: EdgeInsets.all(4.0),
         decoration: BoxDecoration(
@@ -609,7 +623,7 @@ class ProductInfoDetailScreenNavigation {
                     if (product.discountPercent != null)
                       Text(
                         '${product.discountPercent!.toStringAsFixed(0)}%',
-                        style: TextStyle(fontSize: 14, color: Colors.red, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold),
                       ),
                   ],
                 ),

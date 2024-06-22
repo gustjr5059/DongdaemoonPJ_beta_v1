@@ -220,6 +220,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
+  // (이 부분이 로그인 상태에서 다른 화면 이동 후 다시 해당 화면으로 올 때, 동작 상태 조절하는 함수-초기화 / 종료)
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
@@ -313,6 +314,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> with WidgetsBin
     // 사용자가 로그아웃하면(user == null), 페이지 인덱스와 스크롤 위치를 초기화함.
     // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
     // 홈 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 홈 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
+    // (이 부분은 로그아웃하고 재로그인할 때 해당 화면으로 올 때, 동작 상태 조절하는 함수-초기화)
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {

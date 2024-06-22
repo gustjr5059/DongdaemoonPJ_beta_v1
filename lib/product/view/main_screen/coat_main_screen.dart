@@ -157,6 +157,15 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
         // coatMainScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         coatMainScreenPointScrollController.jumpTo(savedScrollPosition);
+
+        // 저장된 탭 인덱스를 불러와 상단 탭 바의 위치를 복원.
+        int savedTabIndex = ref.read(coatCurrentTabProvider);
+        if (savedTabIndex >= 6) {
+          double offset = coatMainTopBarPointAutoScrollController.position.maxScrollExtent;
+          coatMainTopBarPointAutoScrollController.jumpTo(offset);
+        } else if (savedTabIndex <= 1) {
+          coatMainTopBarPointAutoScrollController.jumpTo(0.0);
+        }
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
@@ -201,6 +210,7 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
         ref.read(coatMainSmall1BannerPageProvider.notifier).state = 0;
         ref.read(coatMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 coatMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
         ref.read(coatCurrentTabProvider.notifier).state = 0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+        ref.read(coatMainProductListProvider.notifier).reset(); // 탭 관련 상품 데이터를 초기화함.
       }
     });
 
@@ -231,6 +241,14 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
     if (state == AppLifecycleState.resumed) {
       _largeBannerAutoScroll.startAutoScroll();
       _small1BannerAutoScroll.startAutoScroll();
+      // 저장된 탭 인덱스를 불러와 상단 탭 바의 위치를 복원.
+      int savedTabIndex = ref.read(coatCurrentTabProvider);
+      if (savedTabIndex >= 6) {
+        double offset = coatMainTopBarPointAutoScrollController.position.maxScrollExtent;
+        coatMainTopBarPointAutoScrollController.jumpTo(offset);
+      } else if (savedTabIndex <= 1) {
+        coatMainTopBarPointAutoScrollController.jumpTo(0.0);
+      }
       // 앱이 백그라운드로 이동할 때, 배너의 자동 스크롤을 중지
     } else if (state == AppLifecycleState.paused) {
       _largeBannerAutoScroll.stopAutoScroll();
