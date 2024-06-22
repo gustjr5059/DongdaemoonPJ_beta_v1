@@ -260,8 +260,13 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 class GeneralProductList extends ConsumerStatefulWidget {
   final ScrollController scrollController; // 스크롤 컨트롤러 선언
   final StateNotifierProvider<ProductMainListNotifier, List<ProductContent>> productListProvider; // 제품 목록 provider 선언
+  final String category; // 카테고리 선언
 
-  GeneralProductList({required this.scrollController, required this.productListProvider}); // 생성자 정의
+  GeneralProductList({
+    required this.scrollController,
+    required this.productListProvider,
+    required this.category,
+  }); // 생성자 정의
 
   @override
   _ProductListState createState() => _ProductListState(); // 상태 생성 메소드 정의
@@ -272,9 +277,12 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
   void initState() {
     super.initState(); // 부모 클래스의 initState 호출
     widget.scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
-    if (ref.read(widget.productListProvider).isEmpty) { // 제품 목록이 비어있다면
-      ref.read(widget.productListProvider.notifier).fetchInitialProducts(); // 초기 제품 가져오기 호출
-    }
+    // 위젯이 완전히 빌드된 후에 초기 데이터 로드 작업을 수행하기 위해 Future.delayed(Duration.zero)를 사용
+    Future.delayed(Duration.zero, () {
+      if (ref.read(widget.productListProvider).isEmpty) { // 제품 목록이 비어있다면
+        ref.read(widget.productListProvider.notifier).fetchInitialProducts(widget.category); // 초기 제품 가져오기 호출
+      }
+    });
   }
 
   @override
@@ -287,7 +295,7 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
   void _scrollListener() {
     if (widget.scrollController.position.pixels >=
         widget.scrollController.position.maxScrollExtent - 200) { // 스크롤이 끝에 가까워지면
-      ref.read(widget.productListProvider.notifier).fetchMoreProducts(); // 더 많은 제품 가져오기 호출
+      ref.read(widget.productListProvider.notifier).fetchMoreProducts(widget.category); // 더 많은 제품 가져오기 호출
     }
   }
 
@@ -324,6 +332,7 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
 }
 // ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
 // GeneralProductList 클래스 내용 구현 끝
+
 
 // ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 시작
 Widget buildGeneralProductRow(WidgetRef ref, List<ProductContent> products, BuildContext context) {

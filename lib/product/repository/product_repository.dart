@@ -329,7 +329,7 @@ class WinterProductRepository {
 // -------- 2차 카테고리(신상, 최고 ~~) 끝 부분
 
 // -------- 1차 카테고리(블라우스, 가디건 ~~) 시작 부분
-// -------- 파이어스토어 내 데이터를 불러오는 범용성 repositoru (데이터 범위는 provider에서 정함) 시작
+// -------- 파이어스토어 내 데이터를 불러오는 범용성 리포지토리 (데이터 범위는 provider에서 정함) 시작
 class GeneralProductRepository<T> {
   final FirebaseFirestore firestore; // Firestore 인스턴스
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
@@ -354,11 +354,14 @@ class GeneralProductRepository<T> {
   Future<List<ProductContent>> fetchProductContents({required int limit, DocumentSnapshot? startAfter}) async {
     List<ProductContent> products = []; // 상품 목록 초기화
 
+    // 제한된 수의 상품을 가져올 때까지 반복
     while (products.length < limit && currentCollectionIndex < collections.length) {
       String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션
       Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
-      if (lastDocument != null) {
-        query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후부터 시작
+
+      // 상품 데이터를 가져올 때, 마지막 데이터 이후부터 새롭게 가져오도록 하는 로직 부분
+      if (startAfter != null) {
+        query = query.startAfterDocument(startAfter); // 마지막 문서 이후부터 시작
       }
 
       final snapshots = await query.get(); // 쿼리 실행하여 스냅샷 가져오기
@@ -380,5 +383,6 @@ class GeneralProductRepository<T> {
     currentCollectionIndex = 0; // 컬렉션 인덱스 초기화
   }
 }
-// -------- 파이어스토어 내 데이터를 불러오는 범용성 repositoru (데이터 범위는 provider에서 정함) 끝
+// -------- 파이어스토어 내 데이터를 불러오는 범용성 리포지토리 (데이터 범위는 provider에서 정함) 끝
 // -------- 1차 카테고리(블라우스, 가디건 ~~) 끝 부분
+

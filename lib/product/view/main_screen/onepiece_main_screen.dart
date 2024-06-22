@@ -299,6 +299,28 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
     }
   }
 
+  // onepieceMainProductListProvider 관련 카테고리 인덱스를 받아 해당 카테고리 이름을 반환하는 함수
+  String _getCategory(int index) {
+    switch (index) {
+      case 1:
+        return '신상';
+      case 2:
+        return '최고';
+      case 3:
+        return '할인';
+      case 4:
+        return '봄';
+      case 5:
+        return '여름';
+      case 6:
+        return '가을';
+      case 7:
+        return '겨울';
+      default:
+        return '전체';
+    }
+  }
+
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
@@ -307,6 +329,13 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
     void onTopBarTap(int index) {
+      ref.read(onepieceCurrentTabProvider.notifier).state = index; // 현재 탭 인덱스를 업데이트
+      // 위젯이 완전히 빌드된 후에 초기 데이터 로드 작업을 수행하기 위해 Future.delayed(Duration.zero)를 사용
+      // Riverpod은 위젯 트리 빌딩 중에 상태를 수정하는 것을 허용하지 않으므로 해당 부분을 사용
+      Future.delayed(Duration.zero,() {
+        ref.read(onepieceMainProductListProvider.notifier).reset(); // 상태 초기화
+        ref.read(onepieceMainProductListProvider.notifier).fetchInitialProducts(_getCategory(index)); // 선택한 탭에 해당하는 초기 제품 가져오기 호출
+      });
     }
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
@@ -437,14 +466,30 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen> with Wi
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                             PriceAndDiscountPercentSortButtons(), // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            GeneralProductList(
-                              scrollController: onepieceMainScreenPointScrollController,
-                              productListProvider: onepieceMainProductListProvider,), // 원피스 상품 리스트 추가
+                            Consumer(
+                              // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.
+                              builder: (context, ref, child) {
+                                // builder 함수: Consumer 위젯이 빌드될 때 호출되는 함수로, context, ref, child를 인자로 받음.
+                                final currentTab = ref.watch(onepieceCurrentTabProvider);
+                                // 현재 탭: onepieceCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
+                                final productListProvider = onepieceMainProductListProvider;
+                                // 제품 리스트 제공자: onepieceMainProductListProvider를 productListProvider 변수에 할당.
+                                return GeneralProductList(
+                                  // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
+                                  scrollController: onepieceMainScreenPointScrollController,
+                                  // 스크롤 컨트롤러: onepieceMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.
+                                  productListProvider: productListProvider,
+                                  // 제품 리스트 제공자: productListProvider를 GeneralProductList의 productListProvider로 전달.
+                                  category: _getCategory(currentTab), // 카테고리 인자 추가
+                                  // 카테고리: _getCategory 함수를 호출하여 현재 인덱스에 해당하는 카테고리를 GeneralProductList의 category로 전달.
+                                );
+                              },
+                            ),
                             SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                           ],
                         ),
                       );
-                        },
+                    },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                   ),
                 ),
