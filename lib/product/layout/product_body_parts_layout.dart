@@ -89,38 +89,56 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 
 // ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
 class PriceAndDiscountPercentSortButtons extends ConsumerWidget {
+  // StateNotifierProvider와 StateProvider를 필드로 선언
+  final StateNotifierProvider<ProductMainListNotifier, List<ProductContent>> productListProvider;
+  final StateProvider<String> sortButtonProvider;
+
+  // 생성자: 필수 인자 productListProvider와 sortButtonProvider를 받아서 초기화
+  PriceAndDiscountPercentSortButtons({
+    required this.productListProvider,
+    required this.sortButtonProvider,
+  });
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 현재 선택된 정렬 타입을 감시
+    final selectedSortType = ref.watch(sortButtonProvider);
+    // print("현재 정렬 상태: $selectedSortType");
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0), // 좌우 및 상하 패딩 설정
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 자식 위젯 사이의 공간을 고르게 분배
         children: [
-          _buildExpandedSortButton(context, '가격 높은 순'),
-          _buildExpandedSortButton(context, '가격 낮은 순'),
-          _buildExpandedSortButton(context, '할인율 높은 순'),
-          _buildExpandedSortButton(context, '할인율 낮은 순'),
+          _buildExpandedSortButton(context, '가격 높은 순', ref, selectedSortType), // 가격 높은 순 버튼 생성
+          _buildExpandedSortButton(context, '가격 낮은 순', ref, selectedSortType), // 가격 낮은 순 버튼 생성
+          _buildExpandedSortButton(context, '할인율 높은 순', ref, selectedSortType), // 할인율 높은 순 버튼 생성
+          _buildExpandedSortButton(context, '할인율 낮은 순', ref, selectedSortType), // 할인율 낮은 순 버튼 생성
         ],
       ),
     );
   }
-// 버튼 세부 내용인 _buildExpandedSortButton 위젯
-  Widget _buildExpandedSortButton(BuildContext context, String title) {
+
+  // 버튼 세부 내용인 _buildExpandedSortButton 위젯
+  Widget _buildExpandedSortButton(BuildContext context, String title, WidgetRef ref, String selectedSortType) {
+    // 현재 버튼이 선택된 상태인지 여부를 결정
+    final bool isSelected = selectedSortType == title;
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우 패딩 설정
         child: ElevatedButton(
           onPressed: () {
-            // 정렬 로직을 여기에 추가합니다.
+            ref.read(sortButtonProvider.notifier).state = title; // 버튼 클릭 시 정렬 상태 업데이트
+            ref.read(productListProvider.notifier).sortType = title; // 상품 데이터 정렬 상태 업데이트
+            // print("정렬 버튼 클릭: $title");
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: BUTTON_COLOR, // 버튼 색상 설정
-            foregroundColor: INPUT_BORDER_COLOR, // 텍스트 색상 설정
+            backgroundColor: BUTTON_COLOR, // 버튼 배경 색상 설정
+            foregroundColor: isSelected ? GOLD_COLOR : INPUT_BORDER_COLOR, // 선택된 버튼의 텍스트 색상 설정
             minimumSize: Size(0, 40), // 최소 버튼 크기 설정
-            padding: EdgeInsets.symmetric(horizontal: 8.0), // 패딩 조정
+            padding: EdgeInsets.symmetric(horizontal: 8.0), // 버튼 내 패딩 설정
           ),
           child: FittedBox(
-            fit: BoxFit.scaleDown,
+            fit: BoxFit.scaleDown, // 텍스트 크기를 버튼 크기에 맞게 조절
             child: Text(
               title,
               textAlign: TextAlign.center, // 텍스트 가운데 정렬
@@ -133,7 +151,6 @@ class PriceAndDiscountPercentSortButtons extends ConsumerWidget {
   }
 }
 // ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 끝
-
 
 // ------- ProductsSectionList 클래스 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
@@ -372,81 +389,92 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 스크롤 위치 및 현재 탭 인덱스 초기화
   ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  // 홈 화면 내 섹션의 스크롤 위치 초기화
-  ref.read(homeSectionScrollPositionsProvider.notifier).state = {};
-  // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
-  ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false;
+  ref.read(homeSectionScrollPositionsProvider.notifier).state = {}; // 홈 화면 내 섹션의 스크롤 위치 초기화
+  ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
   // 홈 화면 관련 초기화 부분 끝
 
   // 블라우스 메인 화면 관련 초기화 부분 시작
   ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(blouseMainProductListProvider.notifier).reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(blouseMainSortButtonProvider.notifier).state = ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 블라우스 메인 화면 관련 초기화 부분 끝
 
   // 가디건 메인 화면 관련 초기화 부분 시작
   ref.read(cardiganMainScrollPositionProvider.notifier).state = 0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(cardiganCurrentTabProvider.notifier).state = 0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(cardiganMainProductListProvider.notifier).reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(cardiganMainSortButtonProvider.notifier).state = ''; // 가디건 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 가디건 메인 화면 관련 초기화 부분 끝
 
   // 코트 메인 화면 관련 초기화 부분 시작
   ref.read(coatMainScrollPositionProvider.notifier).state = 0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(coatCurrentTabProvider.notifier).state = 0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(coatMainProductListProvider.notifier).reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(coatMainSortButtonProvider.notifier).state = ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 코트 메인 화면 관련 초기화 부분 끝
 
   // 청바지 메인 화면 관련 초기화 부분 시작
   ref.read(jeanMainScrollPositionProvider.notifier).state = 0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(jeanCurrentTabProvider.notifier).state = 0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(jeanMainProductListProvider.notifier).reset(); // 청바지 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(jeanMainSortButtonProvider.notifier).state = ''; // 청바지 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 청바지 메인 화면 관련 초기화 부분 끝
 
   // 맨투맨 메인 화면 관련 초기화 부분 시작
   ref.read(mtmMainScrollPositionProvider.notifier).state = 0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(mtmCurrentTabProvider.notifier).state = 0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(mtmMainProductListProvider.notifier).reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(mtmMainSortButtonProvider.notifier).state = ''; // 맨투맨 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 맨투맨 메인 화면 관련 초기화 부분 끝
 
   // 니트 메인 화면 관련 초기화 부분 시작
   ref.read(neatMainScrollPositionProvider.notifier).state = 0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(neatCurrentTabProvider.notifier).state = 0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(neatMainProductListProvider.notifier).reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(neatMainSortButtonProvider.notifier).state = ''; // 니트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 니트 메인 화면 관련 초기화 부분 끝
 
   // 원피스 메인 화면 관련 초기화 부분 시작
   ref.read(onepieceMainScrollPositionProvider.notifier).state = 0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(onepieceCurrentTabProvider.notifier).state = 0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(onepieceMainProductListProvider.notifier).reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(onepieceMainSortButtonProvider.notifier).state = ''; // 원피스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 원피스 메인 화면 관련 초기화 부분 끝
 
   // 패딩 메인 화면 관련 초기화 부분 시작
   ref.read(paedingMainScrollPositionProvider.notifier).state = 0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(paedingCurrentTabProvider.notifier).state = 0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(paedingMainProductListProvider.notifier).reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(paedingMainSortButtonProvider.notifier).state = ''; // 패딩 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 패딩 메인 화면 관련 초기화 부분 끝
 
   // 팬츠 메인 화면 관련 초기화 부분 시작
   ref.read(pantsMainScrollPositionProvider.notifier).state = 0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(pantsCurrentTabProvider.notifier).state = 0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(pantsMainProductListProvider.notifier).reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(pantsMainSortButtonProvider.notifier).state = ''; // 팬츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 팬츠 메인 화면 관련 초기화 부분 끝
 
   // 폴라티 메인 화면 관련 초기화 부분 시작
   ref.read(polaMainScrollPositionProvider.notifier).state = 0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(polaCurrentTabProvider.notifier).state = 0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(polaMainProductListProvider.notifier).reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(polaMainSortButtonProvider.notifier).state = ''; // 폴라티 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 폴라티 메인 화면 관련 초기화 부분 끝
 
   // 티셔츠 메인 화면 관련 초기화 부분 시작
   ref.read(shirtMainScrollPositionProvider.notifier).state = 0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(shirtCurrentTabProvider.notifier).state = 0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(shirtMainProductListProvider.notifier).reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(shirtMainSortButtonProvider.notifier).state = ''; // 티셔츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 티셔츠 메인 화면 관련 초기화 부분 끝
 
   // 스커트 메인 화면 관련 초기화 부분 시작
   ref.read(skirtMainScrollPositionProvider.notifier).state = 0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(skirtCurrentTabProvider.notifier).state = 0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
   ref.read(skirtMainProductListProvider.notifier).reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(skirtMainSortButtonProvider.notifier).state = ''; // 스커트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 스커트 메인 화면 관련 초기화 부분 끝
 
 

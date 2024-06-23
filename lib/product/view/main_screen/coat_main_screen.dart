@@ -211,6 +211,8 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
         ref.read(coatMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 coatMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
         ref.read(coatCurrentTabProvider.notifier).state = 0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
         ref.read(coatMainProductListProvider.notifier).reset(); // 탭 관련 상품 데이터를 초기화함.
+        ref.read(coatMainSortButtonProvider.notifier).state = ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+        // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
       }
     });
 
@@ -468,7 +470,10 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen> with WidgetsBin
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons(), // 가격 및 할인 정렬 버튼 추가
+                            PriceAndDiscountPercentSortButtons(
+                              productListProvider: coatMainProductListProvider, // 코트 제품 리스트 정렬 프로바이더 전달
+                              sortButtonProvider: coatMainSortButtonProvider, // 코트 정렬 버튼 프로바이더 전달
+                            ), // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                             Consumer(
                               // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.

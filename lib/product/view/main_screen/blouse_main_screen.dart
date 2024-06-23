@@ -185,6 +185,11 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+
+      // // 가격 순 버튼과 할인율 순 버튼에 의한 상품 데이터 정렬 상태 초기화 - 다른 화면 이동 후 복귀 시, 해당 초기화가 필요하면 사용하기!!
+      // ref.read(blouseMainSortButtonProvider.notifier).state = ''; // 버튼 클릭 상태 초기화
+      // ref.read(blouseMainProductListProvider.notifier).reset(); // 상품 데이터 초기화
+      // // print("initState에서 정렬 상태 및 상품 데이터 초기화됨");
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 blouseMainScreenPointScrollController에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -225,6 +230,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
         ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 blouseMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
         ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
         ref.read(blouseMainProductListProvider.notifier).reset(); // 탭 관련 상품 데이터를 초기화함.
+        ref.read(blouseMainSortButtonProvider.notifier).state = ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+        // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
       }
     });
 
@@ -477,7 +484,10 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons(), // 가격 및 할인 정렬 버튼 추가
+                            PriceAndDiscountPercentSortButtons(
+                              productListProvider: blouseMainProductListProvider, // 블라우스 제품 리스트 프로바이더 전달
+                              sortButtonProvider: blouseMainSortButtonProvider, // 블라우스 정렬 버튼 프로바이더 전달
+                            ), // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                             Consumer(
                               // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.
