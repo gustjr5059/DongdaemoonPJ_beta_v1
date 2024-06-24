@@ -61,19 +61,6 @@ class _CardiganDetailProductScreenState extends ConsumerState<CardiganDetailProd
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController cardiganDetailProductScreenPointScrollController; // 스크롤 컨트롤러 선언
 
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
-  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-  void _updateScrollPosition() {
-    // 'cardiganDetailProductScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = cardiganDetailProductScreenPointScrollController.offset;
-
-    // 'ref'를 사용하여 'cardiganDetailScrollPositionProvider'의 notifier를 읽어옴.
-    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
-    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(cardiganDetailScrollPositionProvider.notifier).state = currentScrollPosition;
-  }
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
-
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -96,10 +83,6 @@ class _CardiganDetailProductScreenState extends ConsumerState<CardiganDetailProd
         cardiganDetailProductScreenPointScrollController.jumpTo(savedScrollPosition);
       }
     });
-    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 cardiganDetailProductScreenPointScrollController에 저장하는 코드
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-    // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    cardiganDetailProductScreenPointScrollController.addListener(_updateScrollPosition);
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -138,9 +121,6 @@ class _CardiganDetailProductScreenState extends ConsumerState<CardiganDetailProd
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    // 'cardiganDetailProductScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
-    // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    cardiganDetailProductScreenPointScrollController.removeListener(_updateScrollPosition);
     cardiganDetailProductScreenPointScrollController.dispose(); // ScrollController 해제
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
