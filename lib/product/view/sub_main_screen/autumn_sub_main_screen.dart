@@ -304,17 +304,13 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
                 automaticallyImplyLeading: false,
                 floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
                 pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 60.0, // 확장 높이 설정
-                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '가을 섹션 더보기',
-                    leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
-                  ),
+                expandedHeight: 0.0, // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                title: buildCommonAppBar( // 공통 AppBar 빌드
+                  context: context, // 현재 context 전달
+                  ref: ref, // 참조(ref) 전달
+                  title: '가을 섹션 더보기', // AppBar의 제목을 '가을 섹션 더보기'로 설정
+                  leadingType: LeadingType.back, // 이전 화면으로 이동 버튼 설정
+                  buttonCase: 2, // 버튼 케이스를 2로 설정 (찜 목록 버튼만 노출)
                 ),
                 leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용

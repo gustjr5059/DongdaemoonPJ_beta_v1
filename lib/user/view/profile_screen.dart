@@ -89,75 +89,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController profileScreenPointScrollController; // 스크롤 컨트롤러 선언
-
-  // 상단 탭 바의 보이지 않는 버튼이 활성화될 시 자동으로 스크롤되는 기능만을 담당함.
-  // 그러므로, 특정 조건에서만 사용되므로, 굳이 Provider를 통해 전역적으로 상태를 관리할 필요가 없음.
-  // 즉, 단일 기능만을 담당하며 상태 관리의 필요성이 적기 때문에 단순히 ScrollController()를 직접 사용한 것임.
-  // ScrollController를 late 변수로 선언
-  // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
-  // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController profileTopBarPointAutoScrollController;
-
-  // => cartScreenPointScrollController는 전체 화면의 스크롤을 제어함 vs cartTopBarPointAutoScrollController는 상단 탭 바의 스크롤을 제어함.
-  // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
-  // => cartTopBarPointAutoScrollController는 전체 화면의 UI를 담당하는게 아니므로 scaffold의 body 내 컨트롤러에 연결이 안되어도 addListener()에 _onScroll()로 연결해놓은거라 해당 기능 사용이 가능!!
-
-
-  // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 시작
-  void _onScroll() {
-    // 현재 스크롤 위치를 profileScreenPointScrollController의 offset 값으로부터 가져옴.
-    double currentScroll = profileScreenPointScrollController.offset;
-    // 현재 스크롤 위치에 따른 탭 인덱스를 계산함.
-    int currentIndex = _determineCurrentTabIndex(currentScroll);
-    // 계산된 탭 인덱스를 상태 관리 객체를 통해 업데이트 함.
-    ref.read(profileCurrentTabProvider.notifier).state = currentIndex;
-
-// '가을'이나 '겨울' 탭이 활성화될 때 자동 스크롤
-    if (currentIndex >= 6) {
-      // currentIndex가 6 이상인 경우 (즉, '가을'이나 '겨울' 탭이 활성화된 경우)
-
-      // 스크롤 컨트롤러의 최대 스크롤 값을 offset에 저장
-      double offset = profileTopBarPointAutoScrollController.position.maxScrollExtent;
-
-      // 스크롤 애니메이션을 사용하여 profileTopBarPointAutoScrollController를 offset 위치로 이동
-      profileTopBarPointAutoScrollController.animateTo(
-        offset, // 이동할 위치 (최대 스크롤 값)
-        duration: Duration(milliseconds: 50), // 애니메이션 시간 (50밀리초)
-        curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
-      );
-    } else if (currentIndex <= 1) {
-      // currentIndex가 1 이하인 경우 (즉, 처음 몇 개의 탭이 활성화된 경우)
-
-      // 스크롤 애니메이션을 사용하여 profileTopBarPointAutoScrollController를 0.0 위치로 이동 (맨 처음 위치)
-      profileTopBarPointAutoScrollController.animateTo(
-        0.0, // 이동할 위치 (맨 처음)
-        duration: Duration(milliseconds: 50), // 애니메이션 시간 (50밀리초)
-        curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
-      );
-    }
-
-  }
-  // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 끝
-
-  // ------ 스크롤 오프셋을 받아 현재의 탭 인덱스를 결정하는 함수인 _determineCurrentTabIndex 내용 시작
-  int _determineCurrentTabIndex(double scrollOffset) {
-    // 각 섹션의 스크롤 시작 위치를 배열로 정의함.
-    // 이 배열의 각 요소는 각 섹션의 시작 스크롤 위치를 나타냄.
-    const sectionOffsets = [0.0, 650.0, 910.0, 1170.0, 1530.0, 1790.0, 2150.0, 2410.0];
-
-    // 섹션 오프셋 배열의 마지막 요소부터 처음 요소까지 역순으로 검사함.
-    for (int i = sectionOffsets.length - 1; i >= 0; i--) {
-      // 현재 스크롤 오프셋이 검사 중인 섹션의 시작 위치보다 크거나 같다면,
-      if (scrollOffset >= sectionOffsets[i]) {
-        // 현재 섹션의 인덱스를 반환함.
-        return i;
-      }
-    }
-    // 어떤 섹션의 시작 위치보다 현재 스크롤 위치가 작은 경우 첫 번째 섹션의 인덱스인 0을 반환함.
-    return 0;
-  }
-  // ------ 스크롤 오프셋을 받아 현재의 탭 인덱스를 결정하는 함수인 _determineCurrentTabIndex 내용 끝
-
+  
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -179,7 +111,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     super.initState();
     // ScrollController를 초기화
     profileScreenPointScrollController = ScrollController();
-    profileTopBarPointAutoScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -205,10 +136,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
     profileScreenPointScrollController.addListener(_updateScrollPosition);
 
-    // profileScreenPointScrollController에 스크롤 이벤트 리스너를 추가함.
-    // 이 리스너는 사용자가 스크롤할 때마다 _onScroll 함수를 호출하도록 설정됨.
-    profileScreenPointScrollController.addListener(_onScroll);
-
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'profileLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _largeBannerPageController = PageController(initialPage: ref.read(profileLargeBannerPageProvider));
@@ -227,6 +154,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 마이페이지 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 마이페이지 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(profileLargeBannerPageProvider.notifier).state = 0;
+        ref.read(profileScrollPositionProvider.notifier).state = 0.0; // 마이페이지 화면 자체의 스크롤 위치 인덱스를 초기화
       }
     });
 
@@ -281,13 +209,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
     profileScreenPointScrollController.removeListener(_updateScrollPosition);
 
-    // profileScreenPointScrollController에서 _onScroll 함수를 리스너로서 제거함.
-    // 이 작업은 더 이상 스크롤 이벤트에 반응하지 않도록 설정할 때 사용됨.
-    profileScreenPointScrollController.removeListener(_onScroll);
-
     profileScreenPointScrollController.dispose(); // ScrollController 해제
-
-    profileTopBarPointAutoScrollController.dispose(); // ScrollController 해제
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
@@ -316,68 +238,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
-    // 각 섹션의 스크롤 위치를 계산하는 함수
-    double calculateScrollOffset(String sectionTitle) {
-      switch (sectionTitle) {
-        case '신상':
-          return 650.0; // '신상품 섹션'의 스크롤 위치
-        case '최고':
-          return 910.0; // '최고의 제품 섹션'의 스크롤 위치
-        case '할인':
-          return 1170.0; // '할인 제품 섹션'의 스크롤 위치
-        case '봄':
-          return 1530.0; // '봄 제품 섹션'의 스크롤 위치
-        case '여름':
-          return 1790.0; // '여름 제품 섹션'의 스크롤 위치
-        case '가을':
-          return 2150.0; // '가을 제품 섹션'의 스크롤 위치
-        case '겨울':
-          return 2410.0; // '겨울 제품 섹션'의 스크롤 위치
-        default:
-          return 0.0;  // 해당하지 않는 섹션의 경우 0.0으로 반환
-      }
-    }
-
-    // 탭의 인덱스에 따라 해당하는 섹션 이름을 결정하는 String 변수 관련 함수
-    String getSectionFromIndex(int index) {
-      switch (index) {
-        case 0: return '전체'; // 전체 항목
-        case 1: return '신상'; // 신상품 항목
-        case 2: return '최고'; // 최고의 제품 항목
-        case 3: return '할인'; // 할인 제품 항목
-        case 4: return '봄'; // 봄 제품 항목
-        case 5: return '여름'; // 여름 제품 항목
-        case 6: return '가을'; // 가을 제품 항목
-        case 7: return '겨울'; // 겨울 제품 항목
-        default: return '';
-      }
-    }
-
-    // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
-    // 탭을 탭했을 때 호출될 함수
-    // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
-    // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
-    void onTopBarTap(int index) {
-
-      String section = getSectionFromIndex(index);
-      // 선택된 섹션에 따라 계산된 스크롤 오프셋으로 스크롤 이동
-      double scrollToPosition = calculateScrollOffset(section);
-      profileScreenPointScrollController.animateTo(
-          scrollToPosition,
-          duration: Duration(milliseconds: 500), // 이동에 걸리는 시간: 500 밀리초
-          curve: Curves.easeInOut // 이동하는 동안의 애니메이션 효과: 시작과 끝이 부드럽게
-      );
-      // 스크롤 위치를 StateProvider에 저장
-      ref.read(profileScrollPositionProvider.notifier).state = scrollToPosition;
-    }
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
-
-    // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
-    // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, profileCurrentTabProvider, profileTopBarPointAutoScrollController);
-    // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
     void _onLargeBannerTap(BuildContext context, int index) async {
@@ -410,29 +270,18 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
                 automaticallyImplyLeading: false,
                 floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
                 pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 120.0, // 확장 높이 설정
-                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '마이페이지',
+                expandedHeight: 0.0, // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                title: buildCommonAppBar( // 공통 AppBar 빌드
+                    context: context, // 현재 context 전달
+                    ref: ref, // 참조(ref) 전달
+                    title: '마이페이지', // AppBar의 제목을 '마이페이지'로 설정
                     leadingType: LeadingType.none, // 버튼 없음.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
-                  ),
                 ),
                 leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 backgroundColor: BUTTON_COLOR,
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(60.0), // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
-                  child: Container(
-                    color: BUTTON_COLOR, // 상단 탭 바 색상 설정
-                    child: topBarList, // 탭 바에 들어갈 위젯 배열
-                  ),
-                ),
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
