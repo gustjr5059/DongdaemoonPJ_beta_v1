@@ -463,7 +463,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with Wi
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons(
+                            PriceAndDiscountPercentSortButtons<ProductMainListNotifier>(
                               productListProvider: cardiganMainProductListProvider, // 가디건 제품 리스트 정렬 프로바이더 전달
                               sortButtonProvider: cardiganMainSortButtonProvider, // 가디건 정렬 버튼 프로바이더 전달
                             ), // 가격 및 할인 정렬 버튼 추가
@@ -476,7 +476,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen> with Wi
                                 // 현재 탭: cardiganCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
                                 final productListProvider = cardiganMainProductListProvider;
                                 // 제품 리스트 제공자: cardiganMainProductListProvider를 productListProvider 변수에 할당.
-                                return GeneralProductList(
+                                return GeneralProductList<ProductMainListNotifier>(
                                   // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
                                   scrollController: cardiganMainScreenPointScrollController,
                                   // 스크롤 컨트롤러: cardiganMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.

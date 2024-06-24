@@ -483,7 +483,7 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen> with WidgetsB
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons(
+                            PriceAndDiscountPercentSortButtons<ProductMainListNotifier>(
                               productListProvider: skirtMainProductListProvider,
                               sortButtonProvider: skirtMainSortButtonProvider,
                             ), // 가격 및 할인 정렬 버튼 추가
@@ -496,7 +496,7 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen> with WidgetsB
                                 // 현재 탭: skirtCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
                                 final productListProvider = skirtMainProductListProvider;
                                 // 제품 리스트 제공자: skirtMainProductListProvider를 productListProvider 변수에 할당.
-                                return GeneralProductList(
+                                return GeneralProductList<ProductMainListNotifier>(
                                   // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
                                   scrollController: skirtMainScreenPointScrollController,
                                   // 스크롤 컨트롤러: skirtMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.

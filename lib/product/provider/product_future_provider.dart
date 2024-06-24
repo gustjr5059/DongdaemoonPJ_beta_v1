@@ -133,16 +133,18 @@ final winterProdFirestoreDataProvider = FutureProvider.autoDispose<List<ProductC
 // ----- 겨울 부분 끝
 // ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
-// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
-// 2차 메인 화면 부분에 적용 1차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면과
+// 섹션 더보기 화면(신상, 최고, 할인, 봄, 여름, 가을, 겨울)에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
+// 2차 메인 화면과 섹션 더보기 화면 부분에 적용 1차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider
 final firebaseFirestoreProvider = Provider<FirebaseFirestore>((ref) {
   return FirebaseFirestore.instance; // FirebaseFirestore 인스턴스를 반환
 });
-// 2차 메인 화면 부분에 적용 2차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider
+// 2차 메인 화면과 섹션 더보기 화면 부분에 적용 2차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider
 final productRepositoryProvider = Provider.family<GeneralProductRepository<ProductContent>, List<String>>((ref, collections) {
   return GeneralProductRepository<ProductContent>(ref.watch(firebaseFirestoreProvider), collections); // 주어진 컬렉션 목록을 이용하여 GeneralProductRepository 인스턴스를 반환
 });
-// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝
+// ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면과
+// 섹션 더보기 화면(신상, 최고, 할인, 봄, 여름, 가을, 겨울)에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
 // ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 상품 상세 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 // 상품 상세 화면 데이터를 가져오는 FutureProvider(범용성)

@@ -30,6 +30,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../home/layout/home_body_parts_layout.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_future_provider.dart';
 import '../../provider/product_state_provider.dart';
 
@@ -100,19 +101,6 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController autumnSubMainScreenPointScrollController; // 스크롤 컨트롤러 선언
 
-  // 상단 탭 바의 보이지 않는 버튼이 활성화될 시 자동으로 스크롤되는 기능만을 담당함.
-  // 그러므로, 특정 조건에서만 사용되므로, 굳이 Provider를 통해 전역적으로 상태를 관리할 필요가 없음.
-  // 즉, 단일 기능만을 담당하며 상태 관리의 필요성이 적기 때문에 단순히 ScrollController()를 직접 사용한 것임.
-  // ScrollController를 late 변수로 선언
-  // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
-  // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController autumnSubMainTopBarPointAutoScrollController;
-
-  // => autumnSubMainScreenPointScrollController는 전체 화면의 스크롤을 제어함 vs autumnSubMainTopBarPointAutoScrollController는 상단 탭 바의 스크롤을 제어함.
-  // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
-  // => autumnSubMainTopBarPointAutoScrollController는 전체 화면의 UI를 담당하는게 아니므로 scaffold의 body 내 컨트롤러에 연결이 안되어도 addListener()에 _onScroll()로 연결해놓은거라 해당 기능 사용이 가능!!
-
-
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -120,10 +108,10 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
     // 'autumnSubMainScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
     double currentScrollPosition = autumnSubMainScreenPointScrollController.offset;
 
-    // 'ref'를 사용하여 'blouseMainScrollPositionProvider'의 notifier를 읽어옴.
+    // 'ref'를 사용하여 'autumnSubMainScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(blouseMainScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(autumnSubMainScrollPositionProvider.notifier).state = currentScrollPosition;
   }
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
@@ -135,7 +123,6 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
     super.initState();
     // ScrollController를 초기화
     autumnSubMainScreenPointScrollController = ScrollController();
-    autumnSubMainTopBarPointAutoScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -145,7 +132,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(blouseMainScrollPositionProvider);
+        double savedScrollPosition = ref.read(autumnSubMainScrollPositionProvider);
         // autumnSubMainScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         autumnSubMainScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -162,24 +149,24 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
     autumnSubMainScreenPointScrollController.addListener(_updateScrollPosition);
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
-    // 'blouseMainLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController = PageController(initialPage: ref.read(blouseMainLargeBannerPageProvider));
+    // 'autumnSubMainLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
+    _largeBannerPageController = PageController(initialPage: ref.read(autumnSubMainLargeBannerPageProvider));
 
     // 큰 배너를 자동으로 스크롤하는 기능 초기화
     _largeBannerAutoScroll = BannerAutoScrollClass(
       pageController: _largeBannerPageController,
-      currentPageProvider: blouseMainLargeBannerPageProvider,
+      currentPageProvider: autumnSubMainLargeBannerPageProvider,
       itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
     );
 
     // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
-    // 'blouseMainSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _small1BannerPageController = PageController(initialPage: ref.read(blouseMainSmall1BannerPageProvider));
+    // 'autumnSubMainSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
+    _small1BannerPageController = PageController(initialPage: ref.read(autumnSubMainSmall1BannerPageProvider));
 
     // 작은 배너1을 자동으로 스크롤하는 기능 초기화
     _small1BannerAutoScroll = BannerAutoScrollClass(
       pageController: _small1BannerPageController,
-      currentPageProvider: blouseMainSmall1BannerPageProvider,
+      currentPageProvider: autumnSubMainSmall1BannerPageProvider,
       itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
     );
 
@@ -188,8 +175,11 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(blouseMainLargeBannerPageProvider.notifier).state = 0;
-        ref.read(blouseMainSmall1BannerPageProvider.notifier).state = 0;
+        ref.read(autumnSubMainLargeBannerPageProvider.notifier).state = 0; // 대배너 페이지 초기화
+        ref.read(autumnSubMainSmall1BannerPageProvider.notifier).state = 0; // 소배너 페이지 초기화
+        ref.read(autumnSubMainScrollPositionProvider.notifier).state = 0.0; // 가을 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.read(autumnSubMainProductListProvider.notifier).reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
+        ref.read(autumnSubMainSortButtonProvider.notifier).state = ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
       }
     });
 
@@ -252,8 +242,6 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
 
     autumnSubMainScreenPointScrollController.dispose(); // ScrollController 해제
 
-    autumnSubMainTopBarPointAutoScrollController.dispose(); // ScrollController 해제
-
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -281,16 +269,6 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
-    // 탭을 탭했을 때 호출될 함수
-    // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
-    // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
-    void onTopBarTap(int index) {
-    }
-    // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
-    // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, blouseCurrentTabProvider, autumnSubMainTopBarPointAutoScrollController);
-    // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     void _onLargeBannerTap(BuildContext context, int index) async {
       final url = largeBannerLinks[index];
@@ -326,7 +304,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
                 automaticallyImplyLeading: false,
                 floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
                 pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 120.0, // 확장 높이 설정
+                expandedHeight: 60.0, // 확장 높이 설정
                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
@@ -342,13 +320,6 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 backgroundColor: BUTTON_COLOR,
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(60.0), // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
-                  child: Container(
-                    color: BUTTON_COLOR, // 상단 탭 바 색상 설정
-                    child: topBarList, // 탭 바에 들어갈 위젯 배열
-                  ),
-                ),
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
@@ -388,7 +359,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 20), // 높이 임의로 50으로 간격 설정
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: SizedBox(
@@ -413,8 +384,22 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen> with 
                               padding: const EdgeInsets.fromLTRB(
                                   8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            Text('블라우스 메인 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            PriceAndDiscountPercentSortButtons<SectionMoreProductListNotifier>(
+                              productListProvider: autumnSubMainProductListProvider, // 가을 제품 리스트 프로바이더 전달
+                              sortButtonProvider: autumnSubMainSortButtonProvider, // 가을 정렬 버튼 프로바이더 전달
+                            ), // 가격 및 할인 정렬 버튼 추가
+                            SizedBox(height: 3),
+                            // GeneralProductList 위젯을 생성, SectionMoreProductListNotifier를 사용
+                            GeneralProductList<SectionMoreProductListNotifier>(
+                              // 스크롤 컨트롤러를 설정 (가을 섹션의 스크롤 컨트롤러)
+                              scrollController: autumnSubMainScreenPointScrollController,
+                              // 상품 리스트 프로바이더를 설정 (가을 섹션의 상품 리스트 프로바이더)
+                              productListProvider: autumnSubMainProductListProvider,
+                              // 카테고리를 '가을'로 설정
+                              category: '가을',
+                            ),
+                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                           ],
                         ),
                       );

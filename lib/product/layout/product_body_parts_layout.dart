@@ -88,9 +88,9 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 // ------ arrowButton 위젯 내용 구현 끝
 
 // ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
-class PriceAndDiscountPercentSortButtons extends ConsumerWidget {
+class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier> extends ConsumerWidget {
   // StateNotifierProvider와 StateProvider를 필드로 선언
-  final StateNotifierProvider<ProductMainListNotifier, List<ProductContent>> productListProvider;
+  final StateNotifierProvider<T, List<ProductContent>> productListProvider;
   final StateProvider<String> sortButtonProvider;
 
   // 생성자: 필수 인자 productListProvider와 sortButtonProvider를 받아서 초기화
@@ -274,9 +274,9 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
 // ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
 // GeneralProductList 클래스 내용 구현 시작
-class GeneralProductList extends ConsumerStatefulWidget {
+class GeneralProductList <T extends BaseProductListNotifier> extends ConsumerStatefulWidget {
   final ScrollController scrollController; // 스크롤 컨트롤러 선언
-  final StateNotifierProvider<ProductMainListNotifier, List<ProductContent>> productListProvider; // 제품 목록 provider 선언
+  final StateNotifierProvider<T, List<ProductContent>> productListProvider; // 제품 목록 provider 선언
   final String category; // 카테고리 선언
 
   GeneralProductList({
@@ -393,6 +393,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
   // 홈 화면 관련 초기화 부분 끝
 
+  // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작
   ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
@@ -476,7 +477,51 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(skirtMainProductListProvider.notifier).reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
   ref.read(skirtMainSortButtonProvider.notifier).state = ''; // 스커트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 스커트 메인 화면 관련 초기화 부분 끝
+  // ------ 2차 메인 화면 관련 부분 끝
 
+  // ------ 섹션 더보기 화면 관련 부분 시작
+  // 신상 더보기 화면 관련 초기화 부분 시작
+  ref.read(newSubMainScrollPositionProvider.notifier).state = 0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(newSubMainProductListProvider.notifier).reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
+  ref.read(newSubMainSortButtonProvider.notifier).state = ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 신상 더보기 화면 관련 초기화 부분 끝
+
+  // 최고 더보기 화면 관련 초기화 부분 시작
+  ref.read(bestSubMainScrollPositionProvider.notifier).state = 0.0; // 최고 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(bestSubMainProductListProvider.notifier).reset(); // 최고 더보기 화면 내 상품 데이터를 초기화
+  ref.read(bestSubMainSortButtonProvider.notifier).state = ''; // 최고 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 최고 더보기 화면 관련 초기화 부분 끝
+
+  // 할인 더보기 화면 관련 초기화 부분 시작
+  ref.read(saleSubMainScrollPositionProvider.notifier).state = 0.0; // 할인 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(saleSubMainProductListProvider.notifier).reset(); // 할인 더보기 화면 내 상품 데이터를 초기화
+  ref.read(saleSubMainSortButtonProvider.notifier).state = ''; // 할인 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 할인 더보기 화면 관련 초기화 부분 끝
+
+  // 봄 더보기 화면 관련 초기화 부분 시작
+  ref.read(springSubMainScrollPositionProvider.notifier).state = 0.0; // 봄 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(springSubMainProductListProvider.notifier).reset(); // 봄 더보기 화면 내 상품 데이터를 초기화
+  ref.read(springSubMainSortButtonProvider.notifier).state = ''; // 봄 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 봄 더보기 화면 관련 초기화 부분 끝
+
+  // 여름 더보기 화면 관련 초기화 부분 시작
+  ref.read(summerSubMainScrollPositionProvider.notifier).state = 0.0; // 여름 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(summerSubMainProductListProvider.notifier).reset(); // 여름 더보기 화면 내 상품 데이터를 초기화
+  ref.read(summerSubMainSortButtonProvider.notifier).state = ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 여름 더보기 화면 관련 초기화 부분 끝
+
+  // 가을 더보기 화면 관련 초기화 부분 시작
+  ref.read(autumnSubMainScrollPositionProvider.notifier).state = 0.0; // 가을 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(autumnSubMainProductListProvider.notifier).reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
+  ref.read(autumnSubMainSortButtonProvider.notifier).state = ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 가을 더보기 화면 관련 초기화 부분 끝
+
+  // 겨울 더보기 화면 관련 초기화 부분 시작
+  ref.read(winterSubMainScrollPositionProvider.notifier).state = 0.0; // 겨울 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(winterSubMainProductListProvider.notifier).reset(); // 겨울 더보기 화면 내 상품 데이터를 초기화
+  ref.read(winterSubMainSortButtonProvider.notifier).state = ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  // 겨울 더보기 화면 관련 초기화 부분 끝
+  // ------ 섹션 더보기 화면 관련 부분 시작
 
 }
 

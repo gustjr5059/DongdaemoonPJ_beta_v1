@@ -484,7 +484,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons(
+                            PriceAndDiscountPercentSortButtons<ProductMainListNotifier>(
                               productListProvider: blouseMainProductListProvider, // 블라우스 제품 리스트 프로바이더 전달
                               sortButtonProvider: blouseMainSortButtonProvider, // 블라우스 정렬 버튼 프로바이더 전달
                             ), // 가격 및 할인 정렬 버튼 추가
@@ -496,7 +496,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                                 final currentTab = ref.watch(blouseCurrentTabProvider);
                                 // 현재 탭: blouseCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
                                 final productListProvider = blouseMainProductListProvider;
-                                return GeneralProductList(
+                                return GeneralProductList<ProductMainListNotifier>(
                                   // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
                                   scrollController: blouseMainScreenPointScrollController,
                                   // 스크롤 컨트롤러: blouseMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.

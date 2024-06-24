@@ -61,6 +61,36 @@ final coatMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 // 가디건 카테고리 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
 final cardiganMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 
+// 신상 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final newSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 최고 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final bestSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 할인 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final saleSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 봄 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final springSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 여름 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final summerSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 가을 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final autumnSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+// 겨울 서브 메인화면(섹션 더보기 화면)의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
+final winterSubMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+
+// 신상 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final newSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 최고 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final bestSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 할인 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final saleSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 봄 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final springSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 여름 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final summerSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 가을 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final autumnSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+// 겨울 서브 메인화면(섹션 더보기 화면)의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final winterSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+
 // 티셔츠 디테일 상품 화면의 페이지 인덱스를 관리하기 위한 StateProvider
 final shirtDetailBannerPageProvider = StateProvider<int>((ref) => 0);
 // 블라우스 디테일 상품 화면의 페이지 인덱스를 관리하기 위한 StateProvider
@@ -119,6 +149,15 @@ final polaMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 final shirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 final skirtMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 
+// 각 섹션별 서브 메인 화면(섹션 더보기 화면)에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
+final newSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final bestSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final saleSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final springSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final summerSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final autumnSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+final winterSubMainScrollPositionProvider = StateProvider<double>((ref) => 0);
+
 // 각 카테고리별 상세화면에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
 final blouseDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
 final cardiganDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
@@ -147,6 +186,14 @@ final polaMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본
 final shirtMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 final skirtMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 
+// 섹션 더보기 화면 내 가격순, 할인순 버튼 관련 상태 관리 함수인 StateProvider
+final newSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final bestSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final saleSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final springSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final summerSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final autumnSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final winterSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
 // 2차 메인 화면-블라우스 메인 화면
@@ -400,52 +447,71 @@ final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝
 
-// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 시작
-// ------- ProductMainListNotifier 클래스 내용 구현 시작
-class ProductMainListNotifier extends StateNotifier<List<ProductContent>> {
-  // 생성자: Provider 참조와 기본 컬렉션 이름을 받아 초기 상태를 빈 리스트로 설정
-  ProductMainListNotifier(this.ref, this.baseCollection) : super([]);
+// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트)과 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 기본 추상 클래스 시작
+// ------- BaseProductListNotifier 클래스 내용 구현 시작
+// 해당 내용은 추상 클래스이며, 해당 클래스를 다른 클래스에 오버라이드(extends 사용)를 하면 해당 클래스 기능은 그대로 사용하면서 추가되는 내용을 각기 적용 가능하므로, 이렇게 구성
 
-  final Ref ref; // Provider 참조
-  final String baseCollection; // 기본 컬렉션 이름
-  bool _isFetching = false; // 데이터 가져오는 중인지 여부를 나타내는 변수
-  DocumentSnapshot? _lastDocument; // 마지막 문서 스냅샷 저장 변수
-  bool get isFetching => _isFetching; // 데이터 가져오는 중인지 여부 반환
-  String _sortType = ''; // 정렬 타입 변수
+// 상태 관리 추상 클래스 BaseProductListNotifier를 정의 (상품 데이터 관리)
+abstract class BaseProductListNotifier extends StateNotifier<List<ProductContent>> {
+  // 생성자를 정의, ref와 baseCollection을 초기화
+  BaseProductListNotifier(this.ref, this.baseCollection) : super([]);
 
-  // 정렬 타입 설정 함수
+  // Ref 객체 선언
+  final Ref ref;
+  // 기본 컬렉션 이름 선언
+  final String baseCollection;
+  // 데이터 페칭 상태를 관리하는 변수 선언
+  bool _isFetching = false;
+  // 마지막 문서 스냅샷을 저장하는 변수 선언
+  DocumentSnapshot? _lastDocument;
+  // 데이터 페칭 상태를 반환하는 getter 정의
+  bool get isFetching => _isFetching;
+  // 정렬 타입을 저장하는 변수 선언
+  String _sortType = '';
+
+  // 정렬 타입을 설정하는 setter 정의
   set sortType(String value) {
-    _sortType = value; // 새로운 정렬 타입으로 설정
-    _sortProducts(); // 제품 정렬 함수 호출
+    _sortType = value;
+    _sortProducts();
   }
 
-  // 제품 정렬 함수
+  // 상품 데이터를 정렬하는 메서드 정의
   void _sortProducts() {
-    List<ProductContent> sortedProducts = [...state]; // 현재 상태 복사하여 리스트 생성
+    // 상태를 복사하여 새로운 리스트에 저장
+    List<ProductContent> sortedProducts = [...state];
+    // 가격 높은 순 정렬
     if (_sortType == '가격 높은 순') {
-      sortedProducts.sort((a, b) => b.discountPrice!.compareTo(a.discountPrice!)); // 가격 높은 순으로 정렬
+      sortedProducts.sort((a, b) => b.discountPrice!.compareTo(a.discountPrice!));
+      // 가격 낮은 순 정렬
     } else if (_sortType == '가격 낮은 순') {
-      sortedProducts.sort((a, b) => a.discountPrice!.compareTo(b.discountPrice!)); // 가격 낮은 순으로 정렬
+      sortedProducts.sort((a, b) => a.discountPrice!.compareTo(b.discountPrice!));
+      // 할인율 높은 순 정렬
     } else if (_sortType == '할인율 높은 순') {
-      sortedProducts.sort((a, b) => b.discountPercent!.compareTo(a.discountPercent!)); // 할인율 높은 순으로 정렬
+      sortedProducts.sort((a, b) => b.discountPercent!.compareTo(a.discountPercent!));
+      // 할인율 낮은 순 정렬
     } else if (_sortType == '할인율 낮은 순') {
-      sortedProducts.sort((a, b) => a.discountPercent!.compareTo(b.discountPercent!)); // 할인율 낮은 순으로 정렬
+      sortedProducts.sort((a, b) => a.discountPercent!.compareTo(b.discountPercent!));
     }
-    state = sortedProducts; // 정렬된 리스트로 상태 업데이트
+    // 상태를 정렬된 리스트로 업데이트
+    state = sortedProducts;
   }
 
-  // 제품을 가져오는 함수 (초기 로드 여부에 따라 다름)
+  // 상품 데이터를 페칭하는 비동기 메서드 정의
   Future<void> _fetchProducts({
-    bool isInitial = false, // 초기 로드인지 여부
-    required List<String> collectionNames, // 가져올 컬렉션 이름 리스트
+    // 초기 페칭 여부를 나타내는 매개변수
+    bool isInitial = false,
+    // 컬렉션 이름 리스트를 매개변수로 받음
+    required List<String> collectionNames,
   }) async {
-    if (_isFetching) return; // 이미 가져오는 중이면 리턴
-    _isFetching = true; // 가져오는 중으로 설정
+    // 이미 페칭 중이면 리턴
+    if (_isFetching) return;
+    // 페칭 상태를 true로 설정
+    _isFetching = true;
     try {
-      // 제품 내용을 가져오는 함수 호출
+      // 상품 데이터를 페칭 (제한: 3개, 시작 문서: _lastDocument)
       final products = await ref.read(productRepositoryProvider(collectionNames)).fetchProductContents(
-        limit: 3, // 한 번에 가져올 상품 수 제한
-        startAfter: isInitial ? null : _lastDocument, // 초기 로드면 처음부터, 아니면 마지막 문서 이후부터
+        limit: 3,
+        startAfter: isInitial ? null : _lastDocument,
       );
 
       // 디버깅 출력 추가
@@ -454,127 +520,240 @@ class ProductMainListNotifier extends StateNotifier<List<ProductContent>> {
       //   debugPrint('Last document before fetch: ${_lastDocument!.id}');
       // }
 
+      // 페칭된 상품 데이터가 비어있지 않으면
       if (products.isNotEmpty) {
-        _lastDocument = products.last.documentSnapshot; // 마지막 문서 업데이트
+        // 마지막 문서를 업데이트
+        _lastDocument = products.last.documentSnapshot;
         // debugPrint('Last document after fetch: ${_lastDocument!.id}');
-        state = isInitial ? products : [...state, ...products]; // 초기 로드면 상태를 덮어쓰고, 아니면 기존 상태에 추가
+        // 상태를 초기화 또는 기존 상태에 추가
+        state = isInitial ? products : [...state, ...products];
       } else {
-        if (isInitial) state = []; // 초기 로드에서 가져온 제품이 없으면 상태를 빈 리스트로 설정
+        // 초기화 시 비어있는 상태로 설정
+        if (isInitial) state = [];
       }
-      _sortProducts(); // Fetch 후 정렬 적용
+      // 상품 데이터를 정렬
+      _sortProducts();
     } catch (e) {
-      // 에러 발생 시 디버깅용 출력
+      // 에러 발생 시 디버깅 출력
       debugPrint('Error fetching products: $e');
     } finally {
-      _isFetching = false; // 가져오는 중 상태 해제
+      // 페칭 상태를 false로 설정
+      _isFetching = false;
     }
   }
 
-  // 초기 제품을 가져오는 함수
+  // 초기 상품 데이터를 페칭하는 메서드 정의
   Future<void> fetchInitialProducts(String category) async {
-    _lastDocument = null; // 초기 로드시 마지막 문서 초기화
-    state = []; // 상태 초기화
-    List<String> collectionNames = _getCollectionNames(category); // 카테고리에 따른 컬렉션 이름 가져오기
-    await _fetchProducts(isInitial: true, collectionNames: collectionNames); // 초기 로드로 제품 가져오기
+    // 마지막 문서와 상태를 초기화
+    _lastDocument = null;
+    state = [];
+    // 카테고리에 따른 컬렉션 이름 리스트를 얻음
+    List<String> collectionNames = _getCollectionNames(category);
+    // 초기 상품 데이터를 페칭
+    await _fetchProducts(isInitial: true, collectionNames: collectionNames);
   }
 
-  // 더 많은 제품을 가져오는 함수
+  // 더 많은 상품 데이터를 페칭하는 메서드 정의
   Future<void> fetchMoreProducts(String category) async {
-    // fetching 중이거나 첫 페이지가 로드되지 않았다면 리턴
+    // 이미 페칭 중이거나 마지막 문서가 없으면 리턴
     if (_isFetching || _lastDocument == null) return;
-    List<String> collectionNames = _getCollectionNames(category); // 카테고리에 따른 컬렉션 이름 가져오기
-    await _fetchProducts(collectionNames: collectionNames); // 더 많은 제품 가져오기
+    // 카테고리에 따른 컬렉션 이름 리스트를 얻음
+    List<String> collectionNames = _getCollectionNames(category);
+    // 추가 상품 데이터를 페칭
+    await _fetchProducts(collectionNames: collectionNames);
   }
 
-  // 데이터 초기화 함수
+  // 상태와 변수들을 초기화하는 메서드 정의
   void reset() {
-    state = []; // 상태 초기화
-    _lastDocument = null; // 마지막 문서 초기화
-    _sortType = ''; // 정렬 타입 초기화
+    state = [];
+    _lastDocument = null;
+    _sortType = '';
   }
 
-  // 카테고리에 따른 컬렉션 이름 반환 함수
+  // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 추상 메서드
+  List<String> _getCollectionNames(String category);
+}
+// ------- BaseProductListNotifier 클래스 내용 구현 끝
+// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트)과 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 기본 추상 클래스 끝
+
+// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 시작
+// ------- ProductMainListNotifier 클래스 내용 구현 시작
+// BaseProductListNotifier 클래스를 상속받는 ProductMainListNotifier 클래스 정의
+class ProductMainListNotifier extends BaseProductListNotifier {
+  // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
+  ProductMainListNotifier(Ref ref, String baseCollection) : super(ref, baseCollection);
+
+  // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 메서드 구현
+  @override
   List<String> _getCollectionNames(String category) {
+    // 카테고리별로 다른 컬렉션 이름 반환
     switch (category) {
       case '신상':
-        return ['${baseCollection}1']; // 신상 컬렉션
+        return ['${baseCollection}1'];
       case '최고':
-        return ['${baseCollection}2']; // 최고 컬렉션
+        return ['${baseCollection}2'];
       case '할인':
-        return ['${baseCollection}3']; // 할인 컬렉션
+        return ['${baseCollection}3'];
       case '봄':
-        return ['${baseCollection}4']; // 봄 컬렉션
+        return ['${baseCollection}4'];
       case '여름':
-        return ['${baseCollection}5']; // 여름 컬렉션
+        return ['${baseCollection}5'];
       case '가을':
-        return ['${baseCollection}6']; // 가을 컬렉션
+        return ['${baseCollection}6'];
       case '겨울':
-        return ['${baseCollection}7']; // 겨울 컬렉션
-      default: // 전체
+        return ['${baseCollection}7'];
+    // 기본적으로 모든 컬렉션 반환
+      default:
         return [
-          '${baseCollection}1', // 신상 컬렉션
-          '${baseCollection}2', // 최고 컬렉션
-          '${baseCollection}3', // 할인 컬렉션
-          '${baseCollection}4', // 봄 컬렉션
-          '${baseCollection}5', // 여름 컬렉션
-          '${baseCollection}6', // 가을 컬렉션
-          '${baseCollection}7'  // 겨울 컬렉션
+          '${baseCollection}1',
+          '${baseCollection}2',
+          '${baseCollection}3',
+          '${baseCollection}4',
+          '${baseCollection}5',
+          '${baseCollection}6',
+          '${baseCollection}7'
         ];
     }
   }
 }
-// ------- ProductMainListNotifier 클래스 내용 구현 끝
 
-// 카테고리별로 ProductMainListNotifier 인스턴스를 생성하는 프로바이더 정의
+// 2차 메인 화면 관련 ProductMainListNotifier 인스턴스를 생성하는 프로바이더 정의
 // UI 코드에서 category 값을 인자로 전달하여 fetchInitialProducts와 fetchMoreProducts를 호출할 수 있음
 final blouseMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a2b'); // 블라우스 컬렉션
+  // 블라우스 컬렉션
+  return ProductMainListNotifier(ref, 'a2b');
 });
 
 final cardiganMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a12b'); // 가디건 컬렉션
+  // 가디건 컬렉션
+  return ProductMainListNotifier(ref, 'a12b');
 });
 
 final coatMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a11b'); // 코트 컬렉션
+  // 코트 컬렉션
+  return ProductMainListNotifier(ref, 'a11b');
 });
 
 final jeanMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a8b'); // 청바지 컬렉션
+  // 청바지 컬렉션
+  return ProductMainListNotifier(ref, 'a8b');
 });
 
 final mtmMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a3b'); // 맨투맨 컬렉션
+  // 맨투맨 컬렉션
+  return ProductMainListNotifier(ref, 'a3b');
 });
 
 final neatMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a4b'); // 니트 컬렉션
+  // 니트 컬렉션
+  return ProductMainListNotifier(ref, 'a4b');
 });
 
 final onepieceMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a6b'); // 원피스 컬렉션
+  // 원피스 컬렉션
+  return ProductMainListNotifier(ref, 'a6b');
 });
 
 final paedingMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a10b'); // 패딩 컬렉션
+  // 패딩 컬렉션
+  return ProductMainListNotifier(ref, 'a10b');
 });
 
 final pantsMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a7b'); // 바지 컬렉션
+  // 바지 컬렉션
+  return ProductMainListNotifier(ref, 'a7b');
 });
 
 final polaMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a5b'); // 폴라티 컬렉션
+  // 폴라티 컬렉션
+  return ProductMainListNotifier(ref, 'a5b');
 });
 
 final shirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a1b'); // 셔츠 컬렉션
+  // 셔츠 컬렉션
+  return ProductMainListNotifier(ref, 'a1b');
 });
 
 final skirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
-  return ProductMainListNotifier(ref, 'a9b'); // 스커트 컬렉션
+  // 스커트 컬렉션
+  return ProductMainListNotifier(ref, 'a9b');
 });
-// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 끝
+// ------- ProductMainListNotifier 클래스 내용 구현 끝
+// ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
+
+// ------- 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 시작
+// ------- SectionMoreProductListNotifier 클래스 내용 구현 시작
+// BaseProductListNotifier 클래스를 상속받는 SectionMoreProductListNotifier 클래스 정의
+class SectionMoreProductListNotifier extends BaseProductListNotifier {
+  // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
+  SectionMoreProductListNotifier(Ref ref, String baseCollection) : super(ref, baseCollection);
+
+  // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 메서드 구현
+  @override
+  List<String> _getCollectionNames(String category) {
+    // 카테고리별로 다른 컬렉션 이름 반환 (12개의 서브 컬렉션)
+    switch (category) {
+      case '신상':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
+      case '최고':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b2');
+      case '할인':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b3');
+      case '봄':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b4');
+      case '여름':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b5');
+      case '가을':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b6');
+      case '겨울':
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b7');
+    // 기본적으로 신상 컬렉션 반환
+      default:
+        return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
+    }
+  }
+}
+
+// 섹션 더보기 화면 관련 SectionMoreProductListNotifier 인스턴스를 생성하는 프로바이더 정의
+// UI 코드에서 category 값을 인자로 전달하여 fetchInitialProducts와 fetchMoreProducts를 호출할 수 있음
+final newSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 신상 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+
+final bestSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 최고 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+
+final saleSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 할인 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+
+final springSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 봄 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+
+final summerSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 여름 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+
+final autumnSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 가을 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+
+final winterSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+  // 겨울 섹션
+  return SectionMoreProductListNotifier(ref, 'a');
+});
+// ------- SectionMoreProductListNotifier 클래스 내용 구현 끝
+// ------- 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
+
+
 
 
 

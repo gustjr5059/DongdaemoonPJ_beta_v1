@@ -31,8 +31,7 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 // 이 파일은 Future Provider와 관련된 기능을 제공하는 파일입니다.
 // 이를 통해 비동기 데이터 호출 및 상태 관리를 할 수 있습니다.
 import '../../common/provider/common_future_provider.dart';
-// 각 계절별 및 특별한 상품 카테고리에 대한 하위 페이지를 구현한 파일들을 임포트합니다.
-import '../../product/layout/product_body_parts_layout.dart';
+// 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/new_sub_main_screen.dart';
@@ -40,7 +39,6 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
-// 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
 import '../layout/home_body_parts_layout.dart';
 // 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 home_future_provider.dart 파일을 가져옵니다.
 // 이 파일은 홈 화면과 관련된 Future Provider 기능을 제공합니다.
