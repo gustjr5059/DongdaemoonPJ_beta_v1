@@ -28,9 +28,13 @@ import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴�
 // CardiganDetailProductScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class CardiganDetailProductScreen extends ConsumerStatefulWidget {
   final String fullPath;
+  final String title;
 
-  const CardiganDetailProductScreen({Key? key, required this.fullPath})
-      : super(key: key);
+  const CardiganDetailProductScreen({
+    Key? key,
+    required this.fullPath,
+    required this.title,
+  }) : super(key: key);
 
   @override
   _CardiganDetailProductScreenState createState() =>
@@ -189,7 +193,7 @@ class _CardiganDetailProductScreenState
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '가디건 상세',
+                  title: widget.title,
                   // AppBar의 제목을 '가디건 상세'로 설정
                   leadingType: LeadingType.back,
                   // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

@@ -11,6 +11,7 @@ class ProductContent {
   final double? discountPercent; // 제품의 할인율을 저장하는 필드.
   final List<Map<String, dynamic>>? colorOptions; // 추가된 색상 옵션을 저장하는 필드.
   final List<String>? sizes; // 제품의 사이즈 옵션을 저장하는 필드.
+  final String? category; // 제품의 카테고리를 저장하는 필드.
   final DocumentSnapshot?
       documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
 
@@ -25,6 +26,7 @@ class ProductContent {
     this.discountPercent,
     this.colorOptions,
     this.sizes,
+    this.category,
     this.documentSnapshot,
   });
 
@@ -44,6 +46,7 @@ class ProductContent {
         discountPercent: null,
         colorOptions: null,
         sizes: null,
+        category: null,
         documentSnapshot: doc,
       );
     }
@@ -108,6 +111,8 @@ class ProductContent {
       // 할인 가격.
       discountPercent: parseDouble(data['discount_percent']),
       // 할인율.
+      category: data['category'] as String?,
+      // 제품의 카테고리.
       documentSnapshot: doc, // 문서 스냅샷.
     );
   }

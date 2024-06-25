@@ -384,7 +384,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                               },
                               child: Text('회원가입'),
                             ),
-                            // // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
+                            // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
                             // ElevatedButton(
                             //   onPressed: () async {
                             //     await createFirestoreDocuments();
@@ -419,7 +419,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 
-// Firestore 문서를 생성하는 함수
+// ------ Firestore 문서를 생성하는 함수 구현 시작
   Future<void> createFirestoreDocuments() async {
     final firestore = FirebaseFirestore.instance;
     final batch = firestore.batch();
@@ -440,35 +440,73 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       12: '해당 상품은 가디건입니다.',
     };
 
+    final Map<int, String> categoryMap = {
+      1: 'shirt',
+      2: 'blouse',
+      3: 'mtm',
+      4: 'neat',
+      5: 'pola',
+      6: 'onepiece',
+      7: 'pants',
+      8: 'jean',
+      9: 'skirt',
+      10: 'paeding',
+      11: 'coat',
+      12: 'cardigan',
+    };
+
+    final Map<int, String> typeMap = {
+      1: 'new',
+      2: 'best',
+      3: 'sale',
+      4: 'spring',
+      5: 'summer',
+      6: 'autumn',
+      7: 'winter',
+    };
+
+    final Map<int, String> categoryTextMap = {
+      1: '티셔츠',
+      2: '블라우스',
+      3: '맨투맨',
+      4: '니트',
+      5: '폴라티',
+      6: '원피스',
+      7: '팬츠',
+      8: '청바지',
+      9: '스커트',
+      10: '패딩',
+      11: '코트',
+      12: '가디건',
+    };
+
     for (int i = 1; i <= 12; i++) {
       String docId = 'a$i';
       DocumentReference docRef = firestore.collection('couturier').doc(docId);
       String briefIntroduction = briefIntroductionMap[i] ?? '해당 상품은 설명이 없습니다.';
+      String category = categoryMap[i] ?? '';
+      String categoryText = categoryTextMap[i] ?? '해당 상품은 카테고리가 없습니다.';
 
       for (int j = 1; j <= 7; j++) {
         String subCollectionId = 'a${i}b$j';
-        CollectionReference subCollectionRef =
-            docRef.collection(subCollectionId);
+        CollectionReference subCollectionRef = docRef.collection(subCollectionId);
+        String type = typeMap[j] ?? '';
 
         for (int k = 1; k <= 15; k++) {
           int discountPercent = 9 + k; // k=1이면 10, k=2이면 11, ...
-          int discountPrice =
-              originalPrice - (originalPrice * discountPercent ~/ 100);
+          int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
           String subDocId = 'a${i}b${j}_$k';
           DocumentReference subDocRef = subCollectionRef.doc(subDocId);
 
+          String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
+
           batch.set(subDocRef, {
             'brief_introduction': briefIntroduction,
-            'clothes_color1':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
-            'clothes_color2':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
-            'clothes_color3':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
-            'clothes_color4':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
-            'clothes_color5':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
+            'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
+            'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
+            'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
+            'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
+            'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
             'clothes_size1': 'S',
             'clothes_size2': 'M',
             'clothes_size3': 'L',
@@ -478,25 +516,22 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
             'color3_text': 'lavender',
             'color4_text': 'pink',
             'color5_text': 'yellow',
-            'detail_page_image1':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm1.png?alt=media&token=979c896f-29ba-4739-9725-5e3d84ad48af',
-            'detail_page_image2':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm2.png?alt=media&token=2a2b915d-3d40-4ce6-8c92-0e4f1f64e6fb',
-            'detail_page_image3':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm3.png?alt=media&token=db3c8ce7-81e2-4391-81b4-df9d475e201f',
-            'detail_page_image4':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm4.png?alt=media&token=9ed3622d-c1c1-4366-bd78-23d33bc6f497',
-            'detail_page_image5':
-                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm5.png?alt=media&token=b220aa12-960f-4c67-811e-7c3cd4ceb073',
+            'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm1.png?alt=media&token=979c896f-29ba-4739-9725-5e3d84ad48af',
+            'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm2.png?alt=media&token=2a2b915d-3d40-4ce6-8c92-0e4f1f64e6fb',
+            'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm3.png?alt=media&token=db3c8ce7-81e2-4391-81b4-df9d475e201f',
+            'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm4.png?alt=media&token=9ed3622d-c1c1-4366-bd78-23d33bc6f497',
+            'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm5.png?alt=media&token=b220aa12-960f-4c67-811e-7c3cd4ceb073',
             'discount_percent': discountPercent,
             'discount_price': discountPrice,
             'original_price': originalPrice,
-            'thumbnails': '',
-          });
+            'thumbnails': thumbnailUrl, // thumbnails 필드값 추가
+            'category': categoryText, // category 필드값 추가
+          }, SetOptions(merge: true)); // merge 옵션 사용
         }
       }
     }
     await batch.commit();
   }
+// ------ Firestore 문서를 생성하는 함수 구현 끝
 }
 // _ProfileMainScreenState 클래스 끝

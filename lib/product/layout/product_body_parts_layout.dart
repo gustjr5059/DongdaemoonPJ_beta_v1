@@ -426,7 +426,7 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
 Widget buildGeneralProductRow(
     WidgetRef ref, List<ProductContent> products, BuildContext context) {
   final productInfo =
-      ProductInfoDetailScreenNavigation(ref, '상품'); // 제품 정보 상세 화면 내비게이션 객체 생성
+      ProductInfoDetailScreenNavigation(ref); // 제품 정보 상세 화면 내비게이션 객체 생성
 
   return Row(
     children: products
@@ -705,22 +705,25 @@ Widget buildHorizontalDocumentsList(
     String category,
     ScrollController horizontalScrollViewScrollController) {
   // ProductInfoDetailScreenNavigation 클래스 인스턴스를 생성하여 제품 정보 상세 화면 네비게이션을 설정함.
-  final productInfo = ProductInfoDetailScreenNavigation(ref, category);
+  final productInfo = ProductInfoDetailScreenNavigation(ref);
 
   return NotificationListener<ScrollNotification>(
+    // 스크롤 알림 리스너를 추가함
     onNotification: (scrollNotification) {
       // debugPrint('Scroll notification: ${scrollNotification.metrics.pixels}');
       return false; // 스크롤 알림 수신시 false 반환하여 기본 동작 유지
     },
     child: SingleChildScrollView(
+      // SingleChildScrollView를 사용하여 스크롤 가능한 영역을 생성함
       controller: horizontalScrollViewScrollController, // 가로 스크롤 컨트롤러 설정
       scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정
       child: Row(
-        // 각 제품에 대해 buildProdFirestoreDetailDocument 함수를 호출하여 가로로 나열된 문서 리스트를 생성함.
+        // Row 위젯을 사용하여 가로로 나열된 문서 리스트를 생성함
         children: products
             .map((product) =>
                 productInfo.buildProdFirestoreDetailDocument(context, product))
             .toList(),
+        // 각 제품에 대해 buildProdFirestoreDetailDocument 함수를 호출하여 위젯을 생성하고 리스트에 추가함
       ),
     ),
   );
@@ -732,68 +735,96 @@ Widget buildHorizontalDocumentsList(
 // 상품별 간단하게 데이터를 보여주는 UI 부분과 해당 상품 클릭 시, 상품 상세화면으로 이동하도록 하는 로직
 class ProductInfoDetailScreenNavigation {
   final WidgetRef ref; // ref 변수는 상태 관리를 위해 사용.
-  final String category; // category 변수는 제품의 카테고리를 나타냄.
 
   // 생성자에서 ref와 category를 초기화함.
-  ProductInfoDetailScreenNavigation(this.ref, this.category);
+  ProductInfoDetailScreenNavigation(this.ref);
 
   // 상세 화면으로 이동하고 화면을 뒤로 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화하는 함수.
-  void navigateToDetailScreen(BuildContext context, String fullPath) {
-    Widget detailScreen;
+  void navigateToDetailScreen(BuildContext context, ProductContent product) {
+    Widget detailScreen; // 상세 화면 위젯
+    String appBarTitle; // 앱바 타이틀
 
-    // 카테고리에 따라 적절한 상세 화면 위젯을 선택함.
-    switch (category) {
+    // 상품의 카테고리에 따라 적절한 상세 화면 위젯과 타이틀을 선택.
+    switch (product.category) {
       case "티셔츠":
-        detailScreen = ShirtDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '티셔츠 상세';
+        detailScreen = ShirtDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "블라우스":
-        detailScreen = BlouseDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '블라우스 상세';
+        detailScreen = BlouseDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "가디건":
-        detailScreen = CardiganDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '가디건 상세';
+        detailScreen = CardiganDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "코트":
-        detailScreen = CoatDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '코트 상세';
+        detailScreen = CoatDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "청바지":
-        detailScreen = JeanDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '청바지 상세';
+        detailScreen = JeanDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "맨투맨":
-        detailScreen = MtmDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '맨투맨 상세';
+        detailScreen =
+            MtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
         break;
       case "니트":
-        detailScreen = NeatDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '니트 상세';
+        detailScreen = NeatDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "원피스":
-        detailScreen = OnepieceDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '원피스 상세';
+        detailScreen = OnepieceDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "패딩":
-        detailScreen = PaedingDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '패딩 상세';
+        detailScreen = PaedingDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "팬츠":
-        detailScreen = PantsDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '팬츠 상세';
+        detailScreen = PantsDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "폴라티":
-        detailScreen = PolaDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '폴라티 상세';
+        detailScreen = PolaDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       case "스커트":
-        detailScreen = SkirtDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '스커트 상세';
+        detailScreen = SkirtDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
         break;
       default:
-        detailScreen = ShirtDetailProductScreen(fullPath: fullPath);
+        appBarTitle = '티셔츠 상세';
+        detailScreen = ShirtDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
     }
 
-    // 네비게이션을 통해 상세 화면으로 이동하고, 뒤로 돌아왔을 때 색상과 사이즈 선택 상태를 초기화함.
+    // 디버그 출력으로 타이틀 확인
+    debugPrint(
+        'Navigating to $appBarTitle screen for document: ${product.docId}');
+
+    // 네비게이션을 사용하여 상세 화면으로 이동함
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
+      // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
       ref.read(colorSelectionIndexProvider.notifier).state = null;
       ref.read(sizeSelectionProvider.notifier).state = null;
     });
-
-    // 상품의 문서명을 로그로 출력함. - 해당 로그값으로, 상세화면 내 데이터와 파이어베이스 내 문서의 데이터 일치성을 확인하고자 하는 부분
-    debugPrint('Navigating to detail screen for document: $fullPath');
   }
 
   // Firestore에서 상세한 문서 정보를 빌드하여 UI에 구현하는 위젯.
@@ -803,14 +834,15 @@ class ProductInfoDetailScreenNavigation {
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
       onTap: () {
         navigateToDetailScreen(
-            context, product.docId); // product.docId를 사용하여 해당 문서로 이동함.
+            context, product); // product.docId를 사용하여 해당 문서로 이동함.
       },
       child: Container(
-        // height: 180, // 항목의 높이를 명시적으로 지정하여 충분한 공간 확보
+        // 높이를 명시적으로 지정하여 충분한 공간 확보
         width: 175,
         padding: EdgeInsets.all(4.0),
         margin: EdgeInsets.all(4.0),
         decoration: BoxDecoration(
+          // 컨테이너의 배경색을 흰색으로 설정하고 둥근 모서리 및 그림자 효과를 추가함
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
@@ -818,7 +850,7 @@ class ProductInfoDetailScreenNavigation {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: Offset(0, 3), // 그림자의 위치를 설정함
             ),
           ],
         ),

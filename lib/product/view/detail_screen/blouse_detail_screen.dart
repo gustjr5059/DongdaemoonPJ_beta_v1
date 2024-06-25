@@ -27,10 +27,15 @@ import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴�
 // GlobalKey 대신 local context 사용 방법 설명 클래스
 // BlouseDetailProductScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class BlouseDetailProductScreen extends ConsumerStatefulWidget {
-  final String fullPath;
+  final String fullPath; // 전체 경로를 나타내는 문자열 변수
+  final String title; // 타이틀을 나타내는 문자열 변수
 
-  const BlouseDetailProductScreen({Key? key, required this.fullPath})
-      : super(key: key);
+  const BlouseDetailProductScreen({
+    Key? key, // 위젯의 키를 나타내는 매개변수
+    required this.fullPath, // 전체 경로를 필수 매개변수로 받음
+    required this.title, // 타이틀을 필수 매개변수로 받음
+  }) : super(key: key); // 부모 클래스의 생성자를 호출하여 초기화함
+
 
   @override
   _BlouseDetailProductScreenState createState() =>
@@ -189,7 +194,7 @@ class _BlouseDetailProductScreenState
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '블라우스 상세',
+                  title: widget.title,
                   // AppBar의 제목을 '블라우스 상세'로 설정
                   leadingType: LeadingType.back,
                   // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
