@@ -1,4 +1,3 @@
-
 // Firebase Firestore 라이브러리의 임포트
 // Firestore는 Google Firebase 플랫폼의 일부로 제공되는 NoSQL 클라우드 데이터베이스입니다.
 // 이 데이터베이스를 사용하면 데이터를 실시간으로 저장하고 동기화할 수 있어서, 멀티 사용자 앱에서 데이터의 일관성을 유지할 수 있습니다.
@@ -9,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore 라
 // 제품 모델은 제품의 이름, 가격, 설명, 이미지 URL 등과 같은 속성을 가질 수 있으며,
 // Firestore 데이터베이스와의 상호작용을 통해 이러한 데이터를 쉽게 저장하고 검색할 수 있습니다.
 import '../model/product_model.dart'; // ProductContent 모델 정의 파일의 임포트
-
 
 // -------- 2차 카테고리(신상, 최고 ~~) 시작 부분
 // Firestore 데이터베이스로부터 신상 상품 정보를 조회하는 기능을 제공하는 클래스
@@ -30,9 +28,13 @@ class NewProductRepository {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -40,7 +42,9 @@ class NewProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -75,9 +79,13 @@ class BestProductRepository {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -85,7 +93,9 @@ class BestProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -120,9 +130,13 @@ class SaleProductRepository {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -130,7 +144,9 @@ class SaleProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -161,13 +177,18 @@ class SpringProductRepository {
   SpringProductRepository(this.firestore); // 생성자
 
   // 봄 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchSpringProductContents({int limit = 4}) async {
+  Future<List<ProductContent>> fetchSpringProductContents(
+      {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -175,7 +196,9 @@ class SpringProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -206,13 +229,18 @@ class SummerProductRepository {
   SummerProductRepository(this.firestore); // 생성자
 
   // 여름 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchSummerProductContents({int limit = 4}) async {
+  Future<List<ProductContent>> fetchSummerProductContents(
+      {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -220,7 +248,9 @@ class SummerProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -251,13 +281,18 @@ class AutumnProductRepository {
   AutumnProductRepository(this.firestore); // 생성자
 
   // 가을 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchAutumnProductContents({int limit = 4}) async {
+  Future<List<ProductContent>> fetchAutumnProductContents(
+      {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -265,7 +300,9 @@ class AutumnProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -296,13 +333,18 @@ class WinterProductRepository {
   WinterProductRepository(this.firestore); // 생성자
 
   // 겨울 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchWinterProductContents({int limit = 4}) async {
+  Future<List<ProductContent>> fetchWinterProductContents(
+      {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
-    while (products.length < limit && currentCollectionIndex < collections.length) {
-      String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 쿼리 설정
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
+      String currentCollection =
+          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
@@ -310,7 +352,9 @@ class WinterProductRepository {
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 제품 리스트에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 제품 리스트에 추가
       } else {
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -344,20 +388,25 @@ class GeneralProductRepository<T> {
     final docRef = firestore.doc(fullPath); // 경로에 해당하는 문서 참조
     final snapshot = await docRef.get(); // 문서 스냅샷 가져오기
     if (snapshot.exists) {
-      return ProductContent.fromFirestore(snapshot); // 데이터가 존재하면 ProductContent로 변환하여 반환
+      return ProductContent.fromFirestore(
+          snapshot); // 데이터가 존재하면 ProductContent로 변환하여 반환
     } else {
       throw Exception('Firestore 데이터가 없습니다.'); // 데이터가 없으면 예외 발생
     }
   }
 
   // 상품 데이터를 가져오는 함수
-  Future<List<ProductContent>> fetchProductContents({required int limit, DocumentSnapshot? startAfter}) async {
+  Future<List<ProductContent>> fetchProductContents(
+      {required int limit, DocumentSnapshot? startAfter}) async {
     List<ProductContent> products = []; // 상품 목록 초기화
 
     // 제한된 수의 상품을 가져올 때까지 반복
-    while (products.length < limit && currentCollectionIndex < collections.length) {
+    while (products.length < limit &&
+        currentCollectionIndex < collections.length) {
       String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션
-      Query query = firestore.collectionGroup(currentCollection).limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
+      Query query = firestore
+          .collectionGroup(currentCollection)
+          .limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
 
       // 상품 데이터를 가져올 때, 마지막 데이터 이후부터 새롭게 가져오도록 하는 로직 부분
       if (startAfter != null) {
@@ -367,7 +416,9 @@ class GeneralProductRepository<T> {
       final snapshots = await query.get(); // 쿼리 실행하여 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
-        products.addAll(snapshots.docs.map((doc) => ProductContent.fromFirestore(doc)).toList()); // 상품 목록에 추가
+        products.addAll(snapshots.docs
+            .map((doc) => ProductContent.fromFirestore(doc))
+            .toList()); // 상품 목록에 추가
       } else {
         lastDocument = null; // 문서가 없으면 마지막 문서 초기화
         currentCollectionIndex++; // 다음 컬렉션으로 이동
@@ -385,4 +436,3 @@ class GeneralProductRepository<T> {
 }
 // -------- 파이어스토어 내 데이터를 불러오는 범용성 리포지토리 (데이터 범위는 provider에서 정함) 끝
 // -------- 1차 카테고리(블라우스, 가디건 ~~) 끝 부분
-

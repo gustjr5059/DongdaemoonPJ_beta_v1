@@ -1,19 +1,23 @@
-
 // Dart의 IO 라이브러리에서 Platform 클래스를 가져옵니다. 이 클래스는 운영 체제에 대한 정보를 제공합니다.
 import 'dart:io' show Platform;
+
 // Dart의 비동기 프로그래밍 기능을 지원하는 'dart:async' 라이브러리를 가져옵니다.
 // 이 라이브러리를 사용하여 Future와 Stream 객체를 통해 비동기 작업을 쉽게 처리할 수 있습니다.
 import 'dart:async';
+
 // Firebase의 사용자 인증 기능을 제공하는 FirebaseAuth 패키지를 임포트합니다.
 // 이를 통해 이메일, 비밀번호, 소셜 미디어 계정을 이용한 로그인 기능 등을 구현할 수 있습니다.
 import 'package:firebase_auth/firebase_auth.dart';
+
 // Flutter의 기본 디자인 및 UI 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 // 이 패키지는 버튼, 카드, 앱 바 등 다양한 머티리얼 디자인 위젯을 포함하고 있습니다.
 import 'package:flutter/material.dart';
+
 // flutter 패키지의 services 라이브러리를 가져옵니다.
 // 이 라이브러리는 플러터 애플리케이션에서 네이티브 서비스에 접근할 수 있게 해줍니다.
 // 예를 들어, 클립보드, 네트워크 상태, 시스템 설정 등을 제어할 수 있습니다.
 import 'package:flutter/services.dart';
+
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 // Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
@@ -21,33 +25,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용�
 // 이 패키지는 Flutter 애플리케이션에서 URL을 열거나 이메일, 전화, 문자 메시지 등을 실행할 수 있는 기능을 제공합니다.
 // 예를 들어, 웹 브라우저에서 특정 웹 페이지를 열거나, 메일 앱을 열어 이메일을 작성하거나, 전화 앱을 열어 전화를 걸 수 있습니다.
 import 'package:url_launcher/url_launcher.dart';
+
 // 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
 // 이 레이아웃은 에러 발생 시 사용자에게 보여질 UI 컴포넌트를 정의합니다.
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
+
 // colors.dart 파일을 common 디렉토리의 const 폴더에서 가져옵니다.
 // 이 파일에는 애플리케이션 전반에서 사용할 색상 상수들이 정의되어 있을 것입니다.
 // 상수로 정의된 색상들을 사용하여 일관된 색상 테마를 유지할 수 있습니다.
 import '../../../common/const/colors.dart';
+
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
 import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴포넌트 파일
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../common/provider/common_state_provider.dart';
+
 // banner_model.dart 파일을 common 디렉토리의 model 폴더에서 가져옵니다.
 // 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있습니다.
 // 배너 데이터를 구조화하고 관리하기 위해 사용됩니다.
 import '../../../common/model/banner_model.dart';
+
 // common_future_provider.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
 // 이 파일에는 Future Provider와 관련된 기능이 정의되어 있습니다.
 // 비동기 데이터 호출 및 상태 관리를 위해 사용됩니다.
 import '../../../common/provider/common_future_provider.dart';
+
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_future_provider.dart';
 import '../../provider/product_state_provider.dart';
-
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -57,6 +66,7 @@ import '../../provider/product_state_provider.dart';
 // BlouseMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class BlouseMainScreen extends ConsumerStatefulWidget {
   const BlouseMainScreen({Key? key}) : super(key: key);
+
   @override
   _BlouseMainScreenState createState() => _BlouseMainScreenState();
 }
@@ -64,15 +74,17 @@ class BlouseMainScreen extends ConsumerStatefulWidget {
 // _BlouseMainScreenState 클래스 시작
 // _BlouseMainScreenState 클래스는 BlouseMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with WidgetsBindingObserver {
-
+class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
+    with WidgetsBindingObserver {
   // 큰 배너를 위한 페이지 컨트롤러
   late PageController _largeBannerPageController;
+
   // 큰 배너를 자동 스크롤하는 클래스
   late BannerAutoScrollClass _largeBannerAutoScroll;
 
   // 첫 번째 작은 배너를 위한 페이지 컨트롤러
   late PageController _small1BannerPageController;
+
   // 첫 번째 작은 배너를 자동 스크롤하는 클래스
   late BannerAutoScrollClass _small1BannerAutoScroll;
 
@@ -137,10 +149,11 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
     // 'ref'를 사용하여 'blouseMainScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(blouseMainScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(blouseMainScrollPositionProvider.notifier).state =
+        currentScrollPosition;
   }
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
+  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -171,7 +184,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
         // 저장된 탭 인덱스가 6 이상인 경우 (탭이 끝부분에 위치한 경우),
         // 상단 탭 바를 스크롤 가능한 최대 범위까지 이동시킴.
         if (savedTabIndex >= 6) {
-          double offset = blouseMainTopBarPointAutoScrollController.position.maxScrollExtent;
+          double offset = blouseMainTopBarPointAutoScrollController
+              .position.maxScrollExtent;
           blouseMainTopBarPointAutoScrollController.jumpTo(offset);
         }
         // 저장된 탭 인덱스가 1 이하인 경우 (탭이 처음 부분에 위치한 경우),
@@ -179,7 +193,6 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
         else if (savedTabIndex <= 1) {
           blouseMainTopBarPointAutoScrollController.jumpTo(0.0);
         }
-
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
@@ -198,7 +211,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'blouseMainLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController = PageController(initialPage: ref.read(blouseMainLargeBannerPageProvider));
+    _largeBannerPageController = PageController(
+        initialPage: ref.read(blouseMainLargeBannerPageProvider));
 
     // 큰 배너를 자동으로 스크롤하는 기능 초기화
     _largeBannerAutoScroll = BannerAutoScrollClass(
@@ -209,7 +223,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
 
     // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
     // 'blouseMainSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _small1BannerPageController = PageController(initialPage: ref.read(blouseMainSmall1BannerPageProvider));
+    _small1BannerPageController = PageController(
+        initialPage: ref.read(blouseMainSmall1BannerPageProvider));
 
     // 작은 배너1을 자동으로 스크롤하는 기능 초기화
     _small1BannerAutoScroll = BannerAutoScrollClass(
@@ -227,10 +242,15 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
         // 블라우스 메인 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 블라우스 메인 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(blouseMainLargeBannerPageProvider.notifier).state = 0;
         ref.read(blouseMainSmall1BannerPageProvider.notifier).state = 0;
-        ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 로그아웃 시 blouseMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
-        ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-        ref.read(blouseMainProductListProvider.notifier).reset(); // 탭 관련 상품 데이터를 초기화함.
-        ref.read(blouseMainSortButtonProvider.notifier).state = ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+        ref.read(blouseMainScrollPositionProvider.notifier).state =
+            0.0; // 로그아웃 시 blouseMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
+        ref.read(blouseCurrentTabProvider.notifier).state =
+            0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+        ref
+            .read(blouseMainProductListProvider.notifier)
+            .reset(); // 탭 관련 상품 데이터를 초기화함.
+        ref.read(blouseMainSortButtonProvider.notifier).state =
+            ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
       }
     });
@@ -247,6 +267,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       _small1BannerAutoScroll.startAutoScroll();
     });
   }
+
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
@@ -267,7 +288,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       // 저장된 탭 인덱스가 6 이상인 경우 (탭이 끝부분에 위치한 경우),
       // 상단 탭 바를 스크롤 가능한 최대 범위까지 이동시킴.
       if (savedTabIndex >= 6) {
-        double offset = blouseMainTopBarPointAutoScrollController.position.maxScrollExtent;
+        double offset =
+            blouseMainTopBarPointAutoScrollController.position.maxScrollExtent;
         blouseMainTopBarPointAutoScrollController.jumpTo(offset);
       }
       // 저장된 탭 인덱스가 1 이하인 경우 (탭이 처음 부분에 위치한 경우),
@@ -281,6 +303,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
       _small1BannerAutoScroll.stopAutoScroll();
     }
   }
+
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
 
@@ -311,13 +334,13 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
   // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
   void _updateStatusBar() {
-
-    Color statusBarColor = BUTTON_COLOR;  // 여기서 원하는 색상을 지정
+    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
 
     if (Platform.isAndroid) {
       // 안드로이드에서는 상태표시줄 색상을 직접 지정
@@ -328,7 +351,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
     } else if (Platform.isIOS) {
       // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light,  // 밝은 아이콘 사용
+        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
       ));
     }
   }
@@ -363,17 +386,21 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
     void onTopBarTap(int index) {
-      ref.read(blouseCurrentTabProvider.notifier).state = index; // 현재 탭 인덱스를 업데이트
+      ref.read(blouseCurrentTabProvider.notifier).state =
+          index; // 현재 탭 인덱스를 업데이트
       // 위젯이 완전히 빌드된 후에 초기 데이터 로드 작업을 수행하기 위해 Future.delayed(Duration.zero)를 사용
       // Riverpod은 위젯 트리 빌딩 중에 상태를 수정하는 것을 허용하지 않으므로 해당 부분을 사용
-      Future.delayed(Duration.zero,() {
+      Future.delayed(Duration.zero, () {
         ref.read(blouseMainProductListProvider.notifier).reset(); // 상태 초기화
-        ref.read(blouseMainProductListProvider.notifier).fetchInitialProducts(_getCategory(index)); // 선택한 탭에 해당하는 초기 제품 가져오기 호출
+        ref.read(blouseMainProductListProvider.notifier).fetchInitialProducts(
+            _getCategory(index)); // 선택한 탭에 해당하는 초기 제품 가져오기 호출
       });
     }
+
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
-    Widget topBarList = buildTopBarList(context, onTopBarTap, blouseCurrentTabProvider, blouseMainTopBarPointAutoScrollController);
+    Widget topBarList = buildTopBarList(context, onTopBarTap,
+        blouseCurrentTabProvider, blouseMainTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     void _onLargeBannerTap(BuildContext context, int index) async {
@@ -408,26 +435,33 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
               SliverAppBar(
                 // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
                 automaticallyImplyLeading: false,
-                floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
-                pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 120.0, // 확장 높이 설정
+                floating: true,
+                // 스크롤 시 SliverAppBar가 빠르게 나타남.
+                pinned: true,
+                // 스크롤 다운시 AppBar가 상단에 고정됨.
+                expandedHeight: 120.0,
+                // 확장 높이 설정
                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                 flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin, // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
                     context: context,
                     ref: ref,
                     title: '블라우스 메인',
-                    leadingType: LeadingType.back, // 이전화면으로 이동 버튼.
+                    leadingType: LeadingType.back,
+                    // 이전화면으로 이동 버튼.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
                   ),
                 ),
-                leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
+                leading: null,
+                // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 backgroundColor: BUTTON_COLOR,
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(60.0), // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
+                  preferredSize: Size.fromHeight(60.0),
+                  // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
                   child: Container(
                     color: BUTTON_COLOR, // 상단 탭 바 색상 설정
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
@@ -440,69 +474,87 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
                 padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우로 4의 패딩을 추가
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        // 좌우로 4의 패딩을 추가
                         child: Column(
                           children: [
                             SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                             CommonCardView(
                               content: SizedBox(
                                 height: 150, // 높이 150의 콘텐츠 박스
-                                child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
+                                child: buildCommonBannerPageViewSection<
+                                    AllLargeBannerImage>(
                                   context: context,
                                   ref: ref,
-                                  currentPageProvider: blouseMainLargeBannerPageProvider,
+                                  currentPageProvider:
+                                      blouseMainLargeBannerPageProvider,
                                   pageController: _largeBannerPageController,
                                   bannerAutoScroll: _largeBannerAutoScroll,
                                   bannerLinks: largeBannerLinks,
-                                  bannerImagesProvider: allLargeBannerImagesProvider,
+                                  bannerImagesProvider:
+                                      allLargeBannerImagesProvider,
                                   onPageTap: _onLargeBannerTap,
                                 ),
                               ),
                               backgroundColor: LIGHT_PURPLE_COLOR, // 배경색 설정
                               elevation: 4, // 그림자 높이 설정
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
+                              padding: const EdgeInsets.fromLTRB(
+                                  8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
                             SizedBox(height: 10), // 10의 높이를 가진 간격 추가
                             CommonCardView(
                               content: SizedBox(
                                 height: 30, // 높이 30의 콘텐츠 박스
-                                child: buildCommonBannerPageViewSection<BlouseMainSmall1BannerImage>(
+                                child: buildCommonBannerPageViewSection<
+                                    BlouseMainSmall1BannerImage>(
                                   context: context,
                                   ref: ref,
-                                  currentPageProvider: blouseMainSmall1BannerPageProvider,
+                                  currentPageProvider:
+                                      blouseMainSmall1BannerPageProvider,
                                   pageController: _small1BannerPageController,
                                   bannerAutoScroll: _small1BannerAutoScroll,
                                   bannerLinks: small1BannerLinks,
-                                  bannerImagesProvider: blouseMainSmall1BannerImagesProvider,
+                                  bannerImagesProvider:
+                                      blouseMainSmall1BannerImagesProvider,
                                   onPageTap: _onSmall1BannerTap,
                                 ),
                               ),
                               backgroundColor: LIGHT_SKY_BLUE_COLOR, // 배경색 설정
                               elevation: 4, // 그림자 높이 설정
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
+                              padding: const EdgeInsets.fromLTRB(
+                                  8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons<ProductMainListNotifier>(
-                              productListProvider: blouseMainProductListProvider, // 블라우스 제품 리스트 프로바이더 전달
-                              sortButtonProvider: blouseMainSortButtonProvider, // 블라우스 정렬 버튼 프로바이더 전달
+                            PriceAndDiscountPercentSortButtons<
+                                ProductMainListNotifier>(
+                              productListProvider:
+                                  blouseMainProductListProvider,
+                              // 블라우스 제품 리스트 프로바이더 전달
+                              sortButtonProvider:
+                                  blouseMainSortButtonProvider, // 블라우스 정렬 버튼 프로바이더 전달
                             ), // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                             Consumer(
                               // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.
                               builder: (context, ref, child) {
                                 // builder 함수: Consumer 위젯이 빌드될 때 호출되는 함수로, context, ref, child를 인자로 받음.
-                                final currentTab = ref.watch(blouseCurrentTabProvider);
+                                final currentTab =
+                                    ref.watch(blouseCurrentTabProvider);
                                 // 현재 탭: blouseCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
-                                final productListProvider = blouseMainProductListProvider;
-                                return GeneralProductList<ProductMainListNotifier>(
+                                final productListProvider =
+                                    blouseMainProductListProvider;
+                                return GeneralProductList<
+                                    ProductMainListNotifier>(
                                   // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
-                                  scrollController: blouseMainScreenPointScrollController,
+                                  scrollController:
+                                      blouseMainScreenPointScrollController,
                                   // 스크롤 컨트롤러: blouseMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.
                                   productListProvider: productListProvider,
                                   // 제품 리스트 제공자: productListProvider를 GeneralProductList의 productListProvider로 전달.
-                                  category: _getCategory(currentTab), // 카테고리 인자 추가
+                                  category:
+                                      _getCategory(currentTab), // 카테고리 인자 추가
                                   // 카테고리: _getCategory 함수를 호출하여 현재 인덱스에 해당하는 카테고리를 GeneralProductList의 category로 전달.
                                 );
                               },
@@ -518,20 +570,19 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen> with Widget
               ),
             ],
           ),
-            // buildTopButton 함수는 주어진 context와 blouseMainScreenPointScrollController를 사용하여
-            // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+          // buildTopButton 함수는 주어진 context와 blouseMainScreenPointScrollController를 사용하여
+          // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
           buildTopButton(context, blouseMainScreenPointScrollController),
-         ],
-       ),
-       bottomNavigationBar: buildCommonBottomNavigationBar(
-            ref.watch(tabIndexProvider), ref, context, 5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
-      );
-      // ------ 화면구성 끝
-    }
-  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-  // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
+        ],
+      ),
+      bottomNavigationBar: buildCommonBottomNavigationBar(
+          ref.watch(tabIndexProvider), ref, context, 5),
+      // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
+    );
+    // ------ 화면구성 끝
   }
+// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+// ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
+}
 // _BlouseMainScreenState 클래스 끝
-
-

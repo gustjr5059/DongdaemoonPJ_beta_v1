@@ -1,4 +1,3 @@
-
 // Riverpod 라이브러리를 임포트합니다.
 // 이 라이브러리는 상태 관리를 위한 강력하고 유연한 프레임워크로, 애플리케이션의 다양한 상태를 관리하는데 도움을 줍니다.
 // Riverpod는 기존 Provider 라이브러리를 기반으로 하여 더욱 발전된 기능을 제공하며,
@@ -9,7 +8,6 @@ import 'package:dongdaemoon_beta_v1/product/provider/product_future_provider.dar
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/product_model.dart';
-
 
 // 티셔츠 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final shirtMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -173,27 +171,46 @@ final shirtDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
 final skirtDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // 2차 메인 화면 내 가격순, 할인순 버튼 관련 상태 관리 함수인 StateProvider
-final blouseMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final cardiganMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final coatMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final jeanMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final mtmMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final neatMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final onepieceMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final paedingMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final pantsMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final polaMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final shirtMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final skirtMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final blouseMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final cardiganMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final coatMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final jeanMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final mtmMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final neatMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final onepieceMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final paedingMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final pantsMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final polaMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final shirtMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final skirtMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 
 // 섹션 더보기 화면 내 가격순, 할인순 버튼 관련 상태 관리 함수인 StateProvider
-final newSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final bestSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final saleSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final springSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final summerSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final autumnSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-final winterSubMainSortButtonProvider = StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final newSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final bestSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final saleSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final springSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final summerSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final autumnSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
+final winterSubMainSortButtonProvider =
+    StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 
 // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
 // 2차 메인 화면-블라우스 메인 화면
@@ -367,7 +384,6 @@ final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-
 // 최고 서브 메인
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 bestSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -452,20 +468,26 @@ final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
 // 해당 내용은 추상 클래스이며, 해당 클래스를 다른 클래스에 오버라이드(extends 사용)를 하면 해당 클래스 기능은 그대로 사용하면서 추가되는 내용을 각기 적용 가능하므로, 이렇게 구성
 
 // 상태 관리 추상 클래스 BaseProductListNotifier를 정의 (상품 데이터 관리)
-abstract class BaseProductListNotifier extends StateNotifier<List<ProductContent>> {
+abstract class BaseProductListNotifier
+    extends StateNotifier<List<ProductContent>> {
   // 생성자를 정의, ref와 baseCollection을 초기화
   BaseProductListNotifier(this.ref, this.baseCollection) : super([]);
 
   // Ref 객체 선언
   final Ref ref;
+
   // 기본 컬렉션 이름 선언
   final String baseCollection;
+
   // 데이터 페칭 상태를 관리하는 변수 선언
   bool _isFetching = false;
+
   // 마지막 문서 스냅샷을 저장하는 변수 선언
   DocumentSnapshot? _lastDocument;
+
   // 데이터 페칭 상태를 반환하는 getter 정의
   bool get isFetching => _isFetching;
+
   // 정렬 타입을 저장하는 변수 선언
   String _sortType = '';
 
@@ -481,16 +503,20 @@ abstract class BaseProductListNotifier extends StateNotifier<List<ProductContent
     List<ProductContent> sortedProducts = [...state];
     // 가격 높은 순 정렬
     if (_sortType == '가격 높은 순') {
-      sortedProducts.sort((a, b) => b.discountPrice!.compareTo(a.discountPrice!));
+      sortedProducts
+          .sort((a, b) => b.discountPrice!.compareTo(a.discountPrice!));
       // 가격 낮은 순 정렬
     } else if (_sortType == '가격 낮은 순') {
-      sortedProducts.sort((a, b) => a.discountPrice!.compareTo(b.discountPrice!));
+      sortedProducts
+          .sort((a, b) => a.discountPrice!.compareTo(b.discountPrice!));
       // 할인율 높은 순 정렬
     } else if (_sortType == '할인율 높은 순') {
-      sortedProducts.sort((a, b) => b.discountPercent!.compareTo(a.discountPercent!));
+      sortedProducts
+          .sort((a, b) => b.discountPercent!.compareTo(a.discountPercent!));
       // 할인율 낮은 순 정렬
     } else if (_sortType == '할인율 낮은 순') {
-      sortedProducts.sort((a, b) => a.discountPercent!.compareTo(b.discountPercent!));
+      sortedProducts
+          .sort((a, b) => a.discountPercent!.compareTo(b.discountPercent!));
     }
     // 상태를 정렬된 리스트로 업데이트
     state = sortedProducts;
@@ -509,10 +535,12 @@ abstract class BaseProductListNotifier extends StateNotifier<List<ProductContent
     _isFetching = true;
     try {
       // 상품 데이터를 페칭 (제한: 3개, 시작 문서: _lastDocument)
-      final products = await ref.read(productRepositoryProvider(collectionNames)).fetchProductContents(
-        limit: 3,
-        startAfter: isInitial ? null : _lastDocument,
-      );
+      final products = await ref
+          .read(productRepositoryProvider(collectionNames))
+          .fetchProductContents(
+            limit: 3,
+            startAfter: isInitial ? null : _lastDocument,
+          );
 
       // 디버깅 출력 추가
       // debugPrint('Fetched products count: ${products.length}');
@@ -581,7 +609,8 @@ abstract class BaseProductListNotifier extends StateNotifier<List<ProductContent
 // BaseProductListNotifier 클래스를 상속받는 ProductMainListNotifier 클래스 정의
 class ProductMainListNotifier extends BaseProductListNotifier {
   // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
-  ProductMainListNotifier(Ref ref, String baseCollection) : super(ref, baseCollection);
+  ProductMainListNotifier(Ref ref, String baseCollection)
+      : super(ref, baseCollection);
 
   // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 메서드 구현
   @override
@@ -602,7 +631,7 @@ class ProductMainListNotifier extends BaseProductListNotifier {
         return ['${baseCollection}6'];
       case '겨울':
         return ['${baseCollection}7'];
-    // 기본적으로 모든 컬렉션 반환
+      // 기본적으로 모든 컬렉션 반환
       default:
         return [
           '${baseCollection}1',
@@ -619,62 +648,74 @@ class ProductMainListNotifier extends BaseProductListNotifier {
 
 // 2차 메인 화면 관련 ProductMainListNotifier 인스턴스를 생성하는 프로바이더 정의
 // UI 코드에서 category 값을 인자로 전달하여 fetchInitialProducts와 fetchMoreProducts를 호출할 수 있음
-final blouseMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final blouseMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 블라우스 컬렉션
   return ProductMainListNotifier(ref, 'a2b');
 });
 
-final cardiganMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final cardiganMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 가디건 컬렉션
   return ProductMainListNotifier(ref, 'a12b');
 });
 
-final coatMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final coatMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 코트 컬렉션
   return ProductMainListNotifier(ref, 'a11b');
 });
 
-final jeanMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final jeanMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 청바지 컬렉션
   return ProductMainListNotifier(ref, 'a8b');
 });
 
-final mtmMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final mtmMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 맨투맨 컬렉션
   return ProductMainListNotifier(ref, 'a3b');
 });
 
-final neatMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final neatMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 니트 컬렉션
   return ProductMainListNotifier(ref, 'a4b');
 });
 
-final onepieceMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final onepieceMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 원피스 컬렉션
   return ProductMainListNotifier(ref, 'a6b');
 });
 
-final paedingMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final paedingMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 패딩 컬렉션
   return ProductMainListNotifier(ref, 'a10b');
 });
 
-final pantsMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final pantsMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 바지 컬렉션
   return ProductMainListNotifier(ref, 'a7b');
 });
 
-final polaMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final polaMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 폴라티 컬렉션
   return ProductMainListNotifier(ref, 'a5b');
 });
 
-final shirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final shirtMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 셔츠 컬렉션
   return ProductMainListNotifier(ref, 'a1b');
 });
 
-final skirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
+final skirtMainProductListProvider =
+    StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 스커트 컬렉션
   return ProductMainListNotifier(ref, 'a9b');
 });
@@ -686,7 +727,8 @@ final skirtMainProductListProvider = StateNotifierProvider<ProductMainListNotifi
 // BaseProductListNotifier 클래스를 상속받는 SectionMoreProductListNotifier 클래스 정의
 class SectionMoreProductListNotifier extends BaseProductListNotifier {
   // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
-  SectionMoreProductListNotifier(Ref ref, String baseCollection) : super(ref, baseCollection);
+  SectionMoreProductListNotifier(Ref ref, String baseCollection)
+      : super(ref, baseCollection);
 
   // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 메서드 구현
   @override
@@ -707,7 +749,7 @@ class SectionMoreProductListNotifier extends BaseProductListNotifier {
         return List.generate(12, (index) => '${baseCollection}${index + 1}b6');
       case '겨울':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b7');
-    // 기본적으로 신상 컬렉션 반환
+      // 기본적으로 신상 컬렉션 반환
       default:
         return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
     }
@@ -716,46 +758,53 @@ class SectionMoreProductListNotifier extends BaseProductListNotifier {
 
 // 섹션 더보기 화면 관련 SectionMoreProductListNotifier 인스턴스를 생성하는 프로바이더 정의
 // UI 코드에서 category 값을 인자로 전달하여 fetchInitialProducts와 fetchMoreProducts를 호출할 수 있음
-final newSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final newSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 신상 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
-final bestSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final bestSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 최고 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
-final saleSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final saleSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 할인 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
-final springSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final springSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 봄 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
-final summerSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final summerSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 여름 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
-final autumnSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final autumnSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 가을 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
-final winterSubMainProductListProvider = StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>((ref) {
+final winterSubMainProductListProvider =
+    StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
+        (ref) {
   // 겨울 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 // ------- SectionMoreProductListNotifier 클래스 내용 구현 끝
 // ------- 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
-
-
-
-
-
-
-

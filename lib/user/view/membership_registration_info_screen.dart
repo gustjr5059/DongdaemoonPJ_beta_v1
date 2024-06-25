@@ -4,7 +4,6 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import 'login_screen.dart';
 
-
 // -------- 회원가입 안내 화면 관련 MembershipRegistrationInfoScreen 클래스 정의 내용 시작
 class MembershipRegistrationInfoScreen extends StatelessWidget {
   @override
@@ -24,8 +23,10 @@ class MembershipRegistrationInfoScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Image.asset(
-                'asset/img/misc/poster_img/membership_guide_image.png', // 이미지를 불러오는 경로
-                height: MediaQuery.of(context).size.height / 2, // 화면 높이의 절반을 차지하도록 설정
+                'asset/img/misc/poster_img/membership_guide_image.png',
+                // 이미지를 불러오는 경로
+                height: MediaQuery.of(context).size.height /
+                    2, // 화면 높이의 절반을 차지하도록 설정
                 fit: BoxFit.cover, // 이미지를 잘라서 박스에 맞춤
               ),
             ),
@@ -39,7 +40,8 @@ class MembershipRegistrationInfoScreen extends StatelessWidget {
                   children: [
                     Text(
                       '<회원가입 안내>', // 안내 텍스트
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), // 텍스트 스타일
+                      style: TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold), // 텍스트 스타일
                       textAlign: TextAlign.center, // 텍스트를 중앙 정렬
                     ),
                     SizedBox(height: 20), // 텍스트 사이의 간격
@@ -77,7 +79,9 @@ class MembershipRegistrationInfoScreen extends StatelessWidget {
                     // 돌아가기 버튼 클릭 시 LoginScreen으로 이동
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()), // LoginScreen으로 네비게이션
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LoginScreen()), // LoginScreen으로 네비게이션
                     );
                   },
                   child: Text('돌아가기'), // 버튼 텍스트

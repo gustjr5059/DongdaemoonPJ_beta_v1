@@ -1,7 +1,9 @@
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Firebase의 사용자 인증 기능을 제공하는 FirebaseAuth 패키지를 임포트합니다.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,18 +28,25 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   // FirebaseAuth 인스턴스 초기화
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   // 이메일 입력을 위한 컨트롤러
   final TextEditingController emailController = TextEditingController();
+
   // 비밀번호 입력을 위한 컨트롤러
   final TextEditingController passwordController = TextEditingController();
+
   // 이메일 입력 필드의 포커스 노드
   FocusNode emailFocusNode = FocusNode();
+
   // 비밀번호 입력 필드의 포커스 노드
   FocusNode passwordFocusNode = FocusNode();
+
   // 사용자 이메일 저장 변수
   String username = '';
+
   // 사용자 비밀번호 저장 변수
   String password = '';
+
   // 자동 로그인 여부 저장 변수
   bool autoLogin = false;
 

@@ -1,7 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 // 장바구니 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final cartLargeBannerPageProvider = StateProvider<int>((ref) => 0);

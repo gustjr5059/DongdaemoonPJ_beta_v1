@@ -1,39 +1,49 @@
-
-
 // Dart의 IO 라이브러리에서 Platform 클래스를 가져옵니다. 이 클래스는 운영 체제에 대한 정보를 제공합니다.
 import 'dart:io' show Platform;
+
 // Dart 비동기 프로그래밍을 위한 라이브러리에서 Future와 Stream 등을 사용할 수 있게 합니다.
 import 'dart:async';
+
 // Firebase의 사용자 인증 기능을 사용하기 위한 패키지를 임포트합니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+
 // 플랫폼 특정 기능을 제어하기 위한 서비스 인터페이스를 제공합니다.
 import 'package:flutter/services.dart';
+
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // url_launcher 패키지를 가져옵니다.
 // 이 패키지는 URL을 열거나, 이메일, 전화 등을 실행할 수 있는 기능을 제공합니다.
 import 'package:url_launcher/url_launcher.dart';
+
 // 공통적으로 사용될 상태 관리 로직을 포함하는 파일을 임포트합니다.
 import '../../../common/provider/common_state_provider.dart';
+
 // 애플리케이션의 공통 UI 컴포넌트를 구성하는 파일을 임포트합니다.
 import '../../../common/layout/common_body_parts_layout.dart';
+
 // 다양한 색상을 정의하는 파일을 임포트합니다.
 import '../../common/const/colors.dart';
+
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
+
 // banner_model.dart 파일을 common 디렉토리의 model 폴더에서 가져옵니다.
 // 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있을 것입니다.
 import '../../common/model/banner_model.dart';
+
 // common_future_provider.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
 // 이 파일에는 Future Provider와 관련된 기능이 정의되어 있을 것입니다.
 import '../../common/provider/common_future_provider.dart';
+
 // 프로필 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/profile_state_provider.dart';
 import 'login_screen.dart';
-
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -43,6 +53,7 @@ import 'login_screen.dart';
 // ProfileMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class ProfileMainScreen extends ConsumerStatefulWidget {
   const ProfileMainScreen({Key? key}) : super(key: key);
+
   @override
   _ProfileMainScreenState createState() => _ProfileMainScreenState();
 }
@@ -50,10 +61,11 @@ class ProfileMainScreen extends ConsumerStatefulWidget {
 // _ProfileMainScreenState 클래스 시작
 // _ProfileMainScreenState 클래스는 CartMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with WidgetsBindingObserver {
-
+class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
+    with WidgetsBindingObserver {
   // 큰 배너를 위한 페이지 컨트롤러
   late PageController _largeBannerPageController;
+
   // 큰 배너를 자동 스크롤하는 클래스
   late BannerAutoScrollClass _largeBannerAutoScroll;
 
@@ -89,7 +101,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController profileScreenPointScrollController; // 스크롤 컨트롤러 선언
-  
+
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -100,8 +112,10 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     // 'ref'를 사용하여 'profileScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(profileScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(profileScrollPositionProvider.notifier).state =
+        currentScrollPosition;
   }
+
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
@@ -129,7 +143,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
       // tabIndexProvider의 상태를 하단 탭 바 내 마이페이지 버튼 인덱스인 3과 매핑
       // -> 마이페이지 화면 초기화 시, 하단 탭 바 내 마이페이지 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 3;
-
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -138,7 +151,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'profileLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController = PageController(initialPage: ref.read(profileLargeBannerPageProvider));
+    _largeBannerPageController =
+        PageController(initialPage: ref.read(profileLargeBannerPageProvider));
 
     // 큰 배너를 자동으로 스크롤하는 기능 초기화
     _largeBannerAutoScroll = BannerAutoScrollClass(
@@ -154,7 +168,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 마이페이지 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 마이페이지 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(profileLargeBannerPageProvider.notifier).state = 0;
-        ref.read(profileScrollPositionProvider.notifier).state = 0.0; // 마이페이지 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.read(profileScrollPositionProvider.notifier).state =
+            0.0; // 마이페이지 화면 자체의 스크롤 위치 인덱스를 초기화
       }
     });
 
@@ -168,8 +183,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     Future.delayed(Duration.zero, () {
       _largeBannerAutoScroll.startAutoScroll();
     });
-
   }
+
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
@@ -188,6 +203,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
       _largeBannerAutoScroll.stopAutoScroll();
     }
   }
+
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
 
@@ -213,13 +229,13 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
   // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
   void _updateStatusBar() {
-
-    Color statusBarColor = BUTTON_COLOR;  // 여기서 원하는 색상을 지정
+    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
 
     if (Platform.isAndroid) {
       // 안드로이드에서는 상태표시줄 색상을 직접 지정
@@ -230,7 +246,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     } else if (Platform.isIOS) {
       // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light,  // 밝은 아이콘 사용
+        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
       ));
     }
   }
@@ -238,7 +254,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
     void _onLargeBannerTap(BuildContext context, int index) async {
       // largeBannerLinks 리스트에서 index에 해당하는 URL을 가져옴.
@@ -268,17 +283,26 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
               SliverAppBar(
                 // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
                 automaticallyImplyLeading: false,
-                floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
-                pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 0.0, // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar( // 공통 AppBar 빌드
-                    context: context, // 현재 context 전달
-                    ref: ref, // 참조(ref) 전달
-                    title: '마이페이지', // AppBar의 제목을 '마이페이지'로 설정
-                    leadingType: LeadingType.none, // 버튼 없음.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                floating: true,
+                // 스크롤 시 SliverAppBar가 빠르게 나타남.
+                pinned: true,
+                // 스크롤 다운시 AppBar가 상단에 고정됨.
+                expandedHeight: 0.0,
+                // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                title: buildCommonAppBar(
+                  // 공통 AppBar 빌드
+                  context: context,
+                  // 현재 context 전달
+                  ref: ref,
+                  // 참조(ref) 전달
+                  title: '마이페이지',
+                  // AppBar의 제목을 '마이페이지'로 설정
+                  leadingType: LeadingType.none,
+                  // 버튼 없음.
+                  buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
                 ),
-                leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
+                leading: null,
+                // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 backgroundColor: BUTTON_COLOR,
@@ -290,7 +314,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -304,13 +328,15 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
                                 // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정
                                 height: 200,
                                 // 카드뷰 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 설정
-                                child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
+                                child: buildCommonBannerPageViewSection<
+                                    AllLargeBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider: profileLargeBannerPageProvider,
+                                  currentPageProvider:
+                                      profileLargeBannerPageProvider,
                                   // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
                                   pageController: _largeBannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
@@ -318,7 +344,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
                                   // 배너 링크들을 전달
                                   bannerLinks: largeBannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider: allLargeBannerImagesProvider,
+                                  bannerImagesProvider:
+                                      allLargeBannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: _onLargeBannerTap,
                                 ),
@@ -327,28 +354,33 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
                               // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
                               elevation: 4,
                               // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
+                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
                             Text('PROFILE 내용'),
                             // 로그인/로그아웃 버튼
                             ElevatedButton(
                               onPressed: () async {
-                              // 로그아웃 처리
+                                // 로그아웃 처리
                                 await FirebaseAuth.instance.signOut();
-                              // 페이지 인덱스를 0으로 초기화
-                                ref.read(currentPageProvider.notifier).state = 0;
-                              // 로그아웃 후 로그인 화면으로 이동
-                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+                                // 페이지 인덱스를 0으로 초기화
+                                ref.read(currentPageProvider.notifier).state =
+                                    0;
+                                // 로그아웃 후 로그인 화면으로 이동
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (_) => LoginScreen()));
                               },
                               child: Text('로그아웃'),
                             ),
                             // 항상 표시되는 회원가입 버튼
                             ElevatedButton(
                               onPressed: () {
-                                 // 회원가입 페이지로 이동
-                                Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginScreen())); // 여기에 회원가입 화면 경로 필요
+                                // 회원가입 페이지로 이동
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) =>
+                                        LoginScreen())); // 여기에 회원가입 화면 경로 필요
                               },
                               child: Text('회원가입'),
                             ),
@@ -376,10 +408,14 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 4), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          ref.watch(tabIndexProvider),
+          ref,
+          context,
+          4), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }
+
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 
@@ -390,20 +426,19 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     const int originalPrice = 10000;
 
     final Map<int, String> briefIntroductionMap = {
-    1: '해당 상품은 티셔츠입니다.',
-    2: '해당 상품은 블라우스입니다.',
-    3: '해당 상품은 맨투맨입니다.',
-    4: '해당 상품은 니트입니다.',
-    5: '해당 상품은 폴라티입니다.',
-    6: '해당 상품은 원피스입니다.',
-    7: '해당 상품은 팬츠입니다.',
-    8: '해당 상품은 청바지입니다.',
-    9: '해당 상품은 스커트입니다.',
-    10: '해당 상품은 패딩입니다.',
-    11: '해당 상품은 코트입니다.',
-    12: '해당 상품은 가디건입니다.',
+      1: '해당 상품은 티셔츠입니다.',
+      2: '해당 상품은 블라우스입니다.',
+      3: '해당 상품은 맨투맨입니다.',
+      4: '해당 상품은 니트입니다.',
+      5: '해당 상품은 폴라티입니다.',
+      6: '해당 상품은 원피스입니다.',
+      7: '해당 상품은 팬츠입니다.',
+      8: '해당 상품은 청바지입니다.',
+      9: '해당 상품은 스커트입니다.',
+      10: '해당 상품은 패딩입니다.',
+      11: '해당 상품은 코트입니다.',
+      12: '해당 상품은 가디건입니다.',
     };
-
 
     for (int i = 1; i <= 12; i++) {
       String docId = 'a$i';
@@ -412,21 +447,28 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
 
       for (int j = 1; j <= 7; j++) {
         String subCollectionId = 'a${i}b$j';
-        CollectionReference subCollectionRef = docRef.collection(subCollectionId);
+        CollectionReference subCollectionRef =
+            docRef.collection(subCollectionId);
 
         for (int k = 1; k <= 15; k++) {
           int discountPercent = 9 + k; // k=1이면 10, k=2이면 11, ...
-          int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
+          int discountPrice =
+              originalPrice - (originalPrice * discountPercent ~/ 100);
           String subDocId = 'a${i}b${j}_$k';
           DocumentReference subDocRef = subCollectionRef.doc(subDocId);
 
           batch.set(subDocRef, {
             'brief_introduction': briefIntroduction,
-            'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
-            'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
-            'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
-            'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
-            'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
+            'clothes_color1':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
+            'clothes_color2':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
+            'clothes_color3':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
+            'clothes_color4':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
+            'clothes_color5':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
             'clothes_size1': 'S',
             'clothes_size2': 'M',
             'clothes_size3': 'L',
@@ -436,11 +478,16 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
             'color3_text': 'lavender',
             'color4_text': 'pink',
             'color5_text': 'yellow',
-            'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm1.png?alt=media&token=979c896f-29ba-4739-9725-5e3d84ad48af',
-            'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm2.png?alt=media&token=2a2b915d-3d40-4ce6-8c92-0e4f1f64e6fb',
-            'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm3.png?alt=media&token=db3c8ce7-81e2-4391-81b4-df9d475e201f',
-            'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm4.png?alt=media&token=9ed3622d-c1c1-4366-bd78-23d33bc6f497',
-            'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm5.png?alt=media&token=b220aa12-960f-4c67-811e-7c3cd4ceb073',
+            'detail_page_image1':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm1.png?alt=media&token=979c896f-29ba-4739-9725-5e3d84ad48af',
+            'detail_page_image2':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm2.png?alt=media&token=2a2b915d-3d40-4ce6-8c92-0e4f1f64e6fb',
+            'detail_page_image3':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm3.png?alt=media&token=db3c8ce7-81e2-4391-81b4-df9d475e201f',
+            'detail_page_image4':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm4.png?alt=media&token=9ed3622d-c1c1-4366-bd78-23d33bc6f497',
+            'detail_page_image5':
+                'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm5.png?alt=media&token=b220aa12-960f-4c67-811e-7c3cd4ceb073',
             'discount_percent': discountPercent,
             'discount_price': discountPrice,
             'original_price': originalPrice,
@@ -451,6 +498,5 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen> with Widg
     }
     await batch.commit();
   }
-
 }
 // _ProfileMainScreenState 클래스 끝

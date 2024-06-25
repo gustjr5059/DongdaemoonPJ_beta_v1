@@ -1,8 +1,8 @@
-
 // Flutter에서 제공하는 Material 디자인 위젯을 사용하기 위해 필수적인 패키지입니다.
 // 이 패키지는 애플리케이션의 시각적 구성 요소들을 제공하며, UI 구축의 기본이 됩니다.
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // Dart에서 비동기 프로그래밍을 위한 기본 라이브러리인 'dart:async'를 임포트합니다.
 // 이 라이브러리는 비동기 작업을 관리하기 위한 Future와 Stream과 같은 객체들을 제공합니다.
 // 예를 들어, 네트워크 요청, 데이터베이스 쿼리 등의 작업을 비동기적으로 처리할 때 사용됩니다.
@@ -16,14 +16,12 @@ import '../../user/view/login_screen.dart'; // 로그인 화면으로 이동하�
 // 디자인의 일관성을 유지하는 데 도움을 줍니다.
 import '../const/colors.dart'; // 색상 정의 파일 임포트
 
-
 class SplashScreen2 extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen2> {
-
   @override
   void initState() {
     super.initState();
@@ -42,10 +40,12 @@ class _SplashScreenState extends State<SplashScreen2> {
     Timer(Duration(seconds: 1), () {
       if (autoLogin) {
         // autoLogin이 true인 경우 HomeMainScreen으로 이동.
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeMainScreen()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => HomeMainScreen()));
       } else {
         // autoLogin이 false인 경우 LoginScreen으로 이동.
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
       }
     });
   }
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen2> {
           child: Image.asset(
             // 'asset/img/misc/splash_img/splash2_image.png',
             // 'asset/img/misc/splash_img/ssamjang.png',
-            'asset/img/misc/splash_img/douna.png',// 이미지 파일 경로를 설정하세요.
+            'asset/img/misc/splash_img/douna.png', // 이미지 파일 경로를 설정하세요.
             fit: BoxFit.contain, // 이미지 비율을 유지하면서 화면에 맞게 조절
           ),
         ),

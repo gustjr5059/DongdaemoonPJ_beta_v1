@@ -1,24 +1,29 @@
-
 // Dart의 IO 라이브러리에서 Platform 클래스를 가져옵니다. 이 클래스는 운영 체제에 대한 정보를 제공합니다.
 import 'dart:io' show Platform;
+
 // Dart의 비동기 프로그래밍 기능을 지원하는 'dart:async' 라이브러리를 가져옵니다.
 // 이 라이브러리를 사용하여 Future와 Stream 객체를 통해 비동기 작업을 쉽게 처리할 수 있습니다.
 import 'dart:async';
+
 // Firebase의 사용자 인증 기능을 제공하는 FirebaseAuth 패키지를 임포트합니다.
 // 이를 통해 이메일, 비밀번호, 소셜 미디어 계정을 이용한 로그인 기능 등을 구현할 수 있습니다.
 import 'package:firebase_auth/firebase_auth.dart';
+
 // Flutter의 기본 디자인 및 UI 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 // 이 패키지는 버튼, 카드, 앱 바 등 다양한 머티리얼 디자인 위젯을 포함하고 있습니다.
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 // Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
 import 'package:url_launcher/url_launcher.dart';
+
 // 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
 // 이 레이아웃은 에러 발생 시 사용자에게 보여질 UI 컴포넌트를 정의합니다.
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
+
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
 import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴포넌트 파일
@@ -28,12 +33,12 @@ import '../../../common/model/banner_model.dart';
 import '../../../common/provider/common_future_provider.dart';
 import '../../../common/provider/common_state_provider.dart';
 import '../../../home/layout/home_body_parts_layout.dart';
+
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_future_provider.dart';
 import '../../provider/product_state_provider.dart';
-
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -43,6 +48,7 @@ import '../../provider/product_state_provider.dart';
 // NewSubMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class NewSubMainScreen extends ConsumerStatefulWidget {
   const NewSubMainScreen({Key? key}) : super(key: key);
+
   @override
   _NewSubMainScreenState createState() => _NewSubMainScreenState();
 }
@@ -50,15 +56,17 @@ class NewSubMainScreen extends ConsumerStatefulWidget {
 // _NewSubMainScreenState 클래스 시작
 // _NewSubMainScreenState 클래스는 NewSubMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with WidgetsBindingObserver {
-
+class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
+    with WidgetsBindingObserver {
   // 큰 배너를 위한 페이지 컨트롤러
   late PageController _largeBannerPageController;
+
   // 큰 배너를 자동 스크롤하는 클래스
   late BannerAutoScrollClass _largeBannerAutoScroll;
 
   // 첫 번째 작은 배너를 위한 페이지 컨트롤러
   late PageController _small1BannerPageController;
+
   // 첫 번째 작은 배너를 자동 스크롤하는 클래스
   late BannerAutoScrollClass _small1BannerAutoScroll;
 
@@ -111,8 +119,10 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
     // 'ref'를 사용하여 'newSubMainScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(newSubMainScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(newSubMainScrollPositionProvider.notifier).state =
+        currentScrollPosition;
   }
+
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
@@ -140,7 +150,6 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 신상 섹션 더보기 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 newSubMainScreenPointScrollController에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -149,7 +158,8 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'blouseMainLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController = PageController(initialPage: ref.read(newSubMainLargeBannerPageProvider));
+    _largeBannerPageController = PageController(
+        initialPage: ref.read(newSubMainLargeBannerPageProvider));
 
     // 큰 배너를 자동으로 스크롤하는 기능 초기화
     _largeBannerAutoScroll = BannerAutoScrollClass(
@@ -160,7 +170,8 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
 
     // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
     // 'blouseMainSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _small1BannerPageController = PageController(initialPage: ref.read(newSubMainSmall1BannerPageProvider));
+    _small1BannerPageController = PageController(
+        initialPage: ref.read(newSubMainSmall1BannerPageProvider));
 
     // 작은 배너1을 자동으로 스크롤하는 기능 초기화
     _small1BannerAutoScroll = BannerAutoScrollClass(
@@ -174,11 +185,17 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(newSubMainLargeBannerPageProvider.notifier).state = 0; // 대배너 페이지 초기화
-        ref.read(newSubMainSmall1BannerPageProvider.notifier).state = 0; // 소배너 페이지 초기화
-        ref.read(newSubMainScrollPositionProvider.notifier).state = 0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-        ref.read(newSubMainProductListProvider.notifier).reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
-        ref.read(newSubMainSortButtonProvider.notifier).state = ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+        ref.read(newSubMainLargeBannerPageProvider.notifier).state =
+            0; // 대배너 페이지 초기화
+        ref.read(newSubMainSmall1BannerPageProvider.notifier).state =
+            0; // 소배너 페이지 초기화
+        ref.read(newSubMainScrollPositionProvider.notifier).state =
+            0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref
+            .read(newSubMainProductListProvider.notifier)
+            .reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
+        ref.read(newSubMainSortButtonProvider.notifier).state =
+            ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
       }
     });
 
@@ -193,8 +210,8 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
       _largeBannerAutoScroll.startAutoScroll();
       _small1BannerAutoScroll.startAutoScroll();
     });
-
   }
+
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
@@ -215,6 +232,7 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
       _small1BannerAutoScroll.stopAutoScroll();
     }
   }
+
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
 
@@ -243,13 +261,13 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
   // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
   void _updateStatusBar() {
-
-    Color statusBarColor = BUTTON_COLOR;  // 여기서 원하는 색상을 지정
+    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
 
     if (Platform.isAndroid) {
       // 안드로이드에서는 상태표시줄 색상을 직접 지정
@@ -260,7 +278,7 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
     } else if (Platform.isIOS) {
       // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light,  // 밝은 아이콘 사용
+        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
       ));
     }
   }
@@ -268,7 +286,6 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     void _onLargeBannerTap(BuildContext context, int index) async {
       final url = largeBannerLinks[index];
       if (await canLaunchUrl(Uri.parse(url))) {
@@ -301,17 +318,26 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
               SliverAppBar(
                 // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
                 automaticallyImplyLeading: false,
-                floating: true, // 스크롤 시 SliverAppBar가 빠르게 나타남.
-                pinned: true, // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 0.0, // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar( // 공통 AppBar 빌드
-                  context: context, // 현재 context 전달
-                  ref: ref, // 참조(ref) 전달
-                  title: '신상 섹션 더보기', // AppBar의 제목을 '신상 섹션 더보기'로 설정
-                  leadingType: LeadingType.back, // 이전 화면으로 이동 버튼 설정
+                floating: true,
+                // 스크롤 시 SliverAppBar가 빠르게 나타남.
+                pinned: true,
+                // 스크롤 다운시 AppBar가 상단에 고정됨.
+                expandedHeight: 0.0,
+                // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                title: buildCommonAppBar(
+                  // 공통 AppBar 빌드
+                  context: context,
+                  // 현재 context 전달
+                  ref: ref,
+                  // 참조(ref) 전달
+                  title: '신상 섹션 더보기',
+                  // AppBar의 제목을 '신상 섹션 더보기'로 설정
+                  leadingType: LeadingType.back,
+                  // 이전 화면으로 이동 버튼 설정
                   buttonCase: 2, // 버튼 케이스를 2로 설정 (찜 목록 버튼만 노출)
                 ),
-                leading: null, // 좌측 상단의 메뉴 버튼 등을 제거함.
+                leading: null,
+                // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 backgroundColor: BUTTON_COLOR,
@@ -323,27 +349,31 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
+                            SizedBox(height: 5),
+                            // 높이 20으로 간격 설정
                             // 큰 배너 섹션을 카드뷰로 구성
                             CommonCardView(
                               content: SizedBox(
                                 // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함.
                                 height: 200,
                                 // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<AllLargeBannerImage>(
+                                child: buildCommonBannerPageViewSection<
+                                    AllLargeBannerImage>(
                                   context: context,
                                   ref: ref,
-                                  currentPageProvider: blouseMainLargeBannerPageProvider,
+                                  currentPageProvider:
+                                      blouseMainLargeBannerPageProvider,
                                   pageController: _largeBannerPageController,
                                   bannerAutoScroll: _largeBannerAutoScroll,
                                   bannerLinks: largeBannerLinks,
-                                  bannerImagesProvider: allLargeBannerImagesProvider,
+                                  bannerImagesProvider:
+                                      allLargeBannerImagesProvider,
                                   onPageTap: _onLargeBannerTap,
                                 ),
                               ),
@@ -351,24 +381,28 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
                               // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
                               elevation: 4,
                               // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
+                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 20), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 20),
+                            // 높이 임의로 50으로 간격 설정
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: SizedBox(
                                 // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
                                 height: 60,
                                 // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<BlouseMainSmall1BannerImage>(
+                                child: buildCommonBannerPageViewSection<
+                                    BlouseMainSmall1BannerImage>(
                                   context: context,
                                   ref: ref,
-                                  currentPageProvider: blouseMainSmall1BannerPageProvider,
+                                  currentPageProvider:
+                                      blouseMainSmall1BannerPageProvider,
                                   pageController: _small1BannerPageController,
                                   bannerAutoScroll: _small1BannerAutoScroll,
                                   bannerLinks: small1BannerLinks,
-                                  bannerImagesProvider: blouseMainSmall1BannerImagesProvider,
+                                  bannerImagesProvider:
+                                      blouseMainSmall1BannerImagesProvider,
                                   onPageTap: _onSmall1BannerTap,
                                 ),
                               ),
@@ -376,25 +410,34 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
                               // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
                               elevation: 4,
                               // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
+                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons<SectionMoreProductListNotifier>(
-                              productListProvider: newSubMainProductListProvider, // 신상 제품 리스트 프로바이더 전달
-                              sortButtonProvider: newSubMainSortButtonProvider, // 신상 정렬 버튼 프로바이더 전달
-                            ), // 가격 및 할인 정렬 버튼 추가
+                            SizedBox(height: 3),
+                            // 3의 높이를 가진 간격 추가
+                            PriceAndDiscountPercentSortButtons<
+                                SectionMoreProductListNotifier>(
+                              productListProvider:
+                                  newSubMainProductListProvider,
+                              // 신상 제품 리스트 프로바이더 전달
+                              sortButtonProvider:
+                                  newSubMainSortButtonProvider, // 신상 정렬 버튼 프로바이더 전달
+                            ),
+                            // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: 3),
                             // GeneralProductList 위젯을 생성, SectionMoreProductListNotifier를 사용
                             GeneralProductList<SectionMoreProductListNotifier>(
                               // 스크롤 컨트롤러를 설정 (신상 섹션의 스크롤 컨트롤러)
-                              scrollController: newSubMainScreenPointScrollController,
+                              scrollController:
+                                  newSubMainScreenPointScrollController,
                               // 상품 리스트 프로바이더를 설정 (신상 섹션의 상품 리스트 프로바이더)
-                              productListProvider: newSubMainProductListProvider,
+                              productListProvider:
+                                  newSubMainProductListProvider,
                               // 카테고리를 '신상'으로 설정
                               category: '신상',
                             ),
-                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            SizedBox(height: 3),
+                            // 3의 높이를 가진 간격 추가
                           ],
                         ),
                       );
@@ -411,7 +454,8 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          ref.watch(tabIndexProvider), ref, context, 5),
+      // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
     // ------ 화면구성 끝
@@ -420,5 +464,3 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen> with Widget
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
 // _CartMainScreenState 클래스 끝
-
-

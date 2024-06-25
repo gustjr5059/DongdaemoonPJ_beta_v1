@@ -1,4 +1,3 @@
-
 // Firebase 코어 관련 기능을 사용하기 위해 필요한 Firebase Core 패키지를 임포트합니다.
 // 이 패키지는 Firebase 서비스를 Flutter 애플리케이션에 연동하고 초기화하는데 사용됩니다.
 // Firebase 서비스에는 인증, 데이터베이스, 분석 등 다양한 기능이 포함되어 있으며,
@@ -16,23 +15,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이
 // 애플리케이션의 초기 스크린을 정의하는 스플래시 스크린 뷰 파일을 임포트합니다.
 // 이 스크린은 앱이 로딩되는 동안 사용자에게 보여지며, 첫 인상을 형성하는 중요한 역할을 합니다.
 import 'common/view/splash1_screen.dart';
+
 // Firebase 초기 설정 파일을 임포트합니다.
 // 이 파일은 FlutterFire CLI 도구를 사용하여 생성되며, Firebase 프로젝트의 구성 정보를 포함하고 있습니다.
 // Firebase 서비스를 사용하기 위한 필수적인 API 키, 프로젝트 ID 등의 정보가 이 파일에 정의되어 있습니다.
 import 'firebase_options.dart'; // Firebase 초기 설정 관련 패키지 (firebase_cli를 통해 생성된 파일)
 
-
 // Firebase 초기화 코드
 // (Firebase와 Flutter 프로젝트를 연동하여 Firebase 서비스를 사용할 수 있게 함)
 // Firebase와 Flutter 프로젝트가 통합되어 Firebase 서비스를 사용가능)
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진이 초기화되기 전에 실행되어야 하는 코드를 위한 메서드
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Flutter 엔진이 초기화되기 전에 실행되어야 하는 코드를 위한 메서드
   // Firebase 초기화
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // 현재 플랫폼에 맞는 Firebase 초기 설정 적용
+    options:
+        DefaultFirebaseOptions.currentPlatform, // 현재 플랫폼에 맞는 Firebase 초기 설정 적용
   );
   runApp(
-    ProviderScope( // 앱 전체에 걸쳐 Riverpod 상태 관리를 가능하게 하는 최상위 위젯
+    ProviderScope(
+      // 앱 전체에 걸쳐 Riverpod 상태 관리를 가능하게 하는 최상위 위젯
       child: MyApp(),
     ),
   );

@@ -1,4 +1,3 @@
-
 // Riverpod 라이브러리를 임포트합니다.
 // 이 라이브러리는 상태 관리를 위한 강력하고 유연한 프레임워크로, 애플리케이션의 다양한 상태를 관리하는데 도움을 줍니다.
 // Riverpod는 기존 Provider 라이브러리를 기반으로 하여 더욱 발전된 기능을 제공하며,
@@ -6,7 +5,6 @@
 // 이를 통해 앱의 상태를 전역적으로 또는 로컬적으로 제어하고, 상태 변화에 따라 UI를 자동으로 업데이트하는 구조를 구현할 수 있습니다.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 // 찜 목록 화면에서 화면 자체 스크롤로 이동환 위치를 저장하는 StateProvider
 final wishlistScrollPositionProvider = StateProvider<double>((ref) => 0);

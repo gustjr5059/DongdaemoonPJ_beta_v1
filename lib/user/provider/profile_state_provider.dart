@@ -1,7 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 // 마이페이지 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final profileLargeBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -21,4 +19,3 @@ final profileScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
-

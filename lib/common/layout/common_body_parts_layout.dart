@@ -1,13 +1,15 @@
-
 // Dart의 비동기 프로그래밍 기능을 사용하기 위한 'dart:async' 라이브러리를 임포트합니다.
 import 'dart:async';
+
 // 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
+
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
 // 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
+
 // 여러 의류 카테고리 화면을 정의한 파일들을 임포트합니다.
 import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 가디건 화면
@@ -20,19 +22,23 @@ import '../provider/common_future_provider.dart'; // 비동기 데이터 로드�
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 
-
 // ------ 배너 페이지 뷰 자동 스크롤 기능 구현 위한 클래스 시작
 class BannerAutoScrollClass {
   // 페이지 뷰를 제어할 PageController 객체
   final PageController pageController;
+
   // 현재 페이지 인덱스를 추적하고 관리할 상태 변수
   final StateProvider<int> currentPageProvider;
+
   // 자동 스크롤을 위한 타이머 객체. 선택적으로 사용되므로 nullable 타입
   Timer? _timer;
+
   // 배너 아이템의 총 개수를 저장하는 변수
   int itemCount;
+
   // 페이지를 넘기는 데 걸리는 시간(ms 단위)
   final int scrollDuration;
+
   // 자동 스크롤 전 대기 시간(ms 단위)
   final int waitDuration;
 
@@ -41,15 +47,16 @@ class BannerAutoScrollClass {
     required this.pageController,
     required this.currentPageProvider,
     required this.itemCount,
-    this.scrollDuration = 300,  // 기본 스크롤 지속 시간을 300ms로 설정
-    this.waitDuration = 5000,   // 기본 대기 시간을 5000ms(5초)로 설정
+    this.scrollDuration = 300, // 기본 스크롤 지속 시간을 300ms로 설정
+    this.waitDuration = 5000, // 기본 대기 시간을 5000ms(5초)로 설정
   });
 
   // 자동 스크롤 기능을 시작하는 함수
   void startAutoScroll() {
     _timer?.cancel(); // 기존에 실행중인 타이머가 있다면 취소
     // 5초마다 반복되는 타이머를 설정
-    _timer = Timer.periodic(Duration(milliseconds: waitDuration), (Timer timer) {
+    _timer =
+        Timer.periodic(Duration(milliseconds: waitDuration), (Timer timer) {
       // 페이지 컨트롤러와 아이템 수를 확인
       if (pageController.hasClients && itemCount > 0) {
         // 다음 페이지 번호 계산, 현재 페이지에서 1을 더함
@@ -111,13 +118,13 @@ Widget buildBannerPageView({
 }) {
   // PageView.builder를 반환하여 동적으로 아이템을 생성하는 페이지 뷰를 구현
   return PageView.builder(
-    controller: pageController,  // PageController 인스턴스 사용. 페이지 이동 제어
-    itemCount: itemCount,        // 총 페이지(아이템)의 수를 지정
+    controller: pageController, // PageController 인스턴스 사용. 페이지 이동 제어
+    itemCount: itemCount, // 총 페이지(아이템)의 수를 지정
     onPageChanged: (index) {
       // 페이지가 변경될 때 호출될 함수. 새 페이지 인덱스를 상태 관리 도구를 통해 업데이트
       ref.read(currentPageProvider.notifier).state = index;
     },
-    itemBuilder: itemBuilder,    // 각 페이지를 구성할 위젯을 빌드하는 함수
+    itemBuilder: itemBuilder, // 각 페이지를 구성할 위젯을 빌드하는 함수
   );
 }
 // ------ buildBannerPageView 위젯 내용 구현 끝
@@ -150,7 +157,8 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
               onTap: () {
                 onPageTap(context, index); // 콜백 함수 호출
               },
-              child: BannerImageClass(imageUrl: commonBannerImages[index].imageUrl),
+              child: BannerImageClass(
+                  imageUrl: commonBannerImages[index].imageUrl),
             ),
             currentPageProvider: currentPageProvider,
             context: context,
@@ -188,12 +196,16 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
 class CommonCardView extends StatelessWidget {
   // 'content'는 카드 내부에 표시될 위젯을 정의함.
   final Widget content;
+
   // 'backgroundColor'는 카드의 배경색을 정의함. 기본값은 흰색임.
   final Color backgroundColor;
+
   // 'elevation'는 카드의 그림자 깊이를 정의함. 기본값은 4.0임.
   final double elevation;
+
   // 'margin'은 카드의 외부 여백을 정의함. 기본값은 모든 방향으로 2의 여백임.
   final EdgeInsets margin;
+
   // 'padding'은 카드 내부의 여백을 정의함. 기본값은 모든 방향으로 8의 여백임.
   final EdgeInsets padding;
 
@@ -263,10 +275,3 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
   );
 }
 // ------ 공통적으로 사용될 'top' 버튼 위젯 내용 끝
-
-
-
-
-
-
-

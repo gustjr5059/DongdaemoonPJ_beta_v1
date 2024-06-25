@@ -1,25 +1,31 @@
-
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+
 // Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+
 // 상태 관리를 위해 사용되는 Riverpod 패키지를 임포트합니다.
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
 import '../../common/const/colors.dart';
+
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../model/product_model.dart';
+
 // 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
 import '../provider/product_future_provider.dart';
+
 // 제품 상태 관리를 위한 StateProvider 파일을 임포트합니다.
 import '../provider/product_state_provider.dart';
+
 // 각 의류 카테고리에 대한 상세 화면 구현 파일들을 임포트합니다.
 // 이 파일들은 각 카테고리별 제품의 상세 정보를 표시하는 화면을 정의합니다.
 import '../view/detail_screen/blouse_detail_screen.dart'; // 블라우스 상세 화면
@@ -35,18 +41,18 @@ import '../view/detail_screen/pola_detail_screen.dart'; // 폴라(터틀넥) 상
 import '../view/detail_screen/shirt_detail_screen.dart'; // 셔츠 상세 화면
 import '../view/detail_screen/skirt_detail_screen.dart'; // 스커트 상세 화면
 
-
 // ------ pageViewWithArrows 위젯 내용 구현 시작
 // PageView와 화살표 버튼을 포함하는 위젯
 // 사용자가 페이지를 넘길 수 있도록 함.
 Widget pageViewWithArrows(
-    BuildContext context,
-    PageController pageController, // 페이지 전환을 위한 컨트롤러
-    WidgetRef ref, // Riverpod 상태 관리를 위한 ref
-    StateProvider<int> currentPageProvider, { // 현재 페이지 인덱스를 관리하기 위한 StateProvider
-      required IndexedWidgetBuilder itemBuilder, // 각 페이지를 구성하기 위한 함수
-      required int itemCount, // 전체 페이지 수
-    }) {
+  BuildContext context,
+  PageController pageController, // 페이지 전환을 위한 컨트롤러
+  WidgetRef ref, // Riverpod 상태 관리를 위한 ref
+  StateProvider<int> currentPageProvider, {
+  // 현재 페이지 인덱스를 관리하기 위한 StateProvider
+  required IndexedWidgetBuilder itemBuilder, // 각 페이지를 구성하기 위한 함수
+  required int itemCount, // 전체 페이지 수
+}) {
   int currentPage = ref.watch(currentPageProvider); // 현재 페이지 인덱스를 관찰
   return Stack(
     alignment: Alignment.center,
@@ -55,17 +61,30 @@ Widget pageViewWithArrows(
         controller: pageController, // 페이지 컨트롤러 할당
         itemCount: itemCount, // 페이지 수 설정
         onPageChanged: (index) {
-          ref.read(currentPageProvider.notifier).state = index; // 페이지가 변경될 때마다 인덱스 업데이트
+          ref.read(currentPageProvider.notifier).state =
+              index; // 페이지가 변경될 때마다 인덱스 업데이트
         },
         itemBuilder: itemBuilder, // 페이지를 구성하는 위젯을 생성
       ),
       // 왼쪽 화살표 버튼. 첫 페이지가 아닐 때만 활성화됩니다.
-      arrowButton(context, Icons.arrow_back_ios, currentPage > 0,
-              () => pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut), currentPageProvider, ref),
+      arrowButton(
+          context,
+          Icons.arrow_back_ios,
+          currentPage > 0,
+          () => pageController.previousPage(
+              duration: Duration(milliseconds: 300), curve: Curves.easeInOut),
+          currentPageProvider,
+          ref),
       // 오른쪽 화살표 버튼. 마지막 페이지가 아닐 때만 활성화됩니다.
       // 현재 페이지 < 전체 페이지 수 - 1 의 조건으로 변경하여 마지막 페이지 검사를 보다 정확하게 합니다.
-      arrowButton(context, Icons.arrow_forward_ios, currentPage < itemCount - 1,
-              () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut), currentPageProvider, ref),
+      arrowButton(
+          context,
+          Icons.arrow_forward_ios,
+          currentPage < itemCount - 1,
+          () => pageController.nextPage(
+              duration: Duration(milliseconds: 300), curve: Curves.easeInOut),
+          currentPageProvider,
+          ref),
     ],
   );
 }
@@ -74,7 +93,13 @@ Widget pageViewWithArrows(
 // ------ arrowButton 위젯 내용 구현 시작
 // 화살표 버튼을 생성하는 위젯(함수)
 // 화살표 버튼을 통해 사용자는 페이지를 앞뒤로 넘길 수 있음.
-Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallback onPressed, StateProvider<int> currentPageProvider, WidgetRef ref) {
+Widget arrowButton(
+    BuildContext context,
+    IconData icon,
+    bool isActive,
+    VoidCallback onPressed,
+    StateProvider<int> currentPageProvider,
+    WidgetRef ref) {
   return Positioned(
     left: icon == Icons.arrow_back_ios ? 10 : null, // 왼쪽 화살표 위치 조정
     right: icon == Icons.arrow_forward_ios ? 10 : null, // 오른쪽 화살표 위치 조정
@@ -88,7 +113,8 @@ Widget arrowButton(BuildContext context, IconData icon, bool isActive, VoidCallb
 // ------ arrowButton 위젯 내용 구현 끝
 
 // ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
-class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier> extends ConsumerWidget {
+class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
+    extends ConsumerWidget {
   // StateNotifierProvider와 StateProvider를 필드로 선언
   final StateNotifierProvider<T, List<ProductContent>> productListProvider;
   final StateProvider<String> sortButtonProvider;
@@ -105,21 +131,28 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier> exte
     final selectedSortType = ref.watch(sortButtonProvider);
     // print("현재 정렬 상태: $selectedSortType");
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0), // 좌우 및 상하 패딩 설정
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      // 좌우 및 상하 패딩 설정
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 자식 위젯 사이의 공간을 고르게 분배
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // 자식 위젯 사이의 공간을 고르게 분배
         children: [
-          _buildExpandedSortButton(context, '가격 높은 순', ref, selectedSortType), // 가격 높은 순 버튼 생성
-          _buildExpandedSortButton(context, '가격 낮은 순', ref, selectedSortType), // 가격 낮은 순 버튼 생성
-          _buildExpandedSortButton(context, '할인율 높은 순', ref, selectedSortType), // 할인율 높은 순 버튼 생성
-          _buildExpandedSortButton(context, '할인율 낮은 순', ref, selectedSortType), // 할인율 낮은 순 버튼 생성
+          _buildExpandedSortButton(context, '가격 높은 순', ref, selectedSortType),
+          // 가격 높은 순 버튼 생성
+          _buildExpandedSortButton(context, '가격 낮은 순', ref, selectedSortType),
+          // 가격 낮은 순 버튼 생성
+          _buildExpandedSortButton(context, '할인율 높은 순', ref, selectedSortType),
+          // 할인율 높은 순 버튼 생성
+          _buildExpandedSortButton(context, '할인율 낮은 순', ref, selectedSortType),
+          // 할인율 낮은 순 버튼 생성
         ],
       ),
     );
   }
 
   // 버튼 세부 내용인 _buildExpandedSortButton 위젯
-  Widget _buildExpandedSortButton(BuildContext context, String title, WidgetRef ref, String selectedSortType) {
+  Widget _buildExpandedSortButton(BuildContext context, String title,
+      WidgetRef ref, String selectedSortType) {
     // 현재 버튼이 선택된 상태인지 여부를 결정
     final bool isSelected = selectedSortType == title;
     return Expanded(
@@ -127,14 +160,19 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier> exte
         padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우 패딩 설정
         child: ElevatedButton(
           onPressed: () {
-            ref.read(sortButtonProvider.notifier).state = title; // 버튼 클릭 시 정렬 상태 업데이트
-            ref.read(productListProvider.notifier).sortType = title; // 상품 데이터 정렬 상태 업데이트
+            ref.read(sortButtonProvider.notifier).state =
+                title; // 버튼 클릭 시 정렬 상태 업데이트
+            ref.read(productListProvider.notifier).sortType =
+                title; // 상품 데이터 정렬 상태 업데이트
             // print("정렬 버튼 클릭: $title");
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: BUTTON_COLOR, // 버튼 배경 색상 설정
-            foregroundColor: isSelected ? GOLD_COLOR : INPUT_BORDER_COLOR, // 선택된 버튼의 텍스트 색상 설정
-            minimumSize: Size(0, 40), // 최소 버튼 크기 설정
+            backgroundColor: BUTTON_COLOR,
+            // 버튼 배경 색상 설정
+            foregroundColor: isSelected ? GOLD_COLOR : INPUT_BORDER_COLOR,
+            // 선택된 버튼의 텍스트 색상 설정
+            minimumSize: Size(0, 40),
+            // 최소 버튼 크기 설정
             padding: EdgeInsets.symmetric(horizontal: 8.0), // 버튼 내 패딩 설정
           ),
           child: FittedBox(
@@ -156,13 +194,15 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier> exte
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
 class ProductsSectionList extends ConsumerStatefulWidget {
   final String category; // 카테고리 이름을 저장하는 필드
-  final Future<List<ProductContent>> Function(int limit, DocumentSnapshot? startAfter) fetchProducts; // 제품을 가져오는 비동기 함수
+  final Future<List<ProductContent>> Function(
+      int limit, DocumentSnapshot? startAfter) fetchProducts; // 제품을 가져오는 비동기 함수
 
   // 생성자
   ProductsSectionList({required this.category, required this.fetchProducts});
 
   @override
-  _ProductsSectionListState createState() => _ProductsSectionListState(); // 상태 객체 생성
+  _ProductsSectionListState createState() =>
+      _ProductsSectionListState(); // 상태 객체 생성
 }
 
 class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
@@ -175,7 +215,9 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
     super.initState();
     _scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
     // 이미 저장된 홈 화면 내 섹션 데이터를 로드
-    final savedProducts = ref.read(homeSectionDataStateProvider.notifier).getSectionProducts(widget.category);
+    final savedProducts = ref
+        .read(homeSectionDataStateProvider.notifier)
+        .getSectionProducts(widget.category);
     if (savedProducts.isNotEmpty) {
       setState(() {
         _lastDocument = savedProducts.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
@@ -186,7 +228,8 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
     // 저장된 홈 화면 내 섹션 스크롤 위치를 설정
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final savedScrollPosition = ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
+      final savedScrollPosition =
+          ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
       _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
     });
   }
@@ -201,8 +244,10 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
   // 스크롤 리스너 함수
   void _scrollListener() {
     // 스크롤이 끝에 도달하고 데이터를 가져오는 중이 아닐 때
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 && !_isFetching) {
-      _fetchMoreProducts();  // 추가 제품 데이터 가져오기 호출
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isFetching) {
+      _fetchMoreProducts(); // 추가 제품 데이터 가져오기 호출
     }
 
     // 현재 홈 화면 내 섹션 스크롤 위치를 저장
@@ -220,7 +265,9 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
     try {
       final products = await widget.fetchProducts(4, null); // 초기 4개 제품 데이터 가져오기
       setState(() {
-        ref.read(homeSectionDataStateProvider.notifier).updateSection(widget.category, products); // 섹션 내 제품 데이터 상태 업데이트
+        ref
+            .read(homeSectionDataStateProvider.notifier)
+            .updateSection(widget.category, products); // 섹션 내 제품 데이터 상태 업데이트
         if (products.isNotEmpty) {
           _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
         }
@@ -241,11 +288,16 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
       _isFetching = true; // 데이터 가져오는 중 상태로 설정
     });
     try {
-      final products = await widget.fetchProducts(4, _lastDocument); // 추가 4개 제품 데이터 가져오기
+      final products =
+          await widget.fetchProducts(4, _lastDocument); // 추가 4개 제품 데이터 가져오기
       setState(() {
-        final currentProducts = ref.read(homeSectionDataStateProvider.notifier).getSectionProducts(widget.category); // 현재 섹션 내 제품 리스트 가져오기
-        final updatedProducts = currentProducts + products; // 새로운 섹션 내 제품 리스트와 병합
-        ref.read(homeSectionDataStateProvider.notifier).updateSection(widget.category, updatedProducts); // 섹션 내 제품 데이터 상태 업데이트
+        final currentProducts = ref
+            .read(homeSectionDataStateProvider.notifier)
+            .getSectionProducts(widget.category); // 현재 섹션 내 제품 리스트 가져오기
+        final updatedProducts =
+            currentProducts + products; // 새로운 섹션 내 제품 리스트와 병합
+        ref.read(homeSectionDataStateProvider.notifier).updateSection(
+            widget.category, updatedProducts); // 섹션 내 제품 데이터 상태 업데이트
         if (products.isNotEmpty) {
           _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
         }
@@ -261,11 +313,15 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
   @override
   Widget build(BuildContext context) {
-    final products = ref.watch(homeSectionDataStateProvider)[widget.category] ?? []; // 현재 카테고리의 제품 리스트 가져오기
+    final products = ref.watch(homeSectionDataStateProvider)[widget.category] ??
+        []; // 현재 카테고리의 제품 리스트 가져오기
     return Column(
       children: [
-        buildHorizontalDocumentsList(ref, products, context, widget.category, _scrollController), // 가로 스크롤 문서 리스트 빌드
-        if (_isFetching) CircularProgressIndicator(), // 데이터 가져오는 중일 때 로딩 인디케이터 표시
+        buildHorizontalDocumentsList(
+            ref, products, context, widget.category, _scrollController),
+        // 가로 스크롤 문서 리스트 빌드
+        if (_isFetching) CircularProgressIndicator(),
+        // 데이터 가져오는 중일 때 로딩 인디케이터 표시
       ],
     );
   }
@@ -274,9 +330,11 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
 // ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
 // GeneralProductList 클래스 내용 구현 시작
-class GeneralProductList <T extends BaseProductListNotifier> extends ConsumerStatefulWidget {
+class GeneralProductList<T extends BaseProductListNotifier>
+    extends ConsumerStatefulWidget {
   final ScrollController scrollController; // 스크롤 컨트롤러 선언
-  final StateNotifierProvider<T, List<ProductContent>> productListProvider; // 제품 목록 provider 선언
+  final StateNotifierProvider<T, List<ProductContent>>
+      productListProvider; // 제품 목록 provider 선언
   final String category; // 카테고리 선언
 
   GeneralProductList({
@@ -296,8 +354,11 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
     widget.scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
     // 위젯이 완전히 빌드된 후에 초기 데이터 로드 작업을 수행하기 위해 Future.delayed(Duration.zero)를 사용
     Future.delayed(Duration.zero, () {
-      if (ref.read(widget.productListProvider).isEmpty) { // 제품 목록이 비어있다면
-        ref.read(widget.productListProvider.notifier).fetchInitialProducts(widget.category); // 초기 제품 가져오기 호출
+      if (ref.read(widget.productListProvider).isEmpty) {
+        // 제품 목록이 비어있다면
+        ref
+            .read(widget.productListProvider.notifier)
+            .fetchInitialProducts(widget.category); // 초기 제품 가져오기 호출
       }
     });
   }
@@ -311,31 +372,42 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
   // 스크롤 리스너 함수
   void _scrollListener() {
     if (widget.scrollController.position.pixels >=
-        widget.scrollController.position.maxScrollExtent - 200) { // 스크롤이 끝에 가까워지면
-      ref.read(widget.productListProvider.notifier).fetchMoreProducts(widget.category); // 더 많은 제품 가져오기 호출
+        widget.scrollController.position.maxScrollExtent - 200) {
+      // 스크롤이 끝에 가까워지면
+      ref
+          .read(widget.productListProvider.notifier)
+          .fetchMoreProducts(widget.category); // 더 많은 제품 가져오기 호출
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final products = ref.watch(widget.productListProvider); // 제품 목록 상태 감시
-    final isFetching = ref.watch(widget.productListProvider.notifier.select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
+    final isFetching = ref.watch(widget.productListProvider.notifier
+        .select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
 
     return Column(
       children: [
         ListView.builder(
-          shrinkWrap: true, // 높이 제한
-          physics: NeverScrollableScrollPhysics(), // 스크롤 비활성화
-          padding: EdgeInsets.symmetric(vertical: 10.0), // 상하 패딩 설정
-          itemCount: (products.length / 3).ceil(), // 행의 개수 계산
+          shrinkWrap: true,
+          // 높이 제한
+          physics: NeverScrollableScrollPhysics(),
+          // 스크롤 비활성화
+          padding: EdgeInsets.symmetric(vertical: 10.0),
+          // 상하 패딩 설정
+          itemCount: (products.length / 3).ceil(),
+          // 행의 개수 계산
           itemBuilder: (context, index) {
             int startIndex = index * 3; // 시작 인덱스 계산
             int endIndex = startIndex + 3; // 끝 인덱스 계산
-            if (endIndex > products.length) { // 끝 인덱스가 제품 개수보다 많으면
+            if (endIndex > products.length) {
+              // 끝 인덱스가 제품 개수보다 많으면
               endIndex = products.length; // 끝 인덱스를 제품 개수로 조정
             }
-            List<ProductContent> productRow = products.sublist(startIndex, endIndex); // 행에 들어갈 제품들 추출
-            return buildGeneralProductRow(ref, productRow, context); // 행 빌드 함수 호출
+            List<ProductContent> productRow =
+                products.sublist(startIndex, endIndex); // 행에 들어갈 제품들 추출
+            return buildGeneralProductRow(
+                ref, productRow, context); // 행 빌드 함수 호출
           },
         ),
         if (isFetching) // 가져오는 중이라면
@@ -350,23 +422,29 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
 // ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
 // GeneralProductList 클래스 내용 구현 끝
 
-
 // ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 시작
-Widget buildGeneralProductRow(WidgetRef ref, List<ProductContent> products, BuildContext context) {
-  final productInfo = ProductInfoDetailScreenNavigation(ref, '상품'); // 제품 정보 상세 화면 내비게이션 객체 생성
+Widget buildGeneralProductRow(
+    WidgetRef ref, List<ProductContent> products, BuildContext context) {
+  final productInfo =
+      ProductInfoDetailScreenNavigation(ref, '상품'); // 제품 정보 상세 화면 내비게이션 객체 생성
 
   return Row(
-    children: products.map((product) => Expanded( // 각 제품을 확장된 위젯으로 변환
-      child: Padding(
-        padding: const EdgeInsets.all(2.0), // 패딩 설정
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
-          children: [
-            productInfo.buildProdFirestoreDetailDocument(context, product), // 제품 정보 상세 화면 빌드 함수 호출
-          ],
-        ),
-      ),
-    )).toList(), // 리스트로 변환
+    children: products
+        .map((product) => Expanded(
+              // 각 제품을 확장된 위젯으로 변환
+              child: Padding(
+                padding: const EdgeInsets.all(2.0), // 패딩 설정
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
+                  children: [
+                    productInfo.buildProdFirestoreDetailDocument(
+                        context, product),
+                    // 제품 정보 상세 화면 빌드 함수 호출
+                  ],
+                ),
+              ),
+            ))
+        .toList(), // 리스트로 변환
   );
 }
 // ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 끝
@@ -387,149 +465,245 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 각 화면마다의 FirebaseAuth.instance.authStateChanges().listen((user) 여기에도 provider 구현하고, 여기에도 구현하는 두 곳 다 구현해야함.
   // 홈 화면 관련 초기화 부분 시작
   // 스크롤 위치 및 현재 탭 인덱스 초기화
-  ref.read(homeScrollPositionProvider.notifier).state = 0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(homeCurrentTabProvider.notifier).state = 0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(homeSectionScrollPositionsProvider.notifier).state = {}; // 홈 화면 내 섹션의 스크롤 위치 초기화
-  ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
+  ref.read(homeScrollPositionProvider.notifier).state =
+      0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(homeCurrentTabProvider.notifier).state =
+      0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref.read(homeSectionScrollPositionsProvider.notifier).state =
+      {}; // 홈 화면 내 섹션의 스크롤 위치 초기화
+  ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
+      false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
   // 홈 화면 관련 초기화 부분 끝
 
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작
-  ref.read(blouseMainScrollPositionProvider.notifier).state = 0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(blouseCurrentTabProvider.notifier).state = 0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(blouseMainProductListProvider.notifier).reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(blouseMainSortButtonProvider.notifier).state = ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(blouseMainScrollPositionProvider.notifier).state =
+      0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(blouseCurrentTabProvider.notifier).state =
+      0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(blouseMainProductListProvider.notifier)
+      .reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(blouseMainSortButtonProvider.notifier).state =
+      ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 블라우스 메인 화면 관련 초기화 부분 끝
 
   // 가디건 메인 화면 관련 초기화 부분 시작
-  ref.read(cardiganMainScrollPositionProvider.notifier).state = 0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(cardiganCurrentTabProvider.notifier).state = 0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(cardiganMainProductListProvider.notifier).reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(cardiganMainSortButtonProvider.notifier).state = ''; // 가디건 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(cardiganMainScrollPositionProvider.notifier).state =
+      0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(cardiganCurrentTabProvider.notifier).state =
+      0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(cardiganMainProductListProvider.notifier)
+      .reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(cardiganMainSortButtonProvider.notifier).state =
+      ''; // 가디건 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 가디건 메인 화면 관련 초기화 부분 끝
 
   // 코트 메인 화면 관련 초기화 부분 시작
-  ref.read(coatMainScrollPositionProvider.notifier).state = 0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(coatCurrentTabProvider.notifier).state = 0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(coatMainProductListProvider.notifier).reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(coatMainSortButtonProvider.notifier).state = ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(coatMainScrollPositionProvider.notifier).state =
+      0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(coatCurrentTabProvider.notifier).state =
+      0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(coatMainProductListProvider.notifier)
+      .reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(coatMainSortButtonProvider.notifier).state =
+      ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 코트 메인 화면 관련 초기화 부분 끝
 
   // 청바지 메인 화면 관련 초기화 부분 시작
-  ref.read(jeanMainScrollPositionProvider.notifier).state = 0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(jeanCurrentTabProvider.notifier).state = 0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(jeanMainProductListProvider.notifier).reset(); // 청바지 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(jeanMainSortButtonProvider.notifier).state = ''; // 청바지 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(jeanMainScrollPositionProvider.notifier).state =
+      0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(jeanCurrentTabProvider.notifier).state =
+      0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(jeanMainProductListProvider.notifier)
+      .reset(); // 청바지 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(jeanMainSortButtonProvider.notifier).state =
+      ''; // 청바지 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 청바지 메인 화면 관련 초기화 부분 끝
 
   // 맨투맨 메인 화면 관련 초기화 부분 시작
-  ref.read(mtmMainScrollPositionProvider.notifier).state = 0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(mtmCurrentTabProvider.notifier).state = 0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(mtmMainProductListProvider.notifier).reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(mtmMainSortButtonProvider.notifier).state = ''; // 맨투맨 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(mtmMainScrollPositionProvider.notifier).state =
+      0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(mtmCurrentTabProvider.notifier).state =
+      0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(mtmMainProductListProvider.notifier)
+      .reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(mtmMainSortButtonProvider.notifier).state =
+      ''; // 맨투맨 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 맨투맨 메인 화면 관련 초기화 부분 끝
 
   // 니트 메인 화면 관련 초기화 부분 시작
-  ref.read(neatMainScrollPositionProvider.notifier).state = 0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(neatCurrentTabProvider.notifier).state = 0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(neatMainProductListProvider.notifier).reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(neatMainSortButtonProvider.notifier).state = ''; // 니트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(neatMainScrollPositionProvider.notifier).state =
+      0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(neatCurrentTabProvider.notifier).state =
+      0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(neatMainProductListProvider.notifier)
+      .reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(neatMainSortButtonProvider.notifier).state =
+      ''; // 니트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 니트 메인 화면 관련 초기화 부분 끝
 
   // 원피스 메인 화면 관련 초기화 부분 시작
-  ref.read(onepieceMainScrollPositionProvider.notifier).state = 0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(onepieceCurrentTabProvider.notifier).state = 0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(onepieceMainProductListProvider.notifier).reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(onepieceMainSortButtonProvider.notifier).state = ''; // 원피스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(onepieceMainScrollPositionProvider.notifier).state =
+      0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(onepieceCurrentTabProvider.notifier).state =
+      0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(onepieceMainProductListProvider.notifier)
+      .reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(onepieceMainSortButtonProvider.notifier).state =
+      ''; // 원피스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 원피스 메인 화면 관련 초기화 부분 끝
 
   // 패딩 메인 화면 관련 초기화 부분 시작
-  ref.read(paedingMainScrollPositionProvider.notifier).state = 0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(paedingCurrentTabProvider.notifier).state = 0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(paedingMainProductListProvider.notifier).reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(paedingMainSortButtonProvider.notifier).state = ''; // 패딩 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(paedingMainScrollPositionProvider.notifier).state =
+      0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(paedingCurrentTabProvider.notifier).state =
+      0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(paedingMainProductListProvider.notifier)
+      .reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(paedingMainSortButtonProvider.notifier).state =
+      ''; // 패딩 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 패딩 메인 화면 관련 초기화 부분 끝
 
   // 팬츠 메인 화면 관련 초기화 부분 시작
-  ref.read(pantsMainScrollPositionProvider.notifier).state = 0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(pantsCurrentTabProvider.notifier).state = 0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(pantsMainProductListProvider.notifier).reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(pantsMainSortButtonProvider.notifier).state = ''; // 팬츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(pantsMainScrollPositionProvider.notifier).state =
+      0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(pantsCurrentTabProvider.notifier).state =
+      0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(pantsMainProductListProvider.notifier)
+      .reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(pantsMainSortButtonProvider.notifier).state =
+      ''; // 팬츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 팬츠 메인 화면 관련 초기화 부분 끝
 
   // 폴라티 메인 화면 관련 초기화 부분 시작
-  ref.read(polaMainScrollPositionProvider.notifier).state = 0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(polaCurrentTabProvider.notifier).state = 0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(polaMainProductListProvider.notifier).reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(polaMainSortButtonProvider.notifier).state = ''; // 폴라티 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(polaMainScrollPositionProvider.notifier).state =
+      0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(polaCurrentTabProvider.notifier).state =
+      0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(polaMainProductListProvider.notifier)
+      .reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(polaMainSortButtonProvider.notifier).state =
+      ''; // 폴라티 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 폴라티 메인 화면 관련 초기화 부분 끝
 
   // 티셔츠 메인 화면 관련 초기화 부분 시작
-  ref.read(shirtMainScrollPositionProvider.notifier).state = 0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(shirtCurrentTabProvider.notifier).state = 0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(shirtMainProductListProvider.notifier).reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(shirtMainSortButtonProvider.notifier).state = ''; // 티셔츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(shirtMainScrollPositionProvider.notifier).state =
+      0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(shirtCurrentTabProvider.notifier).state =
+      0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(shirtMainProductListProvider.notifier)
+      .reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(shirtMainSortButtonProvider.notifier).state =
+      ''; // 티셔츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 티셔츠 메인 화면 관련 초기화 부분 끝
 
   // 스커트 메인 화면 관련 초기화 부분 시작
-  ref.read(skirtMainScrollPositionProvider.notifier).state = 0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(skirtCurrentTabProvider.notifier).state = 0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(skirtMainProductListProvider.notifier).reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(skirtMainSortButtonProvider.notifier).state = ''; // 스커트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(skirtMainScrollPositionProvider.notifier).state =
+      0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(skirtCurrentTabProvider.notifier).state =
+      0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+  ref
+      .read(skirtMainProductListProvider.notifier)
+      .reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+  ref.read(skirtMainSortButtonProvider.notifier).state =
+      ''; // 스커트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 스커트 메인 화면 관련 초기화 부분 끝
   // ------ 2차 메인 화면 관련 부분 끝
 
   // ------ 섹션 더보기 화면 관련 부분 시작
   // 신상 더보기 화면 관련 초기화 부분 시작
-  ref.read(newSubMainScrollPositionProvider.notifier).state = 0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(newSubMainProductListProvider.notifier).reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
-  ref.read(newSubMainSortButtonProvider.notifier).state = ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(newSubMainScrollPositionProvider.notifier).state =
+      0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(newSubMainProductListProvider.notifier)
+      .reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
+  ref.read(newSubMainSortButtonProvider.notifier).state =
+      ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 신상 더보기 화면 관련 초기화 부분 끝
 
   // 최고 더보기 화면 관련 초기화 부분 시작
-  ref.read(bestSubMainScrollPositionProvider.notifier).state = 0.0; // 최고 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(bestSubMainProductListProvider.notifier).reset(); // 최고 더보기 화면 내 상품 데이터를 초기화
-  ref.read(bestSubMainSortButtonProvider.notifier).state = ''; // 최고 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(bestSubMainScrollPositionProvider.notifier).state =
+      0.0; // 최고 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(bestSubMainProductListProvider.notifier)
+      .reset(); // 최고 더보기 화면 내 상품 데이터를 초기화
+  ref.read(bestSubMainSortButtonProvider.notifier).state =
+      ''; // 최고 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 최고 더보기 화면 관련 초기화 부분 끝
 
   // 할인 더보기 화면 관련 초기화 부분 시작
-  ref.read(saleSubMainScrollPositionProvider.notifier).state = 0.0; // 할인 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(saleSubMainProductListProvider.notifier).reset(); // 할인 더보기 화면 내 상품 데이터를 초기화
-  ref.read(saleSubMainSortButtonProvider.notifier).state = ''; // 할인 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(saleSubMainScrollPositionProvider.notifier).state =
+      0.0; // 할인 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(saleSubMainProductListProvider.notifier)
+      .reset(); // 할인 더보기 화면 내 상품 데이터를 초기화
+  ref.read(saleSubMainSortButtonProvider.notifier).state =
+      ''; // 할인 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 할인 더보기 화면 관련 초기화 부분 끝
 
   // 봄 더보기 화면 관련 초기화 부분 시작
-  ref.read(springSubMainScrollPositionProvider.notifier).state = 0.0; // 봄 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(springSubMainProductListProvider.notifier).reset(); // 봄 더보기 화면 내 상품 데이터를 초기화
-  ref.read(springSubMainSortButtonProvider.notifier).state = ''; // 봄 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(springSubMainScrollPositionProvider.notifier).state =
+      0.0; // 봄 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(springSubMainProductListProvider.notifier)
+      .reset(); // 봄 더보기 화면 내 상품 데이터를 초기화
+  ref.read(springSubMainSortButtonProvider.notifier).state =
+      ''; // 봄 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 봄 더보기 화면 관련 초기화 부분 끝
 
   // 여름 더보기 화면 관련 초기화 부분 시작
-  ref.read(summerSubMainScrollPositionProvider.notifier).state = 0.0; // 여름 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(summerSubMainProductListProvider.notifier).reset(); // 여름 더보기 화면 내 상품 데이터를 초기화
-  ref.read(summerSubMainSortButtonProvider.notifier).state = ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(summerSubMainScrollPositionProvider.notifier).state =
+      0.0; // 여름 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(summerSubMainProductListProvider.notifier)
+      .reset(); // 여름 더보기 화면 내 상품 데이터를 초기화
+  ref.read(summerSubMainSortButtonProvider.notifier).state =
+      ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 여름 더보기 화면 관련 초기화 부분 끝
 
   // 가을 더보기 화면 관련 초기화 부분 시작
-  ref.read(autumnSubMainScrollPositionProvider.notifier).state = 0.0; // 가을 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(autumnSubMainProductListProvider.notifier).reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
-  ref.read(autumnSubMainSortButtonProvider.notifier).state = ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(autumnSubMainScrollPositionProvider.notifier).state =
+      0.0; // 가을 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(autumnSubMainProductListProvider.notifier)
+      .reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
+  ref.read(autumnSubMainSortButtonProvider.notifier).state =
+      ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 가을 더보기 화면 관련 초기화 부분 끝
 
   // 겨울 더보기 화면 관련 초기화 부분 시작
-  ref.read(winterSubMainScrollPositionProvider.notifier).state = 0.0; // 겨울 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(winterSubMainProductListProvider.notifier).reset(); // 겨울 더보기 화면 내 상품 데이터를 초기화
-  ref.read(winterSubMainSortButtonProvider.notifier).state = ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+  ref.read(winterSubMainScrollPositionProvider.notifier).state =
+      0.0; // 겨울 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref
+      .read(winterSubMainProductListProvider.notifier)
+      .reset(); // 겨울 더보기 화면 내 상품 데이터를 초기화
+  ref.read(winterSubMainSortButtonProvider.notifier).state =
+      ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 겨울 더보기 화면 관련 초기화 부분 끝
   // ------ 섹션 더보기 화면 관련 부분 시작
-
 }
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직
 // buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
 // 가로로 스크롤 가능한 문서 리스트를 생성하는 함수. 문서 클릭 시 설정된 동작을 실행함.
-Widget buildHorizontalDocumentsList(WidgetRef ref, List<ProductContent> products, BuildContext context, String category, ScrollController horizontalScrollViewScrollController) {
+Widget buildHorizontalDocumentsList(
+    WidgetRef ref,
+    List<ProductContent> products,
+    BuildContext context,
+    String category,
+    ScrollController horizontalScrollViewScrollController) {
   // ProductInfoDetailScreenNavigation 클래스 인스턴스를 생성하여 제품 정보 상세 화면 네비게이션을 설정함.
   final productInfo = ProductInfoDetailScreenNavigation(ref, category);
 
@@ -543,7 +717,10 @@ Widget buildHorizontalDocumentsList(WidgetRef ref, List<ProductContent> products
       scrollDirection: Axis.horizontal, // 스크롤 방향을 가로로 설정
       child: Row(
         // 각 제품에 대해 buildProdFirestoreDetailDocument 함수를 호출하여 가로로 나열된 문서 리스트를 생성함.
-        children: products.map((product) => productInfo.buildProdFirestoreDetailDocument(context, product)).toList(),
+        children: products
+            .map((product) =>
+                productInfo.buildProdFirestoreDetailDocument(context, product))
+            .toList(),
       ),
     ),
   );
@@ -611,12 +788,8 @@ class ProductInfoDetailScreenNavigation {
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
-      ref
-          .read(colorSelectionIndexProvider.notifier)
-          .state = null;
-      ref
-          .read(sizeSelectionProvider.notifier)
-          .state = null;
+      ref.read(colorSelectionIndexProvider.notifier).state = null;
+      ref.read(sizeSelectionProvider.notifier).state = null;
     });
 
     // 상품의 문서명을 로그로 출력함. - 해당 로그값으로, 상세화면 내 데이터와 파이어베이스 내 문서의 데이터 일치성을 확인하고자 하는 부분
@@ -624,8 +797,8 @@ class ProductInfoDetailScreenNavigation {
   }
 
   // Firestore에서 상세한 문서 정보를 빌드하여 UI에 구현하는 위젯.
-  Widget buildProdFirestoreDetailDocument(BuildContext context,
-      ProductContent product) {
+  Widget buildProdFirestoreDetailDocument(
+      BuildContext context, ProductContent product) {
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
       onTap: () {
@@ -655,8 +828,8 @@ class ProductInfoDetailScreenNavigation {
             // 제품 썸네일을 표시함.
             if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
               Center(
-                child: Image.network(
-                    product.thumbnail!, width: 100, fit: BoxFit.cover),
+                child: Image.network(product.thumbnail!,
+                    width: 100, fit: BoxFit.cover),
               ),
             SizedBox(height: 5),
             // 제품 간단한 소개를 표시함.
@@ -688,15 +861,18 @@ class ProductInfoDetailScreenNavigation {
                   children: [
                     Text(
                       '${product.discountPrice!.toStringAsFixed(0)}원',
-                      style: TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 8),
                     // 할인율을 빨간색으로 표시함.
                     if (product.discountPercent != null)
                       Text(
                         '${product.discountPercent!.toStringAsFixed(0)}%',
-                        style: TextStyle(fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold),
                       ),
                   ],
                 ),
@@ -706,11 +882,10 @@ class ProductInfoDetailScreenNavigation {
             if (product.colors != null)
               Row(
                 children: product.colors!
-                    .map((color) =>
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2),
-                      child: Image.network(color, width: 13, height: 13),
-                    ))
+                    .map((color) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 2),
+                          child: Image.network(color, width: 13, height: 13),
+                        ))
                     .toList(),
               ),
           ],
@@ -723,7 +898,8 @@ class ProductInfoDetailScreenNavigation {
 
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 시작
 // ------ buildProductDetails 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
-Widget buildProductDetails(BuildContext context, WidgetRef ref, ProductContent product) {
+Widget buildProductDetails(
+    BuildContext context, WidgetRef ref, ProductContent product) {
   // print('buildProductDetails 호출');
   // print('상품 소개: ${product.briefIntroduction}');
   return SingleChildScrollView(
@@ -733,28 +909,38 @@ Widget buildProductDetails(BuildContext context, WidgetRef ref, ProductContent p
       crossAxisAlignment: CrossAxisAlignment.start,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
-        SizedBox(height: 10), // 상단 여백을 10으로 설정.
-        buildProductIntroduction(product), // 제품 소개 부분을 표시하는 위젯을 호출.
-        SizedBox(height: 10), // 제품 소개와 다음 섹션 사이의 여백을 10으로 설정.
+        SizedBox(height: 10),
+        // 상단 여백을 10으로 설정.
+        buildProductIntroduction(product),
+        // 제품 소개 부분을 표시하는 위젯을 호출.
+        SizedBox(height: 10),
+        // 제품 소개와 다음 섹션 사이의 여백을 10으로 설정.
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
           child: Divider(), // 세로 구분선을 추가.
         ),
-        SizedBox(height: 20), // 구분선 아래 여백을 20으로 설정.
-        buildPriceInformation(product), // 가격 정보 부분을 표시하는 위젯을 호출.
-        buildColorAndSizeSelection(context, ref, product), // 색상 및 사이즈 선택 부분을 표시하는 위젯을 호출.
-        SizedBox(height: 30), // 여백을 30으로 설정.
+        SizedBox(height: 20),
+        // 구분선 아래 여백을 20으로 설정.
+        buildPriceInformation(product),
+        // 가격 정보 부분을 표시하는 위젯을 호출.
+        buildColorAndSizeSelection(context, ref, product),
+        // 색상 및 사이즈 선택 부분을 표시하는 위젯을 호출.
+        SizedBox(height: 30),
+        // 여백을 30으로 설정.
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
           child: Divider(), // 세로 구분선을 추가.
         ),
-        SizedBox(height: 10), // 구분선 아래 여백을 10으로 설정.
+        SizedBox(height: 10),
+        // 구분선 아래 여백을 10으로 설정.
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
           child: Divider(), // 세로 구분선을 추가.
         ),
-        SizedBox(height: 30), // 여백을 30으로 설정.
-        buildPurchaseButtons(context, ref, product), // 구매 버튼 부분을 표시하는 위젯을 호출.
+        SizedBox(height: 30),
+        // 여백을 30으로 설정.
+        buildPurchaseButtons(context, ref, product),
+        // 구매 버튼 부분을 표시하는 위젯을 호출.
       ],
     ),
   );
@@ -789,7 +975,11 @@ Widget buildPriceInformation(ProductContent product) {
             if (product.originalPrice != null) // 원래 가격이 설정되어 있으면 표시.
               Text('판매가', style: TextStyle(fontSize: 14)),
             SizedBox(width: 50), // '판매가'와 가격 사이의 간격을 50으로 설정.
-            Text('${product.originalPrice ?? "정보 없음"}', style: TextStyle(fontSize: 14, decoration: TextDecoration.lineThrough, fontWeight: FontWeight.bold)),
+            Text('${product.originalPrice ?? "정보 없음"}',
+                style: TextStyle(
+                    fontSize: 14,
+                    decoration: TextDecoration.lineThrough,
+                    fontWeight: FontWeight.bold)),
             // 원래 가격을 표시하고, 정보가 없으면 '정보 없음'을 표시. 가격은 취소선 처리.
           ],
         ),
@@ -797,9 +987,14 @@ Widget buildPriceInformation(ProductContent product) {
         Row(
           children: [
             if (product.discountPrice != null) // 할인 가격이 설정되어 있으면 표시.
-              Text('할인판매가', style: TextStyle(fontSize: 14, color: DISCOUNT_COLOR)),
+              Text('할인판매가',
+                  style: TextStyle(fontSize: 14, color: DISCOUNT_COLOR)),
             SizedBox(width: 26), // '할인판매가'와 가격 사이의 간격을 26으로 설정.
-            Text('${product.discountPrice ?? "정보 없음"}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: DISCOUNT_COLOR)),
+            Text('${product.discountPrice ?? "정보 없음"}',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: DISCOUNT_COLOR)),
             // 할인된 가격을 표시하고, 정보가 없으면 '정보 없음'을 표시. 할인가는 강조된 색상으로 표시.
           ],
         ),
@@ -810,7 +1005,8 @@ Widget buildPriceInformation(ProductContent product) {
 // ------ buildPriceInformation 위젯의 구현 끝
 
 // ------ buildColorAndSizeSelection 위젯 시작: 색상 및 사이즈 선택 부분을 구현.
-Widget buildColorAndSizeSelection(BuildContext context, WidgetRef ref, ProductContent product) {
+Widget buildColorAndSizeSelection(
+    BuildContext context, WidgetRef ref, ProductContent product) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
     child: Column(
@@ -824,23 +1020,33 @@ Widget buildColorAndSizeSelection(BuildContext context, WidgetRef ref, ProductCo
             Expanded(
               // 드롭다운 버튼을 화면 너비에 맞게 확장.
               child: DropdownButton<String>(
-                isExpanded: true, // 드롭다운 버튼의 너비를 최대로 확장.
-                value: ref.watch(colorSelectionIndexProvider), // 선택된 색상 값을 가져옴.
-                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 표시되는 텍스트.
+                isExpanded: true,
+                // 드롭다운 버튼의 너비를 최대로 확장.
+                value: ref.watch(colorSelectionIndexProvider),
+                // 선택된 색상 값을 가져옴.
+                hint: Text('- [필수] 옵션을 선택해 주세요 -'),
+                // 선택하지 않았을 때 표시되는 텍스트.
                 onChanged: (newValue) {
-                  ref.read(colorSelectionIndexProvider.notifier).state = newValue!;
+                  ref.read(colorSelectionIndexProvider.notifier).state =
+                      newValue!;
                   // 새로운 색상이 선택되면 상태를 업데이트.
                 },
-                items: product.colorOptions?.map((option) => DropdownMenuItem<String>(
-                  value: option['url'], // 각 옵션의 URL을 값으로 사용.
-                  child: Row(
-                    children: [
-                      Image.network(option['url'], width: 20, height: 20), // 색상을 나타내는 이미지를 표시.
-                      SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
-                      Text(option['text']), // 색상의 텍스트 설명을 표시.
-                    ],
-                  ),
-                )).toList(),
+                items: product.colorOptions
+                    ?.map((option) => DropdownMenuItem<String>(
+                          value: option['url'], // 각 옵션의 URL을 값으로 사용.
+                          child: Row(
+                            children: [
+                              Image.network(option['url'],
+                                  width: 20, height: 20),
+                              // 색상을 나타내는 이미지를 표시.
+                              SizedBox(width: 8),
+                              // 이미지와 텍스트 사이의 간격을 8로 설정.
+                              Text(option['text']),
+                              // 색상의 텍스트 설명을 표시.
+                            ],
+                          ),
+                        ))
+                    .toList(),
               ),
             ),
           ],
@@ -855,17 +1061,22 @@ Widget buildColorAndSizeSelection(BuildContext context, WidgetRef ref, ProductCo
             Expanded(
               // 드롭다운 버튼을 화면 너비에 맞게 확장.
               child: DropdownButton<String>(
-                isExpanded: true, // 드롭다운 버튼의 너비를 최대로 확장.
-                value: ref.watch(sizeSelectionProvider), // 선택된 사이즈 값을 가져옴.
-                hint: Text('- [필수] 옵션을 선택해 주세요 -'), // 선택하지 않았을 때 표시되는 텍스트.
+                isExpanded: true,
+                // 드롭다운 버튼의 너비를 최대로 확장.
+                value: ref.watch(sizeSelectionProvider),
+                // 선택된 사이즈 값을 가져옴.
+                hint: Text('- [필수] 옵션을 선택해 주세요 -'),
+                // 선택하지 않았을 때 표시되는 텍스트.
                 onChanged: (newValue) {
                   ref.read(sizeSelectionProvider.notifier).state = newValue!;
                   // 새로운 사이즈가 선택되면 상태를 업데이트.
                 },
-                items: product.sizes?.map((size) => DropdownMenuItem<String>(
-                  value: size,
-                  child: Text(size),
-                )).toList(),
+                items: product.sizes
+                    ?.map((size) => DropdownMenuItem<String>(
+                          value: size,
+                          child: Text(size),
+                        ))
+                    .toList(),
               ),
             ),
           ],
@@ -877,7 +1088,8 @@ Widget buildColorAndSizeSelection(BuildContext context, WidgetRef ref, ProductCo
 // ------ buildColorAndSizeSelection 위젯의 구현 끝
 
 // ------ buildPurchaseButtons 위젯 시작: 구매 관련 버튼을 구현.
-Widget buildPurchaseButtons(BuildContext context, WidgetRef ref, ProductContent product) {
+Widget buildPurchaseButtons(
+    BuildContext context, WidgetRef ref, ProductContent product) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
     child: Row(
@@ -886,7 +1098,7 @@ Widget buildPurchaseButtons(BuildContext context, WidgetRef ref, ProductContent 
         Expanded(
           // '장바구니' 버튼을 화면 너비에 맞게 확장.
           child: ElevatedButton(
-            onPressed: () {},  // 장바구니 추가 로직을 구현. (현재는 비어 있음)
+            onPressed: () {}, // 장바구니 추가 로직을 구현. (현재는 비어 있음)
             style: ElevatedButton.styleFrom(
               backgroundColor: BUTTON_COLOR, // 버튼의 배경색을 설정.
               foregroundColor: INPUT_BG_COLOR, // 버튼의 글자색을 설정.
@@ -898,7 +1110,7 @@ Widget buildPurchaseButtons(BuildContext context, WidgetRef ref, ProductContent 
         Expanded(
           // '주문' 버튼을 화면 너비에 맞게 확장.
           child: ElevatedButton(
-            onPressed: () {},  // 주문 로직을 구현. (현재는 비어 있음)
+            onPressed: () {}, // 주문 로직을 구현. (현재는 비어 있음)
             style: ElevatedButton.styleFrom(
               backgroundColor: BUTTON_COLOR, // 버튼의 배경색을 설정.
               foregroundColor: INPUT_BG_COLOR, // 버튼의 글자색을 설정.

@@ -1,4 +1,3 @@
-
 // Firebase 초기화 코드(Firebase와 Flutter 프로젝트가 통합되어 Firebase 서비스를 사용 가능)
 // 이 파일은 FlutterFire CLI에 의해 생성되었습니다. FlutterFire CLI는 Flutter 애플리케이션과 Firebase 서비스를 연동하는데 사용되는 도구입니다.
 // 이 코드는 Firebase 서비스를 애플리케이션에 통합하고 초기화하는 데 필요한 설정을 포함합니다.
@@ -9,12 +8,13 @@
 // Firebase 핵심 기능을 위한 FirebaseOptions 클래스를 임포트합니다.
 // FirebaseOptions 클래스는 Firebase 프로젝트의 구성 정보를 담고 있어, Firebase 서비스를 사용할 때 필요한 설정을 제공합니다.
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+
 // Flutter의 기본 플랫폼 라이브러리에서 필요한 요소들을 임포트합니다.
 // defaultTargetPlatform은 현재 애플리케이션이 실행되고 있는 플랫폼을 알려줍니다.
 // kIsWeb은 애플리케이션이 웹 플랫폼에서 실행되고 있는지 여부를 확인하는 상수입니다.
 // TargetPlatform은 각기 다른 플랫폼(예: iOS, Android)을 구분하는 데 사용되는 열거형(enum)입니다.
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
-
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///

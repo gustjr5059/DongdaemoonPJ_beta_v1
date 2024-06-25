@@ -1,8 +1,8 @@
-
 // Flutter에서 제공하는 Material 디자인 요소를 사용하기 위한 패키지입니다.
 // 이 패키지는 버튼, 카드, 타이포그래피 등의 디자인 요소를 포함하고 있으며,
 // 앱의 기본적인 UI 구성에 필수적입니다.
 import 'package:flutter/material.dart';
+
 // Dart의 비동기 프로그래밍을 지원하는 'dart:async' 라이브러리를 가져옵니다.
 // 이 라이브러리는 Future와 Stream을 통해 비동기 작업을 쉽게 다룰 수 있게 해주며,
 // 네트워크 요청, 파일 I/O, 시간 지연 작업 등에 사용됩니다.
@@ -15,7 +15,6 @@ import 'package:dongdaemoon_beta_v1/common/view/splash2_screen.dart'; // 다음 
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
 import '../const/colors.dart'; // 앱에서 사용할 색상 상수를 정의한 파일을 가져옴.
 
-
 // 스플래시 스크린의 StatefulWidget을 정의함.
 class SplashScreen1 extends StatefulWidget {
   @override
@@ -23,7 +22,8 @@ class SplashScreen1 extends StatefulWidget {
 }
 
 // _SplashScreenState 클래스에서 SingleTickerProviderStateMixin을 사용하여 애니메이션 컨트롤러를 생성함.
-class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen1>
+    with TickerProviderStateMixin {
   late AnimationController _controller; // 애니메이션 컨트롤러를 선언함.
   late Animation<double> _animation; // 애니메이션 값을 저장할 변수를 선언함.
   late AnimationController _loadingController; // 로딩 인디케이터의 회전을 제어하기 위한 컨트롤러
@@ -66,7 +66,8 @@ class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMi
 
     // 1초 후에 SplashScreen2로 화면을 전환함.
     Timer(Duration(seconds: 1), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
     });
   }
 
@@ -75,7 +76,8 @@ class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMi
     // 화면의 UI를 구성함.
     return Scaffold(
       backgroundColor: LOGO_COLOR, // 배경색을 설정함.
-      body: Stack( // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
+      body: Stack(
+        // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
         children: <Widget>[
           Align(
             alignment: Alignment.topCenter, // 상단 중앙에 배치함.
@@ -90,7 +92,8 @@ class _SplashScreenState extends State<SplashScreen1> with TickerProviderStateMi
                 child: Container(
                   width: 130, // 이미지의 너비를 130으로 설정함.
                   height: 130, // 이미지의 높이를 130으로 설정함.
-                  child: Image.asset('asset/img/misc/logo_img/couture_logo_image.png'), // 로고 이미지를 배치함.
+                  child: Image.asset(
+                      'asset/img/misc/logo_img/couture_logo_image.png'), // 로고 이미지를 배치함.
                 ),
               ),
             ),

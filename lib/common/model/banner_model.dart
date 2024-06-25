@@ -1,5 +1,3 @@
-
-
 // 'CommonBannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class CommonBannerImage {
   // 'imageUrl'은 배너 이미지의 URL을 저장하는 변수로, String 타입임.
@@ -22,7 +20,6 @@ class CommonBannerImage {
 // 'AllLargeBannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'AllLargeBannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class AllLargeBannerImage extends CommonBannerImage {
-
   AllLargeBannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'AllLargeBannerImage' 인스턴스를 생성함.
@@ -37,7 +34,6 @@ class AllLargeBannerImage extends CommonBannerImage {
 // 'HomeSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'HomeSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class HomeSmall1BannerImage extends CommonBannerImage {
-
   HomeSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'HomeSmall1BannerImage' 인스턴스를 생성함.
@@ -52,7 +48,6 @@ class HomeSmall1BannerImage extends CommonBannerImage {
 // 'HomeSmall2BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'HomeSmall2BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class HomeSmall2BannerImage extends CommonBannerImage {
-
   HomeSmall2BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'HomeSmall2BannerImage' 인스턴스를 생성함.
@@ -67,7 +62,6 @@ class HomeSmall2BannerImage extends CommonBannerImage {
 // 'HomeSmall3BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'HomeSmall3BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class HomeSmall3BannerImage extends CommonBannerImage {
-
   HomeSmall3BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'HomeSmall3BannerImage' 인스턴스를 생성함.
@@ -84,8 +78,8 @@ class HomeSmall3BannerImage extends CommonBannerImage {
 // 'ShirtMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'ShirtMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스._
 class ShirtMainSmall1BannerImage extends CommonBannerImage {
-
-  ShirtMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  ShirtMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'ShirtMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -99,8 +93,8 @@ class ShirtMainSmall1BannerImage extends CommonBannerImage {
 // 'BlouseMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'BlouseMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class BlouseMainSmall1BannerImage extends CommonBannerImage {
-
-  BlouseMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  BlouseMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'BlouseMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -114,8 +108,8 @@ class BlouseMainSmall1BannerImage extends CommonBannerImage {
 // 'MtmMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'MtmMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class MtmMainSmall1BannerImage extends CommonBannerImage {
-
-  MtmMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  MtmMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'MtmMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -129,8 +123,8 @@ class MtmMainSmall1BannerImage extends CommonBannerImage {
 // 'NeatMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'NeatMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class NeatMainSmall1BannerImage extends CommonBannerImage {
-
-  NeatMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  NeatMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'NeatMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -144,8 +138,8 @@ class NeatMainSmall1BannerImage extends CommonBannerImage {
 // 'PolaMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'PolaMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class PolaMainSmall1BannerImage extends CommonBannerImage {
-
-  PolaMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  PolaMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'PolaMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -159,8 +153,8 @@ class PolaMainSmall1BannerImage extends CommonBannerImage {
 // 'OnepieceMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'OnepieceMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class OnepieceMainSmall1BannerImage extends CommonBannerImage {
-
-  OnepieceMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  OnepieceMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'OnepieceMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -174,8 +168,8 @@ class OnepieceMainSmall1BannerImage extends CommonBannerImage {
 // 'PantsMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'PantsMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class PantsMainSmall1BannerImage extends CommonBannerImage {
-
-  PantsMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  PantsMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'PantsMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -189,8 +183,8 @@ class PantsMainSmall1BannerImage extends CommonBannerImage {
 // 'JeanMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'JeanMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class JeanMainSmall1BannerImage extends CommonBannerImage {
-
-  JeanMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  JeanMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'JeanMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -204,8 +198,8 @@ class JeanMainSmall1BannerImage extends CommonBannerImage {
 // 'SkirtMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'SkirtMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class SkirtMainSmall1BannerImage extends CommonBannerImage {
-
-  SkirtMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  SkirtMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'SkirtMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -219,8 +213,8 @@ class SkirtMainSmall1BannerImage extends CommonBannerImage {
 // 'PaedingMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'PaedingMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class PaedingMainSmall1BannerImage extends CommonBannerImage {
-
-  PaedingMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  PaedingMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'PaedingMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -234,8 +228,8 @@ class PaedingMainSmall1BannerImage extends CommonBannerImage {
 // 'CoatMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'CoatMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class CoatMainSmall1BannerImage extends CommonBannerImage {
-
-  CoatMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  CoatMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'CoatMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
@@ -249,8 +243,8 @@ class CoatMainSmall1BannerImage extends CommonBannerImage {
 // 'CardiganMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'CardiganMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class CardiganMainSmall1BannerImage extends CommonBannerImage {
-
-  CardiganMainSmall1BannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+  CardiganMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'CardiganMainSmall1BannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
