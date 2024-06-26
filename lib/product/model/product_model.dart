@@ -12,6 +12,7 @@ class ProductContent {
   final List<Map<String, dynamic>>? colorOptions; // 추가된 색상 옵션을 저장하는 필드.
   final List<String>? sizes; // 제품의 사이즈 옵션을 저장하는 필드.
   final String? category; // 제품의 카테고리를 저장하는 필드.
+  final List<String>? detailPageImages; // 제품의 상세화면 내 이미지를 저장하는 필드.
   final DocumentSnapshot?
       documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
 
@@ -27,6 +28,7 @@ class ProductContent {
     this.colorOptions,
     this.sizes,
     this.category,
+    this.detailPageImages,
     this.documentSnapshot,
   });
 
@@ -47,6 +49,7 @@ class ProductContent {
         colorOptions: null,
         sizes: null,
         category: null,
+        detailPageImages: null,
         documentSnapshot: doc,
       );
     }
@@ -76,6 +79,14 @@ class ProductContent {
       var size = data['clothes_size$i'];
       if (size is String) {
         sizes.add(size); // 사이즈 데이터를 리스트에 추가함.
+      }
+    }
+
+    List<String> detailPageImages = [];
+    for (int i = 1; i <= 5; i++) {
+      var imageUrl = data['detail_page_image$i'];
+      if (imageUrl is String) {
+        detailPageImages.add(imageUrl);
       }
     }
 
@@ -113,6 +124,8 @@ class ProductContent {
       // 할인율.
       category: data['category'] as String?,
       // 제품의 카테고리.
+      detailPageImages: detailPageImages.isEmpty ? null : detailPageImages,
+      // 제품의 상세화면 내 이미지.
       documentSnapshot: doc, // 문서 스냅샷.
     );
   }

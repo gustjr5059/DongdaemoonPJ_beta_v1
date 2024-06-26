@@ -69,13 +69,31 @@ class _CoatDetailProductScreenState
   late ScrollController
       coatDetailProductScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  late PageController pageController;
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
     super.initState();
+    // StateProvider 초기화
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // getImagePageProvider의 상태를 0으로 초기화함.
+      ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0;
+    });
+
+    // 페이지 컨트롤러를 초기 페이지로 초기화함.
+    pageController = PageController(initialPage: ref.read(getImagePageProvider(widget.fullPath)));
+
+    pageController.addListener(() {
+      // 페이지 컨트롤러의 현재 페이지를 반올림하여 getImagePageProvider 상태에 업데이트함.
+      ref.read(getImagePageProvider(widget.fullPath).notifier).state =
+          pageController.page!.round();
+    });
+
     // ScrollController를 초기화
     coatDetailProductScreenPointScrollController = ScrollController();
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -98,7 +116,9 @@ class _CoatDetailProductScreenState
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(coatDetailScrollPositionProvider.notifier).state = 0;
+        ref.read(coatDetailScrollPositionProvider.notifier).state = 0; // coatDetailScrollPositionProvider의 상태를 0으로 설정
+        ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0; // getImagePageProvider의 상태를 0으로 설정
+        pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
       }
     });
 
@@ -134,6 +154,7 @@ class _CoatDetailProductScreenState
 
     coatDetailProductScreenPointScrollController
         .dispose(); // ScrollController 해제
+    pageController.dispose(); // PageController 해제
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
@@ -217,15 +238,17 @@ class _CoatDetailProductScreenState
                         child: Column(
                           children: [
                             SizedBox(height: 5), // 높이 20으로 간격 설정
+                            // productContent의 상태에 따라 위젯을 빌드.
                             productContent.when(
+                              // 데이터가 로드되었을 때 실행되는 코드 블록.
                               data: (product) {
-                                return buildProductDetails(
-                                    context, ref, product);
+                                // 제품 세부사항을 빌드하여 반환함.
+                                return buildProductDetails(context, ref, product, pageController);
                               },
-                              loading: () =>
-                                  Center(child: CircularProgressIndicator()),
-                              error: (error, _) =>
-                                  Center(child: Text('오류 발생: $error')),
+                              // 로딩 중일 때 실행되는 코드 블록.
+                              loading: () => Center(child: CircularProgressIndicator()),
+                              // 에러가 발생했을 때 실행되는 코드 블록.
+                              error: (error, _) => Center(child: Text('오류 발생: $error')),
                             ),
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],

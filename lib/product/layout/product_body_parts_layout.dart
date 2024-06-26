@@ -1,4 +1,5 @@
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -692,7 +693,22 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(winterSubMainSortButtonProvider.notifier).state =
       ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
   // 겨울 더보기 화면 관련 초기화 부분 끝
-  // ------ 섹션 더보기 화면 관련 부분 시작
+  // ------ 섹션 더보기 화면 관련 부분 끝
+
+  // ------ 상품 상세 화면 관련 초기화 부분 시작
+  ref.read(blouseDetailImagePageProvider.notifier).state = 0; // 블라우스 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(cardiganDetailImagePageProvider.notifier).state = 0; // 가디건 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(coatDetailImagePageProvider.notifier).state = 0; // 코트 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(jeanDetailImagePageProvider.notifier).state = 0; // 청바지 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(mtmDetailImagePageProvider.notifier).state = 0; // 맨투맨 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(neatDetailImagePageProvider.notifier).state = 0; // 니트 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(onepieceDetailImagePageProvider.notifier).state = 0; // 원피스 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(paedingDetailImagePageProvider.notifier).state = 0; // 패딩 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(pantsDetailImagePageProvider.notifier).state = 0; // 팬츠 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(polaDetailImagePageProvider.notifier).state = 0; // 폴라티 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(shirtDetailImagePageProvider.notifier).state = 0; // 티셔츠 상세 화면 내 이미지 부분 관련 초기화
+  ref.read(skirtDetailImagePageProvider.notifier).state = 0; // 스커트 상세 화면 내 이미지 부분 관련 초기화
+  // ------ 상품 상세 화면 관련 초기화 부분 끝
 }
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
@@ -750,67 +766,93 @@ class ProductInfoDetailScreenNavigation {
       case "티셔츠":
         appBarTitle = '티셔츠 상세';
         detailScreen = ShirtDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "블라우스":
         appBarTitle = '블라우스 상세';
         detailScreen = BlouseDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "가디건":
         appBarTitle = '가디건 상세';
         detailScreen = CardiganDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "코트":
         appBarTitle = '코트 상세';
         detailScreen = CoatDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "청바지":
         appBarTitle = '청바지 상세';
         detailScreen = JeanDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "맨투맨":
         appBarTitle = '맨투맨 상세';
-        detailScreen =
-            MtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        detailScreen = MtmDetailProductScreen(
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "니트":
         appBarTitle = '니트 상세';
         detailScreen = NeatDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "원피스":
         appBarTitle = '원피스 상세';
         detailScreen = OnepieceDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "패딩":
         appBarTitle = '패딩 상세';
         detailScreen = PaedingDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "팬츠":
         appBarTitle = '팬츠 상세';
         detailScreen = PantsDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "폴라티":
         appBarTitle = '폴라티 상세';
         detailScreen = PolaDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       case "스커트":
         appBarTitle = '스커트 상세';
         detailScreen = SkirtDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
         break;
       default:
         appBarTitle = '티셔츠 상세';
         detailScreen = ShirtDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
+          fullPath: product.docId,
+          title: appBarTitle,
+        );
     }
 
     // 디버그 출력으로 타이틀 확인
@@ -862,7 +904,7 @@ class ProductInfoDetailScreenNavigation {
               children: [
                 // 제품 썸네일을 표시함.
                 if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
-                // 썸네일이 null이 아니고 빈 문자열이 아닐 때만 실행
+                  // 썸네일이 null이 아니고 빈 문자열이 아닐 때만 실행
                   Center(
                     // 썸네일을 가운데 정렬
                     child: Stack(
@@ -879,20 +921,28 @@ class ProductInfoDetailScreenNavigation {
                           child: IconButton(
                             // 좋아요 상태에 따라 다른 아이콘을 표시
                             icon: Icon(
-                              ref.watch(wishlistProvider).contains(product.docId)
+                              ref
+                                      .watch(wishlistProvider)
+                                      .contains(product.docId)
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               // 좋아요 상태에 따라 아이콘 색상을 변경
-                              color: ref.watch(wishlistProvider).contains(product.docId)
+                              color: ref
+                                      .watch(wishlistProvider)
+                                      .contains(product.docId)
                                   ? Colors.red
                                   : Colors.grey,
                             ),
                             // 아이콘 버튼을 클릭했을 때 실행되는 함수
                             onPressed: () {
                               // 찜 목록에 상품을 추가하거나 제거하는 함수 호출
-                              ref.read(wishlistProvider.notifier).toggleItem(product.docId);
+                              ref
+                                  .read(wishlistProvider.notifier)
+                                  .toggleItem(product.docId);
                               // 찜 목록에 상품이 추가되었는지 확인
-                              if (ref.read(wishlistProvider).contains(product.docId)) {
+                              if (ref
+                                  .read(wishlistProvider)
+                                  .contains(product.docId)) {
                                 // 찜 목록에 상품이 추가되었음을 알리는 스낵바 표시
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('상품이 찜 목록에 담겼습니다.')),
@@ -978,8 +1028,8 @@ class ProductInfoDetailScreenNavigation {
 
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 시작
 // ------ buildProductDetails 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
-Widget buildProductDetails(
-    BuildContext context, WidgetRef ref, ProductContent product) {
+Widget buildProductDetails(BuildContext context, WidgetRef ref,
+    ProductContent product, PageController pageController) {
   // print('buildProductDetails 호출');
   // print('상품 소개: ${product.briefIntroduction}');
   return SingleChildScrollView(
@@ -989,6 +1039,8 @@ Widget buildProductDetails(
       crossAxisAlignment: CrossAxisAlignment.start,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
+        buildProductImageSlider(product, ref, pageController, product.docId),
+        // 이미지 슬라이더를 제일 위에 추가
         SizedBox(height: 10),
         // 상단 여백을 10으로 설정.
         buildProductIntroduction(product),
@@ -1026,6 +1078,64 @@ Widget buildProductDetails(
   );
 }
 // ------ buildProductDetails 위젯의 구현 끝
+
+// ------ buildProductImageSlider 위젯 시작: 제품 이미지 부분을 구현.
+Widget buildProductImageSlider(ProductContent product, WidgetRef ref,
+    PageController pageController, String productId) {
+  // productId를 사용하여 pageProvider를 가져옴.
+  final pageProvider = getImagePageProvider(productId);
+  return Column(
+    children: [
+      // CarouselSlider 위젯을 사용하여 이미지를 슬라이드 형태로 보여줌.
+      CarouselSlider(
+        options: CarouselOptions(
+          height: 400.0,
+          viewportFraction: 1.0,
+          // 페이지가 변경될 때 호출되는 함수.
+          onPageChanged: (index, reason) {
+            // pageProvider의 상태를 변경.
+            ref.read(pageProvider.notifier).state = index;
+          },
+        ),
+        // product.detailPageImages를 반복하여 이미지 위젯을 생성.
+        items: product.detailPageImages?.map((image) {
+          return Builder(
+            builder: (BuildContext context) {
+              // 네트워크에서 이미지를 불러와서 보여줌.
+              return Image.network(image,
+                  fit: BoxFit.cover, width: MediaQuery.of(context).size.width);
+            },
+          );
+        }).toList(),
+      ),
+      // 페이지 인디케이터를 Row 위젯으로 생성.
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        // product.detailPageImages의 각 항목을 반복하여 인디케이터를 생성함.
+        children: product.detailPageImages?.asMap().entries.map((entry) {
+          return GestureDetector(
+            // 인디케이터를 클릭하면 해당 페이지로 이동함.
+            onTap: () => pageController.jumpToPage(entry.key),
+            child: Container(
+              width: 12.0,
+              height: 12.0,
+              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                // 현재 페이지를 기준으로 인디케이터 색상을 변경함.
+                color: ref.watch(pageProvider) == entry.key
+                    ? Color.fromRGBO(0, 0, 0, 0.9)
+                    : Color.fromRGBO(0, 0, 0, 0.4),
+              ),
+            ),
+          );
+        }).toList() ??
+            [],
+      ),
+    ],
+  );
+}
+// ------ buildProductImageSlider 위젯 끝: 제품 이미지 부분을 구현.
 
 // ------ buildProductIntroduction 위젯 시작: 제품 소개 부분을 구현.
 Widget buildProductIntroduction(ProductContent product) {

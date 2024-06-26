@@ -481,12 +481,28 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       12: '가디건',
     };
 
+    final Map<int, String> detailImagePathMap = {
+      1: 'shirt',
+      2: 'blouse',
+      3: 'mtm',
+      4: 'neat',
+      5: 'pola',
+      6: 'onepiece',
+      7: 'pants',
+      8: 'jean',
+      9: 'skirt',
+      10: 'paeding',
+      11: 'coat',
+      12: 'cardigan',
+    };
+
     for (int i = 1; i <= 12; i++) {
       String docId = 'a$i';
       DocumentReference docRef = firestore.collection('couturier').doc(docId);
       String briefIntroduction = briefIntroductionMap[i] ?? '해당 상품은 설명이 없습니다.';
       String category = categoryMap[i] ?? '';
       String categoryText = categoryTextMap[i] ?? '해당 상품은 카테고리가 없습니다.';
+      String detailImagePath = detailImagePathMap[i] ?? '';
 
       for (int j = 1; j <= 7; j++) {
         String subCollectionId = 'a${i}b$j';
@@ -501,6 +517,16 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
 
           String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
 
+          // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
+          // batch.update(subDocRef, {
+          //   'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+          //   'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+          //   'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+          //   'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+          //   'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+          // });
+
+          // 해당 필드값으로 세팅하는 매서드 (SetOptions(merge: true)); // merge 옵션 사용을 해서 기존것이 날라가지않고 유지됨)
           batch.set(subDocRef, {
             'brief_introduction': briefIntroduction,
             'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
@@ -517,11 +543,11 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
             'color3_text': 'lavender',
             'color4_text': 'pink',
             'color5_text': 'yellow',
-            'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm1.png?alt=media&token=979c896f-29ba-4739-9725-5e3d84ad48af',
-            'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm2.png?alt=media&token=2a2b915d-3d40-4ce6-8c92-0e4f1f64e6fb',
-            'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm3.png?alt=media&token=db3c8ce7-81e2-4391-81b4-df9d475e201f',
-            'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm4.png?alt=media&token=9ed3622d-c1c1-4366-bd78-23d33bc6f497',
-            'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fflutter%2Fmtm5.png?alt=media&token=b220aa12-960f-4c67-811e-7c3cd4ceb073',
+            'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+            'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+            'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+            'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+            'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
             'discount_percent': discountPercent,
             'discount_price': discountPrice,
             'original_price': originalPrice,
