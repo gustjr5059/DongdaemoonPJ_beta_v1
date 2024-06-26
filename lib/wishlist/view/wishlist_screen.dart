@@ -54,6 +54,7 @@ import '../../../common/provider/common_future_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../product/model/product_model.dart';
 import '../provider/wishlist_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -212,73 +213,92 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
-    // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
-    // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
-    // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
+
+    // List<ProductContent> wishlistItems = ref.watch(wishlistProvider);
+
     return Scaffold(
       body: Stack(
         children: [
           CustomScrollView(
-            controller: wishlistScreenPointScrollController, // 스크롤 컨트롤러 연결
+            controller: wishlistScreenPointScrollController,
             slivers: <Widget>[
-              // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
               SliverAppBar(
-                // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
                 automaticallyImplyLeading: false,
-                floating: true,
-                // 스크롤 시 SliverAppBar가 빠르게 나타남.
+                floating: false,
                 pinned: true,
-                // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 120.0,
-                // 확장 높이 설정
-                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '찜 목록',
-                    leadingType: LeadingType.none,
-                    // 버튼 없음.
-                    buttonCase: 1, // 1번 케이스 (버튼 없음)
-                  ),
+                expandedHeight: 0.0,
+                title: buildCommonAppBar(
+                  context: context,
+                  ref: ref,
+                  title: '찜 목록',
+                  leadingType: LeadingType.none,
+                  buttonCase: 1,
                 ),
                 leading: null,
-                // 좌측 상단의 메뉴 버튼 등을 제거함.
-                // iOS에서는 AppBar의 배경색을 사용
-                // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 backgroundColor: BUTTON_COLOR,
               ),
-              // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
-                            Text('찜 목록 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
-                ),
+                padding: EdgeInsets.only(top: 10),
+                // sliver: SliverList(
+                //   delegate: SliverChildBuilderDelegate(
+                //         (BuildContext context, int index) {
+                //       ProductContent item = wishlistItems[index];
+                //       bool isEven = index % 2 == 0;
+                //
+                //       return CommonCardView(
+                //         backgroundColor:
+                //         isEven ? LIGHT_YELLOW_COLOR : BEIGE_COLOR,
+                //         content: Row(
+                //           children: [
+                //             if (item.thumbnail != null)
+                //               Image.network(
+                //                 item.thumbnail!,
+                //                 width: 100,
+                //                 height: 100,
+                //                 fit: BoxFit.cover,
+                //               ),
+                //             SizedBox(width: 10),
+                //             Expanded(
+                //               child: Column(
+                //                 crossAxisAlignment: CrossAxisAlignment.start,
+                //                 children: [
+                //                   Text(item.briefIntroduction ?? 'No description'),
+                //                   Text('Original: ${item.originalPrice ?? 0}'),
+                //                   Text('Discount: ${item.discountPrice ?? 0}'),
+                //                   Text('Discount Percent: ${item.discountPercent ?? 0}%'),
+                //                   if (item.colorOptions != null)
+                //                     ...item.colorOptions!.map((option) {
+                //                       return Text('Color: ${option['text']}');
+                //                     }).toList(),
+                //                 ],
+                //               ),
+                //             ),
+                //             Column(
+                //               children: [
+                //                 ElevatedButton(
+                //                   onPressed: () {
+                //                     // 장바구니 담기 기능 추가
+                //                   },
+                //                   child: Text('장바구니 담기'),
+                //                 ),
+                //                 ElevatedButton(
+                //                   onPressed: () {
+                //                     // 삭제 기능 추가
+                //                   },
+                //                   child: Text('삭제'),
+                //                 ),
+                //               ],
+                //             ),
+                //           ],
+                //         ),
+                //       );
+                //     },
+                //     childCount: wishlistItems.length,
+                //   ),
+                // ),
               ),
             ],
           ),
-          // buildTopButton 함수는 주어진 context와 wishlistScreenPointScrollController를 사용하여
-          // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
           buildTopButton(context, wishlistScreenPointScrollController),
         ],
       ),
@@ -286,11 +306,90 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          5),
     );
-    // ------ 화면구성 끝
   }
-// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-// ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
-// _WishlistScreenState 클래스 끝
+//     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
+//     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
+//     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
+//     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
+//     return Scaffold(
+//       body: Stack(
+//         children: [
+//           CustomScrollView(
+//             controller: wishlistScreenPointScrollController, // 스크롤 컨트롤러 연결
+//             slivers: <Widget>[
+//               // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
+//               SliverAppBar(
+//                 // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
+//                 automaticallyImplyLeading: false,
+//                 floating: false,
+//                 // 스크롤 시 SliverAppBar가 빠르게 나타남.
+//                 pinned: true,
+//                 // 스크롤 다운시 AppBar가 상단에 고정됨.
+//                 expandedHeight: 0.0,
+//                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
+//                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+//                 title: buildCommonAppBar(
+//                   // 공통 AppBar 빌드
+//                   context: context,
+//                   // 현재 context 전달
+//                   ref: ref,
+//                   // 참조(ref) 전달
+//                   title: '찜 목록',
+//                   // AppBar의 제목을 '찜 목록'로 설정
+//                   leadingType: LeadingType.none,
+//                   // 버튼 없음.
+//                   buttonCase: 1, // 1번 케이스 (버튼 없음)
+//                 ),
+//                 leading: null,
+//                 // 좌측 상단의 메뉴 버튼 등을 제거함.
+//                 // iOS에서는 AppBar의 배경색을 사용
+//                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
+//                 backgroundColor: BUTTON_COLOR,
+//               ),
+//               // 실제 컨텐츠를 나타내는 슬리버 리스트
+//               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+//               SliverPadding(
+//                 padding: EdgeInsets.only(top: 5),
+//                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+//                 sliver: SliverList(
+//                   delegate: SliverChildBuilderDelegate(
+//                     (BuildContext context, int index) {
+//                       return Padding(
+//                         // 각 항목의 좌우 간격을 4.0으로 설정함.
+//                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
+//                         child: Column(
+//                           children: [
+//                             SizedBox(height: 5), // 높이 20으로 간격 설정
+//                             Text('찜 목록 내용'),
+//                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+//                           ],
+//                         ),
+//                       );
+//                     },
+//                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           // buildTopButton 함수는 주어진 context와 wishlistScreenPointScrollController를 사용하여
+//           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+//           buildTopButton(context, wishlistScreenPointScrollController),
+//         ],
+//       ),
+//       bottomNavigationBar: buildCommonBottomNavigationBar(
+//           ref.watch(tabIndexProvider),
+//           ref,
+//           context,
+//           5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+//     );
+//     // ------ 화면구성 끝
+//   }
+// // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+// // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
+// }
+// }
+// // _WishlistScreenState 클래스 끝

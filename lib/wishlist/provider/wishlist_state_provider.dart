@@ -6,6 +6,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../product/model/product_model.dart';
+
 // 찜 목록 화면에서 화면 자체 스크롤로 이동환 위치를 저장하는 StateProvider
 final wishlistScrollPositionProvider = StateProvider<double>((ref) => 0);
 
@@ -22,3 +24,25 @@ final wishlistScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 // -------- wishlist_screen.dart 관련 ScrollControllerProvider 끝
+
+
+// 찜 목록 상태 관리를 위한 프로바이더 추가
+final wishlistProvider = StateNotifierProvider<WishlistNotifier, Set<String>>((ref) {
+  return WishlistNotifier();
+});
+
+class WishlistNotifier extends StateNotifier<Set<String>> {
+  WishlistNotifier() : super({});
+
+  void toggleItem(String productId) {
+    if (state.contains(productId)) {
+      state = Set.from(state)..remove(productId);
+    } else {
+      state = Set.from(state)..add(productId);
+    }
+  }
+
+  bool isWished(String productId) {
+    return state.contains(productId);
+  }
+}
