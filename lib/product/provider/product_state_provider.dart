@@ -90,30 +90,30 @@ final autumnSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 final winterSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 
 // ------- 상품 상세 화면 관련 StateProvider 시작
-// 티셔츠 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final shirtDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 블라우스 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final blouseDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 맨투맨 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final mtmDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 니트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final neatDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 폴라티 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final polaDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 원피스 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final onepieceDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 팬츠 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final pantsDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 청바지 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final jeanDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 스커트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final skirtDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 패딩 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final paedingDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 코트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final coatDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// 가디건 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-final cardiganDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 티셔츠 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final shirtDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 블라우스 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final blouseDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 맨투맨 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final mtmDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 니트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final neatDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 폴라티 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final polaDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 원피스 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final onepieceDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 팬츠 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final pantsDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 청바지 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final jeanDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 스커트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final skirtDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 패딩 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final paedingDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 코트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final coatDetailImagePageProvider = StateProvider<int>((ref) => 0);
+// // 가디건 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
+// final cardiganDetailImagePageProvider = StateProvider<int>((ref) => 0);
 
 // 각 카테고리별 상세화면에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
 final blouseDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
@@ -140,6 +140,10 @@ StateProvider<int> getImagePageProvider(String productId) {
       productId, () => StateProvider<int>((ref) => 0));
 }
 // ------ 상세 화면마다의 각 id를 통해서 이미지 상태관리하는 provider를 케이스로 나눠서 개별적으로 사용하도록 한 로직 부분 끝
+
+// 상품 상세 화면에서 이미지 클릭 시, 상세 이미지 화면으로 이동하는 데 해당 화면 내 이미지 페이지 인덱스 상태관리 관련 StateProvider
+final detailImagePageProvider = StateProvider<int>((ref) => 0);
+
 // ------- 상품 상세 화면 관련 StateProvider 끝
 
 // 색상 선택을 위한 상태 관리용 StateProvider

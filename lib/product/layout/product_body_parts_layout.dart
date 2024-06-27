@@ -40,6 +40,7 @@ import '../view/detail_screen/onepiece_detail_screen.dart'; // 원피스 상세 
 import '../view/detail_screen/paeding_detail_screen.dart'; // 패딩 상세 화면
 import '../view/detail_screen/pants_detail_screen.dart'; // 바지 상세 화면
 import '../view/detail_screen/pola_detail_screen.dart'; // 폴라(터틀넥) 상세 화면
+import '../view/detail_screen/product_detail_original_image_screen.dart';
 import '../view/detail_screen/shirt_detail_screen.dart'; // 셔츠 상세 화면
 import '../view/detail_screen/skirt_detail_screen.dart'; // 스커트 상세 화면
 
@@ -695,20 +696,20 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 겨울 더보기 화면 관련 초기화 부분 끝
   // ------ 섹션 더보기 화면 관련 부분 끝
 
-  // ------ 상품 상세 화면 관련 초기화 부분 시작
-  ref.read(blouseDetailImagePageProvider.notifier).state = 0; // 블라우스 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(cardiganDetailImagePageProvider.notifier).state = 0; // 가디건 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(coatDetailImagePageProvider.notifier).state = 0; // 코트 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(jeanDetailImagePageProvider.notifier).state = 0; // 청바지 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(mtmDetailImagePageProvider.notifier).state = 0; // 맨투맨 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(neatDetailImagePageProvider.notifier).state = 0; // 니트 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(onepieceDetailImagePageProvider.notifier).state = 0; // 원피스 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(paedingDetailImagePageProvider.notifier).state = 0; // 패딩 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(pantsDetailImagePageProvider.notifier).state = 0; // 팬츠 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(polaDetailImagePageProvider.notifier).state = 0; // 폴라티 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(shirtDetailImagePageProvider.notifier).state = 0; // 티셔츠 상세 화면 내 이미지 부분 관련 초기화
-  ref.read(skirtDetailImagePageProvider.notifier).state = 0; // 스커트 상세 화면 내 이미지 부분 관련 초기화
-  // ------ 상품 상세 화면 관련 초기화 부분 끝
+  // // ------ 상품 상세 화면 관련 초기화 부분 시작
+  // ref.read(blouseDetailImagePageProvider.notifier).state = 0; // 블라우스 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(cardiganDetailImagePageProvider.notifier).state = 0; // 가디건 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(coatDetailImagePageProvider.notifier).state = 0; // 코트 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(jeanDetailImagePageProvider.notifier).state = 0; // 청바지 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(mtmDetailImagePageProvider.notifier).state = 0; // 맨투맨 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(neatDetailImagePageProvider.notifier).state = 0; // 니트 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(onepieceDetailImagePageProvider.notifier).state = 0; // 원피스 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(paedingDetailImagePageProvider.notifier).state = 0; // 패딩 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(pantsDetailImagePageProvider.notifier).state = 0; // 팬츠 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(polaDetailImagePageProvider.notifier).state = 0; // 폴라티 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(shirtDetailImagePageProvider.notifier).state = 0; // 티셔츠 상세 화면 내 이미지 부분 관련 초기화
+  // ref.read(skirtDetailImagePageProvider.notifier).state = 0; // 스커트 상세 화면 내 이미지 부분 관련 초기화
+  // // ------ 상품 상세 화면 관련 초기화 부분 끝
 }
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
@@ -1084,6 +1085,7 @@ Widget buildProductImageSlider(ProductContent product, WidgetRef ref,
     PageController pageController, String productId) {
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
+
   return Column(
     children: [
       // CarouselSlider 위젯을 사용하여 이미지를 슬라이드 형태로 보여줌.
@@ -1098,15 +1100,30 @@ Widget buildProductImageSlider(ProductContent product, WidgetRef ref,
           },
         ),
         // product.detailPageImages를 반복하여 이미지 위젯을 생성.
-        items: product.detailPageImages?.map((image) {
+        items: product.detailPageImages?.map((image) { // product.detailPageImages 리스트를 map 함수로 반복
           return Builder(
-            builder: (BuildContext context) {
-              // 네트워크에서 이미지를 불러와서 보여줌.
-              return Image.network(image,
-                  fit: BoxFit.cover, width: MediaQuery.of(context).size.width);
+            builder: (BuildContext context) { // 각 항목에 대한 빌더 함수 정의
+              return GestureDetector( // 터치 제스처를 감지하는 위젯
+                onTap: () { // 터치 시 동작할 함수 정의
+                  Navigator.push( // 새로운 화면으로 이동
+                    context,
+                    MaterialPageRoute( // 페이지 라우트 정의
+                      builder: (_) => ProductDetailOriginalImageScreen( // ProductDetailOriginalImageScreen 화면으로 이동
+                        images: product.detailPageImages!, // 이미지 리스트 전달
+                        initialPage: ref.read(pageProvider), // 초기 페이지 인덱스 전달
+                      ),
+                    ),
+                  );
+                },
+                child: Image.network( // 네트워크 이미지를 보여주는 위젯
+                  image, // 이미지 URL 설정
+                  fit: BoxFit.cover, // 이미지가 컨테이너를 가득 채우도록 설정
+                  width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
+                ),
+              );
             },
           );
-        }).toList(),
+        }).toList(), // 리스트로 변환
       ),
       // 페이지 인디케이터를 Row 위젯으로 생성.
       Row(
