@@ -1,4 +1,3 @@
-// 상세 이미지를 보여주는 화면
 import 'package:carousel_slider/carousel_slider.dart'; // Carousel Slider 패키지 임포트
 import 'package:flutter/cupertino.dart'; // Cupertino 디자인 패키지 임포트
 import 'package:flutter/material.dart'; // Material 디자인 패키지 임포트
@@ -7,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관�
 import '../../../common/const/colors.dart'; // 색상 상수 파일 임포트
 import '../../provider/product_state_provider.dart'; // 상태 프로바이더 파일 임포트
 
-class ProductDetailOriginalImageScreen extends ConsumerWidget { // ConsumerWidget을 상속받는 클래스 선언
+class ProductDetailOriginalImageScreen extends ConsumerStatefulWidget { // ConsumerStatefulWidget을 상속받는 클래스 선언
   final List<String> images; // 이미지 리스트
   final int initialPage; // 초기 페이지 인덱스
 
@@ -17,7 +16,24 @@ class ProductDetailOriginalImageScreen extends ConsumerWidget { // ConsumerWidge
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { // build 메소드 오버라이드
+// _ProductDetailOriginalImageScreenState 클래스의 인스턴스를 생성하는 메서드
+  _ProductDetailOriginalImageScreenState createState() => _ProductDetailOriginalImageScreenState();
+}
+
+class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetailOriginalImageScreen> {
+
+  @override
+  void initState() {
+    super.initState(); // 부모 클래스의 initState 메서드를 호출하여 초기화
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 프레임이 완전히 렌더링된 후에 호출되는 콜백 함수 추가
+      ref.read(detailImagePageProvider.notifier).state = widget.initialPage;
+      // detailImagePageProvider의 상태를 widget의 초기 페이지로 설정
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) { // build 메소드 오버라이드
     final pageIndex = ref.watch(detailImagePageProvider); // 현재 페이지 인덱스를 상태로부터 읽음
 
     return Scaffold(
@@ -28,9 +44,9 @@ class ProductDetailOriginalImageScreen extends ConsumerWidget { // ConsumerWidge
             children: [
               Expanded(
                 child: CarouselSlider.builder( // CarouselSlider.builder를 사용하여 이미지 슬라이더 생성
-                  itemCount: images.length, // 이미지 개수 설정
+                  itemCount: widget.images.length, // 이미지 개수 설정
                   options: CarouselOptions(
-                    initialPage: initialPage, // 초기 페이지 설정
+                    initialPage: widget.initialPage, // 초기 페이지 설정
                     height: MediaQuery.of(context).size.height * 0.9, // 화면의 90% 높이만 차지하도록 설정
                     viewportFraction: 1.0, // 한 번에 하나의 이미지만 보이도록 설정
                     onPageChanged: (index, reason) { // 페이지 변경 시 호출되는 콜백 함수
@@ -39,7 +55,7 @@ class ProductDetailOriginalImageScreen extends ConsumerWidget { // ConsumerWidge
                   ),
                   itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) => // 이미지 빌더 함수
                   Image.network(
-                    images[itemIndex], // 이미지 URL 설정
+                    widget.images[itemIndex], // 이미지 URL 설정
                     fit: BoxFit.contain, // 원본 비율을 유지하고 상하가 더 작게 차지하도록 설정
                     width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
                   ),
@@ -64,7 +80,7 @@ class ProductDetailOriginalImageScreen extends ConsumerWidget { // ConsumerWidge
             right: 0, // 오른쪽에 위치
             child: Center(
               child: Text(
-                '${pageIndex + 1} / ${images.length}', // 현재 페이지와 전체 페이지 수 표시
+                '${pageIndex + 1} / ${widget.images.length}', // 현재 페이지와 전체 페이지 수 표시
                 style: TextStyle(color: INPUT_BG_COLOR, fontSize: 16), // 색상과 크기 설정
               ),
             ),
