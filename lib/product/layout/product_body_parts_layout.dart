@@ -17,6 +17,7 @@ import '../../common/const/colors.dart';
 
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
@@ -1040,32 +1041,30 @@ Widget buildProductDetails(BuildContext context, WidgetRef ref,
       crossAxisAlignment: CrossAxisAlignment.start,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
-        buildProductImageSlider(product, ref, pageController, product.docId),
-        // 이미지 슬라이더를 제일 위에 추가
+        buildProductImageSliderSection(product, ref, pageController, product.docId), // 이미지 슬라이더 섹션
         SizedBox(height: 10),
         // 상단 여백을 10으로 설정.
-        buildProductIntroduction(product),
-        // 제품 소개 부분을 표시하는 위젯을 호출.
-        SizedBox(height: 10),
-        // 제품 소개와 다음 섹션 사이의 여백을 10으로 설정.
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
-          child: Divider(), // 세로 구분선을 추가.
+        CommonCardView(
+          content: buildProductBriefIntroAndPriceInfoSection(context, ref, product), // 제품 소개 및 가격 정보 부분 섹션
+          backgroundColor: BACKGROUND_COLOR, // 앱 배경색과 구분되는 흰색 계열
+          elevation: 4.0, // 그림자 효과
+          margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+          padding: const EdgeInsets.all(1.0), // 카드 내부 여백을 1.0으로 설정.
         ),
-        SizedBox(height: 20),
-        // 구분선 아래 여백을 20으로 설정.
-        buildPriceInformation(product),
-        // 가격 정보 부분을 표시하는 위젯을 호출.
-        buildColorAndSizeSelection(context, ref, product),
-        // 색상 및 사이즈 선택 부분을 표시하는 위젯을 호출.
-        SizedBox(height: 30),
-        // 여백을 30으로 설정.
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
-          child: Divider(), // 세로 구분선을 추가.
-        ),
+        // 제품 소개 부분과 가격 부분을 표시하는 위젯을 호출.
         SizedBox(height: 10),
-        // 구분선 아래 여백을 10으로 설정.
+        // 제품 소개와 가격 부분 다음 섹션 사이의 여백을 10으로 설정.
+        SizedBox(height: 2),
+        // 구분선 아래 여백을 2로 설정.
+        CommonCardView(
+          content: buildProductColorAndSizeSelection(context, ref, product),
+          backgroundColor: BACKGROUND_COLOR, // 앱 배경색과 구분되는 연한 회색 계열
+          elevation: 4.0, // 그림자 효과
+          margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+          padding: const EdgeInsets.all(1.0), // 카드 내부 여백을 1.0으로 설정.
+        ),
+        SizedBox(height: 50),
+        // 구분선 아래 여백을 50으로 설정.
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
           child: Divider(), // 세로 구분선을 추가.
@@ -1081,7 +1080,7 @@ Widget buildProductDetails(BuildContext context, WidgetRef ref,
 // ------ buildProductDetails 위젯의 구현 끝
 
 // ------ buildProductImageSlider 위젯 시작: 제품 이미지 부분을 구현.
-Widget buildProductImageSlider(ProductContent product, WidgetRef ref,
+Widget buildProductImageSliderSection(ProductContent product, WidgetRef ref,
     PageController pageController, String productId) {
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
@@ -1154,65 +1153,70 @@ Widget buildProductImageSlider(ProductContent product, WidgetRef ref,
 }
 // ------ buildProductImageSlider 위젯 끝: 제품 이미지 부분을 구현.
 
-// ------ buildProductIntroduction 위젯 시작: 제품 소개 부분을 구현.
-Widget buildProductIntroduction(ProductContent product) {
+// ------ buildProductBriefIntroAndPriceInfoSection 위젯 시작: 제품 소개 및 가격 정보 부분을 구현.
+Widget buildProductBriefIntroAndPriceInfoSection(
+    BuildContext context, WidgetRef ref, ProductContent product) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    // 좌우 여백을 20으로 설정.
-    child: Text(
-      product.briefIntroduction ?? '제품 정보가 없습니다.',
-      // 제품 소개 내용을 표시하거나, 내용이 없는 경우 기본 텍스트를 표시.
-      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-      // 폰트 크기는 25, 굵은 글씨로 설정.
-    ),
-  );
-}
-// ------ buildProductIntroduction 위젯의 구현 끝
-
-// ------ buildPriceInformation 위젯 시작: 가격 정보 부분을 구현.
-Widget buildPriceInformation(ProductContent product) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 수평 패딩을 20.0으로 설정
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      // 자식 위젯들을 왼쪽 정렬로 배치.
+      crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
       children: [
-        Row(
-          children: [
-            if (product.originalPrice != null) // 원래 가격이 설정되어 있으면 표시.
-              Text('판매가', style: TextStyle(fontSize: 14)),
-            SizedBox(width: 50), // '판매가'와 가격 사이의 간격을 50으로 설정.
-            Text('${product.originalPrice ?? "정보 없음"}',
-                style: TextStyle(
-                    fontSize: 14,
-                    decoration: TextDecoration.lineThrough,
-                    fontWeight: FontWeight.bold)),
-            // 원래 가격을 표시하고, 정보가 없으면 '정보 없음'을 표시. 가격은 취소선 처리.
-          ],
-        ),
-        SizedBox(height: 10), // 가격 정보 간의 수직 간격을 10으로 설정.
-        Row(
-          children: [
-            if (product.discountPrice != null) // 할인 가격이 설정되어 있으면 표시.
-              Text('할인판매가',
-                  style: TextStyle(fontSize: 14, color: DISCOUNT_COLOR)),
-            SizedBox(width: 26), // '할인판매가'와 가격 사이의 간격을 26으로 설정.
-            Text('${product.discountPrice ?? "정보 없음"}',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: DISCOUNT_COLOR)),
-            // 할인된 가격을 표시하고, 정보가 없으면 '정보 없음'을 표시. 할인가는 강조된 색상으로 표시.
-          ],
-        ),
+        // 제품 간단한 소개를 표시함.
+        if (product.briefIntroduction != null) // briefIntroduction이 null이 아닌 경우에만 표시
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0), // 상단 패딩을 8.0으로 설정
+            child: Text(
+              product.briefIntroduction!, // briefIntroduction 내용을 표시
+              style: TextStyle(fontSize: 23), // 글자 크기를 23으로 설정
+              maxLines: 2, // 최대 2줄로 표시
+              overflow: TextOverflow.visible, // 넘치는 텍스트를 표시
+            ),
+          ),
+        SizedBox(height: 15), // 높이 15의 간격을 추가
+        // 원래 가격을 표시함. 소수점은 표시하지 않음.
+        if (product.originalPrice != null) // originalPrice가 null이 아닌 경우에만 표시
+          Padding(
+            padding: const EdgeInsets.only(top: 2.0), // 상단 패딩을 2.0으로 설정
+            child: Text(
+              '${product.originalPrice!.toStringAsFixed(0)}원', // 원래 가격을 표시, 소수점 없음
+              style: TextStyle(
+                fontSize: 18, // 글자 크기를 18로 설정
+                decoration: TextDecoration.lineThrough, // 취소선을 추가
+                color: Colors.grey[500], // 색상을 연한 회색으로 설정
+                decorationColor: Colors.grey[500], // 취소선 색상을 연한 회색으로 설정
+              ),
+            ),
+          ),
+        // 할인된 가격을 표시함. 소수점은 표시하지 않음.
+        if (product.discountPrice != null) // discountPrice가 null이 아닌 경우에만 표시
+          Padding(
+            padding: const EdgeInsets.only(top: 2.0), // 상단 패딩을 2.0으로 설정
+            child: Row(
+              children: [
+                Text(
+                  '${product.discountPrice!.toStringAsFixed(0)}원', // 할인된 가격을 표시, 소수점 없음
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold), // 글자 크기를 25로 설정하고 볼드체 적용
+                ),
+                SizedBox(width: 8), // 너비 8의 간격을 추가
+                // 할인율을 빨간색으로 표시함.
+                if (product.discountPercent != null) // discountPercent가 null이 아닌 경우에만 표시
+                  Text(
+                    '${product.discountPercent!.toStringAsFixed(0)}%', // 할인율을 표시, 소수점 없음
+                    style: TextStyle(
+                        fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold), // 글자 크기를 25로 설정하고, 색상을 빨간색으로 설정, 볼드체 적용
+                  ),
+              ],
+            ),
+          ),
+        SizedBox(height: 10), // 높이 10의 간격을 추가
       ],
     ),
   );
 }
-// ------ buildPriceInformation 위젯의 구현 끝
+// ------ buildProductBriefIntroAndPriceInfoSection 위젯의 구현 끝: 제품 소개 및 가격 정보 부분을 구현.
 
 // ------ buildColorAndSizeSelection 위젯 시작: 색상 및 사이즈 선택 부분을 구현.
-Widget buildColorAndSizeSelection(
+Widget buildProductColorAndSizeSelection(
     BuildContext context, WidgetRef ref, ProductContent product) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
@@ -1222,7 +1226,7 @@ Widget buildColorAndSizeSelection(
           mainAxisAlignment: MainAxisAlignment.start,
           // 자식 위젯들을 왼쪽 정렬로 배치.
           children: [
-            Text('색상', style: TextStyle(fontSize: 14)), // '색상' 라벨을 표시.
+            Text('색상', style: TextStyle(fontSize: 16)), // '색상' 라벨을 표시.
             SizedBox(width: 63), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 63으로 설정.
             Expanded(
               // 드롭다운 버튼을 화면 너비에 맞게 확장.
@@ -1231,7 +1235,7 @@ Widget buildColorAndSizeSelection(
                 // 드롭다운 버튼의 너비를 최대로 확장.
                 value: ref.watch(colorSelectionIndexProvider),
                 // 선택된 색상 값을 가져옴.
-                hint: Text('- [필수] 옵션을 선택해 주세요 -'),
+                hint: Text('[필수] 옵션을 선택해 주세요'),
                 // 선택하지 않았을 때 표시되는 텍스트.
                 onChanged: (newValue) {
                   ref.read(colorSelectionIndexProvider.notifier).state =
@@ -1263,7 +1267,7 @@ Widget buildColorAndSizeSelection(
           mainAxisAlignment: MainAxisAlignment.start,
           // 자식 위젯들을 왼쪽 정렬로 배치.
           children: [
-            Text('사이즈', style: TextStyle(fontSize: 14)), // '사이즈' 라벨을 표시.
+            Text('사이즈', style: TextStyle(fontSize: 16)), // '사이즈' 라벨을 표시.
             SizedBox(width: 52), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 52로 설정.
             Expanded(
               // 드롭다운 버튼을 화면 너비에 맞게 확장.
@@ -1272,7 +1276,7 @@ Widget buildColorAndSizeSelection(
                 // 드롭다운 버튼의 너비를 최대로 확장.
                 value: ref.watch(sizeSelectionProvider),
                 // 선택된 사이즈 값을 가져옴.
-                hint: Text('- [필수] 옵션을 선택해 주세요 -'),
+                hint: Text('[필수] 옵션을 선택해 주세요'),
                 // 선택하지 않았을 때 표시되는 텍스트.
                 onChanged: (newValue) {
                   ref.read(sizeSelectionProvider.notifier).state = newValue!;

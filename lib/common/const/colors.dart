@@ -8,6 +8,8 @@ const BODY_TEXT_COLOR = Color(0xFF868686);
 const INPUT_BG_COLOR = Color(0xFFFBFBFB);
 // 텍스트필드 테두리 색상
 const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
+// 배경 기본 색상
+const BACKGROUND_COLOR = Color(0xFFFFFFFF);
 // 드로워 색상
 const DRAWER_COLOR = Color(0xFFC77AA1);
 // 버튼 색상

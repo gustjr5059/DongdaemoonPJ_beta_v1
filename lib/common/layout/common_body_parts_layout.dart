@@ -17,6 +17,7 @@ import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
 // 비동기 데이터 로딩을 위해 상태 관리에 사용되는 FutureProvider 파일을 임포트합니다.
 // 이 파일은 네트워크 요청과 같은 비동기 작업 결과를 처리하고 상태 관리에 사용됩니다.
+import '../const/colors.dart';
 import '../model/banner_model.dart';
 import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
@@ -209,28 +210,30 @@ class CommonCardView extends StatelessWidget {
   // 'padding'은 카드 내부의 여백을 정의함. 기본값은 모든 방향으로 8의 여백임.
   final EdgeInsets padding;
 
-  // 생성자에서는 위에서 정의한 필드들을 초기화함.
-  // 필요한 'content'는 반드시 제공되어야 하며, 나머지는 선택적으로 제공될 수 있음.
+// 생성자에서는 위에서 정의한 필드들을 초기화함.
+// 필요한 'content'는 반드시 제공되어야 하며, 나머지는 선택적으로 제공될 수 있음.
   CommonCardView({
-    required this.content,
-    this.backgroundColor = Colors.white,
-    this.elevation = 4.0,
-    this.margin = const EdgeInsets.all(2),
-    this.padding = const EdgeInsets.all(8),
+    required this.content, // content는 필수로 제공되어야 함
+    this.backgroundColor = BACKGROUND_COLOR, // 배경색은 선택적이며 기본값은 BACKGROUND_COLOR로 설정
+    this.elevation = 4.0, // elevation은 선택적이며 기본값은 4.0으로 설정
+    this.margin = const EdgeInsets.all(
+        2), // margin은 선택적이며 기본값은 EdgeInsets.all(2)로 설정
+    this.padding = const EdgeInsets.all(
+        8), // padding은 선택적이며 기본값은 EdgeInsets.all(8)로 설정
   });
 
   @override
   Widget build(BuildContext context) {
-    // Card 위젯을 사용하여 시각적 표현을 구현함.
+    // Container 위젯을 사용하여 시각적 표현을 구현함.
     return Container(
       width: double.infinity, // 해당 위젯이 가능한 한 최대 너비를 가지도록 설정
-      child: Card(
-        color: backgroundColor,
-        elevation: elevation,
-        margin: margin,
+      margin: margin, // 생성자에서 받은 margin 값 적용
+      child: Material(
+        color: backgroundColor, // 생성자에서 받은 배경색 값 적용
+        elevation: elevation, // 생성자에서 받은 elevation 값 적용
         child: Padding(
-          padding: padding,
-          child: content,
+          padding: padding, // 생성자에서 받은 padding 값 적용
+          child: content, // 생성자에서 받은 content 값 적용
         ),
       ),
     );
