@@ -871,7 +871,9 @@ class ProductInfoDetailScreenNavigation {
     ).then((_) {
       // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
       ref.read(colorSelectionIndexProvider.notifier).state = null;
-      ref.read(sizeSelectionProvider.notifier).state = null;
+      ref.read(sizeSelectionIndexProvider.notifier).state = null;
+      // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
+      ref.read(detailQuantityIndexProvider.notifier).state = 1;
     });
   }
 
@@ -1278,12 +1280,12 @@ Widget buildProductColorAndSizeSelection(
               child: DropdownButton<String>(
                 isExpanded: true,
                 // 드롭다운 버튼의 너비를 최대로 확장.
-                value: ref.watch(sizeSelectionProvider),
+                value: ref.watch(sizeSelectionIndexProvider),
                 // 선택된 사이즈 값을 가져옴.
                 hint: Text('[필수] 옵션을 선택해 주세요'),
                 // 선택하지 않았을 때 표시되는 텍스트.
                 onChanged: (newValue) {
-                  ref.read(sizeSelectionProvider.notifier).state = newValue!;
+                  ref.read(sizeSelectionIndexProvider.notifier).state = newValue!;
                   // 새로운 사이즈가 선택되면 상태를 업데이트.
                 },
                 items: product.sizes
@@ -1308,9 +1310,9 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
   // 선택한 색상 인덱스를 가져옴.
   final selectedColor = ref.watch(colorSelectionIndexProvider);
   // 선택한 사이즈를 가져옴.
-  final selectedSize = ref.watch(sizeSelectionProvider);
+  final selectedSize = ref.watch(sizeSelectionIndexProvider);
   // 선택한 수량을 가져옴.
-  final quantity = ref.watch(detailQuantityProvider);
+  final quantity = ref.watch(detailQuantityIndexProvider);
 
   // 할인된 가격을 가져오고, 없으면 0을 설정.
   double discountPrice = product.discountPrice ?? 0;
@@ -1372,7 +1374,7 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                 IconButton(
                   icon: Icon(Icons.remove),
                   onPressed: quantity > 1 ? () {
-                    ref.read(detailQuantityProvider.notifier).state--;
+                    ref.read(detailQuantityIndexProvider.notifier).state--;
                   } : null,
                 ),
                 // 현재 수량을 표시하는 컨테이너.
@@ -1385,7 +1387,7 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    ref.read(detailQuantityProvider.notifier).state++;
+                    ref.read(detailQuantityIndexProvider.notifier).state++;
                   },
                 ),
                 // 수량을 직접 입력할 수 있는 버튼.
@@ -1424,7 +1426,7 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                               child: Text('확인', style: TextStyle(color: Colors.black)), // 색상 수정
                               onPressed: () {
                                 if (input.isNotEmpty) {
-                                  ref.read(detailQuantityProvider.notifier).state = int.parse(input);
+                                  ref.read(detailQuantityIndexProvider.notifier).state = int.parse(input);
                                 }
                                 Navigator.of(context).pop();
                               },
