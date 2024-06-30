@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 // Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // 상태 관리를 위해 사용되는 Riverpod 패키지를 임포트합니다.
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
@@ -13,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
+import '../../cart/view/cart_screen.dart';
 import '../../common/const/colors.dart';
 
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
@@ -20,6 +22,7 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
+import '../../order/view/order_screen.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
@@ -1046,7 +1049,7 @@ Widget buildProductDetails(BuildContext context, WidgetRef ref,
         // 상단 여백을 10으로 설정.
         CommonCardView(
           content: buildProductBriefIntroAndPriceInfoSection(context, ref, product), // 제품 소개 및 가격 정보 부분 섹션
-          backgroundColor: BACKGROUND_COLOR, // 앱 배경색과 구분되는 흰색 계열
+          backgroundColor: BEIGE_COLOR, // 앱 배경색과 구분되는 흰색 계열
           elevation: 4.0, // 그림자 효과
           margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
           padding: const EdgeInsets.all(1.0), // 카드 내부 여백을 1.0으로 설정.
@@ -1054,20 +1057,20 @@ Widget buildProductDetails(BuildContext context, WidgetRef ref,
         // 제품 소개 부분과 가격 부분을 표시하는 위젯을 호출.
         SizedBox(height: 10),
         // 제품 소개와 가격 부분 다음 섹션 사이의 여백을 10으로 설정.
-        SizedBox(height: 2),
-        // 구분선 아래 여백을 2로 설정.
         CommonCardView(
           content: buildProductColorAndSizeSelection(context, ref, product),
-          backgroundColor: BACKGROUND_COLOR, // 앱 배경색과 구분되는 연한 회색 계열
+          backgroundColor: BEIGE_COLOR, // 앱 배경색과 구분되는 연한 회색 계열
           elevation: 4.0, // 그림자 효과
           margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
           padding: const EdgeInsets.all(1.0), // 카드 내부 여백을 1.0으로 설정.
         ),
-        SizedBox(height: 50),
-        // 구분선 아래 여백을 50으로 설정.
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20), // 좌우 여백을 20으로 설정.
-          child: Divider(), // 세로 구분선을 추가.
+        SizedBox(height: 10),
+        CommonCardView(
+          content: buildProductAllCountAndPriceSelection(context, ref, product),
+          backgroundColor: BEIGE_COLOR,
+          elevation: 4.0,
+          margin: const EdgeInsets.symmetric(horizontal: 0.0),
+          padding: const EdgeInsets.all(1.0),
         ),
         SizedBox(height: 30),
         // 여백을 30으로 설정.
@@ -1156,6 +1159,7 @@ Widget buildProductImageSliderSection(ProductContent product, WidgetRef ref,
 // ------ buildProductBriefIntroAndPriceInfoSection 위젯 시작: 제품 소개 및 가격 정보 부분을 구현.
 Widget buildProductBriefIntroAndPriceInfoSection(
     BuildContext context, WidgetRef ref, ProductContent product) {
+  final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0), // 수평 패딩을 20.0으로 설정
     child: Column(
@@ -1178,7 +1182,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
           Padding(
             padding: const EdgeInsets.only(top: 2.0), // 상단 패딩을 2.0으로 설정
             child: Text(
-              '${product.originalPrice!.toStringAsFixed(0)}원', // 원래 가격을 표시, 소수점 없음
+              '${product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', // 원래 가격을 표시, 소수점 없음
               style: TextStyle(
                 fontSize: 18, // 글자 크기를 18로 설정
                 decoration: TextDecoration.lineThrough, // 취소선을 추가
@@ -1194,7 +1198,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
             child: Row(
               children: [
                 Text(
-                  '${product.discountPrice!.toStringAsFixed(0)}원', // 할인된 가격을 표시, 소수점 없음
+                  '${product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', // 할인된 가격을 표시, 소수점 없음
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold), // 글자 크기를 25로 설정하고 볼드체 적용
                 ),
                 SizedBox(width: 8), // 너비 8의 간격을 추가
@@ -1298,35 +1302,184 @@ Widget buildProductColorAndSizeSelection(
 }
 // ------ buildColorAndSizeSelection 위젯의 구현 끝
 
+// ------ buildProductAllCountAndPriceSelection 위젯 시작: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
+// 선택한 색상, 사이즈, 수량, 총 가격을 표시하는 위젯을 생성하는 함수.
+Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref, ProductContent product) {
+  // 선택한 색상 인덱스를 가져옴.
+  final selectedColor = ref.watch(colorSelectionIndexProvider);
+  // 선택한 사이즈를 가져옴.
+  final selectedSize = ref.watch(sizeSelectionProvider);
+  // 선택한 수량을 가져옴.
+  final quantity = ref.watch(detailQuantityProvider);
+
+  // 할인된 가격을 가져오고, 없으면 0을 설정.
+  double discountPrice = product.discountPrice ?? 0;
+  // 총 가격을 계산.
+  double totalPrice = discountPrice * quantity;
+
+  // 선택한 색상 정보를 가져옴.
+  final selectedColorOption = product.colorOptions?.firstWhere(
+        (option) => option['url'] == selectedColor,
+    orElse: () => {'url': '', 'text': ''},
+  );
+
+  // 정규식을 사용하여 천 단위로 쉼표를 추가.
+  final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // 색상과 사이즈가 선택되었을 때만 보여줌.
+      if (selectedColor != null && selectedSize != null)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // 선택한 색상을 텍스트로 표시함.
+                  Text('선택한 색상:', style: TextStyle(fontSize: 16)),
+                  SizedBox(width: 8),
+                  // 선택한 색상이 존재하면 이미지를 표시함.
+                  if (selectedColorOption != null)
+                    Image.network(
+                      selectedColorOption['url'],
+                      width: 20,
+                      height: 20,
+                    ),
+                  SizedBox(width: 8),
+                  // 선택한 색상 이름을 텍스트로 표시함.
+                  Text(selectedColorOption?['text'], style: TextStyle(fontSize: 16)),
+                ],
+              ),
+              SizedBox(height: 8),
+              // 선택한 사이즈를 텍스트로 표시함.
+              Text('선택한 사이즈: $selectedSize', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // '수량' 텍스트를 표시함.
+            Text('수량', style: TextStyle(fontSize: 16)),
+            Row(
+              children: [
+                // 수량 감소 버튼. 수량이 1보다 클 때만 작동함.
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: quantity > 1 ? () {
+                    ref.read(detailQuantityProvider.notifier).state--;
+                  } : null,
+                ),
+                // 현재 수량을 표시하는 컨테이너.
+                Container(
+                  width: 50,
+                  alignment: Alignment.center,
+                  child: Text('$quantity', style: TextStyle(fontSize: 16)),
+                ),
+                // 수량 증가 버튼.
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    ref.read(detailQuantityProvider.notifier).state++;
+                  },
+                ),
+                // 수량을 직접 입력할 수 있는 버튼.
+                TextButton(
+                  onPressed: () {
+                    // 수량 입력을 위한 다이얼로그를 표시.
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final TextEditingController controller = TextEditingController();
+                        String input = '';
+                        return AlertDialog(
+                          // 다이얼로그 제목.
+                          title: Text('수량 입력', style: TextStyle(color: Colors.black)), // 색상 수정
+                          content: TextField(
+                            controller: controller,
+                            keyboardType: TextInputType.number,
+                            // 숫자만 입력 가능하게 설정.
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            autofocus: true,
+                            onChanged: (value) {
+                              input = value;
+                            },
+                            decoration: InputDecoration(
+                              // 포커스된 상태의 밑줄 색상을 검정으로 변경.
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black), // 밑줄 색상 변경
+                              ),
+                            ),
+                          ),
+                          actions: <TextButton>[
+                            // 확인 버튼을 누르면 수량을 설정하고 다이얼로그를 닫음.
+                            TextButton(
+                              child: Text('확인', style: TextStyle(color: Colors.black)), // 색상 수정
+                              onPressed: () {
+                                if (input.isNotEmpty) {
+                                  ref.read(detailQuantityProvider.notifier).state = int.parse(input);
+                                }
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)), // 색상 수정
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      // 총 가격을 표시.
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        child: Text('총 가격: ${totalPrice.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
+    ],
+  );
+}
+// ------ buildProductAllCountAndPriceSelection 위젯 끝: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
+
 // ------ buildPurchaseButtons 위젯 시작: 구매 관련 버튼을 구현.
 Widget buildPurchaseButtons(
     BuildContext context, WidgetRef ref, ProductContent product) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 버튼들을 화면 양쪽 끝에 배치.
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          // '장바구니' 버튼을 화면 너비에 맞게 확장.
           child: ElevatedButton(
-            onPressed: () {}, // 장바구니 추가 로직을 구현. (현재는 비어 있음)
+            onPressed: () {
+            },
             style: ElevatedButton.styleFrom(
-              backgroundColor: BUTTON_COLOR, // 버튼의 배경색을 설정.
-              foregroundColor: INPUT_BG_COLOR, // 버튼의 글자색을 설정.
+              backgroundColor: BUTTON_COLOR,
+              foregroundColor: INPUT_BG_COLOR,
             ),
-            child: Text('장바구니'), // 버튼의 텍스트를 '장바구니'로 설정.
+            child: Text('장바구니'),
           ),
         ),
-        SizedBox(width: 10), // '장바구니'와 '주문' 버튼 사이의 간격을 10으로 설정.
+        SizedBox(width: 10),
         Expanded(
-          // '주문' 버튼을 화면 너비에 맞게 확장.
           child: ElevatedButton(
-            onPressed: () {}, // 주문 로직을 구현. (현재는 비어 있음)
+            onPressed: () {
+            },
             style: ElevatedButton.styleFrom(
-              backgroundColor: BUTTON_COLOR, // 버튼의 배경색을 설정.
-              foregroundColor: INPUT_BG_COLOR, // 버튼의 글자색을 설정.
+              backgroundColor: BUTTON_COLOR,
+              foregroundColor: INPUT_BG_COLOR,
             ),
-            child: Text('주문'), // 버튼의 텍스트를 '주문'으로 설정.
+            child: Text('주문'),
           ),
         ),
       ],

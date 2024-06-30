@@ -143,6 +143,8 @@ StateProvider<int> getImagePageProvider(String productId) {
 
 // 상품 상세 화면에서 이미지 클릭 시, 상세 이미지 화면으로 이동하는 데 해당 화면 내 이미지 페이지 인덱스 상태관리 관련 StateProvider
 final detailImagePageProvider = StateProvider<int>((ref) => 0);
+// 상품 상세 화면에서 수량 부분의 숫자 인덱스 상태관리 관련 StateProvider
+final detailQuantityProvider = StateProvider<int>((ref) => 1);
 
 // ------- 상품 상세 화면 관련 StateProvider 끝
 
