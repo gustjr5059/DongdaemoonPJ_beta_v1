@@ -701,6 +701,11 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // ------ 섹션 더보기 화면 관련 부분 끝
 
   // // ------ 상품 상세 화면 관련 초기화 부분 시작
+  // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
+  ref.read(colorSelectionIndexProvider.notifier).state = null;
+  ref.read(sizeSelectionIndexProvider.notifier).state = null;
+  // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
+  ref.read(detailQuantityIndexProvider.notifier).state = 1;
   // ref.read(blouseDetailImagePageProvider.notifier).state = 0; // 블라우스 상세 화면 내 이미지 부분 관련 초기화
   // ref.read(cardiganDetailImagePageProvider.notifier).state = 0; // 가디건 상세 화면 내 이미지 부분 관련 초기화
   // ref.read(coatDetailImagePageProvider.notifier).state = 0; // 코트 상세 화면 내 이미지 부분 관련 초기화
