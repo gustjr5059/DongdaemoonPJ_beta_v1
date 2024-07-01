@@ -241,8 +241,17 @@ class _PaedingDetailProductScreenState
                             productContent.when(
                               // 데이터가 로드되었을 때 실행되는 코드 블록.
                               data: (product) {
-                                // 제품 세부사항을 빌드하여 반환함.
-                                return buildProdDetailScreenContents(context, ref, product, pageController);
+                                return Column(
+                                  children: [
+                                    buildProdDetailScreenContents(context, ref, product, pageController),
+                                    SizedBox(height: 50),
+                                    ProductDetailScreenTabs(
+                                      productInfoContent: ProductInfoContents(product: product),
+                                      reviewsContent: buildProductColorAndSizeSelection(context, ref, product),
+                                      inquiryContent: buildProductAllCountAndPriceSelection(context, ref, product),
+                                    ),
+                                  ],
+                                );
                               },
                               // 로딩 중일 때 실행되는 코드 블록.
                               loading: () => Center(child: CircularProgressIndicator()),

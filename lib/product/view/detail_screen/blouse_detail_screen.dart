@@ -246,8 +246,8 @@ class _BlouseDetailProductScreenState
                                   children: [
                                     buildProdDetailScreenContents(context, ref, product, pageController),
                                     SizedBox(height: 50),
-                                    DetailTabs(
-                                      productInfoContent: buildProductBriefIntroAndPriceInfoSection(context, ref, product),
+                                    ProductDetailScreenTabs(
+                                      productInfoContent: ProductInfoContents(product: product),
                                       reviewsContent: buildProductColorAndSizeSelection(context, ref, product),
                                       inquiryContent: buildProductAllCountAndPriceSelection(context, ref, product),
                                     ),

@@ -880,6 +880,8 @@ class ProductInfoDetailScreenNavigation {
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
       // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
       ref.read(detailQuantityIndexProvider.notifier).state = 1;
+      // 화면을 돌아왔을 때 '상품정보', '리뷰', '문의'탭 상태를 초기화함
+      ref.read(prodDetailScreenTabSectionProvider.notifier).state = ProdDetailScreenTabSection.productInfo;
     });
   }
 
@@ -1473,17 +1475,14 @@ Widget buildDetailScreenCartAndPurchaseButtons(
 // ------ buildDetailScreenCartAndPurchaseButtons 위젯의 구현 끝
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 끝
 
+// ------ 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 시작
+class ProductDetailScreenTabs extends ConsumerWidget {
+  final Widget productInfoContent; // '상품 정보' 탭의 내용을 담는 위젯
+  final Widget reviewsContent; // '리뷰' 탭의 내용을 담는 위젯
+  final Widget inquiryContent; // '문의' 탭의 내용을 담는 위젯
 
-enum DetailSection { productInfo, reviews, inquiry }
-
-final detailSectionProvider = StateProvider<DetailSection>((ref) => DetailSection.productInfo);
-
-class DetailTabs extends ConsumerWidget {
-  final Widget productInfoContent;
-  final Widget reviewsContent;
-  final Widget inquiryContent;
-
-  DetailTabs({
+  // 생성자, 각 탭의 내용을 받음.
+  ProductDetailScreenTabs({
     required this.productInfoContent,
     required this.reviewsContent,
     required this.inquiryContent,
@@ -1491,64 +1490,198 @@ class DetailTabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSection = ref.watch(detailSectionProvider);
+    // 현재 선택된 탭 섹션을 가져옴.
+    final currentTabSection = ref.watch(prodDetailScreenTabSectionProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildTabButtons(ref, currentSection),
-        _buildSectionContent(currentSection),
+        _buildTabButtons(ref, currentTabSection), // 탭 버튼들을 빌드
+        _buildSectionContent(currentTabSection), // 현재 선택된 탭의 내용을 빌드
       ],
     );
   }
 
-  Widget _buildTabButtons(WidgetRef ref, DetailSection currentSection) {
+  // 탭 버튼들을 빌드하는 위젯인 _buildTabButtons
+  Widget _buildTabButtons(WidgetRef ref, ProdDetailScreenTabSection currentTabSection) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildTabButton(ref, DetailSection.productInfo, currentSection, '상품정보'),
-        _buildTabButton(ref, DetailSection.reviews, currentSection, '리뷰'),
-        _buildTabButton(ref, DetailSection.inquiry, currentSection, '문의'),
+        // '상품정보' 탭 버튼을 빌드
+        _buildTabButton(ref, ProdDetailScreenTabSection.productInfo, currentTabSection, '상품정보'),
+        // '리뷰' 탭 버튼을 빌드
+        _buildTabButton(ref, ProdDetailScreenTabSection.reviews, currentTabSection, '리뷰'),
+        // '문의' 탭 버튼을 빌드
+        _buildTabButton(ref, ProdDetailScreenTabSection.inquiry, currentTabSection, '문의'),
       ],
     );
   }
 
-  Widget _buildTabButton(WidgetRef ref, DetailSection section, DetailSection currentSection, String text) {
-    final isSelected = section == currentSection;
+  // 개별 탭 버튼을 빌드하는 위젯인 _buildTabButton
+  Widget _buildTabButton(WidgetRef ref, ProdDetailScreenTabSection section, ProdDetailScreenTabSection currentTabSection, String text) {
+    final isSelected = section == currentTabSection; // 현재 선택된 탭인지 확인
     return GestureDetector(
       onTap: () {
-        ref.read(detailSectionProvider.notifier).state = section;
+        // 탭 버튼 클릭 시 선택된 탭 섹션을 변경
+        ref.read(prodDetailScreenTabSectionProvider.notifier).state = section;
       },
       child: Column(
         children: [
+          // 탭 버튼 텍스트
           Text(
             text,
             style: TextStyle(
-              color: isSelected ? Colors.black : Colors.grey,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? Colors.black : Colors.grey, // 선택된 탭이면 검정색, 아니면 회색
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // 선택된 탭이면 굵게, 아니면 일반
             ),
           ),
-          if (isSelected)
+          if (isSelected) // 선택된 탭이면 밑줄 표시
             Container(
               width: 60,
               height: 2,
-              color: Colors.black,
+              color: Colors.black, // 밑줄 색상 검정
             ),
         ],
       ),
     );
   }
 
-  Widget _buildSectionContent(DetailSection section) {
+  // 선택된 탭 섹션의 내용을 빌드하는 위젯인 _buildSectionContent
+  Widget _buildSectionContent(ProdDetailScreenTabSection section) {
     switch (section) {
-      case DetailSection.productInfo:
-        return productInfoContent;
-      case DetailSection.reviews:
-        return reviewsContent;
-      case DetailSection.inquiry:
-        return inquiryContent;
+      case ProdDetailScreenTabSection.productInfo: // '상품정보' 섹션이면
+        return productInfoContent; // '상품정보' 내용을 반환
+      case ProdDetailScreenTabSection.reviews: // '리뷰' 섹션이면
+        return reviewsContent; // '리뷰' 내용을 반환
+      case ProdDetailScreenTabSection.inquiry: // '문의' 섹션이면
+        return inquiryContent; // '문의' 내용을 반환
       default:
-        return Container();
+        return Container(); // 기본적으로 빈 컨테이너 반환
     }
   }
 }
+// ------ 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 끝
+
+// -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 시작
+class ProductInfoContents extends StatefulWidget {
+  // ProductContent 타입의 product를 인자로 받는 ProductInfoContents 위젯 클래스 정의
+  final ProductContent product;
+
+  // 생성자: product를 필수 인자로 받고, key는 선택적으로 받음
+  const ProductInfoContents({Key? key, required this.product}) : super(key: key);
+
+  @override
+  _ProductInfoContentsState createState() => _ProductInfoContentsState();
+}
+
+class _ProductInfoContentsState extends State<ProductInfoContents> {
+  // 추가 이미지를 표시할지 여부를 저장하는 변수, 초기값은 false
+  bool showMoreImages = false;
+
+  // 이미지 URL을 받아서 이미지를 좌우로 꽉 차도록 원본비율을 유지하며 표시하는 위젯을 생성하는 함수인 buildProdInfoImage
+  Widget buildProdInfoImage(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) {
+      // 이미지 URL이 null이거나 비어있으면 빈 컨테이너 반환
+      return Container();
+    }
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.fitWidth, // 원본 비율 유지하며 좌우로 꽉 차도록 설정
+      width: MediaQuery.of(context).size.width, // 화면 너비에 맞춤
+    );
+  }
+
+  // 밑줄과 텍스트를 포함하는 위젯 생성하는 함수인 buildSectionTitle
+  Widget buildSectionTitle(String title) {
+    return Column(
+      children: [
+        SizedBox(height: 20), // 위쪽 여백 설정
+        Row(
+          children: [
+            Expanded(child: Divider(thickness: 2, color: Colors.grey)), // 좌측 선
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0), // 좌우 여백 설정
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, // 글자 굵게 설정
+                  fontSize: 16, // 글자 크기 설정
+                  color: Colors.grey, // 글자 색상 설정
+                ),
+              ),
+            ),
+            Expanded(child: Divider(thickness: 2, color: Colors.grey)), // 우측 선
+          ],
+        ),
+        SizedBox(height: 10), // 아래쪽 여백 설정
+      ],
+    );
+  }
+
+  // 내용 확장 관련 버튼을 빌드하는 위젯인 buildExpandButton
+  Widget buildExpandButton(String text, IconData icon) {
+    return Container(
+      width: double.infinity, // 버튼을 화면의 좌우로 꽉 차게 설정
+      margin: EdgeInsets.symmetric(vertical: 10), // 위아래 여백 설정
+      child: ElevatedButton.icon(
+        onPressed: () {
+          // 버튼 클릭 시 showMoreImages 값 토글
+          setState(() {
+            showMoreImages = !showMoreImages;
+          });
+        },
+        style: ElevatedButton.styleFrom(
+          foregroundColor: BUTTON_COLOR, // 텍스트 색상
+          backgroundColor: BACKGROUND_COLOR, // 배경 색상
+          side: BorderSide(color: BUTTON_COLOR), // 테두리 색상
+          padding: EdgeInsets.symmetric(vertical: 15), // 버튼 높이 조절
+        ),
+        icon: Icon(icon, color: BUTTON_COLOR), // 아이콘 색상 설정
+        label: Text(
+          text,
+          style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // 이미지가 세로로 나열되도록 설정
+      children: [
+        SizedBox(height: 20), // 위쪽 여백 설정
+        buildSectionTitle('INTRO INFO'), // 섹션 제목 설정
+        if (widget.product.detailIntroImages != null)
+        // product의 detailIntroImages가 null이 아니면
+          ...widget.product.detailIntroImages!.take(2).map(buildProdInfoImage).toList(), // 처음 두 개의 이미지를 표시
+        if (!showMoreImages && widget.product.detailIntroImages != null && widget.product.detailIntroImages!.length > 2)
+        // 추가 이미지를 표시하지 않는 상태에서 이미지가 2개 이상일 경우
+          buildExpandButton('상품 정보 펼쳐보기', Icons.arrow_downward), // 확장 버튼 표시
+        if (showMoreImages) ...[
+          // 추가 이미지를 표시하는 상태일 경우
+          if (widget.product.detailIntroImages != null)
+          // product의 detailIntroImages가 null이 아니면
+            ...widget.product.detailIntroImages!.skip(2).map(buildProdInfoImage).toList(), // 나머지 이미지를 표시
+          SizedBox(height: 20), // 여백 설정
+          buildSectionTitle('COLOR INFO'), // 섹션 제목 설정
+          ...?widget.product.detailColorImages?.map(buildProdInfoImage).toList(), // 색상 정보 이미지 표시
+          SizedBox(height: 20), // 여백 설정
+          buildSectionTitle('SIZE INFO'), // 섹션 제목 설정
+          buildProdInfoImage(widget.product.detailSizeImage), // 사이즈 정보 이미지 표시
+          SizedBox(height: 20), // 여백 설정
+          buildSectionTitle('DETAILS INFO'), // 섹션 제목 설정
+          buildProdInfoImage(widget.product.detailDetailsImage), // 상세 정보 이미지 표시
+          SizedBox(height: 20), // 여백 설정
+          buildSectionTitle('FABRIC INFO'), // 섹션 제목 설정
+          buildProdInfoImage(widget.product.detailFabricImage), // 원단 정보 이미지 표시
+          SizedBox(height: 20), // 여백 설정
+          buildSectionTitle('WASHING INFO'), // 섹션 제목 설정
+          buildProdInfoImage(widget.product.detailWashingImage), // 세탁 정보 이미지 표시
+          buildExpandButton('접기', Icons.arrow_upward), // 접기 버튼 표시
+        ],
+      ],
+    );
+  }
+}
+// -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 끝

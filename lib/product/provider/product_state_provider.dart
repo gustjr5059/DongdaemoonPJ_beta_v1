@@ -149,6 +149,13 @@ final colorSelectionIndexProvider = StateProvider<String?>((ref) => null);
 final sizeSelectionIndexProvider = StateProvider<String?>((ref) => null);
 // 상품 상세 화면에서 수량 부분의 숫자 인덱스 상태관리 관련 StateProvider
 final detailQuantityIndexProvider = StateProvider<int>((ref) => 1);
+// 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스
+// 관련 탭 섹션 상수 부분
+enum ProdDetailScreenTabSection { productInfo, reviews, inquiry }
+// 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스
+// 관련 탭 섹션 상태관리 관련 StateProvider
+final prodDetailScreenTabSectionProvider = StateProvider<ProdDetailScreenTabSection>((ref) => ProdDetailScreenTabSection.productInfo);
+
 // ------- 상품 상세 화면 관련 StateProvider 끝
 
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
