@@ -13,6 +13,12 @@ class ProductContent {
   final List<String>? sizes; // 제품의 사이즈 옵션을 저장하는 필드.
   final String? category; // 제품의 카테고리를 저장하는 필드.
   final List<String>? detailPageImages; // 제품의 상세화면 내 이미지를 저장하는 필드.
+  final List<String>? detailColorImages; // detail_color_image1 ~ detail_color_image5를 저장하는 필드.
+  final String? detailDetailsImage; // detail_details_image1을 저장하는 필드.
+  final String? detailFabricImage; // detail_fabric_image1을 저장하는 필드.
+  final List<String>? detailIntroImages; // detail_intro_image1 ~ detail_intro_image5를 저장하는 필드.
+  final String? detailSizeImage; // detail_size_image1을 저장하는 필드.
+  final String? detailWashingImage; // detail_washing_image1을 저장하는 필드.
   final DocumentSnapshot?
       documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
 
@@ -29,6 +35,12 @@ class ProductContent {
     this.sizes,
     this.category,
     this.detailPageImages,
+    this.detailColorImages,
+    this.detailDetailsImage,
+    this.detailFabricImage,
+    this.detailIntroImages,
+    this.detailSizeImage,
+    this.detailWashingImage,
     this.documentSnapshot,
   });
 
@@ -50,6 +62,12 @@ class ProductContent {
         sizes: null,
         category: null,
         detailPageImages: null,
+        detailColorImages: null,
+        detailDetailsImage: null,
+        detailFabricImage: null,
+        detailIntroImages: null,
+        detailSizeImage: null,
+        detailWashingImage: null,
         documentSnapshot: doc,
       );
     }
@@ -73,7 +91,6 @@ class ProductContent {
 
     // 사이즈 옵션을 저장할 리스트를 초기화함.
     List<String> sizes = [];
-
     // Firestore에서 최대 4개의 사이즈 옵션을 가져옴.
     for (int i = 1; i <= 4; i++) {
       var size = data['clothes_size$i'];
@@ -82,13 +99,47 @@ class ProductContent {
       }
     }
 
+    // 상품 상세 화면 내 이미지 페이지 뷰의 이미지 데이터를 저장할 리스트를 초기화함.
     List<String> detailPageImages = [];
+    // Firestore에서 최대 5개의 이미지 옵션을 가져옴.
     for (int i = 1; i <= 5; i++) {
       var imageUrl = data['detail_page_image$i'];
       if (imageUrl is String) {
         detailPageImages.add(imageUrl);
       }
     }
+
+    // 상품 상세 화면 내 상품 정보의 색상 이미지 데이터를 저장할 리스트를 초기화함.
+    List<String> detailColorImages = [];
+    // Firestore에서 최대 5개의 이미지 옵션을 가져옴.
+    for (int i = 1; i <= 5; i++) {
+      var imageUrl = data['detail_color_image$i'];
+      if (imageUrl is String) {
+        detailColorImages.add(imageUrl);
+      }
+    }
+
+    // 상품 상세 화면 내 상품 정보의 소개 이미지 데이터를 저장할 리스트를 초기화함.
+    List<String> detailIntroImages = [];
+    // Firestore에서 최대 5개의 이미지 옵션을 가져옴.
+    for (int i = 1; i <= 5; i++) {
+      var imageUrl = data['detail_intro_image$i'];
+      if (imageUrl is String) {
+        detailIntroImages.add(imageUrl);
+      }
+    }
+
+    // 상품 상세 화면 내 상품 정보의 상세정보 이미지 데이터를 저장할 정보를 가져옴.
+    var detailDetailsImage = data['detail_details_image1'] as String?;
+
+    // 상품 상세 화면 내 상품 정보의 섬유정보 이미지 데이터를 저장할 정보를 가져옴.
+    var detailFabricImage = data['detail_fabric_image1'] as String?;
+
+    // 상품 상세 화면 내 상품 정보의 사이즈 정보 이미지 데이터를 저장할 정보를 가져옴.
+    var detailSizeImage = data['detail_size_image1'] as String?;
+
+    // 상품 상세 화면 내 상품 정보의 세탁 정보 이미지 데이터를 저장할 정보를 가져옴.
+    var detailWashingImage = data['detail_washing_image1'] as String?;
 
     // 다양한 타입의 데이터를 double로 변환하는 헬퍼 함수.
     double? parseDouble(dynamic value) {
@@ -126,6 +177,18 @@ class ProductContent {
       // 제품의 카테고리.
       detailPageImages: detailPageImages.isEmpty ? null : detailPageImages,
       // 제품의 상세화면 내 이미지.
+      detailColorImages: detailColorImages.isEmpty ? null : detailColorImages,
+      // 상세 색상 이미지.
+      detailDetailsImage: detailDetailsImage,
+      // 상세 설명 이미지.
+      detailFabricImage: detailFabricImage,
+      // 상세 원단 이미지.
+      detailIntroImages: detailIntroImages.isEmpty ? null : detailIntroImages,
+      // 상세 소개 이미지.
+      detailSizeImage: detailSizeImage,
+      // 상세 사이즈 이미지.
+      detailWashingImage: detailWashingImage,
+      // 상세 세탁 이미지.
       documentSnapshot: doc, // 문서 스냅샷.
     );
   }
