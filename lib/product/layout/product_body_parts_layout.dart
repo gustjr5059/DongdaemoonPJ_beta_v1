@@ -1052,8 +1052,8 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         ),
         SizedBox(height: 30),
         // 여백을 30으로 설정.
-        buildPurchaseButtons(context, ref, product),
-        // 구매 버튼 부분을 표시하는 위젯을 호출.
+        buildDetailScreenCartAndPurchaseButtons(context, ref, product),
+        // 장바구니 및 바로 발주 버튼 부분을 표시하는 위젯을 호출.
       ],
     ),
   );
@@ -1435,8 +1435,8 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
 }
 // ------ buildProductAllCountAndPriceSelection 위젯 끝: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
 
-// ------ buildPurchaseButtons 위젯 시작: 구매 관련 버튼을 구현.
-Widget buildPurchaseButtons(
+// ------ buildDetailScreenCartAndPurchaseButtons 위젯 시작: 구매 관련 버튼을 구현.
+Widget buildDetailScreenCartAndPurchaseButtons(
     BuildContext context, WidgetRef ref, ProductContent product) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -1463,12 +1463,92 @@ Widget buildPurchaseButtons(
               backgroundColor: BUTTON_COLOR,
               foregroundColor: INPUT_BG_COLOR,
             ),
-            child: Text('주문'),
+            child: Text('바로 발주'),
           ),
         ),
       ],
     ),
   );
 }
-// ------ buildPurchaseButtons 위젯의 구현 끝
+// ------ buildDetailScreenCartAndPurchaseButtons 위젯의 구현 끝
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 끝
+
+
+enum DetailSection { productInfo, reviews, inquiry }
+
+final detailSectionProvider = StateProvider<DetailSection>((ref) => DetailSection.productInfo);
+
+class DetailTabs extends ConsumerWidget {
+  final Widget productInfoContent;
+  final Widget reviewsContent;
+  final Widget inquiryContent;
+
+  DetailTabs({
+    required this.productInfoContent,
+    required this.reviewsContent,
+    required this.inquiryContent,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentSection = ref.watch(detailSectionProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTabButtons(ref, currentSection),
+        _buildSectionContent(currentSection),
+      ],
+    );
+  }
+
+  Widget _buildTabButtons(WidgetRef ref, DetailSection currentSection) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _buildTabButton(ref, DetailSection.productInfo, currentSection, '상품정보'),
+        _buildTabButton(ref, DetailSection.reviews, currentSection, '리뷰'),
+        _buildTabButton(ref, DetailSection.inquiry, currentSection, '문의'),
+      ],
+    );
+  }
+
+  Widget _buildTabButton(WidgetRef ref, DetailSection section, DetailSection currentSection, String text) {
+    final isSelected = section == currentSection;
+    return GestureDetector(
+      onTap: () {
+        ref.read(detailSectionProvider.notifier).state = section;
+      },
+      child: Column(
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? Colors.black : Colors.grey,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          if (isSelected)
+            Container(
+              width: 60,
+              height: 2,
+              color: Colors.black,
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionContent(DetailSection section) {
+    switch (section) {
+      case DetailSection.productInfo:
+        return productInfoContent;
+      case DetailSection.reviews:
+        return reviewsContent;
+      case DetailSection.inquiry:
+        return inquiryContent;
+      default:
+        return Container();
+    }
+  }
+}
