@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
+import '../../../common/provider/common_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_future_provider.dart';
 import '../../provider/product_state_provider.dart';
@@ -244,7 +245,7 @@ class _OnepieceDetailProductScreenState
                                 return Column(
                                   children: [
                                     buildProdDetailScreenContents(context, ref, product, pageController),
-                                    SizedBox(height: 50),
+                                    SizedBox(height: 40),
                                     ProductDetailScreenTabs(
                                       productInfoContent: ProductInfoContents(product: product),
                                       reviewsContent: buildProductColorAndSizeSelection(context, ref, product),
@@ -258,7 +259,6 @@ class _OnepieceDetailProductScreenState
                               // 에러가 발생했을 때 실행되는 코드 블록.
                               error: (error, _) => Center(child: Text('오류 발생: $error')),
                             ),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
                       );
                     },
@@ -274,6 +274,9 @@ class _OnepieceDetailProductScreenState
               context, onepieceDetailProductScreenPointScrollController),
         ],
       ),
+      // 하단 탭 바 - 2번 케이스인 '장바구니' 버튼과 '바로 발주' 버튼이 UI로 구현됨.
+      bottomNavigationBar: buildCommonBottomNavigationBar(
+          ref.watch(tabIndexProvider), ref, context, 5, 2),
     );
     // ------ 화면구성 끝
   }

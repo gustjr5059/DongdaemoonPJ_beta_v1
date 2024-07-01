@@ -196,7 +196,11 @@ AppBar buildCommonAppBar({
 // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
 // BottomNavigationBar 생성 함수
 Widget buildCommonBottomNavigationBar(
-    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase) {
+    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase) {
+
+  switch (navigationCase) {
+    // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
+    case 1:
   // 선택된 아이템의 색상을 초기화
   Color selectedColor = DRAWER_COLOR;
   // 선택되지 않은 아이템의 색상을 초기화
@@ -331,6 +335,44 @@ Widget buildCommonBottomNavigationBar(
     // 선택된 아이템의 폰트 크기
     unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
   );
+  // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
+    case 2:
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // 좌우 20.0, 상하 10.0의 여백을 추가
+        child: Row( // 수평으로 배치되는 Row 위젯 사용
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Row 내부 위젯들을 양 끝에 배치
+          children: [
+            Expanded( // 내부 위젯의 가로 공간을 최대한 확장
+              child: ElevatedButton(
+                onPressed: () {
+                  // 장바구니 버튼 클릭 시 동작 추가
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
+                  foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
+                ),
+                child: Text('장바구니'), // 버튼 텍스트 설정
+              ),
+            ),
+            SizedBox(width: 10), // 버튼들 사이에 10픽셀 너비의 여백 추가
+            Expanded( // 내부 위젯의 가로 공간을 최대한 확장
+              child: ElevatedButton(
+                onPressed: () {
+                  // 바로 발주 버튼 클릭 시 동작 추가
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
+                  foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
+                ),
+                child: Text('바로 발주'), // 버튼 텍스트 설정
+              ),
+            ),
+          ],
+        ),
+      );
+    default:
+      return Container(); // 기본으로 빈 컨테이너 반환
+  }
 }
 // ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
 

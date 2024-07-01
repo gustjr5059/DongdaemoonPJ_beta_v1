@@ -373,11 +373,12 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
           buildTopButton(context, orderScreenPointScrollController),
         ],
       ),
+      // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider),
           ref,
           context,
-          3), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          3, 1), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

@@ -1052,10 +1052,6 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
           margin: const EdgeInsets.symmetric(horizontal: 0.0),
           padding: const EdgeInsets.all(1.0),
         ),
-        SizedBox(height: 30),
-        // 여백을 30으로 설정.
-        buildDetailScreenCartAndPurchaseButtons(context, ref, product),
-        // 장바구니 및 바로 발주 버튼 부분을 표시하는 위젯을 호출.
       ],
     ),
   );
@@ -1436,43 +1432,6 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
   );
 }
 // ------ buildProductAllCountAndPriceSelection 위젯 끝: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
-
-// ------ buildDetailScreenCartAndPurchaseButtons 위젯 시작: 구매 관련 버튼을 구현.
-Widget buildDetailScreenCartAndPurchaseButtons(
-    BuildContext context, WidgetRef ref, ProductContent product) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BUTTON_COLOR,
-              foregroundColor: INPUT_BG_COLOR,
-            ),
-            child: Text('장바구니'),
-          ),
-        ),
-        SizedBox(width: 10),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BUTTON_COLOR,
-              foregroundColor: INPUT_BG_COLOR,
-            ),
-            child: Text('바로 발주'),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-// ------ buildDetailScreenCartAndPurchaseButtons 위젯의 구현 끝
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 끝
 
 // ------ 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 시작

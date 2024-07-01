@@ -306,7 +306,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5),
+          5, 1),
     );
   }
 }
