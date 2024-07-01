@@ -235,19 +235,39 @@ class _NeatDetailProductScreenState
                     (BuildContext context, int index) {
                       return Column(
                           children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
                             // productContent의 상태에 따라 위젯을 빌드.
                             productContent.when(
                               // 데이터가 로드되었을 때 실행되는 코드 블록.
+                              // data 함수에서 product를 받아옴
                               data: (product) {
+                                // 리뷰 내용 리스트를 생성하여 reviewsContent에 할당
+                                final List<ProductReviewContents> reviewsContent = [
+                                  // 첫 번째 리뷰 내용을 ProductReviewContents 객체로 생성
+                                  // 임시로 데이터를 생성한 부분
+                                  // - 리뷰 작성 화면에서 작성한 내용을 파이어베이스에 저장 후 저장된 내용을 불러오도록 로직을 재설계해야함!!
+                                  ProductReviewContents(
+                                    thumbnailUrl: 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2Fshirt_new.png?alt=media', // 상품 썸네일 URL
+                                    productName: 'Example Product', // 상품명
+                                    orderNumber: '12345', // 발주 번호
+                                    orderDate: '2024-06-30', // 발주 일자
+                                    reviewerName: '고딩12', // 리뷰 작성자
+                                    reviewDate: '2024-06-30', // 리뷰 작성 일자
+                                    reviewImageUrl: 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media', // 리뷰 이미지 URL
+                                    reviewContent: '만족해요', // 리뷰 내용
+                                  ),
+                                  // 더 많은 리뷰 내용을 여기에 추가할 수 있습니다.
+                                ];
+                                // Column 위젯을 반환하여 여러 위젯을 세로로 배치
                                 return Column(
                                   children: [
+                                    // buildProdDetailScreenContents 함수를 호출하여 상품 상세 화면 콘텐츠를 생성
                                     buildProdDetailScreenContents(context, ref, product, pageController),
-                                    SizedBox(height: 40),
+                                    SizedBox(height: 40), // 여백
+                                    // ProductDetailScreenTabs 위젯을 사용하여 탭을 생성
                                     ProductDetailScreenTabs(
-                                      productInfoContent: ProductInfoContents(product: product),
-                                      reviewsContent: buildProductColorAndSizeSelection(context, ref, product),
-                                      inquiryContent: buildProductAllCountAndPriceSelection(context, ref, product),
+                                      productInfoContent: ProductInfoContents(product: product), // 상품 정보 콘텐츠
+                                      reviewsContent: reviewsContent, // 리뷰 내용 리스트
+                                      inquiryContent: ProductInquiryContents(), // 상품 문의 콘텐츠
                                     ),
                                   ],
                                 );

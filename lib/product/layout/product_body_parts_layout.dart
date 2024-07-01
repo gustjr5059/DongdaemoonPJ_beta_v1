@@ -1,3 +1,5 @@
+
+import 'dart:io' show Platform;
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/services.dart';
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
 import '../../cart/view/cart_screen.dart';
@@ -1437,7 +1440,7 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
 // ------ 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 시작
 class ProductDetailScreenTabs extends ConsumerWidget {
   final Widget productInfoContent; // '상품 정보' 탭의 내용을 담는 위젯
-  final Widget reviewsContent; // '리뷰' 탭의 내용을 담는 위젯
+  final List<ProductReviewContents> reviewsContent; // '리뷰' 탭의 내용을 담는 리스트
   final Widget inquiryContent; // '문의' 탭의 내용을 담는 위젯
 
   // 생성자, 각 탭의 내용을 받음.
@@ -1456,6 +1459,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTabButtons(ref, currentTabSection), // 탭 버튼들을 빌드
+        SizedBox(height: 20), // 탭과 컨텐츠 사이에 간격을 추가
         _buildSectionContent(currentTabSection), // 현재 선택된 탭의 내용을 빌드
       ],
     );
@@ -1511,9 +1515,9 @@ class ProductDetailScreenTabs extends ConsumerWidget {
       case ProdDetailScreenTabSection.productInfo: // '상품정보' 섹션이면
         return productInfoContent; // '상품정보' 내용을 반환
       case ProdDetailScreenTabSection.reviews: // '리뷰' 섹션이면
-        return reviewsContent; // '리뷰' 내용을 반환
+        return Column(children: reviewsContent); // '리뷰' 내용을 반환
       case ProdDetailScreenTabSection.inquiry: // '문의' 섹션이면
-        return inquiryContent; // '문의' 내용을 반환
+        return ProductInquiryContents(); // '문의' 내용을 반환
       default:
         return Container(); // 기본적으로 빈 컨테이너 반환
     }
@@ -1644,3 +1648,114 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
   }
 }
 // -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 끝
+
+// ------ 상품 상세 화면 내 리뷰에서 UI로 구현되는 내용 관련 ProductReviewContents 클래스 시작
+// ProductReviewContents 클래스는 StatelessWidget을 상속받아 정의됨
+// 해당 리뷰 부분은 리뷰 작성 화면에서 작성한 내용을 파이어베이스에 저장 후 저장된 내용을 불러오도록 로직을 재설계해야함!!
+class ProductReviewContents extends StatelessWidget {
+  // 클래스의 필드들을 final로 선언
+  final String thumbnailUrl;
+  final String productName;
+  final String orderNumber;
+  final String orderDate;
+  final String reviewerName;
+  final String reviewDate;
+  final String reviewImageUrl;
+  final String reviewContent;
+
+  // 생성자를 통해 필드들을 초기화
+  const ProductReviewContents({
+    required this.thumbnailUrl, // 상품 썸네일 URL
+    required this.productName, // 상품명
+    required this.orderNumber, // 발주 번호
+    required this.orderDate, // 발주 일자
+    required this.reviewerName, // 작성자 이름
+    required this.reviewDate, // 리뷰 등록 일자
+    required this.reviewImageUrl, // 리뷰 이미지 URL
+    required this.reviewContent, // 리뷰 내용
+  });
+
+  // build 메서드를 오버라이드하여 UI를 구성
+  @override
+  Widget build(BuildContext context) {
+    // CommonCardView 위젯을 반환, content에 Column 위젯을 사용하여 여러 위젯을 세로로 배치
+    return CommonCardView(
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // 좌측 정렬
+        children: [
+          SizedBox(height: 10), // 위쪽 여백 설정
+          // 상품 썸네일
+          Image.network(thumbnailUrl, height: 100, width: 100, fit: BoxFit.cover),
+          const SizedBox(height: 8), // 여백
+          // 상품 정보
+          Text('상품명: $productName', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4), // 여백
+          Text('발주 번호: $orderNumber'),
+          const SizedBox(height: 4), // 여백
+          Text('발주 일자: $orderDate'),
+          const SizedBox(height: 4), // 여백
+          Text('작성자: $reviewerName'),
+          const SizedBox(height: 4), // 여백
+          Text('리뷰 등록 일자: $reviewDate'),
+          const SizedBox(height: 8), // 여백
+          // 리뷰 이미지가 있을 경우만 이미지 위젯을 표시
+          if (reviewImageUrl.isNotEmpty)
+            Image.network(reviewImageUrl, height: 200, width: double.infinity, fit: BoxFit.cover),
+          const SizedBox(height: 8), // 여백
+          // 리뷰 내용
+          Text(reviewContent),
+        ],
+      ),
+      backgroundColor: BEIGE_COLOR, // 카드의 배경색 설정
+    );
+  }
+}
+// ------ 상품 상세 화면 내 리뷰에서 UI로 구현되는 내용 관련 ProductReviewContents 클래스 끝
+
+// ------ 연결된 링크로 이동하는 '상품 문의하기' 버튼을 UI로 구현하는 ProductInquiryContents 클래스 내용 구현 시작
+// ProductInquiryContents 클래스는 StatelessWidget을 상속받아 정의됨
+class ProductInquiryContents extends StatelessWidget {
+  // build 메서드를 오버라이드하여 UI를 구성
+  @override
+  Widget build(BuildContext context) {
+    // CommonCardView 위젯을 반환, content에 Column 위젯을 사용하여 여러 위젯을 세로로 배치
+    return CommonCardView(
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.center, // 중앙 정렬
+        children: [
+          // ElevatedButton 위젯을 사용하여 버튼을 생성
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+              backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
+              side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+            ),
+            // 버튼이 눌렸을 때의 동작 정의
+            onPressed: () async {
+              // URL을 상수로 선언
+              const url = 'https://pf.kakao.com/_xjVrbG';
+              // URI를 파싱하여 생성
+              final uri = Uri.parse(url);
+              // URL을 열 수 있는지 확인하고 열 수 있으면 URL을 엶
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              } else {
+                // URL을 열 수 없으면 예외를 던짐
+                throw 'Could not launch $url';
+              }
+            },
+            // 버튼의 자식 위젯으로 텍스트를 설정
+            child: Text(
+              '상품 문의하기',
+              style: TextStyle(
+                fontWeight: FontWeight.bold, // 텍스트를 굵게 설정
+              ),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: BEIGE_COLOR, // 카드의 배경색 설정
+    );
+  }
+}
+// ------ 연결된 링크로 이동하는 '상품 문의하기' 버튼을 UI로 구현하는 ProductInquiryContents 클래스 내용 구현 끝
