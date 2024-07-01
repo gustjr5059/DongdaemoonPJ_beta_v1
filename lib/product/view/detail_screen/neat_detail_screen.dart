@@ -227,15 +227,12 @@ class _NeatDetailProductScreenState
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.zero, // 컨텐츠 내용 부분 패딩이 없음.
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Column(
+                      return Column(
                           children: [
                             SizedBox(height: 5), // 높이 20으로 간격 설정
                             // productContent의 상태에 따라 위젯을 빌드.
@@ -243,7 +240,7 @@ class _NeatDetailProductScreenState
                               // 데이터가 로드되었을 때 실행되는 코드 블록.
                               data: (product) {
                                 // 제품 세부사항을 빌드하여 반환함.
-                                return buildProductDetails(context, ref, product, pageController);
+                                return buildProdDetailScreenContents(context, ref, product, pageController);
                               },
                               // 로딩 중일 때 실행되는 코드 블록.
                               loading: () => Center(child: CircularProgressIndicator()),
@@ -252,7 +249,6 @@ class _NeatDetailProductScreenState
                             ),
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
-                        ),
                       );
                     },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정

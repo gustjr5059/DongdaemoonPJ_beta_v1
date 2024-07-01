@@ -1039,8 +1039,8 @@ class ProductInfoDetailScreenNavigation {
 } // -------- ProductInfoDetailScreenNavigation 클래스 내용 구현 끝
 
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 시작
-// ------ buildProductDetails 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
-Widget buildProductDetails(BuildContext context, WidgetRef ref,
+// ------ buildProdDetailScreenContents 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
+Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
     ProductContent product, PageController pageController) {
   // print('buildProductDetails 호출');
   // print('상품 소개: ${product.briefIntroduction}');
@@ -1087,7 +1087,7 @@ Widget buildProductDetails(BuildContext context, WidgetRef ref,
     ),
   );
 }
-// ------ buildProductDetails 위젯의 구현 끝
+// ------ buildProdDetailScreenContents 위젯의 구현 끝
 
 // ------ buildProductImageSlider 위젯 시작: 제품 이미지 부분을 구현.
 Widget buildProductImageSliderSection(ProductContent product, WidgetRef ref,
@@ -1166,7 +1166,7 @@ Widget buildProductImageSliderSection(ProductContent product, WidgetRef ref,
 // ------ buildProductBriefIntroAndPriceInfoSection 위젯 시작: 제품 소개 및 가격 정보 부분을 구현.
 Widget buildProductBriefIntroAndPriceInfoSection(
     BuildContext context, WidgetRef ref, ProductContent product) {
-  final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+  final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'); // 정규식을 사용하여 천 단위로 쉼표를 추가.
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0), // 수평 패딩을 20.0으로 설정
     child: Column(
