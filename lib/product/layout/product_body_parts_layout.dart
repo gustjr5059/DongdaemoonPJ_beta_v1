@@ -23,6 +23,7 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../order/view/order_screen.dart';
+import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
@@ -915,57 +916,27 @@ class ProductInfoDetailScreenNavigation {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 제품 썸네일을 표시함.
+                // 썸네일이 null이 아니고 빈 문자열이 아닐 때만 실행
                 if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
-                  // 썸네일이 null이 아니고 빈 문자열이 아닐 때만 실행
+                // 썸네일을 가운데 정렬
                   Center(
-                    // 썸네일을 가운데 정렬
+                    // 썸네일 이미지와 좋아요 아이콘을 겹쳐서 표시
                     child: Stack(
-                      // 썸네일 이미지와 좋아요 아이콘을 겹쳐서 표시
                       children: [
                         // 네트워크에서 이미지를 가져와서 표시
+                        // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
                         Image.network(product.thumbnail!,
                             width: 100, fit: BoxFit.cover),
-                        // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
+                        // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
                         Positioned(
-                          // 아이콘 버튼을 이미지의 오른쪽 위에 배치
-                          top: -10,
-                          right: -10,
-                          child: IconButton(
-                            // 좋아요 상태에 따라 다른 아이콘을 표시
-                            icon: Icon(
-                              ref
-                                      .watch(wishlistProvider)
-                                      .contains(product.docId)
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              // 좋아요 상태에 따라 아이콘 색상을 변경
-                              color: ref
-                                      .watch(wishlistProvider)
-                                      .contains(product.docId)
-                                  ? Colors.red
-                                  : Colors.grey,
-                            ),
-                            // 아이콘 버튼을 클릭했을 때 실행되는 함수
-                            onPressed: () {
-                              // 찜 목록에 상품을 추가하거나 제거하는 함수 호출
-                              ref
-                                  .read(wishlistProvider.notifier)
-                                  .toggleItem(product.docId);
-                              // 찜 목록에 상품이 추가되었는지 확인
-                              if (ref
-                                  .read(wishlistProvider)
-                                  .contains(product.docId)) {
-                                // 찜 목록에 상품이 추가되었음을 알리는 스낵바 표시
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('상품이 찜 목록에 담겼습니다.')),
-                                );
-                              } else {
-                                // 찜 목록에서 상품이 제거되었음을 알리는 스낵바 표시
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('상품이 찜 목록에서 비워졌습니다.')),
-                                );
-                              }
-                            },
+                          top: -10,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
+                          right: -10, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
+                          // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
+                          child: WishlistIconButton(
+                            docId: product.docId,
+                            // WishlistIconButton에 product의 docId를 전달
+                            ref: ref,
+                            // WishlistIconButton에 ref를 전달
                           ),
                         ),
                       ],
@@ -1216,6 +1187,12 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                     style: TextStyle(
                         fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold), // 글자 크기를 25로 설정하고, 색상을 빨간색으로 설정, 볼드체 적용
                   ),
+                Spacer(), // 할인율과의 간격 공간 생성
+                // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
+                WishlistIconButton(
+                  docId: product.docId,
+                  ref: ref,
+                ),
               ],
             ),
           ),
