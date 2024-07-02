@@ -295,8 +295,14 @@ class _OnepieceDetailProductScreenState
         ],
       ),
       // 하단 탭 바 - 2번 케이스인 '장바구니' 버튼과 '바로 발주' 버튼이 UI로 구현됨.
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 2),
+      bottomNavigationBar: productContent.when(
+        data: (product) {
+          return buildCommonBottomNavigationBar(
+              ref.watch(tabIndexProvider), ref, context, 5, 2, product: product);
+        },
+        loading: () => SizedBox.shrink(),  // 로딩 중일 때는 빈 공간으로 처리
+        error: (error, _) => SizedBox.shrink(),  // 에러가 발생했을 때는 빈 공간으로 처리
+      ),
     );
     // ------ 화면구성 끝
   }

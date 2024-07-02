@@ -36,6 +36,7 @@ dependencies:
   cached_network_image: ^3.3.1
   shared_preferences: ^2.2.3
   carousel_slider: ^4.2.1
+  http: ^1.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -53,6 +54,7 @@ dependencies:
   badges: ^3.1.2
   uuid: ^4.4.0
   debounce_throttle: ^2.0.0
+  firebase_storage: ^11.7.5
 
 dev_dependencies:
   flutter_test:

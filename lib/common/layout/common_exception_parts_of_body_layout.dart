@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션 내 쇼핑 카트 화면 관련 파일을 임포트합니다.
+import '../../cart/layout/cart_body_parts_layout.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../cart/view/cart_screen.dart';
 
@@ -28,6 +29,7 @@ import '../../order/view/order_screen.dart';
 
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
 import '../../product/layout/product_body_parts_layout.dart';
+import '../../product/model/product_model.dart';
 import '../../product/provider/product_future_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/login_screen.dart';
@@ -196,7 +198,7 @@ AppBar buildCommonAppBar({
 // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
 // BottomNavigationBar 생성 함수
 Widget buildCommonBottomNavigationBar(
-    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase) {
+    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase, {ProductContent? product}) {
 
   switch (navigationCase) {
     // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
@@ -337,6 +339,9 @@ Widget buildCommonBottomNavigationBar(
   );
   // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:
+      if (product == null) {
+        throw ArgumentError('Product must be provided for navigation case 2');
+      }
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // 좌우 20.0, 상하 10.0의 여백을 추가
         child: Row( // 수평으로 배치되는 Row 위젯 사용
@@ -344,9 +349,7 @@ Widget buildCommonBottomNavigationBar(
           children: [
             Expanded( // 내부 위젯의 가로 공간을 최대한 확장
               child: ElevatedButton(
-                onPressed: () {
-                  // 장바구니 버튼 클릭 시 동작 추가
-                },
+                onPressed: () => onCartButtonPressed(context, ref, product), // 장바구니 버튼 클릭했을 때, 데이터를 파이어베이스에 저장하도록 하는 로직 재사용하여 구현
                 style: ElevatedButton.styleFrom(
                   backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
                   foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정

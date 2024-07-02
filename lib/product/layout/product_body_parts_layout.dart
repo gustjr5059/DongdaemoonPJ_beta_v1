@@ -1222,31 +1222,31 @@ Widget buildProductColorAndSizeSelection(
               child: DropdownButton<String>(
                 isExpanded: true,
                 // 드롭다운 버튼의 너비를 최대로 확장.
-                value: ref.watch(colorSelectionIndexProvider),
+                value: ref.watch(colorSelectionUrlProvider),
                 // 선택된 색상 값을 가져옴.
                 hint: Text('[필수] 옵션을 선택해 주세요'),
                 // 선택하지 않았을 때 표시되는 텍스트.
                 onChanged: (newValue) {
-                  ref.read(colorSelectionIndexProvider.notifier).state =
-                      newValue!;
-                  // 새로운 색상이 선택되면 상태를 업데이트.
+                  final selectedIndex = product.colorOptions?.indexWhere((option) => option['url'] == newValue) ?? -1;
+                  // 새로운 값과 일치하는 색상 옵션의 인덱스를 찾음.
+                  ref.read(colorSelectionIndexProvider.notifier).state = selectedIndex;
+                  // 색상 인덱스를 업데이트.
+                  ref.read(colorSelectionUrlProvider.notifier).state = newValue;
+                  // 선택된 색상 URL을 업데이트.
                 },
                 items: product.colorOptions
                     ?.map((option) => DropdownMenuItem<String>(
-                          value: option['url'], // 각 옵션의 URL을 값으로 사용.
-                          child: Row(
-                            children: [
-                              Image.network(option['url'],
-                                  width: 20, height: 20),
-                              // 색상을 나타내는 이미지를 표시.
-                              SizedBox(width: 8),
-                              // 이미지와 텍스트 사이의 간격을 8로 설정.
-                              Text(option['text']),
-                              // 색상의 텍스트 설명을 표시.
-                            ],
-                          ),
-                        ))
-                    .toList(),
+                  value: option['url'], // 각 옵션의 URL을 값으로 사용.
+                  child: Row(
+                    children: [
+                      Image.network(option['url'],
+                          width: 20, height: 20), // 색상을 나타내는 이미지를 표시.
+                      SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
+                      Text(option['text']), // 색상의 텍스트 설명을 표시.
+                    ],
+                  ),
+                ))
+                    .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
               ),
             ),
           ],
@@ -1273,10 +1273,10 @@ Widget buildProductColorAndSizeSelection(
                 },
                 items: product.sizes
                     ?.map((size) => DropdownMenuItem<String>(
-                          value: size,
-                          child: Text(size),
-                        ))
-                    .toList(),
+                  value: size, // 각 사이즈를 값으로 사용.
+                  child: Text(size), // 사이즈 텍스트를 표시.
+                ))
+                    .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
               ),
             ),
           ],
@@ -1290,8 +1290,8 @@ Widget buildProductColorAndSizeSelection(
 // ------ buildProductAllCountAndPriceSelection 위젯 시작: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
 // 선택한 색상, 사이즈, 수량, 총 가격을 표시하는 위젯을 생성하는 함수.
 Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref, ProductContent product) {
-  // 선택한 색상 인덱스를 가져옴.
-  final selectedColor = ref.watch(colorSelectionIndexProvider);
+  // 선택한 색상 URL을 가져옴.
+  final selectedColorUrl = ref.watch(colorSelectionUrlProvider);
   // 선택한 사이즈를 가져옴.
   final selectedSize = ref.watch(sizeSelectionIndexProvider);
   // 선택한 수량을 가져옴.
@@ -1304,8 +1304,8 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
 
   // 선택한 색상 정보를 가져옴.
   final selectedColorOption = product.colorOptions?.firstWhere(
-        (option) => option['url'] == selectedColor,
-    orElse: () => {'url': '', 'text': ''},
+        (option) => option['url'] == selectedColorUrl,
+    orElse: () => {'url': '', 'text': ''}, // 기본 값 설정.
   );
 
   // 정규식을 사용하여 천 단위로 쉼표를 추가.
@@ -1315,9 +1315,10 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       // 색상과 사이즈가 선택되었을 때만 보여줌.
-      if (selectedColor != null && selectedSize != null)
+      if (selectedColorUrl != null && selectedSize != null)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          // 좌우 여백 20, 수직 여백 8로 설정.
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1325,20 +1326,20 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                 children: [
                   // 선택한 색상을 텍스트로 표시함.
                   Text('선택한 색상:', style: TextStyle(fontSize: 16)),
-                  SizedBox(width: 8),
+                  SizedBox(width: 8), // 텍스트와 이미지 사이의 간격을 8로 설정.
                   // 선택한 색상이 존재하면 이미지를 표시함.
                   if (selectedColorOption != null)
                     Image.network(
-                      selectedColorOption['url'],
+                      selectedColorOption['url']!,
                       width: 20,
                       height: 20,
                     ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
                   // 선택한 색상 이름을 텍스트로 표시함.
-                  Text(selectedColorOption?['text'], style: TextStyle(fontSize: 16)),
+                  Text(selectedColorOption?['text']!, style: TextStyle(fontSize: 16)),
                 ],
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 8), // 색상과 사이즈 사이의 수직 간격을 8로 설정.
               // 선택한 사이즈를 텍스트로 표시함.
               Text('선택한 사이즈: $selectedSize', style: TextStyle(fontSize: 16)),
             ],
@@ -1346,8 +1347,10 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
         ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        // 좌우 여백 20, 수직 여백 8로 설정.
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // 자식 위젯들을 좌우로 배치.
           children: [
             // '수량' 텍스트를 표시함.
             Text('수량', style: TextStyle(fontSize: 16)),
@@ -1381,18 +1384,19 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                       context: context,
                       builder: (BuildContext context) {
                         final TextEditingController controller = TextEditingController();
-                        String input = '';
+                        // 텍스트 입력 컨트롤러를 생성.
+                        String input = ''; // 입력 값을 저장할 변수.
                         return AlertDialog(
                           // 다이얼로그 제목.
                           title: Text('수량 입력', style: TextStyle(color: Colors.black)), // 색상 수정
                           content: TextField(
-                            controller: controller,
+                            controller: controller, // 컨트롤러 연결.
                             keyboardType: TextInputType.number,
                             // 숫자만 입력 가능하게 설정.
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly
                             ],
-                            autofocus: true,
+                            autofocus: true, // 자동으로 포커스.
                             onChanged: (value) {
                               input = value;
                             },
@@ -1410,8 +1414,10 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                               onPressed: () {
                                 if (input.isNotEmpty) {
                                   ref.read(detailQuantityIndexProvider.notifier).state = int.parse(input);
+                                  // 입력된 값을 정수로 변환하여 상태를 업데이트.
                                 }
                                 Navigator.of(context).pop();
+                                // 다이얼로그 닫기.
                               },
                             ),
                           ],
