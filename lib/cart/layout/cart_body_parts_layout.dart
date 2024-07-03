@@ -1,6 +1,8 @@
+import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:flutter/material.dart'; // Flutter의 Material Design 위젯을 사용하기 위해 import
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 패키지를 사용하기 위해 import
+import 'package:intl/intl.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 import '../../product/provider/product_state_provider.dart'; // 제품 상태 제공자를 사용하기 위해 import
@@ -53,134 +55,235 @@ void onCartButtonPressed(
 class CartItemsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // cartItemsProvider의 상태를 관찰하여 cartItems 변수에 저장
+    // cartItemsProvider를 통해 장바구니 아이템 목록을 가져옴
     final cartItems = ref.watch(cartItemsProvider);
 
-    // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 메시지 표시
+    // 장바구니가 비어있을 경우 보여줄 텍스트
     if (cartItems.isEmpty) {
       return Text('장바구니가 비어 있습니다.');
     }
 
-    // 장바구니에 아이템이 있을 경우, 각 아이템을 UI로 표시
+    // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
+    final numberFormat = NumberFormat('###,###');
+
+    // 장바구니 아이템들을 UI로 표시
     return Column(
-      // cartItems 리스트를 순회하면서 각 아이템을 위젯으로 생성
       children: cartItems.map((cartItem) {
+        // 원래 가격을 정수로 변환
+        final int originalPrice = cartItem['original_price']?.round() ?? 0;
+        // 할인된 가격을 정수로 변환
+        final int discountPrice = cartItem['discount_price']?.round() ?? 0;
+        // 선택된 수량을 정수로 변환
+        final int selectedCount = cartItem['selected_count'] ?? 1;
+        // 원래 가격에 선택된 수량을 곱한 값
+        final int totalOriginalPrice = originalPrice * selectedCount;
+        // 할인된 가격에 선택된 수량을 곱한 값
+        final int totalDiscountPrice = discountPrice * selectedCount;
+
+        // CommonCardView 위젯으로 각 아이템 표시
         return CommonCardView(
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 썸네일 이미지가 있을 경우 이미지 표시
-              if (cartItem['thumbnails'] != null)
-                Image.network(
-                  cartItem['thumbnails'] ?? '',
-                  height: 100,
-                  width: 100,
-                  fit: BoxFit.cover,
-                ),
-              // 상품 간단 소개 텍스트 표시
-              Text('${cartItem['brief_introduction'] ?? ''}'),
-              // 원래 가격 텍스트 표시
-              Text('${cartItem['original_price']?.round() ?? 0}원'),
-              // 할인된 가격 텍스트 표시
-              Text('${cartItem['discount_price']?.round() ?? 0}원'),
-              // 할인율 텍스트 표시
-              Text('${cartItem['discount_percent']?.round() ?? 0}%'),
               Row(
                 children: [
-                  Text(''),
-                  SizedBox(width: 8),
-                  // 선택된 색상 이미지가 있을 경우 이미지 표시
-                  if (cartItem['selected_color_image'] != null)
+                  // 체크박스 표시
+                  Transform.scale(
+                    scale: 1.5,
+                    child: Checkbox(
+                      value: true,
+                      onChanged: (bool? value) {},
+                    ),
+                  ),
+                  // 아이템 이름 중앙 정렬
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        '${cartItem['brief_introduction'] ?? ''}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // 아이템 삭제 버튼
+                  Transform.scale(
+                    scale: 1.5, // x 버튼 크기 조절
+                    child: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        // 아이템 삭제 로직 호출
+                        ref.read(cartItemsProvider.notifier)
+                            .removeItem(cartItem['id']);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  // 썸네일 이미지 표시
+                  if (cartItem['thumbnails'] != null)
                     Image.network(
-                      cartItem['selected_color_image'] ?? '',
-                      height: 30,
-                      width: 30,
+                      cartItem['thumbnails'] ?? '',
+                      height: 130,
+                      width: 130,
                       fit: BoxFit.cover,
                     ),
                   SizedBox(width: 8),
-                  // 선택된 색상 텍스트 표시
-                  Text('${cartItem['selected_color_text'] ?? ''}'),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 원래 가격 표시
+                      Text(
+                        '${numberFormat.format(totalOriginalPrice)}원',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[500],
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          // 할인된 가격 표시
+                          Text(
+                            '${numberFormat.format(totalDiscountPrice)}원',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          // 할인율 표시
+                          Text(
+                            '${cartItem['discount_percent']?.round() ?? 0}%',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          // 선택된 색상 이미지 표시
+                          if (cartItem['selected_color_image'] != null)
+                            Image.network(
+                              cartItem['selected_color_image'] ?? '',
+                              height: 20,
+                              width: 20,
+                              fit: BoxFit.cover,
+                            ),
+                          SizedBox(width: 8),
+                          // 선택된 색상 텍스트 표시
+                          Text(
+                            '${cartItem['selected_color_text'] ?? ''}',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      // 선택된 사이즈 텍스트 표시
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30.0), // 10 정도 우측으로 이동
+                        child: Text(
+                          '${cartItem['selected_size'] ?? ''}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              // 선택된 사이즈 텍스트 표시
-              Text('${cartItem['selected_size'] ?? ''}'),
-              Row(
-                children: [
-                  Text(''),
-                  // 수량 감소 버튼
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () {
-                      // 수량이 1보다 클 경우 수량 감소
-                      if (cartItem['selected_count'] > 1) {
-                        ref.read(cartItemsProvider.notifier).updateItemQuantity(cartItem['id'], cartItem['selected_count'] - 1);
-                      }
-                    },
-                  ),
-                  // 현재 선택된 수량 표시
-                  Container(
-                    width: 50,
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${cartItem['selected_count'] ?? 0}',
-                      style: TextStyle(fontSize: 16),
+              Center(
+                // 수량 조절 버튼과 직접 입력 버튼
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // 수량 감소 버튼
+                    IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        // 수량이 1보다 클 때만 감소
+                        if (cartItem['selected_count'] > 1) {
+                          ref.read(cartItemsProvider.notifier)
+                              .updateItemQuantity(cartItem['id'], cartItem['selected_count'] - 1);
+                        }
+                      },
                     ),
-                  ),
-                  // 수량 증가 버튼
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      // 수량 증가
-                      ref.read(cartItemsProvider.notifier).updateItemQuantity(cartItem['id'], cartItem['selected_count'] + 1);
-                    },
-                  ),
-                  // 수량 직접 입력 버튼
-                  TextButton(
-                    onPressed: () {
-                      // 수량 입력 다이얼로그 표시
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          final TextEditingController controller = TextEditingController();
-                          String input = '';
-                          return AlertDialog(
-                            title: Text('수량 입력'),
-                            content: TextField(
-                              controller: controller,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              autofocus: true,
-                              onChanged: (value) {
-                                input = value;
-                              },
-                            ),
-                            actions: <TextButton>[
-                              // 확인 버튼
-                              TextButton(
-                                child: Text('확인'),
-                                onPressed: () {
-                                  // 입력한 수량이 비어 있지 않을 경우 수량 업데이트
-                                  if (input.isNotEmpty) {
-                                    ref.read(cartItemsProvider.notifier).updateItemQuantity(cartItem['id'], int.parse(input));
-                                  }
-                                  // 다이얼로그 닫기
-                                  Navigator.of(context).pop();
+                    // 현재 수량 표시
+                    Container(
+                      width: 50,
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${cartItem['selected_count'] ?? 0}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    // 수량 증가 버튼
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        ref.read(cartItemsProvider.notifier)
+                            .updateItemQuantity(cartItem['id'], cartItem['selected_count'] + 1);
+                      },
+                    ),
+                    // 수량 직접 입력 버튼
+                    TextButton(
+                      onPressed: () {
+                        // 수량 입력을 위한 다이얼로그 표시
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            final TextEditingController controller = TextEditingController();
+                            String input = '';
+                            return AlertDialog(
+                              title: Text('수량 입력', style: TextStyle(color: Colors.black)),
+                              content: TextField(
+                                controller: controller,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                autofocus: true,
+                                onChanged: (value) {
+                                  input = value;
                                 },
+                                decoration: InputDecoration(
+                                  // 포커스된 상태의 밑줄 색상을 검정으로 변경.
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black), // 밑줄 색상 변경
+                                  ),
+                                ),
                               ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Text('직접 입력'),
-                  ),
-                ],
+                              actions: <TextButton>[
+                                TextButton(
+                                  child: Text('확인', style: TextStyle(color: Colors.black)),
+                                  onPressed: () {
+                                    // 입력된 수량이 비어있지 않을 경우 수량 업데이트
+                                    if (input.isNotEmpty) {
+                                      ref.read(cartItemsProvider.notifier)
+                                          .updateItemQuantity(cartItem['id'], int.parse(input));
+                                    }
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: BEIGE_COLOR,
           elevation: 2,
           padding: const EdgeInsets.all(8),
         );
@@ -189,3 +292,4 @@ class CartItemsList extends ConsumerWidget {
   }
 }
 // ------ 장바구니 화면 내 파이어스토어에 있는 장바구니에 담긴 상품 아이템 데이터를 UI로 구현하는 CartItemsList 클래스 끝
+

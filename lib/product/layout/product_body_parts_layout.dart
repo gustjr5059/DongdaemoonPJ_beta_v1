@@ -878,8 +878,11 @@ class ProductInfoDetailScreenNavigation {
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
-      // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
+      // 화면을 돌아왔을 때 선택된 색상 텍스트 인덱스의 상태를 초기화함
       ref.read(colorSelectionIndexProvider.notifier).state = null;
+      // 화면을 돌아왔을 때 선택된 색상 이미지 Url의 상태를 초기화함
+      ref.read(colorSelectionUrlProvider.notifier).state = null;
+      // 화면을 돌아왔을 때 선택된 사이즈의 상태를 초기화함
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
       // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
       ref.read(detailQuantityIndexProvider.notifier).state = 1;

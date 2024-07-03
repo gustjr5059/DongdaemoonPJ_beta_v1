@@ -142,6 +142,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 장바구니 버튼 인덱스인 1과 매핑
       // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 1;
+      // 장바구니 화면 초기화 시, 장바구니 아이템을 파이어베이스 내 최신화된 데이터로 업데이트 하는 초기화 로직
+      ref.read(cartItemsProvider.notifier).refreshCartItems();
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -356,7 +358,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 30), // 높이 임의로 50으로 간격 설정
                             // 장바구니 화면 내 파이어스토어에 있는 장바구니에 담긴 상품 아이템 데이터를 UI로 구현하는 CartItemsList 클래스
                             // 재사용하여 장바구니 화면에 구현하는 로직
                             CartItemsList(),
