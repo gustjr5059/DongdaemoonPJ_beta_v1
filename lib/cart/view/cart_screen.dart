@@ -41,6 +41,8 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_future_provider.dart';
 
 // 장바구니 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../layout/cart_body_parts_layout.dart';
+import '../provider/cart_future_provier.dart';
 import '../provider/cart_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -166,7 +168,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(cartLargeBannerPageProvider.notifier).state = 0;
         ref.read(cartScrollPositionProvider.notifier).state =
-            0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
+        0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
       }
     });
 
@@ -311,7 +313,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                        (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -332,7 +334,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                   ref: ref,
                                   // ref 전달 (Provider나 상태 관리에 사용)
                                   currentPageProvider:
-                                      cartLargeBannerPageProvider,
+                                  cartLargeBannerPageProvider,
                                   // 현재 페이지를 관리하는 Provider
                                   pageController: _largeBannerPageController,
                                   // 페이지 컨트롤러를 전달
@@ -341,10 +343,10 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                   bannerLinks: largeBannerLinks,
                                   // 배너 링크들을 전달
                                   bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
+                                  allLargeBannerImagesProvider,
                                   // 배너 이미지들을 관리하는 Provider
                                   onPageTap:
-                                      _onLargeBannerTap, // 배너 탭(클릭) 시 실행할 함수 전달
+                                  _onLargeBannerTap, // 배너 탭(클릭) 시 실행할 함수 전달
                                 ),
                               ),
                               backgroundColor: LIGHT_PURPLE_COLOR,
@@ -355,8 +357,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
-                            Text('CART 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+                            // 장바구니 화면 내 파이어스토어에 있는 장바구니에 담긴 상품 아이템 데이터를 UI로 구현하는 CartItemsList 클래스
+                            // 재사용하여 장바구니 화면에 구현하는 로직
+                            CartItemsList(),
                           ],
                         ),
                       );
@@ -373,7 +376,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         ],
       ),
       bottomNavigationBar:
-          buildCustomBottomNavigationBar(ref, context), // 새롭게 정의한 하단 탭 바를 사용
+      buildCustomBottomNavigationBar(ref, context), // 새롭게 정의한 하단 탭 바를 사용
     );
     // ------ 화면구성 끝
   }

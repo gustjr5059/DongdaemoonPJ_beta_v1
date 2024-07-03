@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../repository/cart_repository.dart';
+import 'cart_future_provier.dart';
+
 // 장바구니 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final cartLargeBannerPageProvider = StateProvider<int>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
@@ -19,3 +22,43 @@ final cartScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+// Firestore와의 상호작용을 위해 CartItemRepository를 사용하여 상태를 관리하는 provider인 StateNotifier
+// 즉, CartItemRepository를 통해서 파이어베이스와 UI부분을 보면서 수량의 변화에 따른 상태가 변경되는 것을 관리(상태 업데이트)하는 담당
+class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+  // CartItemRepository 인스턴스를 저장하기 위한 변수 선언
+  final CartItemRepository cartItemRepository;
+
+  // 생성자에서 CartItemRepository를 받아 초기 상태를 빈 리스트로 설정하고, loadCartItems 함수 호출
+  CartItemsNotifier(this.cartItemRepository) : super([]) {
+    loadCartItems();
+  }
+
+  // Firestore에서 장바구니 아이템 목록을 불러와 상태를 업데이트하는 함수
+  Future<void> loadCartItems() async {
+    state = await cartItemRepository.getCartItems();
+  }
+
+  // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수
+  Future<void> updateItemQuantity(String id, int newQuantity) async {
+    // Firestore에서 수량 업데이트
+    await cartItemRepository.updateCartItemQuantity(id, newQuantity);
+    // 상태를 새로운 수량으로 업데이트
+    state = [
+      for (final item in state)
+        if (item['id'] == id)
+          {...item, 'selected_count': newQuantity} // 수량이 변경된 아이템 업데이트
+        else
+          item // 수량이 변경되지 않은 아이템은 그대로 유지
+    ];
+  }
+}
+
+// CartItemsNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
+final cartItemsProvider = StateNotifierProvider<CartItemsNotifier, List<Map<String, dynamic>>>((ref) {
+  // cartItemRepositoryProvider를 통해 CartItemRepository 인스턴스를 가져옴
+  final cartItemRepository = ref.read(cartItemRepositoryProvider);
+  // CartItemsNotifier 인스턴스를 생성하여 반환
+  return CartItemsNotifier(cartItemRepository);
+});
+
