@@ -31,9 +31,6 @@ class CartItemRepository {
   // 장바구니에 아이템 추가하는 함수 - 선택된 색상, 사이즈, 수량 정보를 포함하여 장바구니 아이템을 Firestore에 추가
   Future<void> addToCartItem(ProductContent product, String? selectedColorText,
       String? selectedColorUrl, String? selectedSize, int quantity) async {
-    // Firestore에 저장할 문서명 생성
-    final cartItemCount = await getCartItemCount(); // 현재 장바구니 아이템 개수를 가져옴
-    final newDocName = 'cart_item_${cartItemCount + 1}'; // 새로운 문서명을 생성
 
     // Firestore에 저장할 데이터 준비
     final data = {
@@ -46,10 +43,11 @@ class CartItemRepository {
       'selected_color_image': null, // 나중에 저장될 이미지 URL
       'selected_size': selectedSize, // 선택한 사이즈
       'selected_count': quantity, // 선택한 수량
+      'timestamp': FieldValue.serverTimestamp(), // 현재 서버 타임스탬프를 저장
     };
 
     // 파이어스토리지에 저장할 경로 생성
-    final storagePath = 'cart_item_image/cart_$newDocName'; // 저장할 경로 생성
+    final storagePath = 'cart_item_image/cart_${DateTime.now().millisecondsSinceEpoch}'; // 저장할 경로 생성
 
     // 썸네일 이미지 저장
     if (product.thumbnail != null) { // 썸네일 이미지가 있을 경우
@@ -65,13 +63,15 @@ class CartItemRepository {
       data['selected_color_image'] = colorImageUrl; // 데이터를 업데이트
     }
 
-    // Firestore에 데이터 저장
-    await firestore.collection('cart_item').doc(newDocName).set(data); // Firestore에 데이터를 저장
+    // Firestore에 데이터 저장 - 문서 ID를 타임스탬프 기반으로 설정하여 최신순으로 정렬되도록 함
+    await firestore.collection('cart_item').doc('${DateTime.now().millisecondsSinceEpoch}').set(data); // Firestore에 데이터를 저장
   }
 
   // Firestore에서 장바구니 아이템 목록을 가져오는 함수 - Firestore에서 'cart_item' 컬렉션의 문서를 가져와 List로 반환
   Future<List<Map<String, dynamic>>> getCartItems() async {
-    final querySnapshot = await firestore.collection('cart_item').get(); // 'cart_item' 컬렉션에서 모든 문서를 가져옴
+    // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
+    // - 장바구니 화면 내 timestamp인 필드 데이터를 가지고 내림차순으로 상품 데이터를 정렬하여 최신 데이터가 제일 상단에 위치하도록 함
+    final querySnapshot = await firestore.collection('cart_item').orderBy('timestamp', descending: true).get();
     return querySnapshot.docs.map((doc) { // 가져온 문서들을 순회하여 리스트로 반환
       final data = doc.data(); // 문서 데이터를 가져옴
       data['id'] = doc.id; // 문서 ID를 데이터에 추가함

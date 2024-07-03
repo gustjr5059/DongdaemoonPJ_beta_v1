@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart'; // Flutter의 Cupertino 디자인 패키지를 사용하기 위해 import
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 패키지를 사용하기 위해 import
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../repository/cart_repository.dart'; // 장바구니 데이터 처리를 위한 CartRepository를 import
 import 'cart_future_provier.dart'; // CartFutureProvider를 import
@@ -12,6 +15,9 @@ final cartCurrentTabProvider = StateProvider<int>((ref) => 0);
 
 // 장바구니 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동할 위치를 저장하는 StateProvider
 final cartScrollPositionProvider = StateProvider<double>((ref) => 0);
+
+// 장바구니 화면에서 하단 탭 바 내 전체 체크박스 관련 상태관리 StateProvider
+final allCheckedProvider = StateProvider<bool>((ref) => false);
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 cartScrollControllerProvider라는 이름의 Provider를 정의함
@@ -38,7 +44,10 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
   // Firestore에서 장바구니 아이템 목록을 불러와 상태를 업데이트하는 함수
   Future<void> loadCartItems() async {
+    // Firestore에서 장바구니 아이템 목록을 가져와 상태를 업데이트
     state = await cartItemRepository.getCartItems();
+    // 체크 상태를 불러오는 함수 호출
+    await _loadCheckedStates();
   }
 
   // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수
@@ -49,21 +58,78 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     state = [
       for (final item in state)
         if (item['id'] == id)
-          {...item, 'selected_count': newQuantity} // 수량이 변경된 아이템 업데이트
+        // 수량이 변경된 아이템 업데이트
+          {...item, 'selected_count': newQuantity}
         else
-          item // 수량이 변경되지 않은 아이템은 그대로 유지
+        // 수량이 변경되지 않은 아이템은 그대로 유지
+          item
     ];
   }
 
   // 장바구니에서 아이템을 제거하고 상태를 갱신하는 함수
   Future<void> removeItem(String id) async {
-    await cartItemRepository.removeCartItem(id); // Firestore에서 아이템 제거
-    state = state.where((item) => item['id'] != id).toList(); // 상태에서 제거된 아이템 삭제
+    // Firestore에서 아이템 제거
+    await cartItemRepository.removeCartItem(id);
+    // 상태에서 제거된 아이템 삭제
+    state = state.where((item) => item['id'] != id).toList();
+  }
+
+  // 장바구니 내 모든 아이템의 체크 상태를 변경하는 함수
+  void toggleAll(bool checked) {
+    // 모든 아이템의 체크 상태를 업데이트
+    state = [
+      for (final item in state)
+        {...item, 'checked': checked}
+    ];
+    // 체크 상태를 저장하는 함수 호출
+    _saveCheckedStates();
+  }
+
+  // 장바구니 아이템의 체크 상태를 변경하는 함수
+  void toggleItemChecked(String id, bool checked) {
+    // 특정 아이템의 체크 상태를 업데이트
+    state = [
+      for (final item in state)
+        if (item['id'] == id)
+          {...item, 'checked': checked}
+        else
+          item
+    ];
+    // 체크 상태를 저장하는 함수 호출
+    _saveCheckedStates();
   }
 
   // 장바구니 아이템 목록을 새로고침하는 함수
   Future<void> refreshCartItems() async {
-    state = await cartItemRepository.getCartItems(); // Firestore에서 최신 장바구니 아이템 목록을 불러옴
+    // Firestore에서 최신 장바구니 아이템 목록을 불러옴
+    state = await cartItemRepository.getCartItems();
+    // 체크 상태를 불러오는 함수 호출
+    await _loadCheckedStates();
+  }
+
+  // 장바구니 아이템의 체크 상태를 저장하는 함수
+  Future<void> _saveCheckedStates() async {
+    // SharedPreferences 인스턴스를 불러옴
+    final prefs = await SharedPreferences.getInstance();
+    // 체크 상태를 아이템 ID를 키로 하는 맵으로 변환
+    final checkedStates = {for (var item in state) item['id']: item['checked'] ?? false};
+    // 체크 상태를 JSON 문자열로 변환하여 저장
+    await prefs.setString('checkedStates', jsonEncode(checkedStates));
+  }
+
+  // 장바구니 아이템의 체크 상태를 불러오는 함수
+  Future<void> _loadCheckedStates() async {
+    // SharedPreferences 인스턴스를 불러옴
+    final prefs = await SharedPreferences.getInstance();
+    // 저장된 체크 상태를 JSON 문자열로부터 불러옴
+    final checkedStatesString = prefs.getString('checkedStates') ?? '{}';
+    // 체크 상태를 맵으로 변환
+    final checkedStates = Map<String, bool>.from(jsonDecode(checkedStatesString));
+    // 상태를 불러온 체크 상태로 업데이트
+    state = [
+      for (final item in state)
+        {...item, 'checked': checkedStates[item['id']] ?? false}
+    ];
   }
 }
 
@@ -74,3 +140,4 @@ final cartItemsProvider = StateNotifierProvider<CartItemsNotifier, List<Map<Stri
   // CartItemsNotifier 인스턴스를 생성하여 반환
   return CartItemsNotifier(cartItemRepository);
 });
+

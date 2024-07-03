@@ -102,20 +102,20 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController cartScreenPointScrollController; // 스크롤 컨트롤러 선언
 
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
-  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-  void _updateScrollPosition() {
-    // 'cartScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = cartScreenPointScrollController.offset;
-
-    // 'ref'를 사용하여 'cartScrollPositionProvider'의 notifier를 읽어옴.
-    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
-    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(cartScrollPositionProvider.notifier).state = currentScrollPosition;
-  }
-
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
+  // // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
+  // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
+  // // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
+  // void _updateScrollPosition() {
+  //   // 'cartScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
+  //   double currentScrollPosition = cartScreenPointScrollController.offset;
+  //
+  //   // 'ref'를 사용하여 'cartScrollPositionProvider'의 notifier를 읽어옴.
+  //   // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
+  //   // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
+  //   ref.read(cartScrollPositionProvider.notifier).state = currentScrollPosition;
+  // }
+  //
+  // // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -145,10 +145,10 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // 장바구니 화면 초기화 시, 장바구니 아이템을 파이어베이스 내 최신화된 데이터로 업데이트 하는 초기화 로직
       ref.read(cartItemsProvider.notifier).refreshCartItems();
     });
-    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-    // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    cartScreenPointScrollController.addListener(_updateScrollPosition);
+    // // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
+    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
+    // // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
+    // cartScreenPointScrollController.addListener(_updateScrollPosition);
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'cartLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
@@ -222,9 +222,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    // 'cartScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
-    // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    cartScreenPointScrollController.removeListener(_updateScrollPosition);
+    // // 'cartScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
+    // // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
+    // cartScreenPointScrollController.removeListener(_updateScrollPosition);
 
     cartScreenPointScrollController.dispose(); // ScrollController 해제
 
@@ -377,8 +377,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
           buildTopButton(context, cartScreenPointScrollController),
         ],
       ),
-      bottomNavigationBar:
-      buildCustomBottomNavigationBar(ref, context), // 새롭게 정의한 하단 탭 바를 사용
+      bottomNavigationBar: buildCommonBottomNavigationBar(0, ref, context, 0, 3),
     );
     // ------ 화면구성 끝
   }

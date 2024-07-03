@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
@@ -200,6 +201,9 @@ AppBar buildCommonAppBar({
 Widget buildCommonBottomNavigationBar(
     int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase, {ProductContent? product}) {
 
+  // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
+  final numberFormat = NumberFormat('###,###'); // 천 단위일때마다 쉼표 표시
+
   switch (navigationCase) {
     // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
     case 1:
@@ -337,6 +341,7 @@ Widget buildCommonBottomNavigationBar(
     // 선택된 아이템의 폰트 크기
     unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
   );
+
   // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:
       if (product == null) {
@@ -373,6 +378,85 @@ Widget buildCommonBottomNavigationBar(
           ],
         ),
       );
+
+  // ㅊ - 장바구니 화면에 구현
+    case 3:
+    // 전체 체크박스 선택 여부를 상태로 관리
+      final allChecked = ref.watch(allCheckedProvider);
+      // 장바구니 아이템 목록을 상태로 관리
+      final cartItems = ref.watch(cartItemsProvider);
+
+      // 선택된 아이템들의 합계 금액 계산
+      int totalSelectedPrice = cartItems
+      // 아이템 목록 중 선택된 아이템만 필터링
+          .where((item) => item['checked'] == true)
+      // 선택된 아이템들의 합계 금액을 계산
+          .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt());
+
+      return Container(
+        // 컨테이너의 내부 여백 설정
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        // 컨테이너 배경색을 흰색으로 설정
+        color: Colors.white,
+        child: Row(
+          // Row의 주 축 방향에서의 정렬 방식을 공간을 동일하게 나눔
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // 전체 선택 체크박스와 텍스트를 담을 Row
+            Row(
+              children: [
+                // 체크박스 크기를 1.5배로 확대
+                Transform.scale(
+                  scale: 1.5,
+                  child: Checkbox(
+                    // 체크박스의 선택 여부를 allChecked 상태로 설정
+                    value: allChecked,
+                    // 체크박스 상태 변경 시 호출되는 함수
+                    onChanged: (bool? value) {
+                      // allCheckedProvider 상태 업데이트
+                      ref.read(allCheckedProvider.notifier).state = value!;
+                      // cartItemsProvider 상태에서 모든 아이템의 체크 상태를 변경
+                      ref.read(cartItemsProvider.notifier).toggleAll(value);
+                    },
+                  ),
+                ),
+                // 체크박스와 텍스트 사이의 간격 설정
+                SizedBox(width: 8),
+                // "전체" 텍스트를 표시
+                Text(
+                  '전체',
+                  // 텍스트 스타일 설정 (크기: 16, 굵게)
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            // 합계 금액을 표시하는 텍스트
+            Text(
+              '합계: ${numberFormat.format(totalSelectedPrice)}원',
+              // 텍스트 스타일 설정 (크기: 18, 굵게)
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            // 발주하기 버튼
+            ElevatedButton(
+              // 버튼 클릭 시 호출되는 함수
+              onPressed: () {
+                // OrderMainScreen으로 화면 전환
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => OrderMainScreen()),
+                );
+              },
+              // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
+              style: ElevatedButton.styleFrom(
+                backgroundColor: BUTTON_COLOR,
+                foregroundColor: INPUT_BG_COLOR,
+              ),
+              // 버튼에 표시될 텍스트
+              child: Text('발주하기'),
+            ),
+          ],
+        ),
+      );
+
     default:
       return Container(); // 기본으로 빈 컨테이너 반환
   }
@@ -411,115 +495,6 @@ void navigateToScreenAndRemoveUntil(
     MaterialPageRoute(builder: (context) => screen),
     (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
   );
-}
-
-Widget buildCustomBottomNavigationBar(WidgetRef ref, BuildContext context) {
-  final allSelected = ref.watch(allItemsSelectedProvider);
-  final totalAmount = ref.watch(totalAmountProvider);
-
-  return BottomAppBar(
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      height: 70.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Checkbox(
-                value: allSelected,
-                onChanged: (bool? value) {
-                  ref.read(allItemsSelectedProvider.notifier).state = value!;
-                  ref.read(cartStateProvider.notifier).updateAllSelected(value);
-                },
-              ),
-              Text('전체 선택'),
-            ],
-          ),
-          Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('합계',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                  Text('${totalAmount}원',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red)),
-                ],
-              ),
-              SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => OrderMainScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: BUTTON_COLOR,
-                ),
-                child: Text('발주하기'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-final allItemsSelectedProvider = StateProvider<bool>((ref) {
-  final cartItems = ref.watch(cartStateProvider);
-  return cartItems.every((item) => item.isSelected);
-});
-
-final totalAmountProvider = Provider<int>((ref) {
-  final cartItems = ref.watch(cartStateProvider);
-  return cartItems
-      .where((item) => item.isSelected)
-      .fold(0, (sum, item) => sum + item.discountedPrice);
-});
-
-final cartStateProvider =
-    StateNotifierProvider<CartStateNotifier, List<CartItem>>((ref) {
-  return CartStateNotifier();
-});
-
-class CartStateNotifier extends StateNotifier<List<CartItem>> {
-  CartStateNotifier() : super([]);
-
-  void updateAllSelected(bool isSelected) {
-    state = state.map((item) => item.copyWith(isSelected: isSelected)).toList();
-  }
-}
-
-class CartItem {
-  final String id;
-  final String name;
-  final int price;
-  final int discountedPrice;
-  final bool isSelected;
-
-  CartItem({
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.discountedPrice,
-    this.isSelected = false,
-  });
-
-  CartItem copyWith({bool? isSelected}) {
-    return CartItem(
-      id: id,
-      name: name,
-      price: price,
-      discountedPrice: discountedPrice,
-      isSelected: isSelected ?? this.isSelected,
-    );
-  }
 }
 
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작

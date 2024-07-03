@@ -91,8 +91,11 @@ class CartItemsList extends ConsumerWidget {
                   Transform.scale(
                     scale: 1.5,
                     child: Checkbox(
-                      value: true,
-                      onChanged: (bool? value) {},
+                      value: cartItem['checked'] ?? false,
+                      onChanged: (bool? value) {
+                        ref.read(cartItemsProvider.notifier)
+                            .toggleItemChecked(cartItem['id'], value!);
+                      },
                     ),
                   ),
                   // 아이템 이름 중앙 정렬
