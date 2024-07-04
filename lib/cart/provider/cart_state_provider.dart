@@ -10,10 +10,7 @@ import 'cart_future_provier.dart'; // CartFutureProvider를 import
 // 장바구니 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final cartLargeBannerPageProvider = StateProvider<int>((ref) => 0);
 
-// 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
-final cartCurrentTabProvider = StateProvider<int>((ref) => 0);
-
-// 장바구니 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동할 위치를 저장하는 StateProvider
+// 장바구니 화면에서 단순 화면 스크롤로 이동할 위치를 저장하는 StateProvider
 final cartScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // 장바구니 화면에서 하단 탭 바 내 전체 체크박스 관련 상태관리 StateProvider

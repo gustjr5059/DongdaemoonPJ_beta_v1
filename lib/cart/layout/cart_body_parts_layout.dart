@@ -92,6 +92,7 @@ class CartItemsList extends ConsumerWidget {
                     scale: 1.5,
                     child: Checkbox(
                       value: cartItem['checked'] ?? false,
+                      activeColor: BUTTON_COLOR,  // 체크박스 색상 변경
                       onChanged: (bool? value) {
                         ref.read(cartItemsProvider.notifier)
                             .toggleItemChecked(cartItem['id'], value!);
@@ -128,6 +129,7 @@ class CartItemsList extends ConsumerWidget {
                 children: [
                   // 썸네일 이미지 표시
                   if (cartItem['thumbnails'] != null)
+
                     Image.network(
                       cartItem['thumbnails'] ?? '',
                       height: 130,

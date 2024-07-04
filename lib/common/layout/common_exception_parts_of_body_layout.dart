@@ -411,6 +411,7 @@ Widget buildCommonBottomNavigationBar(
                   child: Checkbox(
                     // 체크박스의 선택 여부를 allChecked 상태로 설정
                     value: allChecked,
+                    activeColor: BUTTON_COLOR,  // 체크박스 색상 변경
                     // 체크박스 상태 변경 시 호출되는 함수
                     onChanged: (bool? value) {
                       // allCheckedProvider 상태 업데이트
