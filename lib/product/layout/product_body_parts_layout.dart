@@ -756,7 +756,9 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // // ------ 상품 상세 화면 관련 초기화 부분 시작
   // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
-  ref.read(colorSelectionIndexProvider.notifier).state = null;
+  ref.read(colorSelectionIndexProvider.notifier).state = 0;
+  ref.read(colorSelectionTextProvider.notifier).state = null;
+  ref.read(colorSelectionUrlProvider.notifier).state = null;
   ref.read(sizeSelectionIndexProvider.notifier).state = null;
   // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
   ref.read(detailQuantityIndexProvider.notifier).state = 1;
@@ -928,8 +930,9 @@ class ProductInfoDetailScreenNavigation {
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
+      ref.read(colorSelectionIndexProvider.notifier).state = 0;
       // 화면을 돌아왔을 때 선택된 색상 텍스트 인덱스의 상태를 초기화함
-      ref.read(colorSelectionIndexProvider.notifier).state = null;
+      ref.read(colorSelectionTextProvider.notifier).state = null;
       // 화면을 돌아왔을 때 선택된 색상 이미지 Url의 상태를 초기화함
       ref.read(colorSelectionUrlProvider.notifier).state = null;
       // 화면을 돌아왔을 때 선택된 사이즈의 상태를 초기화함
@@ -985,18 +988,18 @@ class ProductInfoDetailScreenNavigation {
                         // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
                         Image.network(product.thumbnail!,
                             width: 100, fit: BoxFit.cover),
-                        // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
-                        Positioned(
-                          top: -10,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
-                          right: -10, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
-                          // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
-                          child: WishlistIconButton(
-                            docId: product.docId,
-                            // WishlistIconButton에 product의 docId를 전달
-                            ref: ref,
-                            // WishlistIconButton에 ref를 전달
-                          ),
-                        ),
+                        // // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
+                        // Positioned(
+                        //   top: -10,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
+                        //   right: -10, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
+                        //   // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
+                        //   child: WishlistIconButton(
+                        //     docId: product.docId,
+                        //     // WishlistIconButton에 product의 docId를 전달
+                        //     ref: ref,
+                        //     // WishlistIconButton에 ref를 전달
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -1094,7 +1097,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         SizedBox(height: 10),
         // 제품 소개와 가격 부분 다음 섹션 사이의 여백을 10으로 설정.
         CommonCardView(
-          content: buildProductColorAndSizeSelection(context, ref, product),
+          content: ProductColorAndSizeSelection(product: product), // 색상과 사이즈 선택 관련 섹션
           backgroundColor: BEIGE_COLOR, // 앱 배경색과 구분되는 연한 회색 계열
           elevation: 4.0, // 그림자 효과
           margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
@@ -1102,7 +1105,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         ),
         SizedBox(height: 10),
         CommonCardView(
-          content: buildProductAllCountAndPriceSelection(context, ref, product),
+          content: buildProductAllCountAndPriceSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
           backgroundColor: BEIGE_COLOR,
           elevation: 4.0,
           margin: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -1257,94 +1260,130 @@ Widget buildProductBriefIntroAndPriceInfoSection(
 }
 // ------ buildProductBriefIntroAndPriceInfoSection 위젯의 구현 끝: 제품 소개 및 가격 정보 부분을 구현.
 
-// ------ buildColorAndSizeSelection 위젯 시작: 색상 및 사이즈 선택 부분을 구현.
-Widget buildProductColorAndSizeSelection(
-    BuildContext context, WidgetRef ref, ProductContent product) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          // 자식 위젯들을 왼쪽 정렬로 배치.
-          children: [
-            Text('색상', style: TextStyle(fontSize: 16)), // '색상' 라벨을 표시.
-            SizedBox(width: 63), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 63으로 설정.
-            Expanded(
-              // 드롭다운 버튼을 화면 너비에 맞게 확장.
-              child: DropdownButton<String>(
-                isExpanded: true,
-                // 드롭다운 버튼의 너비를 최대로 확장.
-                value: ref.watch(colorSelectionUrlProvider),
-                // 선택된 색상 값을 가져옴.
-                hint: Text('[필수] 옵션을 선택해 주세요'),
-                // 선택하지 않았을 때 표시되는 텍스트.
-                onChanged: (newValue) {
-                  final selectedIndex = product.colorOptions?.indexWhere((option) => option['url'] == newValue) ?? -1;
-                  // 새로운 값과 일치하는 색상 옵션의 인덱스를 찾음.
-                  ref.read(colorSelectionIndexProvider.notifier).state = selectedIndex;
-                  // 색상 인덱스를 업데이트.
-                  ref.read(colorSelectionUrlProvider.notifier).state = newValue;
-                  // 선택된 색상 URL을 업데이트.
-                },
-                items: product.colorOptions
-                    ?.map((option) => DropdownMenuItem<String>(
-                  value: option['url'], // 각 옵션의 URL을 값으로 사용.
-                  child: Row(
-                    children: [
-                      Image.network(option['url'],
-                          width: 20, height: 20), // 색상을 나타내는 이미지를 표시.
-                      SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
-                      Text(option['text']), // 색상의 텍스트 설명을 표시.
-                    ],
-                  ),
-                ))
-                    .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10), // 색상 선택과 사이즈 선택 사이의 수직 간격을 10으로 설정.
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          // 자식 위젯들을 왼쪽 정렬로 배치.
-          children: [
-            Text('사이즈', style: TextStyle(fontSize: 16)), // '사이즈' 라벨을 표시.
-            SizedBox(width: 52), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 52로 설정.
-            Expanded(
-              // 드롭다운 버튼을 화면 너비에 맞게 확장.
-              child: DropdownButton<String>(
-                isExpanded: true,
-                // 드롭다운 버튼의 너비를 최대로 확장.
-                value: ref.watch(sizeSelectionIndexProvider),
-                // 선택된 사이즈 값을 가져옴.
-                hint: Text('[필수] 옵션을 선택해 주세요'),
-                // 선택하지 않았을 때 표시되는 텍스트.
-                onChanged: (newValue) {
-                  ref.read(sizeSelectionIndexProvider.notifier).state = newValue!;
-                  // 새로운 사이즈가 선택되면 상태를 업데이트.
-                },
-                items: product.sizes
-                    ?.map((size) => DropdownMenuItem<String>(
-                  value: size, // 각 사이즈를 값으로 사용.
-                  child: Text(size), // 사이즈 텍스트를 표시.
-                ))
-                    .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+// ------ buildColorAndSizeSelection 클래스 시작: 색상 및 사이즈 선택 부분을 구현.
+class ProductColorAndSizeSelection extends ConsumerStatefulWidget {
+  final ProductContent product;
+
+  const ProductColorAndSizeSelection({Key? key, required this.product}) : super(key: key);
+
+  @override
+  _ProductColorAndSizeSelectionState createState() => _ProductColorAndSizeSelectionState();
 }
-// ------ buildColorAndSizeSelection 위젯의 구현 끝
+
+class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSizeSelection> {
+  @override
+  void initState() {
+    super.initState();
+
+    // 초기값 설정을 위해 첫 번째 옵션을 가져옴
+    final initialColorImage = widget.product.colorOptions?.isNotEmpty ?? false
+        ? widget.product.colorOptions!.first['url']
+        : null;
+    final initialColorText = widget.product.colorOptions?.isNotEmpty ?? false
+        ? widget.product.colorOptions!.first['text']
+        : null;
+    final initialSize = widget.product.sizes?.isNotEmpty ?? false
+        ? widget.product.sizes!.first
+        : null;
+
+    // 초기값으로 상태를 업데이트
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(colorSelectionUrlProvider.notifier).state ??= initialColorImage; // 선택된 색상 이미지
+      ref.read(colorSelectionTextProvider.notifier).state ??= initialColorText; // 선택된 색상 텍스트
+      ref.read(sizeSelectionIndexProvider.notifier).state ??= initialSize; // 선택된 사이즈
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final product = widget.product;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // 자식 위젯들을 왼쪽 정렬로 배치.
+            children: [
+              Text('색상', style: TextStyle(fontSize: 16)), // '색상' 라벨을 표시.
+              SizedBox(width: 63), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 63으로 설정.
+              Expanded(
+                // 드롭다운 버튼을 화면 너비에 맞게 확장.
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  // 드롭다운 버튼의 너비를 최대로 확장.
+                  value: ref.watch(colorSelectionUrlProvider),
+                  // 선택된 색상 값을 가져옴.
+                  onChanged: (newValue) {
+                    final selectedIndex = product.colorOptions?.indexWhere((option) => option['url'] == newValue) ?? -1;
+                    final selectedText = product.colorOptions?.firstWhere((option) => option['url'] == newValue)?['text'];
+                    // 새로운 값과 일치하는 색상 옵션의 인덱스를 찾음.
+                    ref.read(colorSelectionIndexProvider.notifier).state = selectedIndex;
+                    ref.read(colorSelectionTextProvider.notifier).state = selectedText; // 색상 텍스트 업데이트
+                    // 색상 인덱스를 업데이트.
+                    ref.read(colorSelectionUrlProvider.notifier).state = newValue;
+                    // 선택된 색상 URL을 업데이트.
+                  },
+                  items: product.colorOptions
+                      ?.map((option) => DropdownMenuItem<String>(
+                    value: option['url'], // 각 옵션의 URL을 값으로 사용.
+                    child: Row(
+                      children: [
+                        Image.network(option['url'],
+                            width: 20, height: 20), // 색상을 나타내는 이미지를 표시.
+                        SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
+                        Text(option['text']), // 색상의 텍스트 설명을 표시.
+                      ],
+                    ),
+                  ))
+                      .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10), // 색상 선택과 사이즈 선택 사이의 수직 간격을 10으로 설정.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // 자식 위젯들을 왼쪽 정렬로 배치.
+            children: [
+              Text('사이즈', style: TextStyle(fontSize: 16)), // '사이즈' 라벨을 표시.
+              SizedBox(width: 52), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 52로 설정.
+              Expanded(
+                // 드롭다운 버튼을 화면 너비에 맞게 확장.
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  // 드롭다운 버튼의 너비를 최대로 확장.
+                  value: ref.watch(sizeSelectionIndexProvider),
+                  // 선택된 사이즈 값을 가져옴.
+                  onChanged: (newValue) {
+                    ref.read(sizeSelectionIndexProvider.notifier).state = newValue!;
+                    // 새로운 사이즈가 선택되면 상태를 업데이트.
+                  },
+                  items: product.sizes
+                      ?.map((size) => DropdownMenuItem<String>(
+                    value: size, // 각 사이즈를 값으로 사용.
+                    child: Text(size), // 사이즈 텍스트를 표시.
+                  ))
+                      .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+// ------ buildColorAndSizeSelection 클래스 끝: 색상 및 사이즈 선택 부분을 구현.
 
 // ------ buildProductAllCountAndPriceSelection 위젯 시작: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
 // 선택한 색상, 사이즈, 수량, 총 가격을 표시하는 위젯을 생성하는 함수.
 Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref, ProductContent product) {
   // 선택한 색상 URL을 가져옴.
   final selectedColorUrl = ref.watch(colorSelectionUrlProvider);
+  // 선택한 색상 텍스트를 가져옴.
+  final selectedColorText = ref.watch(colorSelectionTextProvider);
   // 선택한 사이즈를 가져옴.
   final selectedSize = ref.watch(sizeSelectionIndexProvider);
   // 선택한 수량을 가져옴.
@@ -1381,15 +1420,15 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                   Text('선택한 색상:', style: TextStyle(fontSize: 16)),
                   SizedBox(width: 8), // 텍스트와 이미지 사이의 간격을 8로 설정.
                   // 선택한 색상이 존재하면 이미지를 표시함.
-                  if (selectedColorOption != null)
+                  if (selectedColorUrl != null)
                     Image.network(
-                      selectedColorOption['url']!,
+                      selectedColorUrl,
                       width: 20,
                       height: 20,
                     ),
                   SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
                   // 선택한 색상 이름을 텍스트로 표시함.
-                  Text(selectedColorOption?['text']!, style: TextStyle(fontSize: 16)),
+                  Text(selectedColorText ?? '', style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 8), // 색상과 사이즈 사이의 수직 간격을 8로 설정.

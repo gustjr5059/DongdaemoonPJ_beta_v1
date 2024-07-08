@@ -7,6 +7,7 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 import '../../product/provider/product_state_provider.dart'; // 제품 상태 제공자를 사용하기 위해 import
+import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../provider/cart_future_provier.dart';
 import '../provider/cart_state_provider.dart'; // 장바구니 관련 Future Provider를 사용하기 위해 import
 
@@ -115,17 +116,10 @@ class CartItemsList extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  // 아이템 삭제 버튼
+                  // 찜 마크 표시 버튼 생성
                   Transform.scale(
-                    scale: 1.5,  // x 버튼 크기 조절
-                    child: IconButton(
-                      icon: Icon(Icons.close),  // x 아이콘 설정
-                      onPressed: () {  // x 버튼 클릭 시 호출되는 함수
-                        // 아이템 삭제 로직 호출
-                        ref.read(cartItemsProvider.notifier)
-                            .removeItem(cartItem['id']);  // 아이템 삭제 함수 호출
-                      },
-                    ),
+                    scale: 1.5,  // 찜 마크 크기 조절
+                    child: WishlistIconButton(docId: cartItem['product_id'], ref: ref), // WishlistIconButton 재사용하여 구현
                   ),
                 ],
               ),
@@ -301,6 +295,21 @@ class CartItemsList extends ConsumerWidget {
                         );
                       },
                       child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)),
+                    ),
+                    SizedBox(width: 50),
+                    // '삭제' 버튼 생성
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(cartItemsProvider.notifier)
+                            .removeItem(cartItem['id']); // 해당 프로바이더와 연결된 파이어스토어 내 상품 데이터 삭제
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: BUTTON_COLOR,
+                        backgroundColor: BACKGROUND_COLOR,
+                        side: BorderSide(color: BUTTON_COLOR),
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      child: Text('삭제', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),

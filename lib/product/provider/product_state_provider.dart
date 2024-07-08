@@ -144,8 +144,9 @@ StateProvider<int> getImagePageProvider(String productId) {
 // 상품 상세 화면에서 이미지 클릭 시, 상세 이미지 화면으로 이동하는 데 해당 화면 내 이미지 페이지 인덱스 상태관리 관련 StateProvider
 final detailImagePageProvider = StateProvider<int>((ref) => 0);
 // 색상 선택을 위한 상태 관리용 StateProvider
-final colorSelectionIndexProvider = StateProvider<int?>((ref) => null); // 색상 인덱스 상태관리 StateProvider(색상 텍스트 데이터용)
-final colorSelectionUrlProvider = StateProvider<String?>((ref) => null); // 색상 Url 상태관리 StateProvider(색상 이미지 Url 데이터용)
+final colorSelectionUrlProvider = StateProvider<String?>((ref) => null);
+final colorSelectionTextProvider = StateProvider<String?>((ref) => null);
+final colorSelectionIndexProvider = StateProvider<int>((ref) => 0);
 // 사이즈 선택을 위한 상태 관리용 StateProvider
 final sizeSelectionIndexProvider = StateProvider<String?>((ref) => null);
 // 상품 상세 화면에서 수량 부분의 숫자 인덱스 상태관리 관련 StateProvider
