@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 패키지를 사용하기 위해 import
 import 'package:intl/intl.dart';
 import '../../common/layout/common_body_parts_layout.dart';
+import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 import '../../product/provider/product_state_provider.dart'; // 제품 상태 제공자를 사용하기 위해 import
 import '../provider/cart_future_provier.dart';
@@ -66,6 +67,9 @@ class CartItemsList extends ConsumerWidget {
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
 
+    // ProductInfoDetailScreenNavigation 인스턴스 생성
+    final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
+
     // 장바구니 아이템들을 UI로 표시
     return Column(
       children: cartItems.map((cartItem) {
@@ -89,13 +93,13 @@ class CartItemsList extends ConsumerWidget {
                 children: [
                   // 체크박스 표시
                   Transform.scale(
-                    scale: 1.5,
+                    scale: 1.5,  // 체크박스 크기 조절
                     child: Checkbox(
-                      value: cartItem['checked'] ?? false,
+                      value: cartItem['checked'] ?? false,  // 체크박스의 초기값 설정
                       activeColor: BUTTON_COLOR,  // 체크박스 색상 변경
-                      onChanged: (bool? value) {
+                      onChanged: (bool? value) {  // 체크박스 상태가 변경될 때 호출되는 콜백 함수
                         ref.read(cartItemsProvider.notifier)
-                            .toggleItemChecked(cartItem['id'], value!);
+                            .toggleItemChecked(cartItem['id'], value!);  // 체크박스 상태 변경 로직 호출
                       },
                     ),
                   ),
@@ -103,23 +107,23 @@ class CartItemsList extends ConsumerWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        '${cartItem['brief_introduction'] ?? ''}',
+                        '${cartItem['brief_introduction'] ?? ''}',  // 아이템의 간단한 설명
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 18,  // 글자 크기 설정
+                          fontWeight: FontWeight.bold,  // 글자 두께 설정
                         ),
                       ),
                     ),
                   ),
                   // 아이템 삭제 버튼
                   Transform.scale(
-                    scale: 1.5, // x 버튼 크기 조절
+                    scale: 1.5,  // x 버튼 크기 조절
                     child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
+                      icon: Icon(Icons.close),  // x 아이콘 설정
+                      onPressed: () {  // x 버튼 클릭 시 호출되는 함수
                         // 아이템 삭제 로직 호출
                         ref.read(cartItemsProvider.notifier)
-                            .removeItem(cartItem['id']);
+                            .removeItem(cartItem['id']);  // 아이템 삭제 함수 호출
                       },
                     ),
                   ),
@@ -128,13 +132,28 @@ class CartItemsList extends ConsumerWidget {
               Row(
                 children: [
                   // 썸네일 이미지 표시
-                  if (cartItem['thumbnails'] != null)
-
-                    Image.network(
-                      cartItem['thumbnails'] ?? '',
-                      height: 130,
-                      width: 130,
-                      fit: BoxFit.cover,
+                  if (cartItem['thumbnails'] != null)  // 썸네일 이미지가 있는 경우에만 표시
+                    GestureDetector(
+                      onTap: () {  // 썸네일 클릭 시 호출되는 함수
+                        // 썸네일 클릭 시 해당 상품 상세 화면으로 이동
+                        navigatorProductDetailScreen.navigateToDetailScreen(
+                          context,
+                          ProductContent(
+                            docId: cartItem['product_id'],  // 상품 ID
+                            thumbnail: cartItem['thumbnails'],  // 썸네일 이미지 URL
+                            briefIntroduction: cartItem['brief_introduction'],  // 상품 간단 설명
+                            originalPrice: cartItem['original_price'],  // 원래 가격
+                            discountPrice: cartItem['discount_price'],  // 할인된 가격
+                            discountPercent: cartItem['discount_percent'],  // 할인율
+                          ),
+                        );
+                      },
+                      child: Image.network(
+                        cartItem['thumbnails'] ?? '',  // 썸네일 이미지 URL
+                        height: 130,  // 이미지 높이
+                        width: 130,  // 이미지 너비
+                        fit: BoxFit.cover,  // 이미지 맞추기 설정
+                      ),
                     ),
                   SizedBox(width: 8),
                   Column(
