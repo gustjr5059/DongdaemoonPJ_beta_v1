@@ -302,6 +302,9 @@ class CartItemsList extends ConsumerWidget {
                       onPressed: () {
                         ref.read(cartItemsProvider.notifier)
                             .removeItem(cartItem['id']); // 해당 프로바이더와 연결된 파이어스토어 내 상품 데이터 삭제
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('상품이 장바구니에서 삭제되었습니다.')),
+                        ); // 메세지 노출
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: BUTTON_COLOR,
