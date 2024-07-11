@@ -91,5 +91,22 @@ class CartItemRepository {
   Future<void> removeCartItem(String docId) async {
     await firestore.collection('cart_item').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제
   }
+
+  // Firestore에서 장바구니 아이템 스트림을 가져오는 함수
+  Stream<List<Map<String, dynamic>>> cartItemsStream() {
+    // Firestore의 'cart_item' 컬렉션을 timestamp 내림차순으로 정렬하여 가져옴.
+    return firestore.collection('cart_item').orderBy('timestamp', descending: true).snapshots().map((querySnapshot) {
+      // 쿼리 결과를 문서 목록으로 변환.
+      return querySnapshot.docs.map((doc) {
+        // 각 문서의 데이터를 가져옴.
+        final data = doc.data();
+        // 문서의 ID를 데이터에 추가.
+        data['id'] = doc.id;
+        // 데이터를 반환.
+        return data;
+        // 변환된 데이터를 리스트로 변환하여 반환.
+      }).toList();
+    });
+  }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝

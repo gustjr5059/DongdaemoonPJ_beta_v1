@@ -8,54 +8,82 @@ import '../provider/wishlist_state_provider.dart'; // 찜 목록의 상태 관�
 // ------- 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 내용 구현 시작
 // 찜 목록 아이콘 버튼 위젯을 구현하는 클래스
 class WishlistIconButton extends ConsumerWidget {
-  final ProductContent product; // 현재 상품 정보를 담고 있는 필드
+  // ProductContent 타입의 product를 필드로 가짐
+  final ProductContent product;
 
-  WishlistIconButton({required this.product}); // 생성자에서 상품 정보를 받아 필드에 저장
+  // 생성자를 통해 필드 초기화
+  WishlistIconButton({required this.product});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 찜 목록에 현재 상품이 포함되어 있는지 여부를 확인
-    final isWished = ref.watch(wishlistItemProvider).contains(product.docId);
+    // wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
+    final asyncWishlist = ref.watch(wishlistItemProvider);
 
-    return IconButton(
-      icon: Icon(
-        // 찜 목록에 포함된 경우와 아닌 경우에 따라 아이콘 모양 및 색상 설정
-        isWished ? Icons.favorite : Icons.favorite_border,
-        color: isWished ? Colors.red : Colors.grey,
-      ),
-      // 아이콘 버튼이 눌렸을 때의 동작을 정의
-      onPressed: () async {
-        final wishlistNotifier = ref.read(wishlistItemProvider.notifier); // 찜 목록 상태를 업데이트할 Notifier
-        final wishlistRepository = ref.read(wishlistItemRepositoryProvider); // 찜 목록 비동기 작업을 위한 Repository
+    // asyncWishlist 상태에 따라 위젯을 빌드
+    return asyncWishlist.when(
+      // 데이터가 로드된 경우
+      data: (wishlist) {
+        // 찜 목록에 현재 상품이 있는지 확인
+        final isWished = wishlist.contains(product.docId);
+        // 아이콘 버튼 반환
+        return IconButton(
+          // 찜 목록에 있는 경우 꽉 찬 하트 아이콘, 그렇지 않은 경우 빈 하트 아이콘
+          icon: Icon(
+            isWished ? Icons.favorite : Icons.favorite_border,
+            // 찜 목록에 있는 경우 빨간색, 그렇지 않은 경우 회색
+            color: isWished ? Colors.red : Colors.grey,
+          ),
+          // 버튼 클릭 시 동작 정의
+          onPressed: () async {
+            // wishlistItemProvider의 notifier를 가져옴
+            final wishlistNotifier = ref.read(wishlistItemProvider.notifier);
+            // wishlistItemRepositoryProvider를 가져옴
+            final wishlistRepository = ref.read(wishlistItemRepositoryProvider);
 
-        if (isWished) { // 이미 찜 목록에 있는 경우
-          wishlistNotifier.toggleItem(product.docId);  // 상태를 업데이트하여 찜 목록에서 제거
-          try {
-            await wishlistRepository.removeFromWishlistItem(product.docId); // 서버에서 찜 목록에서 제거
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('상품이 찜 목록에서 비워졌습니다.')), // 성공 메시지 표시
-            );
-          } catch (e) {
-            wishlistNotifier.toggleItem(product.docId);  // 실패하면 상태를 롤백
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('찜 목록에서 비우는 중 오류가 발생했습니다.')), // 오류 메시지 표시
-            );
-          }
-        } else { // 찜 목록에 없는 경우
-          wishlistNotifier.toggleItem(product.docId);  // 상태를 업데이트하여 찜 목록에 추가
-          try {
-            await wishlistRepository.addToWishlistItem(product); // 서버에서 찜 목록에 추가
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('상품이 찜 목록에 담겼습니다.')), // 성공 메시지 표시
-            );
-          } catch (e) {
-            wishlistNotifier.toggleItem(product.docId);  // 실패하면 상태를 롤백
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('찜 목록에 담는 중 오류가 발생했습니다.')), // 오류 메시지 표시
-            );
-          }
-        }
+            if (isWished) {
+              // 찜 목록에 있는 경우 제거
+              wishlistNotifier.toggleItem(product.docId);
+              try {
+                // Firestore에서 찜 목록에서 제거
+                await wishlistRepository.removeFromWishlistItem(product.docId);
+                // 성공 메시지 표시
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('상품이 찜 목록에서 비워졌습니다.')),
+                );
+              } catch (e) {
+                // 오류 발생 시 다시 추가
+                wishlistNotifier.toggleItem(product.docId);
+                // 오류 메시지 표시
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('찜 목록에서 비우는 중 오류가 발생했습니다.')),
+                );
+              }
+            } else {
+              // 찜 목록에 없는 경우 추가
+              wishlistNotifier.toggleItem(product.docId);
+              try {
+                // Firestore에서 찜 목록에 추가
+                await wishlistRepository.addToWishlistItem(product);
+                // 성공 메시지 표시
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('상품이 찜 목록에 담겼습니다.')),
+                );
+              } catch (e) {
+                // 오류 발생 시 다시 제거
+                wishlistNotifier.toggleItem(product.docId);
+                // 오류 메시지 표시
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('찜 목록에 담는 중 오류가 발생했습니다.')),
+                );
+              }
+            }
+          },
+        );
       },
+      // 로딩 중인 경우 로딩 인디케이터 표시
+      loading: () => CircularProgressIndicator(),
+      // 오류 발생 시 오류 아이콘 표시
+      error: (e, stack) => Icon(Icons.error),
     );
   }
 }

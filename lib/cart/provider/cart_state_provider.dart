@@ -130,6 +130,14 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   }
 }
 
+// 장바구니 아이템 스트림을 제공하는 StreamProvider 정의
+final cartItemsStreamProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+  // cartItemRepositoryProvider를 읽어 cartItemRepository를 가져옴.
+  final cartItemRepository = ref.read(cartItemRepositoryProvider);
+  // cartItemRepository에서 cartItemsStream을 호출하여 스트림을 반환.
+  return cartItemRepository.cartItemsStream(); // 장바구니 아이템 스트림 반환
+});
+
 // CartItemsNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
 final cartItemsProvider = StateNotifierProvider<CartItemsNotifier, List<Map<String, dynamic>>>((ref) {
   // cartItemRepositoryProvider를 통해 CartItemRepository 인스턴스를 가져옴

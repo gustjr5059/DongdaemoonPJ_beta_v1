@@ -21,10 +21,10 @@ void onCartButtonPressed(
   final selectedColorUrl = ref.read(
       colorSelectionUrlProvider); // colorSelectionUrlProvider를 사용하여 선택된 색상 URL을 읽음
   final selectedColorOption = (product.colorOptions != null &&
-          selectedColorIndex != null &&
-          selectedColorIndex >= 0 &&
-          selectedColorIndex <
-              product.colorOptions!.length) // 조건문으로 색상 옵션이 존재하고 유효한 인덱스인지 확인
+      selectedColorIndex != null &&
+      selectedColorIndex >= 0 &&
+      selectedColorIndex <
+          product.colorOptions!.length) // 조건문으로 색상 옵션이 존재하고 유효한 인덱스인지 확인
       ? product.colorOptions![selectedColorIndex] // 유효한 인덱스라면 선택된 색상 옵션을 가져옴
       : null; // 유효하지 않다면 null을 반환
   final selectedColorText = selectedColorOption?['text'] ??
@@ -36,9 +36,10 @@ void onCartButtonPressed(
 
   cartRepository
       .addToCartItem(
-          product, selectedColorText, selectedColorUrl, selectedSize, quantity)
+      product, selectedColorText, selectedColorUrl, selectedSize, quantity)
       .then((_) {
     // addToCartItem 함수를 호출하여 상품을 장바구니에 추가하고 성공 시
+    ref.read(cartItemsProvider.notifier).refreshCartItems(); // 상태를 즉시 갱신
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
   }).catchError((error) {
@@ -57,13 +58,18 @@ void onCartButtonPressed(
 class CartItemsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // cartItemsProvider를 통해 장바구니 아이템 목록을 가져옴
-    final cartItems = ref.watch(cartItemsProvider);
+    // cartItemsStreamProvider를 통해 장바구니 항목의 스트림을 감시하여, cartItemsAsyncValue에 할당.
+    final cartItemsAsyncValue = ref.watch(cartItemsStreamProvider);
 
-    // 장바구니가 비어있을 경우 보여줄 텍스트
-    if (cartItems.isEmpty) {
-      return Text('장바구니가 비어 있습니다.');
-    }
+    // cartItemsAsyncValue의 상태에 따라 위젯을 빌드.
+    return cartItemsAsyncValue.when(
+      // 데이터가 성공적으로 로드되었을 때 실행되는 콜백 함수.
+      data: (cartItems) {
+        // 장바구니 항목이 비어있을 경우의 조건문.
+        if (cartItems.isEmpty) {
+          // 장바구니가 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
+          return Center(child: Text('장바구니가 비어 있습니다.'));
+        }
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
@@ -333,9 +339,16 @@ class CartItemsList extends ConsumerWidget {
           elevation: 2,
           padding: const EdgeInsets.all(8),
         );
-      }).toList(),
+       }).toList(),
+      );
+     },
+      // 데이터가 로딩 중일 때 실행되는 콜백 함수.
+      loading: () => Center(child: CircularProgressIndicator()),
+      // 데이터 로딩 중 오류가 발생했을 때 실행되는 콜백 함수.
+      error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
     );
   }
 }
 // ------ 장바구니 화면 내 파이어스토어에 있는 장바구니에 담긴 상품 아이템 데이터를 UI로 구현하는 CartItemsList 클래스 끝
+
 

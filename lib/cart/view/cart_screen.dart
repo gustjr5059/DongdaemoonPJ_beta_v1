@@ -312,76 +312,85 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
                 padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
-                            // 큰 배너 섹션을 카드뷰로 구성
-                            CommonCardView(
-                              // 카드뷰의 내용(content)을 구성
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함
-                                height: 200,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  context: context,
-                                  // 현재 빌드 컨텍스트를 전달
-                                  ref: ref,
-                                  // ref 전달 (Provider나 상태 관리에 사용)
-                                  currentPageProvider:
-                                  cartLargeBannerPageProvider,
-                                  // 현재 페이지를 관리하는 Provider
-                                  pageController: _largeBannerPageController,
-                                  // 페이지 컨트롤러를 전달
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 자동 스크롤 기능 전달
-                                  bannerLinks: largeBannerLinks,
-                                  // 배너 링크들을 전달
-                                  bannerImagesProvider:
-                                  allLargeBannerImagesProvider,
-                                  // 배너 이미지들을 관리하는 Provider
-                                  onPageTap:
-                                  _onLargeBannerTap, // 배너 탭(클릭) 시 실행할 함수 전달
-                                ),
-                              ),
-                              backgroundColor: LIGHT_PURPLE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-                            ),
-                            SizedBox(height: 30), // 높이 임의로 50으로 간격 설정
-                            // 장바구니 화면 내 파이어스토어에 있는 장바구니에 담긴 상품 아이템 데이터를 UI로 구현하는 CartItemsList 클래스
-                            // 재사용하여 장바구니 화면에 구현하는 로직
-                            CartItemsList(),
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
+                // Consumer 위젯을 사용하여 리프레시 및 데이터 제공을 처리함.
+                sliver: Consumer(
+                  builder: (context, ref, child) { // 여기서 'ref'를 사용.
+                    // cartItemsStreamProvider를 통해 장바구니 항목의 스트림을 감시하여, cartItemsAsyncValue에 할당함.
+                    final cartItemsAsyncValue = ref.watch(cartItemsStreamProvider);
+                    // cartItemsAsyncValue의 상태에 따라 위젯을 빌드함.
+                    return cartItemsAsyncValue.when(
+                      // 데이터가 성공적으로 로드되었을 때 실행되는 콜백 함수임.
+                      data: (cartItems) {
+                        // SliverList 위젯을 사용하여 스크롤 가능한 리스트를 생성함.
+                        return SliverList(
+                          // SliverChildBuilderDelegate를 사용하여 자식 위젯을 빌드함.
+                          delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                              // 여러 위젯을 수직으로 배열하기 위해 Column 위젯을 사용함.
+                              return Column(
+                                children: [
+                                  // 위젯 사이에 공간을 추가하는 SizedBox임.
+                                  SizedBox(height: 5),
+                                  // CommonCardView 위젯을 사용하여 공통 카드 레이아웃을 생성.
+                                  CommonCardView(
+                                    // content에 SizedBox를 사용하여 배너 섹션의 높이를 설정.
+                                    content: SizedBox(
+                                      height: 200,
+                                      // buildCommonBannerPageViewSection 함수를 호출하여 배너 페이지 뷰를 생성.
+                                      child: buildCommonBannerPageViewSection<
+                                          AllLargeBannerImage>(
+                                        context: context,
+                                        ref: ref,
+                                        currentPageProvider:
+                                        cartLargeBannerPageProvider,
+                                        pageController:
+                                        _largeBannerPageController,
+                                        bannerAutoScroll: _largeBannerAutoScroll,
+                                        bannerLinks: largeBannerLinks,
+                                        bannerImagesProvider:
+                                        allLargeBannerImagesProvider,
+                                        onPageTap: _onLargeBannerTap,
+                                      ),
+                                    ),
+                                    // 배경색을 설정.
+                                    backgroundColor: LIGHT_PURPLE_COLOR,
+                                    // 그림자의 높이를 설정.
+                                    elevation: 4,
+                                    // 패딩을 설정.
+                                    padding: const EdgeInsets.fromLTRB(
+                                        8.0, 8.0, 8.0, 8.0),
+                                  ),
+                                  // 위젯 사이에 공간을 추가하는 SizedBox임.
+                                  SizedBox(height: 30),
+                                  // CartItemsList 위젯을 추가.
+                                  CartItemsList(),
+                                ],
+                              );
+                            },
+                            // 자식 위젯의 개수를 설정함.
+                            childCount: 1,
+                          ),
+                        );
+                      },
+                      // 데이터가 로딩 중일 때 실행되는 콜백 함수.
+                      loading: () =>
+                          SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
+                      // 데이터 로딩 중 오류가 발생했을 때 실행되는 콜백 함수.
+                      error: (error, stack) =>
+                          SliverToBoxAdapter(child: Center(child: Text('오류가 발생했습니다.'))),
+                    );
+                  },
                 ),
               ),
             ],
           ),
-          // buildTopButton 함수는 주어진 context와 cartScreenPointScrollController를 사용하여
-          // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+          // 상단 버튼을 생성하는 함수.
           buildTopButton(context, cartScreenPointScrollController),
         ],
       ),
+      // 하단 네비게이션 바를 생성하는 함수.
       bottomNavigationBar: buildCommonBottomNavigationBar(0, ref, context, 0, 3),
     );
-    // ------ 화면구성 끝
   }
-// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-// ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
 // _CartMainScreenState 클래스 끝
