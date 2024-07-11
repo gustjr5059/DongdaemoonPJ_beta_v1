@@ -29,6 +29,27 @@ final wishlistItemProvider = StateNotifierProvider<WishlistItemNotifier, AsyncVa
   return WishlistItemNotifier(wishlistRepository);
 });
 
+// wishlistItemsStreamProvider를 정의 - Firestore에서 wishlist_item 컬렉션의 실시간 스트림을 제공
+final wishlistItemsStreamProvider = StreamProvider.autoDispose((ref) {
+  final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  return wishlistRepository.firestore
+      .collection('wishlist_item')
+      .orderBy('timestamp', descending: true) // timestamp 필드 기준으로 내림차순 정렬
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs.map((doc) {
+      return {
+        'product_id': doc['product_id'],
+        'thumbnails': doc['thumbnails'],
+        'brief_introduction': doc['brief_introduction'],
+        'original_price': doc['original_price'],
+        'discount_price': doc['discount_price'],
+        'discount_percent': doc['discount_percent'],
+      };
+    }).toList();
+  });
+});
+
 // Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 StateNotifier
 class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // WishlistItemRepository 인스턴스 저장
@@ -74,6 +95,16 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
         // 상품이 찜 목록에 없는 경우 추가
         state = AsyncValue.data(Set.from(items)..add(productId));
       }
+    }
+  }
+
+  // 상품 ID를 기준으로 찜 목록에서 제거하는 함수인 removeItem
+  void removeItem(String productId) async {
+    try {
+      await wishlistItemRepository.removeFromWishlistItem(productId);
+      toggleItem(productId); // 로컬 상태에서도 제거
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
     }
   }
 

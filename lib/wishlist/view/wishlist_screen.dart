@@ -55,6 +55,7 @@ import '../../../common/provider/common_future_provider.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../product/model/product_model.dart';
+import '../layout/wishlist_body_parts_layout.dart';
 import '../provider/wishlist_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -237,65 +238,28 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                 leading: null,
                 backgroundColor: BUTTON_COLOR,
               ),
+              // 실제 컨텐츠를 나타내는 슬리버 리스트
+              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 10),
-                // sliver: SliverList(
-                //   delegate: SliverChildBuilderDelegate(
-                //         (BuildContext context, int index) {
-                //       ProductContent item = wishlistItems[index];
-                //       bool isEven = index % 2 == 0;
-                //
-                //       return CommonCardView(
-                //         backgroundColor:
-                //         isEven ? LIGHT_YELLOW_COLOR : BEIGE_COLOR,
-                //         content: Row(
-                //           children: [
-                //             if (item.thumbnail != null)
-                //               Image.network(
-                //                 item.thumbnail!,
-                //                 width: 100,
-                //                 height: 100,
-                //                 fit: BoxFit.cover,
-                //               ),
-                //             SizedBox(width: 10),
-                //             Expanded(
-                //               child: Column(
-                //                 crossAxisAlignment: CrossAxisAlignment.start,
-                //                 children: [
-                //                   Text(item.briefIntroduction ?? 'No description'),
-                //                   Text('Original: ${item.originalPrice ?? 0}'),
-                //                   Text('Discount: ${item.discountPrice ?? 0}'),
-                //                   Text('Discount Percent: ${item.discountPercent ?? 0}%'),
-                //                   if (item.colorOptions != null)
-                //                     ...item.colorOptions!.map((option) {
-                //                       return Text('Color: ${option['text']}');
-                //                     }).toList(),
-                //                 ],
-                //               ),
-                //             ),
-                //             Column(
-                //               children: [
-                //                 ElevatedButton(
-                //                   onPressed: () {
-                //                     // 장바구니 담기 기능 추가
-                //                   },
-                //                   child: Text('장바구니 담기'),
-                //                 ),
-                //                 ElevatedButton(
-                //                   onPressed: () {
-                //                     // 삭제 기능 추가
-                //                   },
-                //                   child: Text('삭제'),
-                //                 ),
-                //               ],
-                //             ),
-                //           ],
-                //         ),
-                //       );
-                //     },
-                //     childCount: wishlistItems.length,
-                //   ),
-                // ),
+              padding: EdgeInsets.only(top: 5),
+              // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Padding(
+                      // 각 항목의 좌우 간격을 4.0으로 설정함.
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Column(
+                        children: [
+                          WishlistItemsList(), // WishlistItemsList 클래스 사용
+                          SizedBox(height: 5),
+                        ],
+                      ),
+                    );
+                  },
+                  childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                ),
+              ),
               ),
             ],
           ),
