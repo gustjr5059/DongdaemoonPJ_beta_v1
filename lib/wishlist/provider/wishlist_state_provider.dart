@@ -26,23 +26,27 @@ final wishlistScrollControllerProvider = Provider<ScrollController>((ref) {
 // -------- wishlist_screen.dart 관련 ScrollControllerProvider 끝
 
 
-// 찜 목록 상태 관리를 위한 프로바이더 추가
-final wishlistProvider = StateNotifierProvider<WishlistNotifier, Set<String>>((ref) {
-  return WishlistNotifier();
+// WishlistItemNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
+final wishlistItemProvider = StateNotifierProvider<WishlistItemNotifier, Set<String>>((ref) {
+  return WishlistItemNotifier(); // WishlistItemNotifier 인스턴스를 반환
 });
 
-class WishlistNotifier extends StateNotifier<Set<String>> {
-  WishlistNotifier() : super({});
+// Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 provider인 StateNotifier
+class WishlistItemNotifier extends StateNotifier<Set<String>> {
+  WishlistItemNotifier() : super({}); // 초기 상태를 빈 Set으로 설정
 
+  // 상품 ID를 기준으로 찜 목록에 추가 또는 제거하는 함수
   void toggleItem(String productId) {
-    if (state.contains(productId)) {
-      state = Set.from(state)..remove(productId);
-    } else {
-      state = Set.from(state)..add(productId);
+    if (state.contains(productId)) { // 현재 상태에 상품 ID가 포함되어 있는 경우
+      state = Set.from(state)..remove(productId); // 상태를 업데이트하여 상품 ID 제거
+    } else { // 현재 상태에 상품 ID가 포함되어 있지 않은 경우
+      state = Set.from(state)..add(productId); // 상태를 업데이트하여 상품 ID 추가
     }
   }
 
+  // 주어진 상품 ID가 찜 목록에 있는지 확인하는 함수
   bool isWished(String productId) {
-    return state.contains(productId);
+    return state.contains(productId); // 상품 ID가 상태에 포함되어 있는지 여부 반환
   }
 }
+

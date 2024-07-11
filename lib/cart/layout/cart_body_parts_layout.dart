@@ -85,6 +85,16 @@ class CartItemsList extends ConsumerWidget {
         // 할인된 가격에 선택된 수량을 곱한 값
         final int totalDiscountPrice = discountPrice * selectedCount;
 
+        // ProductContent 객체 생성
+        final product = ProductContent(
+          docId: cartItem['product_id'],
+          thumbnail: cartItem['thumbnails'],
+          briefIntroduction: cartItem['brief_introduction'],
+          originalPrice: cartItem['original_price'],
+          discountPrice: cartItem['discount_price'],
+          discountPercent: cartItem['discount_percent'],
+        );
+
         // CommonCardView 위젯으로 각 아이템 표시
         return CommonCardView(
           content: Column(
@@ -119,7 +129,7 @@ class CartItemsList extends ConsumerWidget {
                   // 찜 마크 표시 버튼 생성
                   Transform.scale(
                     scale: 1.5,  // 찜 마크 크기 조절
-                    child: WishlistIconButton(docId: cartItem['product_id'], ref: ref), // WishlistIconButton 재사용하여 구현
+                    child: WishlistIconButton(product: product), // WishlistIconButton 재사용하여 구현
                   ),
                 ],
               ),

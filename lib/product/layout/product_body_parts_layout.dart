@@ -988,18 +988,15 @@ class ProductInfoDetailScreenNavigation {
                         // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
                         Image.network(product.thumbnail!,
                             width: 100, fit: BoxFit.cover),
-                        // // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
-                        // Positioned(
-                        //   top: -10,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
-                        //   right: -10, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
-                        //   // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
-                        //   child: WishlistIconButton(
-                        //     docId: product.docId,
-                        //     // WishlistIconButton에 product의 docId를 전달
-                        //     ref: ref,
-                        //     // WishlistIconButton에 ref를 전달
-                        //   ),
-                        // ),
+                        // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
+                        Positioned(
+                          top: -10,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
+                          right: -10, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
+                          // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
+                          child: WishlistIconButton(
+                              product: product, // 'product' 파라미터를 전달
+                            ),
+                        ),
                       ],
                     ),
                   ),
@@ -1247,8 +1244,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                 Spacer(), // 할인율과의 간격 공간 생성
                 // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
                 WishlistIconButton(
-                  docId: product.docId,
-                  ref: ref,
+                  product: product, // 'product' 파라미터를 전달
                 ),
               ],
             ),
