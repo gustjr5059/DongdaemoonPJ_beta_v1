@@ -498,6 +498,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(cartLargeBannerPageProvider.notifier).state = 0; // 장바구니 배너 페이지뷰 초기화
   // 장바구니 화면 관련 초기화 부분 끝
 
+  // 찜 목록 화면 관련 초기화 부분 시작
+  // 찜 목록 화면에서 단순 화면 스크롤 초기화
+  ref.read(wishlistScrollPositionProvider.notifier).state =
+  0.0;
+  // 찜 목록 화면 관련 초기화 부분 끝
+
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작
   ref.read(blouseMainScrollPositionProvider.notifier).state =
