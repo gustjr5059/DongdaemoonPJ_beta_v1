@@ -34,12 +34,24 @@ final cartScrollControllerProvider = Provider<ScrollController>((ref) {
 class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // CartItemRepository 인스턴스를 저장하기 위한 변수 선언
   final CartItemRepository cartItemRepository;
+  final Ref ref; // Ref 인스턴스를 저장하기 위한 변수 선언
   // 장바구니 아이템 스트림 구독을 위한 변수 선언
   StreamSubscription<List<Map<String, dynamic>>>? _cartItemsSubscription;
 
   // 생성자에서 CartItemRepository를 받아 초기 상태를 빈 리스트로 설정하고, _subscribeToCartItems 함수 호출
-  CartItemsNotifier(this.cartItemRepository) : super([]) {
+  CartItemsNotifier(this.cartItemRepository, this.ref) : super([]) {
     _subscribeToCartItems();
+  }
+
+  // 전체 체크박스 상태를 업데이트하는 함수
+  void _updateAllCheckedState(List<Map<String, dynamic>> cartItems) {
+    // 마이크로태스크 큐에 함수를 추가하여 다른 작업이 끝난 후 실행되도록 함
+    Future.microtask(() {
+      // cartItems 리스트가 비어있지 않고 모든 항목의 'bool_checked' 값이 true인지 확인하여 allChecked 변수에 할당
+      final allChecked = cartItems.isNotEmpty && cartItems.every((item) => item['bool_checked'] == true);
+      // allCheckedProvider 상태를 allChecked 값으로 업데이트
+      ref.read(allCheckedProvider.notifier).state = allChecked;
+    });
   }
 
   // Firestore의 장바구니 아이템 스트림에 구독하여 상태를 업데이트하는 함수
@@ -47,6 +59,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     // 장바구니 아이템 스트림을 구독하고, 데이터가 변경되면 상태를 업데이트
     _cartItemsSubscription = cartItemRepository.cartItemsStream().listen((cartItems) {
       state = cartItems;
+      // 전체 체크박스 상태 업데이트
+      _updateAllCheckedState(cartItems);
     });
   }
 
@@ -54,6 +68,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   Future<void> loadCartItems() async {
     // Firestore에서 장바구니 아이템 목록을 가져와 상태를 업데이트
     state = await cartItemRepository.getCartItems();
+    // 전체 체크박스 상태 업데이트
+    _updateAllCheckedState(state);
   }
 
   // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수
@@ -70,6 +86,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
         // 수량이 변경되지 않은 아이템은 그대로 유지
           item
     ];
+    // 전체 체크박스 상태 업데이트
+    _updateAllCheckedState(state);
   }
 
   // 장바구니에서 아이템을 제거하고 상태를 갱신하는 함수
@@ -78,6 +96,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     await cartItemRepository.removeCartItem(id);
     // 상태에서 제거된 아이템 삭제
     state = state.where((item) => item['id'] != id).toList();
+    // 전체 체크박스 상태 업데이트
+    _updateAllCheckedState(state);
   }
 
   // 장바구니 아이템의 체크 상태를 변경하는 함수
@@ -94,6 +114,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
         // 체크 상태가 변경되지 않은 아이템은 그대로 유지
           item
     ];
+    // 전체 체크박스 상태 업데이트
+    _updateAllCheckedState(state);
   }
 
   // 장바구니 내 모든 아이템의 체크 상태를 변경하는 함수
@@ -118,6 +140,6 @@ final cartItemsProvider = StateNotifierProvider<CartItemsNotifier, List<Map<Stri
   // cartItemRepositoryProvider를 통해 CartItemRepository 인스턴스를 가져옴
   final cartItemRepository = ref.read(cartItemRepositoryProvider);
   // CartItemsNotifier 인스턴스를 생성하여 반환
-  return CartItemsNotifier(cartItemRepository);
+  return CartItemsNotifier(cartItemRepository, ref);
 });
 
