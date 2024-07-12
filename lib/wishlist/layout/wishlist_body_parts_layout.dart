@@ -137,51 +137,41 @@ class WishlistItemsList extends ConsumerWidget {
               discountPercent: wishlistItem['discount_percent'],
             );
 
-            // CommonCardView 위젯으로 각 아이템 표시
-            return CommonCardView(
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      // 아이템 이름 중앙 정렬
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            '${wishlistItem['brief_introduction'] ?? ''}',  // 아이템의 간단한 설명
-                            style: TextStyle(
-                              fontSize: 18,  // 글자 크기 설정
-                              fontWeight: FontWeight.bold,  // 글자 두께 설정
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      // 썸네일 이미지 표시
-                      if (wishlistItem['thumbnails'] != null)  // 썸네일 이미지가 있는 경우에만 표시
-                        GestureDetector(
-                          onTap: () {  // 썸네일 클릭 시 호출되는 함수
-                            // 썸네일 클릭 시 해당 상품 상세 화면으로 이동
-                            navigatorProductDetailScreen.navigateToDetailScreen(
-                              context,
-                              product,
-                            );
-                          },
+            return GestureDetector(
+              onTap: () {
+                navigatorProductDetailScreen.navigateToDetailScreen(context, product);
+              },
+              child: CommonCardView(
+                content: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: wishlistItem['thumbnails'] != null
+                          ? AspectRatio(
+                        aspectRatio: 1,
+                        child: FittedBox(
+                          fit: BoxFit.cover,
                           child: Image.network(
-                            wishlistItem['thumbnails'] ?? '',  // 썸네일 이미지 URL
-                            height: 130,  // 이미지 높이
-                            width: 130,  // 이미지 너비
-                            fit: BoxFit.cover,  // 이미지 맞추기 설정
+                            wishlistItem['thumbnails'] ?? '',
                           ),
                         ),
-                      SizedBox(width: 8),
-                      Column(
+                      )
+                          : Container(),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 원래 가격 표시
+                          Text(
+                            '${wishlistItem['brief_introduction'] ?? ''}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
                           Text(
                             '${numberFormat.format(originalPrice)}원',
                             style: TextStyle(
@@ -192,20 +182,18 @@ class WishlistItemsList extends ConsumerWidget {
                           ),
                           Row(
                             children: [
-                              // 할인된 가격 표시
                               Text(
                                 '${numberFormat.format(discountPrice)}원',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               SizedBox(width: 8),
-                              // 할인율 표시
                               Text(
                                 '${wishlistItem['discount_percent']?.round() ?? 0}%',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -213,54 +201,42 @@ class WishlistItemsList extends ConsumerWidget {
                             ],
                           ),
                           SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              final String? itemId = wishlistItem['product_id'];
+                              if (itemId != null) {
+                                ref.read(wishlistItemProvider.notifier).removeItem(itemId);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('상품 ID가 유효하지 않습니다.')),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: BUTTON_COLOR,
+                              backgroundColor: BACKGROUND_COLOR,
+                              side: BorderSide(color: BUTTON_COLOR),
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            child: Text('삭제', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
                         ],
                       ),
-                    ],
-                  ),
-                  Center(
-                    // 수량 조절 버튼과 직접 입력 버튼
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 50),
-                        // '삭제' 버튼 생성
-                        ElevatedButton(
-                          onPressed: () {
-                            final String? itemId = wishlistItem['product_id'];
-                            if (itemId != null) {
-                              ref.read(wishlistItemProvider.notifier).removeItem(itemId); // 해당 프로바이더와 연결된 파이어스토어 내 상품 데이터 삭제
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
-                              ); // 메세지 노출
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('상품 ID가 유효하지 않습니다.')),
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: BUTTON_COLOR,
-                            backgroundColor: BACKGROUND_COLOR,
-                            side: BorderSide(color: BUTTON_COLOR),
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                          ),
-                          child: Text('삭제', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                backgroundColor: BEIGE_COLOR,
+                elevation: 2,
+                padding: const EdgeInsets.all(4),
               ),
-              backgroundColor: BEIGE_COLOR,
-              elevation: 2,
-              padding: const EdgeInsets.all(8),
             );
           }).toList(),
         );
       },
-      // 데이터가 로딩 중일 때 실행되는 콜백 함수.
       loading: () => Center(child: CircularProgressIndicator()),
-      // 데이터 로딩 중 오류가 발생했을 때 실행되는 콜백 함수.
       error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
     );
   }

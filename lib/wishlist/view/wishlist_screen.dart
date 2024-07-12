@@ -251,8 +251,9 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Column(
                         children: [
+                          SizedBox(height: 8),
                           WishlistItemsList(), // WishlistItemsList 클래스 사용
-                          SizedBox(height: 5),
+                          SizedBox(height: 8),
                         ],
                       ),
                     );
