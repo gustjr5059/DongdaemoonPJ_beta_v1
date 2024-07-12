@@ -7,7 +7,6 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 import '../../product/provider/product_state_provider.dart'; // 제품 상태 제공자를 사용하기 위해 import
-import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../provider/cart_future_provier.dart';
 import '../provider/cart_state_provider.dart'; // 장바구니 관련 Future Provider를 사용하기 위해 import
 
@@ -38,8 +37,6 @@ void onCartButtonPressed(
       .addToCartItem(
       product, selectedColorText, selectedColorUrl, selectedSize, quantity)
       .then((_) {
-    // addToCartItem 함수를 호출하여 상품을 장바구니에 추가하고 성공 시
-    ref.read(cartItemsProvider.notifier).refreshCartItems(); // 상태를 즉시 갱신
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
   }).catchError((error) {
@@ -58,18 +55,8 @@ void onCartButtonPressed(
 class CartItemsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // cartItemsStreamProvider를 통해 장바구니 항목의 스트림을 감시하여, cartItemsAsyncValue에 할당.
-    final cartItemsAsyncValue = ref.watch(cartItemsStreamProvider);
-
-    // cartItemsAsyncValue의 상태에 따라 위젯을 빌드.
-    return cartItemsAsyncValue.when(
-      // 데이터가 성공적으로 로드되었을 때 실행되는 콜백 함수.
-      data: (cartItems) {
-        // 장바구니 항목이 비어있을 경우의 조건문.
-        if (cartItems.isEmpty) {
-          // 장바구니가 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
-          return Center(child: Text('장바구니가 비어 있습니다.'));
-        }
+    // cartItemsProvider를 통해 장바구니 아이템 목록 상태를 가져옴
+    final cartItems = ref.watch(cartItemsProvider);
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
@@ -77,21 +64,24 @@ class CartItemsList extends ConsumerWidget {
     // ProductInfoDetailScreenNavigation 인스턴스 생성
     final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
 
-    // 장바구니 아이템들을 UI로 표시
-    return Column(
+    // 장바구니가 비어 있을 경우 화면에 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
+    return cartItems.isEmpty
+        ? Center(child: Text('장바구니가 비어 있습니다.'))
+        : Column(
+      // 장바구니 아이템을 반복하여 UI를 생성
       children: cartItems.map((cartItem) {
-        // 원래 가격을 정수로 변환
+        // 상품의 원래 가격을 정수형으로 변환, 값이 없을 경우 0으로 설정
         final int originalPrice = cartItem['original_price']?.round() ?? 0;
-        // 할인된 가격을 정수로 변환
+        // 상품의 할인 가격을 정수형으로 변환, 값이 없을 경우 0으로 설정
         final int discountPrice = cartItem['discount_price']?.round() ?? 0;
-        // 선택된 수량을 정수로 변환
+        // 선택된 상품의 수량을 가져옴, 값이 없을 경우 1로 설정
         final int selectedCount = cartItem['selected_count'] ?? 1;
-        // 원래 가격에 선택된 수량을 곱한 값
+        // 원래 가격에 선택된 수량을 곱한 값을 계산
         final int totalOriginalPrice = originalPrice * selectedCount;
-        // 할인된 가격에 선택된 수량을 곱한 값
+        // 할인 가격에 선택된 수량을 곱한 값을 계산
         final int totalDiscountPrice = discountPrice * selectedCount;
 
-        // ProductContent 객체 생성
+        // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장
         final product = ProductContent(
           docId: cartItem['product_id'],
           thumbnail: cartItem['thumbnails'],
@@ -101,75 +91,64 @@ class CartItemsList extends ConsumerWidget {
           discountPercent: cartItem['discount_percent'],
         );
 
-        // CommonCardView 위젯으로 각 아이템 표시
+        // CommonCardView 위젯을 사용하여 상품 정보를 카드 형태로 표시
         return CommonCardView(
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  // 체크박스 표시
+                  // 체크박스 크기를 1.5배로 조정하여 표시
                   Transform.scale(
-                    scale: 1.5,  // 체크박스 크기 조절
+                    scale: 1.5,
                     child: Checkbox(
-                      value: cartItem['checked'] ?? false,  // 체크박스의 초기값 설정
-                      activeColor: BUTTON_COLOR,  // 체크박스 색상 변경
-                      onChanged: (bool? value) {  // 체크박스 상태가 변경될 때 호출되는 콜백 함수
+                      // 체크박스의 체크 여부를 cartItem의 bool_checked 값으로 설정, 값이 없을 경우 false로 설정
+                      value: cartItem['bool_checked'] ?? false,
+                      activeColor: BUTTON_COLOR,
+                      // 체크박스 상태 변경 시 cartItemsProvider의 상태를 업데이트
+                      onChanged: (bool? value) {
                         ref.read(cartItemsProvider.notifier)
-                            .toggleItemChecked(cartItem['id'], value!);  // 체크박스 상태 변경 로직 호출
+                            .toggleItemChecked(cartItem['id'], value!);
                       },
                     ),
                   ),
-                  // 아이템 이름 중앙 정렬
+                  // 상품의 간단한 설명을 중앙에 Bold체로 표시
                   Expanded(
                     child: Center(
                       child: Text(
-                        '${cartItem['brief_introduction'] ?? ''}',  // 아이템의 간단한 설명
+                        '${cartItem['brief_introduction'] ?? ''}',
                         style: TextStyle(
-                          fontSize: 18,  // 글자 크기 설정
-                          fontWeight: FontWeight.bold,  // 글자 두께 설정
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  // // 찜 마크 표시 버튼 생성
-                  // Transform.scale(
-                  //   scale: 1.5,  // 찜 마크 크기 조절
-                  //   child: WishlistIconButton(product: product), // WishlistIconButton 재사용하여 구현
-                  // ),
                 ],
               ),
               Row(
                 children: [
-                  // 썸네일 이미지 표시
-                  if (cartItem['thumbnails'] != null)  // 썸네일 이미지가 있는 경우에만 표시
+                  // 썸네일 이미지가 있을 경우 이미지 표시, 클릭 시 상세 페이지로 이동
+                  if (cartItem['thumbnails'] != null)
                     GestureDetector(
-                      onTap: () {  // 썸네일 클릭 시 호출되는 함수
-                        // 썸네일 클릭 시 해당 상품 상세 화면으로 이동
+                      onTap: () {
                         navigatorProductDetailScreen.navigateToDetailScreen(
                           context,
-                          ProductContent(
-                            docId: cartItem['product_id'],  // 상품 ID
-                            thumbnail: cartItem['thumbnails'],  // 썸네일 이미지 URL
-                            briefIntroduction: cartItem['brief_introduction'],  // 상품 간단 설명
-                            originalPrice: cartItem['original_price'],  // 원래 가격
-                            discountPrice: cartItem['discount_price'],  // 할인된 가격
-                            discountPercent: cartItem['discount_percent'],  // 할인율
-                          ),
+                          product,
                         );
                       },
                       child: Image.network(
-                        cartItem['thumbnails'] ?? '',  // 썸네일 이미지 URL
-                        height: 130,  // 이미지 높이
-                        width: 130,  // 이미지 너비
-                        fit: BoxFit.cover,  // 이미지 맞추기 설정
+                        cartItem['thumbnails'] ?? '',
+                        height: 130,
+                        width: 130,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 원래 가격 표시
+                      // 원래 가격을 취소선과 함께 표시
                       Text(
                         '${numberFormat.format(totalOriginalPrice)}원',
                         style: TextStyle(
@@ -180,7 +159,7 @@ class CartItemsList extends ConsumerWidget {
                       ),
                       Row(
                         children: [
-                          // 할인된 가격 표시
+                          // 할인 가격을 Bold체로 표시
                           Text(
                             '${numberFormat.format(totalDiscountPrice)}원',
                             style: TextStyle(
@@ -189,7 +168,7 @@ class CartItemsList extends ConsumerWidget {
                             ),
                           ),
                           SizedBox(width: 8),
-                          // 할인율 표시
+                          // 할인 퍼센트를 빨간색으로 Bold체로 표시
                           Text(
                             '${cartItem['discount_percent']?.round() ?? 0}%',
                             style: TextStyle(
@@ -203,7 +182,7 @@ class CartItemsList extends ConsumerWidget {
                       SizedBox(height: 8),
                       Row(
                         children: [
-                          // 선택된 색상 이미지 표시
+                          // 선택된 색상 이미지가 있을 경우 이미지 표시
                           if (cartItem['selected_color_image'] != null)
                             Image.network(
                               cartItem['selected_color_image'] ?? '',
@@ -212,7 +191,7 @@ class CartItemsList extends ConsumerWidget {
                               fit: BoxFit.cover,
                             ),
                           SizedBox(width: 8),
-                          // 선택된 색상 텍스트 표시
+                          // 선택된 색상 텍스트를 표시
                           Text(
                             '${cartItem['selected_color_text'] ?? ''}',
                             style: TextStyle(fontSize: 18),
@@ -220,9 +199,9 @@ class CartItemsList extends ConsumerWidget {
                         ],
                       ),
                       SizedBox(height: 5),
-                      // 선택된 사이즈 텍스트 표시
+                      // 선택된 사이즈를 왼쪽 여백을 주어 표시
                       Padding(
-                        padding: const EdgeInsets.only(left: 30.0), // 10 정도 우측으로 이동
+                        padding: const EdgeInsets.only(left: 30.0),
                         child: Text(
                           '${cartItem['selected_size'] ?? ''}',
                           style: TextStyle(fontSize: 18),
@@ -233,22 +212,21 @@ class CartItemsList extends ConsumerWidget {
                 ],
               ),
               Center(
-                // 수량 조절 버튼과 직접 입력 버튼
+                // 수량 조절 버튼과 삭제 버튼을 중앙에 정렬하여 표시
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // 수량 감소 버튼
+                    // 수량 감소 버튼, 1보다 큰 경우에만 수량 감소
                     IconButton(
                       icon: Icon(Icons.remove),
                       onPressed: () {
-                        // 수량이 1보다 클 때만 감소
                         if (cartItem['selected_count'] > 1) {
                           ref.read(cartItemsProvider.notifier)
                               .updateItemQuantity(cartItem['id'], cartItem['selected_count'] - 1);
                         }
                       },
                     ),
-                    // 현재 수량 표시
+                    // 현재 선택된 수량을 중앙에 표시
                     Container(
                       width: 50,
                       alignment: Alignment.center,
@@ -268,12 +246,12 @@ class CartItemsList extends ConsumerWidget {
                     // 수량 직접 입력 버튼
                     TextButton(
                       onPressed: () {
-                        // 수량 입력을 위한 다이얼로그 표시
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             final TextEditingController controller = TextEditingController();
                             String input = '';
+                            // 수량 입력을 위한 AlertDialog 생성
                             return AlertDialog(
                               title: Text('수량 입력', style: TextStyle(color: Colors.black)),
                               content: TextField(
@@ -287,9 +265,8 @@ class CartItemsList extends ConsumerWidget {
                                   input = value;
                                 },
                                 decoration: InputDecoration(
-                                  // 포커스된 상태의 밑줄 색상을 검정으로 변경.
                                   focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black), // 밑줄 색상 변경
+                                    borderSide: BorderSide(color: Colors.black),
                                   ),
                                 ),
                               ),
@@ -297,7 +274,7 @@ class CartItemsList extends ConsumerWidget {
                                 TextButton(
                                   child: Text('확인', style: TextStyle(color: Colors.black)),
                                   onPressed: () {
-                                    // 입력된 수량이 비어있지 않을 경우 수량 업데이트
+                                    // 입력값이 비어 있지 않을 경우 수량 업데이트
                                     if (input.isNotEmpty) {
                                       ref.read(cartItemsProvider.notifier)
                                           .updateItemQuantity(cartItem['id'], int.parse(input));
@@ -313,14 +290,14 @@ class CartItemsList extends ConsumerWidget {
                       child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                     SizedBox(width: 50),
-                    // '삭제' 버튼 생성
+                    // 삭제 버튼, 클릭 시 장바구니에서 해당 상품을 삭제하고 스낵바 표시
                     ElevatedButton(
                       onPressed: () {
                         ref.read(cartItemsProvider.notifier)
-                            .removeItem(cartItem['id']); // 해당 프로바이더와 연결된 파이어스토어 내 상품 데이터 삭제
+                            .removeItem(cartItem['id']);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('상품이 장바구니에서 삭제되었습니다.')),
-                        ); // 메세지 노출
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: BUTTON_COLOR,
@@ -335,20 +312,14 @@ class CartItemsList extends ConsumerWidget {
               ),
             ],
           ),
+          // 카드의 배경색과 그림자, 패딩 설정
           backgroundColor: BEIGE_COLOR,
           elevation: 2,
           padding: const EdgeInsets.all(8),
         );
-       }).toList(),
-      );
-     },
-      // 데이터가 로딩 중일 때 실행되는 콜백 함수.
-      loading: () => Center(child: CircularProgressIndicator()),
-      // 데이터 로딩 중 오류가 발생했을 때 실행되는 콜백 함수.
-      error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
+      }).toList(),
     );
   }
 }
 // ------ 장바구니 화면 내 파이어스토어에 있는 장바구니에 담긴 상품 아이템 데이터를 UI로 구현하는 CartItemsList 클래스 끝
-
 

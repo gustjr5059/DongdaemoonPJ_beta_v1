@@ -45,6 +45,7 @@ class CartItemRepository {
       'selected_size': selectedSize, // 선택한 사이즈
       'selected_count': quantity, // 선택한 수량
       'timestamp': FieldValue.serverTimestamp(), // 현재 서버 타임스탬프를 저장
+      'bool_checked': false, // 기본값으로 체크되지 않은 상태로 저장
     };
 
     // 파이어스토리지에 저장할 경로 생성
@@ -107,6 +108,11 @@ class CartItemRepository {
         // 변환된 데이터를 리스트로 변환하여 반환.
       }).toList();
     });
+  }
+
+  // Firestore에서 특정 아이템의 체크 상태를 업데이트하는 함수인 updateCartItemChecked
+  Future<void> updateCartItemChecked(String id, bool checked) async {
+    await firestore.collection('cart_item').doc(id).update({'bool_checked': checked});
   }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝

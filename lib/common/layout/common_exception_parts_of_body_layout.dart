@@ -388,9 +388,9 @@ Widget buildCommonBottomNavigationBar(
 
       // 선택된 아이템들의 합계 금액 계산
       int totalSelectedPrice = cartItems
-      // 아이템 목록 중 선택된 아이템만 필터링
-          .where((item) => item['checked'] == true)
-      // 선택된 아이템들의 합계 금액을 계산
+          // 아이템 목록 중 선택된 아이템만 필터링
+          .where((item) => item['bool_checked'] == true)
+          // 선택된 아이템들의 합계 금액을 계산
           .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt());
 
       return Container(
