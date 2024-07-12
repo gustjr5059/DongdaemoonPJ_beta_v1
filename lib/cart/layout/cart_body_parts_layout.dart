@@ -132,11 +132,11 @@ class CartItemsList extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  // 찜 마크 표시 버튼 생성
-                  Transform.scale(
-                    scale: 1.5,  // 찜 마크 크기 조절
-                    child: WishlistIconButton(product: product), // WishlistIconButton 재사용하여 구현
-                  ),
+                  // // 찜 마크 표시 버튼 생성
+                  // Transform.scale(
+                  //   scale: 1.5,  // 찜 마크 크기 조절
+                  //   child: WishlistIconButton(product: product), // WishlistIconButton 재사용하여 구현
+                  // ),
                 ],
               ),
               Row(

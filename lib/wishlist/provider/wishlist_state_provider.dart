@@ -31,12 +31,15 @@ final wishlistItemProvider = StateNotifierProvider<WishlistItemNotifier, AsyncVa
 
 // wishlistItemsStreamProvider를 정의 - Firestore에서 wishlist_item 컬렉션의 실시간 스트림을 제공
 final wishlistItemsStreamProvider = StreamProvider.autoDispose((ref) {
+  // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  // Firestore에서 wishlist_item 컬렉션을 구독하여 실시간 스트림을 반환
   return wishlistRepository.firestore
       .collection('wishlist_item')
       .orderBy('timestamp', descending: true) // timestamp 필드 기준으로 내림차순 정렬
       .snapshots()
       .map((snapshot) {
+    // 문서를 변환하여 필요한 필드만 포함하는 맵으로 반환
     return snapshot.docs.map((doc) {
       return {
         'product_id': doc['product_id'],
@@ -50,8 +53,7 @@ final wishlistItemsStreamProvider = StreamProvider.autoDispose((ref) {
   });
 });
 
-
-// Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 StateNotifier
+// ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 시작
 class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // WishlistItemRepository 인스턴스 저장
   final WishlistItemRepository wishlistItemRepository;
@@ -60,6 +62,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
 
   // 생성자에서 Firestore 데이터를 구독하는 메서드 호출
   WishlistItemNotifier(this.wishlistItemRepository) : super(const AsyncValue.loading()) {
+    // Firestore의 실시간 데이터를 구독하는 메서드 호출
     _listenToWishlistItems();
   }
 
@@ -80,17 +83,19 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // 클래스가 dispose될 때 구독을 취소하는 메서드
   @override
   void dispose() {
+    // 구독 취소
     _subscription.cancel();
     super.dispose();
   }
 
   // 상품 ID를 기준으로 찜 목록에 추가 또는 제거하는 함수
   void toggleItem(String productId) {
+    // 현재 상태가 데이터인 경우
     if (state is AsyncData) {
-      // 현재 상태가 데이터인 경우
+      // 현재 찜 목록 상태를 가져옴
       final items = (state as AsyncData<Set<String>>).value;
+      // 상품이 찜 목록에 있는 경우 제거
       if (items.contains(productId)) {
-        // 상품이 이미 찜 목록에 있는 경우 제거
         state = AsyncValue.data(Set.from(items)..remove(productId));
       } else {
         // 상품이 찜 목록에 없는 경우 추가
@@ -102,17 +107,32 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // 상품 ID를 기준으로 찜 목록에서 제거하는 함수인 removeItem
   void removeItem(String productId) async {
     try {
+      // Firestore에서 상품 제거
       await wishlistItemRepository.removeFromWishlistItem(productId);
-      toggleItem(productId); // 로컬 상태에서도 제거
+      // 로컬 상태에서도 제거
+      state = state.whenData((items) => Set.from(items)..remove(productId));
     } catch (error, stackTrace) {
+      // 오류 발생 시 상태를 오류로 업데이트
       state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  // 상품 ID를 기준으로 찜 목록에 추가하는 함수인 addItem
+  void addItem(String productId) {
+    // 현재 상태가 데이터인 경우
+    if (state is AsyncData) {
+      // 현재 찜 목록 상태를 가져옴
+      final items = (state as AsyncData<Set<String>>).value;
+      // 상품을 찜 목록에 추가
+      state = AsyncValue.data(Set.from(items)..add(productId));
     }
   }
 
   // 주어진 상품 ID가 찜 목록에 있는지 확인하는 함수
   bool isWished(String productId) {
+    // 현재 상태가 데이터인 경우
     if (state is AsyncData) {
-      // 현재 상태가 데이터인 경우
+      // 현재 찜 목록 상태를 가져옴
       final items = (state as AsyncData<Set<String>>).value;
       // 상품이 찜 목록에 있는지 여부 반환
       return items.contains(productId);
@@ -121,3 +141,4 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
     return false;
   }
 }
+// ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 끝

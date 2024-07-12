@@ -44,38 +44,40 @@ class WishlistIconButton extends ConsumerWidget {
             // wishlistItemRepositoryProvider를 가져옴
             final wishlistRepository = ref.read(wishlistItemRepositoryProvider);
 
+            // 상품이 찜 목록에 있는 경우
             if (isWished) {
-              // 찜 목록에 있는 경우 제거
-              wishlistNotifier.toggleItem(product.docId);
               try {
-                // Firestore에서 찜 목록에서 제거
+                // 찜 목록에서 상품 제거
                 await wishlistRepository.removeFromWishlistItem(product.docId);
-                // 성공 메시지 표시
+                // 로컬 상태 업데이트
+                wishlistNotifier.removeItem(product.docId);
+                // 사용자에게 알림 표시
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('상품이 찜 목록에서 비워졌습니다.')),
                 );
               } catch (e) {
-                // 오류 발생 시 다시 추가
+                // 오류 발생 시 로컬 상태 복원
                 wishlistNotifier.toggleItem(product.docId);
-                // 오류 메시지 표시
+                // 사용자에게 오류 알림 표시
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('찜 목록에서 비우는 중 오류가 발생했습니다.')),
                 );
               }
             } else {
-              // 찜 목록에 없는 경우 추가
-              wishlistNotifier.toggleItem(product.docId);
+              // 상품이 찜 목록에 없는 경우
               try {
-                // Firestore에서 찜 목록에 추가
+                // 찜 목록에 상품 추가
                 await wishlistRepository.addToWishlistItem(product);
-                // 성공 메시지 표시
+                // 로컬 상태 업데이트
+                wishlistNotifier.addItem(product.docId);
+                // 사용자에게 알림 표시
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('상품이 찜 목록에 담겼습니다.')),
                 );
               } catch (e) {
-                // 오류 발생 시 다시 제거
+                // 오류 발생 시 로컬 상태 복원
                 wishlistNotifier.toggleItem(product.docId);
-                // 오류 메시지 표시
+                // 사용자에게 오류 알림 표시
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('찜 목록에 담는 중 오류가 발생했습니다.')),
                 );
@@ -84,9 +86,9 @@ class WishlistIconButton extends ConsumerWidget {
           },
         );
       },
-      // 로딩 중인 경우 로딩 인디케이터 표시
+      // 데이터가 로딩 중인 경우
       loading: () => CircularProgressIndicator(),
-      // 오류 발생 시 오류 아이콘 표시
+      // 에러가 발생한 경우
       error: (e, stack) => Icon(Icons.error),
     );
   }
