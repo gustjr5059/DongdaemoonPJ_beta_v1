@@ -36,13 +36,13 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 // 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있을 것입니다.
 import '../../common/model/banner_model.dart';
 
-// common_future_provider.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
+// common_all_providers.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
 // 이 파일에는 Future Provider와 관련된 기능이 정의되어 있을 것입니다.
-import '../../common/provider/common_future_provider.dart';
+import '../../common/provider/common_all_providers.dart';
 
 // 장바구니 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../layout/cart_body_parts_layout.dart';
-import '../provider/cart_future_provier.dart';
+import '../provider/cart_all_proviers.dart';
 import '../provider/cart_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용

@@ -1,5 +1,5 @@
 import 'dart:async';  // 비동기 프로그래밍을 위한 라이브러리 임포트
-import 'package:dongdaemoon_beta_v1/wishlist/provider/wishlist_future_provider.dart';  // 찜 목록 프로바이더 파일 임포트
+import 'package:dongdaemoon_beta_v1/wishlist/provider/wishlist_all_providers.dart';  // 찜 목록 프로바이더 파일 임포트
 import 'package:flutter/cupertino.dart';  // Cupertino 디자인 시스템을 위한 Flutter 패키지 임포트
 import 'package:flutter_riverpod/flutter_riverpod.dart';  // Riverpod 상태 관리를 위한 패키지 임포트
 import '../repository/wishlist_repository.dart';  // 찜 목록 레포지토리 파일 임포트
@@ -20,38 +20,6 @@ final wishlistScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 // -------- wishlist_screen.dart 관련 ScrollControllerProvider 끝
-
-// WishlistItemNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
-final wishlistItemProvider = StateNotifierProvider<WishlistItemNotifier, AsyncValue<Set<String>>>((ref) {
-  // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴.
-  final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
-  // WishlistItemNotifier를 생성하고 반환함.
-  return WishlistItemNotifier(wishlistRepository);
-});
-
-// wishlistItemsStreamProvider를 정의 - Firestore에서 wishlist_item 컬렉션의 실시간 스트림을 제공
-final wishlistItemsStreamProvider = StreamProvider.autoDispose((ref) {
-  // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴
-  final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
-  // Firestore에서 wishlist_item 컬렉션을 구독하여 실시간 스트림을 반환
-  return wishlistRepository.firestore
-      .collection('wishlist_item')
-      .orderBy('timestamp', descending: true) // timestamp 필드 기준으로 내림차순 정렬
-      .snapshots()
-      .map((snapshot) {
-    // 문서를 변환하여 필요한 필드만 포함하는 맵으로 반환
-    return snapshot.docs.map((doc) {
-      return {
-        'product_id': doc['product_id'],
-        'thumbnails': doc['thumbnails'],
-        'brief_introduction': doc['brief_introduction'],
-        'original_price': doc['original_price'],
-        'discount_price': doc['discount_price'],
-        'discount_percent': doc['discount_percent'],
-      };
-    }).toList();
-  });
-});
 
 // ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 시작
 class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
@@ -142,3 +110,11 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   }
 }
 // ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 끝
+
+// WishlistItemNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
+final wishlistItemProvider = StateNotifierProvider<WishlistItemNotifier, AsyncValue<Set<String>>>((ref) {
+  // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴.
+  final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  // WishlistItemNotifier를 생성하고 반환함.
+  return WishlistItemNotifier(wishlistRepository);
+});

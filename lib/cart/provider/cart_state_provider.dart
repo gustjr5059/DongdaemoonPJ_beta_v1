@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart'; // Flutter의 Cupertino 디자인 패키지를 사용하기 위해 import
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 패키지를 사용하기 위해 import
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../repository/cart_repository.dart'; // 장바구니 데이터 처리를 위한 CartRepository를 import
-import 'cart_future_provier.dart'; // CartFutureProvider를 import
+import 'cart_all_proviers.dart'; // CartFutureProvider를 import
+
 
 // 장바구니 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final cartLargeBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -34,7 +31,8 @@ final cartScrollControllerProvider = Provider<ScrollController>((ref) {
 class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // CartItemRepository 인스턴스를 저장하기 위한 변수 선언
   final CartItemRepository cartItemRepository;
-  final Ref ref; // Ref 인스턴스를 저장하기 위한 변수 선언
+  // Ref 인스턴스를 저장하기 위한 변수 선언
+  final Ref ref;
   // 장바구니 아이템 스트림 구독을 위한 변수 선언
   StreamSubscription<List<Map<String, dynamic>>>? _cartItemsSubscription;
 
@@ -48,7 +46,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     // 마이크로태스크 큐에 함수를 추가하여 다른 작업이 끝난 후 실행되도록 함
     Future.microtask(() {
       // cartItems 리스트가 비어있지 않고 모든 항목의 'bool_checked' 값이 true인지 확인하여 allChecked 변수에 할당
-      final allChecked = cartItems.isNotEmpty && cartItems.every((item) => item['bool_checked'] == true);
+      final allChecked = cartItems.isNotEmpty &&
+          cartItems.every((item) => item['bool_checked'] == true);
       // allCheckedProvider 상태를 allChecked 값으로 업데이트
       ref.read(allCheckedProvider.notifier).state = allChecked;
     });
@@ -57,7 +56,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // Firestore의 장바구니 아이템 스트림에 구독하여 상태를 업데이트하는 함수
   void _subscribeToCartItems() {
     // 장바구니 아이템 스트림을 구독하고, 데이터가 변경되면 상태를 업데이트
-    _cartItemsSubscription = cartItemRepository.cartItemsStream().listen((cartItems) {
+    _cartItemsSubscription =
+        cartItemRepository.cartItemsStream().listen((cartItems) {
       state = cartItems;
       // 전체 체크박스 상태 업데이트
       _updateAllCheckedState(cartItems);
@@ -80,10 +80,10 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     state = [
       for (final item in state)
         if (item['id'] == id)
-        // 수량이 변경된 아이템 업데이트
+          // 수량이 변경된 아이템 업데이트
           {...item, 'selected_count': newQuantity}
         else
-        // 수량이 변경되지 않은 아이템은 그대로 유지
+          // 수량이 변경되지 않은 아이템은 그대로 유지
           item
     ];
     // 전체 체크박스 상태 업데이트
@@ -108,10 +108,10 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     state = [
       for (final item in state)
         if (item['id'] == id)
-        // 체크 상태가 변경된 아이템 업데이트
+          // 체크 상태가 변경된 아이템 업데이트
           {...item, 'bool_checked': checked}
         else
-        // 체크 상태가 변경되지 않은 아이템은 그대로 유지
+          // 체크 상태가 변경되지 않은 아이템은 그대로 유지
           item
     ];
     // 전체 체크박스 상태 업데이트
@@ -136,10 +136,10 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 // ------ Firestore와의 상호작용을 위해 CartItemRepository를 사용하여 상태를 관리하는 provider인 CartItemsNotifier 클래스 내용 끝
 
 // CartItemsNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
-final cartItemsProvider = StateNotifierProvider<CartItemsNotifier, List<Map<String, dynamic>>>((ref) {
+final cartItemsProvider =
+    StateNotifierProvider<CartItemsNotifier, List<Map<String, dynamic>>>((ref) {
   // cartItemRepositoryProvider를 통해 CartItemRepository 인스턴스를 가져옴
   final cartItemRepository = ref.read(cartItemRepositoryProvider);
   // CartItemsNotifier 인스턴스를 생성하여 반환
   return CartItemsNotifier(cartItemRepository, ref);
 });
-

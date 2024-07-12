@@ -30,14 +30,14 @@ import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴�
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../common/model/banner_model.dart';
-import '../../../common/provider/common_future_provider.dart';
+import '../../../common/provider/common_all_providers.dart';
 import '../../../common/provider/common_state_provider.dart';
 import '../../../home/layout/home_body_parts_layout.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../layout/product_body_parts_layout.dart';
-import '../../provider/product_future_provider.dart';
+import '../../provider/product_all_providers.dart';
 import '../../provider/product_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용

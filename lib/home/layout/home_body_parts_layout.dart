@@ -19,7 +19,7 @@ import '../../product/layout/product_body_parts_layout.dart';
 
 // 다양한 의류 카테고리에 대한 메인 화면 파일들을 임포트합니다.
 import '../../product/model/product_model.dart';
-import '../../product/provider/product_future_provider.dart';
+import '../../product/provider/product_all_providers.dart';
 import '../../product/repository/product_repository.dart';
 import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 카테고리 메인 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 카디건 카테고리 메인 화면

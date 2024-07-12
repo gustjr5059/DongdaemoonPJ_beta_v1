@@ -38,10 +38,10 @@ import '../../common/const/colors.dart';
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
 
-// common 디렉토리의 provider 폴더에 있는 common_future_provider.dart 파일을 가져옵니다.
+// common 디렉토리의 provider 폴더에 있는 common_all_providers.dart 파일을 가져옵니다.
 // 이 파일은 Future Provider와 관련된 기능을 제공하는 파일입니다.
 // 이를 통해 비동기 데이터 호출 및 상태 관리를 할 수 있습니다.
-import '../../common/provider/common_future_provider.dart';
+import '../../common/provider/common_all_providers.dart';
 
 // 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
@@ -53,10 +53,10 @@ import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
 import '../layout/home_body_parts_layout.dart';
 
-// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 home_future_provider.dart 파일을 가져옵니다.
+// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 home_all_providers.dart 파일을 가져옵니다.
 // 이 파일은 홈 화면과 관련된 Future Provider 기능을 제공합니다.
 // 이를 통해 홈 화면에서 비동기 데이터를 호출하고 상태를 관리할 수 있습니다.
-import '../provider/home_future_provider.dart';
+import '../provider/home_all_providers.dart';
 
 // 홈 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/home_state_provider.dart';

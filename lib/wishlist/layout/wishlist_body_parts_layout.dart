@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/layout/product_body_parts_layout.dart';
-import '../provider/wishlist_future_provider.dart'; // 찜 목록의 비동기 동작을 위한 Provider 임포트
+import '../provider/wishlist_all_providers.dart'; // 찜 목록의 비동기 동작을 위한 Provider 임포트
 import '../provider/wishlist_state_provider.dart'; // 찜 목록의 상태 관리를 위한 Provider 임포트
 
 // ------- 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 내용 구현 시작

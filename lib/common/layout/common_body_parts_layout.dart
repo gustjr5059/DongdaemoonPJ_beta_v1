@@ -19,7 +19,7 @@ import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
 // 이 파일은 네트워크 요청과 같은 비동기 작업 결과를 처리하고 상태 관리에 사용됩니다.
 import '../const/colors.dart';
 import '../model/banner_model.dart';
-import '../provider/common_future_provider.dart'; // 비동기 데이터 로드를 위한 FutureProvider
+import '../provider/common_all_providers.dart'; // 비동기 데이터 로드를 위한 FutureProvider
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 

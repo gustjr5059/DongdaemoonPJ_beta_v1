@@ -7,7 +7,7 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 import '../../product/provider/product_state_provider.dart'; // 제품 상태 제공자를 사용하기 위해 import
-import '../provider/cart_future_provier.dart';
+import '../provider/cart_all_proviers.dart';
 import '../provider/cart_state_provider.dart'; // 장바구니 관련 Future Provider를 사용하기 위해 import
 
 // 장바구니 버튼 클릭 시 호출되는 함수 - 장바구니 버튼이 클릭되었을 때 addToCartItem 함수를 호출하여 상품을 장바구니에 추가하고, 성공 또는 실패 메시지를 표시

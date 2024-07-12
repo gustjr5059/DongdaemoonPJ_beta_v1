@@ -47,10 +47,10 @@ import '../../../common/provider/common_state_provider.dart';
 // 배너 데이터를 구조화하고 관리하기 위해 사용됩니다.
 import '../../../common/model/banner_model.dart';
 
-// common_future_provider.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
+// common_all_providers.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
 // 이 파일에는 Future Provider와 관련된 기능이 정의되어 있습니다.
 // 비동기 데이터 호출 및 상태 관리를 위해 사용됩니다.
-import '../../../common/provider/common_future_provider.dart';
+import '../../../common/provider/common_all_providers.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.

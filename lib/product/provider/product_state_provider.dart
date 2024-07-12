@@ -4,7 +4,7 @@
 // 각종 상태 관리 요구 사항을 보다 세밀하고 효과적으로 다룰 수 있도록 설계되었습니다.
 // 이를 통해 앱의 상태를 전역적으로 또는 로컬적으로 제어하고, 상태 변화에 따라 UI를 자동으로 업데이트하는 구조를 구현할 수 있습니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dongdaemoon_beta_v1/product/provider/product_future_provider.dart';
+import 'package:dongdaemoon_beta_v1/product/provider/product_all_providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/product_model.dart';

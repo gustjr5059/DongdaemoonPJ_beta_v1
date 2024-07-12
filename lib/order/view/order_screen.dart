@@ -36,9 +36,9 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 // 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있을 것입니다.
 import '../../common/model/banner_model.dart';
 
-// common_future_provider.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
+// common_all_providers.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
 // 이 파일에는 Future Provider와 관련된 기능이 정의되어 있을 것입니다.
-import '../../common/provider/common_future_provider.dart';
+import '../../common/provider/common_all_providers.dart';
 
 // 주문 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/order_state_provider.dart';

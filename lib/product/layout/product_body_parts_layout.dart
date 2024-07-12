@@ -32,7 +32,7 @@ import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
 // 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
-import '../provider/product_future_provider.dart';
+import '../provider/product_all_providers.dart';
 
 // 제품 상태 관리를 위한 StateProvider 파일을 임포트합니다.
 import '../provider/product_state_provider.dart';

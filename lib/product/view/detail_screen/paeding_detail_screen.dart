@@ -9,7 +9,7 @@ import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
-import '../../provider/product_future_provider.dart';
+import '../../provider/product_all_providers.dart';
 import '../../provider/product_state_provider.dart';
 
 // flutter 패키지의 services 라이브러리를 가져옵니다.
