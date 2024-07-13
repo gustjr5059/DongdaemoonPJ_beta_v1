@@ -26,7 +26,8 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
-import '../../order/view/order_screen.dart';
+import '../../order/provider/order_state_provider.dart';
+import '../../order/view/order_list_screen.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
@@ -497,6 +498,19 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0;
   ref.read(cartLargeBannerPageProvider.notifier).state = 0; // 장바구니 배너 페이지뷰 초기화
   // 장바구니 화면 관련 초기화 부분 끝
+
+  // 발주 내역 화면 관련 초기화 부분 시작
+  // 발주 내역 화면에서 단순 화면 스크롤 초기화
+  ref.read(orderListScrollPositionProvider.notifier).state =
+  0.0;
+  ref.read(orderListLargeBannerPageProvider.notifier).state = 0; // 발주 내역 배너 페이지뷰 초기화
+  // 발주 내역 화면 관련 초기화 부분 끝
+
+  // 발주 화면 관련 초기화 부분 시작
+  // 발주 화면에서 단순 화면 스크롤 초기화
+  ref.read(orderMainScrollPositionProvider.notifier).state =
+  0.0;
+  // 발주 화면 관련 초기화 부분 끝
 
   // 찜 목록 화면 관련 초기화 부분 시작
   // 찜 목록 화면에서 단순 화면 스크롤 초기화

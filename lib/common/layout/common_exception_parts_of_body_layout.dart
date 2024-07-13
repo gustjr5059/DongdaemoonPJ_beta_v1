@@ -26,9 +26,10 @@ import '../../home/view/home_screen.dart';
 
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
 import '../../order/provider/order_state_provider.dart';
-import '../../order/view/order_screen.dart';
+import '../../order/view/order_list_screen.dart';
 
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
+import '../../order/view/order_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../../product/provider/product_all_providers.dart';
@@ -253,7 +254,7 @@ Widget buildCommonBottomNavigationBar(
               case 1:
                 return CartMainScreen();
               case 2:
-                return OrderMainScreen();
+                return OrderListMainScreen();
               case 3:
                 return ProfileMainScreen();
               default:
@@ -290,7 +291,7 @@ Widget buildCommonBottomNavigationBar(
           case 2:
             // 발주 내역 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
             final orderScrollController =
-                ref.read(orderScrollControllerProvider);
+                ref.read(orderListScrollControllerProvider);
             if (orderScrollController.hasClients) {
               orderScrollController.animateTo(
                 0,
@@ -366,7 +367,10 @@ Widget buildCommonBottomNavigationBar(
             Expanded( // 내부 위젯의 가로 공간을 최대한 확장
               child: ElevatedButton(
                 onPressed: () {
-                  // 바로 발주 버튼 클릭 시 동작 추가
+                  // OrderMainScreen으로 화면 전환
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => OrderMainScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
