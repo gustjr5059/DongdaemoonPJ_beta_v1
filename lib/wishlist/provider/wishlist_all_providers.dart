@@ -12,12 +12,14 @@ final wishlistItemRepositoryProvider = Provider((ref) => WishlistItemRepository(
 ));
 
 // wishlistItemsStreamProvider를 정의 - Firestore에서 wishlist_item 컬렉션의 실시간 스트림을 제공
-final wishlistItemsStreamProvider = StreamProvider.autoDispose((ref) {
+final wishlistItemsStreamProvider = StreamProvider.family.autoDispose((ref, String userId) {
   // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
   // Firestore에서 wishlist_item 컬렉션을 구독하여 실시간 스트림을 반환
   return wishlistRepository.firestore
       .collection('wishlist_item')
+      .doc(userId)
+      .collection('items')
       .orderBy('timestamp', descending: true) // timestamp 필드 기준으로 내림차순 정렬
       .snapshots()
       .map((snapshot) {

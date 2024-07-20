@@ -497,6 +497,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(cartScrollPositionProvider.notifier).state =
   0.0;
   ref.read(cartLargeBannerPageProvider.notifier).state = 0; // 장바구니 배너 페이지뷰 초기화
+  ref.invalidate(cartItemsProvider); // 장바구니 데이터 초기화
   // 장바구니 화면 관련 초기화 부분 끝
 
   // 발주 내역 화면 관련 초기화 부분 시작
@@ -516,6 +517,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 찜 목록 화면에서 단순 화면 스크롤 초기화
   ref.read(wishlistScrollPositionProvider.notifier).state =
   0.0;
+  ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
   // 찜 목록 화면 관련 초기화 부분 끝
 
   // ------ 2차 메인 화면 관련 부분 시작

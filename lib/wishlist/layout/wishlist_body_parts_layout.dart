@@ -1,4 +1,5 @@
 import 'package:dongdaemoon_beta_v1/product/model/product_model.dart'; // Product 모델 클래스 임포트
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart'; // Cupertino 디자인을 사용하기 위한 패키지 임포트
 import 'package:flutter/material.dart'; // Material 디자인을 사용하기 위한 패키지 임포트
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 패키지 임포트
@@ -20,8 +21,17 @@ class WishlistIconButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
-    final asyncWishlist = ref.watch(wishlistItemProvider);
+// 현재 로그인된 사용자 정보를 가져옴
+    final user = FirebaseAuth.instance.currentUser;
+// user가 null인 경우 (로그인되지 않은 경우)
+    if (user == null) {
+      // 빈 위젯 반환
+      return SizedBox.shrink();
+    }
+// 로그인된 사용자의 UID를 가져옴
+    final userId = user.uid;
+// wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
+    final asyncWishlist = ref.watch(wishlistItemProvider(userId));
 
     // asyncWishlist 상태에 따라 위젯을 빌드
     return asyncWishlist.when(
@@ -40,7 +50,7 @@ class WishlistIconButton extends ConsumerWidget {
           // 버튼 클릭 시 동작 정의
           onPressed: () async {
             // wishlistItemProvider의 notifier를 가져옴
-            final wishlistNotifier = ref.read(wishlistItemProvider.notifier);
+            final wishlistNotifier = ref.read(wishlistItemProvider(userId).notifier);
             // wishlistItemRepositoryProvider를 가져옴
             final wishlistRepository = ref.read(wishlistItemRepositoryProvider);
 
@@ -48,7 +58,7 @@ class WishlistIconButton extends ConsumerWidget {
             if (isWished) {
               try {
                 // 찜 목록에서 상품 제거
-                await wishlistRepository.removeFromWishlistItem(product.docId);
+                await wishlistRepository.removeFromWishlistItem(userId, product.docId);
                 // 로컬 상태 업데이트
                 wishlistNotifier.removeItem(product.docId);
                 // 사용자에게 알림 표시
@@ -67,7 +77,7 @@ class WishlistIconButton extends ConsumerWidget {
               // 상품이 찜 목록에 없는 경우
               try {
                 // 찜 목록에 상품 추가
-                await wishlistRepository.addToWishlistItem(product);
+                await wishlistRepository.addToWishlistItem(userId, product);
                 // 로컬 상태 업데이트
                 wishlistNotifier.addItem(product.docId);
                 // 사용자에게 알림 표시
@@ -99,8 +109,9 @@ class WishlistIconButton extends ConsumerWidget {
 class WishlistItemsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
     // wishlistItemsStreamProvider를 통해 찜 목록 항목의 스트림을 감시하여, wishlistItemsAsyncValue에 할당.
-    final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider);
+    final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider(userId));
 
     // cartItemsAsyncValue의 상태에 따라 위젯을 빌드.
     return wishlistItemsAsyncValue.when(
@@ -138,6 +149,7 @@ class WishlistItemsList extends ConsumerWidget {
             );
 
             return GestureDetector(
+              // 탭할 때 상세 화면으로 이동
               onTap: () {
                 navigatorProductDetailScreen.navigateToDetailScreen(context, product);
               },
@@ -145,8 +157,11 @@ class WishlistItemsList extends ConsumerWidget {
                 content: Row(
                   children: [
                     Container(
+                      // 이미지 컨테이너 너비 설정
                       width: MediaQuery.of(context).size.width * 0.35,
+                      // 이미지 컨테이너 높이 설정
                       height: MediaQuery.of(context).size.height * 0.15,
+                      // 썸네일이 있을 경우 이미지 표시
                       child: wishlistItem['thumbnails'] != null
                           ? AspectRatio(
                         aspectRatio: 1,
@@ -157,13 +172,16 @@ class WishlistItemsList extends ConsumerWidget {
                           ),
                         ),
                       )
-                          : Container(),
+                          : Container(), // 썸네일이 없을 경우 빈 컨테이너 표시
                     ),
                     SizedBox(width: 12),
+                    // 남은 공간을 차지하는 위젯
                     Expanded(
                       child: Column(
+                        // 자식 위젯들을 왼쪽 정렬
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // 짧은 소개 텍스트
                           Text(
                             '${wishlistItem['brief_introduction'] ?? ''}',
                             style: TextStyle(
@@ -172,6 +190,7 @@ class WishlistItemsList extends ConsumerWidget {
                             ),
                           ),
                           SizedBox(height: 4),
+                          // 원래 가격 텍스트
                           Text(
                             '${numberFormat.format(originalPrice)}원',
                             style: TextStyle(
@@ -180,6 +199,7 @@ class WishlistItemsList extends ConsumerWidget {
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
+                          // 할인 가격과 할인율을 표시하는 행
                           Row(
                             children: [
                               Text(
@@ -201,20 +221,25 @@ class WishlistItemsList extends ConsumerWidget {
                             ],
                           ),
                           SizedBox(height: 8),
+                          // 삭제 버튼
                           ElevatedButton(
                             onPressed: () {
                               final String? itemId = wishlistItem['product_id'];
                               if (itemId != null) {
-                                ref.read(wishlistItemProvider.notifier).removeItem(itemId);
+                                // 찜 목록에서 상품 제거
+                                ref.read(wishlistItemProvider(userId).notifier).removeItem(itemId);
+                                // 스낵바로 삭제 메시지 표시
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
                                 );
                               } else {
+                                // 유효하지 않은 상품 ID 메시지 표시
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('상품 ID가 유효하지 않습니다.')),
                                 );
                               }
                             },
+                            // 버튼 스타일 설정
                             style: ElevatedButton.styleFrom(
                               foregroundColor: BUTTON_COLOR,
                               backgroundColor: BACKGROUND_COLOR,
@@ -228,6 +253,7 @@ class WishlistItemsList extends ConsumerWidget {
                     ),
                   ],
                 ),
+                // 카드 배경색 설정
                 backgroundColor: BEIGE_COLOR,
                 elevation: 2,
                 padding: const EdgeInsets.all(4),
@@ -236,7 +262,9 @@ class WishlistItemsList extends ConsumerWidget {
           }).toList(),
         );
       },
+      // 로딩 중일 때 표시할 위젯
       loading: () => Center(child: CircularProgressIndicator()),
+      // 에러 발생 시 표시할 위젯
       error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
     );
   }

@@ -25,25 +25,27 @@ final wishlistScrollControllerProvider = Provider<ScrollController>((ref) {
 class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // WishlistItemRepository 인스턴스 저장
   final WishlistItemRepository wishlistItemRepository;
+  final String userId; // 추가된 userId 변수
   // Firestore 실시간 구독을 위한 StreamSubscription 변수
   late StreamSubscription _subscription;
 
   // 생성자에서 Firestore 데이터를 구독하는 메서드 호출
-  WishlistItemNotifier(this.wishlistItemRepository) : super(const AsyncValue.loading()) {
+  WishlistItemNotifier(this.wishlistItemRepository, this.userId) : super(const AsyncValue.loading()) {
     // Firestore의 실시간 데이터를 구독하는 메서드 호출
     _listenToWishlistItems();
   }
 
   // Firestore의 실시간 데이터를 구독하는 메서드
   void _listenToWishlistItems() {
-    // Firestore 컬렉션 'wishlist_item'의 변경사항을 구독
-    _subscription = wishlistItemRepository.firestore.collection('wishlist_item').snapshots().listen((snapshot) {
-      // 문서에서 'product_id' 필드를 추출하여 Set<String>으로 변환
+    _subscription = wishlistItemRepository.firestore
+        .collection('wishlist_item')
+        .doc(userId)
+        .collection('items')
+        .snapshots()
+        .listen((snapshot) {
       final itemIds = snapshot.docs.map((doc) => doc['product_id'] as String).toSet();
-      // 상태를 업데이트
       state = AsyncValue.data(itemIds);
     }, onError: (error, stackTrace) {
-      // 오류 발생 시 상태를 오류로 업데이트
       state = AsyncValue.error(error, stackTrace);
     });
   }
@@ -75,12 +77,9 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // 상품 ID를 기준으로 찜 목록에서 제거하는 함수인 removeItem
   void removeItem(String productId) async {
     try {
-      // Firestore에서 상품 제거
-      await wishlistItemRepository.removeFromWishlistItem(productId);
-      // 로컬 상태에서도 제거
+      await wishlistItemRepository.removeFromWishlistItem(userId, productId);
       state = state.whenData((items) => Set.from(items)..remove(productId));
     } catch (error, stackTrace) {
-      // 오류 발생 시 상태를 오류로 업데이트
       state = AsyncValue.error(error, stackTrace);
     }
   }
@@ -112,9 +111,9 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
 // ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 끝
 
 // WishlistItemNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
-final wishlistItemProvider = StateNotifierProvider<WishlistItemNotifier, AsyncValue<Set<String>>>((ref) {
+final wishlistItemProvider = StateNotifierProvider.family<WishlistItemNotifier, AsyncValue<Set<String>>, String>((ref, String userId) {
   // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴.
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
   // WishlistItemNotifier를 생성하고 반환함.
-  return WishlistItemNotifier(wishlistRepository);
+  return WishlistItemNotifier(wishlistRepository, userId);
 });

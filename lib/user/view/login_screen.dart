@@ -8,13 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/view/home_screen.dart';
+import '../provider/user_me_provider.dart';
 import 'membership_registration_info_screen.dart';
 
-// 로그인 화면을 위한 StatefulWidget 정의
+// ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 시작
 class LoginScreen extends ConsumerStatefulWidget {
   // 라우트 이름 정의
   static String get routeName => 'login';
@@ -53,7 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // 자동 로그인 정보 불러오기
+    // 자동 로그인 정보 불러옴
     _loadAutoLogin();
     emailFocusNode.addListener(() {
       if (emailFocusNode.hasFocus) {
@@ -75,12 +77,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  // SharedPreferences에서 자동 로그인 정보 불러오는 함수
+// SharedPreferences에서 자동 로그인 정보 불러오는 함수
   void _loadAutoLogin() async {
+    // SharedPreferences 인스턴스 가져옴
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState로 상태 업데이트
     setState(() {
+      // autoLogin 값을 SharedPreferences에서 불러오고, 값이 없으면 false 설정
       autoLogin = prefs.getBool('autoLogin') ?? false;
       if (autoLogin) {
+        // autoLogin이 true인 경우, username과 password를 SharedPreferences에서 불러옴
         username = prefs.getString('username') ?? '';
         password = prefs.getString('password') ?? '';
         // 자동 로그인 정보가 있으면 _login 메서드를 호출하여 로그인 시도
@@ -89,40 +95,57 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
   }
 
-  // SharedPreferences에 자동 로그인 정보 저장하는 함수
+// SharedPreferences에 자동 로그인 정보 저장하는 함수
   void _saveAutoLogin() async {
+    // SharedPreferences 인스턴스 가져옴
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    // autoLogin 값을 SharedPreferences에 저장
     prefs.setBool('autoLogin', autoLogin);
     if (autoLogin) {
+      // autoLogin이 true인 경우, username과 password를 SharedPreferences에 저장
       prefs.setString('username', username);
       prefs.setString('password', password);
     } else {
+      // autoLogin이 false인 경우, username과 password를 SharedPreferences에서 삭제
       prefs.remove('username');
       prefs.remove('password');
     }
   }
 
-  // 로그인 함수
+// 로그인 함수
   void _login() async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      // FirebaseAuth를 사용하여 이메일과 비밀번호로 로그인 시도
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: username,
         password: password,
       );
-      // 로그인 성공 시 스낵바 메시지 표시
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("로그인이 되었습니다."),
-        ),
-      );
-      // 탭 인덱스를 0으로 초기화
-      ref.read(tabIndexProvider.notifier).state = 0;
-      // 홈 화면으로 이동
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => HomeMainScreen()),
-      );
+      // 로그인한 사용자 정보 가져옴
+      User? user = userCredential.user;
+      if (user != null) {
+        // userMeProvider를 통해 사용자 정보 저장
+        await ref.read(userMeProvider.notifier).login(
+          email: username,
+          password: password,
+        );
+        // cartItemsProvider를 통해 장바구니 데이터 로드
+        await ref.read(cartItemsProvider.notifier).loadCartItems(); // 장바구니 데이터 로드
+
+        // 로그인 성공 메시지 출력
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("로그인이 되었습니다."),
+          ),
+        );
+        // 탭 인덱스를 0으로 설정
+        ref.read(tabIndexProvider.notifier).state = 0;
+        // 홈 화면으로 이동 및 현재 화면을 대체
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => HomeMainScreen()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      // 로그인 실패 시 스낵바 메시지 표시
+      // 로그인 실패 시 오류 메시지 출력
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("아이디 혹은 비밀번호가 일치하지 않습니다."),
@@ -134,17 +157,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // SingleChildScrollView를 사용하여 화면을 스크롤 가능하게 만듭니다.
+      // SingleChildScrollView를 사용하여 화면을 스크롤 가능하게 함.
       body: SingleChildScrollView(
-        // SafeArea를 사용하여 장치의 안전 영역을 침범하지 않도록 합니다.
+        // SafeArea를 사용하여 장치의 안전 영역을 침범하지 않도록 함.
         child: SafeArea(
           top: true,
           bottom: false,
           child: Padding(
-            // 좌우 여백을 16.0으로 설정합니다.
+            // 좌우 여백을 16.0으로 설정함.
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
-              // 자식 위젯들을 stretch(늘리기) 방향으로 정렬합니다.
+              // 자식 위젯들을 stretch(늘리기) 방향으로 정렬함.
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // 타이틀 위젯
@@ -155,7 +178,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // 이미지 위젯
                 Image.asset(
                   'asset/img/misc/main_image.jpg',
-                  // 화면 너비의 1.5배로 이미지 너비를 설정합니다.
+                  // 화면 너비의 1.5배로 이미지 너비를 설정함.
                   width: MediaQuery.of(context).size.width / 2 * 3,
                 ),
                 const SizedBox(height: 12.0),
@@ -267,16 +290,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  // URL을 여는 함수 정의
+// URL을 여는 함수 정의
   void _launchURL(String url) async {
+    // URL 문자열을 Uri 객체로 변환
     Uri uri = Uri.parse(url);
+    // URL을 열 수 있는지 확인
     if (await canLaunchUrl(uri)) {
+      // URL 열기
       await launchUrl(uri);
     } else {
+      // URL을 열 수 없을 때 예외 발생
       throw 'Could not launch $url';
     }
   }
 }
+// ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 끝
 
 // 로그인 화면 타이틀 위젯
 class _Title extends StatelessWidget {
