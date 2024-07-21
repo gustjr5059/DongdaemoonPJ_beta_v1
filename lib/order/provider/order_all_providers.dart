@@ -8,3 +8,9 @@ final userInfoProvider = FutureProvider.family<Map<String, dynamic>?, String>((r
   final repository = OrderRepository();
   return repository.getUserInfoByEmail(email);
 });
+
+// 주소 검색 기능을 제공하는 FutureProvider
+final addressSearchProvider = FutureProvider.family<List<dynamic>, String>((ref, query) async {
+  final repository = OrderRepository();
+  return repository.searchAddress(query);
+});

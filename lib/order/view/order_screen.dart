@@ -303,6 +303,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                           children: [
                             SizedBox(height: 10), // 높이 임의로 50으로 간격 설정
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자 정보를 표시
+                            AddressSearchWidget(), // 주소 검색 위젯 추가
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
                         ),

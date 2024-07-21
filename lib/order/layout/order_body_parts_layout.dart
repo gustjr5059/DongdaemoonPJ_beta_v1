@@ -22,6 +22,7 @@ class UserInfoWidget extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 '구매자정보',
@@ -80,6 +81,72 @@ class UserInfoWidget extends ConsumerWidget {
               ? Center(child: Text(value))
               : Align(alignment: Alignment.centerLeft, child: Text(value)),
         ),
+      ],
+    );
+  }
+}
+
+class AddressSearchWidget extends ConsumerStatefulWidget {
+  @override
+  _AddressSearchWidgetState createState() => _AddressSearchWidgetState();
+}
+
+class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
+  final TextEditingController _controller = TextEditingController();
+  String _query = '';
+  bool _isFirstLoad = true;
+
+  void _search() {
+    setState(() {
+      _query = _controller.text;
+      _isFirstLoad = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final addressSearchResult = ref.watch(addressSearchProvider(_query));
+
+    return Column(
+      mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 변경
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              labelText: '주소 검색',
+              suffixIcon: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: _search,
+              ),
+            ),
+          ),
+        ),
+        if (_query.isNotEmpty && !_isFirstLoad) // 빈 쿼리와 첫 로드를 처리
+          Flexible( // Expanded 대신 Flexible 사용
+            child: addressSearchResult.when(
+              data: (addresses) => ListView.builder(
+                shrinkWrap: true,
+                itemCount: addresses.length,
+                itemBuilder: (context, index) {
+                  final address = addresses[index];
+                  final roadAddress = address['road_address'];
+                  final zoneNo = roadAddress != null ? roadAddress['zone_no'] : '';
+                  final fullAddress = roadAddress != null ? roadAddress['address_name'] : address['address_name'];
+                  final displayAddress = zoneNo.isNotEmpty ? '$fullAddress [$zoneNo]' : fullAddress;
+                  return ListTile(
+                    title: Text(displayAddress),
+                    onTap: () {
+                      Navigator.pop(context, displayAddress);
+                    },
+                  );
+                },
+              ),
+              loading: () => Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('Error: $error')),
+            ),
+          ),
       ],
     );
   }
