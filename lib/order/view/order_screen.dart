@@ -54,6 +54,7 @@ import '../../../common/provider/common_all_providers.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../layout/order_body_parts_layout.dart';
 import '../provider/order_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -251,6 +252,8 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
+    final User? user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -298,8 +301,8 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                         // 좌우로 4의 패딩을 추가
                         child: Column(
                           children: [
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
-                            Text('발주 내용'),
+                            SizedBox(height: 10), // 높이 임의로 50으로 간격 설정
+                            if (user != null) UserInfoWidget(email: user.email!), // 사용자 정보를 표시
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
                         ),
