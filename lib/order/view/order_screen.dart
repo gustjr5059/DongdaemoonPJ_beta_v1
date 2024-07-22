@@ -254,7 +254,12 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
     final User? user = FirebaseAuth.instance.currentUser;
 
-    return Scaffold(
+    return GestureDetector(
+        onTap: () {
+      // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
+      FocusScope.of(context).unfocus();
+    },
+    child: Scaffold(
       body: Stack(
         children: [
           CustomScrollView(
@@ -303,6 +308,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                           children: [
                             SizedBox(height: 10), // 높이 임의로 50으로 간격 설정
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자 정보를 표시
+                            if (user != null) RecipientInfoWidget(email: user.email!),
                             AddressSearchWidget(), // 주소 검색 위젯 추가
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
@@ -324,10 +330,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context, 5, 1),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
-    );
+    ),
+   );
     // ------ 화면구성 끝
-  }
+ }
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
