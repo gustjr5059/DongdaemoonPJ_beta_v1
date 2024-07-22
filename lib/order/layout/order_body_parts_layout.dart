@@ -99,24 +99,35 @@ class RecipientInfoWidget extends ConsumerStatefulWidget {
 class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _requestController = TextEditingController();
+  TextEditingController _addressController = TextEditingController(text: '없음');
+  TextEditingController _postalCodeController = TextEditingController(text: '없음');
+  TextEditingController _detailAddressController = TextEditingController();
+  TextEditingController _customMemoController = TextEditingController();
 
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _phoneNumberFocusNode = FocusNode();
   FocusNode _addressFocusNode = FocusNode();
-  FocusNode _requestFocusNode = FocusNode();
+  FocusNode _postalCodeFocusNode = FocusNode();
+  FocusNode _detailAddressFocusNode = FocusNode();
+  FocusNode _customMemoFocusNode = FocusNode();
+
+  String _selectedMemo = "기사님께 보여지는 메모입니다.";
+  bool _isCustomMemo = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _phoneNumberController.dispose();
     _addressController.dispose();
-    _requestController.dispose();
+    _postalCodeController.dispose();
+    _detailAddressController.dispose();
+    _customMemoController.dispose();
     _nameFocusNode.dispose();
     _phoneNumberFocusNode.dispose();
     _addressFocusNode.dispose();
-    _requestFocusNode.dispose();
+    _postalCodeFocusNode.dispose();
+    _detailAddressFocusNode.dispose();
+    _customMemoFocusNode.dispose();
     super.dispose();
   }
 
@@ -133,50 +144,30 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                Text(
-                  '받는사람정보',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(width: 20),  // 받는사람정보 오른쪽 간격 조정
-                ElevatedButton(
-                  onPressed: () {
-                    // 배송지 변경 기능 구현
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: BUTTON_COLOR,
-                    backgroundColor: BACKGROUND_COLOR,
-                    side: BorderSide(color: BUTTON_COLOR),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  ),
-                  child: Text('배송지 변경', style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                SizedBox(width: 10),  // 배송지변경 버튼 오른쪽 간격 조정
-                ElevatedButton(
-                  onPressed: () {
-                    // 배송 요청사항 변경 기능 구현
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: BUTTON_COLOR,
-                    backgroundColor: BACKGROUND_COLOR,
-                    side: BorderSide(color: BUTTON_COLOR),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  ),
-                  child: Text('요청사항 변경', style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ],
+            Text(
+              '받는사람정보',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 16),
             Column(
               children: [
+                _buildDropdownRow('배송지', '배송지를 선택해주세요'),
                 _buildEditableRow('이름', _nameController, _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
-                _buildEditableRow('배송주소', _addressController, _addressFocusNode, "'배송지 변경' 버튼을 클릭하여 배송지를 선택해주세요."),
                 _buildEditableRow('연락처', _phoneNumberController, _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."),
-                _buildEditableRow('배송 요청사항', _requestController, _requestFocusNode, "'요청사항 변경' 버튼을 클릭하여 요청사항을 선택해주세요."),
+                _buildFixedValueRowWithButton('우편번호', _postalCodeController, '우편번호 찾기'),
+                _buildFixedValueRow('주소', _addressController),
+                _buildEditableRow(
+                  '상세주소',
+                  _detailAddressController,
+                  _detailAddressFocusNode,
+                  "우편번호 및 주소를 선택 후 기입해주세요.",
+                  isEnabled: _addressController.text != '없음' && _postalCodeController.text != '없음',
+                ),
+                _buildDropdownMemoRow(),
+                if (_isCustomMemo) _buildEditableRow('배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.'),
               ],
             ),
           ],
@@ -185,17 +176,59 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     );
   }
 
-  Widget _buildEditableRow(String label, TextEditingController controller, FocusNode focusNode, String hintText) {
+  Widget _buildDropdownRow(String label, String hint) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              width: 120,
+              width: 80,
               color: Colors.grey.shade200,
               padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: hint,
+                    onChanged: (String? newValue) {},
+                    items: <String>[hint].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditableRow(String label, TextEditingController controller, FocusNode focusNode, String hintText, {bool isEnabled = true}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 80,
+              color: Colors.grey.shade200,
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
               child: Text(
                 label,
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -206,24 +239,26 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 color: Colors.white,
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () {
-                    // 이 컨테이너를 클릭하면 포커스 설정
+                  onTap: isEnabled
+                      ? () {
                     FocusScope.of(context).requestFocus(focusNode);
-                  },
+                  }
+                      : null,
                   child: AbsorbPointer(
+                    absorbing: !isEnabled,
                     child: TextField(
                       controller: controller,
                       focusNode: focusNode,
-                      style: TextStyle(fontSize: 14), // 왼쪽 텍스트 크기와 동일하게 조정
+                      style: TextStyle(fontSize: 14),
                       decoration: InputDecoration(
                         hintText: hintText,
-                        hintStyle: TextStyle(color: Colors.grey.shade400), // 힌트 텍스트 색상 연하게 설정
-                        hintMaxLines: 2, // 힌트 텍스트가 여러 줄로 표시되도록 설정
+                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        hintMaxLines: 2,
                         border: InputBorder.none,
-                        isDense: true, // 텍스트 필드의 높이 줄이기
-                        contentPadding: EdgeInsets.zero, // 텍스트 필드의 패딩 없애기
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
                       ),
-                      maxLines: null, // 여러 줄 입력 가능
+                      maxLines: null,
                     ),
                   ),
                 ),
@@ -234,7 +269,147 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
       ),
     );
   }
+
+  Widget _buildFixedValueRow(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 80,
+              color: Colors.grey.shade200,
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.all(8.0),
+                child: Text(controller.text),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFixedValueRowWithButton(String label, TextEditingController controller, String buttonText) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 80,
+              color: Colors.grey.shade200,
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Expanded(child: Text(controller.text)),
+                    ElevatedButton(
+                      onPressed: () {
+                        // 우편번호 찾기 기능 구현
+                        setState(() {
+                          // 예시로 데이터가 불러와지는 것을 가정
+                          _addressController.text = "서울특별시 강남구 테헤란로 123";
+                          _postalCodeController.text = "12345";
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: BUTTON_COLOR,
+                        backgroundColor: BACKGROUND_COLOR,
+                        side: BorderSide(color: BUTTON_COLOR),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        textStyle: TextStyle(fontSize: 10),
+                      ),
+                      child: Text(buttonText, style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownMemoRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 80,
+              color: Colors.grey.shade200,
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '배송메모',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedMemo,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        if (newValue == '직접입력') {
+                          _isCustomMemo = true;
+                          _selectedMemo = newValue!;
+                        } else {
+                          _isCustomMemo = false;
+                          _selectedMemo = newValue!;
+                        }
+                      });
+                    },
+                    items: <String>[
+                      '기사님께 보여지는 메모입니다.',
+                      '경비실에 맡겨주세요',
+                      '벨은 누르지 말아주세요',
+                      '무인택배함에 넣어주세요',
+                      '직접입력',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+
 
 
 class AddressSearchWidget extends ConsumerStatefulWidget {
