@@ -24,11 +24,13 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+    <!--ios에 카카오 API 연동하기 위한 설정 시작-->
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
 	</array>
+    <!--ios에 카카오 API 연동하기 위한 설정 끝-->
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -50,10 +52,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <!--ios에 웹 뷰를 연동할 때 필요한 설정 시작-->
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <!--ios에 웹 뷰를 연동할 때 필요한 설정 끝-->
 </dict>
 </plist>

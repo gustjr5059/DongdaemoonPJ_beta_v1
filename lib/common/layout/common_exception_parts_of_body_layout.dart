@@ -29,6 +29,7 @@ import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
 
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
+import '../../order/view/order_postcode_search_screen.dart';
 import '../../order/view/order_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
@@ -369,7 +370,7 @@ Widget buildCommonBottomNavigationBar(
                 onPressed: () {
                   // OrderMainScreen으로 화면 전환
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => OrderMainScreen()),
+                    MaterialPageRoute(builder: (_) => OrderPostcodeSearchScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

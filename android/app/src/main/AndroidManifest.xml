@@ -1,10 +1,13 @@
+<!--안드로이드에 API 연결하기 위한 패키지 지정 관련 로직-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.couturier">
+    <!--안드로이드 기반 앱에 인터넷 연결 관련 로직-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="dongdaemoon_beta_v1"
         android:icon="@mipmap/ic_launcher"
-        android:enableOnBackInvokedCallback="true">
+        android:enableOnBackInvokedCallback="true"
+        >
         <!--android:enableOnBackInvokedCallback="true" 설정을 통해 백 버튼 이벤트가 정상적으로 활성화되었고,
         사용자가 기기에서 백 버튼을 조작할 때 이벤트가 발생하면 앱이 이를 감지하고 적절히 반응할 수 있도록 준비된 상태-->
         <!--Android 12(API 레벨 31) 이상에서 새롭게 도입된 OnBackInvokedCallback 기능을 활성화하여,

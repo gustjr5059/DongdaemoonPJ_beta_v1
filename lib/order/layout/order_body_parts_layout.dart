@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import '../../common/const/colors.dart';
 import '../provider/order_all_providers.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'dart:io';
+import '../view/order_postcode_search_screen.dart';
 
+// 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 시작
 class UserInfoWidget extends ConsumerWidget {
   final String email;
 
-  UserInfoWidget({required this.email});
+  UserInfoWidget({required this.email}); // 생성자에서 이메일을 받아옴
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userInfoAsyncValue = ref.watch(userInfoProvider(email));
+    final userInfoAsyncValue = ref.watch(userInfoProvider(email)); // Riverpod을 사용하여 사용자 정보 프로바이더를 구독
 
     return userInfoAsyncValue.when(
       data: (userInfo) {
@@ -46,9 +45,9 @@ class UserInfoWidget extends ConsumerWidget {
                   1: FlexColumnWidth(2),
                 },
                 children: [
-                  _buildTableRow('이름', name),
-                  _buildTableRow('이메일', email),
-                  _buildTableRow('휴대폰 번호', phoneNumber),
+                  _buildTableRow('이름', name), // 이름 행 생성
+                  _buildTableRow('이메일', email), // 이메일 행 생성
+                  _buildTableRow('휴대폰 번호', phoneNumber), // 휴대폰 번호 행 생성
                 ],
               ),
               SizedBox(height: 8),
@@ -63,11 +62,12 @@ class UserInfoWidget extends ConsumerWidget {
           ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+      loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태 처리
+      error: (error, stack) => Center(child: Text('Error: $error')), // 에러 상태 처리
     );
   }
 
+  // 표의 행을 빌드하는 함수
   TableRow _buildTableRow(String label, String value) {
     return TableRow(
       children: [
@@ -90,17 +90,20 @@ class UserInfoWidget extends ConsumerWidget {
     );
   }
 }
+// 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 끝
 
+// 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
 class RecipientInfoWidget extends StatefulWidget {
   final String email;
 
-  RecipientInfoWidget({required this.email});
+  RecipientInfoWidget({required this.email}); // 생성자에서 이메일을 받아옴
 
   @override
   _RecipientInfoWidgetState createState() => _RecipientInfoWidgetState();
 }
 
 class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
+  // 텍스트 입력 컨트롤러 선언
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _addressController = TextEditingController(text: '없음');
@@ -108,6 +111,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   TextEditingController _detailAddressController = TextEditingController();
   TextEditingController _customMemoController = TextEditingController();
 
+  // 포커스 노드 선언
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _phoneNumberFocusNode = FocusNode();
   FocusNode _addressFocusNode = FocusNode();
@@ -115,11 +119,12 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   FocusNode _detailAddressFocusNode = FocusNode();
   FocusNode _customMemoFocusNode = FocusNode();
 
-  String _selectedMemo = "기사님께 보여지는 메모입니다.";
-  bool _isCustomMemo = false;
+  String _selectedMemo = "기사님께 보여지는 메모입니다."; // 선택된 메모 초기값 설정
+  bool _isCustomMemo = false; // 사용자 지정 메모 사용 여부
 
   @override
   void dispose() {
+    // 컨트롤러와 포커스 노드 해제
     _nameController.dispose();
     _phoneNumberController.dispose();
     _addressController.dispose();
@@ -135,16 +140,26 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     super.dispose();
   }
 
-  Future<String> loadHtmlFromAssets(String filename) async {
-    return await rootBundle.loadString('asset/$filename');
+  // 우편번호 검색 화면을 여는 함수
+  Future<void> _openPostcodeSearch() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => OrderPostcodeSearchScreen()),
+    );
+
+    if (result != null && result is List<String>) {
+      setState(() {
+        _addressController.text = result[0];
+        _postalCodeController.text = result[1];
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
-        FocusScope.of(context).unfocus();
+        FocusScope.of(context).unfocus(); // 화면을 탭할 때 키보드 숨기기
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -161,20 +176,20 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
             SizedBox(height: 16),
             Column(
               children: [
-                _buildDropdownRow('배송지', '배송지를 선택해주세요'),
-                _buildEditableRow('이름', _nameController, _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
-                _buildEditableRow('연락처', _phoneNumberController, _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."),
-                _buildFixedValueRowWithButton('우편번호', _postalCodeController, '우편번호 찾기'),
-                _buildFixedValueRow('주소', _addressController),
+                _buildDropdownRow('배송지', '배송지를 선택해주세요'), // 드롭다운 행 생성
+                _buildEditableRow('이름', _nameController, _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."), // 수정 가능한 이름 행 생성
+                _buildEditableRow('연락처', _phoneNumberController, _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."), // 수정 가능한 연락처 행 생성
+                _buildFixedValueRowWithButton('우편번호', _postalCodeController, '우편번호 찾기'), // 우편번호 찾기 버튼이 포함된 행 생성
+                _buildFixedValueRow('주소', _addressController), // 고정된 값이 있는 주소 행 생성
                 _buildEditableRow(
                   '상세주소',
                   _detailAddressController,
                   _detailAddressFocusNode,
                   "우편번호 및 주소를 선택 후 기입해주세요.",
-                  isEnabled: _addressController.text != '없음' && _postalCodeController.text != '없음',
+                  isEnabled: _addressController.text != '없음' && _postalCodeController.text != '없음', // 우편번호와 주소가 없을 때는 비활성화
                 ),
-                _buildDropdownMemoRow(),
-                if (_isCustomMemo) _buildEditableRow('배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.'),
+                _buildDropdownMemoRow(), // 드롭다운 메모 행 생성
+                if (_isCustomMemo) _buildEditableRow('배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.'), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
               ],
             ),
           ],
@@ -183,6 +198,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 드롭다운 행을 빌드하는 함수
   Widget _buildDropdownRow(String label, String hint) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -224,6 +240,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 수정 가능한 행을 빌드하는 함수
   Widget _buildEditableRow(String label, TextEditingController controller, FocusNode focusNode, String hintText, {bool isEnabled = true}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -248,11 +265,11 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                 child: GestureDetector(
                   onTap: isEnabled
                       ? () {
-                    FocusScope.of(context).requestFocus(focusNode);
+                    FocusScope.of(context).requestFocus(focusNode); // 행을 탭할 때 포커스를 설정
                   }
                       : null,
                   child: AbsorbPointer(
-                    absorbing: !isEnabled,
+                    absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
                     child: TextField(
                       controller: controller,
                       focusNode: focusNode,
@@ -277,6 +294,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 고정된 값을 가진 행을 빌드하는 함수
   Widget _buildFixedValueRow(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -298,7 +316,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
               child: Container(
                 color: Colors.white,
                 padding: const EdgeInsets.all(8.0),
-                child: Text(controller.text),
+                child: Text(controller.text), // 고정된 값을 텍스트로 표시
               ),
             ),
           ],
@@ -307,6 +325,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 버튼을 포함한 고정된 값을 가진 행을 빌드하는 함수
   Widget _buildFixedValueRowWithButton(String label, TextEditingController controller, String buttonText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -330,41 +349,16 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                 child: Row(
                   children: [
-                    Expanded(child: Text(controller.text)),
+                    Expanded(child: Text(controller.text)), // 고정된 값을 텍스트로 표시
                     ElevatedButton(
-                      onPressed: () async {
-                        final htmlContent = await loadHtmlFromAssets('postcode.html');
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.7,
-                              child: InAppWebView(
-                                initialData: InAppWebViewInitialData(
-                                  data: htmlContent,
-                                ),
-                                onWebViewCreated: (controller) {
-                                  controller.addJavaScriptHandler(handlerName: 'onComplete', callback: (args) {
-                                    setState(() {
-                                      _addressController.text = args[0];
-                                      _postalCodeController.text = args[1];
-                                    });
-                                    Navigator.pop(context);
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
+                      onPressed: _openPostcodeSearch, // 우편번호 찾기 버튼을 눌렀을 때 실행되는 함수
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue,
-                        side: BorderSide(color: Colors.blue),
-                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                        textStyle: TextStyle(fontSize: 10),
+                        foregroundColor: BUTTON_COLOR,
+                        backgroundColor: BACKGROUND_COLOR,
+                        side: BorderSide(color: BUTTON_COLOR),
+                        padding: EdgeInsets.symmetric(vertical: 10),
                       ),
-                      child: Text(buttonText, style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text('우편번호 찾기', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -376,6 +370,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 드롭다운 메모 행을 빌드하는 함수
   Widget _buildDropdownMemoRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -422,7 +417,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                         value: value,
                         child: Text(value),
                       );
-                    }).toList(),
+                    }).toList(), // 드롭다운 메뉴 항목 설정
                   ),
                 ),
               ),
@@ -433,29 +428,30 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 }
+// 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 끝
 
-
-
+// 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 class AddressSearchWidget extends ConsumerStatefulWidget {
   @override
   _AddressSearchWidgetState createState() => _AddressSearchWidgetState();
 }
 
 class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
-  final TextEditingController _controller = TextEditingController();
-  String _query = '';
-  bool _isFirstLoad = true;
+  final TextEditingController _controller = TextEditingController(); // 주소 입력 컨트롤러
+  String _query = ''; // 검색 쿼리
+  bool _isFirstLoad = true; // 첫 로드 여부
 
+  // 주소 검색 함수
   void _search() {
     setState(() {
-      _query = _controller.text;
-      _isFirstLoad = false;
+      _query = _controller.text; // 검색 쿼리 설정
+      _isFirstLoad = false; // 첫 로드 여부 설정
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final addressSearchResult = ref.watch(addressSearchProvider(_query));
+    final addressSearchResult = ref.watch(addressSearchProvider(_query)); // Riverpod을 사용하여 주소 검색 프로바이더를 구독
 
     return Column(
       mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 변경
@@ -463,12 +459,12 @@ class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
-            controller: _controller,
+            controller: _controller, // 텍스트 필드 컨트롤러 설정
             decoration: InputDecoration(
               labelText: '주소 검색',
               suffixIcon: IconButton(
                 icon: Icon(Icons.search),
-                onPressed: _search,
+                onPressed: _search, // 검색 버튼을 눌렀을 때 실행되는 함수
               ),
             ),
           ),
@@ -478,26 +474,27 @@ class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
             child: addressSearchResult.when(
               data: (addresses) => ListView.builder(
                 shrinkWrap: true,
-                itemCount: addresses.length,
+                itemCount: addresses.length, // 검색 결과 개수
                 itemBuilder: (context, index) {
-                  final address = addresses[index];
-                  final roadAddress = address['road_address'];
-                  final zoneNo = roadAddress != null ? roadAddress['zone_no'] : '';
-                  final fullAddress = roadAddress != null ? roadAddress['address_name'] : address['address_name'];
-                  final displayAddress = zoneNo.isNotEmpty ? '$fullAddress [$zoneNo]' : fullAddress;
+                  final address = addresses[index]; // 주소 정보
+                  final roadAddress = address['road_address']; // 도로명 주소
+                  final zoneNo = roadAddress != null ? roadAddress['zone_no'] : ''; // 우편번호
+                  final fullAddress = roadAddress != null ? roadAddress['address_name'] : address['address_name']; // 전체 주소
+                  final displayAddress = zoneNo.isNotEmpty ? '$fullAddress [$zoneNo]' : fullAddress; // 표시할 주소
                   return ListTile(
                     title: Text(displayAddress),
                     onTap: () {
-                      Navigator.pop(context, displayAddress);
+                      Navigator.pop(context, displayAddress); // 주소를 선택했을 때 이전 화면으로 반환
                     },
                   );
                 },
               ),
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Error: $error')),
+              loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태 처리
+              error: (error, stack) => Center(child: Text('Error: $error')), // 에러 상태 처리
             ),
           ),
       ],
     );
   }
 }
+// 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 끝
