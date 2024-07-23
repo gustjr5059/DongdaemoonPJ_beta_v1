@@ -40,7 +40,9 @@ dependencies:
   intl: ^0.17.0
   device_info_plus: ^9.1.2
   package_info_plus: ^5.0.1
-
+  webview_flutter: ^2.0.10
+  flutter_inappwebview: ^5.3.2
+  path_provider: ^2.0.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -83,6 +85,7 @@ dependency_overrides:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
+    - asset/postcode.html
     - asset/img/misc/main_image.jpg
     - asset/img/misc/logo_image.jpg
     - asset/img/misc/splash_img/splash2_image.png

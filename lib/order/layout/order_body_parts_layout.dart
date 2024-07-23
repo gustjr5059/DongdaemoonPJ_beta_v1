@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../common/const/colors.dart';
 import '../provider/order_all_providers.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'dart:io';
 
 class UserInfoWidget extends ConsumerWidget {
   final String email;
@@ -87,7 +91,7 @@ class UserInfoWidget extends ConsumerWidget {
   }
 }
 
-class RecipientInfoWidget extends ConsumerStatefulWidget {
+class RecipientInfoWidget extends StatefulWidget {
   final String email;
 
   RecipientInfoWidget({required this.email});
@@ -96,7 +100,7 @@ class RecipientInfoWidget extends ConsumerStatefulWidget {
   _RecipientInfoWidgetState createState() => _RecipientInfoWidgetState();
 }
 
-class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
+class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _addressController = TextEditingController(text: '없음');
@@ -131,6 +135,10 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     super.dispose();
   }
 
+  Future<String> loadHtmlFromAssets(String filename) async {
+    return await rootBundle.loadString('asset/$filename');
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -147,9 +155,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
             Text(
               '받는사람정보',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
             Column(
@@ -325,18 +332,35 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   children: [
                     Expanded(child: Text(controller.text)),
                     ElevatedButton(
-                      onPressed: () {
-                        // 우편번호 찾기 기능 구현
-                        setState(() {
-                          // 예시로 데이터가 불러와지는 것을 가정
-                          _addressController.text = "서울특별시 강남구 테헤란로 123";
-                          _postalCodeController.text = "12345";
-                        });
+                      onPressed: () async {
+                        final htmlContent = await loadHtmlFromAssets('postcode.html');
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: InAppWebView(
+                                initialData: InAppWebViewInitialData(
+                                  data: htmlContent,
+                                ),
+                                onWebViewCreated: (controller) {
+                                  controller.addJavaScriptHandler(handlerName: 'onComplete', callback: (args) {
+                                    setState(() {
+                                      _addressController.text = args[0];
+                                      _postalCodeController.text = args[1];
+                                    });
+                                    Navigator.pop(context);
+                                  });
+                                },
+                              ),
+                            );
+                          },
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: BUTTON_COLOR,
-                        backgroundColor: BACKGROUND_COLOR,
-                        side: BorderSide(color: BUTTON_COLOR),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue,
+                        side: BorderSide(color: Colors.blue),
                         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                         textStyle: TextStyle(fontSize: 10),
                       ),

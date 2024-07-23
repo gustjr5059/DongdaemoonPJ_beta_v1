@@ -9,7 +9,7 @@ import 'dart:ui' as ui;
 import '../../common/api_key.dart'; // API 키 로드 함수가 포함된 파일을 임포트
 
 Future<String> getKAHeader() async {
-  String sdkVersion = '3.19.6'; // SDK 버전은 수동으로 입력합니다.
+  String sdkVersion = '3.22.3'; // SDK 버전은 수동으로 입력합니다.
   String osVersion;
   String device;
   String appName;
