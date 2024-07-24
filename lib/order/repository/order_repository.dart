@@ -111,24 +111,37 @@ class OrderRepository {
   // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
 
   // 기존 발주 관련 데이터 처리 로직
-  Future<void> placeOrder(List<ProductContent> items) async {
+  Future<void> placeOrder({
+    required Map<String, dynamic> ordererInfo,
+    required Map<String, dynamic> recipientInfo,
+    required Map<String, dynamic> amountInfo,
+    required List<ProductContent> productInfo,
+  }) async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
-    final orderCollection = firestore.collection('orders').doc(userId).collection('items');
+    final orderCollection = firestore.collection('order_list').doc(userId).collection('orders').doc();
 
-    for (var item in items) {
-      await orderCollection.add({
-        'product_id': item.docId,
-        'product_number': item.productNumber,
-        'thumbnails': item.thumbnail,
-        'brief_introduction': item.briefIntroduction,
-        'original_price': item.originalPrice,
-        'discount_price': item.discountPrice,
-        'discount_percent': item.discountPercent,
-        'selected_count': item.selectedCount,
-        'selected_color_image': item.selectedColorImage,
-        'selected_color_text': item.selectedColorText,
-        'selected_size': item.selectedSize,
-        'timestamp': FieldValue.serverTimestamp(),
+    // 발주자 정보 저장
+    await orderCollection.collection('orderer_info').doc('info').set(ordererInfo);
+
+    // 수령자 정보 저장
+    await orderCollection.collection('recipient_info').doc('info').set(recipientInfo);
+
+    // 결제 정보 저장
+    await orderCollection.collection('amount_info').doc('info').set(amountInfo);
+
+    // 상품 정보 저장
+    for (var item in productInfo) {
+      await orderCollection.collection('product_info').add({
+        'briefIntroduction': item.briefIntroduction,
+        'productNumber': item.productNumber,
+        'thumbnail': item.thumbnail,
+        'originalPrice': item.originalPrice,
+        'discountPrice': item.discountPrice,
+        'discountPercent': item.discountPercent,
+        'selectedCount': item.selectedCount,
+        'selectedColorImage': item.selectedColorImage,
+        'selectedColorText': item.selectedColorText,
+        'selectedSize': item.selectedSize,
       });
     }
   }

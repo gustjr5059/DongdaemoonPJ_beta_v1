@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart';
+import '../view/complete_payment_screen.dart';
 import '../view/order_postcode_search_screen.dart';
+
 
 // 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 시작
 class UserInfoWidget extends ConsumerWidget {
@@ -31,7 +33,7 @@ class UserInfoWidget extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '구매자정보',
+                '발주자 정보',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -97,23 +99,44 @@ class UserInfoWidget extends ConsumerWidget {
 // 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
 class RecipientInfoWidget extends StatefulWidget {
   final String email;
+  final TextEditingController nameController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController addressController;
+  final TextEditingController postalCodeController;
+  final TextEditingController detailAddressController;
+  final TextEditingController customMemoController;
+  final String selectedMemo;
+  final bool isCustomMemo;
+  final void Function(String) onMemoChanged;
 
-  RecipientInfoWidget({required this.email}); // 생성자에서 이메일을 받아옴
+  RecipientInfoWidget({
+    required this.email,
+    required this.nameController,
+    required this.phoneNumberController,
+    required this.addressController,
+    required this.postalCodeController,
+    required this.detailAddressController,
+    required this.customMemoController,
+    required this.selectedMemo,
+    required this.isCustomMemo,
+    required this.onMemoChanged,
+  });
 
   @override
   _RecipientInfoWidgetState createState() => _RecipientInfoWidgetState();
 }
 
 class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
-  // 텍스트 입력 컨트롤러 선언
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _addressController = TextEditingController(text: '없음');
-  TextEditingController _postalCodeController = TextEditingController(text: '없음');
-  TextEditingController _detailAddressController = TextEditingController();
-  TextEditingController _customMemoController = TextEditingController();
+  late TextEditingController _nameController;
+  late TextEditingController _phoneNumberController;
+  late TextEditingController _addressController;
+  late TextEditingController _postalCodeController;
+  late TextEditingController _detailAddressController;
+  late TextEditingController _customMemoController;
 
-  // 포커스 노드 선언
+  late String _selectedMemo;
+  late bool _isCustomMemo;
+
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _phoneNumberFocusNode = FocusNode();
   FocusNode _addressFocusNode = FocusNode();
@@ -121,18 +144,22 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   FocusNode _detailAddressFocusNode = FocusNode();
   FocusNode _customMemoFocusNode = FocusNode();
 
-  String _selectedMemo = "기사님께 보여지는 메모입니다."; // 선택된 메모 초기값 설정
-  bool _isCustomMemo = false; // 사용자 지정 메모 사용 여부
+  @override
+  void initState() {
+    super.initState();
+    _nameController = widget.nameController;
+    _phoneNumberController = widget.phoneNumberController;
+    _addressController = widget.addressController;
+    _postalCodeController = widget.postalCodeController;
+    _detailAddressController = widget.detailAddressController;
+    _customMemoController = widget.customMemoController;
+
+    _selectedMemo = widget.selectedMemo;
+    _isCustomMemo = widget.isCustomMemo;
+  }
 
   @override
   void dispose() {
-    // 컨트롤러와 포커스 노드 해제
-    _nameController.dispose();
-    _phoneNumberController.dispose();
-    _addressController.dispose();
-    _postalCodeController.dispose();
-    _detailAddressController.dispose();
-    _customMemoController.dispose();
     _nameFocusNode.dispose();
     _phoneNumberFocusNode.dispose();
     _addressFocusNode.dispose();
@@ -142,7 +169,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     super.dispose();
   }
 
-  // 우편번호 검색 화면을 여는 함수
   Future<void> _openPostcodeSearch() async {
     final result = await Navigator.push(
       context,
@@ -170,10 +196,8 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '받는사람정보',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+              '수령자 정보',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
             Column(
@@ -191,7 +215,9 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                   isEnabled: _addressController.text != '없음' && _postalCodeController.text != '없음', // 우편번호와 주소가 없을 때는 비활성화
                 ),
                 _buildDropdownMemoRow(), // 드롭다운 메모 행 생성
-                if (_isCustomMemo) _buildEditableRow('배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.'), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
+                if (_isCustomMemo)
+                  _buildEditableRow(
+                      '배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.'), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
               ],
             ),
           ],
@@ -200,7 +226,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
-  // 드롭다운 행을 빌드하는 함수
   Widget _buildDropdownRow(String label, String hint) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -242,7 +267,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
-  // 수정 가능한 행을 빌드하는 함수
   Widget _buildEditableRow(String label, TextEditingController controller, FocusNode focusNode, String hintText, {bool isEnabled = true}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -296,7 +320,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
-  // 고정된 값을 가진 행을 빌드하는 함수
   Widget _buildFixedValueRow(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -327,7 +350,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
-  // 버튼을 포함한 고정된 값을 가진 행을 빌드하는 함수
   Widget _buildFixedValueRowWithButton(String label, TextEditingController controller, String buttonText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -372,7 +394,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
-  // 드롭다운 메모 행을 빌드하는 함수
   Widget _buildDropdownMemoRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -399,13 +420,14 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     value: _selectedMemo,
                     onChanged: (String? newValue) {
                       setState(() {
-                        if (newValue == '직접입력') {
+                        _selectedMemo = newValue!;
+                        if (_selectedMemo == '직접입력') {
                           _isCustomMemo = true;
-                          _selectedMemo = newValue!;
                         } else {
                           _isCustomMemo = false;
-                          _selectedMemo = newValue!;
+                          widget.customMemoController.clear(); // 직접 입력이 아닌 경우 내용 지우기
                         }
+                        widget.onMemoChanged(_selectedMemo);
                       });
                     },
                     items: <String>[
@@ -419,7 +441,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                         value: value,
                         child: Text(value),
                       );
-                    }).toList(), // 드롭다운 메뉴 항목 설정
+                    }).toList(),
                   ),
                 ),
               ),
@@ -455,7 +477,7 @@ class TotalPaymentWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
         children: [
           Text(
-            '결제금액', // 결제금액 제목 텍스트
+            '금액 정보', // 결제금액 제목 텍스트
             style: TextStyle(
               fontSize: 18, // 텍스트 크기 18
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
@@ -509,6 +531,109 @@ class TotalPaymentWidget extends StatelessWidget {
   }
 }
 // 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 끝
+
+// 발주 화면 내 결제 방법 정보 관련 UI 내용을 구현하는 PaymentMethodInfoWidget 클래스 내용 시작
+class PaymentMethodInfoWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+        children: [
+          Text(
+            '결제 방법', // 결제 방법 제목 텍스트
+            style: TextStyle(
+              fontSize: 18, // 텍스트 크기 18
+              fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+            ),
+          ),
+          SizedBox(height: 16), // 텍스트와 설명 텍스트 사이에 16 픽셀 높이의 여백 추가
+          Text(
+            "결제 방법은 무조건 계좌이체이며, '결제하기' 버튼 클릭 후 안내하는 계좌로 이체 진행해주세요.",
+            style: TextStyle(
+              fontSize: 14, // 텍스트 크기 14
+              color: Colors.grey, // 텍스트 색상을 회색으로 설정
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+// 발주 화면 내 결제 방법 정보 관련 UI 내용을 구현하는 PaymentMethodInfoWidget 클래스 내용 끝
+
+
+class CompleteOrderButton extends ConsumerWidget {
+  final double totalProductPrice;
+  final double productDiscountPrice;
+  final double totalPaymentPrice;
+  final Map<String, dynamic> ordererInfo;
+  final TextEditingController nameController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController addressController;
+  final TextEditingController postalCodeController;
+  final TextEditingController detailAddressController;
+  final TextEditingController customMemoController;
+  final String selectedMemo; // 수정: 전달되는 메모 값
+  final bool isCustomMemo;
+  final List<ProductContent> orderItems;
+
+  CompleteOrderButton({
+    required this.totalProductPrice,
+    required this.productDiscountPrice,
+    required this.totalPaymentPrice,
+    required this.ordererInfo,
+    required this.nameController,
+    required this.phoneNumberController,
+    required this.addressController,
+    required this.postalCodeController,
+    required this.detailAddressController,
+    required this.customMemoController,
+    required this.selectedMemo, // 수정: 생성자에서 메모 값 받아옴
+    required this.isCustomMemo,
+    required this.orderItems,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ElevatedButton(
+      onPressed: () async {
+        final recipientInfo = {
+          'name': nameController.text,
+          'phone_number': phoneNumberController.text,
+          'postal_code': postalCodeController.text,
+          'address': addressController.text,
+          'detail_address': detailAddressController.text,
+          'memo': selectedMemo, // 수정: 선택된 메모 값 사용
+          'extra_memo': isCustomMemo ? customMemoController.text : null,
+        };
+        final amountInfo = {
+          'total_product_price': totalProductPrice,
+          'product_discount_price': productDiscountPrice,
+          'total_payment_price': totalPaymentPrice,
+        };
+        await ref.read(placeOrderProvider(PlaceOrderParams(
+          ordererInfo: ordererInfo,
+          recipientInfo: recipientInfo,
+          amountInfo: amountInfo,
+          productInfo: orderItems,
+        )).future);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CompletePaymentScreen()),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: BUTTON_COLOR,
+        foregroundColor: INPUT_BG_COLOR,
+      ),
+      child: Text('결제하기'),
+    );
+  }
+}
+
 
 // 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
 class OrderItemWidget extends StatelessWidget {

@@ -21,7 +21,26 @@ final addressSearchProvider = FutureProvider.family<List<dynamic>, String>((ref,
 final orderRepositoryProvider = Provider((ref) => OrderRepository(firestore: FirebaseFirestore.instance));
 
 // 발주 처리 함수
-final placeOrderProvider = FutureProvider.family<void, List<ProductContent>>((ref, items) async {
+final placeOrderProvider = FutureProvider.family<void, PlaceOrderParams>((ref, params) async {
   final repository = ref.read(orderRepositoryProvider);
-  await repository.placeOrder(items);
+  await repository.placeOrder(
+    ordererInfo: params.ordererInfo,
+    recipientInfo: params.recipientInfo,
+    amountInfo: params.amountInfo,
+    productInfo: params.productInfo,
+  );
 });
+
+class PlaceOrderParams {
+  final Map<String, dynamic> ordererInfo;
+  final Map<String, dynamic> recipientInfo;
+  final Map<String, dynamic> amountInfo;
+  final List<ProductContent> productInfo;
+
+  PlaceOrderParams({
+    required this.ordererInfo,
+    required this.recipientInfo,
+    required this.amountInfo,
+    required this.productInfo,
+  });
+}
