@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
+import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart';
 import '../view/order_postcode_search_screen.dart';
 
@@ -429,6 +431,167 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   }
 }
 // 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 끝
+
+
+// TotalPaymentWidget 클래스 정의
+class TotalPaymentWidget extends StatelessWidget {
+  final double totalPaymentAmount;
+  final double totalProductAmount;
+  final double productDiscount;
+
+  TotalPaymentWidget({
+    required this.totalPaymentAmount,
+    required this.totalProductAmount,
+    required this.productDiscount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '총 결제금액',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16),
+          Table(
+            border: TableBorder.symmetric(
+              inside: BorderSide(color: Colors.grey.shade300),
+            ),
+            columnWidths: {
+              0: FlexColumnWidth(1),
+              1: FlexColumnWidth(2),
+            },
+            children: [
+              _buildTableRow('총 상품금액', totalProductAmount.toStringAsFixed(0) + '원'),
+              _buildTableRow('상품 할인', '-' + productDiscount.toStringAsFixed(0) + '원'),
+              _buildTableRow('총 결제금액', totalPaymentAmount.toStringAsFixed(0) + '원', isTotal: true),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 표의 행을 빌드하는 함수
+  TableRow _buildTableRow(String label, String value, {bool isTotal = false}) {
+    return TableRow(
+      children: [
+        Container(
+          color: Colors.grey.shade200,
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(8.0),
+          alignment: Alignment.centerRight,
+          child: Text(
+            value,
+            style: TextStyle(
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              color: isTotal ? Colors.red : Colors.black,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class OrderItemWidget extends StatelessWidget {
+  final ProductContent product;
+
+  OrderItemWidget({required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    final numberFormat = NumberFormat('###,###');
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (product.briefIntroduction != null)
+            Text(
+              product.briefIntroduction!,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            // 제품 번호를 표시함.
+            if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
+            Text(
+                  '상품번호: ${product.productNumber}', // productNumber 내용을 표시
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 18로 설정
+                ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                if (product.thumbnail != null)
+                  Image.network(
+                    product.thumbnail!,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ),
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${numberFormat.format(product.originalPrice)}원',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[500],
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    Text(
+                      '${numberFormat.format(product.discountPrice)}원',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${product.discountPercent?.round()}%',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text('수량: ${product.selectedCount}'),
+                    if (product.selectedColorImage != null)
+                      Image.network(
+                        product.selectedColorImage!,
+                        height: 20,
+                        width: 20,
+                        fit: BoxFit.cover,
+                      ),
+                    Text('색상: ${product.selectedColorText}'),
+                    Text('사이즈: ${product.selectedSize}'),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
 
 // 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 class AddressSearchWidget extends ConsumerStatefulWidget {

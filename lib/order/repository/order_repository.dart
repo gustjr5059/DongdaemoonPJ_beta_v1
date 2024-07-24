@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io' show Platform;
 import 'dart:ui' as ui;
 
-import '../../common/api_key.dart'; // API 키 로드 함수가 포함된 파일을 임포트
+import '../../common/api_key.dart';
+import '../../product/model/product_model.dart'; // API 키 로드 함수가 포함된 파일을 임포트
 
 // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 시작
 // KA 헤더를 생성하는 비동기 함수
@@ -46,12 +48,15 @@ Future<String> getKAHeader() async {
 
 // 발주 관련 화면의 레퍼지토리 클래스
 class OrderRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Firestore 인스턴스 생성
+  final FirebaseFirestore firestore; // Firestore 인스턴스를 저장할 필드
+
+  // 생성자에서 Firestore 인스턴스를 받아 초기화합니다.
+  OrderRepository({required this.firestore});
 
   // 이메일을 이용해 사용자 정보를 가져오는 비동기 함수
   Future<Map<String, dynamic>?> getUserInfoByEmail(String email) async {
     try {
-      QuerySnapshot querySnapshot = await _firestore
+      QuerySnapshot querySnapshot = await firestore
           .collection('users')
           .where('email', isEqualTo: email)
           .get(); // Firestore에서 이메일로 사용자 정보 검색
@@ -104,5 +109,28 @@ class OrderRepository {
     }
   }
   // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
+
+  // 기존 발주 관련 데이터 처리 로직
+  Future<void> placeOrder(List<ProductContent> items) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final orderCollection = firestore.collection('orders').doc(userId).collection('items');
+
+    for (var item in items) {
+      await orderCollection.add({
+        'product_id': item.docId,
+        'product_number': item.productNumber,
+        'thumbnails': item.thumbnail,
+        'brief_introduction': item.briefIntroduction,
+        'original_price': item.originalPrice,
+        'discount_price': item.discountPrice,
+        'discount_percent': item.discountPercent,
+        'selected_count': item.selectedCount,
+        'selected_color_image': item.selectedColorImage,
+        'selected_color_text': item.selectedColorText,
+        'selected_size': item.selectedSize,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+  }
 }
 // 발주 관련 화면의 레퍼지토리 내용 끝

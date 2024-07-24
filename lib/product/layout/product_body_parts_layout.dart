@@ -1219,6 +1219,15 @@ Widget buildProductBriefIntroAndPriceInfoSection(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
       children: [
+        // 제품 번호를 표시함.
+        if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0), // 상단 패딩을 8.0으로 설정
+            child: Text(
+              '상품번호: ${product.productNumber}', // productNumber 내용을 표시
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
+            ),
+          ),
         // 제품 간단한 소개를 표시함.
         if (product.briefIntroduction != null) // briefIntroduction이 null이 아닌 경우에만 표시
           Padding(

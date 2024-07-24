@@ -398,6 +398,40 @@ Widget buildCommonBottomNavigationBar(
           // 선택된 아이템들의 합계 금액을 계산
           .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt());
 
+// 발주 화면에서 사용할 선택된 아이템들을 필터링하고 ProductContent 객체로 변환하여 리스트로 저장
+      final orderProducts = cartItems
+      // cartItems 리스트에서 'bool_checked'가 true인 아이템들만 필터링
+          .where((item) => item['bool_checked'] == true)
+      // 필터링된 아이템들을 map 함수를 사용하여 ProductContent 객체로 변환
+          .map((item) {
+        return ProductContent(
+          // ProductContent 객체의 docId 필드를 item의 'product_id' 값으로 설정
+          docId: item['product_id'],
+          // ProductContent 객체의 productNumber 필드를 item의 'product_number' 값으로 설정
+          productNumber: item['product_number'],
+          // ProductContent 객체의 thumbnail 필드를 item의 'thumbnails' 값으로 설정
+          thumbnail: item['thumbnails'],
+          // ProductContent 객체의 briefIntroduction 필드를 item의 'brief_introduction' 값으로 설정
+          briefIntroduction: item['brief_introduction'],
+          // ProductContent 객체의 originalPrice 필드를 item의 'original_price' 값으로 설정
+          originalPrice: item['original_price'],
+          // ProductContent 객체의 discountPrice 필드를 item의 'discount_price' 값으로 설정
+          discountPrice: item['discount_price'],
+          // ProductContent 객체의 discountPercent 필드를 item의 'discount_percent' 값으로 설정
+          discountPercent: item['discount_percent'],
+          // ProductContent 객체의 selectedCount 필드를 item의 'selected_count' 값으로 설정
+          selectedCount: item['selected_count'],
+          // ProductContent 객체의 selectedColorImage 필드를 item의 'selected_color_image' 값으로 설정
+          selectedColorImage: item['selected_color_image'],
+          // ProductContent 객체의 selectedColorText 필드를 item의 'selected_color_text' 값으로 설정
+          selectedColorText: item['selected_color_text'],
+          // ProductContent 객체의 selectedSize 필드를 item의 'selected_size' 값으로 설정
+          selectedSize: item['selected_size'],
+        );
+      })
+      // 변환된 ProductContent 객체들을 리스트로 저장
+          .toList();
+
       return Container(
         // 컨테이너의 내부 여백 설정
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
@@ -446,6 +480,8 @@ Widget buildCommonBottomNavigationBar(
             ElevatedButton(
               // 버튼 클릭 시 호출되는 함수
               onPressed: () {
+                // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정한 내용
+                ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
                 // OrderMainScreen으로 화면 전환
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => OrderMainScreen()),

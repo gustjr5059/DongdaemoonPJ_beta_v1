@@ -84,6 +84,7 @@ class CartItemsList extends ConsumerWidget {
         // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장
         final product = ProductContent(
           docId: cartItem['product_id'],
+          productNumber: cartItem['product_number'],
           thumbnail: cartItem['thumbnails'],
           briefIntroduction: cartItem['brief_introduction'],
           originalPrice: cartItem['original_price'],
@@ -134,11 +135,25 @@ class CartItemsList extends ConsumerWidget {
                   children: [
                     // 썸네일 이미지를 표시
                     if (cartItem['thumbnails'] != null)
-                      Image.network(
-                        cartItem['thumbnails'] ?? '',
-                        height: 130,
-                        width: 130,
-                        fit: BoxFit.cover,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 상품 번호를 표시
+                          if (cartItem['product_number'] != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Text(
+                                '상품번호: ${cartItem['product_number']}',
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          Image.network(
+                            cartItem['thumbnails'] ?? '',
+                            height: 130,
+                            width: 130,
+                            fit: BoxFit.cover,
+                          ),
+                        ],
                       ),
                     SizedBox(width: 8),
                     Column(

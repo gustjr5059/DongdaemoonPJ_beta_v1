@@ -21,6 +21,11 @@ class ProductContent {
   final String? detailWashingImage; // detail_washing_image1을 저장하는 필드.
   final DocumentSnapshot?
       documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
+  final int? selectedCount; // 선택된 수량을 저장하는 필드.
+  final String? selectedColorImage; // 선택된 색상 이미지를 저장하는 필드.
+  final String? selectedColorText; // 선택된 색상 텍스트를 저장하는 필드.
+  final String? selectedSize; // 선택된 사이즈를 저장하는 필드.
+  final String? productNumber; // 제품 번호를 저장하는 필드.
 
   // 클래스의 생성자입니다. 모든 필드를 초기화함.
   ProductContent({
@@ -42,6 +47,11 @@ class ProductContent {
     this.detailSizeImage,
     this.detailWashingImage,
     this.documentSnapshot,
+    this.selectedCount,
+    this.selectedColorImage,
+    this.selectedColorText,
+    this.selectedSize,
+    this.productNumber,
   });
 
   // Firestore 문서 스냅샷으로부터 ProductContent 객체를 생성하는 팩토리 생성자임.
@@ -69,6 +79,11 @@ class ProductContent {
         detailSizeImage: null,
         detailWashingImage: null,
         documentSnapshot: doc,
+        selectedCount: null,
+        selectedColorImage: null,
+        selectedColorText: null,
+        selectedSize: null,
+        productNumber: null,
       );
     }
 
@@ -190,6 +205,11 @@ class ProductContent {
       detailWashingImage: detailWashingImage,
       // 상세 세탁 이미지.
       documentSnapshot: doc, // 문서 스냅샷.
+      selectedCount: data['selected_count'] as int?, // 선택된 수량
+      selectedColorImage: data['selected_color_image'] as String?, // 선택된 색상 이미지
+      selectedColorText: data['selected_color_text'] as String?, // 선택된 색상 텍스트
+      selectedSize: data['selected_size'] as String?, // 선택된 사이즈
+      productNumber: data['product_number'] as String?, // 제품 번호
     );
   }
 }

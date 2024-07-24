@@ -510,22 +510,23 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         CollectionReference subCollectionRef = docRef.collection(subCollectionId);
         String type = typeMap[j] ?? '';
 
-        for (int k = 1; k <= 15; k++) {
-          int discountPercent = 9 + k; // k=1이면 10, k=2이면 11, ...
+        for (int k = 0; k < 15; k++) {
+          int discountPercent = 10 + k; // k=0이면 10, k=1이면 11, ...
           int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
           String subDocId = 'a${i}b${j}_$k';
+          String productNumber = 'A${i}B${j}_${k.toString().padLeft(3, '0')}';
           DocumentReference subDocRef = subCollectionRef.doc(subDocId);
 
           String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
 
-          // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
-          batch.update(subDocRef, {
-            'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
-            'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
-            'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
-            'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
-            'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
-          });
+          // // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
+          // batch.update(subDocRef, {
+          //   'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+          //   'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+          //   'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+          //   'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+          //   'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+          // });
 
           // 해당 필드값으로 세팅하는 매서드 (SetOptions(merge: true)); // merge 옵션 사용을 해서 기존것이 날라가지않고 유지됨)
           batch.set(subDocRef, {
@@ -570,27 +571,29 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
             // 'original_price': originalPrice,
             'thumbnails': thumbnailUrl, // thumbnails 필드값 추가
             'category': categoryText, // category 필드값 추가
+            'product_number': productNumber, // product_number 필드 추가
           }, SetOptions(merge: true)); // merge 옵션 사용
 
-          // 장바구니 관련 필드들 삭제
-          batch.update(subDocRef, {
-            'cart_thumbnails': FieldValue.delete(),
-            'cart_brief_introduction': FieldValue.delete(),
-            'cart_original_price': FieldValue.delete(),
-            'cart_discount_price': FieldValue.delete(),
-            'cart_discount_percent': FieldValue.delete(),
-            'cart_selected_color_text': FieldValue.delete(),
-            'cart_selected_color_image': FieldValue.delete(),
-            'cart_selected_size': FieldValue.delete(),
-            'cart_selected_count': FieldValue.delete(),
-            'cart_timestamp': FieldValue.delete(),
-          });
-          SetOptions(merge: true); // merge 옵션 사용
+          // // 장바구니 관련 필드들 삭제
+          // batch.update(subDocRef, {
+          //   'cart_thumbnails': FieldValue.delete(),
+          //   'cart_brief_introduction': FieldValue.delete(),
+          //   'cart_original_price': FieldValue.delete(),
+          //   'cart_discount_price': FieldValue.delete(),
+          //   'cart_discount_percent': FieldValue.delete(),
+          //   'cart_selected_color_text': FieldValue.delete(),
+          //   'cart_selected_color_image': FieldValue.delete(),
+          //   'cart_selected_size': FieldValue.delete(),
+          //   'cart_selected_count': FieldValue.delete(),
+          //   'cart_timestamp': FieldValue.delete(),
+          // });
+          // SetOptions(merge: true); // merge 옵션 사용
         }
       }
     }
     await batch.commit();
   }
 // ------ Firestore 문서를 생성하는 함수 구현 끝
+
 }
 // _ProfileMainScreenState 클래스 끝

@@ -55,6 +55,7 @@ import '../../../common/provider/common_all_providers.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../layout/order_body_parts_layout.dart';
+import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -253,6 +254,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
     final User? user = FirebaseAuth.instance.currentUser;
+    final orderItems = ref.watch(orderItemsProvider); // 주문할 상품 목록을 상태로 관리
 
     return GestureDetector(
         onTap: () {
@@ -309,6 +311,23 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                             SizedBox(height: 10), // 높이 임의로 50으로 간격 설정
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자 정보를 표시
                             if (user != null) RecipientInfoWidget(email: user.email!),
+                            TotalPaymentWidget(
+                              totalPaymentAmount: 19900, // 여기에 실제 값을 넣으세요
+                              totalProductAmount: 30000,
+                              productDiscount: 10100,
+                            ),
+                            for (var item in orderItems) OrderItemWidget(product: item), // 주문할 상품 목록 표시
+                            ElevatedButton(
+                              onPressed: () async {
+                                await ref.read(placeOrderProvider(orderItems).future); // 결제하기 버튼 클릭 시 주문 처리
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: BUTTON_COLOR,
+                                foregroundColor: INPUT_BG_COLOR,
+                              ),
+                              child: Text('결제하기'),
+                            ),
                             // AddressSearchWidget(), // 주소 검색 위젯 추가
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],

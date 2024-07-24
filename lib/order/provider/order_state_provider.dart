@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../product/model/product_model.dart';
+
 // ------- order_list_screen.dart - 발주내역 관련 내용 시작 부분
 // 발주 내역 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final orderListLargeBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -37,4 +39,17 @@ final orderMainScrollControllerProvider = Provider<ScrollController>((ref) {
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
 });
+
+// 발주 화면으로 전달할 상품 리스트를 관리하는 상태 프로바이더
+final orderItemsProvider = StateNotifierProvider<OrderItemsNotifier, List<ProductContent>>((ref) {
+  return OrderItemsNotifier();
+});
+
+class OrderItemsNotifier extends StateNotifier<List<ProductContent>> {
+  OrderItemsNotifier() : super([]);
+
+  void setOrderItems(List<ProductContent> items) {
+    state = items;
+  }
+}
 // ------- order_screen.dart - 발주 관련 내용 끝 부분

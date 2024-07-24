@@ -39,6 +39,7 @@ class CartItemRepository {
     // Firestore에 저장할 데이터 준비
     final data = {
       'product_id': product.docId, // 상품 상세 화면의 문서 id를 저장
+      'product_number': product.productNumber, // 상품 번호
       'thumbnails': product.thumbnail, // 제품의 썸네일 이미지 URL
       'brief_introduction': product.briefIntroduction, // 제품의 간단한 소개
       'original_price': product.originalPrice, // 제품의 원래 가격
