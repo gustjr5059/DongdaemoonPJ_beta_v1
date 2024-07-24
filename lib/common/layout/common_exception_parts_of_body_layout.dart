@@ -34,6 +34,7 @@ import '../../order/view/order_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../../product/provider/product_all_providers.dart';
+import '../../product/provider/product_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/login_screen.dart';
 
@@ -347,16 +348,44 @@ Widget buildCommonBottomNavigationBar(
   // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:
       if (product == null) {
-        throw ArgumentError('Product must be provided for navigation case 2');
+        throw ArgumentError('Product must be provided for navigation case 2'); // 제품이 제공되지 않은 경우 예외 처리
       }
+
+      // 선택된 색상, 사이즈, 수량 등을 상태에서 가져옴
+      final selectedColorUrl = ref.watch(colorSelectionUrlProvider); // 선택된 색상 URL 상태 값 가져오기
+      final selectedColorText = ref.watch(colorSelectionTextProvider); // 선택된 색상 텍스트 상태 값 가져오기
+      final selectedSize = ref.watch(sizeSelectionIndexProvider); // 선택된 사이즈 상태 값 가져오기
+      final quantity = ref.watch(detailQuantityIndexProvider); // 선택된 수량 상태 값 가져오기
+
+      // 선택된 수량을 반영하여 가격 계산
+      double totalProductPrice = (product.originalPrice ?? 0).toDouble() * quantity; // 총 제품 가격 계산
+      double productDiscountPrice = ((product.originalPrice ?? 0).toDouble() - (product.discountPrice ?? 0).toDouble()) * quantity; // 할인된 금액 계산
+      double totalPaymentPrice = (product.discountPrice ?? 0).toDouble() * quantity; // 총 결제 금액 계산
+
+      // 선택된 옵션과 수량을 반영한 ProductContent 객체 생성
+      final orderProduct = ProductContent(
+        docId: product.docId, // 제품 문서 ID 설정
+        productNumber: product.productNumber ?? '', // 제품 번호 설정
+        thumbnail: product.thumbnail ?? '', // 제품 썸네일 설정
+        briefIntroduction: product.briefIntroduction ?? '', // 제품 간단 소개 설정
+        originalPrice: (product.originalPrice ?? 0), // 원래 가격 설정
+        discountPrice: (product.discountPrice ?? 0), // 할인 가격 설정
+        discountPercent: (product.discountPercent ?? 0), // 할인 퍼센트 설정
+        selectedCount: quantity, // 선택한 수량 설정
+        selectedColorImage: selectedColorUrl ?? '', // 선택한 색상 이미지 URL 설정
+        selectedColorText: selectedColorText ?? '', // 선택한 색상 텍스트 설정
+        selectedSize: selectedSize ?? '', // 선택한 사이즈 설정
+      );
+
+      // UI 패딩 설정
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // 좌우 20.0, 상하 10.0의 여백을 추가
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // 좌우 20.0, 상하 10.0의 여백 추가
         child: Row( // 수평으로 배치되는 Row 위젯 사용
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // Row 내부 위젯들을 양 끝에 배치
           children: [
             Expanded( // 내부 위젯의 가로 공간을 최대한 확장
               child: ElevatedButton(
-                onPressed: () => onCartButtonPressed(context, ref, product), // 장바구니 버튼 클릭했을 때, 데이터를 파이어베이스에 저장하도록 하는 로직 재사용하여 구현
+                onPressed: () => onCartButtonPressed(context, ref, product), // 장바구니 버튼 클릭 시 실행될 함수 지정
                 style: ElevatedButton.styleFrom(
                   backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
                   foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
@@ -368,9 +397,15 @@ Widget buildCommonBottomNavigationBar(
             Expanded( // 내부 위젯의 가로 공간을 최대한 확장
               child: ElevatedButton(
                 onPressed: () {
+                  // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
+                  ref.read(orderItemsProvider.notifier).setOrderItems([orderProduct]); // 주문 아이템 상태 업데이트
                   // OrderMainScreen으로 화면 전환
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => OrderPostcodeSearchScreen()),
+                    MaterialPageRoute(builder: (_) => OrderMainScreen(
+                      totalProductPrice: totalProductPrice.toDouble(), // 총 제품 가격 전달
+                      productDiscountPrice: productDiscountPrice.toDouble(), // 할인된 금액 전달
+                      totalPaymentPrice: totalPaymentPrice.toDouble(), // 총 결제 금액 전달
+                    )),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -397,6 +432,16 @@ Widget buildCommonBottomNavigationBar(
           .where((item) => item['bool_checked'] == true)
           // 선택된 아이템들의 합계 금액을 계산
           .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt());
+
+      int totalProductPrice = cartItems
+          .where((item) => item['bool_checked'] == true) // 선택된 아이템들만 필터링
+          .fold(0, (sum, item) => sum + (item['original_price'] as num).toInt() * (item['selected_count'] as num).toInt()); // 원래 가격과 선택된 수량을 곱한 값을 더하여 총 상품금액 계산
+
+      int totalPaymentPrice = cartItems
+          .where((item) => item['bool_checked'] == true) // 선택된 아이템들만 필터링
+          .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt()); // 할인된 가격과 선택된 수량을 곱한 값을 더하여 총 결제금액 계산
+
+      int totalDiscountPrice = totalProductPrice - totalPaymentPrice; // 총 상품금액에서 총 결제금액을 빼서 총 할인금액 계산
 
 // 발주 화면에서 사용할 선택된 아이템들을 필터링하고 ProductContent 객체로 변환하여 리스트로 저장
       final orderProducts = cartItems
@@ -484,7 +529,11 @@ Widget buildCommonBottomNavigationBar(
                 ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
                 // OrderMainScreen으로 화면 전환
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => OrderMainScreen()),
+                  MaterialPageRoute(builder: (_) => OrderMainScreen(
+                    totalProductPrice: totalProductPrice.toDouble(), // 총 상품금액을 실수형으로 변환하여 OrderMainScreen에 전달
+                    productDiscountPrice: totalDiscountPrice.toDouble(), // 총 할인금액을 실수형으로 변환하여 OrderMainScreen에 전달
+                    totalPaymentPrice: totalPaymentPrice.toDouble(), // 총 결제금액을 실수형으로 변환하여 OrderMainScreen에 전달
+                  )),
                 );
               },
               // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)

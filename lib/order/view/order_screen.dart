@@ -65,7 +65,16 @@ import '../provider/order_state_provider.dart';
 // GlobalKey 대신 local context 사용 방법 설명 클래스
 // OrderMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class OrderMainScreen extends ConsumerStatefulWidget {
-  const OrderMainScreen({Key? key}) : super(key: key);
+  final double totalPaymentPrice; // 총 결제금액을 저장하는 변수
+  final double totalProductPrice; // 총 상품금액을 저장하는 변수
+  final double productDiscountPrice; // 상품 할인금액을 저장하는 변수
+
+  const OrderMainScreen({
+    Key? key, // 위젯의 키를 전달받음
+    required this.totalPaymentPrice, // 필수 매개변수로 총 결제금액을 받음
+    required this.totalProductPrice, // 필수 매개변수로 총 상품금액을 받음
+    required this.productDiscountPrice, // 필수 매개변수로 상품 할인금액을 받음
+  }) : super(key: key); // 상위 클래스의 생성자를 호출하여 key를 전달
 
   @override
   _OrderMainScreenState createState() => _OrderMainScreenState();
@@ -312,9 +321,9 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자 정보를 표시
                             if (user != null) RecipientInfoWidget(email: user.email!),
                             TotalPaymentWidget(
-                              totalPaymentAmount: 19900, // 여기에 실제 값을 넣으세요
-                              totalProductAmount: 30000,
-                              productDiscount: 10100,
+                              totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액을 TotalPaymentWidget에 전달
+                              totalProductPrice: widget.totalProductPrice, // 총 상품금액을 TotalPaymentWidget에 전달
+                              productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액을 TotalPaymentWidget에 전달
                             ),
                             for (var item in orderItems) OrderItemWidget(product: item), // 주문할 상품 목록 표시
                             ElevatedButton(

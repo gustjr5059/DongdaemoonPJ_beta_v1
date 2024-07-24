@@ -433,45 +433,47 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
 // 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 끝
 
 
-// TotalPaymentWidget 클래스 정의
+// 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 시작
 class TotalPaymentWidget extends StatelessWidget {
-  final double totalPaymentAmount;
-  final double totalProductAmount;
-  final double productDiscount;
+  final double totalPaymentPrice; // 총 결제금액을 저장하는 변수
+  final double totalProductPrice; // 총 상품금액을 저장하는 변수
+  final double productDiscountPrice; // 상품 할인금액을 저장하는 변수
 
   TotalPaymentWidget({
-    required this.totalPaymentAmount,
-    required this.totalProductAmount,
-    required this.productDiscount,
+    required this.totalPaymentPrice, // 필수 매개변수로 총 결제금액을 받음
+    required this.totalProductPrice, // 필수 매개변수로 총 상품금액을 받음
+    required this.productDiscountPrice, // 필수 매개변수로 상품 할인금액을 받음
   });
 
   @override
   Widget build(BuildContext context) {
+    final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
         children: [
           Text(
-            '총 결제금액',
+            '결제금액', // 결제금액 제목 텍스트
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontSize: 18, // 텍스트 크기 18
+              fontWeight: FontWeight.bold, // 텍스트 굵게 설정
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 16), // 텍스트와 테이블 사이에 16 픽셀 높이의 여백 추가
           Table(
             border: TableBorder.symmetric(
-              inside: BorderSide(color: Colors.grey.shade300),
+              inside: BorderSide(color: Colors.grey.shade300), // 테이블 내부 경계선 색상 설정
             ),
             columnWidths: {
-              0: FlexColumnWidth(1),
-              1: FlexColumnWidth(2),
+              0: FlexColumnWidth(1), // 첫 번째 열의 너비 비율 설정
+              1: FlexColumnWidth(2), // 두 번째 열의 너비 비율 설정
             },
             children: [
-              _buildTableRow('총 상품금액', totalProductAmount.toStringAsFixed(0) + '원'),
-              _buildTableRow('상품 할인', '-' + productDiscount.toStringAsFixed(0) + '원'),
-              _buildTableRow('총 결제금액', totalPaymentAmount.toStringAsFixed(0) + '원', isTotal: true),
+              _buildTableRow('총 상품금액', '${numberFormat.format(totalProductPrice)}원'), // 총 상품금액 행 생성
+              _buildTableRow('상품 할인금액', '-${numberFormat.format(productDiscountPrice)}원'), // 상품 할인금액 행 생성
+              _buildTableRow('총 결제금액', '${numberFormat.format(totalPaymentPrice)}원', isTotal: true), // 총 결제금액 행 생성
             ],
           ),
         ],
@@ -479,27 +481,26 @@ class TotalPaymentWidget extends StatelessWidget {
     );
   }
 
-  // 표의 행을 빌드하는 함수
   TableRow _buildTableRow(String label, String value, {bool isTotal = false}) {
     return TableRow(
       children: [
         Container(
-          color: Colors.grey.shade200,
-          padding: const EdgeInsets.all(8.0),
+          color: Colors.grey.shade200, // 셀 배경색 설정
+          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
           child: Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            label, // 셀에 표시될 텍스트
+            style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
           ),
         ),
         Container(
-          color: Colors.white,
-          padding: const EdgeInsets.all(8.0),
-          alignment: Alignment.centerRight,
+          color: Colors.white, // 셀 배경색 설정
+          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+          alignment: Alignment.centerRight, // 텍스트를 오른쪽 정렬
           child: Text(
-            value,
+            value, // 셀에 표시될 값
             style: TextStyle(
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: isTotal ? Colors.red : Colors.black,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, // 총 결제금액인 경우 텍스트 굵게 설정
+              color: isTotal ? Colors.red : Colors.black, // 총 결제금액인 경우 텍스트 색상을 빨간색으로 설정
             ),
           ),
         ),
@@ -507,7 +508,9 @@ class TotalPaymentWidget extends StatelessWidget {
     );
   }
 }
+// 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 끝
 
+// 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
 class OrderItemWidget extends StatelessWidget {
   final ProductContent product;
 
@@ -590,8 +593,7 @@ class OrderItemWidget extends StatelessWidget {
     );
   }
 }
-
-
+// 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
 
 // 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 class AddressSearchWidget extends ConsumerStatefulWidget {
