@@ -325,18 +325,18 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                               totalProductPrice: widget.totalProductPrice, // 총 상품금액을 TotalPaymentWidget에 전달
                               productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액을 TotalPaymentWidget에 전달
                             ),
-                            for (var item in orderItems) OrderItemWidget(product: item), // 주문할 상품 목록 표시
-                            ElevatedButton(
-                              onPressed: () async {
-                                await ref.read(placeOrderProvider(orderItems).future); // 결제하기 버튼 클릭 시 주문 처리
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: BUTTON_COLOR,
-                                foregroundColor: INPUT_BG_COLOR,
-                              ),
-                              child: Text('결제하기'),
-                            ),
+                            // for (var item in orderItems) OrderItemWidget(product: item), // 주문할 상품 목록 표시
+                            // ElevatedButton(
+                            //   onPressed: () async {
+                            //     await ref.read(placeOrderProvider(orderItems).future); // 결제하기 버튼 클릭 시 주문 처리
+                            //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
+                            //   },
+                            //   style: ElevatedButton.styleFrom(
+                            //     backgroundColor: BUTTON_COLOR,
+                            //     foregroundColor: INPUT_BG_COLOR,
+                            //   ),
+                            //   child: Text('결제하기'),
+                            // ),
                             // AddressSearchWidget(), // 주소 검색 위젯 추가
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
