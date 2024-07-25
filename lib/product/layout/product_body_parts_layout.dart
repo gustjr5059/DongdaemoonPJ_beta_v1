@@ -26,6 +26,7 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
+import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
@@ -512,6 +513,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(orderMainScrollPositionProvider.notifier).state =
   0.0;
   // 발주 화면 관련 초기화 부분 끝
+
+  // 발주 완료 화면 관련 초기화 부분 시작
+  // 발주 완료 화면에서 단순 화면 스크롤 초기화
+  ref.read(completePaymentScrollPositionProvider.notifier).state =
+  0.0;
+  // 발주 완료 화면 관련 초기화 부분 끝
 
   // 찜 목록 화면 관련 초기화 부분 시작
   // 찜 목록 화면에서 단순 화면 스크롤 초기화

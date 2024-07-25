@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../product/model/product_model.dart';
-import '../repository/order_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // 클라우드 파이어스토어 라이브러리 임포트
+import 'package:firebase_auth/firebase_auth.dart'; // 파이어베이스 인증 라이브러리 임포트
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 라이브러리 임포트
+import '../../product/model/product_model.dart'; // 제품 모델 파일 임포트
+import '../repository/order_repository.dart'; // 발주 레포지토리 파일 임포트
 
 // 이메일을 기반으로 사용자 정보를 가져오는 FutureProvider
 final userInfoProvider = FutureProvider.family<Map<String, dynamic>?, String>((ref, email) async {
@@ -17,18 +18,19 @@ final addressSearchProvider = FutureProvider.family<List<dynamic>, String>((ref,
   return repository.searchAddress(query); // 검색된 주소 목록을 반환
 });
 
-// 주문 레포지토리를 제공하는 프로바이더
+// 발주 레포지토리를 제공하는 프로바이더
 final orderRepositoryProvider = Provider((ref) => OrderRepository(firestore: FirebaseFirestore.instance));
 
 // 발주 처리 함수
-final placeOrderProvider = FutureProvider.family<void, PlaceOrderParams>((ref, params) async {
-  // orderRepositoryProvider를 통해 OrderRepository 인스턴스를 가져옴
+final placeOrderProvider = FutureProvider.family<String, PlaceOrderParams>((ref, params) async {
+  // orderRepositoryProvider를 통해 발주 레포지토리 인스턴스를 가져옴
   final repository = ref.read(orderRepositoryProvider);
-  await repository.placeOrder(
-    ordererInfo: params.ordererInfo, // 발주자 정보 전달
-    recipientInfo: params.recipientInfo, // 수령자 정보 전달
-    amountInfo: params.amountInfo, // 결제 정보 전달
-    productInfo: params.productInfo, // 상품 정보 전달
+  // 발주 요청을 처리하고 결과를 반환함
+  return await repository.placeOrder(
+    ordererInfo: params.ordererInfo, // 발주자 정보
+    recipientInfo: params.recipientInfo, // 수령자 정보
+    amountInfo: params.amountInfo, // 결제 정보
+    productInfo: params.productInfo, // 상품 정보 리스트
   );
 });
 
@@ -46,3 +48,27 @@ class PlaceOrderParams {
     required this.productInfo, // 생성자에서 상품 정보 리스트를 받아옴
   });
 }
+
+// 발주 데이터를 가져오는 FutureProvider
+final orderDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, orderId) async {
+  // orderRepositoryProvider를 통해 발주 레포지토리 인스턴스를 가져옴
+  final repository = ref.watch(orderRepositoryProvider);
+  // 현재 로그인한 사용자의 UID를 가져옴
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+
+  // 사용자가 로그인되어 있지 않으면 예외를 발생시킴
+  if (userId == null) {
+    throw Exception('User not logged in');
+  }
+
+  // 발주 데이터를 가져와 반환함
+  return await repository.fetchOrderData(userId, orderId);
+});
+
+// 입금 계좌 정보를 가져오는 FutureProvider
+final accountNumberProvider = FutureProvider<String>((ref) async {
+  // orderRepositoryProvider를 통해 발주 레포지토리 인스턴스를 가져옴
+  final repository = ref.read(orderRepositoryProvider);
+  // 입금 계좌 정보를 가져와 반환함
+  return await repository.fetchAccountNumber();
+});

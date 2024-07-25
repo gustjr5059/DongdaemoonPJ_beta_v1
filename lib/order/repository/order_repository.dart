@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io' show Platform;
 import 'dart:ui' as ui;
@@ -114,52 +115,97 @@ class OrderRepository {
 
   // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
 
-  // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보를 매개변수로 받는 함수 내용 시작
-  Future<void> placeOrder({
+  // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보, 발주 관련 번호 정보를 매개변수로 받는 함수 내용 시작
+  // 발주를 처리하고, 발주 ID를 반환하는 함수
+  Future<String> placeOrder({
     required Map<String, dynamic> ordererInfo, // 발주자 정보
     required Map<String, dynamic> recipientInfo, // 수령자 정보
     required Map<String, dynamic> amountInfo, // 결제 정보
     required List<ProductContent> productInfo, // 상품 정보 리스트
   }) async {
-    // 현재 로그인된 사용자의 UID를 가져옴
+    // 현재 로그인한 사용자의 UID를 가져옴
     final userId = FirebaseAuth.instance.currentUser!.uid;
+    // 발주 문서를 생성할 위치를 Firestore에서 지정
+    final orderDoc = firestore.collection('order_list').doc(userId).collection('orders').doc();
+    // 발주 ID를 생성
+    final orderId = orderDoc.id;
 
-    // 사용자의 주문 리스트 컬렉션에서 새로운 주문 문서를 생성
-    final orderCollection = firestore.collection('order_list')
-        .doc(userId)
-        .collection('orders')
-        .doc();
+    // 발주자 정보를 Firestore에 저장
+    await orderDoc.collection('orderer_info').doc('info').set(ordererInfo);
+    // 수령자 정보를 Firestore에 저장
+    await orderDoc.collection('recipient_info').doc('info').set(recipientInfo);
+    // 결제 정보를 Firestore에 저장
+    await orderDoc.collection('amount_info').doc('info').set(amountInfo);
 
-    // 발주자 정보를 'orderer_info' 컬렉션의 'info' 문서에 저장
-    await orderCollection.collection('orderer_info').doc('info').set(
-        ordererInfo);
-
-    // 수령자 정보를 'recipient_info' 컬렉션의 'info' 문서에 저장
-    await orderCollection.collection('recipient_info').doc('info').set(
-        recipientInfo);
-
-    // 디버깅을 위해 수령자 정보 저장 완료 메세지를 출력
-    print('Recipient Info Stored: $recipientInfo');
-
-    // 결제 정보를 'amount_info' 컬렉션의 'info' 문서에 저장
-    await orderCollection.collection('amount_info').doc('info').set(amountInfo);
-
-    // 상품 정보를 'product_info' 컬렉션에 각각의 문서로 저장
+    // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var item in productInfo) {
-      await orderCollection.collection('product_info').add({
-        'briefIntroduction': item.briefIntroduction, // 간단한 상품 소개
+      await orderDoc.collection('product_info').add({
+        'briefIntroduction': item.briefIntroduction, // 상품 간략 소개
         'productNumber': item.productNumber, // 상품 번호
-        'thumbnail': item.thumbnail, // 상품 썸네일 이미지
+        'thumbnail': item.thumbnail, // 썸네일 이미지 URL
         'originalPrice': item.originalPrice, // 원래 가격
-        'discountPrice': item.discountPrice, // 할인된 가격
-        'discountPercent': item.discountPercent, // 할인율
-        'selectedCount': item.selectedCount, // 선택된 수량
-        'selectedColorImage': item.selectedColorImage, // 선택된 색상 이미지
-        'selectedColorText': item.selectedColorText, // 선택된 색상 텍스트
-        'selectedSize': item.selectedSize, // 선택된 사이즈
+        'discountPrice': item.discountPrice, // 할인 가격
+        'discountPercent': item.discountPercent, // 할인 퍼센트
+        'selectedCount': item.selectedCount, // 선택한 수량
+        'selectedColorImage': item.selectedColorImage, // 선택한 색상 이미지
+        'selectedColorText': item.selectedColorText, // 선택한 색상 텍스트
+        'selectedSize': item.selectedSize, // 선택한 사이즈
       });
     }
+
+    // number_info 컬렉션에 order_number와 order_date 추가
+    final now = DateTime.now(); // 현재 시간을 가져옴
+    final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
+    await orderDoc.collection('number_info').doc('info').set({
+      'order_number': orderNumber, // 주문 번호 저장
+      'order_date': now, // 주문 날짜 저장
+    });
+
+    return orderId; // 발주 ID를 반환
+  }
+
+  // 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수
+  // 발주 데이터를 가져오는 함수
+  Future<Map<String, dynamic>> fetchOrderData(String userId, String orderId) async {
+    // 발주 문서를 Firestore에서 가져옴
+    final orderDoc = firestore.collection('order_list').doc(userId).collection('orders').doc(orderId);
+
+    // 각 정보 문서를 Firestore에서 가져옴
+    final ordererInfoDoc = await orderDoc.collection('orderer_info').doc('info').get();
+    final recipientInfoDoc = await orderDoc.collection('recipient_info').doc('info').get();
+    final amountInfoDoc = await orderDoc.collection('amount_info').doc('info').get();
+    final numberInfoDoc = await orderDoc.collection('number_info').doc('info').get();
+    final productInfoQuery = await orderDoc.collection('product_info').get();
+
+    // 정보 문서가 존재하지 않으면 예외를 발생시킴
+    if (!ordererInfoDoc.exists || !recipientInfoDoc.exists || !amountInfoDoc.exists || !numberInfoDoc.exists) {
+      throw Exception('Order not found');
+    }
+
+    // 상품 정보를 리스트로 변환
+    final productInfo = productInfoQuery.docs.map((doc) => doc.data()).toList();
+
+    // 각 정보를 맵으로 반환
+    return {
+      'ordererInfo': ordererInfoDoc.data(), // 발주자 정보
+      'recipientInfo': recipientInfoDoc.data(), // 수령자 정보
+      'amountInfo': amountInfoDoc.data(), // 결제 정보
+      'numberInfo': numberInfoDoc.data(), // 주문 번호 및 날짜 정보
+      'productInfo': productInfo, // 상품 정보 리스트
+    };
+  }
+  // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보, 발주 관련 정보를 매개변수로 받는 함수 내용 끝
+
+  // 입금계좌 정보를 불러오는 함수
+  Future<String> fetchAccountNumber() async {
+    // 특정 계좌 문서를 Firestore에서 가져옴
+    final accountDoc = await firestore.collection('accounts').doc('account_1').get();
+    // 계좌 문서가 존재하지 않으면 예외를 발생시킴
+    if (!accountDoc.exists) {
+      throw Exception('Account not found');
+    }
+    // 계좌 번호를 반환, 존재하지 않으면 'No account number' 반환
+    return accountDoc.data()?['account_number'] ?? 'No account number';
   }
 }
-// ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보를 매개변수로 받는 함수 내용 끝
 // 발주 관련 화면의 레퍼지토리 내용 끝

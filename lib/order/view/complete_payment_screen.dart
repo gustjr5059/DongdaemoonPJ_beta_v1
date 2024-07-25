@@ -22,6 +22,9 @@ import 'package:flutter/services.dart';
 // Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
 
+// 숫자 및 날짜 포맷을 위한 intl 라이브러리를 임포트합니다.
+import 'package:intl/intl.dart';
+
 // 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
 // 이 레이아웃은 에러 발생 시 사용자에게 보여질 UI 컴포넌트를 정의합니다.
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
@@ -34,6 +37,7 @@ import '../../../common/const/colors.dart';
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
 import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴포넌트 파일
+
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../common/provider/common_state_provider.dart';
@@ -42,23 +46,24 @@ import '../../../common/provider/common_state_provider.dart';
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../layout/complete_body_parts_layout.dart';
 import '../provider/complete_payment_provider.dart';
-import '../provider/order_state_provider.dart';
-
+import '../provider/order_all_providers.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
-// GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
+// GlobalKey를 사용하면 여러 위젯에서 사용이 안되는 경우가 있으므로 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// CompletePaymentScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+// CompletePaymentScreen 클래스는 ConsumerWidget을 상속하여 Riverpod를 통한 상태 관리 지원
 class CompletePaymentScreen extends ConsumerStatefulWidget {
+  final String orderId; // orderId 필드 추가
 
   const CompletePaymentScreen({
     Key? key, // 위젯의 키를 전달받음
+    required this.orderId, // 생성자에서 orderId를 받아옴
   }) : super(key: key); // 상위 클래스의 생성자를 호출하여 key를 전달
 
   @override
-  _CompletePaymentScreenState createState() => _CompletePaymentScreenState();
+  _CompletePaymentScreenState createState() => _CompletePaymentScreenState(); // 상태 관리 클래스 생성
 }
 
 // _CompletePaymentScreenState 클래스 시작
@@ -67,47 +72,17 @@ class CompletePaymentScreen extends ConsumerStatefulWidget {
 class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     with WidgetsBindingObserver {
 
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // blouseMainScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
-  // ref.read(blouseMainScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
-  // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
-  // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
-  // 2.하단 탭바의 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
-  // 3.사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을때 마지막으로 본 위치로 자동으로 스크롤되도록 하는 기능,
-  // 4.단순 스크롤을 내리거나 올릴 시, 상단 탭 바 버튼 텍스트 색상이 변경되도록 하는 기능,
-  // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
-  // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
-
-  // orderMainScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
-  // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
-  // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController completePaymentScreenPointScrollController; // 스크롤 컨트롤러 선언
 
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
-  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-  void _updateScrollPosition() {
-    // 'completePaymentScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = completePaymentScreenPointScrollController.offset;
-
-    // 'ref'를 사용하여 'completePaymentScrollPositionProvider'의 notifier를 읽어옴.
-    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
-    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(completePaymentScrollPositionProvider.notifier).state =
-        currentScrollPosition;
-  }
-
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
-
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
-  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
+  // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void initState() {
     super.initState();
@@ -132,10 +107,6 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
       // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
     });
-    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 blouseMainScreenPointScrollController에 저장하는 코드
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-    // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    completePaymentScreenPointScrollController.addListener(_updateScrollPosition);
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -157,9 +128,9 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     _updateStatusBar();
   }
 
-  // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
+  // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
-  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
+  // 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 시작
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -167,17 +138,12 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     if (state == AppLifecycleState.resumed) {
       _updateStatusBar();
     }
-    // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
-    if (state == AppLifecycleState.resumed) {
-      // 앱이 백그라운드로 이동할 때, 배너의 자동 스크롤을 중지
-    } else if (state == AppLifecycleState.paused) {
-    }
   }
 
-  // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
+  // 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
 
-  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
+  // 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
   void dispose() {
     // WidgetsBinding 인스턴스에서 이 객체를 옵저버 목록에서 제거함.
@@ -187,17 +153,13 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    // 'completePaymentScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
-    // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    completePaymentScreenPointScrollController.removeListener(_updateScrollPosition);
-
     completePaymentScreenPointScrollController.dispose(); // ScrollController 해제
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
-  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
-  // ------ 앱 실행 생명주기 관리 관련 함수 끝
+  // 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
+  // 앱 실행 생명주기 관리 관련 함수 끝
 
   // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
   void _updateStatusBar() {
@@ -217,103 +179,91 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     }
   }
 
-  // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
+  // 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
-    // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
-    // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
-    // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
-    final User? user = FirebaseAuth.instance.currentUser;
-    final orderItems = ref.watch(orderItemsProvider); // 주문할 상품 목록을 상태로 관리
+    // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
+    final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
 
-    return GestureDetector(
-      onTap: () {
-        // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            CustomScrollView(
-              controller: completePaymentScreenPointScrollController, // 스크롤 컨트롤러 연결
-              slivers: <Widget>[
-                // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
-                SliverAppBar(
-                  // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
-                  automaticallyImplyLeading: false,
-                  floating: true,
-                  // 스크롤 시 SliverAppBar가 빠르게 나타남.
-                  pinned: true,
-                  // 스크롤 다운시 AppBar가 상단에 고정됨.
-                  expandedHeight: 0.0,
-                  // 확장 높이 설정
-                  // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                  flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.pin,
-                    // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                    background: buildCommonAppBar(
+    // 주문 데이터의 상태에 따라 다른 UI를 표시
+    return orderDataFuture.when(
+      data: (data) {
+        // 주문 데이터를 각각의 변수로 분리
+        final amountInfo = data['amountInfo'];
+        final ordererInfo = data['ordererInfo'];
+        final recipientInfo = data['recipientInfo'];
+        final numberInfo = data['numberInfo'];
+        final orderNumber = numberInfo['order_number'];
+        // 주문 날짜를 원하는 형식으로 포맷
+        final orderDate = DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(numberInfo['order_date'].toDate());
+
+        return Scaffold(
+          body: Stack(
+            children: [
+              CustomScrollView(
+                controller: completePaymentScreenPointScrollController, // 스크롤 컨트롤러 연결
+                slivers: <Widget>[
+                  SliverAppBar(
+                    automaticallyImplyLeading: false, // 기본 뒤로 가기 버튼 비활성화
+                    floating: false, // 스크롤 시 앱바 고정
+                    pinned: true, // 앱바를 상단에 고정
+                    expandedHeight: 0.0, // 확장되지 않도록 설정
+                    title: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '결제완료',
-                      leadingType: LeadingType.back,
-                      // 이전화면으로 이동 버튼.
-                      buttonCase: 1, // 1번 케이스 (버튼 없음)
+                      title: '발주 완료', // 앱바 제목 설정
+                      leadingType: LeadingType.none, // 리딩 아이콘 없음
+                      buttonCase: 1, // 버튼 타입 설정
+                    ),
+                    leading: null,
+                    backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(top: 5), // 패딩 설정
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                CompletePaymentInfoWidget(
+                                  orderNumber: orderNumber,
+                                  orderDate: orderDate,
+                                  totalPayment: amountInfo['total_payment_price'],
+                                  customerName: ordererInfo['name'],
+                                  recipientInfo: recipientInfo,
+                                ),
+                                SizedBox(height: 3000), // 추가 패딩
+                              ],
+                            ),
+                          );
+                        },
+                        childCount: 1,
+                      ),
                     ),
                   ),
-                  leading: null,
-                  // 좌측 상단의 메뉴 버튼 등을 제거함.
-                  // iOS에서는 AppBar의 배경색을 사용
-                  // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                  backgroundColor: BUTTON_COLOR,
-                ),
-                // 실제 컨텐츠를 나타내는 슬리버 리스트
-                // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-                SliverPadding(
-                  padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          // 좌우로 4의 패딩을 추가
-                          child: Column(
-                            children: [
-                              SizedBox(height: 10), // 높이 임의로 50으로 간격 설정
-                              // CompletePaymentInfoWidget을 사용하여 주문 완료 정보를 표시
-                              CompletePaymentInfoWidget(
-                                bankAccount: '12345678901234 (은행명)',
-                                orderNumber: '20231111-1643491',
-                                orderDate: '2023-11-11',
-                                totalPayment: 1350000,
-                                customerName: '테스트 (01012345678)',
-                                address: '충북 청주시 서원구 1순환로 627 123 (28562)',
-                              ),
-                              SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
-                            ],
-                          ),
-                        );
-                      },
-                      childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // buildTopButton 함수는 주어진 context와 completePaymentScreenPointScrollController를 사용하여
-            // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-            buildTopButton(context, completePaymentScreenPointScrollController),
-          ],
-        ),
-        // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
-        bottomNavigationBar: buildCommonBottomNavigationBar(
-            ref.watch(tabIndexProvider), ref, context, 5, 1),
-        // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-      ),
+                ],
+              ),
+              // buildTopButton 함수는 주어진 context와 completePaymentScreenPointScrollController를 사용하여
+              // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+              buildTopButton(context, completePaymentScreenPointScrollController),
+            ],
+          ),
+          // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
+          bottomNavigationBar: buildCommonBottomNavigationBar(
+              ref.watch(tabIndexProvider), ref, context, 5, 1
+          ),
+        );
+      },
+      loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 위젯
+      error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 텍스트
+      // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
-    // ------ 화면구성 끝
+    // 화면 구성 끝
   }
-// ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-// ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
+// 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
+// SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
 // _CompletePaymentScreenState 클래스 끝

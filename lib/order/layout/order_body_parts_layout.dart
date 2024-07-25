@@ -651,32 +651,42 @@ class CompleteOrderButton extends ConsumerWidget {
 
               print('Recipient Info: $recipientInfo'); // 디버깅 메세지 추가
 
+              // 결제 금액 정보 맵 생성
               final amountInfo = {
                 'total_product_price': totalProductPrice, // 총 상품금액
                 'product_discount_price': productDiscountPrice, // 상품 할인금액
                 'total_payment_price': totalPaymentPrice, // 총 결제금액
               };
-              await ref.read(placeOrderProvider(PlaceOrderParams(
-                ordererInfo: ordererInfo,
-                recipientInfo: recipientInfo,
-                amountInfo: amountInfo,
-                productInfo: orderItems,
+
+              // 발주 요청을 보내고 결과로 발주 ID를 받아옴
+              final orderId = await ref.read(placeOrderProvider(PlaceOrderParams(
+                ordererInfo: ordererInfo, // 발주자 정보
+                recipientInfo: recipientInfo, // 수령자 정보
+                amountInfo: amountInfo, // 결제 정보
+                productInfo: orderItems, // 상품 정보 리스트
               )).future);
+
+              // 발주 완료 메시지를 스낵바로 표시
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다.')));
-              Navigator.push(
+
+              // 발주 완료 화면으로 이동, 현재 화면을 대체함
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => CompletePaymentScreen()), // 결제 완료 화면으로 이동
+                MaterialPageRoute(
+                  builder: (context) => CompletePaymentScreen(orderId: orderId), // 발주 ID를 전달
+                ),
               );
             } : () {
+              // 결제금액이 15,000원 미만일 경우 경고 메시지 표시
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('15,000원 이상 금액부터 결제가 가능합니다.')));
             }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
             style: ElevatedButton.styleFrom(
-              foregroundColor: BUTTON_COLOR,
-              backgroundColor: BACKGROUND_COLOR,
-              side: BorderSide(color: BUTTON_COLOR),
+              foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상 설정
+              backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상 설정
+              side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상 설정
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50), // 패딩을 늘려 버튼 크기를 조정
             ),
-            child: Text('결제하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            child: Text('결제하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼 텍스트 설정
           ),
         ),
       ],

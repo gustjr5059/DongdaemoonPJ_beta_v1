@@ -1,127 +1,134 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '../../common/const/colors.dart';
-import '../../home/view/home_screen.dart'; // 숫자 포맷을 위해 임포트
+import 'package:flutter/material.dart'; // 플러터 위젯 및 머터리얼 디자인 라이브러리 임포트
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 플러터 리버팟 라이브러리 임포트
+import 'package:intl/intl.dart'; // 숫자 및 날짜 포맷을 위한 intl 라이브러리 임포트
+import '../../common/const/colors.dart'; // 공통 색상 상수 파일 임포트
+import '../../home/view/home_screen.dart'; // 홈 화면 관련 파일 임포트
+import '../provider/order_all_providers.dart'; // 주문 관련 프로바이더 파일 임포트
 
 
-// ------ 결제완료 화면 내 UI 구현 관련 CompletePaymentInfoWidget 클래스 내용 시작 부분
-class CompletePaymentInfoWidget extends StatelessWidget {
-  // 필요한 정보를 받기 위한 필드들
-  final String bankAccount;  // 은행 계좌 정보
-  final String orderNumber;  // 주문 번호
-  final String orderDate;  // 주문 날짜
-  final double totalPayment;  // 총 결제 금액
-  final String customerName;  // 고객 이름
-  final String address;  // 배송지
+// ------- 결제 완료 화면에 표시할 정보를 구성하는 CompletePaymentInfoWidget 클래스 내용 시작 부분
+class CompletePaymentInfoWidget extends ConsumerWidget {
+  // 필요한 결제 정보들을 필드로 선언
+  final String orderNumber; // 주문 번호
+  final String orderDate; // 주문 날짜
+  final double totalPayment; // 총 결제 금액
+  final String customerName; // 고객 이름
+  final Map<String, dynamic> recipientInfo; // 수령인 정보
 
+  // 생성자를 통해 필요한 결제 정보들을 초기화
   CompletePaymentInfoWidget({
-    // 생성자에서 필요한 정보를 모두 받아옴
-    required this.bankAccount,
     required this.orderNumber,
     required this.orderDate,
     required this.totalPayment,
     required this.customerName,
-    required this.address,
+    required this.recipientInfo,
   });
 
+  // 위젯의 UI를 구성하는 build 함수
   @override
-  Widget build(BuildContext context) {
-    // 숫자를 포맷하기 위한 NumberFormat 객체 생성
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 숫자 포맷을 설정 (천 단위 콤마 추가)
     final numberFormat = NumberFormat('###,###');
+    // 계좌 번호를 비동기로 가져오기 위해 프로바이더를 구독
+    final accountNumberFuture = ref.watch(accountNumberProvider);
 
-    return Padding(
-      // 전체 패딩 설정
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        // 열 정렬 설정
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 주문완료 텍스트
-          Text(
-            '주문완료',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 16), // 간격
-          // 주문이 완료되었습니다 텍스트
-          Text(
-            '주문이 완료되었습니다.',
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          // 계좌 정보 안내 텍스트
-          Text(
-            '아래 계좌 정보로 입금해 주시면 결제가 완료처리가 됩니다.',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-          ),
-          SizedBox(height: 16), // 간격
-          // 정보를 보여주기 위한 테이블
-          Table(
-            border: TableBorder.all(color: Colors.grey.shade300),
-            columnWidths: {
-              0: FlexColumnWidth(1), // 첫 번째 열의 너비 설정
-              1: FlexColumnWidth(2), // 두 번째 열의 너비 설정
-            },
+    // 계좌 번호의 상태에 따라 다른 UI를 표시
+    return accountNumberFuture.when(
+      data: (accountNumber) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0), // 전체 패딩 설정
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
             children: [
-              // 각 행을 생성하여 테이블에 추가
-              _buildTableRow('입금계좌안내', bankAccount),
-              _buildTableRow('발주 번호', orderNumber),
-              _buildTableRow('발주 일자', orderDate),
-              _buildTableRow('총 결제 금액', '${numberFormat.format(totalPayment)}원'),
-              _buildTableRow('발주자 성함', customerName),
-              _buildTableRow('배송지', address),
+              Text(
+                '발주완료', // 발주 완료 제목
+                style: TextStyle(
+                  fontSize: 24, // 폰트 크기 설정
+                  fontWeight: FontWeight.bold, // 폰트 굵기 설정
+                ),
+              ),
+              SizedBox(height: 16), // 간격
+              Text(
+                '발주가 완료되었습니다.', // 설명 텍스트
+                style: TextStyle(
+                  fontSize: 16, // 폰트 크기 설정
+                ),
+              ),
+              Text(
+                '아래 계좌 정보로 입금해 주시면 결제가 완료처리가 됩니다.', // 추가 설명 텍스트
+                style: TextStyle(
+                  fontSize: 14, // 폰트 크기 설정
+                  color: Colors.grey, // 텍스트 색상 설정
+                ),
+              ),
+              SizedBox(height: 16), // 간격
+              // 각 정보 행을 표시하기 위한 함수 호출
+              _buildInfoRow('입금계좌안내', accountNumber),
+              _buildInfoRow('발주 번호', orderNumber),
+              _buildInfoRow('발주 일자', orderDate),
+              _buildInfoRow('총 결제 금액', '${numberFormat.format(totalPayment)}원'),
+              _buildInfoRow('발주자 성함', customerName),
+              _buildInfoRow('우편번호', recipientInfo['postal_code']),
+              _buildInfoRow('주소', recipientInfo['address']),
+              _buildInfoRow('상세주소', recipientInfo['detail_address']),
+              SizedBox(height: 16), // 간격
+              // 홈으로 이동하는 버튼
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeMainScreen()), // 홈 화면으로 이동
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+                    backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
+                    side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50), // 버튼 패딩
+                  ),
+                  child: Text('홈으로 이동', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼 텍스트
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 16), // 간격
-          // 홈으로 이동 버튼
-          ElevatedButton(
-            onPressed: () {
-              // 버튼 클릭 시 HomeMainScreen으로 이동
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeMainScreen()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-              backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-              side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-              padding: EdgeInsets.symmetric(vertical: 10), // 버튼 패딩
+        );
+      },
+      loading: () => CircularProgressIndicator(), // 로딩 중일 때 표시할 위젯
+      error: (error, stack) => Text('Error: $error'), // 에러 발생 시 표시할 텍스트
+    );
+  }
+
+  // 각 정보 행을 구성하는 함수
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0), // 행 간 간격 조정
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+          children: [
+            Container(
+              width: 100, // 라벨 셀의 너비 설정
+              color: Colors.grey.shade200, // 배경 색상 설정
+              padding: const EdgeInsets.all(8.0), // 패딩 설정
+              alignment: Alignment.topLeft, // 텍스트 정렬
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트 스타일 설정
+              ),
             ),
-            child: Text('홈으로 이동', style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-        ],
+            Expanded(
+              child: Container(
+                color: Colors.white, // 배경 색상 설정
+                padding: const EdgeInsets.all(8.0), // 패딩 설정
+                alignment: Alignment.topLeft, // 텍스트 정렬
+                child: Text(value), // 값 표시
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  // 테이블의 각 행을 생성하는 함수
-  TableRow _buildTableRow(String label, String value) {
-    return TableRow(
-      children: [
-        // 첫 번째 셀
-        Container(
-          color: Colors.grey.shade200, // 배경색 설정
-          padding: const EdgeInsets.all(8.0), // 패딩 설정
-          child: Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold), // 텍스트 스타일 설정
-          ),
-        ),
-        // 두 번째 셀
-        Container(
-          color: Colors.white, // 배경색 설정
-          padding: const EdgeInsets.all(8.0), // 패딩 설정
-          child: Text(value), // 전달받은 값을 텍스트로 표시
-        ),
-      ],
-    );
-  }
 }
-// ------ 결제완료 화면 내 UI 구현 관련 CompletePaymentInfoWidget 클래스 내용 끝 부분
+// ------- 결제 완료 화면에 표시할 정보를 구성하는 CompletePaymentInfoWidget 클래스 내용 끝 부분
