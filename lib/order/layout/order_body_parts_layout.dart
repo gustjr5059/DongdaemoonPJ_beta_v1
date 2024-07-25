@@ -8,10 +8,10 @@ import '../provider/order_all_providers.dart';
 import '../view/complete_payment_screen.dart';
 import '../view/order_postcode_search_screen.dart';
 
-
-// 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 시작
+// ------- 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 시작
+// UserInfoWidget 클래스는 구매자의 정보를 화면에 표시하는 역할을 담당.
 class UserInfoWidget extends ConsumerWidget {
-  final String email;
+  final String email; // 이메일 정보를 저장하는 필드
 
   UserInfoWidget({required this.email}); // 생성자에서 이메일을 받아옴
 
@@ -27,26 +27,26 @@ class UserInfoWidget extends ConsumerWidget {
         final phoneNumber = userInfo?['phone_number'] ?? '-';
 
         return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+            mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
             children: [
               Text(
-                '발주자 정보',
+                '발주자 정보', // 발주자 정보 제목 텍스트
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 18, // 텍스트 크기 18
+                  fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 16), // 텍스트와 테이블 사이에 16 픽셀 높이의 여백 추가
               Table(
                 border: TableBorder.symmetric(
-                  inside: BorderSide(color: Colors.grey.shade300),
+                  inside: BorderSide(color: Colors.grey.shade300), // 테이블 내부 경계선 색상 설정
                 ),
                 columnWidths: {
-                  0: FlexColumnWidth(1),
-                  1: FlexColumnWidth(2),
+                  0: FlexColumnWidth(1), // 첫 번째 열의 너비 비율 설정
+                  1: FlexColumnWidth(2), // 두 번째 열의 너비 비율 설정
                 },
                 children: [
                   _buildTableRow('이름', name), // 이름 행 생성
@@ -54,12 +54,12 @@ class UserInfoWidget extends ConsumerWidget {
                   _buildTableRow('휴대폰 번호', phoneNumber), // 휴대폰 번호 행 생성
                 ],
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 8), // 테이블과 안내문 사이에 8 픽셀 높이의 여백 추가
               Text(
-                '* 해당 정보의 변경이 필요할 시, 로그인 화면 내 회원가입 절차를 통해 변경된 내용으로 재전송 해주세요.',
+                '* 해당 정보의 변경이 필요할 시, 로그인 화면 내 회원가입 절차를 통해 변경된 내용으로 재전송 해주세요.', // 안내문 텍스트
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
+                  fontSize: 12, // 텍스트 크기 12
+                  color: Colors.grey, // 텍스트 색상을 회색으로 설정
                 ),
               ),
             ],
@@ -76,38 +76,39 @@ class UserInfoWidget extends ConsumerWidget {
     return TableRow(
       children: [
         Container(
-          color: Colors.grey.shade200,
-          padding: const EdgeInsets.all(8.0),
+          color: Colors.grey.shade200, // 셀 배경색 설정
+          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
           child: Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            label, // 셀에 표시될 텍스트
+            style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
           ),
         ),
         Container(
-          color: Colors.white,
-          padding: const EdgeInsets.all(8.0),
-          child: value == '-'
-              ? Center(child: Text(value))
-              : Align(alignment: Alignment.centerLeft, child: Text(value)),
+          color: Colors.white, // 셀 배경색 설정
+          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+          child: value == '-' // 값이 '-'인 경우
+              ? Center(child: Text(value)) // 가운데 정렬
+              : Align(alignment: Alignment.centerLeft, child: Text(value)), // 왼쪽 정렬
         ),
       ],
     );
   }
 }
-// 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 끝
+// ------ 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 끝
 
-// 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
+// ------ 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
+// RecipientInfoWidget 클래스는 수령자의 정보를 입력받고 화면에 표시하는 역할을 담당.
 class RecipientInfoWidget extends StatefulWidget {
-  final String email;
-  final TextEditingController nameController;
-  final TextEditingController phoneNumberController;
-  final TextEditingController addressController;
-  final TextEditingController postalCodeController;
-  final TextEditingController detailAddressController;
-  final TextEditingController customMemoController;
-  final String selectedMemo;
-  final bool isCustomMemo;
-  final void Function(String) onMemoChanged;
+  final String email; // 이메일 정보를 저장하는 필드
+  final TextEditingController nameController; // 이름 입력 컨트롤러
+  final TextEditingController phoneNumberController; // 휴대폰 번호 입력 컨트롤러
+  final TextEditingController addressController; // 주소 입력 컨트롤러
+  final TextEditingController postalCodeController; // 우편번호 입력 컨트롤러
+  final TextEditingController detailAddressController; // 상세 주소 입력 컨트롤러
+  final TextEditingController customMemoController; // 사용자 지정 메모 입력 컨트롤러
+  final String selectedMemo; // 선택된 메모
+  final bool isCustomMemo; // 사용자 지정 메모 여부
+  final void Function(bool, String, String) onMemoChanged; // 콜백 함수 타입 변경
 
   RecipientInfoWidget({
     required this.email,
@@ -156,6 +157,8 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
 
     _selectedMemo = widget.selectedMemo;
     _isCustomMemo = widget.isCustomMemo;
+
+    print('Initial Custom Memo Controller Text: ${_customMemoController.text}'); // 초기 값 확인
   }
 
   @override
@@ -169,6 +172,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     super.dispose();
   }
 
+  // 우편번호 검색 화면을 열고 결과를 받아오는 함수
   Future<void> _openPostcodeSearch() async {
     final result = await Navigator.push(
       context,
@@ -185,21 +189,24 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print('Build Custom Memo Controller Text: ${_customMemoController.text}'); // 빌드 시 값 확인
+    print('Is Custom Memo: $_isCustomMemo'); // isCustomMemo 값 확인
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus(); // 화면을 탭할 때 키보드 숨기기
       },
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+          mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
           children: [
             Text(
-              '수령자 정보',
+              '수령자 정보', // 수령자 정보 제목 텍스트
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16), // 제목과 폼 사이에 16 픽셀 높이의 여백 추가
             Column(
               children: [
                 _buildDropdownRow('배송지', '배송지를 선택해주세요'), // 드롭다운 행 생성
@@ -217,7 +224,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                 _buildDropdownMemoRow(), // 드롭다운 메모 행 생성
                 if (_isCustomMemo)
                   _buildEditableRow(
-                      '배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.'), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
+                    '배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.', isEnabled: _isCustomMemo,), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
               ],
             ),
           ],
@@ -226,35 +233,36 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 드롭다운 행을 생성하는 함수
   Widget _buildDropdownRow(String label, String hint) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80,
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              width: 80, // 셀의 너비 설정
+              color: Colors.grey.shade200, // 셀 배경색 설정
+              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
               child: Text(
-                label,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                label, // 셀에 표시될 텍스트
+                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8.0),
+                color: Colors.white, // 셀 배경색 설정
+                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: hint,
-                    onChanged: (String? newValue) {},
+                    value: hint, // 드롭다운의 기본값 설정
+                    onChanged: (String? newValue) {}, // 변경 이벤트 처리
                     items: <String>[hint].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value), // 드롭다운에 표시될 텍스트
                       );
                     }).toList(),
                   ),
@@ -267,27 +275,28 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 수정 가능한 행을 생성하는 함수
   Widget _buildEditableRow(String label, TextEditingController controller, FocusNode focusNode, String hintText, {bool isEnabled = true}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80,
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              width: 80, // 셀의 너비 설정
+              color: Colors.grey.shade200, // 셀 배경색 설정
+              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
               child: Text(
-                label,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                label, // 셀에 표시될 텍스트
+                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8.0),
+                color: Colors.white, // 셀 배경색 설정
+                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
                 child: GestureDetector(
                   onTap: isEnabled
                       ? () {
@@ -297,18 +306,24 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                   child: AbsorbPointer(
                     absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
                     child: TextField(
-                      controller: controller,
-                      focusNode: focusNode,
-                      style: TextStyle(fontSize: 14),
+                      controller: controller, // 텍스트 필드 컨트롤러 설정
+                      focusNode: focusNode, // 텍스트 필드 포커스 노드 설정
+                      style: TextStyle(fontSize: 14), // 텍스트 필드 스타일 설정
                       decoration: InputDecoration(
-                        hintText: hintText,
-                        hintStyle: TextStyle(color: Colors.grey.shade400),
-                        hintMaxLines: 2,
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
+                        hintText: hintText, // 힌트 텍스트 설정
+                        hintStyle: TextStyle(color: Colors.grey.shade400), // 힌트 텍스트 색상 설정
+                        hintMaxLines: 2, // 힌트 텍스트 최대 줄 수 설정
+                        border: InputBorder.none, // 입력 경계선 제거
+                        isDense: true, // 간격 설정
+                        contentPadding: EdgeInsets.zero, // 내용 여백 제거
                       ),
-                      maxLines: null,
+                      maxLines: null, // 최대 줄 수 설정
+                      onChanged: (value) {
+                        print('TextField $label changed: $value'); // 디버깅 메시지 추가
+                        if (label == '배송메모') {
+                          widget.onMemoChanged(_isCustomMemo, value, _selectedMemo); // 배송메모 변경 시 콜백 호출
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -320,27 +335,28 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 고정된 값을 가진 행을 생성하는 함수
   Widget _buildFixedValueRow(String label, TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80,
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              width: 80, // 셀의 너비 설정
+              color: Colors.grey.shade200, // 셀 배경색 설정
+              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
               child: Text(
-                label,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                label, // 셀에 표시될 텍스트
+                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8.0),
+                color: Colors.white, // 셀 배경색 설정
+                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
                 child: Text(controller.text), // 고정된 값을 텍스트로 표시
               ),
             ),
@@ -350,39 +366,40 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 버튼이 포함된 고정된 값을 가진 행을 생성하는 함수
   Widget _buildFixedValueRowWithButton(String label, TextEditingController controller, String buttonText) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80,
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-              alignment: Alignment.centerLeft,
+              width: 80, // 셀의 너비 설정
+              color: Colors.grey.shade200, // 셀 배경색 설정
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0), // 셀 내부 여백 설정
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
               child: Text(
-                label,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                label, // 셀에 표시될 텍스트
+                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                color: Colors.white, // 셀 배경색 설정
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0), // 셀 내부 여백 설정
                 child: Row(
                   children: [
                     Expanded(child: Text(controller.text)), // 고정된 값을 텍스트로 표시
                     ElevatedButton(
                       onPressed: _openPostcodeSearch, // 우편번호 찾기 버튼을 눌렀을 때 실행되는 함수
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: BUTTON_COLOR,
-                        backgroundColor: BACKGROUND_COLOR,
-                        side: BorderSide(color: BUTTON_COLOR),
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+                        backgroundColor: BACKGROUND_COLOR, // 버튼 배경색
+                        side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+                        padding: EdgeInsets.symmetric(vertical: 10), // 버튼 패딩
                       ),
-                      child: Text('우편번호 찾기', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text(buttonText, style: TextStyle(fontWeight: FontWeight.bold)), // 버튼 텍스트
                     ),
                   ],
                 ),
@@ -394,40 +411,40 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 
+  // 드롭다운 메모 행을 생성하는 함수
   Widget _buildDropdownMemoRow() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80,
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              width: 80, // 셀의 너비 설정
+              color: Colors.grey.shade200, // 셀 배경색 설정
+              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
               child: Text(
-                '배송메모',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                '배송메모', // 셀에 표시될 텍스트
+                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8.0),
+                color: Colors.white, // 셀 배경색 설정
+                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: _selectedMemo,
+                    value: _selectedMemo, // 드롭다운의 기본값 설정
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedMemo = newValue!;
-                        if (_selectedMemo == '직접입력') {
-                          _isCustomMemo = true;
-                        } else {
-                          _isCustomMemo = false;
+                        _selectedMemo = newValue!; // 선택된 메모 값 업데이트
+                        _isCustomMemo = _selectedMemo == '직접입력'; // 직접 입력 여부 설정
+                        if (!_isCustomMemo) {
                           widget.customMemoController.clear(); // 직접 입력이 아닌 경우 내용 지우기
                         }
-                        widget.onMemoChanged(_selectedMemo);
+                        print('Selected Memo: $_selectedMemo'); // 디버깅 메시지 추가
+                        widget.onMemoChanged(_isCustomMemo, widget.customMemoController.text, _selectedMemo); // 메모 변경 시 콜백 호출
                       });
                     },
                     items: <String>[
@@ -439,7 +456,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value), // 드롭다운에 표시될 텍스트
                       );
                     }).toList(),
                   ),
@@ -452,10 +469,10 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     );
   }
 }
-// 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 끝
+// ------- 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 끝
 
-
-// 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 시작
+// ------- 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 시작
+// TotalPaymentWidget 클래스는 결제 금액 정보를 화면에 표시하는 역할을 담당.
 class TotalPaymentWidget extends StatelessWidget {
   final double totalPaymentPrice; // 총 결제금액을 저장하는 변수
   final double totalProductPrice; // 총 상품금액을 저장하는 변수
@@ -503,6 +520,7 @@ class TotalPaymentWidget extends StatelessWidget {
     );
   }
 
+  // 테이블의 행을 생성하는 함수
   TableRow _buildTableRow(String label, String value, {bool isTotal = false}) {
     return TableRow(
       children: [
@@ -530,9 +548,10 @@ class TotalPaymentWidget extends StatelessWidget {
     );
   }
 }
-// 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 끝
+// -------- 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 끝
 
-// 발주 화면 내 결제 방법 정보 관련 UI 내용을 구현하는 PaymentMethodInfoWidget 클래스 내용 시작
+// ------- 발주 화면 내 결제 방법 정보 관련 UI 내용을 구현하는 PaymentMethodInfoWidget 클래스 내용 시작
+// PaymentMethodInfoWidget 클래스는 결제 방법 정보를 화면에 표시하는 역할을 담당.
 class PaymentMethodInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -550,7 +569,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
           ),
           SizedBox(height: 16), // 텍스트와 설명 텍스트 사이에 16 픽셀 높이의 여백 추가
           Text(
-            "결제 방법은 무조건 계좌이체이며, '결제하기' 버튼 클릭 후 안내하는 계좌로 이체 진행해주세요.",
+            "결제 방법은 무조건 계좌이체이며, '결제하기' 버튼 클릭 후 안내하는 계좌로 이체 진행해주세요.", // 설명 텍스트
             style: TextStyle(
               fontSize: 14, // 텍스트 크기 14
               color: Colors.grey, // 텍스트 색상을 회색으로 설정
@@ -561,57 +580,67 @@ class PaymentMethodInfoWidget extends StatelessWidget {
     );
   }
 }
-// 발주 화면 내 결제 방법 정보 관련 UI 내용을 구현하는 PaymentMethodInfoWidget 클래스 내용 끝
+// ------ 발주 화면 내 결제 방법 정보 관련 UI 내용을 구현하는 PaymentMethodInfoWidget 클래스 내용 끝
 
-
+// ------- 주문 완료 버튼을 구성하는 UI 관련 CompleteOrderButton 클래스 내용 시작 부분
 class CompleteOrderButton extends ConsumerWidget {
-  final double totalProductPrice;
-  final double productDiscountPrice;
-  final double totalPaymentPrice;
-  final Map<String, dynamic> ordererInfo;
-  final TextEditingController nameController;
-  final TextEditingController phoneNumberController;
-  final TextEditingController addressController;
-  final TextEditingController postalCodeController;
-  final TextEditingController detailAddressController;
-  final TextEditingController customMemoController;
-  final String selectedMemo; // 수정: 전달되는 메모 값
-  final bool isCustomMemo;
-  final List<ProductContent> orderItems;
+  final double totalProductPrice; // 총 상품금액
+  final double productDiscountPrice; // 상품 할인금액
+  final double totalPaymentPrice; // 총 결제금액
+  final Map<String, dynamic> ordererInfo; // 발주자 정보
+  final TextEditingController nameController; // 이름 입력 컨트롤러
+  final TextEditingController phoneNumberController; // 휴대폰 번호 입력 컨트롤러
+  final TextEditingController addressController; // 주소 입력 컨트롤러
+  final TextEditingController postalCodeController; // 우편번호 입력 컨트롤러
+  final TextEditingController detailAddressController; // 상세 주소 입력 컨트롤러
+  final TextEditingController customMemoController; // 사용자 지정 메모 입력 컨트롤러
+  final String selectedMemo; // 선택된 메모 값
+  final bool isCustomMemo; // 사용자 지정 메모 여부
+  final List<ProductContent> orderItems; // 주문 상품 목록
 
   CompleteOrderButton({
-    required this.totalProductPrice,
-    required this.productDiscountPrice,
-    required this.totalPaymentPrice,
-    required this.ordererInfo,
-    required this.nameController,
-    required this.phoneNumberController,
-    required this.addressController,
-    required this.postalCodeController,
-    required this.detailAddressController,
-    required this.customMemoController,
-    required this.selectedMemo, // 수정: 생성자에서 메모 값 받아옴
-    required this.isCustomMemo,
-    required this.orderItems,
+    required this.totalProductPrice, // 생성자에서 총 상품금액을 받아옴
+    required this.productDiscountPrice, // 생성자에서 상품 할인금액을 받아옴
+    required this.totalPaymentPrice, // 생성자에서 총 결제금액을 받아옴
+    required this.ordererInfo, // 생성자에서 발주자 정보를 받아옴
+    required this.nameController, // 생성자에서 이름 입력 컨트롤러를 받아옴
+    required this.phoneNumberController, // 생성자에서 휴대폰 번호 입력 컨트롤러를 받아옴
+    required this.addressController, // 생성자에서 주소 입력 컨트롤러를 받아옴
+    required this.postalCodeController, // 생성자에서 우편번호 입력 컨트롤러를 받아옴
+    required this.detailAddressController, // 생성자에서 상세 주소 입력 컨트롤러를 받아옴
+    required this.customMemoController, // 생성자에서 사용자 지정 메모 입력 컨트롤러를 받아옴
+    required this.selectedMemo, // 생성자에서 선택된 메모 값을 받아옴
+    required this.isCustomMemo, // 생성자에서 사용자 지정 메모 여부를 받아옴
+    required this.orderItems, // 생성자에서 주문 상품 목록을 받아옴
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
       onPressed: () async {
+        // extra_memo 설정 로직 수정
+        final extraMemo = isCustomMemo ? customMemoController.text : '';
+
+        print('Custom Memo Controller Text: ${customMemoController.text}'); // 디버깅 메시지 추가
+        print('Is Custom Memo: $isCustomMemo'); // 디버깅 메시지 추가
+        print('Extra Memo: $extraMemo'); // 디버깅 메시지 추가
+
         final recipientInfo = {
-          'name': nameController.text,
-          'phone_number': phoneNumberController.text,
-          'postal_code': postalCodeController.text,
-          'address': addressController.text,
-          'detail_address': detailAddressController.text,
-          'memo': selectedMemo, // 수정: 선택된 메모 값 사용
-          'extra_memo': isCustomMemo ? customMemoController.text : null,
+          'name': nameController.text, // 수령자 이름
+          'phone_number': phoneNumberController.text, // 수령자 휴대폰 번호
+          'postal_code': postalCodeController.text, // 우편번호
+          'address': addressController.text, // 주소
+          'detail_address': detailAddressController.text, // 상세 주소
+          'memo': selectedMemo, // 선택된 메모
+          'extra_memo': extraMemo, // 사용자 지정 메모
         };
+
+        print('Recipient Info: $recipientInfo'); // 디버깅 메세지 추가
+
         final amountInfo = {
-          'total_product_price': totalProductPrice,
-          'product_discount_price': productDiscountPrice,
-          'total_payment_price': totalPaymentPrice,
+          'total_product_price': totalProductPrice, // 총 상품금액
+          'product_discount_price': productDiscountPrice, // 상품 할인금액
+          'total_payment_price': totalPaymentPrice, // 총 결제금액
         };
         await ref.read(placeOrderProvider(PlaceOrderParams(
           ordererInfo: ordererInfo,
@@ -622,92 +651,92 @@ class CompleteOrderButton extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CompletePaymentScreen()),
+          MaterialPageRoute(builder: (context) => CompletePaymentScreen()), // 결제 완료 화면으로 이동
         );
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: BUTTON_COLOR,
-        foregroundColor: INPUT_BG_COLOR,
+        backgroundColor: BUTTON_COLOR, // 버튼 배경색
+        foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상
       ),
-      child: Text('결제하기'),
+      child: Text('결제하기'), // 버튼 텍스트
     );
   }
 }
+// ------- 주문 완료 버튼을 구성하는 UI 관련 CompleteOrderButton 클래스 내용 끝 부분
 
-
-// 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
+// ------- 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
+// OrderItemWidget 클래스는 상품의 상세 정보를 화면에 표시하는 역할을 담당.
 class OrderItemWidget extends StatelessWidget {
-  final ProductContent product;
+  final ProductContent product; // 상품 정보를 저장하는 필드
 
-  OrderItemWidget({required this.product});
+  OrderItemWidget({required this.product}); // 생성자에서 상품 정보를 받아옴
 
   @override
   Widget build(BuildContext context) {
-    final numberFormat = NumberFormat('###,###');
+    final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0), // 카드 내부 여백 설정
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
           children: [
-            if (product.briefIntroduction != null)
-            Text(
-              product.briefIntroduction!,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            // 제품 번호를 표시함.
+            if (product.briefIntroduction != null) // briefIntroduction가 null이 아닌 경우에만 표시
+              Text(
+                product.briefIntroduction!,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 글자 크기 18, 굵게 설정
+              ),
             if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
-            Text(
-                  '상품번호: ${product.productNumber}', // productNumber 내용을 표시
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 18로 설정
-                ),
-            SizedBox(height: 8),
+              Text(
+                '상품번호: ${product.productNumber}', // productNumber 내용을 표시
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
+              ),
+            SizedBox(height: 8), // 텍스트와 이미지 사이에 8 픽셀 높이의 여백 추가
             Row(
               children: [
-                if (product.thumbnail != null)
+                if (product.thumbnail != null) // thumbnail이 null이 아닌 경우에만 표시
                   Image.network(
                     product.thumbnail!,
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
+                    height: 100, // 이미지 높이 100 픽셀
+                    width: 100, // 이미지 너비 100 픽셀
+                    fit: BoxFit.cover, // 이미지를 잘라서 맞춤
                   ),
-                SizedBox(width: 8),
+                SizedBox(width: 8), // 이미지와 텍스트 사이에 8 픽셀 너비의 여백 추가
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
                   children: [
                     Text(
                       '${numberFormat.format(product.originalPrice)}원',
                       style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[500],
-                        decoration: TextDecoration.lineThrough,
+                        fontSize: 14, // 글자 크기 14
+                        color: Colors.grey[500], // 글자 색상 회색
+                        decoration: TextDecoration.lineThrough, // 취소선 스타일 적용
                       ),
                     ),
                     Text(
                       '${numberFormat.format(product.discountPrice)}원',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18, // 글자 크기 18
+                        fontWeight: FontWeight.bold, // 글자 굵게 설정
                       ),
                     ),
                     Text(
                       '${product.discountPercent?.round()}%',
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18, // 글자 크기 18
+                        color: Colors.red, // 글자 색상 빨간색
+                        fontWeight: FontWeight.bold, // 글자 굵게 설정
                       ),
                     ),
-                    Text('수량: ${product.selectedCount}'),
-                    if (product.selectedColorImage != null)
+                    Text('수량: ${product.selectedCount}'), // 수량 표시
+                    if (product.selectedColorImage != null) // selectedColorImage가 null이 아닌 경우에만 표시
                       Image.network(
                         product.selectedColorImage!,
-                        height: 20,
-                        width: 20,
-                        fit: BoxFit.cover,
+                        height: 20, // 이미지 높이 20 픽셀
+                        width: 20, // 이미지 너비 20 픽셀
+                        fit: BoxFit.cover, // 이미지를 잘라서 맞춤
                       ),
-                    Text('색상: ${product.selectedColorText}'),
-                    Text('사이즈: ${product.selectedSize}'),
+                    Text('색상: ${product.selectedColorText}'), // 색상 텍스트 표시
+                    Text('사이즈: ${product.selectedSize}'), // 사이즈 텍스트 표시
                   ],
                 ),
               ],
@@ -720,7 +749,8 @@ class OrderItemWidget extends StatelessWidget {
 }
 // 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
 
-// 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
+// ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
+// AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.
 class AddressSearchWidget extends ConsumerStatefulWidget {
   @override
   _AddressSearchWidgetState createState() => _AddressSearchWidgetState();
@@ -744,16 +774,16 @@ class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
     final addressSearchResult = ref.watch(addressSearchProvider(_query)); // Riverpod을 사용하여 주소 검색 프로바이더를 구독
 
     return Column(
-      mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 변경
+      mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0), // 텍스트 필드 주변 여백 설정
           child: TextField(
             controller: _controller, // 텍스트 필드 컨트롤러 설정
             decoration: InputDecoration(
-              labelText: '주소 검색',
+              labelText: '주소 검색', // 텍스트 필드 라벨 텍스트
               suffixIcon: IconButton(
-                icon: Icon(Icons.search),
+                icon: Icon(Icons.search), // 검색 아이콘
                 onPressed: _search, // 검색 버튼을 눌렀을 때 실행되는 함수
               ),
             ),
@@ -763,7 +793,7 @@ class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
           Flexible( // Expanded 대신 Flexible 사용
             child: addressSearchResult.when(
               data: (addresses) => ListView.builder(
-                shrinkWrap: true,
+                shrinkWrap: true, // 내부 컨텐츠에 맞춰 크기 조정
                 itemCount: addresses.length, // 검색 결과 개수
                 itemBuilder: (context, index) {
                   final address = addresses[index]; // 주소 정보
@@ -772,7 +802,7 @@ class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
                   final fullAddress = roadAddress != null ? roadAddress['address_name'] : address['address_name']; // 전체 주소
                   final displayAddress = zoneNo.isNotEmpty ? '$fullAddress [$zoneNo]' : fullAddress; // 표시할 주소
                   return ListTile(
-                    title: Text(displayAddress),
+                    title: Text(displayAddress), // 리스트 아이템의 제목 설정
                     onTap: () {
                       Navigator.pop(context, displayAddress); // 주소를 선택했을 때 이전 화면으로 반환
                     },
@@ -787,4 +817,4 @@ class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
     );
   }
 }
-// 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 끝
+// ------- 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 끝

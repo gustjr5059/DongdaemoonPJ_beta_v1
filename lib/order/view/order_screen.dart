@@ -21,10 +21,6 @@ import 'package:flutter/services.dart';
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 // Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
-// url_launcher 패키지를 가져옵니다.
-// 이 패키지는 Flutter 애플리케이션에서 URL을 열거나 이메일, 전화, 문자 메시지 등을 실행할 수 있는 기능을 제공합니다.
-// 예를 들어, 웹 브라우저에서 특정 웹 페이지를 열거나, 메일 앱을 열어 이메일을 작성하거나, 전화 앱을 열어 전화를 걸 수 있습니다.
-import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
 // 이 레이아웃은 에러 발생 시 사용자에게 보여질 UI 컴포넌트를 정의합니다.
@@ -42,22 +38,11 @@ import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴�
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../common/provider/common_state_provider.dart';
 
-// banner_model.dart 파일을 common 디렉토리의 model 폴더에서 가져옵니다.
-// 이 파일에는 배너와 관련된 데이터 모델이 정의되어 있습니다.
-// 배너 데이터를 구조화하고 관리하기 위해 사용됩니다.
-import '../../../common/model/banner_model.dart';
-
-// common_all_providers.dart 파일을 common 디렉토리의 provider 폴더에서 가져옵니다.
-// 이 파일에는 Future Provider와 관련된 기능이 정의되어 있습니다.
-// 비동기 데이터 호출 및 상태 관리를 위해 사용됩니다.
-import '../../../common/provider/common_all_providers.dart';
-
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart';
-import 'complete_payment_screen.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -86,24 +71,6 @@ class OrderMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     with WidgetsBindingObserver {
-
-  // 첫 번째 작은 배너를 위한 페이지 컨트롤러
-  late PageController _small1BannerPageController;
-
-  // 첫 번째 작은 배너를 자동 스크롤하는 클래스
-  late BannerAutoScrollClass _small1BannerAutoScroll;
-
-  // 배너 이미지의 총 개수를 저장하는 변수
-  int bannerImageCount = 3;
-
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-
-  // 첫 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small1BannerLinks = [
-    'https://www.coupang.com', // 첫 번째 배너 클릭 시 쿠팡으로 이동
-    'https://www.temu.com/kr', // 두 번째 배너 클릭 시 테무로 이동
-  ];
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -143,17 +110,34 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
 
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
-  // 컨트롤러 선언
+// ----- 수령자 정보 관련 컨트롤러 및 설정값 시작 부분
+// 이름을 입력받는 컨트롤러 생성
   TextEditingController nameController = TextEditingController();
+
+// 휴대폰 번호를 입력받는 컨트롤러 생성
   TextEditingController phoneNumberController = TextEditingController();
+
+// 주소를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
   TextEditingController addressController = TextEditingController(text: '없음');
+
+// 우편번호를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
   TextEditingController postalCodeController = TextEditingController(text: '없음');
+
+// 상세 주소를 입력받는 컨트롤러 생성
   TextEditingController detailAddressController = TextEditingController();
+
+// 사용자 지정 메모를 입력받는 컨트롤러 생성
   TextEditingController customMemoController = TextEditingController();
 
+// 드롭다운에서 선택된 메모를 저장하는 변수, 초기값 설정
   String selectedMemo = "기사님께 보여지는 메모입니다.";
+
+// 사용자 지정 메모 여부를 나타내는 변수, 초기값은 false
   bool isCustomMemo = false;
 
+// 사용자 지정 메모 내용을 저장하는 변수, 초기값 설정
+  String customMemo = ""; // customMemo 변수를 추가
+// ----- 수령자 정보 관련 컨트롤러 및 설정값 끝 부분
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -205,15 +189,27 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     _updateStatusBar();
 
+// ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 시작 부분
+// 이름을 입력받는 컨트롤러를 생성
     nameController = TextEditingController();
+
+// 휴대폰 번호를 입력받는 컨트롤러를 생성
     phoneNumberController = TextEditingController();
+
+// 주소를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
     addressController = TextEditingController(text: '없음');
+
+// 우편번호를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
     postalCodeController = TextEditingController(text: '없음');
+
+// 상세 주소를 입력받는 컨트롤러를 생성
     detailAddressController = TextEditingController();
+
+// 사용자 지정 메모를 입력받는 컨트롤러를 생성
     customMemoController = TextEditingController();
+// ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 끝 부분
 
   }
-
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
@@ -226,10 +222,8 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     }
     // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
     if (state == AppLifecycleState.resumed) {
-      _small1BannerAutoScroll.startAutoScroll();
       // 앱이 백그라운드로 이동할 때, 배너의 자동 스크롤을 중지
     } else if (state == AppLifecycleState.paused) {
-      _small1BannerAutoScroll.stopAutoScroll();
     }
   }
 
@@ -283,9 +277,16 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
+
+    // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
     final User? user = FirebaseAuth.instance.currentUser;
-    final orderItems = ref.watch(orderItemsProvider); // 주문할 상품 목록을 상태로 관리
+
+    // 주문할 상품 목록을 상태로 관리하고 이를 가져옴
+    final orderItems = ref.watch(orderItemsProvider);
+
+    // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
     final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
+
 
     return GestureDetector(
         onTap: () {
@@ -339,22 +340,26 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                         // 좌우로 4의 패딩을 추가
                         child: Column(
                           children: [
-                            SizedBox(height: 10), // 높이 임의로 50으로 간격 설정
-                            if (user != null) UserInfoWidget(email: user.email!), // 사용자 정보를 표시
+                            SizedBox(height: 10), // 높이를 10으로 설정하여 간격 조정
+                            if (user != null) UserInfoWidget(email: user.email!), // 사용자가 로그인된 경우 사용자 정보를 표시
                             if (user != null)
                               RecipientInfoWidget(
-                                email: user.email!,
-                                nameController: nameController,
-                                phoneNumberController: phoneNumberController,
-                                addressController: addressController,
-                                postalCodeController: postalCodeController,
-                                detailAddressController: detailAddressController,
-                                customMemoController: customMemoController,
-                                selectedMemo: selectedMemo,
-                                isCustomMemo: isCustomMemo,
-                                onMemoChanged: (String newMemo) {
+                                email: user.email!, // 수령자 정보 위젯에 이메일 전달
+                                nameController: nameController, // 이름 입력 컨트롤러 전달
+                                phoneNumberController: phoneNumberController, // 휴대폰 번호 입력 컨트롤러 전달
+                                addressController: addressController, // 주소 입력 컨트롤러 전달
+                                postalCodeController: postalCodeController, // 우편번호 입력 컨트롤러 전달
+                                detailAddressController: detailAddressController, // 상세 주소 입력 컨트롤러 전달
+                                customMemoController: customMemoController, // 사용자 지정 메모 입력 컨트롤러 전달
+                                selectedMemo: selectedMemo, // 선택된 메모 전달
+                                isCustomMemo: isCustomMemo, // 사용자 지정 메모 여부 전달
+                                onMemoChanged: (bool isCustom, String newMemo, String newSelectedMemo) {
                                   setState(() {
-                                    selectedMemo = newMemo;
+                                    isCustomMemo = isCustom; // 사용자 지정 메모 여부 업데이트
+                                    if (isCustom) {
+                                      customMemo = newMemo; // 새로운 사용자 지정 메모 업데이트
+                                    }
+                                    selectedMemo = newSelectedMemo; // 새로운 선택된 메모 업데이트
                                   });
                                 },
                               ),
@@ -363,33 +368,33 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                               totalProductPrice: widget.totalProductPrice, // 총 상품금액을 TotalPaymentWidget에 전달
                               productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액을 TotalPaymentWidget에 전달
                             ),
-                            PaymentMethodInfoWidget(),
-                            // for (var item in orderItems) OrderItemWidget(product: item),
+                            PaymentMethodInfoWidget(), // 결제 방법 정보를 표시하는 위젯
+                            // for (var item in orderItems) OrderItemWidget(product: item), // 주문 상품 목록을 표시하는 위젯
                             userInfoAsyncValue.when(
                               data: (userInfo) => CompleteOrderButton(
-                                totalProductPrice: widget.totalProductPrice,
-                                productDiscountPrice: widget.productDiscountPrice,
-                                totalPaymentPrice: widget.totalPaymentPrice,
+                                totalProductPrice: widget.totalProductPrice, // 총 상품금액 전달
+                                productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액 전달
+                                totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액 전달
                                 ordererInfo: {
-                                  'name': userInfo?['name'] ?? '-',
-                                  'email': userInfo?['email'] ?? '-',
-                                  'phone_number': userInfo?['phone_number'] ?? '-',
+                                  'name': userInfo?['name'] ?? '-', // 발주자 이름
+                                  'email': userInfo?['email'] ?? '-', // 발주자 이메일
+                                  'phone_number': userInfo?['phone_number'] ?? '-', // 발주자 휴대폰 번호
                                 },
-                                nameController: nameController,
-                                phoneNumberController: phoneNumberController,
-                                addressController: addressController,
-                                postalCodeController: postalCodeController,
-                                detailAddressController: detailAddressController,
-                                customMemoController: customMemoController,
-                                selectedMemo: selectedMemo,
-                                isCustomMemo: isCustomMemo,
-                                orderItems: orderItems,
+                                nameController: nameController, // 이름 입력 컨트롤러 전달
+                                phoneNumberController: phoneNumberController, // 휴대폰 번호 입력 컨트롤러 전달
+                                addressController: addressController, // 주소 입력 컨트롤러 전달
+                                postalCodeController: postalCodeController, // 우편번호 입력 컨트롤러 전달
+                                detailAddressController: detailAddressController, // 상세 주소 입력 컨트롤러 전달
+                                customMemoController: customMemoController, // 사용자 지정 메모 입력 컨트롤러 전달
+                                selectedMemo: selectedMemo, // 선택된 메모 전달
+                                isCustomMemo: isCustomMemo, // 사용자 지정 메모 여부 전달
+                                orderItems: orderItems, // 주문 상품 목록 전달
                               ),
-                              loading: () => Center(child: CircularProgressIndicator()),
-                              error: (error, stack) => Center(child: Text('Error: $error')),
+                              loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 위젯
+                              error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 위젯
                             ),
                             // AddressSearchWidget(), // 주소 검색 위젯 추가
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: 3000), // 높이를 3000으로 설정하여 간격 조정
                           ],
                         ),
                       );

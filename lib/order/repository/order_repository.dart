@@ -110,40 +110,46 @@ class OrderRepository {
   }
   // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
 
-  // 기존 발주 관련 데이터 처리 로직
+  // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보를 매개변수로 받는 함수 내용 시작
   Future<void> placeOrder({
-    required Map<String, dynamic> ordererInfo,
-    required Map<String, dynamic> recipientInfo,
-    required Map<String, dynamic> amountInfo,
-    required List<ProductContent> productInfo,
+    required Map<String, dynamic> ordererInfo,  // 발주자 정보
+    required Map<String, dynamic> recipientInfo,  // 수령자 정보
+    required Map<String, dynamic> amountInfo,  // 결제 정보
+    required List<ProductContent> productInfo,  // 상품 정보 리스트
   }) async {
+    // 현재 로그인된 사용자의 UID를 가져옴
     final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    // 사용자의 주문 리스트 컬렉션에서 새로운 주문 문서를 생성
     final orderCollection = firestore.collection('order_list').doc(userId).collection('orders').doc();
 
-    // 발주자 정보 저장
+    // 발주자 정보를 'orderer_info' 컬렉션의 'info' 문서에 저장
     await orderCollection.collection('orderer_info').doc('info').set(ordererInfo);
 
-    // 수령자 정보 저장
+    // 수령자 정보를 'recipient_info' 컬렉션의 'info' 문서에 저장
     await orderCollection.collection('recipient_info').doc('info').set(recipientInfo);
 
-    // 결제 정보 저장
+    // 디버깅을 위해 수령자 정보 저장 완료 메세지를 출력
+    print('Recipient Info Stored: $recipientInfo');
+
+    // 결제 정보를 'amount_info' 컬렉션의 'info' 문서에 저장
     await orderCollection.collection('amount_info').doc('info').set(amountInfo);
 
-    // 상품 정보 저장
+    // 상품 정보를 'product_info' 컬렉션에 각각의 문서로 저장
     for (var item in productInfo) {
       await orderCollection.collection('product_info').add({
-        'briefIntroduction': item.briefIntroduction,
-        'productNumber': item.productNumber,
-        'thumbnail': item.thumbnail,
-        'originalPrice': item.originalPrice,
-        'discountPrice': item.discountPrice,
-        'discountPercent': item.discountPercent,
-        'selectedCount': item.selectedCount,
-        'selectedColorImage': item.selectedColorImage,
-        'selectedColorText': item.selectedColorText,
-        'selectedSize': item.selectedSize,
+        'briefIntroduction': item.briefIntroduction,  // 간단한 상품 소개
+        'productNumber': item.productNumber,  // 상품 번호
+        'thumbnail': item.thumbnail,  // 상품 썸네일 이미지
+        'originalPrice': item.originalPrice,  // 원래 가격
+        'discountPrice': item.discountPrice,  // 할인된 가격
+        'discountPercent': item.discountPercent,  // 할인율
+        'selectedCount': item.selectedCount,  // 선택된 수량
+        'selectedColorImage': item.selectedColorImage,  // 선택된 색상 이미지
+        'selectedColorText': item.selectedColorText,  // 선택된 색상 텍스트
+        'selectedSize': item.selectedSize,  // 선택된 사이즈
       });
     }
   }
-}
+// ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보를 매개변수로 받는 함수 내용 끝
 // 발주 관련 화면의 레퍼지토리 내용 끝
