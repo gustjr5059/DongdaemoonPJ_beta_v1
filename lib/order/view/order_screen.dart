@@ -370,6 +370,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                             ),
                             PaymentMethodInfoWidget(), // 결제 방법 정보를 표시하는 위젯
                             // for (var item in orderItems) OrderItemWidget(product: item), // 주문 상품 목록을 표시하는 위젯
+                            SizedBox(height: 40),
                             userInfoAsyncValue.when(
                               data: (userInfo) => CompleteOrderButton(
                                 totalProductPrice: widget.totalProductPrice, // 총 상품금액 전달
@@ -394,7 +395,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                               error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 위젯
                             ),
                             // AddressSearchWidget(), // 주소 검색 위젯 추가
-                            SizedBox(height: 3000), // 높이를 3000으로 설정하여 간격 조정
+                            SizedBox(height: 20), // 높이를 3000으로 설정하여 간격 조정
                           ],
                         ),
                       );

@@ -62,7 +62,8 @@ class OrderRepository {
           .get(); // Firestore에서 이메일로 사용자 정보 검색
 
       if (querySnapshot.docs.isNotEmpty) {
-        return querySnapshot.docs.first.data() as Map<String, dynamic>?; // 사용자 정보 반환
+        return querySnapshot.docs.first.data() as Map<String,
+            dynamic>?; // 사용자 정보 반환
       } else {
         return null; // 사용자 정보가 없을 경우 null 반환
       }
@@ -82,7 +83,8 @@ class OrderRepository {
       final apiKey = await loadApiKey(); // 환경 변수에서 API 키 로드
       final kaHeader = await getKAHeader(); // KA 헤더 얻기
       final encodedQuery = Uri.encodeComponent(query); // 쿼리 인코딩
-      final url = Uri.parse('https://dapi.kakao.com/v2/local/search/address.json?query=$encodedQuery'); // API 호출 URL 생성
+      final url = Uri.parse(
+          'https://dapi.kakao.com/v2/local/search/address.json?query=$encodedQuery'); // API 호출 URL 생성
 
       print('API 호출 URL: $url'); // 디버깅을 위해 URL 출력
       print('KA Header: $kaHeader'); // 디버깅을 위해 KA 헤더 출력
@@ -102,32 +104,39 @@ class OrderRepository {
         final data = json.decode(response.body); // 응답 본문을 JSON으로 디코딩
         return data['documents']; // 주소 데이터 반환
       } else {
-        throw Exception('Failed to load addresses: ${response.statusCode}'); // 실패 시 예외 발생
+        throw Exception(
+            'Failed to load addresses: ${response.statusCode}'); // 실패 시 예외 발생
       }
     } catch (e) {
       throw Exception('Failed to load addresses: $e'); // 예외 발생 시 예외 메시지 출력
     }
   }
+
   // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
 
   // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보를 매개변수로 받는 함수 내용 시작
   Future<void> placeOrder({
-    required Map<String, dynamic> ordererInfo,  // 발주자 정보
-    required Map<String, dynamic> recipientInfo,  // 수령자 정보
-    required Map<String, dynamic> amountInfo,  // 결제 정보
-    required List<ProductContent> productInfo,  // 상품 정보 리스트
+    required Map<String, dynamic> ordererInfo, // 발주자 정보
+    required Map<String, dynamic> recipientInfo, // 수령자 정보
+    required Map<String, dynamic> amountInfo, // 결제 정보
+    required List<ProductContent> productInfo, // 상품 정보 리스트
   }) async {
     // 현재 로그인된 사용자의 UID를 가져옴
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
     // 사용자의 주문 리스트 컬렉션에서 새로운 주문 문서를 생성
-    final orderCollection = firestore.collection('order_list').doc(userId).collection('orders').doc();
+    final orderCollection = firestore.collection('order_list')
+        .doc(userId)
+        .collection('orders')
+        .doc();
 
     // 발주자 정보를 'orderer_info' 컬렉션의 'info' 문서에 저장
-    await orderCollection.collection('orderer_info').doc('info').set(ordererInfo);
+    await orderCollection.collection('orderer_info').doc('info').set(
+        ordererInfo);
 
     // 수령자 정보를 'recipient_info' 컬렉션의 'info' 문서에 저장
-    await orderCollection.collection('recipient_info').doc('info').set(recipientInfo);
+    await orderCollection.collection('recipient_info').doc('info').set(
+        recipientInfo);
 
     // 디버깅을 위해 수령자 정보 저장 완료 메세지를 출력
     print('Recipient Info Stored: $recipientInfo');
@@ -138,18 +147,19 @@ class OrderRepository {
     // 상품 정보를 'product_info' 컬렉션에 각각의 문서로 저장
     for (var item in productInfo) {
       await orderCollection.collection('product_info').add({
-        'briefIntroduction': item.briefIntroduction,  // 간단한 상품 소개
-        'productNumber': item.productNumber,  // 상품 번호
-        'thumbnail': item.thumbnail,  // 상품 썸네일 이미지
-        'originalPrice': item.originalPrice,  // 원래 가격
-        'discountPrice': item.discountPrice,  // 할인된 가격
-        'discountPercent': item.discountPercent,  // 할인율
-        'selectedCount': item.selectedCount,  // 선택된 수량
-        'selectedColorImage': item.selectedColorImage,  // 선택된 색상 이미지
-        'selectedColorText': item.selectedColorText,  // 선택된 색상 텍스트
-        'selectedSize': item.selectedSize,  // 선택된 사이즈
+        'briefIntroduction': item.briefIntroduction, // 간단한 상품 소개
+        'productNumber': item.productNumber, // 상품 번호
+        'thumbnail': item.thumbnail, // 상품 썸네일 이미지
+        'originalPrice': item.originalPrice, // 원래 가격
+        'discountPrice': item.discountPrice, // 할인된 가격
+        'discountPercent': item.discountPercent, // 할인율
+        'selectedCount': item.selectedCount, // 선택된 수량
+        'selectedColorImage': item.selectedColorImage, // 선택된 색상 이미지
+        'selectedColorText': item.selectedColorText, // 선택된 색상 텍스트
+        'selectedSize': item.selectedSize, // 선택된 사이즈
       });
     }
   }
+}
 // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보를 매개변수로 받는 함수 내용 끝
 // 발주 관련 화면의 레퍼지토리 내용 끝

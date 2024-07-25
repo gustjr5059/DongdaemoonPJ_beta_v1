@@ -381,7 +381,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
               alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
               child: Text(
                 label, // 셀에 표시될 텍스트
-                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
@@ -397,9 +397,9 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                         foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
                         backgroundColor: BACKGROUND_COLOR, // 버튼 배경색
                         side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                        padding: EdgeInsets.symmetric(vertical: 10), // 버튼 패딩
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16), // 버튼 패딩 (상하 12, 좌우 16)
                       ),
-                      child: Text(buttonText, style: TextStyle(fontWeight: FontWeight.bold)), // 버튼 텍스트
+                      child: Text(buttonText, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)), // 버튼 텍스트
                     ),
                   ],
                 ),
@@ -616,49 +616,70 @@ class CompleteOrderButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ElevatedButton(
-      onPressed: () async {
-        // extra_memo 설정 로직 수정
-        final extraMemo = isCustomMemo ? customMemoController.text : '';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center, // 자식 위젯들을 중앙 정렬
+      children: [
+        Center( // '15,000원 이상 금액부터 결제가 가능합니다.' 텍스트를 중앙에 위치시킴
+          child: Text(
+            '결제하기 버튼은 15,000원 이상일 시 진행 가능합니다.', // 알림 텍스트
+            style: TextStyle(
+              fontSize: 14, // 텍스트 크기
+              color: Colors.black, // 텍스트 색상 검정
+            ),
+          ),
+        ),
+        SizedBox(height: 8), // 알림 텍스트와 버튼 사이에 여백 추가
+        Center( // '결제하기' 버튼을 중앙에 위치시킴
+          child: ElevatedButton(
+            onPressed: totalPaymentPrice >= 15000 ? () async {
+              // extra_memo 설정 로직 수정
+              final extraMemo = isCustomMemo ? customMemoController.text : '';
 
-        print('Custom Memo Controller Text: ${customMemoController.text}'); // 디버깅 메시지 추가
-        print('Is Custom Memo: $isCustomMemo'); // 디버깅 메시지 추가
-        print('Extra Memo: $extraMemo'); // 디버깅 메시지 추가
+              print('Custom Memo Controller Text: ${customMemoController.text}'); // 디버깅 메시지 추가
+              print('Is Custom Memo: $isCustomMemo'); // 디버깅 메시지 추가
+              print('Extra Memo: $extraMemo'); // 디버깅 메시지 추가
 
-        final recipientInfo = {
-          'name': nameController.text, // 수령자 이름
-          'phone_number': phoneNumberController.text, // 수령자 휴대폰 번호
-          'postal_code': postalCodeController.text, // 우편번호
-          'address': addressController.text, // 주소
-          'detail_address': detailAddressController.text, // 상세 주소
-          'memo': selectedMemo, // 선택된 메모
-          'extra_memo': extraMemo, // 사용자 지정 메모
-        };
+              final recipientInfo = {
+                'name': nameController.text, // 수령자 이름
+                'phone_number': phoneNumberController.text, // 수령자 휴대폰 번호
+                'postal_code': postalCodeController.text, // 우편번호
+                'address': addressController.text, // 주소
+                'detail_address': detailAddressController.text, // 상세 주소
+                'memo': selectedMemo, // 선택된 메모
+                'extra_memo': extraMemo, // 사용자 지정 메모
+              };
 
-        print('Recipient Info: $recipientInfo'); // 디버깅 메세지 추가
+              print('Recipient Info: $recipientInfo'); // 디버깅 메세지 추가
 
-        final amountInfo = {
-          'total_product_price': totalProductPrice, // 총 상품금액
-          'product_discount_price': productDiscountPrice, // 상품 할인금액
-          'total_payment_price': totalPaymentPrice, // 총 결제금액
-        };
-        await ref.read(placeOrderProvider(PlaceOrderParams(
-          ordererInfo: ordererInfo,
-          recipientInfo: recipientInfo,
-          amountInfo: amountInfo,
-          productInfo: orderItems,
-        )).future);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('주문이 완료되었습니다.')));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CompletePaymentScreen()), // 결제 완료 화면으로 이동
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: BUTTON_COLOR, // 버튼 배경색
-        foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상
-      ),
-      child: Text('결제하기'), // 버튼 텍스트
+              final amountInfo = {
+                'total_product_price': totalProductPrice, // 총 상품금액
+                'product_discount_price': productDiscountPrice, // 상품 할인금액
+                'total_payment_price': totalPaymentPrice, // 총 결제금액
+              };
+              await ref.read(placeOrderProvider(PlaceOrderParams(
+                ordererInfo: ordererInfo,
+                recipientInfo: recipientInfo,
+                amountInfo: amountInfo,
+                productInfo: orderItems,
+              )).future);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다.')));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CompletePaymentScreen()), // 결제 완료 화면으로 이동
+              );
+            } : () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('15,000원 이상 금액부터 결제가 가능합니다.')));
+            }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+            style: ElevatedButton.styleFrom(
+              foregroundColor: BUTTON_COLOR,
+              backgroundColor: BACKGROUND_COLOR,
+              side: BorderSide(color: BUTTON_COLOR),
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50), // 패딩을 늘려 버튼 크기를 조정
+            ),
+            child: Text('결제하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
+        ),
+      ],
     );
   }
 }
