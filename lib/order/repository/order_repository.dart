@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:intl/intl.dart';
@@ -161,8 +162,92 @@ class OrderRepository {
       'order_date': now, // 주문 날짜 저장
     });
 
+    // 이메일로 발주 데이터 전송
+    await sendOrderEmail(ordererInfo, recipientInfo, amountInfo, productInfo, orderNumber);
+
     return orderId; // 발주 ID를 반환
   }
+
+  // ------ '결제하기' 버튼 클릭 시, 관련 발주 데이터를 특정 이메일 계정으로 발송하는 기능 관련 함수 내용 시작 부분
+  Future<void> sendOrderEmail(
+      Map<String, dynamic> ordererInfo,
+      Map<String, dynamic> recipientInfo,
+      Map<String, dynamic> amountInfo,
+      List<ProductContent> productInfo,
+      String orderNumber,
+      ) async {
+    final email = Email(
+      body: _generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productInfo),
+      subject: '신규 발주 내역: [$orderNumber] ${ordererInfo['email']}',
+      recipients: ['stonehead0627@gmail.com'],
+      isHTML: true,
+    );
+
+    try {
+      print('이메일 전송 준비 완료');
+      print('이메일 내용: ${email.body}');
+      await FlutterEmailSender.send(email);
+      print('이메일 전송 성공');
+    } catch (error) {
+      print('이메일 전송 실패: $error');
+    }
+  }
+  // ------ '결제하기' 버튼 클릭 시, 관련 발주 데이터를 특정 이메일 계정으로 발송하는 기능 관련 함수 내용 끝 부분
+
+  // ------ 발송하는 이메일 본문 내용 구성 UI 관련 함수 내용 시작 부분
+  String _generateOrderEmailBody(
+      Map<String, dynamic> ordererInfo,
+      Map<String, dynamic> recipientInfo,
+      Map<String, dynamic> amountInfo,
+      List<ProductContent> productInfo,
+      ) {
+    final buffer = StringBuffer();
+    final numberFormat = NumberFormat('###,###');
+
+    buffer.writeln('<html><body>');
+    buffer.writeln('<h2>발주자 정보</h2>');
+    buffer.writeln('<table border="1" cellpadding="5" cellspacing="0">');
+    buffer.writeln('<tr><td><b>이름</b></td><td>${ordererInfo['name']}</td></tr>');
+    buffer.writeln('<tr><td><b>이메일</b></td><td>${ordererInfo['email']}</td></tr>');
+    buffer.writeln('<tr><td><b>휴대폰 번호</b></td><td>${ordererInfo['phone_number']}</td></tr>');
+    buffer.writeln('</table><br>');
+
+    buffer.writeln('<h2>수령자 정보</h2>');
+    buffer.writeln('<table border="1" cellpadding="5" cellspacing="0">');
+    buffer.writeln('<tr><td><b>이름</b></td><td>${recipientInfo['name']}</td></tr>');
+    buffer.writeln('<tr><td><b>휴대폰 번호</b></td><td>${recipientInfo['phone_number']}</td></tr>');
+    buffer.writeln('<tr><td><b>우편번호</b></td><td>${recipientInfo['postal_code']}</td></tr>');
+    buffer.writeln('<tr><td><b>주소</b></td><td>${recipientInfo['address']}</td></tr>');
+    buffer.writeln('<tr><td><b>상세 주소</b></td><td>${recipientInfo['detail_address']}</td></tr>');
+    buffer.writeln('<tr><td><b>메모</b></td><td>${recipientInfo['memo']}</td></tr>');
+    buffer.writeln('<tr><td><b>추가 메모</b></td><td>${recipientInfo['extra_memo']}</td></tr>');
+    buffer.writeln('</table><br>');
+
+    buffer.writeln('<h2>금액 정보</h2>');
+    buffer.writeln('<table border="1" cellpadding="5" cellspacing="0">');
+    buffer.writeln('<tr><td><b>총 상품금액</b></td><td>${numberFormat.format(amountInfo['total_product_price'])}원</td></tr>');
+    buffer.writeln('<tr><td><b>상품 할인금액</b></td><td>${numberFormat.format(amountInfo['product_discount_price'])}원</td></tr>');
+    buffer.writeln('<tr><td><b>총 결제금액</b></td><td>${numberFormat.format(amountInfo['total_payment_price'])}원</td></tr>');
+    buffer.writeln('</table><br>');
+
+    buffer.writeln('<h2>상품 정보</h2>');
+    for (var item in productInfo) {
+      buffer.writeln('<table border="1" cellpadding="5" cellspacing="0">');
+      buffer.writeln('<tr><td><b>상품</b></td><td>${item.briefIntroduction}</td></tr>');
+      buffer.writeln('<tr><td><b>상품 번호</b></td><td>${item.productNumber}</td></tr>');
+      buffer.writeln('<tr><td><b>원래 가격</b></td><td>${numberFormat.format(item.originalPrice)}원</td></tr>');
+      buffer.writeln('<tr><td><b>할인 가격</b></td><td>${numberFormat.format(item.discountPrice)}원</td></tr>');
+      buffer.writeln('<tr><td><b>할인 퍼센트</b></td><td>${item.discountPercent}%</td></tr>');
+      buffer.writeln('<tr><td><b>선택한 수량</b></td><td>${item.selectedCount}개</td></tr>');
+      buffer.writeln('<tr><td><b>선택한 색상</b></td><td>${item.selectedColorText}</td></tr>');
+      buffer.writeln('<tr><td><b>선택한 사이즈</b></td><td>${item.selectedSize}</td></tr>');
+      buffer.writeln('</table><br>');
+    }
+
+    buffer.writeln('</body></html>');
+    return buffer.toString();
+  }
+  // ------ 발송하는 이메일 본문 내용 구성 UI 관련 함수 내용 끝 부분
 
   // 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수
   // 발주 데이터를 가져오는 함수

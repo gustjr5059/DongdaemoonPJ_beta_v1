@@ -667,7 +667,7 @@ class CompleteOrderButton extends ConsumerWidget {
               )).future);
 
               // 발주 완료 메시지를 스낵바로 표시
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다.')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다. 이메일이 전송되었습니다.')));
 
               // 발주 완료 화면으로 이동, 현재 화면을 대체함
               Navigator.pushReplacement(
