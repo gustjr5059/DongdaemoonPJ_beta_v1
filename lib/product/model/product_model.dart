@@ -212,4 +212,33 @@ class ProductContent {
       productNumber: data['product_number'] as String?, // 제품 번호
     );
   }
+
+  // ProductContent 객체를 맵으로 변환하는 toMap 메서드
+  // 클라이언트 관점의 이메일 보내기 기능 관련 코드
+  Map<String, dynamic> toMap() {
+    return {
+      'docId': docId,
+      'thumbnail': thumbnail,
+      'colors': colors,
+      'briefIntroduction': briefIntroduction,
+      'originalPrice': originalPrice,
+      'discountPrice': discountPrice,
+      'discountPercent': discountPercent,
+      'colorOptions': colorOptions,
+      'sizes': sizes,
+      'category': category,
+      'detailPageImages': detailPageImages,
+      'detailColorImages': detailColorImages,
+      'detailDetailsImage': detailDetailsImage,
+      'detailFabricImage': detailFabricImage,
+      'detailIntroImages': detailIntroImages,
+      'detailSizeImage': detailSizeImage,
+      'detailWashingImage': detailWashingImage,
+      'selectedCount': selectedCount,
+      'selectedColorImage': selectedColorImage,
+      'selectedColorText': selectedColorText,
+      'selectedSize': selectedSize,
+      'productNumber': productNumber,
+    };
+  }
 }
