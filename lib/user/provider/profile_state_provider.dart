@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// 마이페이지 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final profileLargeBannerPageProvider = StateProvider<int>((ref) => 0);
-// 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
-final profileCurrentTabProvider = StateProvider<int>((ref) => 0);
+
+// 마이페이지 메인화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
+final profileMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 // 마이페이지 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
-final profileScrollPositionProvider = StateProvider<double>((ref) => 0);
+final profileMainScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 profileScrollControllerProvider라는 이름의 Provider를 정의함.

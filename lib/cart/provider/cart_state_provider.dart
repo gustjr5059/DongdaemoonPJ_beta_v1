@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart'; // Flutter의 Cupertino 디자인 패키지를 사용하기 위해 import
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 패키지를 사용하기 위해 import
 import '../repository/cart_repository.dart'; // 장바구니 데이터 처리를 위한 CartRepository를 import
@@ -53,23 +54,34 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     });
   }
 
-  // Firestore의 장바구니 아이템 스트림에 구독하여 상태를 업데이트하는 함수
+// Firestore의 장바구니 아이템 스트림에 구독하여 상태를 업데이트하는 함수
   void _subscribeToCartItems() {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우
+      state = []; // 상태를 빈 리스트로 초기화
+      return; // 함수 종료
+    }
+
     // 장바구니 아이템 스트림을 구독하고, 데이터가 변경되면 상태를 업데이트
     _cartItemsSubscription =
-        cartItemRepository.cartItemsStream().listen((cartItems) {
-      state = cartItems;
-      // 전체 체크박스 상태 업데이트
-      _updateAllCheckedState(cartItems);
-    });
+        cartItemRepository.cartItemsStream().listen((cartItems) { // 장바구니 아이템 스트림을 구독
+          state = cartItems; // 상태를 가져온 장바구니 아이템으로 업데이트
+          _updateAllCheckedState(cartItems); // 모든 체크 상태를 업데이트
+        }, onError: (error) { // 에러 발생 시
+          state = []; // 상태를 빈 리스트로 초기화
+        });
   }
 
-  // Firestore에서 장바구니 아이템 목록을 불러와 상태를 업데이트하는 함수
+// Firestore에서 장바구니 아이템 목록을 불러와 상태를 업데이트하는 함수
   Future<void> loadCartItems() async {
-    // Firestore에서 장바구니 아이템 목록을 가져와 상태를 업데이트
-    state = await cartItemRepository.getCartItems();
-    // 전체 체크박스 상태 업데이트
-    _updateAllCheckedState(state);
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우
+      state = []; // 상태를 빈 리스트로 초기화
+      return; // 함수 종료
+    }
+
+    state = await cartItemRepository.getCartItems(); // Firestore에서 장바구니 아이템 목록을 불러와 상태를 업데이트
+    _updateAllCheckedState(state); // 모든 체크 상태를 업데이트
   }
 
   // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수

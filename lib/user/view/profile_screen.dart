@@ -42,6 +42,7 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 프로필 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../../product/provider/product_all_providers.dart';
 import '../provider/profile_state_provider.dart';
 import 'login_screen.dart';
 
@@ -63,21 +64,22 @@ class ProfileMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     with WidgetsBindingObserver {
-  // 큰 배너를 위한 페이지 컨트롤러
-  late PageController _largeBannerPageController;
 
-  // 큰 배너를 자동 스크롤하는 클래스
-  late BannerAutoScrollClass _largeBannerAutoScroll;
+  // 첫 번째 작은 배너를 위한 페이지 컨트롤러
+  late PageController _small1BannerPageController;
+
+  // 첫 번째 작은 배너를 자동 스크롤하는 클래스
+  late BannerAutoScrollClass _small1BannerAutoScroll;
 
   // 배너 이미지의 총 개수를 저장하는 변수
   int bannerImageCount = 3;
 
   // 배너 클릭 시 이동할 URL 리스트를 정의함.
   // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 큰 배너 클릭 시 이동할 URL 목록
-  final List<String> largeBannerLinks = [
-    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
-    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
+  // 첫 번째 작은 배너 클릭 시 이동할 URL 목록
+  final List<String> small1BannerLinks = [
+    'https://www.coupang.com', // 첫 번째 배너 클릭 시 쿠팡으로 이동
+    'https://www.temu.com/kr', // 두 번째 배너 클릭 시 테무로 이동
   ];
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
@@ -112,7 +114,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     // 'ref'를 사용하여 'profileScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(profileScrollPositionProvider.notifier).state =
+    ref.read(profileMainScrollPositionProvider.notifier).state =
         currentScrollPosition;
   }
 
@@ -134,7 +136,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(profileScrollPositionProvider);
+        double savedScrollPosition = ref.read(profileMainScrollPositionProvider);
         // profileScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         profileScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -149,15 +151,15 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
     profileScreenPointScrollController.addListener(_updateScrollPosition);
 
-    // 큰 배너에 대한 PageController 및 AutoScroll 초기화
-    // 'profileLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController =
-        PageController(initialPage: ref.read(profileLargeBannerPageProvider));
+    // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
+    // 'cardiganMainSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
+    _small1BannerPageController = PageController(
+        initialPage: ref.read(profileMainSmall1BannerPageProvider));
 
-    // 큰 배너를 자동으로 스크롤하는 기능 초기화
-    _largeBannerAutoScroll = BannerAutoScrollClass(
-      pageController: _largeBannerPageController,
-      currentPageProvider: profileLargeBannerPageProvider,
+    // 작은 배너1을 자동으로 스크롤하는 기능 초기화
+    _small1BannerAutoScroll = BannerAutoScrollClass(
+      pageController: _small1BannerPageController,
+      currentPageProvider: profileMainSmall1BannerPageProvider,
       itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
     );
 
@@ -167,8 +169,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 마이페이지 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 마이페이지 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
-        ref.read(profileLargeBannerPageProvider.notifier).state = 0;
-        ref.read(profileScrollPositionProvider.notifier).state =
+        ref.read(profileMainSmall1BannerPageProvider.notifier).state = 0;
+        ref.read(profileMainScrollPositionProvider.notifier).state =
             0.0; // 마이페이지 화면 자체의 스크롤 위치 인덱스를 초기화
       }
     });
@@ -181,7 +183,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
 
     // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
     Future.delayed(Duration.zero, () {
-      _largeBannerAutoScroll.startAutoScroll();
+      _small1BannerAutoScroll.startAutoScroll();
     });
   }
 
@@ -197,10 +199,10 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     }
     // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
     if (state == AppLifecycleState.resumed) {
-      _largeBannerAutoScroll.startAutoScroll();
+      _small1BannerAutoScroll.startAutoScroll();
       // 앱이 백그라운드로 이동할 때, 배너의 자동 스크롤을 중지
     } else if (state == AppLifecycleState.paused) {
-      _largeBannerAutoScroll.stopAutoScroll();
+      _small1BannerAutoScroll.stopAutoScroll();
     }
   }
 
@@ -215,8 +217,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     WidgetsBinding.instance.removeObserver(this);
 
     // 각 배너 관련 리소스 해제
-    _largeBannerPageController.dispose();
-    _largeBannerAutoScroll.stopAutoScroll();
+    _small1BannerPageController.dispose();
+    _small1BannerAutoScroll.stopAutoScroll();
 
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
@@ -254,17 +256,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onLargeBannerTap(BuildContext context, int index) async {
-      // largeBannerLinks 리스트에서 index에 해당하는 URL을 가져옴.
-      final url = largeBannerLinks[index];
 
-      // 주어진 URL을 열 수 있는지 확인함.
+    void _onSmall1BannerTap(BuildContext context, int index) async {
+      final url = small1BannerLinks[index];
       if (await canLaunchUrl(Uri.parse(url))) {
-        // URL을 열 수 있다면, 해당 URL을 염.
         await launchUrl(Uri.parse(url));
       } else {
-        // URL을 열 수 없다면 예외를 던짐.
         throw '네트워크 오류';
       }
     }
@@ -320,77 +317,35 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
-                            // 큰 배너 섹션을 카드뷰로 구성
+                            SizedBox(height: 10), // 높이 임의로 10으로 간격 설정
                             CommonCardView(
-                              // 카드뷰의 내용을 설정
                               content: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정
-                                height: 200,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 설정
+                                // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
+                                height: 30,
+                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
                                 child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
+                                    ProfileMainSmall1BannerImage>(
                                   context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
                                   ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                      profileLargeBannerPageProvider,
-                                  // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
-                                  pageController: _largeBannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 링크들을 전달
-                                  bannerLinks: largeBannerLinks,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
+                                  profileMainSmall1BannerPageProvider,
+                                  pageController: _small1BannerPageController,
+                                  bannerAutoScroll: _small1BannerAutoScroll,
+                                  bannerLinks: small1BannerLinks,
                                   bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onLargeBannerTap,
+                                  profileMainSmall1BannerImagesProvider,
+                                  onPageTap: _onSmall1BannerTap,
                                 ),
                               ),
-                              backgroundColor: LIGHT_PURPLE_COLOR,
+                              backgroundColor: LIGHT_SKY_BLUE_COLOR,
                               // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
                               elevation: 4,
                               // 카드뷰 그림자 깊이
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 20), // 높이 임의로 3000으로 간격 설정
                             Text('PROFILE 내용'),
-                            // 로그인/로그아웃 버튼
-                            ElevatedButton(
-                              onPressed: () async {
-                                // 로그아웃 처리
-                                await FirebaseAuth.instance.signOut();
-                                // 페이지 인덱스를 0으로 초기화
-                                ref.read(currentPageProvider.notifier).state =
-                                    0;
-                                // 로그아웃 후 로그인 화면으로 이동
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (_) => LoginScreen()));
-                              },
-                              child: Text('로그아웃'),
-                            ),
-                            // 항상 표시되는 회원가입 버튼
-                            ElevatedButton(
-                              onPressed: () {
-                                // 회원가입 페이지로 이동
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) =>
-                                        LoginScreen())); // 여기에 회원가입 화면 경로 필요
-                              },
-                              child: Text('회원가입'),
-                            ),
-                            // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
-                            // ElevatedButton(
-                            //   onPressed: () async {
-                            //     await createFirestoreDocuments();
-                            //   },
-                            //   child: Text('FireStore 문서 생성'),
-                            // ),
                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
                         ),
@@ -416,184 +371,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     );
     // ------ 화면구성 끝
   }
-
-
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
-
-// ------ Firestore 문서를 생성하는 함수 구현 시작
-  Future<void> createFirestoreDocuments() async {
-    final firestore = FirebaseFirestore.instance;
-    final batch = firestore.batch();
-    const int originalPrice = 10000;
-
-    final Map<int, String> briefIntroductionMap = {
-      1: '해당 상품은 티셔츠입니다.',
-      2: '해당 상품은 블라우스입니다.',
-      3: '해당 상품은 맨투맨입니다.',
-      4: '해당 상품은 니트입니다.',
-      5: '해당 상품은 폴라티입니다.',
-      6: '해당 상품은 원피스입니다.',
-      7: '해당 상품은 팬츠입니다.',
-      8: '해당 상품은 청바지입니다.',
-      9: '해당 상품은 스커트입니다.',
-      10: '해당 상품은 패딩입니다.',
-      11: '해당 상품은 코트입니다.',
-      12: '해당 상품은 가디건입니다.',
-    };
-
-    final Map<int, String> categoryMap = {
-      1: 'shirt',
-      2: 'blouse',
-      3: 'mtm',
-      4: 'neat',
-      5: 'pola',
-      6: 'onepiece',
-      7: 'pants',
-      8: 'jean',
-      9: 'skirt',
-      10: 'paeding',
-      11: 'coat',
-      12: 'cardigan',
-    };
-
-    final Map<int, String> typeMap = {
-      1: 'new',
-      2: 'best',
-      3: 'sale',
-      4: 'spring',
-      5: 'summer',
-      6: 'autumn',
-      7: 'winter',
-    };
-
-    final Map<int, String> categoryTextMap = {
-      1: '티셔츠',
-      2: '블라우스',
-      3: '맨투맨',
-      4: '니트',
-      5: '폴라티',
-      6: '원피스',
-      7: '팬츠',
-      8: '청바지',
-      9: '스커트',
-      10: '패딩',
-      11: '코트',
-      12: '가디건',
-    };
-
-    final Map<int, String> detailImagePathMap = {
-      1: 'shirt',
-      2: 'blouse',
-      3: 'mtm',
-      4: 'neat',
-      5: 'pola',
-      6: 'onepiece',
-      7: 'pants',
-      8: 'jean',
-      9: 'skirt',
-      10: 'paeding',
-      11: 'coat',
-      12: 'cardigan',
-    };
-
-    for (int i = 1; i <= 12; i++) {
-      String docId = 'a$i';
-      DocumentReference docRef = firestore.collection('couturier').doc(docId);
-      String briefIntroduction = briefIntroductionMap[i] ?? '해당 상품은 설명이 없습니다.';
-      String category = categoryMap[i] ?? '';
-      String categoryText = categoryTextMap[i] ?? '해당 상품은 카테고리가 없습니다.';
-      String detailImagePath = detailImagePathMap[i] ?? '';
-
-      for (int j = 1; j <= 7; j++) {
-        String subCollectionId = 'a${i}b$j';
-        CollectionReference subCollectionRef = docRef.collection(subCollectionId);
-        String type = typeMap[j] ?? '';
-
-        for (int k = 0; k < 15; k++) {
-          int discountPercent = 10 + k; // k=0이면 10, k=1이면 11, ...
-          int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
-          String subDocId = 'a${i}b${j}_$k';
-          String productNumber = 'A${i}B${j}_${k.toString().padLeft(3, '0')}';
-          DocumentReference subDocRef = subCollectionRef.doc(subDocId);
-
-          String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
-
-          // // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
-          // batch.update(subDocRef, {
-          //   'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
-          //   'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
-          //   'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
-          //   'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
-          //   'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
-          // });
-
-          // 해당 필드값으로 세팅하는 매서드 (SetOptions(merge: true)); // merge 옵션 사용을 해서 기존것이 날라가지않고 유지됨)
-          batch.set(subDocRef, {
-            'brief_introduction': briefIntroduction,
-            'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
-            'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
-            'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
-            'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
-            'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
-            'clothes_size1': 'S',
-            'clothes_size2': 'M',
-            'clothes_size3': 'L',
-            'clothes_size4': 'XL',
-            'color1_text': 'black',
-            'color2_text': 'brown',
-            'color3_text': 'lavender',
-            'color4_text': 'pink',
-            'color5_text': 'yellow',
-            // 상품 상세 화면 내 상단 이미지 페이지 뷰 관련 이미지 데이터
-            'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
-            'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
-            'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
-            'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
-            'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
-            // 상품 상세 화면 내 상품 정보 관련 이미지 데이터
-            'detail_color_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image1.png?alt=media',
-            'detail_color_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image2.png?alt=media',
-            'detail_color_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image3.png?alt=media',
-            'detail_color_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image4.png?alt=media',
-            'detail_color_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image5.png?alt=media',
-            'detail_details_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fdetails_info%2Fdetail_details_image1.png?alt=media',
-            'detail_fabric_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Ffabric_info%2Fdetail_fabric_image1.png?alt=media',
-            'detail_intro_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image1.png?alt=media',
-            'detail_intro_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image2.png?alt=media',
-            'detail_intro_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image3.png?alt=media',
-            'detail_intro_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image4.png?alt=media',
-            'detail_intro_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image5.png?alt=media',
-            'detail_size_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media',
-            'detail_washing_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fwashing_info%2Fdetail_washing_image1.png?alt=media',
-            // 'discount_percent': discountPercent,
-            // 'discount_price': discountPrice,
-            // 'original_price': originalPrice,
-            'thumbnails': thumbnailUrl, // thumbnails 필드값 추가
-            'category': categoryText, // category 필드값 추가
-            'product_number': productNumber, // product_number 필드 추가
-          }, SetOptions(merge: true)); // merge 옵션 사용
-
-          // // 장바구니 관련 필드들 삭제
-          // batch.update(subDocRef, {
-          //   'cart_thumbnails': FieldValue.delete(),
-          //   'cart_brief_introduction': FieldValue.delete(),
-          //   'cart_original_price': FieldValue.delete(),
-          //   'cart_discount_price': FieldValue.delete(),
-          //   'cart_discount_percent': FieldValue.delete(),
-          //   'cart_selected_color_text': FieldValue.delete(),
-          //   'cart_selected_color_image': FieldValue.delete(),
-          //   'cart_selected_size': FieldValue.delete(),
-          //   'cart_selected_count': FieldValue.delete(),
-          //   'cart_timestamp': FieldValue.delete(),
-          // });
-          // SetOptions(merge: true); // merge 옵션 사용
-        }
-      }
-    }
-    await batch.commit();
-  }
-// ------ Firestore 문서를 생성하는 함수 구현 끝
-
 }
 // _ProfileMainScreenState 클래스 끝

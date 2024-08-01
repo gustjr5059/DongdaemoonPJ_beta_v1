@@ -29,6 +29,7 @@ import '../../home/provider/home_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
+import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
@@ -526,6 +527,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0;
   ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
   // 찜 목록 화면 관련 초기화 부분 끝
+
+  // 마이페이지 화면 관련 초기화 부분 시작
+  ref.read(profileMainScrollPositionProvider.notifier).state =
+  0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(profileMainSmall1BannerPageProvider.notifier).state = 0; // 마이페이지 소배너 페이지뷰 초기화
+  // 머아패아자 화면 관련 초기화 부분 끝
 
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작

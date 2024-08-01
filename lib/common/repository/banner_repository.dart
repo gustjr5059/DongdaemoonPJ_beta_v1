@@ -573,3 +573,40 @@ class CardiganMainSmall1BannerRepository {
 }
 
 // -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
+
+// -------- 마이페이지 메인 화면 작은 배너 관련 레퍼지토리 내용 시작
+// 'ProfileMainSmall1BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
+class ProfileMainSmall1BannerRepository {
+  // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
+  // 이 인스턴스를 통해 Firestore 데이터베이스에 접근함.
+  final FirebaseFirestore firestore;
+
+  // 생성자에서는 FirebaseFirestore의 인스턴스를 받아 'firestore' 변수에 할당함.
+  ProfileMainSmall1BannerRepository(this.firestore);
+
+  // 'fetchBannerImages' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
+  // 이 메서드는 List<ProfileMainSmall1BannerImage> 타입의 Future를 반환함.
+  Future<List<ProfileMainSmall1BannerImage>> fetchBannerImages() async {
+    // 'item' 컬렉션 내의 'banners' 문서에 접근하여 데이터를 가져옴.
+    DocumentSnapshot snapshot =
+    await firestore.collection('item').doc('banners').get();
+
+    // 문서가 존재하는 경우 실행됨.
+    if (snapshot.exists) {
+      // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 ProfileMainSmall1BannerImage 객체로 변환함.
+      return [
+        ProfileMainSmall1BannerImage.fromJson({'imageUrl': data['mb34']}),
+        ProfileMainSmall1BannerImage.fromJson({'imageUrl': data['mb35']}),
+        ProfileMainSmall1BannerImage.fromJson({'imageUrl': data['mb36']})
+      ]
+          .whereType<ProfileMainSmall1BannerImage>()
+          .toList(); // 생성된 객체들을 List로 변환하여 반환함.
+    }
+    // 문서가 존재하지 않는 경우 예외를 발생시킴.
+    throw Exception('Failed to fetch banner images');
+  }
+}
+
+// -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 끝

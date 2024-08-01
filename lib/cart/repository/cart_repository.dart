@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore를 
 import 'package:firebase_storage/firebase_storage.dart'; // Firebase Storage를 사용하기 위해 import
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 
+
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 시작
 // CartItemRepository 클래스는 Firestore와의 데이터 통신을 담당하는 역할
 class CartItemRepository {
@@ -15,6 +16,10 @@ class CartItemRepository {
 
   // Firestore에서 장바구니 아이템 개수 가져오는 함수 - Firestore에서 'cart_item' 컬렉션의 문서 개수를 반환
   Future<int> getCartItemCount() async {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
     final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
     final querySnapshot = await firestore.collection('cart_item').doc(userId).collection('items').get(); // 'cart_item' 컬렉션의 모든 문서를 가져옴
     return querySnapshot.docs.length; // 문서의 개수를 반환
@@ -22,7 +27,11 @@ class CartItemRepository {
 
   // 이미지 URL을 Firebase Storage에 업로드하는 함수 - 주어진 이미지 URL을 가져와 Firebase Storage에 저장하고, 다운로드 URL을 반환
   Future<String> uploadImage(String imageUrl, String storagePath) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
     final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
     final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
     final ref = storage.ref().child('$userId/$storagePath'); // Firebase Storage에 저장할 경로 생성
@@ -34,7 +43,11 @@ class CartItemRepository {
   // 장바구니에 아이템 추가하는 함수 - 선택된 색상, 사이즈, 수량 정보를 포함하여 장바구니 아이템을 Firestore에 추가
   Future<void> addToCartItem(ProductContent product, String? selectedColorText,
       String? selectedColorUrl, String? selectedSize, int quantity) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
 
     // Firestore에 저장할 데이터 준비
     final data = {
@@ -78,7 +91,11 @@ class CartItemRepository {
   Future<List<Map<String, dynamic>>> getCartItems() async {
     // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
     // - 장바구니 화면 내 timestamp인 필드 데이터를 가지고 내림차순으로 상품 데이터를 정렬하여 최신 데이터가 제일 상단에 위치하도록 함
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
     final querySnapshot = await firestore.collection('cart_item').doc(userId).collection('items').orderBy('timestamp', descending: true).get(); // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
     return querySnapshot.docs.map((doc) { // 가져온 문서들을 순회하여 리스트로 반환
       final data = doc.data(); // 문서 데이터를 가져옴
@@ -89,21 +106,33 @@ class CartItemRepository {
 
   // Firestore에서 가져온 수량 데이터를 업데이트하는 함수
   Future<void> updateCartItemQuantity(String docId, int newQuantity) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
     await firestore.collection('cart_item').doc(userId).collection('items').doc(docId).update({ // 주어진 문서 ID에 해당하는 문서의 'selected_count' 필드를 업데이트함
-      'selected_count': newQuantity,
+      'selected_count': newQuantity, // 새로운 수량으로 업데이트
     });
   }
 
   // 장바구니 화면 내에서 상품 아이템을 '삭제' 버튼 클릭 시, Firestore에서 삭제되도록 하는 함수
   Future<void> removeCartItem(String docId) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
     await firestore.collection('cart_item').doc(userId).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제
   }
 
   // Firestore에서 장바구니 아이템 스트림을 가져오는 함수
   Stream<List<Map<String, dynamic>>> cartItemsStream() {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
     // Firestore의 'cart_item' 컬렉션을 timestamp 내림차순으로 정렬하여 가져옴.
     return firestore.collection('cart_item').doc(userId).collection('items').orderBy('timestamp', descending: true).snapshots().map((querySnapshot) {
       // 쿼리 결과를 문서 목록으로 변환.
@@ -121,8 +150,12 @@ class CartItemRepository {
 
   // Firestore에서 특정 아이템의 체크 상태를 업데이트하는 함수인 updateCartItemChecked
   Future<void> updateCartItemChecked(String id, bool checked) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
-    await firestore.collection('cart_item').doc(userId).collection('items').doc(id).update({'bool_checked': checked});
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+      throw Exception('User not logged in'); // 예외 발생
+    }
+    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
+    await firestore.collection('cart_item').doc(userId).collection('items').doc(id).update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
   }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝

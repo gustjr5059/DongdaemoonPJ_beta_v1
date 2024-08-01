@@ -1,4 +1,5 @@
 // Firebase의 사용자 인증 기능을 사용하기 위한 패키지를 임포트합니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
@@ -762,6 +763,14 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
           // 카카오 항목
           _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
               'asset/img/misc/drawer_img/kakao.logo.png'),
+          SizedBox(height: 40), // 간격을 위한 SizedBox
+          // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
+          // ElevatedButton(
+          //   onPressed: () async {
+          //     await createFirestoreDocuments();
+          //   },
+          //   child: Text('FireStore 문서 생성'),
+          // ),
         ],
       ),
     ),
@@ -798,3 +807,177 @@ Widget _buildListTile(
   );
 }
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 끝
+
+// ------ Firestore 문서를 생성하는 함수 구현 시작
+Future<void> createFirestoreDocuments() async {
+  final firestore = FirebaseFirestore.instance;
+  final batch = firestore.batch();
+  const int originalPrice = 10000;
+
+  final Map<int, String> briefIntroductionMap = {
+    1: '해당 상품은 티셔츠입니다.',
+    2: '해당 상품은 블라우스입니다.',
+    3: '해당 상품은 맨투맨입니다.',
+    4: '해당 상품은 니트입니다.',
+    5: '해당 상품은 폴라티입니다.',
+    6: '해당 상품은 원피스입니다.',
+    7: '해당 상품은 팬츠입니다.',
+    8: '해당 상품은 청바지입니다.',
+    9: '해당 상품은 스커트입니다.',
+    10: '해당 상품은 패딩입니다.',
+    11: '해당 상품은 코트입니다.',
+    12: '해당 상품은 가디건입니다.',
+  };
+
+  final Map<int, String> categoryMap = {
+    1: 'shirt',
+    2: 'blouse',
+    3: 'mtm',
+    4: 'neat',
+    5: 'pola',
+    6: 'onepiece',
+    7: 'pants',
+    8: 'jean',
+    9: 'skirt',
+    10: 'paeding',
+    11: 'coat',
+    12: 'cardigan',
+  };
+
+  final Map<int, String> typeMap = {
+    1: 'new',
+    2: 'best',
+    3: 'sale',
+    4: 'spring',
+    5: 'summer',
+    6: 'autumn',
+    7: 'winter',
+  };
+
+  final Map<int, String> categoryTextMap = {
+    1: '티셔츠',
+    2: '블라우스',
+    3: '맨투맨',
+    4: '니트',
+    5: '폴라티',
+    6: '원피스',
+    7: '팬츠',
+    8: '청바지',
+    9: '스커트',
+    10: '패딩',
+    11: '코트',
+    12: '가디건',
+  };
+
+  final Map<int, String> detailImagePathMap = {
+    1: 'shirt',
+    2: 'blouse',
+    3: 'mtm',
+    4: 'neat',
+    5: 'pola',
+    6: 'onepiece',
+    7: 'pants',
+    8: 'jean',
+    9: 'skirt',
+    10: 'paeding',
+    11: 'coat',
+    12: 'cardigan',
+  };
+
+  for (int i = 1; i <= 12; i++) {
+    String docId = 'a$i';
+    DocumentReference docRef = firestore.collection('couturier').doc(docId);
+    String briefIntroduction = briefIntroductionMap[i] ?? '해당 상품은 설명이 없습니다.';
+    String category = categoryMap[i] ?? '';
+    String categoryText = categoryTextMap[i] ?? '해당 상품은 카테고리가 없습니다.';
+    String detailImagePath = detailImagePathMap[i] ?? '';
+
+    for (int j = 1; j <= 7; j++) {
+      String subCollectionId = 'a${i}b$j';
+      CollectionReference subCollectionRef = docRef.collection(subCollectionId);
+      String type = typeMap[j] ?? '';
+
+      for (int k = 0; k < 15; k++) {
+        int discountPercent = 10 + k; // k=0이면 10, k=1이면 11, ...
+        int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
+        String subDocId = 'a${i}b${j}_$k';
+        String productNumber = 'A${i}B${j}_${k.toString().padLeft(3, '0')}';
+        DocumentReference subDocRef = subCollectionRef.doc(subDocId);
+
+        String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
+
+        // // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
+        // batch.update(subDocRef, {
+        //   'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+        //   'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+        //   'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+        //   'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+        //   'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+        // });
+
+        // 해당 필드값으로 세팅하는 매서드 (SetOptions(merge: true)); // merge 옵션 사용을 해서 기존것이 날라가지않고 유지됨)
+        batch.set(subDocRef, {
+          'brief_introduction': briefIntroduction,
+          'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
+          'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
+          'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
+          'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
+          'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
+          'clothes_size1': 'S',
+          'clothes_size2': 'M',
+          'clothes_size3': 'L',
+          'clothes_size4': 'XL',
+          'color1_text': 'black',
+          'color2_text': 'brown',
+          'color3_text': 'lavender',
+          'color4_text': 'pink',
+          'color5_text': 'yellow',
+          // 상품 상세 화면 내 상단 이미지 페이지 뷰 관련 이미지 데이터
+          'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+          'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+          'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+          'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+          'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+          // 상품 상세 화면 내 상품 정보 관련 이미지 데이터
+          'detail_color_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image1.png?alt=media',
+          'detail_color_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image2.png?alt=media',
+          'detail_color_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image3.png?alt=media',
+          'detail_color_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image4.png?alt=media',
+          'detail_color_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image5.png?alt=media',
+          'detail_details_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fdetails_info%2Fdetail_details_image1.png?alt=media',
+          'detail_fabric_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Ffabric_info%2Fdetail_fabric_image1.png?alt=media',
+          'detail_intro_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image1.png?alt=media',
+          'detail_intro_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image2.png?alt=media',
+          'detail_intro_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image3.png?alt=media',
+          'detail_intro_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image4.png?alt=media',
+          'detail_intro_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image5.png?alt=media',
+          'detail_size_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media',
+          'detail_washing_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fwashing_info%2Fdetail_washing_image1.png?alt=media',
+          // 'discount_percent': discountPercent,
+          // 'discount_price': discountPrice,
+          // 'original_price': originalPrice,
+          'thumbnails': thumbnailUrl, // thumbnails 필드값 추가
+          'category': categoryText, // category 필드값 추가
+          'product_number': productNumber, // product_number 필드 추가
+        }, SetOptions(merge: true)); // merge 옵션 사용
+
+        // // 장바구니 관련 필드들 삭제
+        // batch.update(subDocRef, {
+        //   'cart_thumbnails': FieldValue.delete(),
+        //   'cart_brief_introduction': FieldValue.delete(),
+        //   'cart_original_price': FieldValue.delete(),
+        //   'cart_discount_price': FieldValue.delete(),
+        //   'cart_discount_percent': FieldValue.delete(),
+        //   'cart_selected_color_text': FieldValue.delete(),
+        //   'cart_selected_color_image': FieldValue.delete(),
+        //   'cart_selected_size': FieldValue.delete(),
+        //   'cart_selected_count': FieldValue.delete(),
+        //   'cart_timestamp': FieldValue.delete(),
+        // });
+        // SetOptions(merge: true); // merge 옵션 사용
+      }
+    }
+  }
+  await batch.commit();
+}
+// ------ Firestore 문서를 생성하는 함수 구현 끝

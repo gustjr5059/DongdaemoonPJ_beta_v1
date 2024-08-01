@@ -256,3 +256,22 @@ class CardiganMainSmall1BannerImage extends CommonBannerImage {
 }
 
 // ----- 각 카테고리 메인 화면 작은 배너 관련 클래스 내용 끝
+
+// ----- 마이페이지 메인 화면 작은 배너 관련 클래스 내용 시작
+// 'ProfileMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'ProfileMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class ProfileMainSmall1BannerImage extends CommonBannerImage {
+  ProfileMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'ProfileMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory ProfileMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'ProfileMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return ProfileMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// ----- 마이페이지 메인 화면 작은 배너 관련 클래스 내용 끝
+

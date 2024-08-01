@@ -331,35 +331,35 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                   children: [
                                     SizedBox(height: 5),
                                     // CommonCardView 위젯을 사용하여 배너를 표시
-                                    CommonCardView(
-                                      content: SizedBox(
-                                        height: 200,
-                                        // buildCommonBannerPageViewSection 함수를 호출하여 배너 페이지 뷰 섹션을 빌드
-                                        child: buildCommonBannerPageViewSection<
-                                            AllLargeBannerImage>(
-                                          context: context,
-                                          ref: ref,
-                                          currentPageProvider:
-                                              cartLargeBannerPageProvider,
-                                          pageController:
-                                              _largeBannerPageController,
-                                          bannerAutoScroll:
-                                              _largeBannerAutoScroll,
-                                          bannerLinks: largeBannerLinks,
-                                          bannerImagesProvider:
-                                              allLargeBannerImagesProvider,
-                                          onPageTap: _onLargeBannerTap,
-                                        ),
-                                      ),
-                                      // 배경색을 LIGHT_PURPLE_COLOR로 설정
-                                      backgroundColor: LIGHT_PURPLE_COLOR,
-                                      // 그림자 크기를 4로 설정
-                                      elevation: 4,
-                                      // 패딩을 8로 설정
-                                      padding: const EdgeInsets.fromLTRB(
-                                          8.0, 8.0, 8.0, 8.0),
-                                    ),
-                                    SizedBox(height: 30),
+                                    // CommonCardView(
+                                    //   content: SizedBox(
+                                    //     height: 200,
+                                    //     // buildCommonBannerPageViewSection 함수를 호출하여 배너 페이지 뷰 섹션을 빌드
+                                    //     child: buildCommonBannerPageViewSection<
+                                    //         AllLargeBannerImage>(
+                                    //       context: context,
+                                    //       ref: ref,
+                                    //       currentPageProvider:
+                                    //           cartLargeBannerPageProvider,
+                                    //       pageController:
+                                    //           _largeBannerPageController,
+                                    //       bannerAutoScroll:
+                                    //           _largeBannerAutoScroll,
+                                    //       bannerLinks: largeBannerLinks,
+                                    //       bannerImagesProvider:
+                                    //           allLargeBannerImagesProvider,
+                                    //       onPageTap: _onLargeBannerTap,
+                                    //     ),
+                                    //   ),
+                                    //   // 배경색을 LIGHT_PURPLE_COLOR로 설정
+                                    //   backgroundColor: LIGHT_PURPLE_COLOR,
+                                    //   // 그림자 크기를 4로 설정
+                                    //   elevation: 4,
+                                    //   // 패딩을 8로 설정
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       8.0, 8.0, 8.0, 8.0),
+                                    // ),
+                                    SizedBox(height: 10),
                                     // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
                                     CartItemsList(),
                                   ],

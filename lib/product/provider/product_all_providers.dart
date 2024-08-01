@@ -623,3 +623,25 @@ final cardiganMainSmall1BannerImagesProvider =
 });
 // ------- 가디건 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 // ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 소배너 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝
+
+
+// ------- 마이페이지 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 시작
+// Firestore에서 작은 배너1 이미지 정보를 가져오기 위한 레포지토리 클래스의 인스턴스를 생성하는 프로바이더.
+final profileMainSmall1BannerRepositoryProvider =
+Provider<ProfileMainSmall1BannerRepository>((ref) {
+  // Firebase Firestore의 인스턴스를 생성자에 전달하여 ProfileMainSmall1BannerRepository 객체를 생성함.
+  // ProfileMainSmall1BannerRepository Firestore에서 배너 데이터를 가져오는 기능을 담당함.
+  return ProfileMainSmall1BannerRepository(FirebaseFirestore.instance);
+});
+
+// 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
+// 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
+final profileMainSmall1BannerImagesProvider =
+FutureProvider<List<ProfileMainSmall1BannerImage>>((ref) async {
+  // 위에서 정의한 profileMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
+  final repository = ref.watch(profileMainSmall1BannerRepositoryProvider);
+  // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
+  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<ProfileMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImages();
+});
+// ------- 마이페이지 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
