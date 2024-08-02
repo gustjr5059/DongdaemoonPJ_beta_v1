@@ -1,15 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
+import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart';
 import '../view/complete_payment_screen.dart';
 import '../view/order_postcode_search_screen.dart';
+
 
 // ------- 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 시작
 // UserInfoWidget 클래스는 구매자의 정보를 화면에 표시하는 역할을 담당.
@@ -672,12 +672,12 @@ class CompleteOrderButton extends ConsumerWidget {
               // 발주 완료 메시지를 스낵바로 표시
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다. 이메일이 전송되었습니다.')));
 
-              // 발주 완료 화면으로 이동, 현재 화면을 대체함
-              Navigator.pushReplacement(
+              // navigateToScreenAndRemoveUntil 함수를 사용하여 발주완료 화면으로 이동
+              navigateToScreenAndRemoveUntil(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CompletePaymentScreen(orderId: orderId), // 발주 ID를 전달
-                ),
+                ref,
+                CompletePaymentScreen(orderId: orderId), // 발주 ID를 전달
+                4, // 탭 인덱스 업데이트 (하단 탭 바 내 4개 버튼 모두 비활성화)
               );
             } : () {
               // 결제금액이 15,000원 미만일 경우 경고 메시지 표시

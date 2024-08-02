@@ -42,7 +42,9 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 프로필 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../../order/provider/order_all_providers.dart';
 import '../../product/provider/product_all_providers.dart';
+import '../layout/user_body_parts_layout.dart';
 import '../provider/profile_state_provider.dart';
 import 'login_screen.dart';
 
@@ -266,6 +268,9 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       }
     }
 
+    // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
+    final User? user = FirebaseAuth.instance.currentUser;
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -296,7 +301,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                   // AppBar의 제목을 '마이페이지'로 설정
                   leadingType: LeadingType.none,
                   // 버튼 없음.
-                  buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                  buttonCase: 1, // 1번 케이스 (버튼 없음)
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
@@ -317,11 +322,13 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 10), // 높이 임의로 10으로 간격 설정
+                            SizedBox(height: 2), // 높이 임의로 10으로 간격 설정
+                            if (user != null) UserProfileInfo(email: user.email!),
+                            SizedBox(height: 10),
                             CommonCardView(
                               content: SizedBox(
                                 // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
-                                height: 30,
+                                height: 50,
                                 // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
                                 child: buildCommonBannerPageViewSection<
                                     ProfileMainSmall1BannerImage>(
@@ -344,9 +351,9 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
+                            SizedBox(height: 10), // 높이 임의로 3000으로 간격 설정
+                            UserProfileOptions(), // 각 화면으로 이동할 수 있는 옵션 구현
                             SizedBox(height: 20), // 높이 임의로 3000으로 간격 설정
-                            Text('PROFILE 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
                           ],
                         ),
                       );
@@ -359,7 +366,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
           ),
           // buildTopButton 함수는 주어진 context와 profileScreenPointScrollController를 사용하여
           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-          buildTopButton(context, profileScreenPointScrollController),
+          // buildTopButton(context, profileScreenPointScrollController),
         ],
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
