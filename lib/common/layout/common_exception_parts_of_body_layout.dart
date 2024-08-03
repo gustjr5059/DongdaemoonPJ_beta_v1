@@ -26,6 +26,11 @@ import '../../home/provider/home_state_provider.dart';
 import '../../home/view/home_screen.dart';
 
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
+import '../../manager/announcement/view/announce_screen.dart';
+import '../../manager/message/view/message_screen.dart';
+import '../../manager/orderlist/view/orderlist_screen.dart';
+import '../../manager/review/view/review_screen.dart';
+import '../../manager/wishlist/view/wishlist_screen.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
 
@@ -694,16 +699,17 @@ Widget buildTopBarList(
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
+  // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
+  final bool isAdmin = userEmail == 'capjs06@gmail.com';
 
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
     // SingleChildScrollView를 자식으로 사용하여 드로어 내용물을 스크롤 가능하게 함.
     child: SingleChildScrollView(
-      padding: EdgeInsets.zero,
-      // SingleChildScrollView의 패딩을 0으로 설정하여 상단 여백을 제거함.
+      padding: EdgeInsets.zero, // SingleChildScrollView의 패딩을 0으로 설정하여 상단 여백을 제거함.
       child: Column(
         children: <Widget>[
-          // 드로어의 헤더 부분을 구성합니다. 헤더는 사용자 정보를 표시하는 영역.
+          // 드로어의 헤더 부분을 구성. 헤더는 사용자 정보를 표시하는 영역.
           DrawerHeader(
             decoration: BoxDecoration(color: DRAWER_COLOR), // 헤더 배경색을 설정함.
             child: Column(
@@ -735,12 +741,9 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.logout, color: Colors.white),
-                      // 로그아웃 아이콘
-                      SizedBox(width: 10),
-                      // 아이콘과 텍스트 사이의 간격
-                      Text('Logout', style: TextStyle(color: Colors.white)),
-                      // 로그아웃 텍스트
+                      Icon(Icons.logout, color: Colors.white), // 로그아웃 아이콘
+                      SizedBox(width: 10), // 아이콘과 텍스트 사이의 간격
+                      Text('Logout', style: TextStyle(color: Colors.white)), // 로그아웃 텍스트
                     ],
                   ),
                 ),
@@ -748,48 +751,91 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
             ),
           ),
           SizedBox(height: 20), // 간격을 위한 SizedBox
-          // 네이버 카페 항목
-          _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo',
-              'asset/img/misc/drawer_img/navercafe.logo.png'),
-          SizedBox(height: 20), // 간격을 위한 SizedBox
-          // 유튜브 항목
-          _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO',
-              'asset/img/misc/drawer_img/youtube.logo.png'),
-          SizedBox(height: 20), // 간격을 위한 SizedBox
-          // 인스타그램 항목
-          _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo',
-              'asset/img/misc/drawer_img/instagram.logo.png'),
-          SizedBox(height: 20), // 간격을 위한 SizedBox
-          // 카카오 항목
-          _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
-              'asset/img/misc/drawer_img/kakao.logo.png'),
-          SizedBox(height: 40), // 간격을 위한 SizedBox
-          // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
-          // ElevatedButton(
-          //   onPressed: () async {
-          //     await createFirestoreDocuments();
-          //   },
-          //   child: Text('FireStore 문서 생성'),
-          // ),
+          if (isAdmin) ...[
+            // 관리자 계정일 때 드로워 항목들
+            _buildAdminListTile(
+              context,
+              Icons.star,
+              '리뷰 관리',
+              ManagerReviewMainScreen(),
+            ),
+            SizedBox(width: 20),
+            _buildAdminListTile(
+              context,
+              Icons.message,
+              '쪽지 관리',
+              ManagerMessageMainScreen(),
+            ),
+            SizedBox(width: 20),
+            _buildAdminListTile(
+              context,
+              Icons.receipt_long_outlined,
+              '발주내역 관리',
+              ManagerOrderlistMainScreen(),
+            ),
+            SizedBox(width: 20),
+            _buildAdminListTile(
+              context,
+              Icons.favorite,
+              '찜 목록 관리',
+              ManagerWishlistMainScreen(),
+            ),
+            SizedBox(width: 20),
+            _buildAdminListTile(
+              context,
+              Icons.announcement,
+              '공지사항 관리',
+              ManagerAnnounceMainScreen(),
+            ),
+          ] else ...[
+            // 일반 사용자 계정일 때 드로워 항목들
+            _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo',
+                'asset/img/misc/drawer_img/navercafe.logo.png'),
+            SizedBox(height: 20), // 간격을 위한 SizedBox
+            _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO',
+                'asset/img/misc/drawer_img/youtube.logo.png'),
+            SizedBox(height: 20), // 간격을 위한 SizedBox
+            _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo',
+                'asset/img/misc/drawer_img/instagram.logo.png'),
+            SizedBox(height: 20), // 간격을 위한 SizedBox
+            _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
+                'asset/img/misc/drawer_img/kakao.logo.png'),
+            SizedBox(height: 40), // 간격을 위한 SizedBox
+          ],
         ],
       ),
     ),
   );
 }
-
 // ------ buildCommonDrawer 위젯 내용 구현 끝
+
+// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
+Widget _buildAdminListTile(
+    BuildContext context, IconData icon, String title, Widget screen) {
+  // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
+  return ListTile(
+    leading: Icon(icon, color: Colors.black), // 아이콘을 왼쪽에 배치
+    title: Text(title), // 제목을 설정
+    onTap: () {
+      // 탭 이벤트 핸들러
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => screen), // 새로운 화면으로 이동
+      );
+    },
+  );
+}
+// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 끝
 
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
 Widget _buildListTile(
     BuildContext context, String title, String url, String leadingImage) {
   // ListTile 위젯 반환
   return ListTile(
-    // 이미지 리딩
-    leading: Image.asset(leadingImage, width: 40),
-    // 타이틀 텍스트
-    title: Text(title),
-    // 탭 핸들러
+    leading: Image.asset(leadingImage, width: 40), // 이미지를 왼쪽에 배치
+    title: Text(title), // 제목을 설정
     onTap: () async {
+      // 탭 이벤트 핸들러
       try {
         // URL을 파싱하여 웹 페이지 열기 시도
         final bool launched = await launchUrl(Uri.parse(url));

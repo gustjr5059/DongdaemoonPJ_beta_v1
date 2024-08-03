@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
+import '../../announcement/provider/announce_state_provider.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../cart/view/cart_screen.dart';
 import '../../common/const/colors.dart';
@@ -26,9 +27,12 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
+import '../../inquiry/provider/inquiry_state_provider.dart';
+import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
+import '../../review/provider/review_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
@@ -533,6 +537,26 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(profileMainSmall1BannerPageProvider.notifier).state = 0; // 마이페이지 소배너 페이지뷰 초기화
   // 머아패아자 화면 관련 초기화 부분 끝
+
+  // 공지사항 화면 관련 초기화 부분 시작
+  ref.read(announceScrollPositionProvider.notifier).state =
+  0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  // 공지사항 화면 관련 초기화 부분 끝
+
+  // 문의하기 화면 관련 초기화 부분 시작
+  ref.read(inquiryScrollPositionProvider.notifier).state =
+  0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  // 문의하기 화면 관련 초기화 부분 끝
+
+  // 쪽지 관리 화면 관련 초기화 부분 시작
+  ref.read(messageScrollPositionProvider.notifier).state =
+  0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  // 쪽지 관리 화면 관련 초기화 부분 끝
+
+  // 리뷰 관리 화면 관련 초기화 부분 시작
+  ref.read(reviewScrollPositionProvider.notifier).state =
+  0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작
