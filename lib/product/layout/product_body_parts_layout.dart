@@ -28,6 +28,11 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../inquiry/provider/inquiry_state_provider.dart';
+import '../../manager/announcement/provider/announce_state_provider.dart';
+import '../../manager/message/provider/message_state_provider.dart';
+import '../../manager/orderlist/provider/orderlist_state_provider.dart';
+import '../../manager/review/provider/review_state_provider.dart';
+import '../../manager/wishlist/provider/wishlist_state_provider.dart';
 import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_state_provider.dart';
@@ -557,6 +562,32 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(reviewScrollPositionProvider.notifier).state =
   0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 리뷰 관리 화면 관련 초기화 부분 끝
+
+  // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
+  // 리뷰 관리 화면 초기화 시작
+  ref.read(managerReviewScrollPositionProvider.notifier).state = 0.0;
+  // 리뷰 관리 화면 초기화 끝
+
+  // 쪽지 관리 화면 초기화 시작
+  ref.read(managerMessageScrollPositionProvider.notifier).state = 0.0;
+  // 쪽지 관리 화면 초기화 끝
+
+  // 발주내역 관리 화면 초기화 시작
+  // 발주내역 관리 화면 자체의 스크롤 초기화
+  ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0.0;
+  // 발주내역 관리 화면 초기화
+  ref.read(selectedUserProvider.notifier).state = '';
+  // 발주내역 관리 화면 초기화 끝
+
+  // 찜 목록 관리 화면 초기화 시작
+  ref.read(managerWishlistScrollPositionProvider.notifier).state = 0.0;
+  // 찜 목록 관리 화면 초기화 끝
+
+  // 공지사항 관리 화면 초기화 시작
+  ref.read(managerAnnounceScrollPositionProvider.notifier).state = 0.0;
+  // 공지사항 관리 화면 초기화 끝
+
+  // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 끝
 
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작

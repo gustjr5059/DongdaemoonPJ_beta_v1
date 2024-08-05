@@ -757,35 +757,40 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
               context,
               Icons.star,
               '리뷰 관리',
-              ManagerReviewMainScreen(),
+              // ManagerReviewMainScreen(),
+              () => onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
             SizedBox(width: 20),
             _buildAdminListTile(
               context,
               Icons.message,
               '쪽지 관리',
-              ManagerMessageMainScreen(),
+              // ManagerMessageMainScreen(),
+               () => onMessageManagementClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
             SizedBox(width: 20),
             _buildAdminListTile(
               context,
               Icons.receipt_long_outlined,
               '발주내역 관리',
-              ManagerOrderlistMainScreen(),
+              // ManagerOrderlistMainScreen(),
+              () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
             SizedBox(width: 20),
             _buildAdminListTile(
               context,
               Icons.favorite,
               '찜 목록 관리',
-              ManagerWishlistMainScreen(),
+              // ManagerWishlistMainScreen(),
+              () => onWishlistManagementClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
             SizedBox(width: 20),
             _buildAdminListTile(
               context,
               Icons.announcement,
               '공지사항 관리',
-              ManagerAnnounceMainScreen(),
+              // ManagerAnnounceMainScreen(),
+              () => onAnnounceManagementClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
           ] else ...[
             // 일반 사용자 계정일 때 드로워 항목들
@@ -810,22 +815,51 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 // ------ buildCommonDrawer 위젯 내용 구현 끝
 
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
-Widget _buildAdminListTile(
-    BuildContext context, IconData icon, String title, Widget screen) {
+// Widget _buildAdminListTile(
+//     BuildContext context, IconData icon, String title, Widget screen) {
+//   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
+//   return ListTile(
+//     leading: Icon(icon, color: Colors.black), // 아이콘을 왼쪽에 배치
+//     title: Text(title), // 제목을 설정
+//     onTap: () {
+//       // 탭 이벤트 핸들러
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(builder: (context) => screen), // 새로운 화면으로 이동
+//       );
+//     },
+//   );
+// }
+Widget _buildAdminListTile(BuildContext context, IconData icon, String title, void Function()? onTap) {
   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
   return ListTile(
     leading: Icon(icon, color: Colors.black), // 아이콘을 왼쪽에 배치
     title: Text(title), // 제목을 설정
-    onTap: () {
-      // 탭 이벤트 핸들러
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => screen), // 새로운 화면으로 이동
-      );
-    },
+    onTap: onTap, // 탭 이벤트 핸들러를 외부에서 전달받은 함수로 설정
   );
 }
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 끝
+
+// 관리자 계정 항목 클릭 시, 실행될 함수들
+void onReviewManagementClick(BuildContext context, WidgetRef ref) {
+  navigateToScreenAndRemoveUntil(context, ref, ManagerReviewMainScreen(), 4); // 화면 이동 함수 호출
+}
+
+void onMessageManagementClick(BuildContext context, WidgetRef ref) {
+  navigateToScreenAndRemoveUntil(context, ref, ManagerMessageMainScreen(), 4); // 화면 이동 함수 호출
+}
+
+void onOrderListClick(BuildContext context, WidgetRef ref) {
+  navigateToScreenAndRemoveUntil(context, ref, ManagerOrderlistMainScreen(), 4); // 화면 이동 함수 호출
+}
+
+void onWishlistManagementClick(BuildContext context, WidgetRef ref) {
+  navigateToScreenAndRemoveUntil(context, ref, ManagerWishlistMainScreen(), 4); // 화면 이동 함수 호출
+}
+
+void onAnnounceManagementClick(BuildContext context, WidgetRef ref) {
+  navigateToScreenAndRemoveUntil(context, ref, ManagerAnnounceMainScreen(), 4); // 화면 이동 함수 호출
+}
 
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
 Widget _buildListTile(

@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../layout/orderlist_body_parts_layout.dart';
 import '../provider/orderlist_state_provider.dart';
 
 
@@ -108,6 +109,8 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 발주내역 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+
+      ref.read(selectedUserProvider.notifier).state = '';
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -116,6 +119,8 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0;
+        // 발주내역 관리 화면 초기화
+        ref.read(selectedUserProvider.notifier).state = '';
       }
     });
 
@@ -212,9 +217,9 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 8),
-                            Text('발주내역 관리 내용'),
-                            SizedBox(height: 8),
+                            SizedBox(height: 5),
+                            ManagerOrderListContents(),
+                            SizedBox(height: 10),
                           ],
                         ),
                       );

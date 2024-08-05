@@ -1,7 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 // 발주내역 관리 화면에서 화면 자체 스크롤로 이동한 위치를 저장하는 StateProvider
 final managerOrderlistScrollPositionProvider = StateProvider<double>((ref) => 0);
@@ -19,3 +17,6 @@ final managerOrderlistScrollControllerProvider = Provider<ScrollController>((ref
   return scrollController;
 });
 // -------- orderlist_screen.dart 관련 ScrollControllerProvider 끝
+
+// 선택된 사용자 ID를 저장하는 Provider
+final selectedUserProvider = StateProvider<String>((ref) => '');
