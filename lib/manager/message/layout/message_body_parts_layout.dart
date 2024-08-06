@@ -85,7 +85,7 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
     final orderNumbers = ref.watch(orderNumbersProvider(selectedReceiver));
 
     if (currentUser == null) {
-      return Center(child: CircularProgressIndicator()); // 유저 데이터 로딩 중
+      return Center(child: CircularProgressIndicator());
     }
 
     return Padding(
@@ -102,7 +102,7 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
               onChanged: (value) {
                 setState(() {
                   selectedReceiver = value;
-                  selectedOrderNumber = null; // 수신자가 변경될 때 발주번호 초기화
+                  selectedOrderNumber = null;
                 });
               },
               items: receiversList.map((receiver) {
@@ -135,7 +135,6 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
               loading: () => CircularProgressIndicator(),
               error: (error, stack) => Text('오류가 발생했습니다: $error'),
             ),
-          // 필요한 경우 더 많은 필드 추가
         ],
       ),
     );

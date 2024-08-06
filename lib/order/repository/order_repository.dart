@@ -124,10 +124,13 @@ class OrderRepository {
     required Map<String, dynamic> amountInfo, // 결제 정보
     required List<ProductContent> productInfo, // 상품 정보 리스트
   }) async {
-    // 현재 로그인한 사용자의 UID를 가져옴
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    // 현재 로그인한 사용자의 이메일을 가져옴
+    final userEmail = FirebaseAuth.instance.currentUser?.email;
+    if (userEmail == null) {
+      throw Exception('User not logged in');
+    }
     // 발주 문서를 생성할 위치를 Firestore에서 지정
-    final orderDoc = firestore.collection('order_list').doc(userId).collection('orders').doc();
+    final orderDoc = firestore.collection('order_list').doc(userEmail).collection('orders').doc();
     // 발주 ID를 생성
     final orderId = orderDoc.id;
 
@@ -169,7 +172,7 @@ class OrderRepository {
     // 해당 로직에 의해 데이터가 중복으로 저장되지만 해당 로직이 없으면 이메일 전송 기능이 구현이 안됨
     // 해당 로직이 이메일 전송 기능인 sendOrderEmailV2의 functions 함수의 트리거 역할!!
     // 해당 로직과 index.js 로직이 백엔드인 파이어베이스에서 관련 데이터로 이메일 보내는 기능 구현 로직
-    await firestore.collection('order_list').doc(userId).collection('orders').doc(orderId).set({
+    await firestore.collection('order_list').doc(userEmail).collection('orders').doc(orderId).set({
       'ordererInfo': ordererInfo, // 발주자 정보
       'recipientInfo': recipientInfo, // 수령자 정보
       'amountInfo': amountInfo, // 결제 정보
@@ -268,9 +271,9 @@ class OrderRepository {
 
   // 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수
   // 발주 데이터를 가져오는 함수
-  Future<Map<String, dynamic>> fetchOrderData(String userId, String orderId) async {
+  Future<Map<String, dynamic>> fetchOrderData(String userEmail, String orderId) async {
     // 발주 문서를 Firestore에서 가져옴
-    final orderDoc = firestore.collection('order_list').doc(userId).collection('orders').doc(orderId);
+    final orderDoc = firestore.collection('order_list').doc(userEmail).collection('orders').doc(orderId);
 
     // 각 정보 문서를 Firestore에서 가져옴
     final ordererInfoDoc = await orderDoc.collection('orderer_info').doc('info').get();

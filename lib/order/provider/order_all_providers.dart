@@ -53,16 +53,16 @@ class PlaceOrderParams {
 final orderDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, orderId) async {
   // orderRepositoryProvider를 통해 발주 레포지토리 인스턴스를 가져옴
   final repository = ref.watch(orderRepositoryProvider);
-  // 현재 로그인한 사용자의 UID를 가져옴
-  final userId = FirebaseAuth.instance.currentUser?.uid;
+  // 현재 로그인한 사용자의 이메일을 가져옴
+  final userEmail = FirebaseAuth.instance.currentUser?.email;
 
   // 사용자가 로그인되어 있지 않으면 예외를 발생시킴
-  if (userId == null) {
+  if (userEmail == null) {
     throw Exception('User not logged in');
   }
 
   // 발주 데이터를 가져와 반환함
-  return await repository.fetchOrderData(userId, orderId);
+  return await repository.fetchOrderData(userEmail, orderId);
 });
 
 // 입금 계좌 정보를 가져오는 FutureProvider

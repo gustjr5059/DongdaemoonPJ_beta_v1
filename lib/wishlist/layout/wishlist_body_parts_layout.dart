@@ -28,10 +28,13 @@ class WishlistIconButton extends ConsumerWidget {
       // 빈 위젯 반환
       return SizedBox.shrink();
     }
-// 로그인된 사용자의 UID를 가져옴
-    final userId = user.uid;
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
 // wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
-    final asyncWishlist = ref.watch(wishlistItemProvider(userId));
+    final asyncWishlist = ref.watch(wishlistItemProvider(userEmail));
 
     // asyncWishlist 상태에 따라 위젯을 빌드
     return asyncWishlist.when(
@@ -50,7 +53,7 @@ class WishlistIconButton extends ConsumerWidget {
           // 버튼 클릭 시 동작 정의
           onPressed: () async {
             // wishlistItemProvider의 notifier를 가져옴
-            final wishlistNotifier = ref.read(wishlistItemProvider(userId).notifier);
+            final wishlistNotifier = ref.read(wishlistItemProvider(userEmail).notifier);
             // wishlistItemRepositoryProvider를 가져옴
             final wishlistRepository = ref.read(wishlistItemRepositoryProvider);
 
@@ -58,7 +61,7 @@ class WishlistIconButton extends ConsumerWidget {
             if (isWished) {
               try {
                 // 찜 목록에서 상품 제거
-                await wishlistRepository.removeFromWishlistItem(userId, product.docId);
+                await wishlistRepository.removeFromWishlistItem(userEmail, product.docId);
                 // 로컬 상태 업데이트
                 wishlistNotifier.removeItem(product.docId);
                 // 사용자에게 알림 표시
@@ -77,7 +80,7 @@ class WishlistIconButton extends ConsumerWidget {
               // 상품이 찜 목록에 없는 경우
               try {
                 // 찜 목록에 상품 추가
-                await wishlistRepository.addToWishlistItem(userId, product);
+                await wishlistRepository.addToWishlistItem(userEmail, product);
                 // 로컬 상태 업데이트
                 wishlistNotifier.addItem(product.docId);
                 // 사용자에게 알림 표시
@@ -109,9 +112,23 @@ class WishlistIconButton extends ConsumerWidget {
 class WishlistItemsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    // 현재 로그인된 사용자 정보를 가져옴
+    final user = FirebaseAuth.instance.currentUser;
+
+    // user가 null인 경우 (로그인되지 않은 경우)
+    if (user == null) {
+      // 빈 위젯 반환
+      return Center(child: Text('로그인이 필요합니다.'));
+    }
+
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email;
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
+
     // wishlistItemsStreamProvider를 통해 찜 목록 항목의 스트림을 감시하여, wishlistItemsAsyncValue에 할당.
-    final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider(userId));
+    final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider(userEmail));
 
     // cartItemsAsyncValue의 상태에 따라 위젯을 빌드.
     return wishlistItemsAsyncValue.when(
@@ -227,7 +244,7 @@ class WishlistItemsList extends ConsumerWidget {
                               final String? itemId = wishlistItem['product_id'];
                               if (itemId != null) {
                                 // 찜 목록에서 상품 제거
-                                ref.read(wishlistItemProvider(userId).notifier).removeItem(itemId);
+                                ref.read(wishlistItemProvider(userEmail).notifier).removeItem(itemId);
                                 // 스낵바로 삭제 메시지 표시
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),

@@ -20,8 +20,12 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
-    final querySnapshot = await firestore.collection('cart_item').doc(userId).collection('items').get(); // 'cart_item' 컬렉션의 모든 문서를 가져옴
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
+    final querySnapshot = await firestore.collection('cart_item').doc(userEmail).collection('items').get(); // 'cart_item' 컬렉션의 모든 문서를 가져옴
     return querySnapshot.docs.length; // 문서의 개수를 반환
   }
 
@@ -31,10 +35,14 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
     final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
     final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
-    final ref = storage.ref().child('$userId/$storagePath'); // Firebase Storage에 저장할 경로 생성
+    final ref = storage.ref().child('$userEmail/$storagePath'); // Firebase Storage에 저장할 경로 생성
     await ref.putData(bytes, SettableMetadata(contentType: 'image/png')); // 이미지를 Firebase Storage에 저장
     final downloadUrl = await ref.getDownloadURL(); // 저장된 이미지의 다운로드 URL을 가져옴
     return downloadUrl; // 다운로드 URL을 반환
@@ -47,7 +55,11 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
 
     // Firestore에 저장할 데이터 준비
     final data = {
@@ -84,7 +96,7 @@ class CartItemRepository {
     }
 
     // Firestore에 데이터 저장 - 문서 ID를 타임스탬프 기반으로 설정하여 최신순으로 정렬되도록 함
-    await firestore.collection('cart_item').doc(userId).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
+    await firestore.collection('cart_item').doc(userEmail).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
   }
 
   // Firestore에서 장바구니 아이템 목록을 가져오는 함수 - Firestore에서 'cart_item' 컬렉션의 문서를 가져와 List로 반환
@@ -95,8 +107,12 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
-    final querySnapshot = await firestore.collection('cart_item').doc(userId).collection('items').orderBy('timestamp', descending: true).get(); // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
+    final querySnapshot = await firestore.collection('cart_item').doc(userEmail).collection('items').orderBy('timestamp', descending: true).get(); // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
     return querySnapshot.docs.map((doc) { // 가져온 문서들을 순회하여 리스트로 반환
       final data = doc.data(); // 문서 데이터를 가져옴
       data['id'] = doc.id; // 문서 ID를 데이터에 추가함
@@ -110,8 +126,12 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
-    await firestore.collection('cart_item').doc(userId).collection('items').doc(docId).update({ // 주어진 문서 ID에 해당하는 문서의 'selected_count' 필드를 업데이트함
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
+    await firestore.collection('cart_item').doc(userEmail).collection('items').doc(docId).update({ // 주어진 문서 ID에 해당하는 문서의 'selected_count' 필드를 업데이트함
       'selected_count': newQuantity, // 새로운 수량으로 업데이트
     });
   }
@@ -122,8 +142,12 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
-    await firestore.collection('cart_item').doc(userId).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
+    await firestore.collection('cart_item').doc(userEmail).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제
   }
 
   // Firestore에서 장바구니 아이템 스트림을 가져오는 함수
@@ -132,9 +156,13 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
     // Firestore의 'cart_item' 컬렉션을 timestamp 내림차순으로 정렬하여 가져옴.
-    return firestore.collection('cart_item').doc(userId).collection('items').orderBy('timestamp', descending: true).snapshots().map((querySnapshot) {
+    return firestore.collection('cart_item').doc(userEmail).collection('items').orderBy('timestamp', descending: true).snapshots().map((querySnapshot) {
       // 쿼리 결과를 문서 목록으로 변환.
       return querySnapshot.docs.map((doc) {
         // 각 문서의 데이터를 가져옴.
@@ -154,8 +182,12 @@ class CartItemRepository {
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
     }
-    final userId = user.uid; // 현재 로그인한 사용자 ID 가져옴
-    await firestore.collection('cart_item').doc(userId).collection('items').doc(id).update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
+    // 현재 로그인한 사용자 이메일 가져옴
+    final userEmail = user.email; // 이메일 주소를 가져옴
+    if (userEmail == null) {
+      throw Exception('User email not available');
+    }
+    await firestore.collection('cart_item').doc(userEmail).collection('items').doc(id).update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
   }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝

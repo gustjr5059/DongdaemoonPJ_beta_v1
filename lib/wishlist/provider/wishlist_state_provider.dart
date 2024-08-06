@@ -25,12 +25,12 @@ final wishlistScrollControllerProvider = Provider<ScrollController>((ref) {
 class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // WishlistItemRepository 인스턴스 저장
   final WishlistItemRepository wishlistItemRepository;
-  final String userId; // 추가된 userId 변수
+  final String userEmail; // 로그인한 이메일 계정 변수
   // Firestore 실시간 구독을 위한 StreamSubscription 변수
   late StreamSubscription _subscription;
 
   // 생성자에서 Firestore 데이터를 구독하는 메서드 호출
-  WishlistItemNotifier(this.wishlistItemRepository, this.userId) : super(const AsyncValue.loading()) {
+  WishlistItemNotifier(this.wishlistItemRepository, this.userEmail) : super(const AsyncValue.loading()) {
     // Firestore의 실시간 데이터를 구독하는 메서드 호출
     _listenToWishlistItems();
   }
@@ -39,7 +39,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   void _listenToWishlistItems() {
     _subscription = wishlistItemRepository.firestore
         .collection('wishlist_item')
-        .doc(userId)
+        .doc(userEmail)
         .collection('items')
         .snapshots()
         .listen((snapshot) {
@@ -77,7 +77,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // 상품 ID를 기준으로 찜 목록에서 제거하는 함수인 removeItem
   void removeItem(String productId) async {
     try {
-      await wishlistItemRepository.removeFromWishlistItem(userId, productId);
+      await wishlistItemRepository.removeFromWishlistItem(userEmail, productId);
       state = state.whenData((items) => Set.from(items)..remove(productId));
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -111,9 +111,9 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
 // ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 끝
 
 // WishlistItemNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
-final wishlistItemProvider = StateNotifierProvider.family<WishlistItemNotifier, AsyncValue<Set<String>>, String>((ref, String userId) {
+final wishlistItemProvider = StateNotifierProvider.family<WishlistItemNotifier, AsyncValue<Set<String>>, String>((ref, String userEmail) {
   // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴.
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
   // WishlistItemNotifier를 생성하고 반환함.
-  return WishlistItemNotifier(wishlistRepository, userId);
+  return WishlistItemNotifier(wishlistRepository, userEmail);
 });

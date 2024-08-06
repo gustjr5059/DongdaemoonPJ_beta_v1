@@ -40,8 +40,8 @@ final receiversProvider = FutureProvider<List<User>>((ref) async {
 // orderNumbersProvider 정의
 final orderNumbersProvider = FutureProvider.family<List<String>, String?>((ref, receiver) async {
   if (receiver == null) return ['없음'];
-  // Firestore에서 발주번호 목록 가져오기
-  final snapshot = await FirebaseFirestore.instance.collection('orders').where('receiver', isEqualTo: receiver).get();
-  if (snapshot.docs.isEmpty) return ['없음'];
-  return snapshot.docs.map((doc) => doc['orderNumber'] as String).toList();
+  final messageRepository = ref.read(messageRepositoryProvider);
+  return await messageRepository.fetchOrderNumbers(receiver);
 });
+
+

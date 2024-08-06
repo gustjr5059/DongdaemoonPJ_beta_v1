@@ -14,10 +14,10 @@ class WishlistItemRepository {
 
   // 이미지 URL을 Firebase Storage에 업로드하는 함수 - 주어진 이미지 URL을 가져와 Firebase Storage에 저장하고, 다운로드 URL을 반환
   Future<String> uploadImage(String imageUrl, String storagePath) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 Email 가져옴
     final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
     final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
-    final ref = storage.ref().child('$userId/$storagePath'); // Firebase Storage에 저장할 경로 생성
+    final ref = storage.ref().child('$userEmail/$storagePath'); // Firebase Storage에 저장할 경로 생성
     await ref.putData(bytes, SettableMetadata(contentType: 'image/png')); // 이미지를 Firebase Storage에 저장
     final downloadUrl = await ref.getDownloadURL(); // 저장된 이미지의 다운로드 URL을 가져옴
     return downloadUrl; // 다운로드 URL을 반환
@@ -25,7 +25,7 @@ class WishlistItemRepository {
 
   // 찜 목록에 항목을 추가하는 함수
   Future<void> addToWishlistItem(String userId, ProductContent product) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일을 가져옴
     // Firestore에 저장할 데이터 생성
     final data = {
       'product_id': product.docId, // 상품 ID
@@ -38,7 +38,7 @@ class WishlistItemRepository {
     };
 
     // 파이어스토리지에 저장할 경로 생성
-    final storagePath = 'wishlist_item_image/$userId/wishlist_${DateTime.now().millisecondsSinceEpoch}';
+    final storagePath = 'wishlist_item_image/$userEmail/wishlist_${DateTime.now().millisecondsSinceEpoch}';
     // 저장할 경로 생성
 
     // 썸네일 이미지 저장
@@ -49,20 +49,20 @@ class WishlistItemRepository {
     }
 
     // Firestore에 데이터 저장
-    await firestore.collection('wishlist_item').doc(userId).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
+    await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
   }
 
   // 찜 목록에서 항목을 제거하는 함수
   Future<void> removeFromWishlistItem(String userId, String productId) async {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // 현재 로그인한 사용자 ID 가져옴
+    final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일 가져옴
     // Firestore에서 해당 상품 ID를 가진 문서를 검색
-    final snapshot = await firestore.collection('wishlist_item').doc(userId).collection('items').where('product_id', isEqualTo: productId).get();
+    final snapshot = await firestore.collection('wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
     for (var doc in snapshot.docs) {
       // 해당 문서를 Firestore에서 삭제
-      await firestore.collection('wishlist_item').doc(userId).collection('items').doc(doc.id).delete();
+      await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(doc.id).delete();
       try {
         // Firebase Storage에서 해당 이미지를 삭제
-        await storage.ref('wishlist_item_image/$userId/${doc.id}').delete();
+        await storage.ref('wishlist_item_image/$userEmail/${doc.id}').delete();
       } catch (e) {
         if (e is FirebaseException && e.code == 'object-not-found') {
           // 객체가 Firebase Storage에서 찾을 수 없는 경우 아무 작업도 하지 않음
