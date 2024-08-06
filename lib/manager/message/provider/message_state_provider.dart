@@ -23,7 +23,7 @@ final managerMessageScrollControllerProvider = Provider<ScrollController>((ref) 
 // -------- managerMessage_screen.dart 관련 ScrollControllerProvider 끝
 
 
-// messageScreenTabProvider 정의
+// 관리자용 쪽지 관리 화면에서 '쪽지 작성', '쪽지 목록' 탭의 선택 상태를 관리하는 messageScreenTabProvider 정의
 final messageScreenTabProvider = StateProvider<MessageScreenTab>((ref) {
   return MessageScreenTab.create;
 });

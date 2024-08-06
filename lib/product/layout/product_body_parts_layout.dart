@@ -29,6 +29,7 @@ import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../inquiry/provider/inquiry_state_provider.dart';
 import '../../manager/announcement/provider/announce_state_provider.dart';
+import '../../manager/message/provider/message_all_provider.dart';
 import '../../manager/message/provider/message_state_provider.dart';
 import '../../manager/orderlist/provider/orderlist_all_provider.dart';
 import '../../manager/orderlist/provider/orderlist_state_provider.dart';
@@ -571,6 +572,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // 쪽지 관리 화면 초기화 시작
   ref.read(managerMessageScrollPositionProvider.notifier).state = 0.0;
+  // 쪽지 관리 화면 내 발신자 관련 로그인한 이메일 계정 데이터 불러오는 로직 초기화
+  ref.invalidate(currentUserProvider);
+  // 쪽지 관리 화면 내 users에 있는 이메일 계정 데이터 불러오는 로직 초기화
+  ref.invalidate(receiversProvider);
+  // 쪽지 관리 화면 내 선택된 이메일 계정 관련 발주번호 데이터 불러오는 로직 초기화
+  ref.invalidate(orderNumbersProvider);
   // 쪽지 관리 화면 초기화 끝
 
   // 발주내역 관리 화면 초기화 시작
