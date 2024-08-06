@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../layout/message_body_parts_layout.dart';
 import '../provider/message_state_provider.dart';
 
 
@@ -213,7 +214,7 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
                         child: Column(
                           children: [
                             SizedBox(height: 8),
-                            Text('쪽지 관리 내용'),
+                            MessageScreenTabs(),
                             SizedBox(height: 8),
                           ],
                         ),

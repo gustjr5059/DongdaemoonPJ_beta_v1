@@ -2,6 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'message_all_provider.dart';
+
 
 // 쪽지 관리 화면에서 화면 자체 스크롤로 이동한 위치를 저장하는 StateProvider
 final managerMessageScrollPositionProvider = StateProvider<double>((ref) => 0);
@@ -19,3 +21,9 @@ final managerMessageScrollControllerProvider = Provider<ScrollController>((ref) 
   return scrollController;
 });
 // -------- managerMessage_screen.dart 관련 ScrollControllerProvider 끝
+
+
+// messageScreenTabProvider 정의
+final messageScreenTabProvider = StateProvider<MessageScreenTab>((ref) {
+  return MessageScreenTab.create;
+});
