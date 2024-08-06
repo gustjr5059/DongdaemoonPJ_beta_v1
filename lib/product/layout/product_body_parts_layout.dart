@@ -30,6 +30,7 @@ import '../../home/provider/home_state_provider.dart';
 import '../../inquiry/provider/inquiry_state_provider.dart';
 import '../../manager/announcement/provider/announce_state_provider.dart';
 import '../../manager/message/provider/message_state_provider.dart';
+import '../../manager/orderlist/provider/orderlist_all_provider.dart';
 import '../../manager/orderlist/provider/orderlist_state_provider.dart';
 import '../../manager/review/provider/review_state_provider.dart';
 import '../../manager/wishlist/provider/wishlist_state_provider.dart';
@@ -576,7 +577,11 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 발주내역 관리 화면 자체의 스크롤 초기화
   ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0.0;
   // 발주내역 관리 화면 초기화
-  ref.read(selectedUserProvider.notifier).state = '';
+  ref.read(selectedUserEmailProvider.notifier).state = '';
+  // 발주내역 관리 화면 내 모든 사용자 이메일 계정 데이터 불러오는 로직 초기화
+  ref.invalidate(allUserEmailsProvider);
+  // 발주내역 관리 화면 내 선택된 이메일 계정 관련 발주 데이터 불러오는 로직 초기화
+  ref.invalidate(userOrdersProvider);
   // 발주내역 관리 화면 초기화 끝
 
   // 찜 목록 관리 화면 초기화 시작

@@ -110,7 +110,8 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
       // -> 발주내역 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
 
-      ref.read(selectedUserProvider.notifier).state = '';
+      // 발주내역 관리 화면 초기화
+      ref.read(selectedUserEmailProvider.notifier).state = '';
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -120,7 +121,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0;
         // 발주내역 관리 화면 초기화
-        ref.read(selectedUserProvider.notifier).state = '';
+        ref.read(selectedUserEmailProvider.notifier).state = '';
       }
     });
 
