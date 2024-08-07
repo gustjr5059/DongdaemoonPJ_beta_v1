@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/const/colors.dart';
 import '../provider/message_all_provider.dart';
 import '../provider/message_state_provider.dart'; // Provider 파일 임포트
 
@@ -62,7 +63,7 @@ class MessageScreenTabs extends ConsumerWidget {
   Widget _buildTabContent(MessageScreenTab tab) {
     switch (tab) {
       case MessageScreenTab.create:
-        return MessageCreateScreen();
+        return MessageCreateForm();
       case MessageScreenTab.list:
         return MessageListScreen();
       default:
@@ -72,13 +73,151 @@ class MessageScreenTabs extends ConsumerWidget {
 }
 // ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성', '쪽지 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 MessageScreenTabs 클래스 내용 끝
 
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 MessageCreateScreen 클래스 내용 시작
-class MessageCreateScreen extends ConsumerStatefulWidget {
+// // ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 MessageCreateScreen 클래스 내용 시작
+// class MessageCreateScreen extends ConsumerStatefulWidget {
+//   @override
+//   _MessageCreateScreenState createState() => _MessageCreateScreenState();
+// }
+//
+// class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
+//   String? selectedReceiver;
+//   String? selectedOrderNumber;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final currentUser = ref.watch(currentUserProvider).asData?.value;
+//     final receivers = ref.watch(receiversProvider);
+//     final orderNumbers = ref.watch(orderNumbersProvider(selectedReceiver));
+//
+//     if (currentUser == null) {
+//       return Center(child: CircularProgressIndicator());
+//     }
+//
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Text(
+//                 '발신자:',
+//                 style: TextStyle(fontSize: 16),
+//               ),
+//               SizedBox(width: 23),
+//               Expanded(
+//                 child: Text(
+//                   '${currentUser.email}',
+//                   style: TextStyle(fontSize: 16),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           SizedBox(height: 10),
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Text(
+//                 '수신자:',
+//                 style: TextStyle(fontSize: 16),
+//               ),
+//               SizedBox(width: 23),
+//               Expanded(
+//                 child: InputDecorator(
+//                   decoration: InputDecoration(
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(5.0),
+//                     ),
+//                     contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+//                   ),
+//                   child: receivers.when(
+//                     data: (receiversList) => DropdownButtonHideUnderline(
+//                       child: DropdownButton<String>(
+//                         hint: Text('수신자 선택'),
+//                         value: selectedReceiver,
+//                         onChanged: (value) {
+//                           setState(() {
+//                             selectedReceiver = value;
+//                             selectedOrderNumber = null;
+//                           });
+//                         },
+//                         items: receiversList.map((receiver) {
+//                           return DropdownMenuItem<String>(
+//                             value: receiver.email,
+//                             child: Text(receiver.email),
+//                           );
+//                         }).toList(),
+//                       ),
+//                     ),
+//                     loading: () => CircularProgressIndicator(),
+//                     error: (error, stack) => Text('오류가 발생했습니다: $error'),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           SizedBox(height: 10),
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Text(
+//                 '발주번호:',
+//                 style: TextStyle(fontSize: 16),
+//               ),
+//               SizedBox(width: 10),
+//               Expanded(
+//                 child: InputDecorator(
+//                   decoration: InputDecoration(
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(5.0),
+//                     ),
+//                     contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+//                   ),
+//                   child: DropdownButtonHideUnderline(
+//                     child: DropdownButton<String>(
+//                       hint: Text('발주번호 선택'),
+//                       value: selectedOrderNumber,
+//                       onChanged: selectedReceiver == null
+//                           ? null
+//                           : (value) {
+//                         setState(() {
+//                           selectedOrderNumber = value;
+//                         });
+//                       },
+//                       items: selectedReceiver == null
+//                           ? []
+//                           : orderNumbers.when(
+//                         data: (orderNumbersList) => orderNumbersList.map((orderNumber) {
+//                           return DropdownMenuItem<String>(
+//                             value: orderNumber,
+//                             child: Text(orderNumber),
+//                           );
+//                         }).toList(),
+//                         loading: () => [],
+//                         error: (error, stack) => [],
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           if (selectedReceiver != null && orderNumbers.isLoading)
+//             CircularProgressIndicator(),
+//         ],
+//       ),
+//     );
+//   }
+// }
+// // ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 MessageCreateScreen 클래스 내용 끝
+
+class MessageCreateForm extends ConsumerStatefulWidget {
   @override
-  _MessageCreateScreenState createState() => _MessageCreateScreenState();
+  _MessageCreateFormState createState() => _MessageCreateFormState();
 }
 
-class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
+class _MessageCreateFormState extends ConsumerState<MessageCreateForm> {
   String? selectedReceiver;
   String? selectedOrderNumber;
 
@@ -87,6 +226,7 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
     final currentUser = ref.watch(currentUserProvider).asData?.value;
     final receivers = ref.watch(receiversProvider);
     final orderNumbers = ref.watch(orderNumbersProvider(selectedReceiver));
+    final messageContent = ref.watch(messageContentProvider);
 
     if (currentUser == null) {
       return Center(child: CircularProgressIndicator());
@@ -100,27 +240,16 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '발신자:',
-                style: TextStyle(fontSize: 16),
-              ),
+              Text('발신자:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 23),
-              Expanded(
-                child: Text(
-                  '${currentUser.email}',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
+              Expanded(child: Text('${currentUser.email}', style: TextStyle(fontSize: 16))),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '수신자:',
-                style: TextStyle(fontSize: 16),
-              ),
+              Text('수신자:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 23),
               Expanded(
                 child: InputDecorator(
@@ -156,14 +285,11 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '발주번호:',
-                style: TextStyle(fontSize: 16),
-              ),
+              Text('발주번호:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 10),
               Expanded(
                 child: InputDecorator(
@@ -177,16 +303,12 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
                     child: DropdownButton<String>(
                       hint: Text('발주번호 선택'),
                       value: selectedOrderNumber,
-                      onChanged: selectedReceiver == null
-                          ? null
-                          : (value) {
+                      onChanged: selectedReceiver == null ? null : (value) {
                         setState(() {
                           selectedOrderNumber = value;
                         });
                       },
-                      items: selectedReceiver == null
-                          ? []
-                          : orderNumbers.when(
+                      items: selectedReceiver == null ? [] : orderNumbers.when(
                         data: (orderNumbersList) => orderNumbersList.map((orderNumber) {
                           return DropdownMenuItem<String>(
                             value: orderNumber,
@@ -204,12 +326,83 @@ class _MessageCreateScreenState extends ConsumerState<MessageCreateScreen> {
           ),
           if (selectedReceiver != null && orderNumbers.isLoading)
             CircularProgressIndicator(),
+          SizedBox(height: 15),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('내용:', style: TextStyle(fontSize: 16)),
+              SizedBox(width: 37),
+              Expanded(
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      hint: Text('내용 선택'),
+                      value: messageContent,
+                      onChanged: selectedOrderNumber == null ? null : (value) {
+                        ref.read(messageContentProvider.notifier).state = value;
+                        if (value == '결제 완료 메세지') {
+                          ref.read(customMessageProvider.notifier).state = '해당 발주 건은 결제 완료 되었습니다.';
+                        } else {
+                          ref.read(customMessageProvider.notifier).state = '';
+                        }
+                      },
+                      items: [
+                        DropdownMenuItem<String>(
+                          value: '결제 완료 메세지',
+                          child: Text('결제 완료 메세지'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '직접입력',
+                          child: Text('직접입력'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          if (messageContent == '결제 완료 메세지')
+            AbsorbPointer(
+              absorbing: true, // 클릭 비활성화
+              child: TextFormField(
+                initialValue: '해당 발주 건은 결제 완료 되었습니다.',
+                style: TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          if (messageContent == '직접입력')
+            TextFormField(
+              initialValue: '',
+              maxLength: 200,
+              maxLines: null, // 입력 시 자동으로 줄바꿈
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0), // 테두리 색상 및 두께 변경
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: BUTTON_COLOR, width: 2.0), // 포커스 시 테두리 색상 및 두께 변경
+                ),
+                hintText: '200자 이내로 작성가능합니다.',
+              ),
+              onChanged: (value) {
+                ref.read(customMessageProvider.notifier).state = value;
+              },
+            ),
         ],
       ),
     );
   }
 }
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 MessageCreateScreen 클래스 내용 끝
 
 // ------ 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 관련 내용을 구현하는 MessageListScreen 클래스 내용 시작
 class MessageListScreen extends StatelessWidget {

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'message_all_provider.dart';
 
 
-// 쪽지 관리 화면에서 화면 자체 스크롤로 이동한 위치를 저장하는 StateProvider
+// 관리자용 쪽지 관리 화면에서 화면 자체 스크롤로 이동한 위치를 저장하는 StateProvider
 final managerMessageScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // -------- managerMessage_screen.dart 관련 ScrollControllerProvider 시작
@@ -26,4 +26,12 @@ final managerMessageScrollControllerProvider = Provider<ScrollController>((ref) 
 // 관리자용 쪽지 관리 화면에서 '쪽지 작성', '쪽지 목록' 탭의 선택 상태를 관리하는 messageScreenTabProvider 정의
 final messageScreenTabProvider = StateProvider<MessageScreenTab>((ref) {
   return MessageScreenTab.create;
+});
+// 관리자용 쪽지 관리 화면에서 내용 선택 관려 드롭다운 메뉴 선택 상태를 관리하는 messageContentProvider 정의
+final messageContentProvider = StateProvider<String?>((ref) {
+  return null;
+});
+// 관리자용 쪽지 관리 화면에서 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태를 관리하는 customMessageProvider 정의
+final customMessageProvider = StateProvider<String?>((ref) {
+  return null;
 });

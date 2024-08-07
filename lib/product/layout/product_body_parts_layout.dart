@@ -578,6 +578,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(receiversProvider);
   // 쪽지 관리 화면 내 선택된 이메일 계정 관련 발주번호 데이터 불러오는 로직 초기화
   ref.invalidate(orderNumbersProvider);
+  // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
+  ref.read(messageContentProvider.notifier).state = null;
+  // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
+  ref.read(customMessageProvider.notifier).state = null;
   // 쪽지 관리 화면 초기화 끝
 
   // 발주내역 관리 화면 초기화 시작

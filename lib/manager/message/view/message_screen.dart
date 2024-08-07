@@ -109,6 +109,10 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+      // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
+      ref.read(messageContentProvider.notifier).state = null;
+      // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
+      ref.read(customMessageProvider.notifier).state = null;
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -117,6 +121,10 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(managerMessageScrollPositionProvider.notifier).state = 0;
+        // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
+        ref.read(messageContentProvider.notifier).state = null;
+        // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
+        ref.read(customMessageProvider.notifier).state = null;
       }
     });
 
@@ -226,7 +234,7 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
               ),
             ],
           ),
-          buildTopButton(context, managerMessageScreenPointScrollController),
+          // buildTopButton(context, managerMessageScreenPointScrollController),
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
