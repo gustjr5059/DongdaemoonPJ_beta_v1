@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/const/colors.dart';
+import '../../../common/layout/common_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
 import '../provider/message_state_provider.dart'; // Provider 파일 임포트
 
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성', '쪽지 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 MessageScreenTabs 클래스 내용 시작
-class MessageScreenTabs extends ConsumerWidget {
+// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성', '쪽지 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 AdminMessageScreenTabs 클래스 내용 시작
+class AdminMessageScreenTabs extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 선택된 탭을 가져옴.
-    final currentTab = ref.watch(messageScreenTabProvider);
+    final currentTab = ref.watch(adminMessageScreenTabProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +45,7 @@ class MessageScreenTabs extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         // 탭을 클릭했을 때 현재 탭 상태를 변경.
-        ref.read(messageScreenTabProvider.notifier).state = tab;
+        ref.read(adminMessageScreenTabProvider.notifier).state = tab;
       },
       child: Column(
         children: [
@@ -73,23 +74,23 @@ class MessageScreenTabs extends ConsumerWidget {
   Widget _buildTabContent(MessageScreenTab tab) {
     switch (tab) {
       case MessageScreenTab.create:
-        return MessageCreateFormScreen(); // '쪽지 작성' 화면을 반환.
+        return AdminMessageCreateFormScreen(); // '쪽지 작성' 화면을 반환.
       case MessageScreenTab.list:
-        return MessageListScreen(); // '쪽지 목록' 화면을 반환.
+        return AdminMessageListScreen(); // '쪽지 목록' 화면을 반환.
       default:
         return Container(); // 기본적으로 빈 컨테이너를 반환.
     }
   }
 }
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성', '쪽지 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 MessageScreenTabs 클래스 내용 끝
+// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성', '쪽지 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 AdminMessageScreenTabs 클래스 내용 끝
 
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 MessageCreateFormScreen 클래스 내용 시작
-class MessageCreateFormScreen extends ConsumerStatefulWidget {
+// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 AdminMessageCreateFormScreen 클래스 내용 시작
+class AdminMessageCreateFormScreen extends ConsumerStatefulWidget {
   @override
-  _MessageCreateFormScreenState createState() => _MessageCreateFormScreenState();
+  _AdminMessageCreateFormScreenState createState() => _AdminMessageCreateFormScreenState();
 }
 
-class _MessageCreateFormScreenState extends ConsumerState<MessageCreateFormScreen> {
+class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreateFormScreen> {
   String? selectedReceiver; // 선택된 수신자를 저장하는 변수.
   String? selectedOrderNumber; // 선택된 발주번호를 저장하는 변수.
 
@@ -102,7 +103,7 @@ class _MessageCreateFormScreenState extends ConsumerState<MessageCreateFormScree
     // 선택된 수신자에 따른 발주번호 목록을 가져옴.
     final orderNumbers = ref.watch(orderNumbersProvider(selectedReceiver));
     // 현재 입력된 메시지 내용을 가져옴.
-    final messageContent = ref.watch(messageContentProvider);
+    final messageContent = ref.watch(adminMessageContentProvider);
 
     // 만약 현재 사용자가 없다면 로딩 스피너를 표시.
     if (currentUser == null) {
@@ -227,11 +228,11 @@ class _MessageCreateFormScreenState extends ConsumerState<MessageCreateFormScree
                       hint: Text('내용 선택'),
                       value: messageContent,
                       onChanged: selectedOrderNumber == null ? null : (value) {
-                        ref.read(messageContentProvider.notifier).state = value;
+                        ref.read(adminMessageContentProvider.notifier).state = value;
                         if (value == '결제 완료 메세지') {
-                          ref.read(customMessageProvider.notifier).state = '해당 발주 건은 결제 완료 되었습니다.';
+                          ref.read(adminCustomMessageProvider.notifier).state = '해당 발주 건은 결제 완료 되었습니다.';
                         } else {
-                          ref.read(customMessageProvider.notifier).state = '';
+                          ref.read(adminCustomMessageProvider.notifier).state = '';
                         }
                       },
                       items: [
@@ -279,7 +280,7 @@ class _MessageCreateFormScreenState extends ConsumerState<MessageCreateFormScree
                 hintText: '200자 이내로 작성가능합니다.',
               ),
               onChanged: (value) {
-                ref.read(customMessageProvider.notifier).state = value;
+                ref.read(adminCustomMessageProvider.notifier).state = value;
               },
             ),
           SizedBox(height: 50), // 입력칸 아래에 간격 추가
@@ -288,13 +289,20 @@ class _MessageCreateFormScreenState extends ConsumerState<MessageCreateFormScree
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  final customMessage = ref.read(customMessageProvider);
+                  final customMessage = ref.read(adminCustomMessageProvider);
                   await ref.read(sendMessageProvider({
                     'sender': currentUser.email!,
                     'recipient': selectedReceiver!,
                     'orderNumber': selectedOrderNumber!,
                     'contents': customMessage!,
                   }).future);
+
+                  // 쪽지 발송 성공 시 스낵바를 이용해 메시지 표시
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('쪽지 발송에 성공했습니다.'),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
@@ -310,14 +318,182 @@ class _MessageCreateFormScreenState extends ConsumerState<MessageCreateFormScree
     );
   }
 }
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 MessageCreateFormScreen 클래스 내용 끝
+// ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 AdminMessageCreateFormScreen 클래스 내용 끝
 
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 관련 내용을 구현하는 MessageListScreen 클래스 내용 시작
-class MessageListScreen extends StatelessWidget {
+// ------ 관리자용 쪽지 관리 화면 내 모든 계정의 쪽지 목록 불러와서 UI 구현하는 AdminMessageListScreen 클래스 내용 시작
+class AdminMessageListScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    // 여기에 쪽지 목록 화면 UI를 구현
-    return Center(child: Text('쪽지 목록 화면'));
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 모든 계정의 쪽지 목록을 가져옴.
+    final messages = ref.watch(fetchAllMessagesProvider);
+
+    // 가져온 쪽지 데이터의 상태에 따라 UI를 구성.
+    return messages.when(
+      // 데이터가 성공적으로 로드된 경우
+      data: (messagesList) {
+        // 쪽지 목록이 비어 있는 경우
+        if (messagesList.isEmpty) {
+          return Center(child: Text('쪽지가 없습니다.'));
+        }
+        // 최신 쪽지가 위로 오도록 리스트를 역순으로 정렬.
+        final reversedMessages = messagesList.reversed.toList();
+        // 쪽지 목록을 열의 형태로 표시.
+        return Column(
+          // 각 쪽지를 맵핑하여 위젯을 생성.
+          children: reversedMessages.map((message) {
+            // 수신자와 주문 번호 텍스트를 구성.
+            String recipientText = '${message['recipient']}';
+            String orderNumberText = '[발주번호: ${message['orderNumber']}]';
+
+            // 쪽지를 탭하면 상세 정보를 보여주는 팝업을 띄움.
+            return GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // 팝업 내용을 구성.
+                    return AlertDialog(
+                      backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: [
+                            // 쪽지 내용을 강조하여 표시.
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: recipientText,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red, // 빨간색 텍스트
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '님께서 발주 완료한 ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black, // 기본 텍스트 색상
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: orderNumberText,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red, // 빨간색 텍스트
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: ' 건 관련 ${message['contents']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black, // 기본 텍스트 색상
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        // 닫기 버튼을 구성.
+                        TextButton(
+                          child: Text(
+                            '닫기',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              // 쪽지 목록 카드 뷰를 구성.
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        // Expanded 위젯을 사용하여 가로로 공간을 최대한 차지하도록 설정
+                        child: CommonCardView(
+                          // CommonCardView 위젯을 사용하여 카드 뷰를 구성
+                          backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
+                          content: RichText(
+                            // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
+                            maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
+                            overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
+                            text: TextSpan(
+                              // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
+                              children: [
+                                TextSpan(
+                                  // 첫 번째 텍스트 스팬
+                                  text: recipientText, // 수신자 텍스트를 설정
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                    color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                  ),
+                                ),
+                                TextSpan(
+                                  // 두 번째 텍스트 스팬
+                                  text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                    color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                  ),
+                                ),
+                                TextSpan(
+                                  // 세 번째 텍스트 스팬
+                                  text: orderNumberText, // 주문 번호 텍스트를 설정
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                    color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                  ),
+                                ),
+                                TextSpan(
+                                  // 네 번째 텍스트 스팬
+                                  text: ' 건 관련 ${message['contents']}', // 메시지 내용을 설정
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                    color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        // 컨테이너를 사용하여 아이콘 배경을 설정
+                        color: LIGHT_PURPLE_COLOR, // 아이콘 배경색을 LIGHT_PURPLE_COLOR로 설정
+                        child: IconButton(
+                          // IconButton 위젯을 사용하여 닫기 버튼을 구성
+                          icon: Icon(Icons.close), // 닫기 아이콘을 설정
+                          onPressed: () {
+                            // 버튼이 눌렸을 때 실행할 함수 설정
+                            ref.read(deleteMessageProvider({
+                              'messageId': message['id'], // 메시지 ID를 전달
+                              'recipient': message['recipient'], // 수신자를 전달
+                            }).future);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }).toList(), // 쪽지 목록을 반복하여 각 항목을 리스트로 구성
+        );
+      },
+      loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
+      error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
+    );
   }
 }
-// ------ 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 관련 내용을 구현하는 MessageListScreen 클래스 내용 끝
+// ------ 관리자용 쪽지 관리 화면 내 모든 계정의 쪽지 목록 불러와서 UI 구현하는 AdminMessageListScreen 클래스 내용 끝

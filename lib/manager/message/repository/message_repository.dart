@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 MessageRepository 클래스 내용 시작
-class MessageRepository {
+// ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 AdminMessageRepository 클래스 내용 시작
+class AdminMessageRepository {
   final FirebaseFirestore firestore;
 
-  // MessageRepository 클래스의 생성자.
-  MessageRepository({required this.firestore});
+  // AdminMessageRepository 클래스의 생성자.
+  AdminMessageRepository({required this.firestore});
 
   // Firestore에서 수신자 이메일 목록을 가져오는 함수.
   Future<List<String>> fetchReceivers() async {
@@ -84,5 +84,26 @@ class MessageRepository {
       'message_sendingTime': FieldValue.serverTimestamp(),
     });
   }
+
+  // 모든 이메일 계정의 쪽지 목록을 가져오는 함수.
+  Stream<List<Map<String, dynamic>>> fetchAllMessages() {
+    // Firestore에서 모든 쪽지 목록을 실시간으로 가져옴.
+    return firestore.collectionGroup('message').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => ({
+        'id': doc.id,  // 문서 ID를 포함하도록 수정
+        ...doc.data() as Map<String, dynamic>
+      })).toList();
+    });
+  }
+
+  // Firestore에서 특정 메시지를 삭제하는 함수.
+  Future<void> deleteMessage(String messageId, String recipient) async {
+    // Firestore에서 해당 메시지를 삭제.
+    await firestore.collection('message_list')
+        .doc(recipient)
+        .collection('message')
+        .doc(messageId)
+        .delete();
+  }
 }
-// ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 MessageRepository 클래스 내용 끝
+// ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 AdminMessageRepository 클래스 내용 끝

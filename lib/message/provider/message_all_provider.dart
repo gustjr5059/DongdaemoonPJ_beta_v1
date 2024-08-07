@@ -6,13 +6,13 @@ import '../repository/message_repository.dart';
 // PrivateMessageRepository를 사용하기 위한 인스턴스를 불러오는 프로바이더를 정의.
 final privateMessageRepositoryProvider = Provider((ref) => PrivateMessageRepository(firestore: FirebaseFirestore.instance));
 
-// 메시지를 불러오는 프로바이더 fetchMessagesProvider를 정의.
+// 메시지를 실시간으로 불러오는 프로바이더 fetchMessagesProvider를 정의.
 // 사용자 이메일을 매개변수로 받아 해당 사용자의 메시지를 리스트 형태로 반환.
-final fetchMessagesProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((ref, email) async {
+final fetchMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, email) {
   // privateMessageRepositoryProvider를 통해 PrivateMessageRepository 인스턴스를 읽어옴.
   final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
-  // PrivateMessageRepository의 fetchMessages 메서드를 호출하여 메시지를 가져옴.
-  return await privateMessageRepository.fetchMessages(email);
+  // PrivateMessageRepository의 fetchMessages 메서드를 호출하여 실시간으로 메시지를 가져옴.
+  return privateMessageRepository.fetchMessages(email);
 });
 
 // 로그인한 사용자의 이메일 계정을 가져오는 프로바이더 currentUserEmailProvider를 정의.

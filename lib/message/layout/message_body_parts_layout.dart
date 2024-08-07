@@ -16,7 +16,7 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
       return Center(child: CircularProgressIndicator());
     }
 
-    // 현재 사용자의 이메일로 쪽지 목록을 가져옴.
+    // 현재 사용자의 이메일로 쪽지 목록을 실시간으로 가져옴.
     final messages = ref.watch(fetchMessagesProvider(currentUserEmail));
 
     // 가져온 쪽지 데이터의 상태에 따라 UI를 구성.

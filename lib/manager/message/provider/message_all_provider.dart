@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart' as auth; // 'auth'로 임포�
 import '../repository/message_repository.dart';
 
 
-// MessageRepository를 사용하기 위한 인스턴스를 불러오는 프로바이더
-final messageRepositoryProvider = Provider((ref) => MessageRepository(firestore: FirebaseFirestore.instance));
+// AdminMessageRepository를 사용하기 위한 인스턴스를 불러오는 프로바이더
+final adminMessageRepositoryProvider = Provider((ref) => AdminMessageRepository(firestore: FirebaseFirestore.instance));
 
 // ------ Local User 클래스 정의하는 내용 시작
 class User {
@@ -42,23 +42,43 @@ final receiversProvider = FutureProvider<List<User>>((ref) async {
 // 선택한 수신자 이메일 계정 관련 발주번호 데이터를 불러오는 orderNumbersProvider 정의
 final orderNumbersProvider = FutureProvider.family<List<String>, String?>((ref, receiver) async {
   if (receiver == null) return ['없음'];
-  final messageRepository = ref.read(messageRepositoryProvider);
-  return await messageRepository.fetchOrderNumbers(receiver);
+  final AdminMessageRepository = ref.read(adminMessageRepositoryProvider);
+  return await AdminMessageRepository.fetchOrderNumbers(receiver);
 });
 
 // 메시지 발송을 위한 프로바이더인 sendMessageProvider
 final sendMessageProvider = FutureProvider.family<void, Map<String, String>>((ref, data) async {
-  // messageRepositoryProvider를 통해 messageRepository 인스턴스를 읽어옴.
-  final messageRepository = ref.read(messageRepositoryProvider);
+  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
+  final AdminMessageRepository = ref.read(adminMessageRepositoryProvider);
 
-  // messageRepository의 sendMessage 메서드를 호출하여 메시지를 발송함.
+  // AdminMessageRepository의 sendMessage 메서드를 호출하여 메시지를 발송함.
   // data 매개변수에서 sender, recipient, orderNumber, contents 값을 추출하여 사용함.
-  await messageRepository.sendMessage(
+  await AdminMessageRepository.sendMessage(
     sender: data['sender']!,          // 발신자 정보를 전달.
     recipient: data['recipient']!,    // 수신자 정보를 전달.
     orderNumber: data['orderNumber']!, // 주문 번호를 전달.
     contents: data['contents']!,      // 메시지 내용을 전달.
   );
 });
+
+// 모든 계정의 쪽지 목록을 불러오는 프로바이더 fetchAllMessagesProvider를 정의.
+final fetchAllMessagesProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
+  final adminMessageRepository = ref.read(adminMessageRepositoryProvider);
+  // AdminMessageRepository의 fetchAllMessages 메서드를 호출하여 모든 계정의 쪽지를 실시간으로 가져옴.
+  return adminMessageRepository.fetchAllMessages();
+});
+
+// 메시지 삭제를 위한 프로바이더 deleteMessageProvider를 정의.
+final deleteMessageProvider = FutureProvider.family<void, Map<String, String>>((ref, data) async {
+  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
+  final adminMessageRepository = ref.read(adminMessageRepositoryProvider);
+  // AdminMessageRepository의 deleteMessage 메서드를 호출하여 메시지를 삭제.
+  await adminMessageRepository.deleteMessage(data['messageId']!, data['recipient']!);
+});
+
+
+
+
 
 

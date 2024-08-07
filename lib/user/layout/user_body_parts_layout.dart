@@ -207,7 +207,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
   }
 
   void onMessageListClick(BuildContext context, WidgetRef ref) { // 메시지 목록 클릭 함수
-    navigateToScreenAndRemoveUntil(context, ref, MessageMainScreen(), 4); // 화면 이동 함수 호출
+    navigateToScreenAndRemoveUntil(context, ref, PrivateMessageMainScreen(), 4); // 화면 이동 함수 호출
   }
 
   void onAnnounceListClick(BuildContext context, WidgetRef ref) { // 공지사항 클릭 함수

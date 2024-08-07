@@ -7,6 +7,7 @@ import 'dart:async';
 
 // Firebase의 사용자 인증 기능을 제공하는 FirebaseAuth 패키지를 임포트합니다.
 // 이를 통해 이메일, 비밀번호, 소셜 미디어 계정을 이용한 로그인 기능 등을 구현할 수 있습니다.
+import 'package:firebase_auth/firebase_auth.dart' as auth; // 'auth'로 임포트
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Flutter의 기본 디자인 및 UI 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
@@ -41,6 +42,7 @@ import '../../../common/provider/common_state_provider.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../layout/message_body_parts_layout.dart';
+import '../provider/message_all_provider.dart';
 import '../provider/message_state_provider.dart';
 
 
@@ -49,25 +51,25 @@ import '../provider/message_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// ManagerMessageMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class ManagerMessageMainScreen extends ConsumerStatefulWidget {
-  const ManagerMessageMainScreen({Key? key}) : super(key: key);
+// AdminMessageMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class AdminMessageMainScreen extends ConsumerStatefulWidget {
+  const AdminMessageMainScreen({Key? key}) : super(key: key);
 
   @override
-  _ManagerMessageMainScreenState createState() => _ManagerMessageMainScreenState();
+  _AdminMessageMainScreenState createState() => _AdminMessageMainScreenState();
 }
 
-// _ManagerMessageMainScreenState 클래스 시작
-// _ManagerMessageMainScreenState 클래스는 ManagerMessageMainScreen 위젯의 상태를 관리함.
+// _AdminMessageMainScreenState 클래스 시작
+// _AdminMessageMainScreenState 클래스는 AdminMessageMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScreen>
+class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
-  StreamSubscription<User?>? authStateChangesSubscription;
+  StreamSubscription<auth.User?>? authStateChangesSubscription;
 
-  // managerMessageScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
-  // ref.read(managerMessageScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
+  // adminMessageScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
+  // ref.read(adminMessageScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
   // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
   // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
   // 2.하단 탭바의 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
@@ -76,13 +78,13 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
   // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
   // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
 
-  // managerMessageScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
+  // adminMessageScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
   // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
   // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController managerMessageScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController adminMessageScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -90,29 +92,31 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
   void initState() {
     super.initState();
     // ScrollController를 초기화
-    managerMessageScreenPointScrollController = ScrollController();
+    adminMessageScreenPointScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
-      if (managerMessageScreenPointScrollController.hasClients) {
+      if (adminMessageScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(managerMessageScrollPositionProvider);
-        // managerMessageScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
+        double savedScrollPosition = ref.read(adminMessageScrollPositionProvider);
+        // adminMessageScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        managerMessageScreenPointScrollController.jumpTo(savedScrollPosition);
+        adminMessageScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
       // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
-      ref.read(messageContentProvider.notifier).state = null;
+      ref.read(adminMessageContentProvider.notifier).state = null;
       // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
-      ref.read(customMessageProvider.notifier).state = null;
+      ref.read(adminCustomMessageProvider.notifier).state = null;
+      // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
+      ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -120,11 +124,13 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(managerMessageScrollPositionProvider.notifier).state = 0;
+        ref.read(adminMessageScrollPositionProvider.notifier).state = 0;
         // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
-        ref.read(messageContentProvider.notifier).state = null;
+        ref.read(adminMessageContentProvider.notifier).state = null;
         // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
-        ref.read(customMessageProvider.notifier).state = null;
+        ref.read(adminCustomMessageProvider.notifier).state = null;
+        // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
+        ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
       }
     });
 
@@ -158,7 +164,7 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    managerMessageScreenPointScrollController.dispose(); // ScrollController 해제
+    adminMessageScreenPointScrollController.dispose(); // ScrollController 해제
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
@@ -191,7 +197,7 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
       body: Stack(
         children: [
           CustomScrollView(
-            controller: managerMessageScreenPointScrollController,
+            controller: adminMessageScreenPointScrollController,
             slivers: <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
@@ -222,7 +228,7 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
                         child: Column(
                           children: [
                             SizedBox(height: 8),
-                            MessageScreenTabs(),
+                            AdminMessageScreenTabs(), // '쪽지 작성', '쪽지 목록' 탭 내용 구현
                             SizedBox(height: 8),
                           ],
                         ),
@@ -245,4 +251,4 @@ class _ManagerMessageMainScreenState extends ConsumerState<ManagerMessageMainScr
     );
   }
 }
-// _ManagerMessageScreenState 클래스 끝
+// _AdminManagerMessageScreenState 클래스 끝

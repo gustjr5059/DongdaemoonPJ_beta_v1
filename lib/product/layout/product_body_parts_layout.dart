@@ -552,7 +552,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 문의하기 화면 관련 초기화 부분 끝
 
   // 쪽지 관리 화면 관련 초기화 부분 시작
-  ref.read(messageScrollPositionProvider.notifier).state =
+  ref.read(privateMessageScrollPositionProvider.notifier).state =
   0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
   ref.invalidate(fetchMessagesProvider); // 메시지 데이터 초기화
@@ -569,7 +569,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 리뷰 관리 화면 초기화 끝
 
   // 쪽지 관리 화면 초기화 시작
-  ref.read(managerMessageScrollPositionProvider.notifier).state = 0.0;
+  ref.read(adminMessageScrollPositionProvider.notifier).state = 0.0;
   // 쪽지 관리 화면 내 발신자 관련 로그인한 이메일 계정 데이터 불러오는 로직 초기화
   ref.invalidate(currentUserProvider);
   // 쪽지 관리 화면 내 users에 있는 이메일 계정 데이터 불러오는 로직 초기화
@@ -577,9 +577,13 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 쪽지 관리 화면 내 선택된 이메일 계정 관련 발주번호 데이터 불러오는 로직 초기화
   ref.invalidate(orderNumbersProvider);
   // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
-  ref.read(messageContentProvider.notifier).state = null;
+  ref.read(adminMessageContentProvider.notifier).state = null;
   // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
-  ref.read(customMessageProvider.notifier).state = null;
+  ref.read(adminCustomMessageProvider.notifier).state = null;
+  // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
+  ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
+  // 쪽지 관리 화면 초기화 시, 모든 계정의 쪽지 목록 상태 초기화
+  ref.invalidate(fetchAllMessagesProvider);
   // 쪽지 관리 화면 초기화 끝
 
   // 발주내역 관리 화면 초기화 시작

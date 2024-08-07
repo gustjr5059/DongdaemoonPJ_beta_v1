@@ -846,7 +846,7 @@ void onReviewManagementClick(BuildContext context, WidgetRef ref) {
 }
 
 void onMessageManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, ManagerMessageMainScreen(), 4); // 화면 이동 함수 호출
+  navigateToScreenAndRemoveUntil(context, ref, AdminMessageMainScreen(), 4); // 화면 이동 함수 호출
 }
 
 void onOrderListClick(BuildContext context, WidgetRef ref) {
