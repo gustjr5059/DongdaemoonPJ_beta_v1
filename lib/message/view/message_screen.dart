@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../layout/message_body_parts_layout.dart';
 import '../provider/message_state_provider.dart';
 
 
@@ -211,14 +212,23 @@ class _MessageMainScreenState extends ConsumerState<MessageMainScreen>
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
                           children: [
-                            SizedBox(height: 8),
-                            Text('쪽지 관리 내용'),
-                            SizedBox(height: 8),
+                            SizedBox(height: 10),
+                            Text(
+                              '쪽지 목록',
+                              style: TextStyle(
+                                fontSize: 20, // 글자 크기 20으로 설정
+                                fontWeight: FontWeight.bold, // bold로 설정
+                              ),
+                            ),
+                            SizedBox(height: 10), // '쪽지 목록'과 PrivateMessageBodyPartsLayout 사이의 간격을 10으로 설정
+                            PrivateMessageBodyPartsContents(), // 불러온 쪽지 내용을 표시
+                            SizedBox(height: 10),
                           ],
                         ),
                       );
-                    },
+                        },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                   ),
                 ),

@@ -46,4 +46,19 @@ final orderNumbersProvider = FutureProvider.family<List<String>, String?>((ref, 
   return await messageRepository.fetchOrderNumbers(receiver);
 });
 
+// 메시지 발송을 위한 프로바이더인 sendMessageProvider
+final sendMessageProvider = FutureProvider.family<void, Map<String, String>>((ref, data) async {
+  // messageRepositoryProvider를 통해 messageRepository 인스턴스를 읽어옴.
+  final messageRepository = ref.read(messageRepositoryProvider);
+
+  // messageRepository의 sendMessage 메서드를 호출하여 메시지를 발송함.
+  // data 매개변수에서 sender, recipient, orderNumber, contents 값을 추출하여 사용함.
+  await messageRepository.sendMessage(
+    sender: data['sender']!,          // 발신자 정보를 전달.
+    recipient: data['recipient']!,    // 수신자 정보를 전달.
+    orderNumber: data['orderNumber']!, // 주문 번호를 전달.
+    contents: data['contents']!,      // 메시지 내용을 전달.
+  );
+});
+
 

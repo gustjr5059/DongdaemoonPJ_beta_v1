@@ -1,27 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 MessageRepository 클래스 내용 시작
 class MessageRepository {
   final FirebaseFirestore firestore;
 
+  // MessageRepository 클래스의 생성자.
   MessageRepository({required this.firestore});
 
+  // Firestore에서 수신자 이메일 목록을 가져오는 함수.
   Future<List<String>> fetchReceivers() async {
+    // Firestore에서 'users' 컬렉션의 모든 문서를 가져옴.
     final querySnapshot = await firestore.collection('users').get();
+    // 이메일 필드를 추출하여 'capjs06@gmail.com'을 제외한 목록을 반환.
     return querySnapshot.docs
         .map((doc) => doc.data()['email'] as String)
         .where((email) => email != 'capjs06@gmail.com')
         .toList();
   }
 
+  // 특정 수신자의 발주번호 목록을 가져오는 함수.
   Future<List<String>> fetchOrderNumbers(String receiver) async {
     try {
-      // Firestore에서 사용자의 이메일을 기준으로 검색
+      // Firestore에서 사용자의 이메일을 기준으로 검색.
       final querySnapshot = await firestore
           .collection('order_list')
           .doc(receiver)
           .collection('orders')
           .get();
 
+      // 만약 주문이 없다면 '없음'을 반환.
       if (querySnapshot.docs.isEmpty) {
         print('No orders found for email: $receiver');
         return ['없음'];
@@ -29,7 +36,7 @@ class MessageRepository {
 
       print('Found ${querySnapshot.docs.length} orders for email: $receiver');
 
-      // 각 order 문서의 number_info 하위 컬렉션에서 order_number 필드 가져오기
+      // 각 order 문서의 number_info 하위 컬렉션에서 order_number 필드를 가져옴.
       List<String> orderNumbers = [];
       for (var doc in querySnapshot.docs) {
         print('Checking order: ${doc.id}');
@@ -47,10 +54,35 @@ class MessageRepository {
         }
       }
 
+      // 발주번호가 없으면 '없음'을 반환.
       return orderNumbers.isEmpty ? ['없음'] : orderNumbers;
     } catch (e) {
       print('Error fetching order numbers: $e');
       return ['없음'];
     }
   }
+
+  // Firestore에 메시지를 저장하는 함수.
+  Future<void> sendMessage({
+    required String sender,
+    required String recipient,
+    required String orderNumber,
+    required String contents,
+  }) async {
+    // Firestore에 저장할 문서의 참조를 생성.
+    final messageDoc = firestore.collection('message_list')
+        .doc(recipient)
+        .collection('message')
+        .doc('${DateTime.now().millisecondsSinceEpoch}');
+
+    // 문서에 데이터를 설정하여 메시지를 저장.
+    await messageDoc.set({
+      'sender': sender,
+      'recipient': recipient,
+      'orderNumber': orderNumber,
+      'contents': contents,
+      'message_sendingTime': FieldValue.serverTimestamp(),
+    });
+  }
 }
+// ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 MessageRepository 클래스 내용 끝

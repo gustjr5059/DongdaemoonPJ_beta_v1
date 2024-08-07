@@ -19,7 +19,6 @@ import 'package:url_launcher/url_launcher.dart';
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
 import '../../announcement/provider/announce_state_provider.dart';
 import '../../cart/provider/cart_state_provider.dart';
-import '../../cart/view/cart_screen.dart';
 import '../../common/const/colors.dart';
 
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
@@ -35,18 +34,15 @@ import '../../manager/orderlist/provider/orderlist_all_provider.dart';
 import '../../manager/orderlist/provider/orderlist_state_provider.dart';
 import '../../manager/review/provider/review_state_provider.dart';
 import '../../manager/wishlist/provider/wishlist_state_provider.dart';
+import '../../message/provider/message_all_provider.dart';
 import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_state_provider.dart';
-import '../../order/view/order_list_screen.dart';
 import '../../review/provider/review_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
-
-// 제품 데이터를 비동기적으로 가져오기 위한 FutureProvider 파일을 임포트합니다.
-import '../provider/product_all_providers.dart';
 
 // 제품 상태 관리를 위한 StateProvider 파일을 임포트합니다.
 import '../provider/product_state_provider.dart';
@@ -558,6 +554,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 쪽지 관리 화면 관련 초기화 부분 시작
   ref.read(messageScrollPositionProvider.notifier).state =
   0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
+  ref.invalidate(fetchMessagesProvider); // 메시지 데이터 초기화
   // 쪽지 관리 화면 관련 초기화 부분 끝
 
   // 리뷰 관리 화면 관련 초기화 부분 시작
