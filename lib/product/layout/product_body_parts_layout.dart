@@ -37,6 +37,7 @@ import '../../manager/wishlist/provider/wishlist_state_provider.dart';
 import '../../message/provider/message_all_provider.dart';
 import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
+import '../../order/provider/order_all_providers.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../review/provider/review_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
@@ -514,6 +515,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(orderListScrollPositionProvider.notifier).state =
   0.0;
   ref.read(orderListLargeBannerPageProvider.notifier).state = 0; // 발주 내역 배너 페이지뷰 초기화
+  // 발주 목록 내 데이터를 불러오는 orderListProvider 초기화
+  ref.invalidate(orderListProvider);
   // 발주 내역 화면 관련 초기화 부분 끝
 
   // 발주 화면 관련 초기화 부분 시작

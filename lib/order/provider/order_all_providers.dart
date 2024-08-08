@@ -72,3 +72,17 @@ final accountNumberProvider = FutureProvider<String>((ref) async {
   // 입금 계좌 정보를 가져와 반환함
   return await repository.fetchAccountNumber();
 });
+
+// 발주 목록 내 특정 계정의 발주 관련 데이터를 불러오는 OrderlistRepository 인스턴스를 제공하는 FutureProvider
+final orderListProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  // Firestore 인스턴스를 사용하여 OrderlistRepository 인스턴스를 생성.
+  final repository = OrderlistRepository(firestore: FirebaseFirestore.instance);
+  // 현재 로그인된 사용자의 이메일을 가져옴.
+  final userEmail = FirebaseAuth.instance.currentUser?.email;
+  // 만약 사용자가 로그인되어 있지 않으면 예외를 발생시킴.
+  if (userEmail == null) {
+    throw Exception('User not logged in');
+  }
+  // 사용자 이메일로 발주 목록을 가져와서 반환.
+  return repository.fetchOrdersByEmail(userEmail);
+});

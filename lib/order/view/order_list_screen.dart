@@ -41,6 +41,8 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 주문 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../layout/order_body_parts_layout.dart';
+import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -168,6 +170,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         ref.read(orderListLargeBannerPageProvider.notifier).state = 0;
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.invalidate(orderListProvider);
       }
     });
 
@@ -354,9 +357,26 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 50), // 높이 임의로 50으로 간격 설정
-                            Text('발주내역 내용'),
-                            SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: 20), // 높이 임의로 50으로 간격 설정
+                            ref.watch(orderListProvider).when(
+                              data: (orders) {
+                                if (orders.isEmpty) {
+                                  return Center(
+                                      child: Text('발주 내역이 없습니다.'));
+                                }
+                                // 직접 OrderListItemWidget 위젯을 배치하는 코드
+                                return Column(
+                                  children: orders.map((order) {
+                                    return OrderListItemWidget(order: order);
+                                  }).toList(),
+                                );
+                              },
+                              loading: () =>
+                                  Center(child: CircularProgressIndicator()),
+                              error: (error, stack) => Center(
+                                  child: Text('에러가 발생했습니다: $error')),
+                            ),
+                            SizedBox(height: 20),
                           ],
                         ),
                       );

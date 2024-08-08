@@ -1,9 +1,11 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart';
@@ -781,7 +783,87 @@ class OrderItemWidget extends StatelessWidget {
     );
   }
 }
-// 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
+// ------ 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
+
+// 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
+class OrderListItemWidget extends ConsumerWidget {
+  // 발주 데이터를 담고 있는 맵 객체를 멤버 변수로 선언.
+  final Map<String, dynamic> order;
+
+  // 생성자를 통해 발주 데이터를 초기화.
+  OrderListItemWidget({required this.order});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 날짜 포맷을 지정.
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
+    final orderDate = (order['numberInfo']['order_date'] as Timestamp).toDate();
+    // 발주번호를 가져옴.
+    final orderNumber = order['numberInfo']['order_number'];
+    // 발주 상태를 나타내는 변수. 실제 데이터로 교체해야 함.
+    final orderStatus = '발주상태';
+
+    // 공통 카드 뷰 위젯을 사용하여 발주 아이템을 표시.
+    return CommonCardView(
+      // 카드 배경색을 지정.
+      backgroundColor: BEIGE_COLOR,
+      // 카드 내용으로 컬럼을 배치.
+      content: Column(
+        // 자식 위젯들을 왼쪽 정렬.
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 행(Row) 위젯을 사용하여 발주일자와 발주상태를 배치.
+          Row(
+            // 자식 위젯들을 양쪽 끝에 배치.
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // 발주일자를 텍스트로 표시.
+              Text(
+                dateFormat.format(orderDate),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              // 발주상태를 텍스트로 표시.
+              Text(
+                orderStatus,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
+              ),
+            ],
+          ),
+          // 여백을 추가.
+          SizedBox(height: 8),
+          // 발주번호를 텍스트로 표시.
+          Text(
+            '발주번호: $orderNumber',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          // 여백을 추가.
+          SizedBox(height: 8),
+          // 버튼을 가운데 배치.
+          Center(
+            // 발주 내역 상세보기 버튼을 생성.
+            child: ElevatedButton(
+              // 버튼 클릭 시의 동작을 정의.
+              onPressed: () {
+                // TODO: 발주 내역 상세보기 버튼 클릭 시의 동작 정의
+              },
+              // 버튼 스타일을 정의합니다.
+              style: ElevatedButton.styleFrom(
+                foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+                backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
+                side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 버튼 패딩
+              ),
+              // 버튼 텍스트를 정의.
+              child: Text('발주 내역 상세보기', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+// 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 끝
 
 // ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 // AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.
