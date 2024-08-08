@@ -36,7 +36,11 @@ final currentUserProvider = StreamProvider<auth.User?>((ref) {
 final receiversProvider = FutureProvider<List<User>>((ref) async {
   // Firestore에서 사용자 목록 가져오기
   final snapshot = await FirebaseFirestore.instance.collection('users').get();
-  return snapshot.docs.map((doc) => User.fromFirestore(doc)).toList();
+  // 'gshe.couture@gmail.com'을 필터링하여 사용자 목록 반환
+  return snapshot.docs
+      .map((doc) => User.fromFirestore(doc))
+      .where((user) => user.email != 'gshe.couture@gmail.com')
+      .toList();
 });
 
 // 선택한 수신자 이메일 계정 관련 발주번호 데이터를 불러오는 orderNumbersProvider 정의

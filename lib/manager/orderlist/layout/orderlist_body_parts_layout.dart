@@ -28,7 +28,7 @@ class ManagerOrderListContents extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButton<String>(
-              hint: Text('사용자 선택'),
+              hint: Text('발주자 계정 선택'),
               // 드롭다운 버튼에 힌트 텍스트 설정
               value: selectedUserEmail.isNotEmpty ? selectedUserEmail : null,
               // 선택된 사용자 이메일이 비어있지 않으면 해당 이메일을 드롭다운 값으로 설정
@@ -58,7 +58,7 @@ class ManagerOrderListContents extends ConsumerWidget {
                     data: (userOrders) {
                       // 발주 데이터를 성공적으로 가져온 경우
                       if (userOrders.isEmpty) {
-                        return Center(child: Text('해당 사용자의 발주 내역이 없습니다.'));
+                        return Center(child: Text('해당 고객의 발주 내역이 없습니다.'));
                         // 발주 데이터가 비어있을 경우 메시지를 표시
                       }
 

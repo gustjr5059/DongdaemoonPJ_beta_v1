@@ -21,7 +21,7 @@ class OrderlistRepository {
         final userEmail = doc.data()?['email'] as String? ?? '';
         print('Processing user: $userEmail');
         return userEmail;
-      }).where((email) => email.isNotEmpty).toList(); // 이메일이 비어있지 않은 경우만 리스트에 추가
+      }).where((email) => email.isNotEmpty && email != 'gshe.couture@gmail.com').toList(); // 'gshe.couture@gmail.com'을 제외하고 리스트에 추가
 
       print('Finished fetching all user emails for admin');
       return userEmails;
@@ -45,8 +45,9 @@ class OrderlistRepository {
 
       if (ordersQuerySnapshot.docs.isEmpty) {
         print('No orders found for email $userEmail');
-        // 발주 내역이 없는 경우 예외를 던짐
-        throw Exception('No orders found for email $userEmail');
+        return []; // 빈 리스트 반환
+        // // 발주 내역이 없는 경우 예외를 던짐
+        // throw Exception('No orders found for email $userEmail');
       }
 
       final List<Map<String, dynamic>> allOrders = [];
@@ -79,8 +80,9 @@ class OrderlistRepository {
       return allOrders;
     } catch (e) {
       print('Failed to fetch orders for email $userEmail: $e');
-      // 에러 발생 시 예외를 던짐
-      throw Exception('Failed to fetch orders for email $userEmail: $e');
+      return []; // 빈 리스트 반환
+      // // 에러 발생 시 예외를 던짐
+      // throw Exception('Failed to fetch orders for email $userEmail: $e');
     }
   }
 }

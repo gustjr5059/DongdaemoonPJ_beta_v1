@@ -9,13 +9,27 @@ class AdminMessageRepository {
 
   // Firestore에서 수신자 이메일 목록을 가져오는 함수.
   Future<List<String>> fetchReceivers() async {
-    // Firestore에서 'users' 컬렉션의 모든 문서를 가져옴.
-    final querySnapshot = await firestore.collection('users').get();
-    // 이메일 필드를 추출하여 'capjs06@gmail.com'을 제외한 목록을 반환.
-    return querySnapshot.docs
-        .map((doc) => doc.data()['email'] as String)
-        .where((email) => email != 'capjs06@gmail.com')
-        .toList();
+    try {
+      print('Fetching all user emails for admin...');
+      // 'users' 컬렉션의 모든 문서를 가져옴.
+      final querySnapshot = await firestore.collection('users').get();
+      print('Fetched users: ${querySnapshot.docs.length}');
+
+      // 각 문서에서 'email' 필드를 추출하여 리스트로 만듦.
+      final List<String> userEmails = querySnapshot.docs.map((doc) {
+        final userEmail = doc.data()['email'] as String? ?? '';
+        print('Processing user: $userEmail');
+        return userEmail;
+      }).where((email) => email.isNotEmpty && email != 'gshe.couture@gmail.com').toList(); // 'gshe.couture@gmail.com'을 제외하고 리스트에 추가
+
+      print('Filtered user emails: $userEmails');
+      print('Finished fetching all user emails for admin');
+      return userEmails;
+    } catch (e) {
+      print('Failed to fetch user emails: $e');
+      // 에러 발생 시 예외를 던짐
+      throw Exception('Failed to fetch user emails: $e');
+    }
   }
 
   // 특정 수신자의 발주번호 목록을 가져오는 함수.

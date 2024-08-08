@@ -700,7 +700,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
   // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
-  final bool isAdmin = userEmail == 'capjs06@gmail.com';
+  final bool isAdmin = userEmail == 'gshe.couture@gmail.com';
 
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(

@@ -157,6 +157,12 @@ class OrderRepository {
       });
     }
 
+    // 발주 상태 정보를 Firestore에 저장
+    final orderStatusInfo = {
+      'order_status': '발주신청 완료', // 기본 값으로 '발주신청 완료'를 저장
+    };
+    await orderDoc.collection('order_status_info').doc('info').set(orderStatusInfo);
+
     // number_info 컬렉션에 order_number와 order_date 추가
     final now = DateTime.now(); // 현재 시간을 가져옴
     final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
@@ -336,8 +342,9 @@ class OrderlistRepository {
 
       if (ordersQuerySnapshot.docs.isEmpty) {
         print('No orders found for email $userEmail');
-        // 발주 내역이 없는 경우 예외를 던짐
-        throw Exception('No orders found for email $userEmail');
+        return []; // 빈 리스트 반환
+        // // 발주 내역이 없는 경우 예외를 던짐
+        // throw Exception('No orders found for email $userEmail');
       }
 
       final List<Map<String, dynamic>> allOrders = [];
@@ -370,8 +377,9 @@ class OrderlistRepository {
       return allOrders;
     } catch (e) {
       print('Failed to fetch orders for email $userEmail: $e');
-      // 에러 발생 시 예외를 던짐
-      throw Exception('Failed to fetch orders for email $userEmail: $e');
+      return []; // 에러 발생 시 빈 리스트 반환
+      // // 에러 발생 시 예외를 던짐
+      // throw Exception('Failed to fetch orders for email $userEmail: $e');
     }
   }
 }
