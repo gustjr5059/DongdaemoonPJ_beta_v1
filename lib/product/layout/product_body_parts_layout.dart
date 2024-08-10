@@ -598,6 +598,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(allUserEmailsProvider);
   // 발주내역 관리 화면 내 선택된 이메일 계정 관련 발주 데이터 불러오는 로직 초기화
   ref.invalidate(userOrdersProvider);
+  // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
+  ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
   // 발주내역 관리 화면 초기화 끝
 
   // 찜 목록 관리 화면 초기화 시작

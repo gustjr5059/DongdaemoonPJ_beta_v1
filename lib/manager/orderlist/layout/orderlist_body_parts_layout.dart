@@ -79,6 +79,10 @@ class ManagerOrderListContents extends ConsumerWidget {
                               final formatter = NumberFormat('#,###');
                               // 숫자 포맷 설정
 
+                              // 발주 상태 저장할 상태 프로바이더 선언
+                              // (orderStatusStateProvider를 구독(subscribe)하여 그 상태를 가져오는 역할)
+                              final orderStatusProvider = ref.watch(orderStatusStateProvider);
+
                               return CommonCardView(
                                 backgroundColor: BEIGE_COLOR,
                                 content: Column(
@@ -120,6 +124,61 @@ class ManagerOrderListContents extends ConsumerWidget {
                                         ],
                                       );
                                     }).toList(),
+                                    SizedBox(height: 10),
+                                    // 드롭다운 버튼 위에 공간을 주기 위해 10픽셀 높이의 SizedBox 추가
+                                    DropdownButton<String>(
+                                      value: orderStatusProvider.isEmpty ? '발주신청 완료' : orderStatusProvider,
+                                      // orderStatusProvider가 비어 있으면 기본 값으로 '발주신청 완료'를 설정하고, 그렇지 않으면 현재 상태를 설정
+                                      onChanged: (String? newStatus) {
+                                        // 드롭다운의 값이 변경되었을 때 호출되는 콜백 함수
+                                        if (newStatus != null) {
+                                          ref.read(orderStatusStateProvider.notifier).state = newStatus;
+                                          // 선택된 새로운 상태로 orderStatusStateProvider의 상태를 업데이트
+                                        }
+                                      },
+                                      items: ['발주신청 완료', '결제완료', '배송완료', '환불']
+                                          .map<DropdownMenuItem<String>>((String status) {
+                                        // 드롭다운에 표시될 각 항목을 리스트로 생성
+                                        return DropdownMenuItem<String>(
+                                          value: status,
+                                          child: Text(status),
+                                          // 각 항목의 텍스트를 드롭다운 메뉴로 표시
+                                        );
+                                      }).toList(),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        // 버튼이 눌렸을 때 비동기 작업을 수행
+                                        try {
+                                          await ref.read(orderlistRepositoryProvider).updateOrderStatus(
+                                              selectedUserEmail,
+                                              numberInfo['order_number'],
+                                              orderStatusProvider);
+                                          // 선택된 사용자 이메일과 발주 번호, 새로운 발주 상태를 이용해 발주 상태를 업데이트
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('\'$orderStatusProvider\'로 발주상태가 변경되었습니다.'),
+                                              // 발주 상태 변경이 성공적으로 이루어졌음을 사용자에게 알림
+                                            ),
+                                          );
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('발주상태 변경에 실패했습니다: $e'),
+                                              // 발주 상태 변경에 실패했을 때 오류 메시지를 사용자에게 알림
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+                                        backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
+                                        side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+                                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // 버튼 패딩
+                                      ),
+                                      child: Text('변경', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                      // 버튼에 '변경'이라는 텍스트를 굵은 글씨로 표시
+                                    ),
                                   ],
                                 ),
                               );

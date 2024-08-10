@@ -20,3 +20,6 @@ final managerOrderlistScrollControllerProvider = Provider<ScrollController>((ref
 
 // 선택된 사용자 이메일을 저장하는 Provider
 final selectedUserEmailProvider = StateProvider<String>((ref) => '');
+
+// 선택한 발송상태 데이터의 상태관리하는 orderStatusStateProvider
+final orderStatusStateProvider = StateProvider<String>((ref) => '발주신청 완료');

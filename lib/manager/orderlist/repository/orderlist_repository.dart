@@ -21,7 +21,10 @@ class OrderlistRepository {
         final userEmail = doc.data()?['email'] as String? ?? '';
         print('Processing user: $userEmail');
         return userEmail;
-      }).where((email) => email.isNotEmpty && email != 'gshe.couture@gmail.com').toList(); // 'gshe.couture@gmail.com'을 제외하고 리스트에 추가
+      })
+          .where((email) =>
+      email.isNotEmpty && email != 'gshe.couture@gmail.com')
+          .toList(); // 'gshe.couture@gmail.com'을 제외하고 리스트에 추가
 
       print('Finished fetching all user emails for admin');
       return userEmails;
@@ -33,7 +36,8 @@ class OrderlistRepository {
   }
 
   // 특정 사용자의 발주 데이터를 가져오는 함수
-  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(String userEmail) async {
+  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(
+      String userEmail) async {
     try {
       print('Fetching orders for email: $userEmail');
       // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
@@ -41,7 +45,8 @@ class OrderlistRepository {
 
       // 해당 문서의 'orders' 하위 컬렉션의 모든 문서를 가져옴
       final ordersQuerySnapshot = await userDocRef.collection('orders').get();
-      print('Fetched orders: ${ordersQuerySnapshot.docs.length} for email: $userEmail');
+      print('Fetched orders: ${ordersQuerySnapshot.docs
+          .length} for email: $userEmail');
 
       if (ordersQuerySnapshot.docs.isEmpty) {
         print('No orders found for email $userEmail');
@@ -56,10 +61,16 @@ class OrderlistRepository {
         print('Processing order: ${orderDoc.id}');
 
         // 각 발주 문서의 하위 컬렉션에서 필요한 정보를 가져옴
-        final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
-        final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
-        final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
-        final productInfoQuery = await orderDoc.reference.collection('product_info').get();
+        final numberInfoDoc = await orderDoc.reference.collection('number_info')
+            .doc('info')
+            .get();
+        final ordererInfoDoc = await orderDoc.reference.collection(
+            'orderer_info').doc('info').get();
+        final amountInfoDoc = await orderDoc.reference.collection('amount_info')
+            .doc('info')
+            .get();
+        final productInfoQuery = await orderDoc.reference.collection(
+            'product_info').get();
 
         // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
         final productInfo = productInfoQuery.docs.map((doc) {
@@ -83,6 +94,37 @@ class OrderlistRepository {
       return []; // 빈 리스트 반환
       // // 에러 발생 시 예외를 던짐
       // throw Exception('Failed to fetch orders for email $userEmail: $e');
+    }
+  }
+
+// 발주 상태를 업데이트하는 비동기 함수 정의
+  Future<void> updateOrderStatus(String userEmail, String orderNumber,
+      String newStatus) async {
+    try {
+      // Firestore에서 'order_list' 컬렉션에서 해당 유저의 문서(userEmail)를 선택하고,
+      // 그 문서 내 'orders' 컬렉션에서 'numberInfo.order_number'가 orderNumber와 일치하는 발주 문서들을 가져옴
+      final orderDoc = await firestore
+          .collection('order_list')
+          .doc(userEmail)
+          .collection('orders')
+          .where('numberInfo.order_number', isEqualTo: orderNumber)
+          .get();
+
+      // 발주 문서가 없을 경우 예외를 발생시켜 "해당 발주를 찾을 수 없습니다." 메시지 출력
+      if (orderDoc.docs.isEmpty) {
+        throw Exception('해당 발주를 찾을 수 없습니다.');
+      }
+
+      // 가져온 첫 번째 발주 문서의 'order_status_info' 하위 컬렉션에 있는 'info' 문서의
+      // 'order_status' 필드를 새로운 상태(newStatus)로 업데이트
+      await orderDoc.docs.first.reference.collection('order_status_info').doc(
+          'info').update({
+        'order_status': newStatus,
+      });
+    } catch (e) {
+      // 발주 상태 업데이트에 실패할 경우 오류 메시지를 출력하고 예외를 발생시킴
+      print('Failed to update order status: $e');
+      throw Exception('Failed to update order status: $e');
     }
   }
 }

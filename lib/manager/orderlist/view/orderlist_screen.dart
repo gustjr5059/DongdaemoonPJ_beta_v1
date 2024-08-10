@@ -112,6 +112,9 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
 
       // 발주내역 관리 화면 초기화
       ref.read(selectedUserEmailProvider.notifier).state = '';
+
+      // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
+      ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -122,6 +125,8 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
         ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0;
         // 발주내역 관리 화면 초기화
         ref.read(selectedUserEmailProvider.notifier).state = '';
+        // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
+        ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
       }
     });
 
@@ -219,7 +224,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
                         child: Column(
                           children: [
                             SizedBox(height: 5),
-                            ManagerOrderListContents(),
+                            ManagerOrderListContents(), // 발주내역을 불러와서 UI로 구현하는 로직 재사용하여 구현
                             SizedBox(height: 10),
                           ],
                         ),

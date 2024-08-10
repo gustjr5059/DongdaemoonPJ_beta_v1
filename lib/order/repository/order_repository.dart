@@ -357,6 +357,7 @@ class OrderlistRepository {
         final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
         final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
         final productInfoQuery = await orderDoc.reference.collection('product_info').get();
+        final orderStatusDoc = await orderDoc.reference.collection('order_status_info').doc('info').get();
 
         // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
         final productInfo = productInfoQuery.docs.map((doc) {
@@ -370,6 +371,7 @@ class OrderlistRepository {
           'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
           'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
           'productInfo': productInfo,
+          'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음', // order_status 필드 추가
         });
       }
 

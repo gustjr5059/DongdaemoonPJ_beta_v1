@@ -143,6 +143,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 발주내역 버튼 인덱스인 2와 매핑
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
+      // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
+      ref.invalidate(orderListProvider);
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -170,6 +172,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         ref.read(orderListLargeBannerPageProvider.notifier).state = 0;
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+        // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
         ref.invalidate(orderListProvider);
       }
     });
@@ -358,24 +361,32 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 20), // 높이 임의로 50으로 간격 설정
+                            // orderListProvider를 구독하여 데이터, 로딩 상태, 에러 상태를 처리
                             ref.watch(orderListProvider).when(
                               data: (orders) {
+                                // 데이터를 성공적으로 가져온 경우
                                 if (orders.isEmpty) {
+                                  // 발주 내역이 비어있는 경우
                                   return Center(
                                       child: Text('발주 내역이 없습니다.'));
+                                  // "발주 내역이 없습니다."라는 메시지를 화면 중앙에 표시
                                 }
-                                // 직접 OrderListItemWidget 위젯을 배치하는 코드
+                                // 발주 내역이 존재하는 경우, 각 발주 항목을 표시하는 위젯을 생성
                                 return Column(
                                   children: orders.map((order) {
+                                    // 각 발주 항목을 OrderListItemWidget으로 변환하여 열거
                                     return OrderListItemWidget(order: order);
                                   }).toList(),
                                 );
                               },
+                              // 데이터를 로딩 중일 때 로딩 인디케이터를 화면 중앙에 표시
                               loading: () =>
                                   Center(child: CircularProgressIndicator()),
+                              // 데이터를 가져오는 중 에러가 발생했을 때 에러 메시지를 화면 중앙에 표시
                               error: (error, stack) => Center(
                                   child: Text('에러가 발생했습니다: $error')),
                             ),
+                            // 위의 내용과 아래 내용 사이에 20픽셀 높이의 공간을 추가
                             SizedBox(height: 20),
                           ],
                         ),

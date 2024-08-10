@@ -801,8 +801,8 @@ class OrderListItemWidget extends ConsumerWidget {
     final orderDate = (order['numberInfo']['order_date'] as Timestamp).toDate();
     // 발주번호를 가져옴.
     final orderNumber = order['numberInfo']['order_number'];
-    // 발주 상태를 나타내는 변수. 실제 데이터로 교체해야 함.
-    final orderStatus = '발주상태';
+    // 발주 상태를 orderStatus 필드에서 가져옴.
+    final orderStatus = order['orderStatus']; // 발주 상태 데이터
 
     // 공통 카드 뷰 위젯을 사용하여 발주 아이템을 표시.
     return CommonCardView(
