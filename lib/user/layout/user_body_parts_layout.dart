@@ -134,7 +134,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
           _buildOptionTile( // 옵션 타일 생성
             context,
             icon: Icons.message, // 아이콘 설정
-            title: '쪽지 관리', // 제목 설정
+            title: '쪽지함', // 제목 설정
             onTap: () { // 클릭 시 실행될 함수
               onMessageListClick(context, ref); // 메시지 목록 클릭 함수 실행
             },

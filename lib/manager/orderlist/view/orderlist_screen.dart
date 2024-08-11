@@ -49,25 +49,25 @@ import '../provider/orderlist_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// ManagerOrderlistMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class ManagerOrderlistMainScreen extends ConsumerStatefulWidget {
-  const ManagerOrderlistMainScreen({Key? key}) : super(key: key);
+// AdminOrderlistMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class AdminOrderlistMainScreen extends ConsumerStatefulWidget {
+  const AdminOrderlistMainScreen({Key? key}) : super(key: key);
 
   @override
-  _ManagerOrderlistMainScreenState createState() => _ManagerOrderlistMainScreenState();
+  _AdminOrderlistMainScreenState createState() => _AdminOrderlistMainScreenState();
 }
 
-// _ManagerOrderlistMainScreenState 클래스 시작
-// _ManagerOrderlistMainScreenState 클래스는 ManagerOrderlistMainScreen 위젯의 상태를 관리함.
+// _AdminOrderlistMainScreenState 클래스 시작
+// _AdminOrderlistMainScreenState 클래스는 AdminOrderlistMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMainScreen>
+class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // managerOrderlistScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
-  // ref.read(managerOrderlistScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
+  // adminOrderlistScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
+  // ref.read(adminOrderlistScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
   // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
   // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
   // 2.하단 탭바의 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
@@ -76,13 +76,13 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
   // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
   // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
 
-  // managerOrderlistScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
+  // adminOrderlistScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
   // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
   // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController managerOrderlistScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController adminOrderlistScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -90,20 +90,20 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
   void initState() {
     super.initState();
     // ScrollController를 초기화
-    managerOrderlistScreenPointScrollController = ScrollController();
+    adminOrderlistScreenPointScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
-      if (managerOrderlistScreenPointScrollController.hasClients) {
+      if (adminOrderlistScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(managerOrderlistScrollPositionProvider);
-        // managerOrderlistScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
+        double savedScrollPosition = ref.read(adminOrderlistScrollPositionProvider);
+        // adminOrderlistScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        managerOrderlistScreenPointScrollController.jumpTo(savedScrollPosition);
+        adminOrderlistScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
@@ -122,7 +122,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0;
+        ref.read(adminOrderlistScrollPositionProvider.notifier).state = 0;
         // 발주내역 관리 화면 초기화
         ref.read(selectedUserEmailProvider.notifier).state = '';
         // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
@@ -160,7 +160,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    managerOrderlistScreenPointScrollController.dispose(); // ScrollController 해제
+    adminOrderlistScreenPointScrollController.dispose(); // ScrollController 해제
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
@@ -193,7 +193,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
       body: Stack(
         children: [
           CustomScrollView(
-            controller: managerOrderlistScreenPointScrollController,
+            controller: adminOrderlistScreenPointScrollController,
             slivers: <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
@@ -224,7 +224,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
                         child: Column(
                           children: [
                             SizedBox(height: 5),
-                            ManagerOrderListContents(), // 발주내역을 불러와서 UI로 구현하는 로직 재사용하여 구현
+                            AdminOrderListContents(), // 발주내역을 불러와서 UI로 구현하는 로직 재사용하여 구현
                             SizedBox(height: 10),
                           ],
                         ),
@@ -236,7 +236,7 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
               ),
             ],
           ),
-          buildTopButton(context, managerOrderlistScreenPointScrollController),
+          buildTopButton(context, adminOrderlistScreenPointScrollController),
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
@@ -247,4 +247,4 @@ class _ManagerOrderlistMainScreenState extends ConsumerState<ManagerOrderlistMai
     );
   }
 }
-// _ManagerOrderlistScreenState 클래스 끝
+// _AdminOrderlistScreenState 클래스 끝

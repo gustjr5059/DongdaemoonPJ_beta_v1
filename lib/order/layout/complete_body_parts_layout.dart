@@ -49,13 +49,28 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               ),
               SizedBox(height: 16), // 간격
               Text(
-                '발주가 완료되었습니다.', // 설명 텍스트
+                '[발주가 완료되었습니다.]', // 설명 텍스트
                 style: TextStyle(
                   fontSize: 16, // 폰트 크기 설정
                 ),
               ),
+              SizedBox(height: 5), // 간격
               Text(
-                '아래 계좌 정보로 입금해 주시면 결제가 완료처리가 됩니다.', // 추가 설명 텍스트
+                '[안내 사항]', // 설명 텍스트
+                style: TextStyle(
+                  fontSize: 16, // 폰트 크기 설정
+                ),
+              ),
+              SizedBox(height: 3), // 간격
+              Text(
+                '아래 계좌 정보로 입금해주시면 결제완료 처리 됩니다.',
+                style: TextStyle(
+                  fontSize: 14, // 폰트 크기 설정
+                  color: Colors.grey, // 텍스트 색상 설정
+                ),
+              ),
+              Text(
+                '발주자와 입금자 성함은 같아야 합니다.',
                 style: TextStyle(
                   fontSize: 14, // 폰트 크기 설정
                   color: Colors.grey, // 텍스트 색상 설정

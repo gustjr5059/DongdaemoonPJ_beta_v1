@@ -63,22 +63,6 @@ class CartMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _CartMainScreenState extends ConsumerState<CartMainScreen>
     with WidgetsBindingObserver {
-  // 큰 배너를 위한 페이지 컨트롤러
-  late PageController _largeBannerPageController;
-
-  // 큰 배너를 자동 스크롤하는 클래스
-  late BannerAutoScrollClass _largeBannerAutoScroll;
-
-  // 배너 이미지의 총 개수를 저장하는 변수
-  int bannerImageCount = 3;
-
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 큰 배너 클릭 시 이동할 URL 목록
-  final List<String> largeBannerLinks = [
-    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
-    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
-  ];
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -101,21 +85,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController cartScreenPointScrollController; // 스크롤 컨트롤러 선언
-
-  // // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
-  // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-  // // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-  // void _updateScrollPosition() {
-  //   // 'cartScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-  //   double currentScrollPosition = cartScreenPointScrollController.offset;
-  //
-  //   // 'ref'를 사용하여 'cartScrollPositionProvider'의 notifier를 읽어옴.
-  //   // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
-  //   // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-  //   ref.read(cartScrollPositionProvider.notifier).state = currentScrollPosition;
-  // }
-  //
-  // // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -143,22 +112,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 1;
     });
-    // // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
-    // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-    // // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    // cartScreenPointScrollController.addListener(_updateScrollPosition);
-
-    // 큰 배너에 대한 PageController 및 AutoScroll 초기화
-    // 'cartLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController =
-        PageController(initialPage: ref.read(cartLargeBannerPageProvider));
-
-    // 큰 배너를 자동으로 스크롤하는 기능 초기화
-    _largeBannerAutoScroll = BannerAutoScrollClass(
-      pageController: _largeBannerPageController,
-      currentPageProvider: cartLargeBannerPageProvider,
-      itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
-    );
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -166,7 +119,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
-        ref.read(cartLargeBannerPageProvider.notifier).state = 0;
         ref.read(cartScrollPositionProvider.notifier).state =
             0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
       }
@@ -178,10 +130,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     _updateStatusBar();
 
-    // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
-    Future.delayed(Duration.zero, () {
-      _largeBannerAutoScroll.startAutoScroll();
-    });
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -193,13 +141,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       _updateStatusBar();
-    }
-    // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
-    if (state == AppLifecycleState.resumed) {
-      _largeBannerAutoScroll.startAutoScroll();
-      // 앱이 백그라운드로 이동할 때, 배너의 자동 스크롤을 중지
-    } else if (state == AppLifecycleState.paused) {
-      _largeBannerAutoScroll.stopAutoScroll();
     }
   }
 
@@ -213,16 +154,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 앱 생명주기 이벤트를 더 이상 수신하지 않겠다는 의도임.
     WidgetsBinding.instance.removeObserver(this);
 
-    // 각 배너 관련 리소스 해제
-    _largeBannerPageController.dispose();
-    _largeBannerAutoScroll.stopAutoScroll();
-
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
-
-    // // 'cartScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
-    // // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    // cartScreenPointScrollController.removeListener(_updateScrollPosition);
 
     cartScreenPointScrollController.dispose(); // ScrollController 해제
 
@@ -253,20 +186,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onLargeBannerTap(BuildContext context, int index) async {
-      // largeBannerLinks 리스트에서 index에 해당하는 URL을 가져옴.
-      final url = largeBannerLinks[index];
-
-      // 주어진 URL을 열 수 있는지 확인함.
-      if (await canLaunchUrl(Uri.parse(url))) {
-        // URL을 열 수 있다면, 해당 URL을 염.
-        await launchUrl(Uri.parse(url));
-      } else {
-        // URL을 열 수 없다면 예외를 던짐.
-        throw '네트워크 오류';
-      }
-    }
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -330,36 +249,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                   // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
                                   children: [
                                     SizedBox(height: 5),
-                                    // CommonCardView 위젯을 사용하여 배너를 표시
-                                    // CommonCardView(
-                                    //   content: SizedBox(
-                                    //     height: 200,
-                                    //     // buildCommonBannerPageViewSection 함수를 호출하여 배너 페이지 뷰 섹션을 빌드
-                                    //     child: buildCommonBannerPageViewSection<
-                                    //         AllLargeBannerImage>(
-                                    //       context: context,
-                                    //       ref: ref,
-                                    //       currentPageProvider:
-                                    //           cartLargeBannerPageProvider,
-                                    //       pageController:
-                                    //           _largeBannerPageController,
-                                    //       bannerAutoScroll:
-                                    //           _largeBannerAutoScroll,
-                                    //       bannerLinks: largeBannerLinks,
-                                    //       bannerImagesProvider:
-                                    //           allLargeBannerImagesProvider,
-                                    //       onPageTap: _onLargeBannerTap,
-                                    //     ),
-                                    //   ),
-                                    //   // 배경색을 LIGHT_PURPLE_COLOR로 설정
-                                    //   backgroundColor: LIGHT_PURPLE_COLOR,
-                                    //   // 그림자 크기를 4로 설정
-                                    //   elevation: 4,
-                                    //   // 패딩을 8로 설정
-                                    //   padding: const EdgeInsets.fromLTRB(
-                                    //       8.0, 8.0, 8.0, 8.0),
-                                    // ),
-                                    SizedBox(height: 10),
                                     // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
                                     CartItemsList(),
                                   ],
@@ -384,5 +273,4 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     );
   }
 }
-
 // _CartMainScreenState 클래스 끝

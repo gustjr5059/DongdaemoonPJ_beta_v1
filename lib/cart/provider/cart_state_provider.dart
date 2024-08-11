@@ -6,9 +6,6 @@ import '../repository/cart_repository.dart'; // 장바구니 데이터 처리를
 import 'cart_all_proviers.dart'; // CartFutureProvider를 import
 
 
-// 장바구니 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final cartLargeBannerPageProvider = StateProvider<int>((ref) => 0);
-
 // 장바구니 화면에서 단순 화면 스크롤로 이동할 위치를 저장하는 StateProvider
 final cartScrollPositionProvider = StateProvider<double>((ref) => 0);
 

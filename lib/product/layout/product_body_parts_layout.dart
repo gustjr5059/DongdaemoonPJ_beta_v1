@@ -27,13 +27,11 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../inquiry/provider/inquiry_state_provider.dart';
-import '../../manager/announcement/provider/announce_state_provider.dart';
 import '../../manager/message/provider/message_all_provider.dart';
 import '../../manager/message/provider/message_state_provider.dart';
 import '../../manager/orderlist/provider/orderlist_all_provider.dart';
 import '../../manager/orderlist/provider/orderlist_state_provider.dart';
 import '../../manager/review/provider/review_state_provider.dart';
-import '../../manager/wishlist/provider/wishlist_state_provider.dart';
 import '../../message/provider/message_all_provider.dart';
 import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
@@ -506,7 +504,6 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 장바구니 화면에서 단순 화면 스크롤 초기화
   ref.read(cartScrollPositionProvider.notifier).state =
   0.0;
-  ref.read(cartLargeBannerPageProvider.notifier).state = 0; // 장바구니 배너 페이지뷰 초기화
   ref.invalidate(cartItemsProvider); // 장바구니 데이터 초기화
   // 장바구니 화면 관련 초기화 부분 끝
 
@@ -514,7 +511,6 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 발주 내역 화면에서 단순 화면 스크롤 초기화
   ref.read(orderListScrollPositionProvider.notifier).state =
   0.0;
-  ref.read(orderListLargeBannerPageProvider.notifier).state = 0; // 발주 내역 배너 페이지뷰 초기화
   // 발주 목록 내 데이터를 불러오는 orderListProvider 초기화
   ref.invalidate(orderListProvider);
   // 발주 내역 화면 관련 초기화 부분 끝
@@ -568,7 +564,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
   // 리뷰 관리 화면 초기화 시작
-  ref.read(managerReviewScrollPositionProvider.notifier).state = 0.0;
+  ref.read(adminReviewScrollPositionProvider.notifier).state = 0.0;
   // 리뷰 관리 화면 초기화 끝
 
   // 쪽지 관리 화면 초기화 시작
@@ -591,7 +587,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // 발주내역 관리 화면 초기화 시작
   // 발주내역 관리 화면 자체의 스크롤 초기화
-  ref.read(managerOrderlistScrollPositionProvider.notifier).state = 0.0;
+  ref.read(adminOrderlistScrollPositionProvider.notifier).state = 0.0;
   // 발주내역 관리 화면 초기화
   ref.read(selectedUserEmailProvider.notifier).state = '';
   // 발주내역 관리 화면 내 모든 사용자 이메일 계정 데이터 불러오는 로직 초기화
@@ -601,14 +597,6 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
   ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
   // 발주내역 관리 화면 초기화 끝
-
-  // 찜 목록 관리 화면 초기화 시작
-  ref.read(managerWishlistScrollPositionProvider.notifier).state = 0.0;
-  // 찜 목록 관리 화면 초기화 끝
-
-  // 공지사항 관리 화면 초기화 시작
-  ref.read(managerAnnounceScrollPositionProvider.notifier).state = 0.0;
-  // 공지사항 관리 화면 초기화 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 끝
 

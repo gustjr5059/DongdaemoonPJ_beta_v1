@@ -31,6 +31,11 @@ class UserInfoWidget extends ConsumerWidget {
         final email = userInfo?['email'] ?? '-';
         final phoneNumber = userInfo?['phone_number'] ?? '-';
 
+        // 휴대폰 번호 입력 필드에 사용할 컨트롤러 생성
+        // 파이어베이스 내 휴대폰 번호 데이터가 있을 시, 불러오고 없으면 직접 입력 부분이 바로 구현
+        // 휴대폰 번호를 불러온 경우에도 커서를 갖다대면 직접 입력 부분이 활성화
+        TextEditingController phoneNumberController = TextEditingController(text: phoneNumber);
+
         return Padding(
           padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
           child: Column(
@@ -56,10 +61,20 @@ class UserInfoWidget extends ConsumerWidget {
                 children: [
                   _buildTableRow('이름', name), // 이름 행 생성
                   _buildTableRow('이메일', email), // 이메일 행 생성
-                  _buildTableRow('휴대폰 번호', phoneNumber), // 휴대폰 번호 행 생성
+                  // _buildTableRow('휴대폰 번호', phoneNumber), // 휴대폰 번호 행 생성
+                  _buildEditablePhoneNumberRow('휴대폰 번호', phoneNumberController), // 수정 가능한 휴대폰 번호 행 생성
                 ],
               ),
               SizedBox(height: 8), // 테이블과 안내문 사이에 8 픽셀 높이의 여백 추가
+              Text(
+                '[연락처 미입력으로 인한 불이익시 당사가 책임지지 않습니다.]', // 안내문 텍스트
+                style: TextStyle(
+                  fontSize: 14, // 텍스트 크기 14
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,// 텍스트 색상을 회색으로 설정
+                ),
+              ),
+              SizedBox(height: 5),
               Text(
                 '* 해당 정보의 변경이 필요할 시, 로그인 화면 내 회원가입 절차를 통해 변경된 내용으로 재전송 해주세요.', // 안내문 텍스트
                 style: TextStyle(
@@ -94,6 +109,38 @@ class UserInfoWidget extends ConsumerWidget {
           child: value == '-' // 값이 '-'인 경우
               ? Center(child: Text(value)) // 가운데 정렬
               : Align(alignment: Alignment.centerLeft, child: Text(value)), // 왼쪽 정렬
+        ),
+      ],
+    );
+  }
+
+  // 수정 가능한 휴대폰 번호 행을 빌드하는 함수
+  TableRow _buildEditablePhoneNumberRow(String label, TextEditingController controller) {
+    return TableRow(
+      children: [
+        Container(
+          color: Colors.grey.shade200, // 셀 배경색 설정
+          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+          child: Text(
+            label, // 셀에 표시될 텍스트
+            style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+          ),
+        ),
+        Container(
+          color: Colors.white, // 셀 배경색 설정
+          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+          child: TextField(
+            controller: controller, // 휴대폰 번호 입력 컨트롤러 설정
+            style: TextStyle(fontSize: 14), // 텍스트 필드 스타일 설정
+            decoration: InputDecoration(
+              hintText: "'-'을 붙여서 기입해주세요.", // 힌트 텍스트 설정
+              hintStyle: TextStyle(color: Colors.grey.shade400), // 힌트 텍스트 색상 설정
+              border: InputBorder.none, // 입력 경계선 제거
+              isDense: true, // 간격 설정
+              contentPadding: EdgeInsets.zero, // 내용 여백 제거
+            ),
+            maxLines: 1, // 최대 줄 수 설정
+          ),
         ),
       ],
     );
@@ -455,8 +502,8 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     items: <String>[
                       '기사님께 보여지는 메모입니다.',
                       '경비실에 맡겨주세요',
+                      '문 앞에 놓아 주세요.',
                       '벨은 누르지 말아주세요',
-                      '무인택배함에 넣어주세요',
                       '직접입력',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(

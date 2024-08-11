@@ -7,8 +7,8 @@ import '../provider/orderlist_all_provider.dart';
 import '../provider/orderlist_state_provider.dart';
 
 
-// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 및 버튼 클릭 시, 나오는 데이터 UI 내용을 구현하는 ManagerOrderListContents 클래스 시작
-class ManagerOrderListContents extends ConsumerWidget {
+// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 및 버튼 클릭 시, 나오는 데이터 UI 내용을 구현하는 AdminOrderListContents 클래스 시작
+class AdminOrderListContents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allUserEmailsAsyncValue = ref.watch(allUserEmailsProvider);
@@ -150,7 +150,7 @@ class ManagerOrderListContents extends ConsumerWidget {
                                       onPressed: () async {
                                         // 버튼이 눌렸을 때 비동기 작업을 수행
                                         try {
-                                          await ref.read(orderlistRepositoryProvider).updateOrderStatus(
+                                          await ref.read(adminOrderlistRepositoryProvider).updateOrderStatus(
                                               selectedUserEmail,
                                               numberInfo['order_number'],
                                               orderStatusProvider);
@@ -205,4 +205,4 @@ class ManagerOrderListContents extends ConsumerWidget {
     );
   }
 }
-// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 및 버튼 클릭 시, 나오는 데이터 UI 내용을 구현하는 ManagerOrderListContents 클래스 끝
+// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 및 버튼 클릭 시, 나오는 데이터 UI 내용을 구현하는 AdminOrderListContents 클래스 끝

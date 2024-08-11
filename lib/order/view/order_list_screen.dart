@@ -63,22 +63,6 @@ class OrderListMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     with WidgetsBindingObserver {
-  // 큰 배너를 위한 페이지 컨트롤러
-  late PageController _largeBannerPageController;
-
-  // 큰 배너를 자동 스크롤하는 클래스
-  late BannerAutoScrollClass _largeBannerAutoScroll;
-
-  // 배너 이미지의 총 개수를 저장하는 변수
-  int bannerImageCount = 3;
-
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 큰 배너 클릭 시 이동할 URL 목록
-  final List<String> largeBannerLinks = [
-    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
-    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
-  ];
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -101,22 +85,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController orderListScreenPointScrollController; // 스크롤 컨트롤러 선언
-
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
-  // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-  // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-  void _updateScrollPosition() {
-    // 'orderListScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
-    double currentScrollPosition = orderListScreenPointScrollController.offset;
-
-    // 'ref'를 사용하여 'orderListScrollPositionProvider'의 notifier를 읽어옴.
-    // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
-    // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(orderListScrollPositionProvider.notifier).state =
-        currentScrollPosition;
-  }
-
-  // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -146,22 +114,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
       ref.invalidate(orderListProvider);
     });
-    // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
-    // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
-    orderListScreenPointScrollController.addListener(_updateScrollPosition);
-
-    // 큰 배너에 대한 PageController 및 AutoScroll 초기화
-    // 'orderListLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
-    _largeBannerPageController =
-        PageController(initialPage: ref.read(orderListLargeBannerPageProvider));
-
-    // 큰 배너를 자동으로 스크롤하는 기능 초기화
-    _largeBannerAutoScroll = BannerAutoScrollClass(
-      pageController: _largeBannerPageController,
-      currentPageProvider: orderListLargeBannerPageProvider,
-      itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
-    );
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -169,7 +121,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
-        ref.read(orderListLargeBannerPageProvider.notifier).state = 0;
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
         // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
@@ -183,10 +134,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     _updateStatusBar();
 
-    // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
-    Future.delayed(Duration.zero, () {
-      _largeBannerAutoScroll.startAutoScroll();
-    });
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -198,13 +145,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       _updateStatusBar();
-    }
-    // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
-    if (state == AppLifecycleState.resumed) {
-      _largeBannerAutoScroll.startAutoScroll();
-      // 앱이 백그라운드로 이동할 때, 배너의 자동 스크롤을 중지
-    } else if (state == AppLifecycleState.paused) {
-      _largeBannerAutoScroll.stopAutoScroll();
     }
   }
 
@@ -218,16 +158,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 앱 생명주기 이벤트를 더 이상 수신하지 않겠다는 의도임.
     WidgetsBinding.instance.removeObserver(this);
 
-    // 각 배너 관련 리소스 해제
-    _largeBannerPageController.dispose();
-    _largeBannerAutoScroll.stopAutoScroll();
-
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
-
-    // 'orderListScreenPointScrollController'의 리스너 목록에서 '_updateScrollPosition' 함수를 제거함.
-    // 이는 '_updateScrollPosition' 함수가 더 이상 스크롤 이벤트에 반응하지 않도록 설정함.
-    orderListScreenPointScrollController.removeListener(_updateScrollPosition);
 
     orderListScreenPointScrollController.dispose(); // ScrollController 해제
 
@@ -257,21 +189,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onLargeBannerTap(BuildContext context, int index) async {
-      // largeBannerLinks 리스트에서 index에 해당하는 URL을 가져옴.
-      final url = largeBannerLinks[index];
-
-      // 주어진 URL을 열 수 있는지 확인함.
-      if (await canLaunchUrl(Uri.parse(url))) {
-        // URL을 열 수 있다면, 해당 URL을 염.
-        await launchUrl(Uri.parse(url));
-      } else {
-        // URL을 열 수 없다면 예외를 던짐.
-        throw '네트워크 오류';
-      }
-    }
-
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -323,44 +240,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
-                            // 큰 배너 섹션을 카드뷰로 구성
-                            CommonCardView(
-                              // 카드뷰의 내용을 구성하는 위젯을 설정
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정함
-                                height: 200,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 설정함
-                                child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                      orderListLargeBannerPageProvider,
-                                  // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
-                                  pageController: _largeBannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 링크들을 전달
-                                  bannerLinks: largeBannerLinks,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onLargeBannerTap,
-                                ),
-                              ),
-                              backgroundColor: LIGHT_PURPLE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-                            ),
-                            SizedBox(height: 20), // 높이 임의로 50으로 간격 설정
+                            SizedBox(height: 5), // 높이 5로 간격 설정
                             // orderListProvider를 구독하여 데이터, 로딩 상태, 에러 상태를 처리
                             ref.watch(orderListProvider).when(
                               data: (orders) {

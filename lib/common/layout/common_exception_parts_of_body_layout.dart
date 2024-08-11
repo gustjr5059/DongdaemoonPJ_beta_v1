@@ -26,20 +26,16 @@ import '../../home/provider/home_state_provider.dart';
 import '../../home/view/home_screen.dart';
 
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
-import '../../manager/announcement/view/announce_screen.dart';
 import '../../manager/message/view/message_screen.dart';
 import '../../manager/orderlist/view/orderlist_screen.dart';
 import '../../manager/review/view/review_screen.dart';
-import '../../manager/wishlist/view/wishlist_screen.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
 
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
-import '../../order/view/order_postcode_search_screen.dart';
 import '../../order/view/order_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
-import '../../product/provider/product_all_providers.dart';
 import '../../product/provider/product_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/login_screen.dart';
@@ -751,61 +747,42 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
             ),
           ),
           SizedBox(height: 20), // 간격을 위한 SizedBox
+          // 관리자 여부에 상관없이 항상 표시되는 항목들
+          _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo',
+              'asset/img/misc/drawer_img/navercafe.logo.png'),
+          SizedBox(height: 10), // 간격을 위한 SizedBox
+          _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO',
+              'asset/img/misc/drawer_img/youtube.logo.png'),
+          SizedBox(height: 10), // 간격을 위한 SizedBox
+          _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo',
+              'asset/img/misc/drawer_img/instagram.logo.png'),
+          SizedBox(height: 10), // 간격을 위한 SizedBox
+          _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
+              'asset/img/misc/drawer_img/kakao.logo.png'),
+          SizedBox(height: 20), // 간격을 위한 SizedBox
+
+          // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
           if (isAdmin) ...[
-            // 관리자 계정일 때 드로워 항목들
             _buildAdminListTile(
               context,
               Icons.star,
               '리뷰 관리',
-              // ManagerReviewMainScreen(),
-              () => onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
+                  () => onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 50), // 간격을 위한 SizedBox
             _buildAdminListTile(
               context,
               Icons.message,
               '쪽지 관리',
-              // ManagerMessageMainScreen(),
-               () => onMessageManagementClick(context, ref), // 클릭 시 실행될 함수 전달
+                  () => onMessageManagementClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 50), // 간격을 위한 SizedBox
             _buildAdminListTile(
               context,
               Icons.receipt_long_outlined,
               '발주내역 관리',
-              // ManagerOrderlistMainScreen(),
-              () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
+                  () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
             ),
-            SizedBox(width: 20),
-            _buildAdminListTile(
-              context,
-              Icons.favorite,
-              '찜 목록 관리',
-              // ManagerWishlistMainScreen(),
-              () => onWishlistManagementClick(context, ref), // 클릭 시 실행될 함수 전달
-            ),
-            SizedBox(width: 20),
-            _buildAdminListTile(
-              context,
-              Icons.announcement,
-              '공지사항 관리',
-              // ManagerAnnounceMainScreen(),
-              () => onAnnounceManagementClick(context, ref), // 클릭 시 실행될 함수 전달
-            ),
-          ] else ...[
-            // 일반 사용자 계정일 때 드로워 항목들
-            _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo',
-                'asset/img/misc/drawer_img/navercafe.logo.png'),
-            SizedBox(height: 20), // 간격을 위한 SizedBox
-            _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO',
-                'asset/img/misc/drawer_img/youtube.logo.png'),
-            SizedBox(height: 20), // 간격을 위한 SizedBox
-            _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo',
-                'asset/img/misc/drawer_img/instagram.logo.png'),
-            SizedBox(height: 20), // 간격을 위한 SizedBox
-            _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
-                'asset/img/misc/drawer_img/kakao.logo.png'),
-            SizedBox(height: 40), // 간격을 위한 SizedBox
           ],
         ],
       ),
@@ -814,7 +791,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 }
 // ------ buildCommonDrawer 위젯 내용 구현 끝
 
-// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
+
 // Widget _buildAdminListTile(
 //     BuildContext context, IconData icon, String title, Widget screen) {
 //   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
@@ -830,19 +807,20 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //     },
 //   );
 // }
+// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
 Widget _buildAdminListTile(BuildContext context, IconData icon, String title, void Function()? onTap) {
   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
   return ListTile(
-    leading: Icon(icon, color: Colors.black), // 아이콘을 왼쪽에 배치
+    leading: Icon(icon, color: Colors.black, size: 40), // 아이콘을 왼쪽에 배치
     title: Text(title), // 제목을 설정
+    contentPadding: EdgeInsets.symmetric(horizontal: 16), // 좌우 간격 조정
     onTap: onTap, // 탭 이벤트 핸들러를 외부에서 전달받은 함수로 설정
   );
 }
-// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 끝
 
 // 관리자 계정 항목 클릭 시, 실행될 함수들
 void onReviewManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, ManagerReviewMainScreen(), 4); // 화면 이동 함수 호출
+  navigateToScreenAndRemoveUntil(context, ref, AdminReviewMainScreen(), 4); // 화면 이동 함수 호출
 }
 
 void onMessageManagementClick(BuildContext context, WidgetRef ref) {
@@ -850,16 +828,9 @@ void onMessageManagementClick(BuildContext context, WidgetRef ref) {
 }
 
 void onOrderListClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, ManagerOrderlistMainScreen(), 4); // 화면 이동 함수 호출
+  navigateToScreenAndRemoveUntil(context, ref, AdminOrderlistMainScreen(), 4); // 화면 이동 함수 호출
 }
-
-void onWishlistManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, ManagerWishlistMainScreen(), 4); // 화면 이동 함수 호출
-}
-
-void onAnnounceManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, ManagerAnnounceMainScreen(), 4); // 화면 이동 함수 호출
-}
+// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 끝
 
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
 Widget _buildListTile(
@@ -868,6 +839,7 @@ Widget _buildListTile(
   return ListTile(
     leading: Image.asset(leadingImage, width: 40), // 이미지를 왼쪽에 배치
     title: Text(title), // 제목을 설정
+    contentPadding: EdgeInsets.symmetric(horizontal: 16), // 좌우 간격 조정
     onTap: () async {
       // 탭 이벤트 핸들러
       try {

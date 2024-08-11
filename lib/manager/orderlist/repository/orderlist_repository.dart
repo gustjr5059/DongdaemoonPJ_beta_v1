@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 OrderlistRepository 클래스 내용 시작 부분
-class OrderlistRepository {
+// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 AdminOrderlistRepository 클래스 내용 시작 부분
+class AdminOrderlistRepository {
   final FirebaseFirestore firestore;
 
-  // OrderlistRepository 클래스의 생성자, FirebaseFirestore 인스턴스를 받아옴
-  OrderlistRepository({required this.firestore});
+  // AdminOrderlistRepository 클래스의 생성자, FirebaseFirestore 인스턴스를 받아옴
+  AdminOrderlistRepository({required this.firestore});
 
   // 모든 사용자의 이메일 데이터를 가져오는 함수
   Future<List<String>> fetchAllUserEmails() async {

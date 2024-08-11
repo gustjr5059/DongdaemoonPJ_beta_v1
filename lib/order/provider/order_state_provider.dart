@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../product/model/product_model.dart';
 
 // ------- order_list_screen.dart - 발주내역 관련 내용 시작 부분
-// 발주 내역 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final orderListLargeBannerPageProvider = StateProvider<int>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final orderListCurrentTabProvider = StateProvider<int>((ref) => 0);
 // 발주 내역 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
