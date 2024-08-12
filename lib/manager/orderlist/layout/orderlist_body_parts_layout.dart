@@ -136,7 +136,7 @@ class AdminOrderListContents extends ConsumerWidget {
                                           // 선택된 새로운 상태로 orderStatusStateProvider의 상태를 업데이트
                                         }
                                       },
-                                      items: ['발주신청 완료', '결제완료', '배송완료', '환불']
+                                      items: ['발주신청 완료', '배송 준비', '배송 중', '배송 완료', '환불']
                                           .map<DropdownMenuItem<String>>((String status) {
                                         // 드롭다운에 표시될 각 항목을 리스트로 생성
                                         return DropdownMenuItem<String>(

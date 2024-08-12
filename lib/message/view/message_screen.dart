@@ -215,14 +215,6 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
                           crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
                           children: [
                             SizedBox(height: 10),
-                            Text(
-                              '쪽지 목록',
-                              style: TextStyle(
-                                fontSize: 20, // 글자 크기 20으로 설정
-                                fontWeight: FontWeight.bold, // bold로 설정
-                              ),
-                            ),
-                            SizedBox(height: 10), // '쪽지 목록'과 PrivateMessageBodyPartsLayout 사이의 간격을 10으로 설정
                             PrivateMessageBodyPartsContents(), // 불러온 쪽지 내용을 표시
                             SizedBox(height: 10),
                           ],

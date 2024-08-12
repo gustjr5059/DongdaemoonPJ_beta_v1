@@ -477,6 +477,9 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 로그아웃 기능 수행
   await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // 자동 로그인 정보 삭제 및 비활성화
+  prefs.setBool('autoLogin', false); // 자동 로그인 체크박스 비활성화
   // prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
   prefs.remove('username'); // 저장된 사용자명 삭제
   prefs.remove('password'); // 저장된 비밀번호 삭제
