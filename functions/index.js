@@ -131,7 +131,7 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
 }
 // ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
 
-// ------ 메시지 발송 후 1분 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
+// ------ "배송 중 메세지" 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
 // Firestore에 새로운 문서가 생성될 때, 특정 "배송 중 메세지"를 감지하고 발주 상태를 자동으로 업데이트
 exports.orderlistOrderStatusAutoUpdate = functions.firestore
   .document('message_list/{recipientId}/message/{messageId}')  // message_list 컬렉션 안의 특정 recipientId와 messageId에 해당하는 문서 경로를 지정
@@ -143,8 +143,9 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
       const recipientId = context.params.recipientId;  // 문서 경로에서 recipientId를 가져옴
       const orderNumber = messageData.orderNumber;  // 메세지 데이터에서 orderNumber를 가져옴
 
-      // 1분 후 상태를 "배송 완료"로 업데이트
-      setTimeout(async () => {  // setTimeout을 사용하여 1분 후에 실행되도록 설정
+      // 3일 후 상태를 "배송 완료"로 업데이트
+      const daysToMilliseconds = 3 * 24 * 60 * 60 * 1000; // 3일을 밀리초로 변환 (3일 x 24시간 x 60분 x 60초 x 1000ms)
+      setTimeout(async () => {  // setTimeout을 사용하여 3일 후에 실행되도록 설정
         try {
           const orderDocRef = admin.firestore()  // Firestore에 접근하기 위한 참조 생성
             .collection('order_list')  // order_list 컬렉션 참조
@@ -163,7 +164,7 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
         } catch (error) {  // 에러 발생 시 에러 처리
           console.error('Error updating order status:', error);  // 에러 내용을 콘솔에 출력
         }
-      }, 259200000);  // 60000ms = 1분 후에 실행되도록 설정 (259200000 : 3일)
+      }, daysToMilliseconds);  // 3일 후에 실행되도록 설정
     }
   });
-  // ------ 메시지 발송 후 1분 후에 발주 상태를 업데이트하는 함수 내용 끝 부분
+  // ------ 메시지 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 끝 부분

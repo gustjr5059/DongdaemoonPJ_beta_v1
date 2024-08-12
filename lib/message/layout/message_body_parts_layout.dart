@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/colors.dart';
@@ -23,12 +24,25 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
     return messages.when(
       // 데이터가 성공적으로 로드된 경우
       data: (messagesList) {
+        // 현재 시간을 가져옴.
+        final currentTime = DateTime.now();
+
+        // 30일 이내에 발송된 쪽지만 필터링.
+        final filteredMessagesList = messagesList.where((message) {
+          final sendingTime = (message['message_sendingTime'] as Timestamp?)?.toDate();
+          if (sendingTime == null) return false;
+          // return currentTime.difference(sendingTime).inMinutes < 1;
+          return currentTime.difference(sendingTime).inDays < 30;
+        }).toList();
+
         // 쪽지 목록이 비어 있는 경우
-        if (messagesList.isEmpty) {
+        if (filteredMessagesList.isEmpty) {
           return Center(child: Text('쪽지가 없습니다.'));
         }
+
         // 최신 쪽지가 위로 오도록 리스트를 역순으로 정렬.
-        final reversedMessages = messagesList.reversed.toList();
+        final reversedMessages = filteredMessagesList.reversed.toList();
+
         // 쪽지 목록을 열의 형태로 표시.
         return Column(
           // 각 쪽지를 맵핑하여 위젯을 생성.
