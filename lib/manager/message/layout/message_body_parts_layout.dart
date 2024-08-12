@@ -93,6 +93,46 @@ class AdminMessageCreateFormScreen extends ConsumerStatefulWidget {
 class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreateFormScreen> {
   String? selectedReceiver; // 선택된 수신자를 저장하는 변수.
   String? selectedOrderNumber; // 선택된 발주번호를 저장하는 변수.
+  String? messageContentText; // 메시지 내용을 저장하는 변수.
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기화 함수를 지연 호출
+    // 위젯이 생성될 때 바로 _resetForm 함수를 호출하면,
+    // 다른 위젯들이 아직 완전히 초기화되지 않았을 가능성이 있으므로,
+    // Future.microtask를 사용하여 이벤트 루프가 한 번 돌아간 후
+    // 초기화 함수를 호출하도록 합니다. 이렇게 하면 다른 위젯들이
+    // 초기화된 후 _resetForm 함수가 실행되므로 안정성이 보장됨.
+    Future.microtask(() => _resetForm());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 초기화 함수를 지연 호출
+    // 위젯의 종속성이 변경될 때, 동일하게 Future.microtask를 사용하여
+    // _resetForm 함수를 지연 호출. 이는 위젯 트리의 변경 사항이
+    // 완전히 반영된 후 초기화 로직이 실행되도록 하여,
+    // 안정성을 높이고 의도하지 않은 동작을 방지.
+    Future.microtask(() => _resetForm());
+  }
+
+  void _resetForm() {
+    // 상태 초기화
+    // 이 함수는 사용자의 선택 항목을 초기 상태로 리셋.
+    setState(() {
+      // 선택된 수신자를 초기화 (null로 설정)
+      selectedReceiver = null;
+      // 선택된 주문 번호를 초기화 (null로 설정)
+      selectedOrderNumber = null;
+      // 상태 관리에서 adminMessageContentProvider의 상태를 초기화 (null로 설정)
+      ref.read(adminMessageContentProvider.notifier).state = null;
+      // 상태 관리에서 adminCustomMessageProvider의 상태를 초기화 (null로 설정)
+      ref.read(adminCustomMessageProvider.notifier).state = null;
+      messageContentText = ''; // 초기 메시지 내용을 빈 문자열로 설정
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +161,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
             children: [
               Text('발신자:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 23),
+              // 발신자 이메일을 표시.
               Expanded(child: Text('${currentUser.email}', style: TextStyle(fontSize: 16))),
             ],
           ),
@@ -131,6 +172,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
             children: [
               Text('수신자:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 23),
+              // 수신자 선택 드롭다운을 위한 입력 장식.
               Expanded(
                 child: InputDecorator(
                   decoration: InputDecoration(
@@ -140,16 +182,19 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                     contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                   ),
                   child: receivers.when(
+                    // 수신자 목록이 성공적으로 로드된 경우 드롭다운을 표시.
                     data: (receiversList) => DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         hint: Text('수신자 선택'),
                         value: selectedReceiver,
+                        // 수신자 선택 시 상태를 업데이트.
                         onChanged: (value) {
                           setState(() {
                             selectedReceiver = value;
                             selectedOrderNumber = null;
                           });
                         },
+                        // 수신자 목록을 드롭다운 항목으로 변환.
                         items: receiversList.map((receiver) {
                           return DropdownMenuItem<String>(
                             value: receiver.email,
@@ -158,7 +203,9 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                         }).toList(),
                       ),
                     ),
+                    // 로딩 중일 경우 로딩 스피너를 표시.
                     loading: () => CircularProgressIndicator(),
+                    // 오류가 발생한 경우 오류 메시지를 표시.
                     error: (error, stack) => Text('오류가 발생했습니다: $error'),
                   ),
                 ),
@@ -172,6 +219,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
             children: [
               Text('발주번호:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 10),
+              // 발주번호 선택 드롭다운을 위한 입력 장식.
               Expanded(
                 child: InputDecorator(
                   decoration: InputDecoration(
@@ -184,11 +232,13 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                     child: DropdownButton<String>(
                       hint: Text('발주번호 선택'),
                       value: selectedOrderNumber,
+                      // 수신자가 선택되지 않은 경우 드롭다운을 비활성화.
                       onChanged: selectedReceiver == null ? null : (value) {
                         setState(() {
                           selectedOrderNumber = value;
                         });
                       },
+                      // 수신자가 선택된 경우 발주번호 목록을 드롭다운 항목으로 변환.
                       items: selectedReceiver == null ? [] : orderNumbers.when(
                         data: (orderNumbersList) => orderNumbersList.map((orderNumber) {
                           return DropdownMenuItem<String>(
@@ -215,6 +265,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
             children: [
               Text('내용:', style: TextStyle(fontSize: 16)),
               SizedBox(width: 37),
+              // 메시지 내용 선택 드롭다운을 위한 입력 장식.
               Expanded(
                 child: InputDecorator(
                   decoration: InputDecoration(
@@ -227,18 +278,33 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                     child: DropdownButton<String>(
                       hint: Text('내용 선택'),
                       value: messageContent,
+                      // 메시지 내용 선택 시 상태를 업데이트.
                       onChanged: selectedOrderNumber == null ? null : (value) {
-                        ref.read(adminMessageContentProvider.notifier).state = value;
-                        if (value == '결제 완료 메세지') {
-                          ref.read(adminCustomMessageProvider.notifier).state = '해당 발주 건은 결제 완료 되었습니다.';
-                        } else {
-                          ref.read(adminCustomMessageProvider.notifier).state = '';
-                        }
+                        setState(() {
+                          // 선택된 메시지 내용에 따라 텍스트를 설정.
+                          if (value == '결제 완료 메세지') {
+                            messageContentText = '해당 발주 건은 결제 완료 되었습니다.';
+                          } else if (value == '배송 중 메세지') {
+                            messageContentText = '해당 발주 건은 배송이 진행되었습니다.';
+                          } else if (value == '직접입력') {
+                            messageContentText = '';  // 직접입력 시 초기화
+                          } else {
+                            messageContentText = '';
+                          }
+                          // 상태를 변경해 UI 업데이트를 유도.
+                          ref.read(adminMessageContentProvider.notifier).state = value;
+                          ref.read(adminCustomMessageProvider.notifier).state = messageContentText;
+                        });
                       },
+                      // 메시지 내용을 드롭다운 항목으로 변환.
                       items: [
                         DropdownMenuItem<String>(
                           value: '결제 완료 메세지',
                           child: Text('결제 완료 메세지'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '배송 중 메세지',
+                          child: Text('배송 중 메세지'),
                         ),
                         DropdownMenuItem<String>(
                           value: '직접입력',
@@ -252,20 +318,21 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
             ],
           ),
           SizedBox(height: 15),
-          // '결제 완료 메세지'가 선택된 경우, 수정 불가능한 텍스트 필드를 표시.
-          if (messageContent == '결제 완료 메세지')
+          // 메시지 내용에 따라 다르게 처리.
+          if (messageContent == '결제 완료 메세지' || messageContent == '배송 중 메세지')
             AbsorbPointer(
-              absorbing: true, // 클릭 비활성화
+              absorbing: true, // 입력 비활성화
               child: TextFormField(
-                initialValue: '해당 발주 건은 결제 완료 되었습니다.',
+                key: ValueKey(messageContentText), // TextFormField를 강제로 새로고침하는 키
+                initialValue: messageContentText,
                 style: TextStyle(fontSize: 16),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
               ),
-            ),
-          // '직접입력'이 선택된 경우, 수정 가능한 텍스트 필드를 표시.
-          if (messageContent == '직접입력')
+            )
+          else if (messageContent == '직접입력')
+          // 직접 입력 시 입력창을 활성화.
             TextFormField(
               initialValue: '',
               maxLength: 200,
@@ -277,17 +344,19 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: BUTTON_COLOR, width: 2.0), // 포커스 시 테두리 색상 및 두께 변경
                 ),
-                hintText: '200자 이내로 작성가능합니다.',
+                hintText: '200자 이내로 작성 가능합니다.',
               ),
+              // 사용자가 입력한 메시지 내용을 상태로 업데이트.
               onChanged: (value) {
                 ref.read(adminCustomMessageProvider.notifier).state = value;
               },
             ),
-          SizedBox(height: 50), // 입력칸 아래에 간격 추가
+          SizedBox(height: 50), // 입력칸 아래에 간격을 추가.
           // 메시지 내용이 선택된 경우, 발송 버튼을 표시.
           if (messageContent != null && messageContent!.isNotEmpty)
             Center(
               child: ElevatedButton(
+                // 발송 버튼을 눌렀을 때 메시지를 전송.
                 onPressed: () async {
                   final customMessage = ref.read(adminCustomMessageProvider);
                   await ref.read(sendMessageProvider({
@@ -297,7 +366,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                     'contents': customMessage!,
                   }).future);
 
-                  // 쪽지 발송 성공 시 스낵바를 이용해 메시지 표시
+                  // 쪽지 발송 성공 시 스낵바를 이용해 메시지를 표시.
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('쪽지 발송에 성공했습니다.'),
