@@ -131,3 +131,39 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
 }
 // ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
 
+// ------ 메시지 발송 후 1분 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
+// Firestore에 새로운 문서가 생성될 때, 특정 "배송 중 메세지"를 감지하고 발주 상태를 자동으로 업데이트
+exports.orderlistOrderStatusAutoUpdate = functions.firestore
+  .document('message_list/{recipientId}/message/{messageId}')  // message_list 컬렉션 안의 특정 recipientId와 messageId에 해당하는 문서 경로를 지정
+  .onCreate(async (snap, context) => {  // 지정된 경로에 문서가 생성될 때 트리거되는 이벤트 리스너 함수 정의
+    const messageData = snap.data();  // 생성된 문서의 데이터를 가져옴
+
+    // 메세지 내용이 "해당 발주 건은 배송이 진행되었습니다."인 경우에만 상태 업데이트 예약
+    if (messageData.contents === '해당 발주 건은 배송이 진행되었습니다.') {
+      const recipientId = context.params.recipientId;  // 문서 경로에서 recipientId를 가져옴
+      const orderNumber = messageData.orderNumber;  // 메세지 데이터에서 orderNumber를 가져옴
+
+      // 1분 후 상태를 "배송 완료"로 업데이트
+      setTimeout(async () => {  // setTimeout을 사용하여 1분 후에 실행되도록 설정
+        try {
+          const orderDocRef = admin.firestore()  // Firestore에 접근하기 위한 참조 생성
+            .collection('order_list')  // order_list 컬렉션 참조
+            .doc(recipientId)  // recipientId에 해당하는 문서 참조
+            .collection('orders')  // orders 하위 컬렉션 참조
+            .where('numberInfo.order_number', '==', orderNumber);  // order_number가 해당 orderNumber와 일치하는 문서를 찾기 위한 쿼리
+
+          const orderDocSnapshot = await orderDocRef.get();  // 쿼리 실행 결과 가져오기
+          if (!orderDocSnapshot.empty) {  // 쿼리 결과가 비어 있지 않은 경우
+            const orderDoc = orderDocSnapshot.docs[0];  // 첫 번째 결과 문서를 가져옴
+            await orderDoc.ref.collection('order_status_info').doc('info').update({  // 해당 문서의 order_status_info 하위 컬렉션의 info 문서를 업데이트
+              'order_status': '배송 완료'  // order_status 필드를 "배송 완료"로 업데이트
+            });
+            console.log(`Order ${orderNumber} status updated to 배송 완료`);  // 상태 업데이트 성공 시 콘솔에 로그 출력
+          }
+        } catch (error) {  // 에러 발생 시 에러 처리
+          console.error('Error updating order status:', error);  // 에러 내용을 콘솔에 출력
+        }
+      }, 259200000);  // 60000ms = 1분 후에 실행되도록 설정 (259200000 : 3일)
+    }
+  });
+  // ------ 메시지 발송 후 1분 후에 발주 상태를 업데이트하는 함수 내용 끝 부분
