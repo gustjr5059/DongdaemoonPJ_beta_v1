@@ -367,6 +367,7 @@ Widget buildCommonBottomNavigationBar(
       // 선택된 옵션과 수량을 반영한 ProductContent 객체 생성
       final orderProduct = ProductContent(
         docId: product.docId, // 제품 문서 ID 설정
+        category: product.category ?? '', // 제품 카테고리 설정
         productNumber: product.productNumber ?? '', // 제품 번호 설정
         thumbnail: product.thumbnail ?? '', // 제품 썸네일 설정
         briefIntroduction: product.briefIntroduction ?? '', // 제품 간단 소개 설정
@@ -454,6 +455,8 @@ Widget buildCommonBottomNavigationBar(
         return ProductContent(
           // ProductContent 객체의 docId 필드를 item의 'product_id' 값으로 설정
           docId: item['product_id'],
+          // ProductContent 객체의 category 필드를 item의 'category' 값으로 설정
+          category: item['category'],
           // ProductContent 객체의 productNumber 필드를 item의 'product_number' 값으로 설정
           productNumber: item['product_number'],
           // ProductContent 객체의 thumbnail 필드를 item의 'thumbnails' 값으로 설정

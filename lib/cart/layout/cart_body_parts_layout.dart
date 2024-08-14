@@ -84,6 +84,7 @@ class CartItemsList extends ConsumerWidget {
         // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장
         final product = ProductContent(
           docId: cartItem['product_id'],
+          category: cartItem['category'],
           productNumber: cartItem['product_number'],
           thumbnail: cartItem['thumbnails'],
           briefIntroduction: cartItem['brief_introduction'],

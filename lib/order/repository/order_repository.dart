@@ -144,16 +144,18 @@ class OrderRepository {
     // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var item in productInfo) {
       await orderDoc.collection('product_info').add({
-        'briefIntroduction': item.briefIntroduction, // 상품 간략 소개
-        'productNumber': item.productNumber, // 상품 번호
-        'thumbnail': item.thumbnail, // 썸네일 이미지 URL
-        'originalPrice': item.originalPrice, // 원래 가격
-        'discountPrice': item.discountPrice, // 할인 가격
-        'discountPercent': item.discountPercent, // 할인 퍼센트
-        'selectedCount': item.selectedCount, // 선택한 수량
-        'selectedColorImage': item.selectedColorImage, // 선택한 색상 이미지
-        'selectedColorText': item.selectedColorText, // 선택한 색상 텍스트
-        'selectedSize': item.selectedSize, // 선택한 사이즈
+        'product_id': item.docId, // 상품 상세 화면의 문서 id를 저장
+        'category': item.category, // 상품의 카테고리 저장
+        'brief_introduction': item.briefIntroduction, // 상품 간략 소개
+        'product_number': item.productNumber, // 상품 번호
+        'thumbnails': item.thumbnail, // 썸네일 이미지 URL
+        'original_price': item.originalPrice, // 원래 가격
+        'discount_price': item.discountPrice, // 할인 가격
+        'discount_percent': item.discountPercent, // 할인 퍼센트
+        'selected_count': item.selectedCount, // 선택한 수량
+        'selected_color_image': item.selectedColorImage, // 선택한 색상 이미지
+        'selected_color_text': item.selectedColorText, // 선택한 색상 텍스트
+        'selected_size': item.selectedSize, // 선택한 사이즈
       });
     }
 
@@ -384,5 +386,64 @@ class OrderlistRepository {
       // throw Exception('Failed to fetch orders for email $userEmail: $e');
     }
   }
+
+  // 특정 발주 번호에 해당하는 데이터를 가져오는 메서드
+  Future<Map<String, dynamic>?> fetchOrderByOrderNumber(String userEmail, String orderNumber) async {
+    try {
+      // Firestore의 'order_list' 컬렉션에서 사용자의 이메일을 기준으로 문서 참조를 가져옴
+      final userDocRef = firestore.collection('order_list').doc(userEmail);
+
+      // 'orders' 서브 컬렉션에서 'numberInfo.order_number' 필드와 일치하는 주문 번호를 가진 문서를 조회
+      final ordersQuerySnapshot = await userDocRef.collection('orders')
+          .where('numberInfo.order_number', isEqualTo: orderNumber)
+          .get();
+
+      // 조회된 문서가 없을 경우, null을 반환하여 주문이 없음을 알림
+      if (ordersQuerySnapshot.docs.isEmpty) {
+        return null; // 일치하는 문서가 없을 경우 null 반환
+      }
+
+      // 첫 번째로 조회된 문서의 참조를 가져옴
+      final orderDocRef = ordersQuerySnapshot.docs.first.reference;
+
+      // 'number_info' 서브 컬렉션에서 'info' 문서를 가져옴
+      final numberInfoDoc = await orderDocRef.collection('number_info').doc('info').get();
+
+      // 'orderer_info' 서브 컬렉션에서 'info' 문서를 가져옴
+      final ordererInfoDoc = await orderDocRef.collection('orderer_info').doc('info').get();
+
+      // 'amount_info' 서브 컬렉션에서 'info' 문서를 가져옴
+      final amountInfoDoc = await orderDocRef.collection('amount_info').doc('info').get();
+
+      // 'recipient_info' 서브 컬렉션에서 'info' 문서를 가져옴
+      final recipientInfoDoc = await orderDocRef.collection('recipient_info').doc('info').get();
+
+      // 'product_info' 서브 컬렉션의 모든 문서를 조회하여 제품 정보를 가져옴
+      final productInfoQuery = await orderDocRef.collection('product_info').get();
+
+      // 'order_status_info' 서브 컬렉션에서 'info' 문서를 가져옴
+      final orderStatusDoc = await orderDocRef.collection('order_status_info').doc('info').get();
+
+      // 조회된 제품 정보 문서들을 순회하며 Map 형식으로 변환
+      final productInfo = productInfoQuery.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList();
+
+      // 각 정보들을 하나의 Map으로 합쳐 반환, 없을 경우 빈 맵을 반환
+      return {
+        'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {}, // 주문 번호 정보
+        'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {}, // 주문자 정보
+        'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {}, // 금액 정보
+        'recipientInfo': recipientInfoDoc.data() as Map<String, dynamic>? ?? {}, // 수령인 정보
+        'productInfo': productInfo, // 제품 정보 리스트
+        'orderStatus': orderStatusDoc.data()?['order_status'] ?? '에러 발생', // 주문 상태 정보
+      };
+    } catch (e) {
+      // 오류 발생 시 로그를 출력하고 null을 반환
+      print('Failed to fetch order details for order number $orderNumber: $e');
+      return null;
+    }
+  }
 }
 // ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 OrderlistRepository 클래스 내용 끝 부분
+

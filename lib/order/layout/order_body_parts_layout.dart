@@ -7,9 +7,11 @@ import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
+import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart';
 import '../view/complete_payment_screen.dart';
+import '../view/order_detail_list_screen.dart';
 import '../view/order_postcode_search_screen.dart';
 
 
@@ -832,7 +834,7 @@ class OrderItemWidget extends StatelessWidget {
 }
 // ------ 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
 
-// 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
+// ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
 class OrderListItemWidget extends ConsumerWidget {
   // 발주 데이터를 담고 있는 맵 객체를 멤버 변수로 선언.
   final Map<String, dynamic> order;
@@ -890,9 +892,16 @@ class OrderListItemWidget extends ConsumerWidget {
           Center(
             // 발주 내역 상세보기 버튼을 생성.
             child: ElevatedButton(
-              // 버튼 클릭 시의 동작을 정의.
+              // 버튼이 클릭되었을 때 실행되는 동작을 정의
               onPressed: () {
-                // TODO: 발주 내역 상세보기 버튼 클릭 시의 동작 정의
+                // Navigator를 사용하여 화면 이동을 수행
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // OrderListDetailScreen 화면으로 이동하며, 발주번호(orderNumber)를 전달
+                    builder: (context) => OrderListDetailScreen(orderNumber: orderNumber),
+                  ),
+                );
               },
               // 버튼 스타일을 정의합니다.
               style: ElevatedButton.styleFrom(
@@ -910,7 +919,401 @@ class OrderListItemWidget extends ConsumerWidget {
     );
   }
 }
-// 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 끝
+// ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 끝
+
+// ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 시작
+class OrderListDetailItemWidget extends ConsumerWidget {
+  // 발주 데이터를 담고 있는 Map<String, dynamic> 형태의 order 필드를 선언
+  final Map<String, dynamic>? order;
+
+  // 생성자에서 order 필드를 필수로 받도록 설정
+  OrderListDetailItemWidget({required this.order});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // order가 null이거나 비어있으면 발주 데이터를 불러올 수 없음을 알리는 메시지를 화면에 표시
+    if (order == null || order!.isEmpty) {
+      return Center(
+        child: Text('발주 데이터를 불러올 수 없습니다.'),
+      );
+    }
+
+    // 날짜 형식을 'yyyy-MM-dd'로 지정
+    final dateFormat = DateFormat('yyyy-MM-dd');
+
+    // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환
+    final orderDate = order!['numberInfo']['order_date']?.toString().isNotEmpty == true
+        ? (order!['numberInfo']['order_date'] as Timestamp).toDate()
+        : null;
+
+    // order 정보에서 발주 번호를 가져오고, 값이 유효하지 않으면 '에러 발생'을 반환
+    final orderNumber = order!['numberInfo']['order_number']?.toString().isNotEmpty == true
+        ? order!['numberInfo']['order_number']
+        : '에러 발생';
+
+    // 숫자 형식을 '###,###'로 지정
+    final numberFormat = NumberFormat('###,###');
+
+    // order 정보에서 총 상품 금액, 상품 할인 금액, 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정
+    final totalProductPrice = order!['amountInfo']['total_product_price']?.toString().isNotEmpty == true
+        ? (order!['amountInfo']['total_product_price'] as num).toDouble()
+        : 0.0;
+    final productDiscountPrice = order!['amountInfo']['product_discount_price']?.toString().isNotEmpty == true
+        ? (order!['amountInfo']['product_discount_price'] as num).toDouble()
+        : 0.0;
+    final totalPaymentPrice = order!['amountInfo']['total_payment_price']?.toString().isNotEmpty == true
+        ? (order!['amountInfo']['total_payment_price'] as num).toDouble()
+        : 0.0;
+
+    // recipientInfo가 null인지 확인하고 각 필드를 안전하게 접근
+    final recipientInfo = order!['recipientInfo'] ?? {};
+
+    // 수령자 정보에서 이름, 연락처, 주소, 상세주소, 우편번호를 가져오고, 값이 유효하지 않으면 기본 메시지를 설정
+    final recipientName = recipientInfo['name']?.toString().isNotEmpty == true
+        ? recipientInfo['name']
+        : '이름 없음';
+    final recipientPhone = recipientInfo['phone_number']?.toString().isNotEmpty == true
+        ? recipientInfo['phone_number']
+        : '연락처 없음';
+    final recipientAddress = recipientInfo['address']?.toString().isNotEmpty == true
+        ? recipientInfo['address']
+        : '주소 없음';
+    final recipientDetailAddress = recipientInfo['detail_address']?.toString().isNotEmpty == true
+        ? recipientInfo['detail_address']
+        : '상세주소 없음';
+    final recipientPostalCode = recipientInfo['postal_code']?.toString().isNotEmpty == true
+        ? recipientInfo['postal_code']
+        : '우편번호 없음';
+
+    // 배송 메모 데이터를 처리하고, '직접입력'일 경우 추가 메모를 가져옴
+    String deliveryMemo = recipientInfo['memo']?.toString().isNotEmpty == true
+        ? recipientInfo['memo']
+        : '배송 메모 없음';
+    if (deliveryMemo == '직접입력') {
+      deliveryMemo = recipientInfo['extra_memo']?.toString().isNotEmpty == true
+          ? recipientInfo['extra_memo']
+          : '추가 메모 없음';
+    }
+
+    // productInfo 리스트를 가져와서 해당 발주번호 관련 상품별로 productInfo 데이터를 구현 가능하도록 하는 로직
+    final List<dynamic> productInfoList = order!['productInfo'] ?? [];
+
+    // ProductInfoDetailScreenNavigation 인스턴스를 생성하여 상품 상세 화면으로 이동할 수 있도록 설정
+    final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
+
+    // 발주 상세 정보를 화면에 렌더링하는 위젯을 구성
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 발주 일자를 표시
+              Text(
+                '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              // 발주 번호를 표시
+              Text(
+                '발주번호: $orderNumber',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 5),
+        // 결제 정보를 표시하는 카드뷰
+        CommonCardView(
+          backgroundColor: BEIGE_COLOR,
+          content: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '결제 정보',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                _buildAmountRow('총 상품금액', '${numberFormat.format(totalProductPrice)} 원'),
+                _buildAmountRow('상품 할인금액', '-${numberFormat.format(productDiscountPrice)} 원'),
+                _buildAmountRow('배송비', '0 원'),
+                Divider(),
+                _buildAmountRow(
+                  '총 결제금액',
+                  '${numberFormat.format(totalPaymentPrice)} 원',
+                  isTotal: true,
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        // 수령자 정보를 표시하는 카드뷰
+        CommonCardView(
+          backgroundColor: BEIGE_COLOR,
+          content: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '수령자 정보',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                _buildRecipientInfoRow('수령자명', recipientName),
+                _buildRecipientInfoRow('수령자 연락처', recipientPhone),
+                _buildRecipientInfoRow('주소(상세주소)', ''),
+                _buildRecipientInfoRow('$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)', ''),
+                Divider(color: Colors.grey),
+                _buildRecipientInfoRow('배송메모', ''),
+                _buildRecipientInfoRow(deliveryMemo, ''),
+              ],
+            ),
+          ),
+        ),
+
+        SizedBox(height: 10),
+        // productInfoList 내 모든 상품을 카드뷰로 렌더링
+        for (var productInfo in productInfoList)
+          GestureDetector(
+            onTap: () {
+              // 상품 상세 화면으로 이동
+              final product = ProductContent(
+                docId: productInfo['product_id'] ?? '', // 필드명을 'productId'에서 'product_id'로 변경
+                category: productInfo['category']?.toString() ?? '에러 발생',
+                productNumber: productInfo['product_number']?.toString() ?? '에러 발생', // 필드명을 'productNumber'에서 'product_number'로 변경
+                thumbnail: productInfo['thumbnails']?.toString() ?? '', // 필드명을 'thumbnail'에서 'thumbnails'로 변경
+                briefIntroduction: productInfo['brief_introduction']?.toString() ?? '에러 발생', // 필드명을 'briefIntroduction'에서 'brief_introduction'로 변경
+                originalPrice: productInfo['original_price'] ?? 0, // 필드명을 'originalPrice'에서 'original_price'로 변경
+                discountPrice: productInfo['discount_price'] ?? 0, // 필드명을 'discountPrice'에서 'discount_price'로 변경
+                discountPercent: productInfo['discount_percent'] ?? 0, // 필드명을 'discountPercent'에서 'discount_percent'로 변경
+              );
+              navigatorProductDetailScreen.navigateToDetailScreen(context, product);
+            },
+            child: CommonCardView(
+              backgroundColor: BEIGE_COLOR,
+              content: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildProductInfoRow(
+                        productInfo['product_number']?.toString().isNotEmpty == true
+                            ? productInfo['product_number']
+                            : '에러 발생',
+                        '',
+                        bold: true,
+                        fontSize: 14),
+                    _buildProductInfoRow(
+                        productInfo['brief_introduction']?.toString().isNotEmpty == true
+                            ? productInfo['brief_introduction']
+                            : '에러 발생',
+                        '',
+                        bold: true,
+                        fontSize: 18),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 3,
+                            child: productInfo['thumbnails']?.toString().isNotEmpty == true
+                                ? Image.network(productInfo['thumbnails'], fit: BoxFit.cover)
+                                : Icon(Icons.image_not_supported)),
+                        SizedBox(width: 8),
+                        Expanded(
+                          flex: 7,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)} 원',
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 14,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)} 원',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : 0.0).toInt()}%',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  productInfo['selected_color_image']?.toString().isNotEmpty == true
+                                      ? Image.network(
+                                    productInfo['selected_color_image'],
+                                    height: 18,
+                                    width: 18,
+                                    fit: BoxFit.cover,
+                                  )
+                                      : Icon(Icons.image_not_supported, size: 20),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    productInfo['selected_color_text']?.toString().isNotEmpty == true
+                                        ? productInfo['selected_color_text']
+                                        : '에러 발생',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                              // 선택된 사이즈와 수량을 표시
+                              Text('사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}'),
+                              Text(
+                                  '수량: ${productInfo['selected_count']?.toString().isNotEmpty == true ? '${productInfo['selected_count']} 개' : '0 개'}'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    // 하단에 환불 및 리뷰 작성 버튼 추가
+                    SizedBox(height: 10),
+                    Divider(color: Colors.grey),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+                            backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
+                            side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+                            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // 버튼 패딩
+                          ),
+                          child: Text('환불', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
+                            backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
+                            side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+                            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // 버튼 패딩
+                          ),
+                          child: Text('리뷰 작성하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  // 결제 정보를 표시하는 행을 구성하는 함수
+  Widget _buildAmountRow(String label, String value, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // 라벨을 표시하는 텍스트
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          // 값을 표시하는 텍스트
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              color: isTotal ? Colors.red : Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// 수령자 정보를 표시하는 행을 구성하는 함수
+Widget _buildRecipientInfoRow(String label, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // 라벨을 표시하는 텍스트
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+            ),
+            textAlign: TextAlign.end,
+            softWrap: true,  // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+// 상품 정보를 표시하는 행을 구성하는 함수
+Widget _buildProductInfoRow(String label, String value, {bool bold = false, double fontSize = 16}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // 라벨을 표시하는 텍스트
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            ),
+            textAlign: TextAlign.end,
+            softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정
+            overflow: TextOverflow.ellipsis, // 텍스트가 길 경우 말줄임 표시
+          ),
+        ),
+      ],
+    ),
+  );
+}
+// ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 끝
 
 // ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 // AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.
