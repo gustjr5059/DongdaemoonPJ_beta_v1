@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../cart/provider/cart_all_proviers.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
@@ -1194,7 +1195,7 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                             foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
                             backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
                             side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // 버튼 패딩
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 패딩
                           ),
                           child: Text('환불', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                         ),
@@ -1204,9 +1205,22 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                             foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
                             backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
                             side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // 버튼 패딩
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 패딩
                           ),
                           child: Text('리뷰 작성하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // '장바구니 담기' 버튼 클릭 시 호출되는 함수로, Firebase에 데이터를 저장하는 로직이 포함됨
+                            onOrderAddToCartButtonPressed(context, ref, productInfo);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: BUTTON_COLOR, // 버튼 텍스트의 색상을 지정
+                            backgroundColor: BACKGROUND_COLOR, // 버튼의 배경 색상을 지정
+                            side: BorderSide(color: BUTTON_COLOR), // 버튼의 테두리 색상을 지정
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼의 패딩을 세로 10, 가로 20으로 설정
+                          ),
+                          child: Text('장바구니 담기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼에 표시될 텍스트와 그 스타일(글씨 크기 16, 굵게 설정)
                         ),
                       ],
                     ),
@@ -1218,6 +1232,8 @@ class OrderListDetailItemWidget extends ConsumerWidget {
       ],
     );
   }
+}
+// ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 끝
 
   // 결제 정보를 표시하는 행을 구성하는 함수
   Widget _buildAmountRow(String label, String value, {bool isTotal = false}) {
@@ -1247,7 +1263,6 @@ class OrderListDetailItemWidget extends ConsumerWidget {
       ),
     );
   }
-}
 
 // 수령자 정보를 표시하는 행을 구성하는 함수
 Widget _buildRecipientInfoRow(String label, String value) {
@@ -1313,7 +1328,37 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
     ),
   );
 }
-// ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 끝
+
+// 장바구니 담기 버튼 클릭 시 호출되는 함수
+void onOrderAddToCartButtonPressed(BuildContext context, WidgetRef ref, Map<String, dynamic> productInfo) {
+  final cartRepository = ref.read(cartItemRepositoryProvider); // cartItemRepositoryProvider를 사용하여 장바구니 레포지토리를 읽음
+
+  final product = ProductContent(
+    docId: productInfo['product_id'], // 제품 문서 ID를 설정
+    category: productInfo['category'], // 제품 카테고리를 설정
+    productNumber: productInfo['product_number'], // 제품 번호를 설정
+    thumbnail: productInfo['thumbnails'], // 제품 썸네일 이미지를 설정
+    briefIntroduction: productInfo['brief_introduction'], // 제품의 간단한 소개를 설정
+    originalPrice: productInfo['original_price'], // 원래 가격을 설정
+    discountPrice: productInfo['discount_price'], // 할인된 가격을 설정
+    discountPercent: productInfo['discount_percent'], // 할인 퍼센트를 설정
+    selectedCount: productInfo['selected_count'], // 선택한 수량을 설정
+    selectedColorImage: productInfo['selected_color_image'], // 선택한 색상 이미지 URL을 설정
+    selectedColorText: productInfo['selected_color_text'], // 선택한 색상 텍스트를 설정
+    selectedSize: productInfo['selected_size'], // 선택한 사이즈를 설정
+  );
+
+  // 장바구니 레포지토리에 제품을 추가하고, 성공 시 메시지를 표시
+  cartRepository.addToCartItem(product, product.selectedColorText, product.selectedColorImage, product.selectedSize, product.selectedCount ?? 1)
+      .then((_) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
+  }).catchError((error) {
+    // 에러가 발생할 경우
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('장바구니에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시
+  });
+}
+
+
 
 // ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 // AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.

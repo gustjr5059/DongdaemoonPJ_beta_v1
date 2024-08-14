@@ -50,7 +50,7 @@ class CartItemRepository {
 
   // 장바구니에 아이템 추가하는 함수 - 선택된 색상, 사이즈, 수량 정보를 포함하여 장바구니 아이템을 Firestore에 추가
   Future<void> addToCartItem(ProductContent product, String? selectedColorText,
-      String? selectedColorUrl, String? selectedSize, int quantity) async {
+      String? selectedColorUrl, String? selectedSize, int selectedCount) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
       throw Exception('User not logged in'); // 예외 발생
@@ -74,7 +74,7 @@ class CartItemRepository {
       'selected_color_text': selectedColorText, // 선택한 색상의 텍스트 데이터 저장
       'selected_color_image': null, // 나중에 저장될 이미지 URL
       'selected_size': selectedSize, // 선택한 사이즈
-      'selected_count': quantity, // 선택한 수량
+      'selected_count': selectedCount, // 선택한 수량
       'timestamp': FieldValue.serverTimestamp(), // 현재 서버 타임스탬프를 저장
       'bool_checked': false, // 기본값으로 체크되지 않은 상태로 저장
     };

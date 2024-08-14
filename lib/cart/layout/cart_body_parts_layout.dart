@@ -30,12 +30,12 @@ void onCartButtonPressed(
       ''; // 선택된 색상 옵션에서 'text' 값을 가져오고, 없다면 빈 문자열을 반환
   final selectedSize = ref.read(
       sizeSelectionIndexProvider); // sizeSelectionIndexProvider를 사용하여 선택된 사이즈 인덱스를 읽음
-  final quantity = ref.read(
+  final selectedCount = ref.read(
       detailQuantityIndexProvider); // detailQuantityIndexProvider를 사용하여 선택된 수량을 읽음
 
   cartRepository
       .addToCartItem(
-      product, selectedColorText, selectedColorUrl, selectedSize, quantity)
+      product, selectedColorText, selectedColorUrl, selectedSize, selectedCount)
       .then((_) {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
