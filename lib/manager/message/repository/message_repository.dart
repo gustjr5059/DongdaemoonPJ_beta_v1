@@ -93,7 +93,7 @@ class AdminMessageRepository {
     await messageDoc.set({
       'sender': sender, // 발신자 ID를 저장
       'recipient': recipient, // 수신자 ID를 저장
-      'orderNumber': orderNumber, // 주문 번호를 저장
+      'order_number': orderNumber, // 주문 번호를 저장
       'contents': contents, // 메시지 내용을 저장
       'message_sendingTime': FieldValue.serverTimestamp(), // 서버 시간을 기준으로 메시지 전송 시간을 저장
     });

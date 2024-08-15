@@ -140,6 +140,11 @@ class OrderRepository {
     await orderDoc.collection('recipient_info').doc('info').set(recipientInfo);
     // 결제 정보를 Firestore에 저장
     await orderDoc.collection('amount_info').doc('info').set(amountInfo);
+    // 발주 데이터를 Firestore에 저장할 때 버튼 상태 필드를 추가.
+    await orderDoc.collection('button_info').doc('info').set({
+      'boolRefundBtn': false, // 초기값은 false로 설정
+      'boolReviewBtn': false, // 초기값은 false로 설정
+    });
 
     // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var item in productInfo) {

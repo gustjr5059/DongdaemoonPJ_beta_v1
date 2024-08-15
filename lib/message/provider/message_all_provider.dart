@@ -23,3 +23,18 @@ final currentUserEmailProvider = StreamProvider<String?>((ref) async* {
   // 현재 사용자의 이메일을 반환.
   yield user?.email;
 });
+
+// 특정 발주번호에 해당하는 결제완료일을 가져오는 함수를 불러와서 사용 가능하도록 하는 paymentCompleteDateProvider
+// FutureProvider.family를 사용하여 비동기적으로 데이터(DateTime?)를 제공하는 provider를 생성하며, String 타입의 인자를 받도록 했음.
+final paymentCompleteDateProvider = FutureProvider.family<DateTime?, String>((ref, orderNumber) async {
+  // 현재 로그인된 사용자의 이메일을 가져오기 위해 currentUserEmailProvider를 호출하고, 그 결과를 기다리도록 했음.
+  final email = await ref.watch(currentUserEmailProvider.future);
+  // 이메일이 null일 경우(사용자가 로그인되지 않은 경우) null을 반환하여 결제완료일을 가져오지 않도록 했음.
+  if (email == null) return null;
+
+  // 결제완료일을 가져오기 위해 privateMessageRepository 인스턴스를 읽어오도록 했음.
+  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
+  // privateMessageRepository의 fetchPaymentCompleteDate 함수를 호출하여 결제완료일을 가져오고 반환하도록 했음.
+  return privateMessageRepository.fetchPaymentCompleteDate(email, orderNumber);
+});
+

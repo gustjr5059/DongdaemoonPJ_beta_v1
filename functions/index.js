@@ -115,14 +115,14 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
   body += `<h2>상품 정보</h2>`;
   productInfo.forEach(item => {
     body += `<table border="1" cellpadding="5" cellspacing="0">`;
-    body += `<tr><td><b>상품</b></td><td>${item.briefIntroduction}</td></tr>`;
-    body += `<tr><td><b>상품 번호</b></td><td>${item.productNumber}</td></tr>`;
-    body += `<tr><td><b>원래 가격</b></td><td>${formatNumber(item.originalPrice)}원</td></tr>`;
-    body += `<tr><td><b>할인 가격</b></td><td>${formatNumber(item.discountPrice)}원</td></tr>`;
-    body += `<tr><td><b>할인 퍼센트</b></td><td>${item.discountPercent}%</td></tr>`;
-    body += `<tr><td><b>선택한 수량</b></td><td>${item.selectedCount}개</td></tr>`;
-    body += `<tr><td><b>선택한 색상</b></td><td>${item.selectedColorText}</td></tr>`;
-    body += `<tr><td><b>선택한 사이즈</b></td><td>${item.selectedSize}</td></tr>`;
+    body += `<tr><td><b>상품</b></td><td>${item.brief_introduction}</td></tr>`;
+    body += `<tr><td><b>상품 번호</b></td><td>${item.product_number}</td></tr>`;
+    body += `<tr><td><b>원래 가격</b></td><td>${formatNumber(item.original_price)}원</td></tr>`;
+    body += `<tr><td><b>할인 가격</b></td><td>${formatNumber(item.discount_price)}원</td></tr>`;
+    body += `<tr><td><b>할인 퍼센트</b></td><td>${item.discount_percent}%</td></tr>`;
+    body += `<tr><td><b>선택한 수량</b></td><td>${item.selected_count}개</td></tr>`;
+    body += `<tr><td><b>선택한 색상</b></td><td>${item.selected_color_text}</td></tr>`;
+    body += `<tr><td><b>선택한 사이즈</b></td><td>${item.selected_size}</td></tr>`;
     body += `</table><br>`;
   });
 
@@ -141,17 +141,18 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
     // 메세지 내용이 "해당 발주 건은 배송이 진행되었습니다."인 경우에만 상태 업데이트 예약
     if (messageData.contents === '해당 발주 건은 배송이 진행되었습니다.') {
       const recipientId = context.params.recipientId;  // 문서 경로에서 recipientId를 가져옴
-      const orderNumber = messageData.orderNumber;  // 메세지 데이터에서 orderNumber를 가져옴
+      const order_number = messageData.order_number;  // 메세지 데이터에서 order_number를 가져옴
 
       // 3일 후 상태를 "배송 완료"로 업데이트
       const daysToMilliseconds = 3 * 24 * 60 * 60 * 1000; // 3일을 밀리초로 변환 (3일 x 24시간 x 60분 x 60초 x 1000ms)
+//      const daysToMilliseconds = 30000; // 3일을 밀리초로 변환 (3일 x 24시간 x 60분 x 60초 x 1000ms)
       setTimeout(async () => {  // setTimeout을 사용하여 3일 후에 실행되도록 설정
         try {
           const orderDocRef = admin.firestore()  // Firestore에 접근하기 위한 참조 생성
             .collection('order_list')  // order_list 컬렉션 참조
             .doc(recipientId)  // recipientId에 해당하는 문서 참조
             .collection('orders')  // orders 하위 컬렉션 참조
-            .where('numberInfo.order_number', '==', orderNumber);  // order_number가 해당 orderNumber와 일치하는 문서를 찾기 위한 쿼리
+            .where('numberInfo.order_number', '==', order_number);  // order_number가 해당 order_number와 일치하는 문서를 찾기 위한 쿼리
 
           const orderDocSnapshot = await orderDocRef.get();  // 쿼리 실행 결과 가져오기
           if (!orderDocSnapshot.empty) {  // 쿼리 결과가 비어 있지 않은 경우
@@ -159,7 +160,7 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
             await orderDoc.ref.collection('order_status_info').doc('info').update({  // 해당 문서의 order_status_info 하위 컬렉션의 info 문서를 업데이트
               'order_status': '배송 완료'  // order_status 필드를 "배송 완료"로 업데이트
             });
-            console.log(`Order ${orderNumber} status updated to 배송 완료`);  // 상태 업데이트 성공 시 콘솔에 로그 출력
+            console.log(`Order ${order_number} status updated to 배송 완료`);  // 상태 업데이트 성공 시 콘솔에 로그 출력
           }
         } catch (error) {  // 에러 발생 시 에러 처리
           console.error('Error updating order status:', error);  // 에러 내용을 콘솔에 출력
@@ -167,4 +168,48 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
       }, daysToMilliseconds);  // 3일 후에 실행되도록 설정
     }
   });
-  // ------ 메시지 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 끝 부분
+// ------ 메시지 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 끝 부분
+
+// ------ Firestore에서 '배송 중 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 시작 부분
+exports.updateButtonStatusOnMessage = functions.firestore
+    .document('message_list/{recipientId}/message/{messageId}')
+    .onCreate(async (snap, context) => {
+        const messageData = snap.data();
+
+        if (messageData.contents === '해당 발주 건은 배송이 진행되었습니다.') {
+            const recipientId = context.params.recipientId;
+            const orderNumber = messageData.order_number;
+            const messageSendingTime = messageData.message_sendingTime.toDate(); // message_sendingTime을 Date 객체로 변환
+            const currentTime = new Date();
+
+            // 메시지 생성 시간과 현재 시간을 비교 (예: 1분 이내의 메시지만 버튼 활성화)
+            if (currentTime - messageSendingTime <= 60000) { // 1분 이내
+                const ordersSnapshot = await admin.firestore()
+                    .collection('order_list')
+                    .doc(recipientId)
+                    .collection('orders')
+                    .where('numberInfo.order_number', '==', orderNumber)
+                    .get();
+
+                if (!ordersSnapshot.empty) {
+                    const orderDoc = ordersSnapshot.docs[0];
+                    const buttonInfoRef = orderDoc.ref.collection('button_info').doc('info');
+
+                    // 버튼 활성화 상태로 업데이트
+                    await buttonInfoRef.update({
+                        'boolRefundBtn': true,
+                        'boolReviewBtn': true,
+                    });
+
+                    // 추가적인 조건에 따라 버튼 비활성화
+                    setTimeout(async () => {
+                        await buttonInfoRef.update({
+                            'boolRefundBtn': false,
+                            'boolReviewBtn': false,
+                        });
+                    }, 60000); // 1분 후 비활성화
+                }
+            }
+        }
+    });
+// ------ Firestore에서 '배송 중 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 끝 부분

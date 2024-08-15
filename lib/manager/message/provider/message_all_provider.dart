@@ -60,7 +60,7 @@ final sendMessageProvider = FutureProvider.family<void, Map<String, String>>((re
   await AdminMessageRepository.sendMessage(
     sender: data['sender']!,          // 발신자 정보를 전달.
     recipient: data['recipient']!,    // 수신자 정보를 전달.
-    orderNumber: data['orderNumber']!, // 주문 번호를 전달.
+    orderNumber: data['order_number']!, // 주문 번호를 전달.
     contents: data['contents']!,      // 메시지 내용을 전달.
   );
 });

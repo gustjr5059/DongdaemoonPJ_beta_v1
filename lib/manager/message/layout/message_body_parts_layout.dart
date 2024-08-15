@@ -363,7 +363,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                   await ref.read(sendMessageProvider({
                     'sender': currentUser.email!,
                     'recipient': selectedReceiver!,
-                    'orderNumber': selectedOrderNumber!,
+                    'order_number': selectedOrderNumber!,
                     'contents': customMessage!,
                   }).future);
 
@@ -426,7 +426,7 @@ class AdminMessageListScreen extends ConsumerWidget {
           children: reversedMessages.map((message) {
             // 수신자와 주문 번호 텍스트를 구성.
             String recipientText = '${message['recipient']}';
-            String orderNumberText = '[발주번호: ${message['orderNumber']}]';
+            String orderNumberText = '[발주번호: ${message['order_number']}]';
 
             // 쪽지를 탭하면 상세 정보를 보여주는 팝업을 띄움.
             return GestureDetector(

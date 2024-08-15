@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart'; // 클라우드 파이어스토어 라이브러리 임포트
 import 'package:firebase_auth/firebase_auth.dart'; // 파이어베이스 인증 라이브러리 임포트
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 라이브러리 임포트
+import '../../message/provider/message_all_provider.dart';
 import '../../product/model/product_model.dart'; // 제품 모델 파일 임포트
 import '../repository/order_repository.dart'; // 발주 레포지토리 파일 임포트
 
@@ -104,4 +105,32 @@ final orderListDetailProvider = FutureProvider.family<Map<String, dynamic>?, Str
 
   // 레포지토리의 fetchOrderByOrderNumber 메서드를 호출하여 발주 번호에 맞는 데이터를 가져옴
   return repository.fetchOrderByOrderNumber(userEmail, orderNumber);
+});
+
+// '환불' 버튼과 '리뷰 작성' 버튼의 활성화 체크에 필요한 데이터를 받아오는 buttonInfoProvider
+// FutureProvider.family를 사용하여 비동기적으로 데이터를 제공하는 provider를 생성하며, String 타입의 발주번호(orderNumber)를 인자로 받도록 했음.
+final buttonInfoProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, orderNumber) async {
+  // 현재 로그인된 사용자의 이메일을 가져오기 위해 currentUserEmailProvider를 호출하고, 그 결과를 기다리도록 했음.
+  final userEmail = await ref.watch(currentUserEmailProvider.future);
+  // 이메일이 null일 경우(사용자가 로그인되지 않은 경우) 빈 Map을 반환하여 이후 로직을 실행하지 않도록 했음.
+  if (userEmail == null) return {};
+
+  // Firestore에서 'order_list' 컬렉션 내의 특정 이메일에 해당하는 문서(doc)를 참조하고,
+  // 그 하위 컬렉션인 'orders'에서 주어진 발주번호(order_number)와 일치하는 문서를 조회하도록 했음.
+  final orderDoc = await FirebaseFirestore.instance
+      .collection('order_list')
+      .doc(userEmail)
+      .collection('orders')
+      .where('numberInfo.order_number', isEqualTo: orderNumber)
+      .get();
+
+  // 조회된 문서가 하나라도 있을 경우, 첫 번째 문서의 참조를 사용하여 하위 컬렉션 'button_info'의 'info' 문서를 가져오도록 했음.
+  if (orderDoc.docs.isNotEmpty) {
+    final buttonInfoDoc = await orderDoc.docs.first.reference.collection('button_info').doc('info').get();
+    // 'info' 문서의 데이터를 반환하며, 문서가 존재하지 않으면 빈 Map을 반환하도록 했음.
+    return buttonInfoDoc.data() ?? {};
+  } else {
+    // 조건에 맞는 문서가 없으면 빈 Map을 반환하도록 했음.
+    return {};
+  }
 });

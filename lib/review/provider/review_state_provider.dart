@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // 리뷰 관리 화면에서 화면 자체 스크롤로 이동한 위치를 저장하는 StateProvider
 final reviewScrollPositionProvider = StateProvider<double>((ref) => 0);
 
+// 리뷰 작성 상세 화면에서 화면 자체 스크롤로 이동한 위치를 저장하는 StateProvider
+final reviewCreateDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
+
 // -------- wishlist_screen.dart 관련 ScrollControllerProvider 시작
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 reviewScrollControllerProvider라는 이름의 Provider를 정의함.

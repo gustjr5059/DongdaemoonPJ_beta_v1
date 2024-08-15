@@ -8,12 +8,15 @@ import '../../cart/provider/cart_all_proviers.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
+import '../../message/provider/message_all_provider.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
+import '../../review/view/review_create_detail_screen.dart';
 import '../provider/order_all_providers.dart';
 import '../view/complete_payment_screen.dart';
 import '../view/order_detail_list_screen.dart';
 import '../view/order_postcode_search_screen.dart';
+import '../view/refund_policy_guide_screen.dart';
 
 
 // ------- 발주 화면 내 구매자정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 시작
@@ -952,6 +955,12 @@ class OrderListDetailItemWidget extends ConsumerWidget {
         ? order!['numberInfo']['order_number']
         : '에러 발생';
 
+    // 결제 완료일 데이터를 비동기로 가져오는 provider를 호출하고 결과를 paymentCompleteDateAsyncValue에 저장
+    final paymentCompleteDateAsyncValue = ref.watch(paymentCompleteDateProvider(orderNumber));
+
+    // 버튼 활성화 정보를 비동기로 가져오는 provider를 호출하고 결과를 buttonInfoAsyncValue에 저장
+    final buttonInfoAsyncValue = ref.watch(buttonInfoProvider(orderNumber));
+
     // 숫자 형식을 '###,###'로 지정
     final numberFormat = NumberFormat('###,###');
 
@@ -1022,6 +1031,22 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                 '발주번호: $orderNumber',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 8),
+              // 결제완료일 데이터를 표시, 비동기 데이터 처리 로직을 추가
+              paymentCompleteDateAsyncValue.when(
+                data: (date) {
+                  if (date != null) {
+                    return Text(
+                      '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                    );
+                  } else {
+                    return SizedBox.shrink(); // UI에 아무것도 표시하지 않음
+                  }
+                },
+                loading: () => CircularProgressIndicator(), // 로딩 상태 처리
+                error: (error, stack) => Text('오류 발생'), // 오류 상태 처리
+              ),
             ],
           ),
         ),
@@ -1079,153 +1104,191 @@ class OrderListDetailItemWidget extends ConsumerWidget {
         ),
 
         SizedBox(height: 10),
-        // productInfoList 내 모든 상품을 카드뷰로 렌더링
+        // 각 상품 정보를 표시하는 로직을 반복문으로 구성
         for (var productInfo in productInfoList)
-          GestureDetector(
-            onTap: () {
-              // 상품 상세 화면으로 이동
-              final product = ProductContent(
-                docId: productInfo['product_id'] ?? '', // 필드명을 'productId'에서 'product_id'로 변경
-                category: productInfo['category']?.toString() ?? '에러 발생',
-                productNumber: productInfo['product_number']?.toString() ?? '에러 발생', // 필드명을 'productNumber'에서 'product_number'로 변경
-                thumbnail: productInfo['thumbnails']?.toString() ?? '', // 필드명을 'thumbnail'에서 'thumbnails'로 변경
-                briefIntroduction: productInfo['brief_introduction']?.toString() ?? '에러 발생', // 필드명을 'briefIntroduction'에서 'brief_introduction'로 변경
-                originalPrice: productInfo['original_price'] ?? 0, // 필드명을 'originalPrice'에서 'original_price'로 변경
-                discountPrice: productInfo['discount_price'] ?? 0, // 필드명을 'discountPrice'에서 'discount_price'로 변경
-                discountPercent: productInfo['discount_percent'] ?? 0, // 필드명을 'discountPercent'에서 'discount_percent'로 변경
-              );
-              navigatorProductDetailScreen.navigateToDetailScreen(context, product);
-            },
-            child: CommonCardView(
-              backgroundColor: BEIGE_COLOR,
-              content: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildProductInfoRow(
-                        productInfo['product_number']?.toString().isNotEmpty == true
-                            ? productInfo['product_number']
-                            : '에러 발생',
-                        '',
-                        bold: true,
-                        fontSize: 14),
-                    _buildProductInfoRow(
-                        productInfo['brief_introduction']?.toString().isNotEmpty == true
-                            ? productInfo['brief_introduction']
-                            : '에러 발생',
-                        '',
-                        bold: true,
-                        fontSize: 18),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 3,
-                            child: productInfo['thumbnails']?.toString().isNotEmpty == true
-                                ? Image.network(productInfo['thumbnails'], fit: BoxFit.cover)
-                                : Icon(Icons.image_not_supported)),
-                        SizedBox(width: 8),
-                        Expanded(
-                          flex: 7,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)} 원',
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontSize: 14,
-                                  decoration: TextDecoration.lineThrough,
+          CommonCardView(
+            backgroundColor: BEIGE_COLOR,
+            content: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildProductInfoRow(
+                      productInfo['product_number']?.toString().isNotEmpty == true
+                          ? productInfo['product_number']
+                          : '에러 발생',
+                      '',
+                      bold: true,
+                      fontSize: 14),
+                  _buildProductInfoRow(
+                      productInfo['brief_introduction']?.toString().isNotEmpty == true
+                          ? productInfo['brief_introduction']
+                          : '에러 발생',
+                      '',
+                      bold: true,
+                      fontSize: 18),
+                  SizedBox(height: 8),
+                  // 새로운 흰색 카드뷰 섹션을 추가
+                  GestureDetector(
+                    onTap: () {
+                      // 상품 상세 화면으로 이동
+                      final product = ProductContent(
+                        docId: productInfo['product_id'] ?? '',
+                        category: productInfo['category']?.toString() ?? '에러 발생',
+                        productNumber: productInfo['product_number']?.toString() ?? '에러 발생',
+                        thumbnail: productInfo['thumbnails']?.toString() ?? '',
+                        briefIntroduction: productInfo['brief_introduction']?.toString() ?? '에러 발생',
+                        originalPrice: productInfo['original_price'] ?? 0,
+                        discountPrice: productInfo['discount_price'] ?? 0,
+                        discountPercent: productInfo['discount_percent'] ?? 0,
+                      );
+                      navigatorProductDetailScreen.navigateToDetailScreen(context, product);
+                    },
+                    child: CommonCardView(
+                      backgroundColor: Colors.white, // 배경색을 흰색으로 설정
+                      content: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                    flex: 3,
+                                    child: productInfo['thumbnails']?.toString().isNotEmpty == true
+                                        ? Image.network(productInfo['thumbnails'], fit: BoxFit.cover)
+                                        : Icon(Icons.image_not_supported)),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  flex: 7,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)} 원',
+                                        style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontSize: 14,
+                                          decoration: TextDecoration.lineThrough,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)} 원',
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : 0.0).toInt()}%',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          productInfo['selected_color_image']?.toString().isNotEmpty == true
+                                              ? Image.network(
+                                            productInfo['selected_color_image'],
+                                            height: 18,
+                                            width: 18,
+                                            fit: BoxFit.cover,
+                                          )
+                                              : Icon(Icons.image_not_supported, size: 20),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            productInfo['selected_color_text']?.toString().isNotEmpty == true
+                                                ? productInfo['selected_color_text']
+                                                : '에러 발생',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                          '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}'),
+                                      Text(
+                                          '수량: ${productInfo['selected_count']?.toString().isNotEmpty == true ? '${productInfo['selected_count']} 개' : '0 개'}'),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)} 원',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : 0.0).toInt()}%',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  productInfo['selected_color_image']?.toString().isNotEmpty == true
-                                      ? Image.network(
-                                    productInfo['selected_color_image'],
-                                    height: 18,
-                                    width: 18,
-                                    fit: BoxFit.cover,
-                                  )
-                                      : Icon(Icons.image_not_supported, size: 20),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    productInfo['selected_color_text']?.toString().isNotEmpty == true
-                                        ? productInfo['selected_color_text']
-                                        : '에러 발생',
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                              // 선택된 사이즈와 수량을 표시
-                              Text('사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}'),
-                              Text(
-                                  '수량: ${productInfo['selected_count']?.toString().isNotEmpty == true ? '${productInfo['selected_count']} 개' : '0 개'}'),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                    // 하단에 환불 및 리뷰 작성 버튼 추가
-                    SizedBox(height: 10),
-                    Divider(color: Colors.grey),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-                            backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-                            side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 패딩
+                  ),
+                  SizedBox(height: 10),
+                  Divider(color: Colors.grey),
+                  // 환불 및 리뷰 버튼을 표시하고, 버튼 활성화 상태에 따라 UI를 제어하는 로직을 추가
+                  buttonInfoAsyncValue.when(
+                    data: (buttonInfo) {
+                      final boolRefundBtn = buttonInfo['boolRefundBtn'] ?? false;
+                      final boolReviewBtn = buttonInfo['boolReviewBtn'] ?? false;
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: boolRefundBtn
+                                ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RefundPolicyGuideScreen(orderNumber: order?['numberInfo']['order_number']),
+                                ),
+                              );
+                            }
+                                : null, // 환불 버튼 활성화 여부에 따라 동작
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: boolRefundBtn ? BUTTON_COLOR : Colors.grey,
+                              backgroundColor: BACKGROUND_COLOR,
+                              side: BorderSide(color: boolRefundBtn ? BUTTON_COLOR : Colors.grey),
+                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                            ),
+                            child: Text('환불', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
-                          child: Text('환불', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-                            backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-                            side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 패딩
+                          ElevatedButton(
+                            onPressed: boolReviewBtn
+                                ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ReviewCreateDetailScreen(),
+                                ),
+                              );
+                            }
+                                : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: boolReviewBtn ? BUTTON_COLOR : Colors.grey,
+                              backgroundColor: BACKGROUND_COLOR,
+                              side: BorderSide(color: boolReviewBtn ? BUTTON_COLOR : Colors.grey),
+                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                            ),
+                            child: Text('리뷰 작성', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
-                          child: Text('리뷰 작성하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // '장바구니 담기' 버튼 클릭 시 호출되는 함수로, Firebase에 데이터를 저장하는 로직이 포함됨
-                            onOrderAddToCartButtonPressed(context, ref, productInfo);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: BUTTON_COLOR, // 버튼 텍스트의 색상을 지정
-                            backgroundColor: BACKGROUND_COLOR, // 버튼의 배경 색상을 지정
-                            side: BorderSide(color: BUTTON_COLOR), // 버튼의 테두리 색상을 지정
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼의 패딩을 세로 10, 가로 20으로 설정
+                          ElevatedButton(
+                            onPressed: () {
+                              onOrderAddToCartButtonPressed(context, ref, productInfo);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: BUTTON_COLOR,
+                              backgroundColor: BACKGROUND_COLOR,
+                              side: BorderSide(color: BUTTON_COLOR),
+                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                            ),
+                            child: Text('장바구니 담기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
-                          child: Text('장바구니 담기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼에 표시될 텍스트와 그 스타일(글씨 크기 16, 굵게 설정)
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                        ],
+                      );
+                    },
+                    loading: () => CircularProgressIndicator(), // 버튼 정보 로딩 중일 때 로딩 인디케이터 표시
+                    error: (error, stack) => Text('버튼 상태를 불러오는 중 오류 발생'), // 오류 발생 시 메시지 표시
+                  ),
+                ],
               ),
             ),
           ),
@@ -1234,6 +1297,7 @@ class OrderListDetailItemWidget extends ConsumerWidget {
   }
 }
 // ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 끝
+
 
   // 결제 정보를 표시하는 행을 구성하는 함수
   Widget _buildAmountRow(String label, String value, {bool isTotal = false}) {
@@ -1357,8 +1421,6 @@ void onOrderAddToCartButtonPressed(BuildContext context, WidgetRef ref, Map<Stri
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('장바구니에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시
   });
 }
-
-
 
 // ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
 // AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.
