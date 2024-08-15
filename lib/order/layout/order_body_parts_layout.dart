@@ -1298,7 +1298,6 @@ class OrderListDetailItemWidget extends ConsumerWidget {
 }
 // ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 끝
 
-
   // 결제 정보를 표시하는 행을 구성하는 함수
   Widget _buildAmountRow(String label, String value, {bool isTotal = false}) {
     return Padding(
