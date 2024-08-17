@@ -557,7 +557,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(privateMessageScrollPositionProvider.notifier).state =
   0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
-  ref.invalidate(fetchMessagesProvider); // 메시지 데이터 초기화
+  // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
+  ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
+  // ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+  // ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
   // 쪽지 관리 화면 관련 초기화 부분 끝
 
   // 리뷰 관리 화면 관련 초기화 부분 시작
@@ -584,8 +587,13 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(adminCustomMessageProvider.notifier).state = null;
   // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
   ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
+  // 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 화면에서 선택된 수신자 이메일 상태 초기화
+  ref.read(selectedReceiverProvider.notifier).state = null;
   // 쪽지 관리 화면 초기화 시, 모든 계정의 쪽지 목록 상태 초기화
-  ref.invalidate(fetchAllMessagesProvider);
+  ref.invalidate(fetchMinutesAllMessagesProvider); // 1분 이내 타임의 쪽지 목록 불러옴
+  ref.invalidate(fetchDaysAllMessagesProvider); // 30일 이내 타임의 쪽지 목록 불러옴
+  ref.invalidate(fetchYearsAllMessagesProvider); // 1년(365일) 이내 타임의 쪽지 목록 불러옴
+
   // 쪽지 관리 화면 초기화 끝
 
   // 발주내역 관리 화면 초기화 시작

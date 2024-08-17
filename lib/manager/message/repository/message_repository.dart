@@ -96,6 +96,7 @@ class AdminMessageRepository {
       'order_number': orderNumber, // 주문 번호를 저장
       'contents': contents, // 메시지 내용을 저장
       'message_sendingTime': FieldValue.serverTimestamp(), // 서버 시간을 기준으로 메시지 전송 시간을 저장
+      'private_email_closed_button': false, // 'private_email_closed_button' 필드에 기본값으로 false를 저장
     });
 
     // 발주 상태 업데이트 로직
@@ -134,19 +135,72 @@ class AdminMessageRepository {
     }
   }
 
-  // 모든 이메일 계정의 쪽지 목록을 가져오는 함수.
-  Stream<List<Map<String, dynamic>>> fetchAllMessages() {
-    // Firestore에서 모든 쪽지 목록을 실시간으로 가져옴.
-    return firestore.collectionGroup('message').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => ({
-        'id': doc.id,  // 문서 ID를 포함하도록 수정
-        ...doc.data() as Map<String, dynamic>
-      })).toList();
-    });
+  // ------ 모든 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 시작
+  // <원리>
+  // 해당 쿼리 로직 :
+  // 파이어스토어 내 인덱스 저장 (컬렉션 ID: message, 'private_email_closed_button' : ascending, 'message_sendingTime' : ascending)
+  // 해당 인덱스 순서에 맞게 쿼리 순서를 짜서,
+  // 우선, 해당 message_sendingTime 이내인 쪽지를 가져오고,
+  // 'message_sendingTime'의 오름차순으로 가져오는데 descending: false로 해서 ascending을 표현함
+  // 이러면 최신순으로 정렬됨 (message_sendingTime : 오름차순)
+  // 여기선, 관리자용 쪽지 관리 화면이라서 'x' 버튼을 클릭하면 fetchDeleteAllMessage 함수를 활용해서 파이어베이스 내 데이터까지 삭제함!!
+
+  // 특정 이메일 계정의 1분 이내 발송된 쪽지 목록을 실시간으로 가져오는 함수
+  Stream<List<Map<String, dynamic>>> fetchMinutesAllMessages(String email, int minutes) {
+    // 1분 전의 날짜와 시간을 계산
+    final oneMinuteAgo = DateTime.now().subtract(Duration(minutes: minutes));
+
+    return firestore
+        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .doc(email) // 주어진 이메일에 해당하는 문서에 접근
+        .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
+        .where('message_sendingTime', isGreaterThanOrEqualTo: oneMinuteAgo) // 'message_sendingTime' 필드가 1분 전보다 늦은(즉, 최근) 문서들만 필터링
+        .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
+        .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
+        .map((snapshot) => snapshot.docs.map((doc) => {
+      'id': doc.id, // 문서 ID를 'id'로 저장
+      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
+    }).toList()); // 각 문서를 맵으로 변환한 후 리스트로 변환
+  }
+
+  // 특정 이메일 계정의 30일 이내 발송된 쪽지 목록을 실시간으로 가져오는 함수
+  Stream<List<Map<String, dynamic>>> fetchDaysAllMessages(String email, int days) {
+    // 30일 전의 날짜와 시간을 계산
+    final thirtyDaysAgo = DateTime.now().subtract(Duration(days: days));
+
+    return firestore
+        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .doc(email) // 주어진 이메일에 해당하는 문서에 접근
+        .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
+        .where('message_sendingTime', isGreaterThanOrEqualTo: thirtyDaysAgo) // 'message_sendingTime' 필드가 30일 전보다 늦은(즉, 최근) 문서들만 필터링
+        .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
+        .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
+        .map((snapshot) => snapshot.docs.map((doc) => {
+      'id': doc.id, // 문서 ID를 'id'로 저장
+      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
+    }).toList()); // 각 문서를 맵으로 변환한 후 리스트로 변환
+  }
+
+  // 특정 이메일 계정의 1년 이내 발송된 쪽지 목록을 실시간으로 가져오는 함수
+  Stream<List<Map<String, dynamic>>> fetchYearsAllMessages(String email, int days) {
+    // 1년(365일) 전의 날짜와 시간을 계산
+    final oneYearAgo = DateTime.now().subtract(Duration(days: days));
+
+    return firestore
+        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .doc(email) // 주어진 이메일에 해당하는 문서에 접근
+        .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
+        .where('message_sendingTime', isGreaterThanOrEqualTo: oneYearAgo) // 'message_sendingTime' 필드가 1년 전보다 늦은(즉, 최근) 문서들만 필터링
+        .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
+        .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
+        .map((snapshot) => snapshot.docs.map((doc) => {
+      'id': doc.id, // 문서 ID를 'id'로 저장
+      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
+    }).toList()); // 각 문서를 맵으로 변환한 후 리스트로 변환
   }
 
   // Firestore에서 특정 메시지를 삭제하는 함수.
-  Future<void> deleteMessage(String messageId, String recipient) async {
+  Future<void> fetchDeleteAllMessage(String messageId, String recipient) async {
     // Firestore에서 해당 메시지를 삭제.
     await firestore.collection('message_list')
         .doc(recipient)
@@ -155,4 +209,5 @@ class AdminMessageRepository {
         .delete();
   }
 }
+// ------ 모든 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 끝
 // ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 AdminMessageRepository 클래스 내용 끝

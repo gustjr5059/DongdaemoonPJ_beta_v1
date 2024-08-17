@@ -35,3 +35,6 @@ final adminMessageContentProvider = StateProvider<String?>((ref) {
 final adminCustomMessageProvider = StateProvider<String?>((ref) {
   return null;
 });
+
+// 관리자용 쪽지 관리 화면 내 '쪽지 목록'탭 화면에서 선택된 수신자 이메일을 관리하는 상태 프로바이더
+final selectedReceiverProvider = StateProvider<String?>((ref) => null);

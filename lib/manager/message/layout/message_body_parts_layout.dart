@@ -394,188 +394,224 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
 class AdminMessageListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 모든 계정의 쪽지 목록을 가져옴.
-    final messages = ref.watch(fetchAllMessagesProvider);
 
-    // 가져온 쪽지 데이터의 상태에 따라 UI를 구성.
-    return messages.when(
-      // 데이터가 성공적으로 로드된 경우
-      data: (messagesList) {
-        // 현재 시간을 가져옴.
-        final currentTime = DateTime.now();
+    // 선택된 수신자 이메일을 관리하는 상태를 가져옴
+    final selectedReceiver = ref.watch(selectedReceiverProvider);
 
-        // 30일 이내에 발송된 쪽지만 필터링.
-        final filteredMessagesList = messagesList.where((message) {
-          final sendingTime = (message['message_sendingTime'] as Timestamp?)?.toDate();
-          if (sendingTime == null) return false;
-          // return currentTime.difference(sendingTime).inMinutes < 1;
-             return currentTime.difference(sendingTime).inDays < 30;
-        }).toList();
+    // 드롭다운 메뉴에 사용할 수신자 이메일 목록을 가져옴
+    final receivers = ref.watch(receiversProvider);
 
-        // 쪽지 목록이 비어 있는 경우
-        if (filteredMessagesList.isEmpty) {
-          return Center(child: Text('쪽지가 없습니다.'));
-        }
+    // // 선택된 수신자의 1분 이내 발송된 쪽지 목록을 가져옴
+    // final messages = ref.watch(fetchMinutesAllMessagesProvider(selectedReceiver));
 
-        // 최신 쪽지가 위로 오도록 리스트를 역순으로 정렬.
-        final reversedMessages = filteredMessagesList.reversed.toList();
+    // 선택된 수신자의 30일 이내 발송된 쪽지 목록을 가져옴
+    final messages = ref.watch(fetchDaysAllMessagesProvider(selectedReceiver));
 
-        // 쪽지 목록을 열의 형태로 표시.
-        return Column(
-          // 각 쪽지를 맵핑하여 위젯을 생성.
-          children: reversedMessages.map((message) {
-            // 수신자와 주문 번호 텍스트를 구성.
-            String recipientText = '${message['recipient']}';
-            String orderNumberText = '[발주번호: ${message['order_number']}]';
+    // // 선택된 수신자의 1년(365일) 이내 발송된 쪽지 목록을 가져옴
+    // final messages = ref.watch(fetchYearsAllMessagesProvider(selectedReceiver));
 
-            // 쪽지를 탭하면 상세 정보를 보여주는 팝업을 띄움.
-            return GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // 팝업 내용을 구성.
-                    return AlertDialog(
-                      backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: [
-                            // 쪽지 내용을 강조하여 표시.
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: recipientText,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red, // 빨간색 텍스트
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: '님께서 발주 완료한 ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black, // 기본 텍스트 색상
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: orderNumberText,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red, // 빨간색 텍스트
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: ' 건 관련 ${message['contents']}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black, // 기본 텍스트 색상
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        // 닫기 버튼을 구성.
-                        TextButton(
-                          child: Text(
-                            '닫기',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
+    return Column(
+      children: [
+        // 수신자 필터링을 위한 드롭다운 메뉴 버튼
+        receivers.when(
+          data: (receiversList) {
+            return DropdownButton<String>(
+              hint: Text('수신자 선택'), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
+              value: selectedReceiver, // 현재 선택된 수신자 이메일 값 설정
+              onChanged: (value) {
+                // 선택한 수신자 이메일을 상태로 업데이트
+                ref.read(selectedReceiverProvider.notifier).state = value;
               },
-              // 쪽지 목록 카드 뷰를 구성.
-              child: Stack(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        // Expanded 위젯을 사용하여 가로로 공간을 최대한 차지하도록 설정
-                        child: CommonCardView(
-                          // CommonCardView 위젯을 사용하여 카드 뷰를 구성
-                          backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
-                          content: RichText(
-                            // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
-                            maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
-                            overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
-                            text: TextSpan(
-                              // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
+              items: receiversList.map((receiver) {
+                return DropdownMenuItem<String>(
+                  value: receiver.email, // 수신자 이메일 값 설정
+                  child: Text(receiver.email), // 드롭다운 메뉴에 표시될 이메일 텍스트 설정
+                );
+              }).toList(),
+            );
+          },
+          loading: () => CircularProgressIndicator(), // 수신자 목록을 불러오는 중일 때 로딩 인디케이터 표시
+          error: (error, stack) => Text('오류가 발생했습니다: $error'), // 수신자 목록을 불러오는 중 오류 발생 시 오류 메시지 표시
+        ),
+        SizedBox(height: 20), // 드롭다운 메뉴와 메시지 목록 사이에 간격을 둠
+        // 선택된 수신자의 쪽지 목록을 표시하는 부분
+        messages.when(
+          data: (messagesList) {
+            if (messagesList.isEmpty) {
+              return Center(child: Text('쪽지가 없습니다.')); // 쪽지 목록이 비어있을 경우 "쪽지가 없습니다" 메시지 표시
+            }
+
+            // 최신 쪽지가 위로 오도록 리스트를 역순으로 정렬.
+            final reversedMessages = messagesList.reversed.toList(); // 쪽지 목록을 최신 순으로 정렬
+
+            // 쪽지 목록을 열의 형태로 표시.
+            return Column(
+              children: reversedMessages.map((message) {
+                // private_email_closed_button 필드값에 따라 '[O]' 또는 '[X]' 표시
+                String statusIcon = message['private_email_closed_button'] == true ? '[삭제 O]  ' : '[삭제 X]  '; // private_email_closed_button 값에 따라 상태 아이콘 설정
+                String recipientText = '${message['recipient']}'; // 수신자 이메일 텍스트 설정
+                String orderNumberText = '[발주번호: ${message['order_number']}]'; // 발주번호 텍스트 설정
+
+                // 쪽지를 탭하면 상세 정보를 보여주는 팝업을 띄움.
+                return GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        // 팝업 내용을 구성.
+                        return AlertDialog(
+                          backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
+                          content: SingleChildScrollView(
+                            child: ListBody(
                               children: [
-                                TextSpan(
-                                  // 첫 번째 텍스트 스팬
-                                  text: recipientText, // 수신자 텍스트를 설정
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.red, // 텍스트 색상을 빨간색으로 설정
-                                  ),
-                                ),
-                                TextSpan(
-                                  // 두 번째 텍스트 스팬
-                                  text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.black, // 텍스트 색상을 검은색으로 설정
-                                  ),
-                                ),
-                                TextSpan(
-                                  // 세 번째 텍스트 스팬
-                                  text: orderNumberText, // 주문 번호 텍스트를 설정
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.red, // 텍스트 색상을 빨간색으로 설정
-                                  ),
-                                ),
-                                TextSpan(
-                                  // 네 번째 텍스트 스팬
-                                  text: ' 건 관련 ${message['contents']}', // 메시지 내용을 설정
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                // 쪽지 내용을 강조하여 표시.
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: statusIcon, // 상태 아이콘 텍스트 설정
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                          color: Colors.blue, // 파란색 텍스트 색상 설정
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: recipientText, // 수신자 이메일 텍스트 설정
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                          color: Colors.red, // 빨간색 텍스트 색상 설정
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                          color: Colors.black, // 기본 텍스트 색상 설정
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: orderNumberText, // 발주번호 텍스트 설정
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                          color: Colors.red, // 빨간색 텍스트 색상 설정
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: ' 건 관련 ${message['contents']}', // 쪽지 내용 텍스트 설정
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                          color: Colors.black, // 기본 텍스트 색상 설정
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ),
-                      Container(
-                        // 컨테이너를 사용하여 아이콘 배경을 설정
-                        color: LIGHT_PURPLE_COLOR, // 아이콘 배경색을 LIGHT_PURPLE_COLOR로 설정
-                        child: IconButton(
-                          // IconButton 위젯을 사용하여 닫기 버튼을 구성
-                          icon: Icon(Icons.close), // 닫기 아이콘을 설정
-                          onPressed: () {
-                            // 버튼이 눌렸을 때 실행할 함수 설정
-                            ref.read(deleteMessageProvider({
-                              'messageId': message['id'], // 메시지 ID를 전달
-                              'recipient': message['recipient'], // 수신자를 전달
-                            }).future);
-                          },
-                        ),
+                          actions: <Widget>[
+                            // 닫기 버튼을 구성.
+                            TextButton(
+                              child: Text(
+                                '닫기', // 닫기 버튼 텍스트
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                  color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // 닫기 버튼을 눌렀을 때 팝업 닫기
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  // 쪽지 목록 카드 뷰를 구성.
+                  child: Stack(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            // Expanded 위젯을 사용하여 가로로 공간을 최대한 차지하도록 설정
+                            child: CommonCardView(
+                              // CommonCardView 위젯을 사용하여 카드 뷰를 구성
+                              backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
+                              content: RichText(
+                                // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
+                                maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
+                                overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
+                                text: TextSpan(
+                                  // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
+                                  children: [
+                                    TextSpan(
+                                      text: statusIcon, // 상태 아이콘 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.blue, // 파란색 텍스트 색상 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: recipientText, // 수신자 이메일 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '님께서 발주 완료한 ', // 고정된 안내 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: orderNumberText, // 발주번호 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' 건 관련 ${message['contents']}', // 메시지 내용 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            // 컨테이너를 사용하여 아이콘 배경을 설정
+                            color: LIGHT_PURPLE_COLOR, // 아이콘 배경색을 LIGHT_PURPLE_COLOR로 설정
+                            child: IconButton(
+                              // IconButton 위젯을 사용하여 닫기 버튼을 구성
+                              icon: Icon(Icons.close), // 닫기 아이콘을 설정
+                              onPressed: () {
+                                // 버튼이 눌렸을 때 실행할 함수 설정
+                                ref.read(fetchDeleteAllMessageProvider({
+                                  'messageId': message['id'], // 메시지 ID를 전달
+                                  'recipient': message['recipient'], // 수신자를 전달
+                                }).future);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              }).toList(), // 쪽지 목록을 반복하여 각 항목을 리스트로 구성
             );
-          }).toList(), // 쪽지 목록을 반복하여 각 항목을 리스트로 구성
-        );
-      },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
-      error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
+          },
+          loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
+          error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
+        ),
+      ],
     );
   }
 }
