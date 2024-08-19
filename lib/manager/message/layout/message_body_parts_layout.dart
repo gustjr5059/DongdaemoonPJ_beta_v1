@@ -391,9 +391,37 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
 // ------ 관리자용 쪽지 관리 화면 내 '쪽지 작성' 탭 관련 내용을 구현하는 AdminMessageCreateFormScreen 클래스 내용 끝
 
 // ------ 관리자용 쪽지 관리 화면 내 모든 계정의 쪽지 목록 불러와서 UI 구현하는 AdminMessageListScreen 클래스 내용 시작
-class AdminMessageListScreen extends ConsumerWidget {
+class AdminMessageListScreen extends ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _AdminMessageListScreenState createState() => _AdminMessageListScreenState();
+}
+
+class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 초기화 함수를 지연 호출하여 위젯이 완전히 초기화된 후 실행되도록 함.
+    Future.microtask(() => _resetForm());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 종속성이 변경될 때 초기화 함수를 지연 호출하여 변경된 종속성에 따라
+    // 상태를 초기화함.
+    Future.microtask(() => _resetForm());
+  }
+
+  void _resetForm() {
+    // 화면의 상태를 초기화하는 로직
+    setState(() {
+      // 선택된 수신자 상태를 초기화 (null로 설정)
+      ref.read(selectedReceiverProvider.notifier).state = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     // 선택된 수신자 이메일을 관리하는 상태를 가져옴
     final selectedReceiver = ref.watch(selectedReceiverProvider);
@@ -452,84 +480,86 @@ class AdminMessageListScreen extends ConsumerWidget {
                 String recipientText = '${message['recipient']}'; // 수신자 이메일 텍스트 설정
                 String orderNumberText = '[발주번호: ${message['order_number']}]'; // 발주번호 텍스트 설정
 
-                // 쪽지를 탭하면 상세 정보를 보여주는 팝업을 띄움.
-                return GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        // 팝업 내용을 구성.
-                        return AlertDialog(
-                          backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: [
-                                // 쪽지 내용을 강조하여 표시.
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: statusIcon, // 상태 아이콘 텍스트 설정
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                          color: Colors.blue, // 파란색 텍스트 색상 설정
-                                        ),
+                // 팝업을 띄우는 함수를 정의
+                void showAlertDialog(BuildContext context) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      // 팝업 내용을 구성.
+                      return AlertDialog(
+                        backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: [
+                              // 쪽지 내용을 강조하여 표시.
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: statusIcon, // 상태 아이콘 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue, // 파란색 텍스트 색상 설정
                                       ),
-                                      TextSpan(
-                                        text: recipientText, // 수신자 이메일 텍스트 설정
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                          color: Colors.red, // 빨간색 텍스트 색상 설정
-                                        ),
+                                    ),
+                                    TextSpan(
+                                      text: recipientText, // 수신자 이메일 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red, // 빨간색 텍스트 색상 설정
                                       ),
-                                      TextSpan(
-                                        text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                          color: Colors.black, // 기본 텍스트 색상 설정
-                                        ),
+                                    ),
+                                    TextSpan(
+                                      text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black, // 기본 텍스트 색상 설정
                                       ),
-                                      TextSpan(
-                                        text: orderNumberText, // 발주번호 텍스트 설정
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                          color: Colors.red, // 빨간색 텍스트 색상 설정
-                                        ),
+                                    ),
+                                    TextSpan(
+                                      text: orderNumberText, // 발주번호 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red, // 빨간색 텍스트 색상 설정
                                       ),
-                                      TextSpan(
-                                        text: ' 건 관련 ${message['contents']}', // 쪽지 내용 텍스트 설정
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                          color: Colors.black, // 기본 텍스트 색상 설정
-                                        ),
+                                    ),
+                                    TextSpan(
+                                      text: ' 건 관련 ${message['contents']}', // 쪽지 내용 텍스트 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black, // 기본 텍스트 색상 설정
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            // 닫기 버튼을 구성.
-                            TextButton(
-                              child: Text(
-                                '닫기', // 닫기 버튼 텍스트
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                  color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
+                                    ),
+                                  ],
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.of(context).pop(); // 닫기 버튼을 눌렀을 때 팝업 닫기
-                              },
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          // 닫기 버튼을 구성.
+                          TextButton(
+                            child: Text(
+                              '닫기',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
+                              ),
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  // 쪽지 목록 카드 뷰를 구성.
-                  child: Stack(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // 닫기 버튼을 눌렀을 때 팝업 닫기
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+
+                // 쪽지 목록 카드 뷰를 구성.
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0), // 화면의 가로 길이에 맞게 패딩 조정
+                  child: Column(
                     children: [
                       Row(
                         children: [
@@ -538,66 +568,99 @@ class AdminMessageListScreen extends ConsumerWidget {
                             child: CommonCardView(
                               // CommonCardView 위젯을 사용하여 카드 뷰를 구성
                               backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
-                              content: RichText(
-                                // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
-                                maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
-                                overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
-                                text: TextSpan(
-                                  // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
-                                  children: [
-                                    TextSpan(
-                                      text: statusIcon, // 상태 아이콘 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.blue, // 파란색 텍스트 색상 설정
-                                      ),
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
+                                    maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
+                                    overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
+                                    text: TextSpan(
+                                      // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
+                                      children: [
+                                        TextSpan(
+                                          text: statusIcon, // 상태 아이콘 텍스트 설정
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue, // 파란색 텍스트 색상 설정
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: recipientText, // 수신자 이메일 텍스트 설정
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '님께서 발주 완료한 ', // 고정된 안내 텍스트 설정
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: orderNumberText, // 발주번호 텍스트 설정
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: ' 건 관련 ${message['contents']}', // 메시지 내용 텍스트 설정
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    TextSpan(
-                                      text: recipientText, // 수신자 이메일 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                  ),
+                                  // [자세히] 버튼을 중앙에 위치시키고, '삭제' 버튼을 오른쪽 끝에 배치
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Spacer(), // 왼쪽을 비우기 위해 Spacer 추가
+                                      TextButton(
+                                        onPressed: () {
+                                          showAlertDialog(context);
+                                        },
+                                        child: Text(
+                                          '[자세히]', // [자세히] 텍스트를 표시
+                                          style: TextStyle(
+                                            color: Colors.blue, // 텍스트 색상을 파란색으로 설정
+                                            fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                            fontSize: 16, // 텍스트 크기 설정
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    TextSpan(
-                                      text: '님께서 발주 완료한 ', // 고정된 안내 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                      Spacer(), // 중앙에 위치시키기 위해 Spacer 추가
+                                      // 카드뷰 내부 오른쪽 끝에 위치하는 삭제 버튼
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor: BUTTON_COLOR,
+                                          backgroundColor: BACKGROUND_COLOR,
+                                          side: BorderSide(color: BUTTON_COLOR),
+                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                        ),
+                                        onPressed: () {
+                                          ref.read(fetchDeleteAllMessageProvider({
+                                            'messageId': message['id'],
+                                            'recipient': message['recipient'],
+                                          }).future);
+                                        },
+                                        child: Text(
+                                          '삭제',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16, // 텍스트 크기 설정
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    TextSpan(
-                                      text: orderNumberText, // 발주번호 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' 건 관련 ${message['contents']}', // 메시지 내용 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          Container(
-                            // 컨테이너를 사용하여 아이콘 배경을 설정
-                            color: LIGHT_PURPLE_COLOR, // 아이콘 배경색을 LIGHT_PURPLE_COLOR로 설정
-                            child: IconButton(
-                              // IconButton 위젯을 사용하여 닫기 버튼을 구성
-                              icon: Icon(Icons.close), // 닫기 아이콘을 설정
-                              onPressed: () {
-                                // 버튼이 눌렸을 때 실행할 함수 설정
-                                ref.read(fetchDeleteAllMessageProvider({
-                                  'messageId': message['id'], // 메시지 ID를 전달
-                                  'recipient': message['recipient'], // 수신자를 전달
-                                }).future);
-                              },
                             ),
                           ),
                         ],

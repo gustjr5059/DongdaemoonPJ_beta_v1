@@ -109,15 +109,15 @@ class AdminOrderListContents extends ConsumerWidget {
                                       return Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('상품 번호: ${productMap['productNumber'] ?? '없음'}'),
+                                          Text('상품 번호: ${productMap['product_number'] ?? '없음'}'),
                                           // 제품 번호를 텍스트로 표시
-                                          Text('상품 가격: ${productMap['discountPrice'] != null ? formatter.format(productMap['discountPrice']) + '원' : '없음'}'),
+                                          Text('상품 가격: ${productMap['discount_price'] != null ? formatter.format(productMap['discount_price']) + '원' : '없음'}'),
                                           // 제품 가격을 텍스트로 표시
-                                          Text('상품 수량: ${productMap['selectedCount'] ?? '없음'} 개'),
+                                          Text('상품 수량: ${productMap['selected_count'] ?? '없음'} 개'),
                                           // 제품 수량을 텍스트로 표시
-                                          Text('상품 색상: ${productMap['selectedColorText'] ?? '없음'}'),
+                                          Text('상품 색상: ${productMap['selected_color_text'] ?? '없음'}'),
                                           // 제품 색상을 텍스트로 표시
-                                          Text('상품 사이즈: ${productMap['selectedSize'] ?? '없음'}'),
+                                          Text('상품 사이즈: ${productMap['selected_size'] ?? '없음'}'),
                                           // 제품 사이즈를 텍스트로 표시
                                           Divider(color: Colors.grey),
                                           // 구분선

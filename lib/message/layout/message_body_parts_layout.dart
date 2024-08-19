@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/colors.dart';
@@ -46,77 +46,79 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
             String recipientText = '${message['recipient']}';
             String orderNumberText = '[발주번호: ${message['order_number']}]';
 
-            // 쪽지를 탭하면 상세 정보를 보여주는 팝업을 띄움.
-            return GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // 팝업 내용을 구성.
-                    return AlertDialog(
-                      backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: [
-                            // 쪽지 내용을 강조하여 표시.
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: recipientText,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red, // 빨간색 텍스트
-                                    ),
+            // 팝업을 띄우는 함수를 정의
+            void showAlertDialog(BuildContext context) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  // 팝업 내용을 구성.
+                  return AlertDialog(
+                    backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: [
+                          // 쪽지 내용을 강조하여 표시.
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: recipientText,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red, // 빨간색 텍스트
                                   ),
-                                  TextSpan(
-                                    text: '님께서 발주 완료한 ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black, // 기본 텍스트 색상
-                                    ),
+                                ),
+                                TextSpan(
+                                  text: '님께서 발주 완료한 ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black, // 기본 텍스트 색상
                                   ),
-                                  TextSpan(
-                                    text: orderNumberText,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red, // 빨간색 텍스트
-                                    ),
+                                ),
+                                TextSpan(
+                                  text: orderNumberText,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red, // 빨간색 텍스트
                                   ),
-                                  TextSpan(
-                                    text: ' 건 관련 ${message['contents']}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black, // 기본 텍스트 색상
-                                    ),
+                                ),
+                                TextSpan(
+                                  text: ' 건 관련 ${message['contents']}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black, // 기본 텍스트 색상
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        // 닫기 버튼을 구성.
-                        TextButton(
-                          child: Text(
-                            '닫기',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
+                                ),
+                              ],
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      // 닫기 버튼을 구성.
+                      TextButton(
+                        child: Text(
+                          '닫기',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
+                          ),
                         ),
-                      ],
-                    );
-                  },
-                );
-              },
-              // 쪽지 목록 카드 뷰를 구성.
-              child: Stack(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+
+            // 쪽지 목록 카드 뷰를 구성.
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 1.0), // 화면의 가로 길이에 맞게 패딩 조정
+              child: Column(
                 children: [
                   Row(
                     children: [
@@ -125,60 +127,93 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                         child: CommonCardView(
                           // CommonCardView 위젯을 사용하여 카드 뷰를 구성
                           backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
-                          content: RichText(
-                            // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
-                            maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
-                            overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
-                            text: TextSpan(
-                              // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
-                              children: [
-                                TextSpan(
-                                  // 첫 번째 텍스트 스팬
-                                  text: recipientText, // 수신자 텍스트를 설정
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.red, // 텍스트 색상을 빨간색으로 설정
-                                  ),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
+                                maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
+                                overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
+                                text: TextSpan(
+                                  // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
+                                  children: [
+                                    TextSpan(
+                                      // 첫 번째 텍스트 스팬
+                                      text: recipientText, // 수신자 텍스트를 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      // 두 번째 텍스트 스팬
+                                      text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      // 세 번째 텍스트 스팬
+                                      text: orderNumberText, // 주문 번호 텍스트를 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      // 네 번째 텍스트 스팬
+                                      text: ' 건 관련 ${message['contents']}', // 메시지 내용을 설정
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                TextSpan(
-                                  // 두 번째 텍스트 스팬
-                                  text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                              ),
+                              // [자세히] 버튼을 중앙에 위치시키고, '삭제' 버튼을 오른쪽 끝에 배치
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Spacer(), // 왼쪽을 비우기 위해 Spacer 추가
+                                  TextButton(
+                                    onPressed: () {
+                                      showAlertDialog(context);
+                                    },
+                                    child: Text(
+                                      '[자세히]', // [자세히] 텍스트를 표시
+                                      style: TextStyle(
+                                        color: Colors.blue, // 텍스트 색상을 파란색으로 설정
+                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
+                                        fontSize: 16, // 텍스트 크기 설정
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                  // 세 번째 텍스트 스팬
-                                  text: orderNumberText, // 주문 번호 텍스트를 설정
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                  Spacer(), // 중앙에 위치시키기 위해 Spacer 추가
+                                  // 카드뷰 내부 오른쪽 끝에 위치하는 삭제 버튼
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: BUTTON_COLOR,
+                                      backgroundColor: BACKGROUND_COLOR,
+                                      side: BorderSide(color: BUTTON_COLOR),
+                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                    ),
+                                    onPressed: () {
+                                      ref.read(fetchDeleteMessagesProvider(message['id']));
+                                    },
+                                    child: Text(
+                                      '삭제',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16, // 텍스트 크기 설정
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                  // 네 번째 텍스트 스팬
-                                  text: ' 건 관련 ${message['contents']}', // 메시지 내용을 설정
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                    color: Colors.black, // 텍스트 색상을 검은색으로 설정
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
-                      Container(
-                        // 컨테이너를 사용하여 아이콘 배경을 설정
-                        color: LIGHT_PURPLE_COLOR, // 아이콘 배경색을 LIGHT_PURPLE_COLOR로 설정
-                        child: IconButton(
-                          // IconButton 위젯을 사용하여 닫기 버튼을 구성
-                          icon: Icon(Icons.close), // 닫기 아이콘을 설정
-                          onPressed: () {
-                            // 닫기 버튼 클릭 시, 해당 메시지의 'private_email_closed_button' 필드를 'true'로 변경
-                            ref.read(fetchDeleteMessagesProvider(message['id']));
-                          },
                         ),
                       ),
                     ],
