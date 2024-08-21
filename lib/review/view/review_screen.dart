@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일 임포트
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함함
+import '../../order/provider/order_all_providers.dart';
 import '../layout/review_body_parts_layout.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
@@ -114,6 +115,8 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
       ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+      // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
+      ref.invalidate(buttonInfoProvider);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함
@@ -124,6 +127,8 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
         ref.read(reviewScrollPositionProvider.notifier).state = 0;
         ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
         ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+        // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
+        ref.invalidate(buttonInfoProvider);
       }
     });
 
@@ -144,6 +149,8 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
     if (state == AppLifecycleState.resumed) {
       ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
       ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+      // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
+      ref.invalidate(buttonInfoProvider);
       _updateStatusBar(); // 앱이 다시 활성화될 때 상태표시줄 업데이트
     }
   }

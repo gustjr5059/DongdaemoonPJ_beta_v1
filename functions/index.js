@@ -198,14 +198,14 @@ exports.updateButtonStatusOnMessage = functions.firestore
                     // 버튼 활성화 상태로 업데이트
                     await buttonInfoRef.update({
                         'boolRefundBtn': true,
-                        'boolReviewBtn': true,
+                        'boolReviewWriteBtn': true,
                     });
 
                     // 추가적인 조건에 따라 버튼 비활성화
                     setTimeout(async () => {
                         await buttonInfoRef.update({
                             'boolRefundBtn': false,
-                            'boolReviewBtn': false,
+                            'boolReviewWriteBtn': false,
                         });
                     }, 864000000); // 10일(10일 = 10 * 24 * 60 * 60 * 1000밀리초) 후 비활성화
                 }

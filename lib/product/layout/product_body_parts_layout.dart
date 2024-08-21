@@ -519,6 +519,16 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(orderListProvider);
   // 발주 내역 화면 관련 초기화 부분 끝
 
+  // 발주 내역 상세 화면 관련 초기화 부분 시작
+  // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
+  ref.read(orderListDetailScrollPositionProvider.notifier).state =
+  0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+  // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
+  ref.invalidate(orderListDetailProvider);
+  // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
+  ref.invalidate(buttonInfoProvider);
+  // 발주 내역 상세 화면 관련 초기화 부분 끝
+
   // 발주 화면 관련 초기화 부분 시작
   // 발주 화면에서 단순 화면 스크롤 초기화
   ref.read(orderMainScrollPositionProvider.notifier).state =
@@ -569,6 +579,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
   ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+  // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
+  ref.invalidate(buttonInfoProvider);
   // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작

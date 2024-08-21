@@ -1227,7 +1227,7 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                   buttonInfoAsyncValue.when(
                     data: (buttonInfo) {
                       final boolRefundBtn = buttonInfo['boolRefundBtn'] ?? false;
-                      final boolReviewBtn = buttonInfo['boolReviewBtn'] ?? false;
+                      final boolReviewWriteBtn = buttonInfo['boolReviewWriteBtn'] ?? false;
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1252,7 +1252,7 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                             child: Text('환불', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
                           ElevatedButton(
-                            onPressed: boolReviewBtn
+                            onPressed: boolReviewWriteBtn
                                 ? () {
                               Navigator.push(
                                 context,
@@ -1263,9 +1263,9 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                             }
                                 : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: boolReviewBtn ? BUTTON_COLOR : Colors.grey,
+                              foregroundColor: boolReviewWriteBtn ? BUTTON_COLOR : Colors.grey,
                               backgroundColor: BACKGROUND_COLOR,
-                              side: BorderSide(color: boolReviewBtn ? BUTTON_COLOR : Colors.grey),
+                              side: BorderSide(color: boolReviewWriteBtn ? BUTTON_COLOR : Colors.grey),
                               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                             ),
                             child: Text('리뷰 작성', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

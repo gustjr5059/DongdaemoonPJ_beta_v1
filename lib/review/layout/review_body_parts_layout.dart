@@ -6,10 +6,12 @@ import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../message/provider/message_all_provider.dart';
+import '../../order/provider/order_all_providers.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
+import '../view/review_create_detail_screen.dart';
 
 
 // ------ 마이페이지용 리뷰 관리 화면 내 '리뷰 작성', '리뷰 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 PrivateReviewScreenTabs 클래스 내용 시작
@@ -166,6 +168,8 @@ class _PrivateReviewCreateFormScreenState extends ConsumerState<PrivateReviewCre
     final paymentCompleteDateAsyncValue = ref.watch(paymentCompleteDateProvider(orderNumber));
     // 배송 시작 날짜를 비동기로 가져오기 위해 AsyncValue로 저장
     final deliveryStartDateAsyncValue = ref.watch(deliveryStartDateProvider(orderNumber));
+    // 버튼 활성화 정보를 비동기로 가져오는 provider를 호출하고 결과를 buttonInfoAsyncValue에 저장
+    final buttonInfoAsyncValue = ref.watch(buttonInfoProvider(orderNumber));
 
     // 상품 정보 리스트를 가져오거나 빈 리스트를 할당
     final List<dynamic> productInfoList = orderData!['productInfo'] ?? [];
@@ -225,7 +229,7 @@ class _PrivateReviewCreateFormScreenState extends ConsumerState<PrivateReviewCre
                     child: CommonCardView(
                       backgroundColor: Colors.white,
                       content: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(2.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -337,6 +341,40 @@ class _PrivateReviewCreateFormScreenState extends ConsumerState<PrivateReviewCre
                     },
                     loading: () => CircularProgressIndicator(),
                     error: (error, stack) => Text('오류 발생'),
+                  ),
+                  Divider(color: Colors.grey),
+                  // 리뷰 버튼을 표시하고, 버튼 활성화 상태에 따라 UI를 제어하는 로직을 추가
+                  buttonInfoAsyncValue.when(
+                  data: (buttonInfo) {
+                  final boolReviewWriteBtn = buttonInfo['boolReviewWriteBtn'] ?? false;
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: boolReviewWriteBtn
+                            ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReviewCreateDetailScreen(),
+                            ),
+                          );
+                        }
+                            : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: boolReviewWriteBtn ? BUTTON_COLOR : Colors.grey,
+                          backgroundColor: BACKGROUND_COLOR,
+                          side: BorderSide(color: boolReviewWriteBtn ? BUTTON_COLOR : Colors.grey),
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        ),
+                        child: Text('리뷰 작성', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  );
+                  },
+                    loading: () => CircularProgressIndicator(), // 버튼 정보 로딩 중일 때 로딩 인디케이터 표시
+                    error: (error, stack) => Text('버튼 상태를 불러오는 중 오류 발생'), // 오류 발생 시 메시지 표시
                   ),
                 ],
               ),
