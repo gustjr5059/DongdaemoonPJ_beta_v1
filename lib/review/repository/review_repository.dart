@@ -67,5 +67,21 @@ class ReviewRepository {
       return []; // 오류 발생 시 빈 리스트 반환
     }
   }
+
+  // 사용자 이메일을 통해 이름 가져오는 함수
+  Future<String> fetchUserNameByEmail(String email) async { // 사용자 이메일을 통해 이름을 가져오는 비동기 함수 선언
+    try { // 오류 발생 가능성이 있는 코드 블록을 시도함
+      DocumentSnapshot userDoc = await firestore.collection('users').doc(email).get(); // Firestore에서 'users' 컬렉션의 문서를 이메일로 가져옴
+      if (userDoc.exists) { // 해당 문서가 존재하는지 확인
+        String userName = userDoc['name']; // 문서에서 'name' 필드의 값을 가져옴
+        return userName; // 사용자 이름을 반환
+      } else { // 문서가 존재하지 않는 경우
+        return '알 수 없음'; // '알 수 없음'이라는 문자열을 반환
+      }
+    } catch (e) { // 오류가 발생한 경우 처리
+      print('Error fetching user name: $e'); // 오류 메시지를 콘솔에 출력
+      return '알 수 없음'; // 오류 발생 시 '알 수 없음'이라는 문자열을 반환
+    }
+  }
 }
 // ------ 리뷰 관리 화면 내 데이터 처리 로직인 ReviewRepository 내용 끝 부분

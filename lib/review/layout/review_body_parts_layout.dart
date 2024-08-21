@@ -420,3 +420,256 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
     ),
   );
 }
+
+// ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 시작 부분
+class PrivateReviewCreateDetailFormScreen extends ConsumerWidget { // 리뷰 작성 상세 화면을 위한 클래스 선언
+  final TextEditingController titleController = TextEditingController(); // 제목 입력 필드를 제어하는 컨트롤러 선언
+  final TextEditingController contentController = TextEditingController(); // 내용 입력 필드를 제어하는 컨트롤러 선언
+  final String userEmail; // 사용자 이메일을 저장하기 위한 변수 선언
+
+  PrivateReviewCreateDetailFormScreen({required this.userEmail}); // 생성자에서 사용자 이메일을 필수 인수로 받음
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) { // 화면의 UI를 그리기 위한 build 메소드
+    return Column( // UI 요소들을 세로로 배치하기 위해 Column 사용
+      crossAxisAlignment: CrossAxisAlignment.start, // 모든 자식 위젯을 왼쪽 정렬
+      children: [
+        _buildTitleRow('리뷰 제목', titleController, '50자 이내로 작성 가능합니다.'), // 제목 입력 필드를 생성하는 함수 호출
+        SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
+        _buildUserRow(ref, '작성자', userEmail), // 작성자 정보를 표시하는 행을 생성하는 함수 호출
+        SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
+        _buildPhotoUploadRow(), // 사진 업로드 버튼을 생성하는 함수 호출
+        SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
+        _buildContentsRow('리뷰 내용', contentController, '300자 이내로 작성 가능합니다.'), // 내용 입력 필드를 생성하는 함수 호출
+        SizedBox(height: 30), // 제출 버튼과의 간격을 위해 30픽셀의 여백 추가
+        _buildSubmitButton(context), // 제출 버튼을 생성하는 함수 호출
+      ],
+    );
+  }
+
+// 제목 행을 생성하는 함수
+  Widget _buildTitleRow(String label, TextEditingController controller, String hintText) {
+    return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        children: [
+          IntrinsicHeight( // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+            child: Row( // 요소들을 가로로 배치하기 위해 Row 사용
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container( // 제목 라벨을 위한 컨테이너 생성
+                  width: 70, // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200, // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  child: Text(
+                    label, // 셀에 표시될 텍스트
+                    style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                  ),
+                ),
+                SizedBox(width: 4), // 라벨과 텍스트 필드 사이의 간격
+                Expanded( // 오른쪽 TextField가 남은 공간을 채우도록 설정
+                  child: TextField( // 사용자로부터 텍스트를 입력받기 위한 필드
+                    controller: controller, // 텍스트 필드 컨트롤러 설정
+                    maxLength: 50, // 최대 글자 수 설정
+                    maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
+                    decoration: InputDecoration( // 텍스트 필드의 외관을 설정
+                      hintText: hintText, // 힌트 텍스트 설정
+                      border: OutlineInputBorder(), // 입력 경계선 설정
+                      focusedBorder: OutlineInputBorder( // 활성화 상태의 테두리 설정
+                        borderSide: BorderSide(color: BUTTON_COLOR, width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+                      ),
+                      counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 4), // TextField와 글자 수 표시 사이의 여백
+          Align( // 글자 수 표시를 오른쪽에 맞춤
+            alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
+            child: ValueListenableBuilder<TextEditingValue>( // 텍스트 입력 시마다 변경사항을 반영
+              valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
+              builder: (context, value, child) {
+                return Text( // 입력된 글자 수를 표시
+                  '${value.text.length}/50', // 글자 수를 반영
+                  style: TextStyle(color: Colors.grey), // 글자 수 표시 스타일
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 사용자 정보를 표시하는 행을 생성하는 함수
+  Widget _buildUserRow(WidgetRef ref, String label, String email) {
+    final userNameAsyncValue = ref.watch(userNameProvider(email)); // 사용자 이름을 비동기적으로 가져오기 위해 프로바이더를 사용
+
+    return userNameAsyncValue.when( // 비동기 상태에 따라 위젯을 생성
+      data: (userName) { // 데이터가 성공적으로 로드된 경우
+        String obscuredName = userName[0] + '*' * (userName.length - 1); // 사용자 이름을 첫 글자만 남기고 나머지는 *로 표시
+        return _buildFixedValueRow(label, obscuredName); // 이름을 표시하는 행을 생성
+      },
+      loading: () => CircularProgressIndicator(), // 로딩 중인 경우 로딩 인디케이터를 표시
+      error: (error, stack) => Text('알 수 없음'), // 에러가 발생한 경우 '알 수 없음'을 표시
+    );
+  }
+
+  // 내용 입력 필드를 생성하는 함수
+  Widget _buildContentsRow(String label, TextEditingController controller, String hintText) {
+    return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        children: [
+          IntrinsicHeight( // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+            child: Row( // 요소들을 가로로 배치하기 위해 Row 사용
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container( // 제목 라벨을 위한 컨테이너 생성
+                  width: 70, // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200, // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  child: Text(
+                    label, // 셀에 표시될 텍스트
+                    style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                  ),
+                ),
+                SizedBox(width: 4), // 라벨과 텍스트 필드 사이의 간격
+                Expanded( // 오른쪽 TextField가 남은 공간을 채우도록 설정
+                  child: TextField( // 사용자로부터 텍스트를 입력받기 위한 필드
+                    controller: controller, // 텍스트 필드 컨트롤러 설정
+                    maxLength: 300, // 최대 글자 수 설정
+                    maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
+                    decoration: InputDecoration( // 텍스트 필드의 외관을 설정
+                      hintText: hintText, // 힌트 텍스트 설정
+                      border: OutlineInputBorder(), // 입력 경계선 설정
+                      focusedBorder: OutlineInputBorder( // 활성화 상태의 테두리 설정
+                        borderSide: BorderSide(color: BUTTON_COLOR, width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+                      ),
+                      counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 4), // TextField와 글자 수 표시 사이의 여백
+          Align( // 글자 수 표시를 오른쪽에 맞춤
+            alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
+            child: ValueListenableBuilder<TextEditingValue>( // 텍스트 입력 시마다 변경사항을 반영
+              valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
+              builder: (context, value, child) {
+                return Text( // 입력된 글자 수를 표시
+                  '${value.text.length}/300', // 글자 수를 반영
+                  style: TextStyle(color: Colors.grey), // 글자 수 표시 스타일
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 고정된 값을 표시하는 행을 생성하는 함수
+  Widget _buildFixedValueRow(String label, String value) {
+    return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        children: [
+          IntrinsicHeight( // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+            child: Row( // 요소들을 가로로 배치하기 위해 Row 사용
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container( // 라벨을 위한 컨테이너 생성
+                  width: 70, // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200, // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  child: Text(
+                    label, // 셀에 표시될 텍스트
+                    style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                  ),
+                ),
+                SizedBox(width: 4), // 라벨과 고정된 값 사이의 간격
+                Expanded( // 오른쪽 Container가 남은 공간을 채우도록 설정
+                  child: Container( // 고정된 값을 표시하기 위한 컨테이너
+                    padding: const EdgeInsets.all(8.0), // 컨테이너 내부 여백 설정
+                    color: Colors.grey.shade200, // 컨테이너 배경색 설정
+                    child: Text(value), // 고정된 값을 텍스트로 표시
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 사진 업로드 버튼을 생성하는 함수
+  Widget _buildPhotoUploadRow() {
+    return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        children: [
+          IntrinsicHeight( // 왼쪽 Container와 오른쪽 버튼의 높이를 동일하게 맞추기 위해 사용
+            child: Row( // 요소들을 가로로 배치하기 위해 Row 사용
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container( // 라벨을 위한 컨테이너 생성
+                  width: 70, // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200, // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  child: Text(
+                    '리뷰 사진', // 셀에 표시될 텍스트
+                    style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                  ),
+                ),
+                SizedBox(width: 4), // 라벨과 버튼 사이의 간격
+                ElevatedButton( // 사진을 업로드할 수 있는 버튼
+                  onPressed: () { // 버튼 클릭 시 호출되는 함수
+                    // 사진 추가 로직
+                  },
+                  style: ElevatedButton.styleFrom( // 버튼의 스타일 설정
+                    foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
+                    backgroundColor: BUTTON_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30), // 버튼 내부 여백 설정
+                  ),
+                  child: Icon(Icons.camera_alt, size: 30,), // 카메라 아이콘을 버튼 안에 표시
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // '리뷰 작성 완료' 버튼을 생성하는 함수
+  Widget _buildSubmitButton(BuildContext context) {
+    return Center( // 제출 버튼을 중앙에 배치
+      child: ElevatedButton( // 리뷰 작성 완료 버튼 생성
+        onPressed: () { // 버튼 클릭 시 호출되는 함수
+          // 리뷰 작성 완료 로직
+        },
+        style: ElevatedButton.styleFrom( // 버튼의 스타일 설정
+          foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
+          backgroundColor: BUTTON_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30), // 버튼 내부 여백 설정
+        ),
+        child: Text('리뷰 작성 완료', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), // 버튼 텍스트 및 텍스트 스타일 설정
+      ),
+    );
+  }
+}
+// ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 끝 부분

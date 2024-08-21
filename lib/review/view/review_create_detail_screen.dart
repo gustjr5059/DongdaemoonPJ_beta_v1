@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../layout/review_body_parts_layout.dart';
 import '../provider/review_state_provider.dart';
 
 
@@ -217,12 +218,16 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
                         child: Column(
                           children: [
                             SizedBox(height: 8),
-                            Text('리뷰 작성 상세 내용'),
+                            Text('리뷰 작성 상세 내용', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                             SizedBox(height: 8),
+                            // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
+                            PrivateReviewCreateDetailFormScreen(
+                              userEmail: FirebaseAuth.instance.currentUser!.email!,
+                            ),
                           ],
                         ),
                       );
-                    },
+                        },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                   ),
                 ),
@@ -232,6 +237,7 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
           buildTopButton(context, reviewCreateDetailScreenPointScrollController),
         ],
       ),
+      // 하단 네비게이션 바 설정
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider),
           ref,
