@@ -18,7 +18,7 @@ final allUserEmailsProvider = FutureProvider((ref) async {
 // 특정 사용자의 발주 데이터를 가져오는 Provider
 final userOrdersProvider = FutureProvider.family((ref, String userEmail) async {
   final repository = ref.read(adminOrderlistRepositoryProvider);
-  // orderlistRepositoryProvider를 읽어서 OrderlistRepository 인스턴스를 가져옴
+  // adminOrderlistRepositoryProvider를 읽어서 AdminOrderlistRepository 인스턴스를 가져옴
   return await repository.fetchOrdersByEmail(userEmail);
   // fetchOrdersByEmail 함수를 호출하여 특정 사용자의 발주 데이터를 가져옴
 });

@@ -55,7 +55,6 @@ final fetchDeleteMessagesProvider = FutureProvider.family<void, String>((ref, me
   await privateMessageRepository.fetchDeleteMessages(email, messageId);
 });
 
-
 // 특정 발주번호에 해당하는 결제완료일을 가져오는 함수를 불러와서 사용 가능하도록 하는 paymentCompleteDateProvider
 // FutureProvider.family를 사용하여 비동기적으로 데이터(DateTime?)를 제공하는 provider를 생성하며, String 타입의 인자를 받도록 했음.
 final paymentCompleteDateProvider = FutureProvider.family<DateTime?, String>((ref, orderNumber) async {
@@ -69,4 +68,23 @@ final paymentCompleteDateProvider = FutureProvider.family<DateTime?, String>((re
   // privateMessageRepository의 fetchPaymentCompleteDate 함수를 호출하여 결제완료일을 가져오고 반환하도록 했음.
   return privateMessageRepository.fetchPaymentCompleteDate(email, orderNumber);
 });
+
+// 특정 발주번호에 해당하는 배송시작일을 가져오는 함수를 불러와서 사용 가능하도록 하는 deliveryStartDateProvider
+// FutureProvider.family를 사용하여 orderNumber를 인자로 받아 DateTime? 타입의 비동기 데이터를 제공하는 final deliveryStartDateProvider 변수를 선언
+final deliveryStartDateProvider = FutureProvider.family<DateTime?, String>((ref, orderNumber) async {
+
+  // currentUserEmailProvider를 통해 현재 사용자의 이메일을 비동기적으로 가져와 email 변수에 저장.
+  final email = await ref.watch(currentUserEmailProvider.future);
+
+  // 이메일이 null이면(즉, 사용자가 로그아웃 상태이거나 이메일이 없는 경우) null을 반환.
+  if (email == null) return null;
+
+  // privateMessageRepositoryProvider를 통해 privateMessageRepository 인스턴스를 가져옴.
+  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
+
+  // privateMessageRepository의 fetchDeliveryStartDate 메서드를 호출하여 배송 시작 날짜를 가져오고, 이를 반환.
+  return privateMessageRepository.fetchDeliveryStartDate(email, orderNumber);
+});
+
+
 

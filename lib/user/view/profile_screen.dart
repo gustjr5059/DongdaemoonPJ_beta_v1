@@ -352,7 +352,10 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                   8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: 10), // 높이 임의로 3000으로 간격 설정
-                            UserProfileOptions(), // 각 화면으로 이동할 수 있는 옵션 구현
+                            // user 객체가 null이 아닌 경우 실행됨
+                            if (user != null)
+                            // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
+                              UserProfileOptions(email: user.email!),
                             SizedBox(height: 20), // 높이 임의로 3000으로 간격 설정
                           ],
                         ),

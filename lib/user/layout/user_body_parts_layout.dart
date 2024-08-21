@@ -117,6 +117,10 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 
 // ------- 마이페이지 화면 내 리뷰 관리 ~ 문의하기 관련 옵션 선택 UI 구현하는 UserProfileOptions 클래스 내용 시작 부분
 class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받아 UserProfileOptions 클래스를 정의
+  final String email;
+
+  UserProfileOptions({required this.email});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) { // build 메서드 정의
     return CommonCardView( // CommonCardView 위젯 반환
@@ -128,7 +132,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
             icon: Icons.star, // 아이콘 설정
             title: '리뷰 관리', // 제목 설정
             onTap: () { // 클릭 시 실행될 함수
-              onReviewListClick(context, ref); // 리뷰 목록 클릭 함수 실행
+              onReviewListClick(context, ref, email); // 리뷰 목록 클릭 함수 실행
             },
           ),
           _buildOptionTile( // 옵션 타일 생성
@@ -202,8 +206,8 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     navigateToScreenAndRemoveUntil(context, ref, WishlistMainScreen(), 4); // 화면 이동 함수 호출
   }
 
-  void onReviewListClick(BuildContext context, WidgetRef ref) { // 리뷰 목록 클릭 함수
-    navigateToScreenAndRemoveUntil(context, ref, ReviewMainScreen(), 4); // 화면 이동 함수 호출
+  void onReviewListClick(BuildContext context, WidgetRef ref, String email) { // 리뷰 목록 클릭 함수
+    navigateToScreenAndRemoveUntil(context, ref, ReviewMainScreen(email: email), 4); // 화면 이동 함수 호출
   }
 
   void onMessageListClick(BuildContext context, WidgetRef ref) { // 메시지 목록 클릭 함수

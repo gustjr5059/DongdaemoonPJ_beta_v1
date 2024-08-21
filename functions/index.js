@@ -182,8 +182,8 @@ exports.updateButtonStatusOnMessage = functions.firestore
             const messageSendingTime = messageData.message_sendingTime.toDate(); // message_sendingTime을 Date 객체로 변환
             const currentTime = new Date();
 
-            // 메시지 생성 시간과 현재 시간을 비교 (예: 1분 이내의 메시지만 버튼 활성화)
-            if (currentTime - messageSendingTime <= 60000) { // 1분 이내
+            // 메시지 생성 시간과 현재 시간을 비교 (예: 10일 이내의 메시지만 버튼 활성화)
+            if (currentTime - messageSendingTime <= 864000000) { // (10일 = 10 * 24 * 60 * 60 * 1000밀리초)
                 const ordersSnapshot = await admin.firestore()
                     .collection('order_list')
                     .doc(recipientId)
@@ -207,7 +207,7 @@ exports.updateButtonStatusOnMessage = functions.firestore
                             'boolRefundBtn': false,
                             'boolReviewBtn': false,
                         });
-                    }, 60000); // 1분 후 비활성화
+                    }, 864000000); // 10일(10일 = 10 * 24 * 60 * 60 * 1000밀리초) 후 비활성화
                 }
             }
         }

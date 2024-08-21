@@ -907,7 +907,7 @@ class OrderListItemWidget extends ConsumerWidget {
                   ),
                 );
               },
-              // 버튼 스타일을 정의합니다.
+              // 버튼 스타일을 정의
               style: ElevatedButton.styleFrom(
                 foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
                 backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상

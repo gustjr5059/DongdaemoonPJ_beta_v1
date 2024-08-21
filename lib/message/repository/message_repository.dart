@@ -114,5 +114,30 @@ class PrivateMessageRepository {
     // 조건에 맞는 문서가 없으면 null을 반환하도록 했음.
     return null;
   }
+
+// 특정 발주번호에 해당하는 배송 시작일을 가져오는 함수
+  Future<DateTime?> fetchDeliveryStartDate(String email, String orderNumber) async {
+
+    // Firestore에서 'message_list' 컬렉션의 특정 이메일 문서 안의 'message' 하위 컬렉션을 참조하는 쿼리 스냅샷을 가져옴
+    final querySnapshot = await firestore
+        .collection('message_list')
+        .doc(email)
+        .collection('message')
+    // 주어진 발주번호와 일치하는 메시지를 필터링함
+        .where('order_number', isEqualTo: orderNumber)
+    // 내용이 '해당 발주 건은 배송이 진행되었습니다.'와 일치하는 메시지를 필터링함
+        .where('contents', isEqualTo: '해당 발주 건은 배송이 진행되었습니다.')
+        .get();
+
+    // 쿼리 결과가 비어 있지 않으면, 즉 하나 이상의 문서가 있으면 실행됨
+    if (querySnapshot.docs.isNotEmpty) {
+      // 첫 번째 문서의 'message_sendingTime' 필드를 Timestamp 타입으로 가져옴
+      final sendingTime = querySnapshot.docs.first.data()['message_sendingTime'] as Timestamp?;
+      // Timestamp를 DateTime으로 변환하여 반환함
+      return sendingTime?.toDate();
+    }
+    // 쿼리 결과가 비어 있으면 null을 반환함
+    return null;
+  }
 }
 // ------ 마이페이지용 쪽지 관리 화면에서 파이어베이스 내 쪽지 관련 데이터를 불러오는 로직인 PrivateMessageRepository 클래스 내용 끝

@@ -87,6 +87,16 @@ class AdminOrderlistRepository {
         });
       }
 
+      // 발주일자 기준으로 내림차순 정렬
+      allOrders.sort((a, b) {
+        final dateA = a['numberInfo']['order_date'] as Timestamp?;
+        final dateB = b['numberInfo']['order_date'] as Timestamp?;
+        if (dateA != null && dateB != null) {
+          return dateB.compareTo(dateA); // 내림차순 정렬
+        }
+        return 0;
+      });
+
       print('Finished fetching orders for email: $userEmail');
       return allOrders;
     } catch (e) {

@@ -37,6 +37,7 @@ import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../order/provider/order_state_provider.dart';
+import '../../review/provider/review_all_provider.dart';
 import '../../review/provider/review_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
@@ -566,6 +567,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 리뷰 관리 화면 관련 초기화 부분 시작
   ref.read(reviewScrollPositionProvider.notifier).state =
   0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
+  ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
   // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
