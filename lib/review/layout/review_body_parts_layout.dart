@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../message/provider/message_all_provider.dart';
@@ -12,6 +13,8 @@ import '../../product/model/product_model.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 import '../view/review_create_detail_screen.dart';
+import 'package:image_picker/image_picker.dart'; // image_picker 패키지를 가져옴.
+import 'dart:io'; // 파일 처리를 위해 dart:io 패키지를 가져옴.
 
 
 // ------ 마이페이지용 리뷰 관리 화면 내 '리뷰 작성', '리뷰 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 PrivateReviewScreenTabs 클래스 내용 시작
@@ -422,25 +425,136 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
 }
 
 // ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 시작 부분
-class PrivateReviewCreateDetailFormScreen extends ConsumerWidget { // 리뷰 작성 상세 화면을 위한 클래스 선언
-  final TextEditingController titleController = TextEditingController(); // 제목 입력 필드를 제어하는 컨트롤러 선언
-  final TextEditingController contentController = TextEditingController(); // 내용 입력 필드를 제어하는 컨트롤러 선언
-  final String userEmail; // 사용자 이메일을 저장하기 위한 변수 선언
+class PrivateReviewCreateDetailFormScreen extends ConsumerStatefulWidget {
+  final TextEditingController titleController = TextEditingController(); // 리뷰 제목을 입력받기 위한 컨트롤러
+  final TextEditingController contentController = TextEditingController(); // 리뷰 내용을 입력받기 위한 컨트롤러
+  final String userEmail; // 사용자의 이메일을 저장하기 위한 변수
 
-  PrivateReviewCreateDetailFormScreen({required this.userEmail}); // 생성자에서 사용자 이메일을 필수 인수로 받음
+  // 생성자, userEmail을 필수로 받아옴
+  PrivateReviewCreateDetailFormScreen({required this.userEmail});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { // 화면의 UI를 그리기 위한 build 메소드
+  _PrivateReviewCreateDetailFormScreenState createState() => _PrivateReviewCreateDetailFormScreenState(); // 상태 객체 생성
+}
+
+class _PrivateReviewCreateDetailFormScreenState extends ConsumerState<PrivateReviewCreateDetailFormScreen> {
+  final List<File> _images = [];  // 최대 3개의 이미지를 저장하기 위한 리스트
+  final ImagePicker _picker = ImagePicker(); // 갤러리에서 이미지를 선택하기 위한 ImagePicker 객체
+
+  // 권한 요청 함수
+  Future<bool> _requestPermission(BuildContext context) async {
+    if (Platform.isAndroid) {
+      // 안드로이드 권한 요청
+      PermissionStatus status = await Permission.photos.status;
+      if (status.isGranted) {
+        // 권한이 이미 허용된 경우
+        return true;
+      } else if (status.isDenied || status.isPermanentlyDenied) {
+        // 권한이 거부되었거나 영구적으로 거부된 경우
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('갤러리 접근 권한'),
+              content: Text('갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('취소'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('승인'),
+                  onPressed: () {
+                    openAppSettings(); // 설정 화면으로 이동
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      }
+    } else if (Platform.isIOS) {
+      // iOS 권한 요청
+      PermissionStatus status = await Permission.photos.status;
+      if (status.isGranted) {
+        // 권한이 이미 허용된 경우
+        return true;
+      } else if (status.isDenied || status.isPermanentlyDenied) {
+        // 권한이 거부되었거나 영구적으로 거부된 경우
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              title: Text('갤러리 접근 권한'),
+              content: Text('갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('취소'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: Text('승인'),
+                  onPressed: () {
+                    openAppSettings(); // 설정 화면으로 이동
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      }
+    }
+    return false;
+  }
+
+  // 이미지 선택 함수
+  Future<void> _pickImage(BuildContext context) async {
+    if (_images.length >= 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('사진은 최대 3개까지 업로드할 수 있습니다.')),
+      );
+      return;
+    }
+
+    // await _requestPermission(context); // 권한 요청 수행
+
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _images.add(File(image.path));
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('사진이 성공적으로 업로드되었습니다.')),
+      );
+    }
+  }
+
+  // 사진 삭제 함수
+  void _removeImage(int index) {
+    setState(() {
+      _images.removeAt(index); // 선택된 이미지를 리스트에서 삭제
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) { // 화면의 UI를 그리기 위한 build 메소드
     return Column( // UI 요소들을 세로로 배치하기 위해 Column 사용
       crossAxisAlignment: CrossAxisAlignment.start, // 모든 자식 위젯을 왼쪽 정렬
       children: [
-        _buildTitleRow('리뷰 제목', titleController, '50자 이내로 작성 가능합니다.'), // 제목 입력 필드를 생성하는 함수 호출
+        _buildTitleRow('리뷰 제목', widget.titleController, '50자 이내로 작성 가능합니다.'), // 제목 입력 필드를 생성하는 함수 호출
         SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
-        _buildUserRow(ref, '작성자', userEmail), // 작성자 정보를 표시하는 행을 생성하는 함수 호출
+        _buildUserRow(ref, '작성자', widget.userEmail), // 작성자 정보를 표시하는 행을 생성하는 함수 호출
         SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
-        _buildPhotoUploadRow(), // 사진 업로드 버튼을 생성하는 함수 호출
+        _buildPhotoUploadRow(context), // 사진 업로드 버튼을 생성하는 함수 호출
         SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
-        _buildContentsRow('리뷰 내용', contentController, '300자 이내로 작성 가능합니다.'), // 내용 입력 필드를 생성하는 함수 호출
+        _buildContentsRow('리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'), // 내용 입력 필드를 생성하는 함수 호출
         SizedBox(height: 30), // 제출 버튼과의 간격을 위해 30픽셀의 여백 추가
         _buildSubmitButton(context), // 제출 버튼을 생성하는 함수 호출
       ],
@@ -614,8 +728,8 @@ class PrivateReviewCreateDetailFormScreen extends ConsumerWidget { // 리뷰 작
     );
   }
 
-  // 사진 업로드 버튼을 생성하는 함수
-  Widget _buildPhotoUploadRow() {
+// 사진 업로드 버튼을 생성하는 함수
+  Widget _buildPhotoUploadRow(BuildContext context) {
     return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
       padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
@@ -636,16 +750,88 @@ class PrivateReviewCreateDetailFormScreen extends ConsumerWidget { // 리뷰 작
                   ),
                 ),
                 SizedBox(width: 4), // 라벨과 버튼 사이의 간격
-                ElevatedButton( // 사진을 업로드할 수 있는 버튼
-                  onPressed: () { // 버튼 클릭 시 호출되는 함수
-                    // 사진 추가 로직
-                  },
-                  style: ElevatedButton.styleFrom( // 버튼의 스타일 설정
-                    foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
-                    backgroundColor: BUTTON_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30), // 버튼 내부 여백 설정
+                Expanded( // 오른쪽 영역이 남은 공간을 채우도록 설정
+                  child: SingleChildScrollView( // 사진 목록을 스크롤 가능하게 설정
+                    scrollDirection: Axis.horizontal, // 가로 스크롤 설정
+                    child: Row( // 사진을 가로로 나열하기 위해 Row 사용
+                      children: [
+                        Row( // 이미지를 담고 있는 Row 생성
+                          children: _images.asMap().entries.map((entry) { // 이미지 리스트를 순회하며 각각의 항목을 추가
+                            int index = entry.key; // 이미지의 인덱스
+                            File image = entry.value; // 이미지 파일
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0), // 사진 간의 간격 추가
+                              child: Stack( // 이미지와 삭제 버튼을 겹치기 위해 Stack 사용
+                                children: [
+                                  Image.file(
+                                    image, // 파일 이미지 표시
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover, // 이미지 크기 조정
+                                  ),
+                                  Positioned(
+                                    right: -10,
+                                    top: -10,
+                                    child: IconButton(
+                                      icon: Icon(Icons.cancel, color: Colors.white), // 삭제 버튼 아이콘 설정
+                                      onPressed: () => _removeImage(index), // 삭제 버튼 클릭 시 이미지 삭제 함수 호출
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(width: 4.0), // 톱니바퀴 버튼과 업로드 버튼 사이의 간격 추가
+                        ElevatedButton( // 이미지 업로드 버튼 생성
+                          onPressed: () async {
+                            await _pickImage(context); // 버튼 클릭 시 이미지 선택 함수 호출
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, // 버튼 텍스트 색상 설정
+                            backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 내부 여백 설정
+                          ),
+                          child: Icon(Icons.camera_alt, size: 30), // 카메라 아이콘 추가
+                        ),
+                        SizedBox(width: 4.0), // 마지막 사진과 버튼들 사이의 간격 추가
+                        ElevatedButton( // 톱니바퀴 아이콘 버튼 생성
+                          onPressed: () async {
+                            await _requestPermission(context); // 버튼 클릭 시 권한 요청 함수 호출
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, // 버튼 텍스트 색상 설정
+                            backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 내부 여백 설정
+                          ),
+                          child: Icon(Icons.settings, size: 30), // 톱니바퀴 아이콘 추가
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Icon(Icons.camera_alt, size: 30,), // 카메라 아이콘을 버튼 안에 표시
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8), // 행과 경고 메시지 사이의 간격 추가
+          RichText( // 다양한 스타일을 조합하기 위해 RichText 사용
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "[필수] ", // 빨간색으로 강조된 부분
+                  style: TextStyle(
+                    color: Colors.red, // 텍스트 색상 빨간색
+                    fontWeight: FontWeight.bold, // 굵은 글씨
+                    fontSize: 18
+                  ),
+                ),
+                TextSpan(
+                  text: "설정 버튼을 클릭한 후, 사진 앱 권한 허용해야만 사진 업로드가 가능합니다.", // 검은색으로 강조된 부분
+                  style: TextStyle(
+                    color: Colors.black, // 텍스트 색상 검은색
+                    fontWeight: FontWeight.bold, // 굵은 글씨
+                    fontSize: 16
+                  ),
                 ),
               ],
             ),
@@ -660,7 +846,7 @@ class PrivateReviewCreateDetailFormScreen extends ConsumerWidget { // 리뷰 작
     return Center( // 제출 버튼을 중앙에 배치
       child: ElevatedButton( // 리뷰 작성 완료 버튼 생성
         onPressed: () { // 버튼 클릭 시 호출되는 함수
-          // 리뷰 작성 완료 로직
+          // 리뷰 작성 완료 로직 (구현 필요)
         },
         style: ElevatedButton.styleFrom( // 버튼의 스타일 설정
           foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
@@ -673,3 +859,4 @@ class PrivateReviewCreateDetailFormScreen extends ConsumerWidget { // 리뷰 작
   }
 }
 // ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 끝 부분
+

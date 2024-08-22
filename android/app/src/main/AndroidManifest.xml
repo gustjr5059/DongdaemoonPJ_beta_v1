@@ -9,14 +9,21 @@
         예를 들어, 애플리케이션이 인터넷 연결이 필요한 작업을 수행하기 전에
         네트워크 상태를 확인하여 연결이 되어 있는지 확인할 수 있습니다.
     -->
+    <!-- 네트워크 상태에 접근하기 위한 권한 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- Android 13 (API 33) 이상에서는 READ_MEDIA_IMAGES 권한을 추가하여 갤러리 접근 권한을 설정 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
     <application
         android:label="dongdaemoon_beta_v1"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
-        >
+        android:requestLegacyExternalStorage="true"> <!-- Android 10 (API 29) 이상에서는 requestLegacyExternalStorage 설정 추가 -->
+
         <!--android:enableOnBackInvokedCallback="true" 설정을 통해 백 버튼 이벤트가 정상적으로 활성화되었고,
         사용자가 기기에서 백 버튼을 조작할 때 이벤트가 발생하면 앱이 이를 감지하고 적절히 반응할 수 있도록 준비된 상태-->
+
+
         <!--Android 12(API 레벨 31) 이상에서 새롭게 도입된 OnBackInvokedCallback 기능을 활성화하여,
         백 버튼을 눌렀을 때 새로운 콜백 메커니즘을 통해 반응하게 하여 사용자가 백 버튼을 눌렀을 때
         특정 작업을 취소하거나 추가적인 액션을 취할 수 있는 기회를 제공 -->
@@ -45,6 +52,7 @@
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <!-- Flutter 관련 메타데이터 설정 -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
