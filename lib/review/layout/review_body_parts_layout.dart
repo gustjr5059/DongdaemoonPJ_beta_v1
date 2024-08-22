@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -360,9 +361,13 @@ class _PrivateReviewCreateFormScreenState extends ConsumerState<PrivateReviewCre
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ReviewCreateDetailScreen(),
-                            ),
-                          );
+                              builder: (context) => ReviewCreateDetailScreen(
+                                productInfo: productInfo, // 개별 상품 데이터를 전달
+                                numberInfo: orderData!['numberInfo'], // 개별 상품 발주번호 및 발주일자 전달
+                                userEmail: FirebaseAuth.instance.currentUser!.email!, // 현재 로그인한 이메일 계정 전달
+                              ),
+                              ),
+                            );
                         }
                             : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작
                         style: ElevatedButton.styleFrom(
@@ -424,21 +429,33 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
   );
 }
 
-// ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 시작 부분
+// 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 시작
 class PrivateReviewCreateDetailFormScreen extends ConsumerStatefulWidget {
-  final TextEditingController titleController = TextEditingController(); // 리뷰 제목을 입력받기 위한 컨트롤러
-  final TextEditingController contentController = TextEditingController(); // 리뷰 내용을 입력받기 위한 컨트롤러
+  final Map<String, dynamic> productInfo; // 특정 상품 정보를 담는 변수
+  final Map<String, dynamic> numberInfo; // 발주 정보를 담는 변수
   final String userEmail; // 사용자의 이메일을 저장하기 위한 변수
+  final TextEditingController titleController =
+  TextEditingController(); // 리뷰 제목을 입력받기 위한 컨트롤러
+  final TextEditingController contentController =
+  TextEditingController(); // 리뷰 내용을 입력받기 위한 컨트롤러
 
-  // 생성자, userEmail을 필수로 받아옴
-  PrivateReviewCreateDetailFormScreen({required this.userEmail});
+  // 생성자에서 productInfo, numberInfo, userEmail을 필수로 받아옴
+  PrivateReviewCreateDetailFormScreen({
+    required this.productInfo,
+    required this.numberInfo,
+    required this.userEmail,
+  });
 
+  // 상태를 생성하는 메서드
   @override
-  _PrivateReviewCreateDetailFormScreenState createState() => _PrivateReviewCreateDetailFormScreenState(); // 상태 객체 생성
+  _PrivateReviewCreateDetailFormScreenState createState() =>
+      _PrivateReviewCreateDetailFormScreenState();
 }
 
-class _PrivateReviewCreateDetailFormScreenState extends ConsumerState<PrivateReviewCreateDetailFormScreen> {
-  final List<File> _images = [];  // 최대 3개의 이미지를 저장하기 위한 리스트
+// PrivateReviewCreateDetailFormScreen의 상태를 정의하는 클래스
+class _PrivateReviewCreateDetailFormScreenState
+    extends ConsumerState<PrivateReviewCreateDetailFormScreen> {
+  final List<File> _images = []; // 최대 3개의 이미지를 저장하기 위한 리스트
   final ImagePicker _picker = ImagePicker(); // 갤러리에서 이미지를 선택하기 위한 ImagePicker 객체
 
   // 권한 요청 함수
@@ -461,13 +478,13 @@ class _PrivateReviewCreateDetailFormScreenState extends ConsumerState<PrivateRev
                 TextButton(
                   child: Text('취소'),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(); // 다이얼로그 닫기
                   },
                 ),
                 TextButton(
                   child: Text('승인'),
                   onPressed: () {
-                    openAppSettings(); // 설정 화면으로 이동
+                    openAppSettings(); // 설정 화면으로 이동함
                   },
                 ),
               ],
@@ -494,13 +511,13 @@ class _PrivateReviewCreateDetailFormScreenState extends ConsumerState<PrivateRev
                 CupertinoDialogAction(
                   child: Text('취소'),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(); // 다이얼로그 닫기
                   },
                 ),
                 CupertinoDialogAction(
                   child: Text('승인'),
                   onPressed: () {
-                    openAppSettings(); // 설정 화면으로 이동
+                    openAppSettings(); // 설정 화면으로 이동함
                   },
                 ),
               ],
@@ -516,17 +533,19 @@ class _PrivateReviewCreateDetailFormScreenState extends ConsumerState<PrivateRev
   // 이미지 선택 함수
   Future<void> _pickImage(BuildContext context) async {
     if (_images.length >= 3) {
+      // 이미지가 3개 이상이면 업로드 제한 메시지를 표시
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('사진은 최대 3개까지 업로드할 수 있습니다.')),
       );
       return;
     }
 
-    // await _requestPermission(context); // 권한 요청 수행
+    // await _requestPermission(context); // 권한 요청 수행 (주석 처리됨)
 
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
+      // 이미지가 선택된 경우 리스트에 추가하고 성공 메시지를 표시
       setState(() {
         _images.add(File(image.path));
       });
@@ -539,24 +558,251 @@ class _PrivateReviewCreateDetailFormScreenState extends ConsumerState<PrivateRev
   // 사진 삭제 함수
   void _removeImage(int index) {
     setState(() {
-      _images.removeAt(index); // 선택된 이미지를 리스트에서 삭제
+      _images.removeAt(index); // 선택된 이미지를 리스트에서 삭제함
     });
   }
 
   @override
-  Widget build(BuildContext context) { // 화면의 UI를 그리기 위한 build 메소드
-    return Column( // UI 요소들을 세로로 배치하기 위해 Column 사용
-      crossAxisAlignment: CrossAxisAlignment.start, // 모든 자식 위젯을 왼쪽 정렬
+  Widget build(BuildContext context) {
+    // 화면의 UI를 그리기 위한 build 메소드
+
+    final numberFormat = NumberFormat('###,###'); // 숫자 형식을 지정하기 위한 formatter
+
+    // 결제 완료 날짜를 비동기로 가져오기 위해 AsyncValue로 저장
+    final paymentCompleteDateAsyncValue =
+    ref.watch(paymentCompleteDateProvider(widget.numberInfo['order_number']));
+
+    // 배송 시작 날짜를 비동기로 가져오기 위해 AsyncValue로 저장
+    final deliveryStartDateAsyncValue =
+    ref.watch(deliveryStartDateProvider(widget.numberInfo['order_number']));
+
+    // 발주 날짜를 가져와 DateTime으로 변환하거나 null을 할당
+    final orderDate = widget.numberInfo['order_date'] != null
+        ? (widget.numberInfo['order_date'] as Timestamp).toDate()
+        : null;
+
+    // 상품 상세 화면으로 이동하는 기능을 위한 navigator 인스턴스
+    final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildTitleRow('리뷰 제목', widget.titleController, '50자 이내로 작성 가능합니다.'), // 제목 입력 필드를 생성하는 함수 호출
-        SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
-        _buildUserRow(ref, '작성자', widget.userEmail), // 작성자 정보를 표시하는 행을 생성하는 함수 호출
-        SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
-        _buildPhotoUploadRow(context), // 사진 업로드 버튼을 생성하는 함수 호출
-        SizedBox(height: 8), // 각 요소 사이에 8픽셀의 여백 추가
-        _buildContentsRow('리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'), // 내용 입력 필드를 생성하는 함수 호출
-        SizedBox(height: 30), // 제출 버튼과의 간격을 위해 30픽셀의 여백 추가
-        _buildSubmitButton(context), // 제출 버튼을 생성하는 함수 호출
+        // 상품 정보 표시 UI
+        CommonCardView(
+          backgroundColor: BEIGE_COLOR, // 배경색 설정
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 발주번호를 표시하는 행을 빌드함
+                _buildProductInfoRow('발주번호: ', widget.numberInfo['order_number'],
+                    bold: true, fontSize: 14),
+                // 상품번호를 표시하는 행을 빌드함
+                _buildProductInfoRow(
+                    '상품번호: ',
+                    widget.productInfo['product_number']?.toString().isNotEmpty == true
+                        ? widget.productInfo['product_number']
+                        : '에러 발생',
+                    bold: true,
+                    fontSize: 14),
+                SizedBox(height: 8), // 요소 간의 간격을 추가
+                // 상품 간단 소개를 표시하는 행을 빌드함
+                _buildProductInfoRow(
+                    widget.productInfo['brief_introduction']?.toString().isNotEmpty ==
+                        true
+                        ? widget.productInfo['brief_introduction']
+                        : '에러 발생',
+                    '',
+                    bold: true,
+                    fontSize: 18),
+                SizedBox(height: 2), // 요소 간의 간격을 추가
+                // 상품 이미지를 클릭했을 때 상품 상세 화면으로 이동하는 기능을 추가함
+                GestureDetector(
+                  onTap: () {
+                    final product = ProductContent(
+                      docId: widget.productInfo['product_id'] ?? '',
+                      category: widget.productInfo['category']?.toString() ?? '에러 발생',
+                      productNumber:
+                      widget.productInfo['product_number']?.toString() ??
+                          '에러 발생',
+                      thumbnail: widget.productInfo['thumbnails']?.toString() ??
+                          '',
+                      briefIntroduction:
+                      widget.productInfo['brief_introduction']?.toString() ??
+                          '에러 발생',
+                      originalPrice: widget.productInfo['original_price'] ?? 0,
+                      discountPrice: widget.productInfo['discount_price'] ?? 0,
+                      discountPercent:
+                      widget.productInfo['discount_percent'] ?? 0,
+                    );
+                    // 상품 상세 화면으로 이동
+                    navigatorProductDetailScreen.navigateToDetailScreen(
+                        context, product);
+                  },
+                  // 상품 정보를 표시하는 카드뷰 생성
+                  child: CommonCardView(
+                    backgroundColor: Colors.white, // 카드 배경색 설정
+                    content: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                // 상품 썸네일 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
+                                child: widget.productInfo['thumbnails']
+                                    ?.toString()
+                                    .isNotEmpty ==
+                                    true
+                                    ? Image.network(
+                                    widget.productInfo['thumbnails'],
+                                    fit: BoxFit.cover)
+                                    : Icon(Icons.image_not_supported),
+                              ),
+                              SizedBox(width: 8), // 요소 간의 간격을 추가
+                              Expanded(
+                                flex: 7,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // 원래 가격을 표시하는 텍스트
+                                    Text(
+                                      '${numberFormat.format(widget.productInfo['original_price'] ?? 0)} 원',
+                                      style: TextStyle(
+                                        color: Colors.grey[500],
+                                        fontSize: 14,
+                                        decoration:
+                                        TextDecoration.lineThrough, // 취소선 추가
+                                      ),
+                                    ),
+                                    // 할인된 가격과 할인율을 표시하는 행을 빌드함
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${numberFormat.format(widget.productInfo['discount_price'] ?? 0)} 원',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 8), // 요소 간의 간격을 추가
+                                        Text(
+                                          '${(widget.productInfo['discount_percent'] ?? 0).toInt()}%',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // 선택한 색상 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
+                                    Row(
+                                      children: [
+                                        widget.productInfo['selected_color_image']
+                                            ?.toString()
+                                            .isNotEmpty ==
+                                            true
+                                            ? Image.network(
+                                          widget.productInfo[
+                                          'selected_color_image'],
+                                          height: 18,
+                                          width: 18,
+                                          fit: BoxFit.cover,
+                                        )
+                                            : Icon(Icons.image_not_supported,
+                                            size: 20),
+                                        SizedBox(width: 8), // 요소 간의 간격을 추가
+                                        // 선택한 색상 텍스트를 표시함
+                                        Text(
+                                          widget.productInfo[
+                                          'selected_color_text']
+                                              ?.toString() ??
+                                              '에러 발생',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                    // 선택한 사이즈와 수량을 표시하는 텍스트
+                                    Text(
+                                        '사이즈: ${widget.productInfo['selected_size']?.toString() ?? '에러 발생'}'),
+                                    Text(
+                                        '수량: ${widget.productInfo['selected_count']?.toString() ?? '0 개'}'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10), // 요소 간의 간격을 추가
+                // 발주 일자를 표시하는 행을 빌드함
+                _buildProductInfoRow(
+                    '발주일자: ',
+                    orderDate != null
+                        ? DateFormat('yyyy-MM-dd').format(orderDate)
+                        : '에러 발생',
+                    bold: true,
+                    fontSize: 16),
+                // 결제 완료 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
+                paymentCompleteDateAsyncValue.when(
+                  data: (date) {
+                    if (date != null) {
+                      return Text(
+                        '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                  loading: () => CircularProgressIndicator(),
+                  error: (error, stack) => Text('오류 발생'),
+                ),
+                // 배송 시작 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
+                deliveryStartDateAsyncValue.when(
+                  data: (date) {
+                    if (date != null) {
+                      return Text(
+                        '배송시작일: ${DateFormat('yyyy-MM-dd').format(date)}',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                  loading: () => CircularProgressIndicator(),
+                  error: (error, stack) => Text('오류 발생'),
+                ),
+                // 추가적인 상품 정보 표시 또는 기타 UI 요소
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 30), // 요소 간의 간격을 추가
+        Text('[리뷰 작성 상세 내용]',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        SizedBox(height: 20), // 요소 간의 간격을 추가
+        // 리뷰 제목을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
+        _buildTitleRow('리뷰 제목', widget.titleController, '50자 이내로 작성 가능합니다.'),
+        SizedBox(height: 8), // 요소 간의 간격을 추가
+        // 작성자 정보를 표시하는 행을 빌드하는 함수 호출
+        _buildUserRow(ref, '작성자', widget.userEmail),
+        SizedBox(height: 8), // 요소 간의 간격을 추가
+        // 사진 업로드 버튼을 빌드하는 함수 호출
+        _buildPhotoUploadRow(context),
+        SizedBox(height: 8), // 요소 간의 간격을 추가
+        // 리뷰 내용을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
+        _buildContentsRow(
+            '리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'),
+        SizedBox(height: 20), // 제출 버튼과의 간격을 위해 여백 추가
+        // 제출 버튼을 빌드하는 함수 호출
+        _buildSubmitButton(context),
       ],
     );
   }

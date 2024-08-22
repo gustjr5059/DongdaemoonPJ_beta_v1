@@ -51,7 +51,17 @@ import '../provider/review_state_provider.dart';
 // GlobalKey 대신 local context 사용 방법 설명 클래스
 // ReviewCreateDetailScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class ReviewCreateDetailScreen extends ConsumerStatefulWidget {
-  const ReviewCreateDetailScreen({Key? key}) : super(key: key);
+  final Map<String, dynamic> productInfo; // 개별 상품 데이터를 받아오기 위한 필드
+  final Map<String, dynamic> numberInfo; // 발주 번호 및 관련 정보를 받아오기 위한 필드
+  final String userEmail; // 사용자 이메일을 받아오기 위한 필드
+
+  // 생성자에서 필요한 데이터를 필수로 받아오도록 수정
+  const ReviewCreateDetailScreen({
+    Key? key,
+    required this.productInfo,
+    required this.numberInfo,
+    required this.userEmail,
+  }) : super(key: key);
 
   @override
   _ReviewCreateDetailScreenState createState() => _ReviewCreateDetailScreenState();
@@ -216,13 +226,18 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 8),
-                            Text('리뷰 작성 상세 내용', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            SizedBox(height: 8),
+                            SizedBox(height: 10),
+                            Text('[리뷰 상품 내용]', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 20),
                             // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
+                            // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
+                            // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
                             PrivateReviewCreateDetailFormScreen(
-                              userEmail: FirebaseAuth.instance.currentUser!.email!,
+                              productInfo: widget.productInfo, // 각 상품 정보를 전달
+                              numberInfo: widget.numberInfo, // 발주 번호와 관련 정보 전달
+                              userEmail: widget.userEmail, // 사용자 이메일 전달
                             ),
                           ],
                         ),

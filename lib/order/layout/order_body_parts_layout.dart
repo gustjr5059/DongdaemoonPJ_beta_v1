@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -925,96 +926,131 @@ class OrderListItemWidget extends ConsumerWidget {
 }
 // ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 끝
 
-// ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 시작
-class OrderListDetailItemWidget extends ConsumerWidget {
+// 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 시작
+class OrderListDetailItemWidget extends ConsumerStatefulWidget {
   // 발주 데이터를 담고 있는 Map<String, dynamic> 형태의 order 필드를 선언
   final Map<String, dynamic>? order;
 
-  // 생성자에서 order 필드를 필수로 받도록 설정
+  // 생성자에서 order 필드를 필수로 받도록 설정함
   OrderListDetailItemWidget({required this.order});
 
+  // 위젯의 상태를 생성하는 메서드를 오버라이드함
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // order가 null이거나 비어있으면 발주 데이터를 불러올 수 없음을 알리는 메시지를 화면에 표시
-    if (order == null || order!.isEmpty) {
+  _OrderListDetailItemWidgetState createState() =>
+      _OrderListDetailItemWidgetState();
+}
+
+// 위젯의 상태를 정의하는 클래스 _OrderListDetailItemWidgetState 시작
+class _OrderListDetailItemWidgetState
+    extends ConsumerState<OrderListDetailItemWidget> {
+  @override
+  Widget build(BuildContext context) {
+    // order가 null이거나 비어있으면 발주 데이터를 불러올 수 없음을 알리는 메시지를 화면에 표시함
+    if (widget.order == null || widget.order!.isEmpty) {
       return Center(
         child: Text('발주 데이터를 불러올 수 없습니다.'),
       );
     }
 
-    // 날짜 형식을 'yyyy-MM-dd'로 지정
+    // 날짜 형식을 'yyyy-MM-dd'로 지정함
     final dateFormat = DateFormat('yyyy-MM-dd');
 
-    // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환
-    final orderDate = order!['numberInfo']['order_date']?.toString().isNotEmpty == true
-        ? (order!['numberInfo']['order_date'] as Timestamp).toDate()
+    // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환함
+    final orderDate = widget.order!['numberInfo']['order_date']
+        ?.toString()
+        .isNotEmpty ==
+        true
+        ? (widget.order!['numberInfo']['order_date'] as Timestamp).toDate()
         : null;
 
-    // order 정보에서 발주 번호를 가져오고, 값이 유효하지 않으면 '에러 발생'을 반환
-    final orderNumber = order!['numberInfo']['order_number']?.toString().isNotEmpty == true
-        ? order!['numberInfo']['order_number']
+    // order 정보에서 발주 번호를 가져오고, 값이 유효하지 않으면 '에러 발생'을 반환함
+    final orderNumber = widget.order!['numberInfo']['order_number']
+        ?.toString()
+        .isNotEmpty ==
+        true
+        ? widget.order!['numberInfo']['order_number']
         : '에러 발생';
 
-    // 결제 완료일 데이터를 비동기로 가져오는 provider를 호출하고 결과를 paymentCompleteDateAsyncValue에 저장
-    final paymentCompleteDateAsyncValue = ref.watch(paymentCompleteDateProvider(orderNumber));
+    // 결제 완료일 데이터를 비동기로 가져오는 provider를 호출하고 결과를 paymentCompleteDateAsyncValue에 저장함
+    final paymentCompleteDateAsyncValue =
+    ref.watch(paymentCompleteDateProvider(orderNumber));
 
-    // 버튼 활성화 정보를 비동기로 가져오는 provider를 호출하고 결과를 buttonInfoAsyncValue에 저장
+    // 버튼 활성화 정보를 비동기로 가져오는 provider를 호출하고 결과를 buttonInfoAsyncValue에 저장함
     final buttonInfoAsyncValue = ref.watch(buttonInfoProvider(orderNumber));
 
-    // 숫자 형식을 '###,###'로 지정
+    // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
 
-    // order 정보에서 총 상품 금액, 상품 할인 금액, 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정
-    final totalProductPrice = order!['amountInfo']['total_product_price']?.toString().isNotEmpty == true
-        ? (order!['amountInfo']['total_product_price'] as num).toDouble()
+    // order 정보에서 총 상품 금액, 상품 할인 금액, 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정함
+    final totalProductPrice = widget.order!['amountInfo']['total_product_price']
+        ?.toString()
+        .isNotEmpty ==
+        true
+        ? (widget.order!['amountInfo']['total_product_price'] as num).toDouble()
         : 0.0;
-    final productDiscountPrice = order!['amountInfo']['product_discount_price']?.toString().isNotEmpty == true
-        ? (order!['amountInfo']['product_discount_price'] as num).toDouble()
+    final productDiscountPrice =
+    widget.order!['amountInfo']['product_discount_price']
+        ?.toString()
+        .isNotEmpty ==
+        true
+        ? (widget.order!['amountInfo']['product_discount_price'] as num)
+        .toDouble()
         : 0.0;
-    final totalPaymentPrice = order!['amountInfo']['total_payment_price']?.toString().isNotEmpty == true
-        ? (order!['amountInfo']['total_payment_price'] as num).toDouble()
+    final totalPaymentPrice = widget.order!['amountInfo']['total_payment_price']
+        ?.toString()
+        .isNotEmpty ==
+        true
+        ? (widget.order!['amountInfo']['total_payment_price'] as num).toDouble()
         : 0.0;
 
-    // recipientInfo가 null인지 확인하고 각 필드를 안전하게 접근
-    final recipientInfo = order!['recipientInfo'] ?? {};
+    // 수령자 정보가 null인지 확인하고 각 필드를 안전하게 접근함
+    final recipientInfo = widget.order!['recipientInfo'] ?? {};
 
-    // 수령자 정보에서 이름, 연락처, 주소, 상세주소, 우편번호를 가져오고, 값이 유효하지 않으면 기본 메시지를 설정
+    // 수령자 정보에서 이름, 연락처, 주소, 상세주소, 우편번호를 가져오고, 값이 유효하지 않으면 기본 메시지를 설정함
     final recipientName = recipientInfo['name']?.toString().isNotEmpty == true
         ? recipientInfo['name']
         : '이름 없음';
-    final recipientPhone = recipientInfo['phone_number']?.toString().isNotEmpty == true
+    final recipientPhone =
+    recipientInfo['phone_number']?.toString().isNotEmpty == true
         ? recipientInfo['phone_number']
         : '연락처 없음';
-    final recipientAddress = recipientInfo['address']?.toString().isNotEmpty == true
+    final recipientAddress =
+    recipientInfo['address']?.toString().isNotEmpty == true
         ? recipientInfo['address']
         : '주소 없음';
-    final recipientDetailAddress = recipientInfo['detail_address']?.toString().isNotEmpty == true
+    final recipientDetailAddress =
+    recipientInfo['detail_address']?.toString().isNotEmpty == true
         ? recipientInfo['detail_address']
         : '상세주소 없음';
-    final recipientPostalCode = recipientInfo['postal_code']?.toString().isNotEmpty == true
+    final recipientPostalCode =
+    recipientInfo['postal_code']?.toString().isNotEmpty == true
         ? recipientInfo['postal_code']
         : '우편번호 없음';
 
     // 배송 메모 데이터를 처리하고, '직접입력'일 경우 추가 메모를 가져옴
-    String deliveryMemo = recipientInfo['memo']?.toString().isNotEmpty == true
+    String deliveryMemo =
+    recipientInfo['memo']?.toString().isNotEmpty == true
         ? recipientInfo['memo']
         : '배송 메모 없음';
     if (deliveryMemo == '직접입력') {
-      deliveryMemo = recipientInfo['extra_memo']?.toString().isNotEmpty == true
+      deliveryMemo =
+      recipientInfo['extra_memo']?.toString().isNotEmpty == true
           ? recipientInfo['extra_memo']
           : '추가 메모 없음';
     }
 
     // productInfo 리스트를 가져와서 해당 발주번호 관련 상품별로 productInfo 데이터를 구현 가능하도록 하는 로직
-    final List<dynamic> productInfoList = order!['productInfo'] ?? [];
+    final List<dynamic> productInfoList = widget.order!['productInfo'] ?? [];
 
-    // ProductInfoDetailScreenNavigation 인스턴스를 생성하여 상품 상세 화면으로 이동할 수 있도록 설정
-    final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
+    // ProductInfoDetailScreenNavigation 인스턴스를 생성하여 상품 상세 화면으로 이동할 수 있도록 설정함
+    final navigatorProductDetailScreen =
+    ProductInfoDetailScreenNavigation(ref);
 
-    // 발주 상세 정보를 화면에 렌더링하는 위젯을 구성
+    // 발주 상세 정보를 화면에 렌더링하는 위젯을 구성함
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 발주 날짜와 발주 번호, 결제 완료일을 표시하는 섹션
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -1038,7 +1074,8 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                   if (date != null) {
                     return Text(
                       '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
                     );
                   } else {
                     return SizedBox.shrink(); // UI에 아무것도 표시하지 않음
@@ -1059,13 +1096,17 @@ class OrderListDetailItemWidget extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 결제 정보를 나타내는 제목 텍스트
                 Text(
                   '결제 정보',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16),
-                _buildAmountRow('총 상품금액', '${numberFormat.format(totalProductPrice)} 원'),
-                _buildAmountRow('상품 할인금액', '-${numberFormat.format(productDiscountPrice)} 원'),
+                // 각 결제 정보 항목을 표시하는 _buildAmountRow 함수 호출
+                _buildAmountRow(
+                    '총 상품금액', '${numberFormat.format(totalProductPrice)} 원'),
+                _buildAmountRow('상품 할인금액',
+                    '-${numberFormat.format(productDiscountPrice)} 원'),
                 _buildAmountRow('배송비', '0 원'),
                 Divider(),
                 _buildAmountRow(
@@ -1086,15 +1127,19 @@ class OrderListDetailItemWidget extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 수령자 정보를 나타내는 제목 텍스트
                 Text(
                   '수령자 정보',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16),
+                // 수령자 정보 각 항목을 표시하는 _buildRecipientInfoRow 함수 호출
                 _buildRecipientInfoRow('수령자명', recipientName),
                 _buildRecipientInfoRow('수령자 연락처', recipientPhone),
                 _buildRecipientInfoRow('주소(상세주소)', ''),
-                _buildRecipientInfoRow('$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)', ''),
+                _buildRecipientInfoRow(
+                    '$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)',
+                    ''),
                 Divider(color: Colors.grey),
                 _buildRecipientInfoRow('배송메모', ''),
                 _buildRecipientInfoRow(deliveryMemo, ''),
@@ -1102,9 +1147,8 @@ class OrderListDetailItemWidget extends ConsumerWidget {
             ),
           ),
         ),
-
         SizedBox(height: 10),
-        // 각 상품 정보를 표시하는 로직을 반복문으로 구성
+        // 각 상품 정보를 표시하는 로직을 반복문으로 구성함
         for (var productInfo in productInfoList)
           CommonCardView(
             backgroundColor: BEIGE_COLOR,
@@ -1113,70 +1157,92 @@ class OrderListDetailItemWidget extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 상품 번호와 간략 소개를 표시하는 _buildProductInfoRow 함수 호출
                   _buildProductInfoRow(
-                      productInfo['product_number']?.toString().isNotEmpty == true
+                      productInfo['product_number']?.toString().isNotEmpty ==
+                          true
                           ? productInfo['product_number']
                           : '에러 발생',
                       '',
                       bold: true,
                       fontSize: 14),
                   _buildProductInfoRow(
-                      productInfo['brief_introduction']?.toString().isNotEmpty == true
+                      productInfo['brief_introduction']
+                          ?.toString()
+                          .isNotEmpty ==
+                          true
                           ? productInfo['brief_introduction']
                           : '에러 발생',
                       '',
                       bold: true,
                       fontSize: 18),
                   SizedBox(height: 8),
-                  // 새로운 흰색 카드뷰 섹션을 추가
+                  // 새로운 흰색 카드뷰 섹션을 추가함
                   GestureDetector(
                     onTap: () {
-                      // 상품 상세 화면으로 이동
+                      // 상품 상세 화면으로 이동함
                       final product = ProductContent(
                         docId: productInfo['product_id'] ?? '',
-                        category: productInfo['category']?.toString() ?? '에러 발생',
-                        productNumber: productInfo['product_number']?.toString() ?? '에러 발생',
-                        thumbnail: productInfo['thumbnails']?.toString() ?? '',
-                        briefIntroduction: productInfo['brief_introduction']?.toString() ?? '에러 발생',
+                        category: productInfo['category']?.toString() ??
+                            '에러 발생',
+                        productNumber: productInfo['product_number']
+                            ?.toString() ??
+                            '에러 발생',
+                        thumbnail:
+                        productInfo['thumbnails']?.toString() ?? '',
+                        briefIntroduction: productInfo['brief_introduction']
+                            ?.toString() ??
+                            '에러 발생',
                         originalPrice: productInfo['original_price'] ?? 0,
                         discountPrice: productInfo['discount_price'] ?? 0,
                         discountPercent: productInfo['discount_percent'] ?? 0,
                       );
-                      navigatorProductDetailScreen.navigateToDetailScreen(context, product);
+                      navigatorProductDetailScreen.navigateToDetailScreen(
+                          context, product);
                     },
                     child: CommonCardView(
-                      backgroundColor: Colors.white, // 배경색을 흰색으로 설정
+                      backgroundColor: Colors.white, // 배경색을 흰색으로 설정함
                       content: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // 상품의 썸네일 이미지와 가격 정보를 표시하는 행
                             Row(
                               children: [
+                                // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
                                 Expanded(
                                     flex: 3,
-                                    child: productInfo['thumbnails']?.toString().isNotEmpty == true
-                                        ? Image.network(productInfo['thumbnails'], fit: BoxFit.cover)
+                                    child: productInfo['thumbnails']
+                                        ?.toString()
+                                        .isNotEmpty ==
+                                        true
+                                        ? Image.network(productInfo['thumbnails'],
+                                        fit: BoxFit.cover)
                                         : Icon(Icons.image_not_supported)),
                                 SizedBox(width: 8),
+                                // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
                                 Expanded(
                                   flex: 7,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)} 원',
                                         style: TextStyle(
                                           color: Colors.grey[500],
                                           fontSize: 14,
-                                          decoration: TextDecoration.lineThrough,
+                                          decoration:
+                                          TextDecoration.lineThrough,
                                         ),
                                       ),
                                       Row(
                                         children: [
                                           Text(
                                             '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)} 원',
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                           SizedBox(width: 8),
                                           Text(
@@ -1190,23 +1256,36 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                                       ),
                                       Row(
                                         children: [
-                                          productInfo['selected_color_image']?.toString().isNotEmpty == true
+                                          // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                          productInfo['selected_color_image']
+                                              ?.toString()
+                                              .isNotEmpty ==
+                                              true
                                               ? Image.network(
-                                            productInfo['selected_color_image'],
+                                            productInfo[
+                                            'selected_color_image'],
                                             height: 18,
                                             width: 18,
                                             fit: BoxFit.cover,
                                           )
-                                              : Icon(Icons.image_not_supported, size: 20),
+                                              : Icon(
+                                              Icons.image_not_supported,
+                                              size: 20),
                                           SizedBox(width: 8),
+                                          // 선택된 색상 텍스트를 표시
                                           Text(
-                                            productInfo['selected_color_text']?.toString().isNotEmpty == true
-                                                ? productInfo['selected_color_text']
+                                            productInfo['selected_color_text']
+                                                ?.toString()
+                                                .isNotEmpty ==
+                                                true
+                                                ? productInfo[
+                                            'selected_color_text']
                                                 : '에러 발생',
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
+                                      // 선택된 사이즈와 수량을 표시
                                       Text(
                                           '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}'),
                                       Text(
@@ -1223,11 +1302,12 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                   ),
                   SizedBox(height: 10),
                   Divider(color: Colors.grey),
-                  // 환불 및 리뷰 버튼을 표시하고, 버튼 활성화 상태에 따라 UI를 제어하는 로직을 추가
+                  // 환불 및 리뷰 버튼을 표시하고, 버튼 활성화 상태에 따라 UI를 제어하는 로직을 추가함
                   buttonInfoAsyncValue.when(
                     data: (buttonInfo) {
                       final boolRefundBtn = buttonInfo['boolRefundBtn'] ?? false;
-                      final boolReviewWriteBtn = buttonInfo['boolReviewWriteBtn'] ?? false;
+                      final boolReviewWriteBtn =
+                          buttonInfo['boolReviewWriteBtn'] ?? false;
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1238,18 +1318,31 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => RefundPolicyGuideScreen(orderNumber: order?['numberInfo']['order_number']),
+                                  builder: (context) =>
+                                      RefundPolicyGuideScreen(
+                                          orderNumber: widget.order?[
+                                          'numberInfo']
+                                          ['order_number']),
                                 ),
                               );
                             }
-                                : null, // 환불 버튼 활성화 여부에 따라 동작
+                                : null, // 환불 버튼 활성화 여부에 따라 동작함
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: boolRefundBtn ? BUTTON_COLOR : Colors.grey,
+                              foregroundColor: boolRefundBtn
+                                  ? BUTTON_COLOR
+                                  : Colors.grey,
                               backgroundColor: BACKGROUND_COLOR,
-                              side: BorderSide(color: boolRefundBtn ? BUTTON_COLOR : Colors.grey),
-                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              side: BorderSide(
+                                  color: boolRefundBtn
+                                      ? BUTTON_COLOR
+                                      : Colors.grey),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
                             ),
-                            child: Text('환불', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: Text('환불',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
                           ),
                           ElevatedButton(
                             onPressed: boolReviewWriteBtn
@@ -1257,36 +1350,60 @@ class OrderListDetailItemWidget extends ConsumerWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ReviewCreateDetailScreen(),
+                                  builder: (context) =>
+                                      ReviewCreateDetailScreen(
+                                        productInfo: productInfo,
+                                        // 개별 상품 데이터를 전달함
+                                        numberInfo: widget.order!['numberInfo'],
+                                        // 개별 상품 발주번호 및 발주일자 전달함
+                                        userEmail: FirebaseAuth.instance
+                                            .currentUser!.email!,
+                                      ),
                                 ),
                               );
                             }
-                                : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작
+                                : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작함
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: boolReviewWriteBtn ? BUTTON_COLOR : Colors.grey,
+                              foregroundColor: boolReviewWriteBtn
+                                  ? BUTTON_COLOR
+                                  : Colors.grey,
                               backgroundColor: BACKGROUND_COLOR,
-                              side: BorderSide(color: boolReviewWriteBtn ? BUTTON_COLOR : Colors.grey),
-                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              side: BorderSide(
+                                  color: boolReviewWriteBtn
+                                      ? BUTTON_COLOR
+                                      : Colors.grey),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
                             ),
-                            child: Text('리뷰 작성', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: Text('리뷰 작성',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              onOrderAddToCartButtonPressed(context, ref, productInfo);
+                              onOrderAddToCartButtonPressed(
+                                  context, ref, productInfo);
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: BUTTON_COLOR,
                               backgroundColor: BACKGROUND_COLOR,
                               side: BorderSide(color: BUTTON_COLOR),
-                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
                             ),
-                            child: Text('장바구니 담기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: Text('장바구니 담기',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
                           ),
                         ],
                       );
                     },
-                    loading: () => CircularProgressIndicator(), // 버튼 정보 로딩 중일 때 로딩 인디케이터 표시
-                    error: (error, stack) => Text('버튼 상태를 불러오는 중 오류 발생'), // 오류 발생 시 메시지 표시
+                    loading: () => CircularProgressIndicator(),
+                    // 버튼 정보 로딩 중일 때 로딩 인디케이터 표시함
+                    error: (error, stack) =>
+                        Text('버튼 상태를 불러오는 중 오류 발생'), // 오류 발생 시 메시지 표시
                   ),
                 ],
               ),
@@ -1296,36 +1413,37 @@ class OrderListDetailItemWidget extends ConsumerWidget {
     );
   }
 }
-// ------ 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 내용 끝
+// 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 끝
 
-  // 결제 정보를 표시하는 행을 구성하는 함수
-  Widget _buildAmountRow(String label, String value, {bool isTotal = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // 라벨을 표시하는 텍스트
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            ),
+// 결제 정보를 표시하는 행을 구성하는 함수
+Widget _buildAmountRow(String label, String value,
+    {bool isTotal = false}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // 라벨을 표시하는 텍스트
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
           ),
-          // 값을 표시하는 텍스트
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: isTotal ? Colors.red : Colors.black,
-            ),
+        ),
+        // 값을 표시하는 텍스트
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? Colors.red : Colors.black,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
 // 수령자 정보를 표시하는 행을 구성하는 함수
 Widget _buildRecipientInfoRow(String label, String value) {
@@ -1351,7 +1469,7 @@ Widget _buildRecipientInfoRow(String label, String value) {
               fontWeight: FontWeight.normal,
             ),
             textAlign: TextAlign.end,
-            softWrap: true,  // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정
+            softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정함
           ),
         ),
       ],
@@ -1360,7 +1478,8 @@ Widget _buildRecipientInfoRow(String label, String value) {
 }
 
 // 상품 정보를 표시하는 행을 구성하는 함수
-Widget _buildProductInfoRow(String label, String value, {bool bold = false, double fontSize = 16}) {
+Widget _buildProductInfoRow(String label, String value,
+    {bool bold = false, double fontSize = 16}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4.0),
     child: Row(
@@ -1383,7 +1502,7 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
             ),
             textAlign: TextAlign.end,
-            softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정
+            softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정함
             overflow: TextOverflow.ellipsis, // 텍스트가 길 경우 말줄임 표시
           ),
         ),
@@ -1393,31 +1512,37 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
 }
 
 // 장바구니 담기 버튼 클릭 시 호출되는 함수
-void onOrderAddToCartButtonPressed(BuildContext context, WidgetRef ref, Map<String, dynamic> productInfo) {
-  final cartRepository = ref.read(cartItemRepositoryProvider); // cartItemRepositoryProvider를 사용하여 장바구니 레포지토리를 읽음
+void onOrderAddToCartButtonPressed(BuildContext context, WidgetRef ref,
+    Map<String, dynamic> productInfo) {
+  final cartRepository = ref.read(
+      cartItemRepositoryProvider); // cartItemRepositoryProvider를 사용하여 장바구니 레포지토리를 읽음
 
   final product = ProductContent(
-    docId: productInfo['product_id'], // 제품 문서 ID를 설정
-    category: productInfo['category'], // 제품 카테고리를 설정
-    productNumber: productInfo['product_number'], // 제품 번호를 설정
-    thumbnail: productInfo['thumbnails'], // 제품 썸네일 이미지를 설정
-    briefIntroduction: productInfo['brief_introduction'], // 제품의 간단한 소개를 설정
-    originalPrice: productInfo['original_price'], // 원래 가격을 설정
-    discountPrice: productInfo['discount_price'], // 할인된 가격을 설정
-    discountPercent: productInfo['discount_percent'], // 할인 퍼센트를 설정
-    selectedCount: productInfo['selected_count'], // 선택한 수량을 설정
-    selectedColorImage: productInfo['selected_color_image'], // 선택한 색상 이미지 URL을 설정
-    selectedColorText: productInfo['selected_color_text'], // 선택한 색상 텍스트를 설정
-    selectedSize: productInfo['selected_size'], // 선택한 사이즈를 설정
+    docId: productInfo['product_id'], // 제품 문서 ID를 설정함
+    category: productInfo['category'], // 제품 카테고리를 설정함
+    productNumber: productInfo['product_number'], // 제품 번호를 설정함
+    thumbnail: productInfo['thumbnails'], // 제품 썸네일 이미지를 설정함
+    briefIntroduction: productInfo['brief_introduction'], // 제품의 간단한 소개를 설정함
+    originalPrice: productInfo['original_price'], // 원래 가격을 설정함
+    discountPrice: productInfo['discount_price'], // 할인된 가격을 설정함
+    discountPercent: productInfo['discount_percent'], // 할인 퍼센트를 설정함
+    selectedCount: productInfo['selected_count'], // 선택한 수량을 설정함
+    selectedColorImage: productInfo['selected_color_image'], // 선택한 색상 이미지 URL을 설정함
+    selectedColorText: productInfo['selected_color_text'], // 선택한 색상 텍스트를 설정함
+    selectedSize: productInfo['selected_size'], // 선택한 사이즈를 설정함
   );
 
-  // 장바구니 레포지토리에 제품을 추가하고, 성공 시 메시지를 표시
-  cartRepository.addToCartItem(product, product.selectedColorText, product.selectedColorImage, product.selectedSize, product.selectedCount ?? 1)
+  // 장바구니 레포지토리에 제품을 추가하고, 성공 시 메시지를 표시함
+  cartRepository
+      .addToCartItem(product, product.selectedColorText,
+      product.selectedColorImage, product.selectedSize, product.selectedCount ?? 1)
       .then((_) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시함
   }).catchError((error) {
     // 에러가 발생할 경우
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('장바구니에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('장바구니에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시함
   });
 }
 
