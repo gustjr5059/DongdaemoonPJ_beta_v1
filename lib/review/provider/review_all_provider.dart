@@ -21,3 +21,9 @@ final userNameProvider = FutureProvider.family<String, String>((ref, email) asyn
   final repository = ref.read(reviewRepositoryProvider); // reviewRepositoryProvider를 통해 Repository 인스턴스를 가져옴
   return await repository.fetchUserNameByEmail(email); // 이메일을 사용하여 사용자 이름을 비동기적으로 가져옴
 });
+
+// 리뷰 데이터를 파이어스토어에 저장하는 함수 호출을 위한 Provider
+final submitReviewProvider = Provider((ref) {  // 리뷰 제출 기능을 제공하는 프로바이더를 생성함
+  final repository = ref.read(reviewRepositoryProvider);  // 리뷰 저장소 프로바이더를 읽어옴
+  return repository.submitReview;  // 저장소의 리뷰 제출 함수를 반환함
+});

@@ -144,7 +144,6 @@ class OrderRepository {
     await orderDoc.collection('button_info').doc('info').set({
       'boolRefundBtn': false, // 초기값은 false로 설정
       'boolReviewWriteBtn': false, // 초기값은 false로 설정
-      'boolReviewUpdateBtn': false, // 초기값은 false로 설정
     });
 
     // 상품 정보를 반복문을 통해 Firestore에 저장

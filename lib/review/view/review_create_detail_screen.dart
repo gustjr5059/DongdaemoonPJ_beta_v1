@@ -229,8 +229,6 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 10),
-                            Text('[리뷰 상품 내용]', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                            SizedBox(height: 20),
                             // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
                             // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
                             // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달

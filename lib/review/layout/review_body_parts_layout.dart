@@ -429,7 +429,7 @@ Widget _buildProductInfoRow(String label, String value, {bool bold = false, doub
   );
 }
 
-// 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 시작
+// ------- 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 시작
 class PrivateReviewCreateDetailFormScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> productInfo; // 특정 상품 정보를 담는 변수
   final Map<String, dynamic> numberInfo; // 발주 정보를 담는 변수
@@ -452,12 +452,13 @@ class PrivateReviewCreateDetailFormScreen extends ConsumerStatefulWidget {
       _PrivateReviewCreateDetailFormScreenState();
 }
 
-// PrivateReviewCreateDetailFormScreen의 상태를 정의하는 클래스
+// ------ PrivateReviewCreateDetailFormScreen의 상태를 정의하는 클래스
 class _PrivateReviewCreateDetailFormScreenState
     extends ConsumerState<PrivateReviewCreateDetailFormScreen> {
   final List<File> _images = []; // 최대 3개의 이미지를 저장하기 위한 리스트
   final ImagePicker _picker = ImagePicker(); // 갤러리에서 이미지를 선택하기 위한 ImagePicker 객체
 
+  // ----- 리뷰 사진 업로드 관련 함수 시작 부분
   // 권한 요청 함수
   Future<bool> _requestPermission(BuildContext context) async {
     if (Platform.isAndroid) {
@@ -561,6 +562,7 @@ class _PrivateReviewCreateDetailFormScreenState
       _images.removeAt(index); // 선택된 이미지를 리스트에서 삭제함
     });
   }
+  // ----- 리뷰 사진 업로드 관련 함수 끝 부분
 
   @override
   Widget build(BuildContext context) {
@@ -587,6 +589,8 @@ class _PrivateReviewCreateDetailFormScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text('[리뷰 상품 내용]', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        SizedBox(height: 20), // 요소 간의 간격을 추가
         // 상품 정보 표시 UI
         CommonCardView(
           backgroundColor: BEIGE_COLOR, // 배경색 설정
@@ -800,7 +804,7 @@ class _PrivateReviewCreateDetailFormScreenState
         // 리뷰 내용을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
         _buildContentsRow(
             '리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'),
-        SizedBox(height: 20), // 제출 버튼과의 간격을 위해 여백 추가
+        SizedBox(height: 10), // 제출 버튼과의 간격을 위해 여백 추가
         // 제출 버튼을 빌드하는 함수 호출
         _buildSubmitButton(context),
       ],
@@ -1087,19 +1091,40 @@ class _PrivateReviewCreateDetailFormScreenState
     );
   }
 
-  // '리뷰 작성 완료' 버튼을 생성하는 함수
+// '리뷰 작성 완료' 버튼을 생성하는 함수
   Widget _buildSubmitButton(BuildContext context) {
-    return Center( // 제출 버튼을 중앙에 배치
-      child: ElevatedButton( // 리뷰 작성 완료 버튼 생성
-        onPressed: () { // 버튼 클릭 시 호출되는 함수
-          // 리뷰 작성 완료 로직 (구현 필요)
+    return Center(  // 버튼을 화면의 중앙에 배치함
+      child: ElevatedButton(  // 눌러서 실행할 수 있는 버튼 위젯을 생성함
+        onPressed: () async {  // 버튼이 눌렸을 때 실행되는 비동기 함수임
+          try {  // 예외 발생을 처리하기 위해 try 블록을 사용함
+            await ref.read(submitReviewProvider)(  // 리뷰 제출을 위한 프로바이더 함수를 호출함
+              userEmail: widget.userEmail,  // 사용자 이메일을 전달함
+              orderNumber: widget.numberInfo['order_number'],  // 주문 번호를 전달함
+              reviewTitle: widget.titleController.text,  // 리뷰 제목을 전달함
+              reviewContents: widget.contentController.text,  // 리뷰 내용을 전달함
+              images: _images,  // 리뷰에 첨부할 이미지 목록을 전달함
+              productInfo: widget.productInfo,  // 제품 정보를 전달함
+              numberInfo: widget.numberInfo,  // 주문 번호 관련 정보를 전달함
+              userName: await ref.read(userNameProvider(widget.userEmail).future),  // 사용자 이름을 비동기로 받아 전달함
+              paymentCompleteDate: await ref.read(paymentCompleteDateProvider(widget.numberInfo['order_number']).future),  // 결제 완료 날짜를 비동기로 받아 전달함
+              deliveryStartDate: await ref.read(deliveryStartDateProvider(widget.numberInfo['order_number']).future),  // 배송 시작 날짜를 비동기로 받아 전달함
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(  // 리뷰 작성 성공 메시지를 표시함
+              SnackBar(content: Text('리뷰가 작성되었습니다.')),  // 스낵바에 표시할 메시지를 설정함
+            );
+          } catch (e) {  // 예외가 발생한 경우 처리함
+            ScaffoldMessenger.of(context).showSnackBar(  // 리뷰 작성 실패 메시지를 표시함
+              SnackBar(content: Text('리뷰 작성 중 오류가 발생했습니다: $e')),  // 스낵바에 표시할 오류 메시지를 설정함
+            );
+          }
         },
-        style: ElevatedButton.styleFrom( // 버튼의 스타일 설정
-          foregroundColor: Colors.white, // 텍스트 색상을 흰색으로 설정
-          backgroundColor: BUTTON_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30), // 버튼 내부 여백 설정
+        style: ElevatedButton.styleFrom(  // 버튼의 스타일을 설정함
+          foregroundColor: Colors.white,  // 버튼 글자 색상을 흰색으로 설정함
+          backgroundColor: BUTTON_COLOR,  // 버튼 배경 색상을 설정함
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),  // 버튼의 여백을 설정함
         ),
-        child: Text('리뷰 작성 완료', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), // 버튼 텍스트 및 텍스트 스타일 설정
+        child: Text('리뷰 작성 완료', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),  // 버튼에 표시할 텍스트와 스타일을 설정함
       ),
     );
   }
