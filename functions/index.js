@@ -38,20 +38,20 @@ function formatNumber(number) { // 숫자를 포맷팅하는 함수.
 
 // Firestore 문서 생성 시 이메일 발송 함수
 exports.sendOrderEmailV2 = functions.firestore
-  .document('order_list/{userId}/orders/{orderId}') // Firestore의 order_list/{userId}/orders/{orderId} 문서 생성 시 트리거됨.
+  .document('order_list/{userId}/orders/{order_number}') // Firestore의 order_list/{userId}/orders/{order_number} 문서 생성 시 트리거됨.
   .onCreate(async (snap, context) => { // 문서 생성 이벤트 핸들러를 비동기로 정의.
     const userId = context.params.userId; // URL 파라미터에서 userId를 가져옴.
-    const orderId = context.params.orderId; // URL 파라미터에서 orderId를 가져옴.
+    const orderNumber = context.params.order_number; // URL 파라미터에서 order_number를 가져옴.
 
-    const ordererInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderId).collection('orderer_info').doc('info').get();
+    const ordererInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderNumber).collection('orderer_info').doc('info').get();
     // Firestore에서 orderer_info 컬렉션의 info 문서를 가져옴.
-    const recipientInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderId).collection('recipient_info').doc('info').get();
+    const recipientInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderNumber).collection('recipient_info').doc('info').get();
     // Firestore에서 recipient_info 컬렉션의 info 문서를 가져옴.
-    const amountInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderId).collection('amount_info').doc('info').get();
+    const amountInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderNumber).collection('amount_info').doc('info').get();
     // Firestore에서 amount_info 컬렉션의 info 문서를 가져옴.
-    const numberInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderId).collection('number_info').doc('info').get();
+    const numberInfoDoc = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderNumber).collection('number_info').doc('info').get();
     // Firestore에서 number_info 컬렉션의 info 문서를 가져옴.
-    const productInfoQuery = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderId).collection('product_info').get();
+    const productInfoQuery = await admin.firestore().collection('order_list').doc(userId).collection('orders').doc(orderNumber).collection('product_info').get();
     // Firestore에서 product_info 컬렉션의 모든 문서를 가져옴.
 
     if (!ordererInfoDoc.exists || !recipientInfoDoc.exists || !amountInfoDoc.exists || !numberInfoDoc.exists) {
@@ -141,7 +141,7 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
     // 메세지 내용이 "해당 발주 건은 배송이 진행되었습니다."인 경우에만 상태 업데이트 예약
     if (messageData.contents === '해당 발주 건은 배송이 진행되었습니다.') {
       const recipientId = context.params.recipientId;  // 문서 경로에서 recipientId를 가져옴
-      const order_number = messageData.order_number;  // 메세지 데이터에서 order_number를 가져옴
+      const orderNumber = messageData.order_number;  // 메세지 데이터에서 order_number를 가져옴
 
       // 3일 후 상태를 "배송 완료"로 업데이트
       const daysToMilliseconds = 3 * 24 * 60 * 60 * 1000; // 3일을 밀리초로 변환 (3일 x 24시간 x 60분 x 60초 x 1000ms)
@@ -152,7 +152,7 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
             .collection('order_list')  // order_list 컬렉션 참조
             .doc(recipientId)  // recipientId에 해당하는 문서 참조
             .collection('orders')  // orders 하위 컬렉션 참조
-            .where('numberInfo.order_number', '==', order_number);  // order_number가 해당 order_number와 일치하는 문서를 찾기 위한 쿼리
+            .where('numberInfo.order_number', '==', orderNumber);  // order_number가 해당 order_number와 일치하는 문서를 찾기 위한 쿼리
 
           const orderDocSnapshot = await orderDocRef.get();  // 쿼리 실행 결과 가져오기
           if (!orderDocSnapshot.empty) {  // 쿼리 결과가 비어 있지 않은 경우
@@ -160,7 +160,7 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
             await orderDoc.ref.collection('order_status_info').doc('info').update({  // 해당 문서의 order_status_info 하위 컬렉션의 info 문서를 업데이트
               'order_status': '배송 완료'  // order_status 필드를 "배송 완료"로 업데이트
             });
-            console.log(`Order ${order_number} status updated to 배송 완료`);  // 상태 업데이트 성공 시 콘솔에 로그 출력
+            console.log(`Order ${orderNumber} status updated to 배송 완료`);  // 상태 업데이트 성공 시 콘솔에 로그 출력
           }
         } catch (error) {  // 에러 발생 시 에러 처리
           console.error('Error updating order status:', error);  // 에러 내용을 콘솔에 출력

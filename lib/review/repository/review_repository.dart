@@ -132,10 +132,12 @@ class ReviewRepository {
         }
       }
 
+      // separator_key 필드를 productInfo에서 가져옴
+      final String separatorKey = productInfo['separator_key'] ?? '';
       // 리뷰 데이터 생성
-      final String reviewId = '${DateTime.now().millisecondsSinceEpoch}';
       final data = {
         'order_number': orderNumber,  // 주문 번호를 포함함
+        'separator_key': separatorKey,  // separator_key를 포함함
         'product_number': productInfo['product_number'] ?? null,  // 제품 번호를 포함함
         'brief_introduction': productInfo['brief_introduction'] ?? null,  // 제품 간단 소개를 포함함
         'product_id': productInfo['product_id'] ?? null,  // 제품 ID를 포함함
@@ -163,7 +165,7 @@ class ReviewRepository {
       await firestore.collection('review_list')
           .doc(userEmail)  // 유저 이메일로 문서 경로 설정
           .collection('reviews')  // 'reviews' 컬렉션에 저장
-          .doc(reviewId)  // 리뷰 ID로 문서 설정
+          .doc(separatorKey)  // separator_key로 문서 ID 설정
           .set(data);  // 데이터 저장
     } catch (e) {
       // 리뷰 제출 중 발생한 오류를 출력함

@@ -129,10 +129,16 @@ class OrderRepository {
     if (userEmail == null) {
       throw Exception('User not logged in');
     }
-    // 발주 문서를 생성할 위치를 Firestore에서 지정
-    final orderDoc = firestore.collection('order_list').doc(userEmail).collection('orders').doc();
-    // 발주 ID를 생성
-    final orderId = orderDoc.id;
+
+    // 현재 시간을 기반으로 주문 번호를 생성
+    final now = DateTime.now(); // 현재 시간을 가져옴
+    final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
+
+    // 발주 문서를 생성할 위치를 Firestore에서 지정 (order_number를 문서 ID로 사용)
+    final orderDoc = firestore.collection('order_list')
+        .doc(userEmail)
+        .collection('orders')
+        .doc(orderNumber); // orderId 대신 orderNumber 사용
 
     // 발주자 정보를 Firestore에 저장
     await orderDoc.collection('orderer_info').doc('info').set(ordererInfo);
@@ -146,9 +152,12 @@ class OrderRepository {
       'boolReviewWriteBtn': false, // 초기값은 false로 설정
     });
 
-    // 상품 정보를 반복문을 통해 Firestore에 저장
-    for (var item in productInfo) {
-      await orderDoc.collection('product_info').add({
+// 상품 정보를 반복문을 통해 Firestore에 저장
+    for (var i = 0; i < productInfo.length; i++) {
+      final item = productInfo[i]; // item 변수 정의
+      final productDocId = '${orderNumber}_${i + 1}'; // 'order_number_1', 'order_number_2' 형식의 문서 ID 생성
+      await orderDoc.collection('product_info').doc(productDocId).set({
+        'separator_key': productDocId, // separator_key 필드에 생성된 문서 ID 저장
         'product_id': item.docId, // 상품 상세 화면의 문서 id를 저장
         'category': item.category, // 상품의 카테고리 저장
         'brief_introduction': item.briefIntroduction, // 상품 간략 소개
@@ -171,8 +180,6 @@ class OrderRepository {
     await orderDoc.collection('order_status_info').doc('info').set(orderStatusInfo);
 
     // number_info 컬렉션에 order_number와 order_date 추가
-    final now = DateTime.now(); // 현재 시간을 가져옴
-    final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
     await orderDoc.collection('number_info').doc('info').set({
       'order_number': orderNumber, // 주문 번호 저장
       'order_date': now, // 주문 날짜 저장
@@ -185,7 +192,11 @@ class OrderRepository {
     // 해당 로직에 의해 데이터가 중복으로 저장되지만 해당 로직이 없으면 이메일 전송 기능이 구현이 안됨
     // 해당 로직이 이메일 전송 기능인 sendOrderEmailV2의 functions 함수의 트리거 역할!!
     // 해당 로직과 index.js 로직이 백엔드인 파이어베이스에서 관련 데이터로 이메일 보내는 기능 구현 로직
-    await firestore.collection('order_list').doc(userEmail).collection('orders').doc(orderId).set({
+    await firestore.collection('order_list')
+        .doc(userEmail)
+        .collection('orders')
+        .doc(orderNumber) // orderId 대신 orderNumber 사용
+        .set({
       'ordererInfo': ordererInfo, // 발주자 정보
       'recipientInfo': recipientInfo, // 수령자 정보
       'amountInfo': amountInfo, // 결제 정보
@@ -196,8 +207,9 @@ class OrderRepository {
       }
     });
 
-    return orderId; // 발주 ID를 반환
+    return orderNumber; // orderId 대신 orderNumber 반환
   }
+
 
   // ------ flutter_email_sender 패키지를 활용한 ios 기본 메일 앱과 연동하여 이메일 보내는 기능
   // 클라이언트 관점에서 이메일 전송하는 기능 (사용자가 직접 메일 앱에서 나온 UI를 보고 보내기 버튼을 클릭해야 이메일을 보낼 수 있는 단점이 있음 - 그래서 사용 x)
@@ -284,9 +296,12 @@ class OrderRepository {
 
   // 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수
   // 발주 데이터를 가져오는 함수
-  Future<Map<String, dynamic>> fetchOrderData(String userEmail, String orderId) async {
+  Future<Map<String, dynamic>> fetchOrderData(String userEmail, String orderNumber) async {
     // 발주 문서를 Firestore에서 가져옴
-    final orderDoc = firestore.collection('order_list').doc(userEmail).collection('orders').doc(orderId);
+    final orderDoc = firestore.collection('order_list')
+        .doc(userEmail)
+        .collection('orders')
+        .doc(orderNumber); // orderId 대신 orderNumber 사용
 
     // 각 정보 문서를 Firestore에서 가져옴
     final ordererInfoDoc = await orderDoc.collection('orderer_info').doc('info').get();
