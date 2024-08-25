@@ -46,72 +46,58 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
             String recipientText = '${message['recipient']}';
             String orderNumberText = '[발주번호: ${message['order_number']}]';
 
-            // 팝업을 띄우는 함수를 정의
-            void showAlertDialog(BuildContext context) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  // 팝업 내용을 구성.
-                  return AlertDialog(
-                    backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: [
-                          // 쪽지 내용을 강조하여 표시.
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: recipientText,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red, // 빨간색 텍스트
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '님께서 발주 완료한 ',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black, // 기본 텍스트 색상
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: orderNumberText,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red, // 빨간색 텍스트
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' 건 관련 ${message['contents']}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black, // 기본 텍스트 색상
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      // 닫기 버튼을 구성.
-                      TextButton(
-                        child: Text(
-                          '닫기',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
-                          ),
+            // '[자세히]' 버튼을 클릭했을 때 팝업을 띄우는 함수
+            // showMessageDetailDialog: 쪽지의 자세한 내용을 팝업으로 표시하는 함수
+            void showMessageDetailDialog(BuildContext context) async {
+              // showSubmitAlertDialog 함수를 호출하여 팝업을 띄움
+              await showSubmitAlertDialog(
+                context,
+                title: '쪽지 내용', // 팝업의 제목 설정
+                contentWidget: RichText(
+                  // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 구성함
+                  text: TextSpan(
+                    children: [
+                      // $recipientText 부분을 빨간색으로 설정하고 Bold로 표시함
+                      TextSpan(
+                        text: recipientText,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                      ),
+                      // '님께서 발주 완료한 ' 부분을 검정색으로 설정함
+                      TextSpan(
+                        text: '님께서 발주 완료한 ',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      // $orderNumberText 부분을 빨간색으로 설정하고 Bold로 표시함
+                      TextSpan(
+                        text: orderNumberText,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                      // 기본 텍스트 색상으로 나머지 문구를 표시함
+                      TextSpan(
+                        text: ' 건 관련 ${message['contents']}',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ],
-                  );
-                },
+                  ),
+                ),
+                actions: buildAlertActions(
+                  context,
+                  noText: '닫기', // '닫기' 버튼 텍스트 설정
+                  noTextStyle: TextStyle( // '닫기' 버튼 텍스트 스타일을 검정색 Bold로 설정함
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               );
             }
 
@@ -179,7 +165,7 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                   Spacer(), // 왼쪽을 비우기 위해 Spacer 추가
                                   TextButton(
                                     onPressed: () {
-                                      showAlertDialog(context);
+                                      showMessageDetailDialog(context); // '[자세히]' 버튼을 클릭했을 때 showMessageDetailDialog 함수를 호출함
                                     },
                                     child: Text(
                                       '[자세히]', // [자세히] 텍스트를 표시

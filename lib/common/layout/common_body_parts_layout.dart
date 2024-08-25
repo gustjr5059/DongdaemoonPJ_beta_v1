@@ -4,6 +4,7 @@ import 'dart:async';
 // 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
@@ -22,6 +23,8 @@ import '../model/banner_model.dart';
 import '../provider/common_all_providers.dart'; // 비동기 데이터 로드를 위한 FutureProvider
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
+
+import 'dart:io';
 
 // ------ 배너 페이지 뷰 자동 스크롤 기능 구현 위한 클래스 시작
 class BannerAutoScrollClass {
@@ -278,3 +281,89 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
   );
 }
 // ------ 공통적으로 사용될 'top' 버튼 위젯 내용 끝
+
+// ------ 공통적으로 사용될 알림창 관련 함수 내용 시작
+
+// 공통적으로 사용할 수 있는 알림창 생성 함수
+// showSubmitAlertDialog: 다양한 플랫폼(iOS, Android)에서 사용할 수 있는 알림창을 생성하는 함수
+Future<bool> showSubmitAlertDialog(BuildContext context, {
+  required String title, // 알림창의 제목을 나타내는 문자열
+  String? content, // 알림창의 내용을 나타내는 선택적 문자열
+  required List<Widget> actions, // 알림창에서 사용할 버튼 리스트 (actions)
+  Widget? contentWidget, // 알림창 내용 대신 사용할 위젯 (contentWidget)
+}) async {
+  // showDialog: 비동기로 알림창을 띄우며 사용자의 입력(확인, 취소 등)을 대기함
+  return await showDialog<bool>(
+    context: context, // 알림창이 표시될 BuildContext
+    barrierDismissible: false, // 사용자가 알림창 외부를 클릭해도 닫히지 않도록 설정함
+    builder: (BuildContext context) {
+      // 플랫폼이 iOS인 경우 CupertinoAlertDialog 사용
+      if (Platform.isIOS) {
+        return CupertinoAlertDialog(
+          title: Text(title), // 제목 표시
+          content: contentWidget ?? Text(content ?? ''), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
+          actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
+        );
+        // 플랫폼이 Android인 경우 AlertDialog 사용
+      } else if (Platform.isAndroid) {
+        return AlertDialog(
+          title: Text(title), // 제목 표시
+          content: contentWidget ?? Text(content ?? ''), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
+          actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
+        );
+      } else {
+        // 지원되지 않는 플랫폼일 경우 기본적으로 false 반환함
+        return AlertDialog(
+          title: Text('Unsupported Platform'), // '지원되지 않는 플랫폼'이라는 제목 표시
+          content: Text('이 플랫폼은 지원되지 않습니다.'), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
+          actions: <Widget>[
+            // '확인' 버튼 클릭 시 false 반환하고 알림창 닫음
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+          ],
+        );
+      }
+    },
+  ) ?? false; // 기본적으로 false 반환함 (예외 상황 대비)
+}
+
+// 공통적으로 사용할 수 있는 알림창 버튼 생성 함수
+// buildAlertActions: 알림창에 표시될 버튼을 생성하는 함수
+List<Widget> buildAlertActions(BuildContext context, {
+  required String noText, // '취소' 또는 '닫기' 버튼에 표시될 텍스트
+  TextStyle? noTextStyle, // '취소' 또는 '닫기' 버튼 텍스트의 스타일
+  String? yesText, // '확인' 버튼에 표시될 선택적 텍스트
+  TextStyle? yesTextStyle, // '확인' 버튼 텍스트의 스타일
+  VoidCallback? onYesPressed, // '확인' 버튼 클릭 시 호출될 함수
+}) {
+  if (yesText != null && onYesPressed != null) {
+    // '확인' 텍스트와 onYesPressed 함수가 제공된 경우, 두 개의 버튼(취소, 확인)을 생성함
+    return <Widget>[
+      TextButton(
+        child: Text(noText, style: noTextStyle), // '취소' 버튼 텍스트에 스타일 적용
+        onPressed: () {
+          Navigator.of(context).pop(false); // '취소' 클릭 시 false 반환하고 알림창 닫음
+        },
+      ),
+      TextButton(
+        child: Text(yesText, style: yesTextStyle), // '확인' 버튼 텍스트에 스타일 적용
+        onPressed: onYesPressed, // '확인' 버튼 클릭 시 전달된 함수 호출
+      ),
+    ];
+  } else {
+    // '확인' 버튼이 없을 경우, '취소' 버튼만 생성함
+    return <Widget>[
+      TextButton(
+        child: Text(noText, style: noTextStyle), // '닫기' 버튼 텍스트에 스타일 적용
+        onPressed: () {
+          Navigator.of(context).pop(false); // '닫기' 클릭 시 false 반환하고 알림창 닫음
+        },
+      ),
+    ];
+  }
+}
+// ------ 공통적으로 사용될 알림창 관련 함수 내용 끝

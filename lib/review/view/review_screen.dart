@@ -50,28 +50,28 @@ import '../provider/review_state_provider.dart';
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용을 권장함
 // GlobalKey를 사용할 경우 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// ReviewMainScreen 클래스는 ConsumerStatefulWidget을 상속받으며, Riverpod를 통한 상태 관리 기능을 지원함
-class ReviewMainScreen extends ConsumerStatefulWidget {
+// PrivateReviewMainScreen 클래스는 ConsumerStatefulWidget을 상속받으며, Riverpod를 통한 상태 관리 기능을 지원함
+class PrivateReviewMainScreen extends ConsumerStatefulWidget {
   final String email; // 이메일 정보를 저장하는 변수
 
   // ReviewMainScreen 생성자, email 매개변수를 필수로 받음
-  const ReviewMainScreen({Key? key, required this.email}) : super(key: key);
+  const PrivateReviewMainScreen({Key? key, required this.email}) : super(key: key);
 
   @override
-  _ReviewMainScreenState createState() => _ReviewMainScreenState(); // 상태 관리 객체 생성
+  _PrivateReviewMainScreenState createState() => _PrivateReviewMainScreenState(); // 상태 관리 객체 생성
 }
 
-// _ReviewMainScreenState 클래스 시작
-// _ReviewMainScreenState 클래스는 ReviewMainScreen 위젯의 상태를 관리함
+// _PrivateReviewMainScreenState 클래스 시작
+// _PrivateReviewMainScreenState 클래스는 ReviewMainScreen 위젯의 상태를 관리함
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시하는 역할을 함
-class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
+class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // reviewScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
-  // ref.read(reviewScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식임
+  // privateReviewScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
+  // ref.read(privateReviewScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식임
   // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨
   // 1. 상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능
   // 2. 하단 탭바의 버튼 클릭 시 화면 초기 위치로 스크롤 이동하는 기능
@@ -80,13 +80,13 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
   // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능
   // => 5개의 기능으로 전체 화면의 스크롤을 제어하는 컨트롤러 역할
 
-  // reviewScrollControllerProvider: 여러 위젯에서 동일한 ScrollController를 공유하고,
+  // privateReviewScrollControllerProvider: 여러 위젯에서 동일한 ScrollController를 공유하고,
   // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함
   // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지할 수 있음
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach되었을 때 발생하는 문제를 해결하기 위한 방법
   // => late로 변수 선언, 해당 변수를 초기화(initState()), 해당 변수를 해제(dispose())
-  late ScrollController reviewScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController privateReviewScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -94,20 +94,20 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
   void initState() {
     super.initState();
     // ScrollController를 초기화함
-    reviewScreenPointScrollController = ScrollController();
+    privateReviewScreenPointScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드, initState는 위젯이 생성될 때 호출되는 초기화 단계임
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함
-      if (reviewScreenPointScrollController.hasClients) {
+      if (privateReviewScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴
-        double savedScrollPosition = ref.read(reviewScrollPositionProvider);
-        // reviewScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함
+        double savedScrollPosition = ref.read(privateReviewScrollPositionProvider);
+        // privateReviewScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함
-        reviewScreenPointScrollController.jumpTo(savedScrollPosition);
+        privateReviewScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭되지 않도록 0~3이 아닌 -1로 매핑함
@@ -124,7 +124,7 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(reviewScrollPositionProvider.notifier).state = 0;
+        ref.read(privateReviewScrollPositionProvider.notifier).state = 0;
         ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
         ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
         // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
@@ -168,7 +168,7 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
     authStateChangesSubscription?.cancel();
 
     // ScrollController 해제
-    reviewScreenPointScrollController.dispose();
+    privateReviewScreenPointScrollController.dispose();
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -200,7 +200,7 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
       body: Stack(
         children: [
           CustomScrollView(
-            controller: reviewScreenPointScrollController,
+            controller: privateReviewScreenPointScrollController,
             slivers: <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
@@ -254,7 +254,7 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
             ],
           ),
           // 상단으로 스크롤하는 버튼을 빌드하는 함수 호출
-          buildTopButton(context, reviewScreenPointScrollController),
+          buildTopButton(context, privateReviewScreenPointScrollController),
         ],
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
@@ -266,4 +266,4 @@ class _ReviewMainScreenState extends ConsumerState<ReviewMainScreen>
     );
   }
 }
-// _ReviewScreenState 클래스 끝
+// _PrivateReviewMainScreenState 클래스 끝

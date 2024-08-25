@@ -463,75 +463,44 @@ class _PrivateReviewCreateDetailFormScreenState
 
   // ----- 리뷰 사진 업로드 관련 함수 시작 부분
   // 권한 요청 함수
+  // _requestPermission: 갤러리 접근을 위한 권한을 요청하는 함수
   Future<bool> _requestPermission(BuildContext context) async {
-    if (Platform.isAndroid) {
-      // 안드로이드 권한 요청
+    // 안드로이드 및 IOS 권한 요청
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Permission.photos.status: 사진 접근 권한의 현재 상태를 가져옴
       PermissionStatus status = await Permission.photos.status;
       if (status.isGranted) {
         // 권한이 이미 허용된 경우
-        return true;
+        return true; // true 반환
       } else if (status.isDenied || status.isPermanentlyDenied) {
         // 권한이 거부되었거나 영구적으로 거부된 경우
-        await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('갤러리 접근 권한'),
-              content: Text('갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('취소'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // 다이얼로그 닫기
-                  },
-                ),
-                TextButton(
-                  child: Text('승인'),
-                  onPressed: () {
-                    openAppSettings(); // 설정 화면으로 이동함
-                  },
-                ),
-              ],
-            );
-          },
+        await showSubmitAlertDialog(
+          context,
+          title: '갤러리 접근 권한', // 팝업 제목 설정
+          content: '갤러리 접근 권한이 필요합니다.\n설정에서 권한을 허용해주세요.', // 팝업 내용 설정
+          actions: buildAlertActions(
+            context,
+            noText: '취소', // '취소' 버튼 텍스트 설정
+            yesText: '승인', // '승인' 버튼 텍스트 설정
+            noTextStyle: TextStyle( // '취소' 버튼 스타일을 검은색 Bold로 설정함
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            yesTextStyle: TextStyle( // '승인' 버튼 스타일을 빨간색 Bold로 설정함
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+            onYesPressed: () {
+              // '승인' 버튼이 클릭되었을 때 실행되는 동작
+              openAppSettings(); // 설정 화면으로 이동함
+              Navigator.of(context).pop(); // 다이얼로그 닫기
+            },
+          ),
         );
-        return false;
-      }
-    } else if (Platform.isIOS) {
-      // iOS 권한 요청
-      PermissionStatus status = await Permission.photos.status;
-      if (status.isGranted) {
-        // 권한이 이미 허용된 경우
-        return true;
-      } else if (status.isDenied || status.isPermanentlyDenied) {
-        // 권한이 거부되었거나 영구적으로 거부된 경우
-        await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return CupertinoAlertDialog(
-              title: Text('갤러리 접근 권한'),
-              content: Text('갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.'),
-              actions: <Widget>[
-                CupertinoDialogAction(
-                  child: Text('취소'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // 다이얼로그 닫기
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: Text('승인'),
-                  onPressed: () {
-                    openAppSettings(); // 설정 화면으로 이동함
-                  },
-                ),
-              ],
-            );
-          },
-        );
-        return false;
+        return false; // 권한 요청 실패 시 false 반환
       }
     }
-    return false;
+    return false; // 권한 요청이 실패하거나 지원되지 않는 플랫폼인 경우 false 반환
   }
 
   // 이미지 선택 함수
@@ -565,6 +534,7 @@ class _PrivateReviewCreateDetailFormScreenState
       _images.removeAt(index); // 선택된 이미지를 리스트에서 삭제함
     });
   }
+
   // ----- 리뷰 사진 업로드 관련 함수 끝 부분
 
   @override
@@ -592,7 +562,8 @@ class _PrivateReviewCreateDetailFormScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('[리뷰 상품 내용]', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text('[리뷰 상품 내용]',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         SizedBox(height: 20), // 요소 간의 간격을 추가
         // 상품 정보 표시 UI
         CommonCardView(
@@ -603,12 +574,15 @@ class _PrivateReviewCreateDetailFormScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 발주번호를 표시하는 행을 빌드함
-                _buildProductInfoRow('발주번호: ', widget.numberInfo['order_number'],
+                _buildProductInfoRow(
+                    '발주번호: ', widget.numberInfo['order_number'],
                     bold: true, fontSize: 14),
                 // 상품번호를 표시하는 행을 빌드함
                 _buildProductInfoRow(
                     '상품번호: ',
-                    widget.productInfo['product_number']?.toString().isNotEmpty == true
+                    widget.productInfo['product_number']
+                        ?.toString()
+                        .isNotEmpty == true
                         ? widget.productInfo['product_number']
                         : '에러 발생',
                     bold: true,
@@ -616,7 +590,9 @@ class _PrivateReviewCreateDetailFormScreenState
                 SizedBox(height: 8), // 요소 간의 간격을 추가
                 // 상품 간단 소개를 표시하는 행을 빌드함
                 _buildProductInfoRow(
-                    widget.productInfo['brief_introduction']?.toString().isNotEmpty ==
+                    widget.productInfo['brief_introduction']
+                        ?.toString()
+                        .isNotEmpty ==
                         true
                         ? widget.productInfo['brief_introduction']
                         : '에러 발생',
@@ -629,7 +605,8 @@ class _PrivateReviewCreateDetailFormScreenState
                   onTap: () {
                     final product = ProductContent(
                       docId: widget.productInfo['product_id'] ?? '',
-                      category: widget.productInfo['category']?.toString() ?? '에러 발생',
+                      category: widget.productInfo['category']?.toString() ??
+                          '에러 발생',
                       productNumber:
                       widget.productInfo['product_number']?.toString() ??
                           '에러 발생',
@@ -677,7 +654,9 @@ class _PrivateReviewCreateDetailFormScreenState
                                   children: [
                                     // 원래 가격을 표시하는 텍스트
                                     Text(
-                                      '${numberFormat.format(widget.productInfo['original_price'] ?? 0)} 원',
+                                      '${numberFormat.format(widget
+                                          .productInfo['original_price'] ??
+                                          0)} 원',
                                       style: TextStyle(
                                         color: Colors.grey[500],
                                         fontSize: 14,
@@ -689,13 +668,17 @@ class _PrivateReviewCreateDetailFormScreenState
                                     Row(
                                       children: [
                                         Text(
-                                          '${numberFormat.format(widget.productInfo['discount_price'] ?? 0)} 원',
+                                          '${numberFormat.format(widget
+                                              .productInfo['discount_price'] ??
+                                              0)} 원',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(width: 8), // 요소 간의 간격을 추가
                                         Text(
-                                          '${(widget.productInfo['discount_percent'] ?? 0).toInt()}%',
+                                          '${(widget
+                                              .productInfo['discount_percent'] ??
+                                              0).toInt()}%',
                                           style: TextStyle(
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold,
@@ -706,7 +689,8 @@ class _PrivateReviewCreateDetailFormScreenState
                                     // 선택한 색상 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
                                     Row(
                                       children: [
-                                        widget.productInfo['selected_color_image']
+                                        widget
+                                            .productInfo['selected_color_image']
                                             ?.toString()
                                             .isNotEmpty ==
                                             true
@@ -732,9 +716,13 @@ class _PrivateReviewCreateDetailFormScreenState
                                     ),
                                     // 선택한 사이즈와 수량을 표시하는 텍스트
                                     Text(
-                                        '사이즈: ${widget.productInfo['selected_size']?.toString() ?? '에러 발생'}'),
+                                        '사이즈: ${widget
+                                            .productInfo['selected_size']
+                                            ?.toString() ?? '에러 발생'}'),
                                     Text(
-                                        '수량: ${widget.productInfo['selected_count']?.toString() ?? '0 개'}'),
+                                        '수량: ${widget
+                                            .productInfo['selected_count']
+                                            ?.toString() ?? '0 개'}'),
                                   ],
                                 ),
                               ),
@@ -815,9 +803,11 @@ class _PrivateReviewCreateDetailFormScreenState
   }
 
 // 제목 행을 생성하는 함수
-  Widget _buildTitleRow(String label, TextEditingController controller, String hintText) {
+  Widget _buildTitleRow(String label, TextEditingController controller,
+      String hintText) {
     return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
         children: [
@@ -826,10 +816,14 @@ class _PrivateReviewCreateDetailFormScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
               children: [
                 Container( // 제목 라벨을 위한 컨테이너 생성
-                  width: 70, // 왼쪽 라벨 부분의 너비 설정
-                  color: Colors.grey.shade200, // 셀 배경색 설정
-                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  width: 70,
+                  // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200,
+                  // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0),
+                  // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft,
+                  // 텍스트를 왼쪽 정렬
                   child: Text(
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
@@ -845,7 +839,8 @@ class _PrivateReviewCreateDetailFormScreenState
                       hintText: hintText, // 힌트 텍스트 설정
                       border: OutlineInputBorder(), // 입력 경계선 설정
                       focusedBorder: OutlineInputBorder( // 활성화 상태의 테두리 설정
-                        borderSide: BorderSide(color: BUTTON_COLOR, width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+                        borderSide: BorderSide(color: BUTTON_COLOR,
+                            width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
                       ),
                       counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
                     ),
@@ -857,7 +852,8 @@ class _PrivateReviewCreateDetailFormScreenState
           SizedBox(height: 4), // TextField와 글자 수 표시 사이의 여백
           Align( // 글자 수 표시를 오른쪽에 맞춤
             alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
-            child: ValueListenableBuilder<TextEditingValue>( // 텍스트 입력 시마다 변경사항을 반영
+            child: ValueListenableBuilder<
+                TextEditingValue>( // 텍스트 입력 시마다 변경사항을 반영
               valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
               builder: (context, value, child) {
                 return Text( // 입력된 글자 수를 표시
@@ -874,11 +870,13 @@ class _PrivateReviewCreateDetailFormScreenState
 
   // 사용자 정보를 표시하는 행을 생성하는 함수
   Widget _buildUserRow(WidgetRef ref, String label, String email) {
-    final userNameAsyncValue = ref.watch(userNameProvider(email)); // 사용자 이름을 비동기적으로 가져오기 위해 프로바이더를 사용
+    final userNameAsyncValue = ref.watch(
+        userNameProvider(email)); // 사용자 이름을 비동기적으로 가져오기 위해 프로바이더를 사용
 
     return userNameAsyncValue.when( // 비동기 상태에 따라 위젯을 생성
       data: (userName) { // 데이터가 성공적으로 로드된 경우
-        String obscuredName = userName[0] + '*' * (userName.length - 1); // 사용자 이름을 첫 글자만 남기고 나머지는 *로 표시
+        String obscuredName = userName[0] +
+            '*' * (userName.length - 1); // 사용자 이름을 첫 글자만 남기고 나머지는 *로 표시
         return _buildFixedValueRow(label, obscuredName); // 이름을 표시하는 행을 생성
       },
       loading: () => CircularProgressIndicator(), // 로딩 중인 경우 로딩 인디케이터를 표시
@@ -887,9 +885,11 @@ class _PrivateReviewCreateDetailFormScreenState
   }
 
   // 내용 입력 필드를 생성하는 함수
-  Widget _buildContentsRow(String label, TextEditingController controller, String hintText) {
+  Widget _buildContentsRow(String label, TextEditingController controller,
+      String hintText) {
     return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
         children: [
@@ -898,10 +898,14 @@ class _PrivateReviewCreateDetailFormScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
               children: [
                 Container( // 제목 라벨을 위한 컨테이너 생성
-                  width: 70, // 왼쪽 라벨 부분의 너비 설정
-                  color: Colors.grey.shade200, // 셀 배경색 설정
-                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  width: 70,
+                  // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200,
+                  // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0),
+                  // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft,
+                  // 텍스트를 왼쪽 정렬
                   child: Text(
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
@@ -917,7 +921,8 @@ class _PrivateReviewCreateDetailFormScreenState
                       hintText: hintText, // 힌트 텍스트 설정
                       border: OutlineInputBorder(), // 입력 경계선 설정
                       focusedBorder: OutlineInputBorder( // 활성화 상태의 테두리 설정
-                        borderSide: BorderSide(color: BUTTON_COLOR, width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+                        borderSide: BorderSide(color: BUTTON_COLOR,
+                            width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
                       ),
                       counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
                     ),
@@ -929,7 +934,8 @@ class _PrivateReviewCreateDetailFormScreenState
           SizedBox(height: 4), // TextField와 글자 수 표시 사이의 여백
           Align( // 글자 수 표시를 오른쪽에 맞춤
             alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
-            child: ValueListenableBuilder<TextEditingValue>( // 텍스트 입력 시마다 변경사항을 반영
+            child: ValueListenableBuilder<
+                TextEditingValue>( // 텍스트 입력 시마다 변경사항을 반영
               valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
               builder: (context, value, child) {
                 return Text( // 입력된 글자 수를 표시
@@ -947,7 +953,8 @@ class _PrivateReviewCreateDetailFormScreenState
   // 고정된 값을 표시하는 행을 생성하는 함수
   Widget _buildFixedValueRow(String label, String value) {
     return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
         children: [
@@ -956,10 +963,14 @@ class _PrivateReviewCreateDetailFormScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
               children: [
                 Container( // 라벨을 위한 컨테이너 생성
-                  width: 70, // 왼쪽 라벨 부분의 너비 설정
-                  color: Colors.grey.shade200, // 셀 배경색 설정
-                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  width: 70,
+                  // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200,
+                  // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0),
+                  // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft,
+                  // 텍스트를 왼쪽 정렬
                   child: Text(
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
@@ -984,7 +995,8 @@ class _PrivateReviewCreateDetailFormScreenState
 // 사진 업로드 버튼을 생성하는 함수
   Widget _buildPhotoUploadRow(BuildContext context) {
     return Padding( // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column( // 요소들을 세로로 배치하기 위해 Column 사용
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
         children: [
@@ -993,10 +1005,14 @@ class _PrivateReviewCreateDetailFormScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
               children: [
                 Container( // 라벨을 위한 컨테이너 생성
-                  width: 70, // 왼쪽 라벨 부분의 너비 설정
-                  color: Colors.grey.shade200, // 셀 배경색 설정
-                  padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-                  alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+                  width: 70,
+                  // 왼쪽 라벨 부분의 너비 설정
+                  color: Colors.grey.shade200,
+                  // 셀 배경색 설정
+                  padding: const EdgeInsets.all(8.0),
+                  // 셀 내부 여백 설정
+                  alignment: Alignment.centerLeft,
+                  // 텍스트를 왼쪽 정렬
                   child: Text(
                     '리뷰 사진', // 셀에 표시될 텍스트
                     style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
@@ -1009,11 +1025,15 @@ class _PrivateReviewCreateDetailFormScreenState
                     child: Row( // 사진을 가로로 나열하기 위해 Row 사용
                       children: [
                         Row( // 이미지를 담고 있는 Row 생성
-                          children: _images.asMap().entries.map((entry) { // 이미지 리스트를 순회하며 각각의 항목을 추가
+                          children: _images
+                              .asMap()
+                              .entries
+                              .map((entry) { // 이미지 리스트를 순회하며 각각의 항목을 추가
                             int index = entry.key; // 이미지의 인덱스
                             File image = entry.value; // 이미지 파일
                             return Padding(
-                              padding: const EdgeInsets.only(right: 8.0), // 사진 간의 간격 추가
+                              padding: const EdgeInsets.only(right: 8.0),
+                              // 사진 간의 간격 추가
                               child: Stack( // 이미지와 삭제 버튼을 겹치기 위해 Stack 사용
                                 children: [
                                   Image.file(
@@ -1026,8 +1046,12 @@ class _PrivateReviewCreateDetailFormScreenState
                                     right: -10,
                                     top: -10,
                                     child: IconButton(
-                                      icon: Icon(Icons.cancel, color: Colors.white), // 삭제 버튼 아이콘 설정
-                                      onPressed: () => _removeImage(index), // 삭제 버튼 클릭 시 이미지 삭제 함수 호출
+                                      icon: Icon(
+                                          Icons.cancel, color: Colors.white),
+                                      // 삭제 버튼 아이콘 설정
+                                      onPressed: () =>
+                                          _removeImage(
+                                              index), // 삭제 버튼 클릭 시 이미지 삭제 함수 호출
                                     ),
                                   ),
                                 ],
@@ -1043,19 +1067,22 @@ class _PrivateReviewCreateDetailFormScreenState
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white, // 버튼 텍스트 색상 설정
                             backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 내부 여백 설정
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20), // 버튼 내부 여백 설정
                           ),
                           child: Icon(Icons.camera_alt, size: 30), // 카메라 아이콘 추가
                         ),
                         SizedBox(width: 4.0), // 마지막 사진과 버튼들 사이의 간격 추가
                         ElevatedButton( // 톱니바퀴 아이콘 버튼 생성
                           onPressed: () async {
-                            await _requestPermission(context); // 버튼 클릭 시 권한 요청 함수 호출
+                            await _requestPermission(
+                                context); // 버튼 클릭 시 권한 요청 함수 호출
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white, // 버튼 텍스트 색상 설정
                             backgroundColor: BUTTON_COLOR, // 버튼 배경색 설정
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // 버튼 내부 여백 설정
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20), // 버튼 내부 여백 설정
                           ),
                           child: Icon(Icons.settings, size: 30), // 톱니바퀴 아이콘 추가
                         ),
@@ -1073,17 +1100,18 @@ class _PrivateReviewCreateDetailFormScreenState
                 TextSpan(
                   text: "[필수] ", // 빨간색으로 강조된 부분
                   style: TextStyle(
-                    color: Colors.red, // 텍스트 색상 빨간색
-                    fontWeight: FontWeight.bold, // 굵은 글씨
-                    fontSize: 18
+                      color: Colors.red, // 텍스트 색상 빨간색
+                      fontWeight: FontWeight.bold, // 굵은 글씨
+                      fontSize: 18
                   ),
                 ),
                 TextSpan(
-                  text: "설정 버튼을 클릭한 후, 사진 앱 권한 허용해야만 사진 업로드가 가능합니다.", // 검은색으로 강조된 부분
+                  text: "설정 버튼을 클릭한 후, 사진 앱 권한 허용해야만 사진 업로드가 가능합니다.",
+                  // 검은색으로 강조된 부분
                   style: TextStyle(
-                    color: Colors.black, // 텍스트 색상 검은색
-                    fontWeight: FontWeight.bold, // 굵은 글씨
-                    fontSize: 16
+                      color: Colors.black, // 텍스트 색상 검은색
+                      fontWeight: FontWeight.bold, // 굵은 글씨
+                      fontSize: 16
                   ),
                 ),
               ],
@@ -1095,47 +1123,77 @@ class _PrivateReviewCreateDetailFormScreenState
   }
 
 // '리뷰 작성 완료' 버튼을 생성하는 함수
+// _buildSubmitButton: 리뷰 작성 완료 버튼을 생성하는 함수
   Widget _buildSubmitButton(BuildContext context) {
-    return Center(  // 버튼을 화면의 중앙에 배치함
-      child: ElevatedButton(  // 눌러서 실행할 수 있는 버튼 위젯을 생성함
-        onPressed: () async {  // 버튼이 눌렸을 때 실행되는 비동기 함수임
-          try {  // 예외 발생을 처리하기 위해 try 블록을 사용함
-            await ref.read(submitReviewProvider)(  // 리뷰 제출을 위한 프로바이더 함수를 호출함
-              userEmail: widget.userEmail,  // 사용자 이메일을 전달함
-              orderNumber: widget.numberInfo['order_number'],  // 주문 번호를 전달함
-              reviewTitle: widget.titleController.text,  // 리뷰 제목을 전달함
-              reviewContents: widget.contentController.text,  // 리뷰 내용을 전달함
-              images: _images,  // 리뷰에 첨부할 이미지 목록을 전달함
-              productInfo: widget.productInfo,  // 제품 정보를 전달함
-              numberInfo: widget.numberInfo,  // 주문 번호 관련 정보를 전달함
-              userName: await ref.read(userNameProvider(widget.userEmail).future),  // 사용자 이름을 비동기로 받아 전달함
-              paymentCompleteDate: await ref.read(paymentCompleteDateProvider(widget.numberInfo['order_number']).future),  // 결제 완료 날짜를 비동기로 받아 전달함
-              deliveryStartDate: await ref.read(deliveryStartDateProvider(widget.numberInfo['order_number']).future),  // 배송 시작 날짜를 비동기로 받아 전달함
-            );
-
-            // 리뷰 작성 완료 후 스택 제거 및 화면 이동
-            navigateToScreenAndRemoveUntil(
+    return Center(
+      // Center 위젯을 사용하여 버튼을 중앙에 배치함
+      child: ElevatedButton(
+        // ElevatedButton을 사용하여 '리뷰 작성 완료' 버튼을 생성함
+        onPressed: () async {
+          // 버튼 클릭 시 실행되는 비동기 함수
+          await showSubmitAlertDialog(
+            context,
+            title: '리뷰 등록', // 팝업의 제목을 '리뷰 등록'으로 설정함
+            content: '리뷰를 등록하시면 수정하실 수 없습니다.\n작성하신 리뷰를 등록하시겠습니까?', // 팝업의 내용을 설정함
+            actions: buildAlertActions(
               context,
-              ref,
-              ReviewMainScreen(email: widget.userEmail),  // 이동할 화면
-              4,  // 하단 탭바의 인덱스 초기화 (필요시 변경)
-            );
+              noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
+              yesText: '예', // '예' 버튼의 텍스트를 설정함
+              noTextStyle: TextStyle( // '아니요' 버튼의 스타일을 검은색 Bold로 설정함
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+              yesTextStyle: TextStyle( // '예' 버튼의 스타일을 빨간색 Bold로 설정함
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+              onYesPressed: () async {
+                // '예' 버튼이 눌렸을 때 실행되는 비동기 함수
+                try {
+                  // 리뷰를 제출하는 로직을 실행함
+                  await ref.read(submitReviewProvider)(
+                    userEmail: widget.userEmail, // 사용자의 이메일을 전달함
+                    orderNumber: widget.numberInfo['order_number'], // 주문 번호를 전달함
+                    reviewTitle: widget.titleController.text, // 리뷰 제목을 전달함
+                    reviewContents: widget.contentController.text, // 리뷰 내용을 전달함
+                    images: _images, // 첨부된 이미지를 전달함
+                    productInfo: widget.productInfo, // 제품 정보를 전달함
+                    numberInfo: widget.numberInfo, // 주문 관련 정보를 전달함
+                    userName: await ref.read(userNameProvider(widget.userEmail).future), // 사용자의 이름을 비동기로 가져와 전달함
+                    paymentCompleteDate: await ref.read(paymentCompleteDateProvider(widget.numberInfo['order_number']).future), // 결제 완료 날짜를 비동기로 가져와 전달함
+                    deliveryStartDate: await ref.read(deliveryStartDateProvider(widget.numberInfo['order_number']).future), // 배송 시작 날짜를 비동기로 가져와 전달함
+                  );
 
-            ScaffoldMessenger.of(context).showSnackBar(  // 리뷰 작성 성공 메시지를 표시함
-              SnackBar(content: Text('리뷰가 작성되었습니다.')),  // 스낵바에 표시할 메시지를 설정함
-            );
-          } catch (e) {  // 예외가 발생한 경우 처리함
-            ScaffoldMessenger.of(context).showSnackBar(  // 리뷰 작성 실패 메시지를 표시함
-              SnackBar(content: Text('리뷰 작성 중 오류가 발생했습니다: $e')),  // 스낵바에 표시할 오류 메시지를 설정함
-            );
-          }
+                  // 리뷰 작성 완료 후 화면을 이동함
+                  navigateToScreenAndRemoveUntil(
+                    context,
+                    ref,
+                    PrivateReviewMainScreen(email: widget.userEmail), // 리뷰 메인 화면으로 이동함
+                    4, // 하단 탭바의 인덱스를 초기화함 (필요시 변경)
+                  );
+
+                  // 리뷰 작성 완료 메시지를 표시함
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('리뷰가 작성되었습니다.')),
+                  );
+                } catch (e) {
+                  // 리뷰 작성 중 오류가 발생한 경우 오류 메시지를 표시함
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('리뷰 작성 중 오류가 발생했습니다: $e')),
+                  );
+                }
+              },
+            ),
+          );
         },
-        style: ElevatedButton.styleFrom(  // 버튼의 스타일을 설정함
-          foregroundColor: Colors.white,  // 버튼 글자 색상을 흰색으로 설정함
-          backgroundColor: BUTTON_COLOR,  // 버튼 배경 색상을 설정함
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),  // 버튼의 여백을 설정함
+        style: ElevatedButton.styleFrom(
+          // ElevatedButton의 스타일을 설정함
+          foregroundColor: Colors.white, // 버튼 텍스트 색상을 흰색으로 설정함
+          backgroundColor: BUTTON_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정함
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30), // 버튼의 패딩을 설정함
         ),
-        child: Text('리뷰 작성 완료', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),  // 버튼에 표시할 텍스트와 스타일을 설정함
+        // 버튼의 텍스트를 설정하고, 크기와 두께를 지정함
+        child: Text('리뷰 등록', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ),
     );
   }

@@ -480,180 +480,168 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                 String recipientText = '${message['recipient']}'; // 수신자 이메일 텍스트 설정
                 String orderNumberText = '[발주번호: ${message['order_number']}]'; // 발주번호 텍스트 설정
 
-                // 팝업을 띄우는 함수를 정의
-                void showAlertDialog(BuildContext context) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      // 팝업 내용을 구성.
-                      return AlertDialog(
-                        backgroundColor: LIGHT_YELLOW_COLOR, // 팝업 배경색을 베이지로 설정
-                        content: SingleChildScrollView(
-                          child: ListBody(
-                            children: [
-                              // 쪽지 내용을 강조하여 표시.
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: statusIcon, // 상태 아이콘 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue, // 파란색 텍스트 색상 설정
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: recipientText, // 수신자 이메일 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red, // 빨간색 텍스트 색상 설정
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: '님께서 발주 완료한 ', // 고정된 안내 텍스트
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black, // 기본 텍스트 색상 설정
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: orderNumberText, // 발주번호 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red, // 빨간색 텍스트 색상 설정
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' 건 관련 ${message['contents']}', // 쪽지 내용 텍스트 설정
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black, // 기본 텍스트 색상 설정
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          // 닫기 버튼을 구성.
-                          TextButton(
-                            child: Text(
-                              '닫기',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black, // 닫기 텍스트 색상을 검은색으로 설정
-                              ),
+                // '[자세히]' 버튼을 클릭했을 때 팝업을 띄우는 함수
+                void showMessageDetailDialog(BuildContext context) async {
+                  // showSubmitAlertDialog 함수를 호출하여 쪽지 내용을 보여주는 팝업을 띄움
+                  await showSubmitAlertDialog(
+                    context,
+                    title: '쪽지 내용', // 팝업의 제목 설정
+                    contentWidget: RichText(
+                      // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 구성함
+                      text: TextSpan(
+                        children: [
+                          // $statusIcon 부분을 파란색으로 설정하고 Bold로 표시함
+                          TextSpan(
+                            text: statusIcon,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
                             ),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // 닫기 버튼을 눌렀을 때 팝업 닫기
-                            },
+                          ),
+                          // $recipientText 부분을 빨간색으로 설정하고 Bold로 표시함
+                          TextSpan(
+                            text: recipientText,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                          // '님께서 발주 완료한 ' 부분을 기본 색상(검정)으로 표시함
+                          TextSpan(
+                            text: '님께서 발주 완료한 ',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          // $orderNumberText 부분을 빨간색으로 설정하고 Bold로 표시함
+                          TextSpan(
+                            text: orderNumberText,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                          // 기본 텍스트 색상으로 나머지 문구를 표시함
+                          TextSpan(
+                            text: ' 건 관련 ${message['contents']}',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
                           ),
                         ],
-                      );
-                    },
+                      ),
+                    ),
+                    actions: buildAlertActions(
+                      context,
+                      noText: '닫기', // '닫기' 버튼 텍스트 설정
+                      noTextStyle: TextStyle( // '닫기' 버튼 스타일을 검은색 Bold로 설정
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   );
                 }
 
-                // 쪽지 목록 카드 뷰를 구성.
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 1.0), // 화면의 가로 길이에 맞게 패딩 조정
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                  // Column 위젯을 사용하여 여러 위젯을 수직으로 배치함
                   child: Column(
                     children: [
                       Row(
                         children: [
+                          // Expanded 위젯을 사용하여 자식 위젯이 가용 공간을 모두 차지하도록 설정함
                           Expanded(
-                            // Expanded 위젯을 사용하여 가로로 공간을 최대한 차지하도록 설정
                             child: CommonCardView(
-                              // CommonCardView 위젯을 사용하여 카드 뷰를 구성
-                              backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
+                              backgroundColor: BEIGE_COLOR, // 배경색을 베이지색으로 설정함
                               content: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                // 자식 위젯들을 왼쪽 정렬함
                                 children: [
                                   RichText(
-                                    // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
-                                    maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
-                                    overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 경우 생략 부호로 처리
+                                    maxLines: 2, // 최대 두 줄까지 텍스트를 표시함
+                                    overflow: TextOverflow.ellipsis, // 넘치는 텍스트는 '...'로 표시함
                                     text: TextSpan(
-                                      // TextSpan을 사용하여 스타일이 다른 텍스트들을 결합
                                       children: [
+                                        // $statusIcon 부분을 파란색으로 설정하고 Bold로 표시함
                                         TextSpan(
-                                          text: statusIcon, // 상태 아이콘 텍스트 설정
+                                          text: statusIcon,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.blue, // 파란색 텍스트 색상 설정
+                                            color: Colors.blue,
                                           ),
                                         ),
+                                        // $recipientText 부분을 빨간색으로 설정하고 Bold로 표시함
                                         TextSpan(
-                                          text: recipientText, // 수신자 이메일 텍스트 설정
+                                          text: recipientText,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                            color: Colors.red,
                                           ),
                                         ),
+                                        // '님께서 발주 완료한 ' 부분을 검정색으로 표시함
                                         TextSpan(
-                                          text: '님께서 발주 완료한 ', // 고정된 안내 텍스트 설정
+                                          text: '님께서 발주 완료한 ',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                            color: Colors.black,
                                           ),
                                         ),
+                                        // $orderNumberText 부분을 빨간색으로 설정하고 Bold로 표시함
                                         TextSpan(
-                                          text: orderNumberText, // 발주번호 텍스트 설정
+                                          text: orderNumberText,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                            color: Colors.red,
                                           ),
                                         ),
+                                        // ' 건 관련 ${message['contents']}' 부분을 검정색으로 표시함
                                         TextSpan(
-                                          text: ' 건 관련 ${message['contents']}', // 메시지 내용 텍스트 설정
+                                          text: ' 건 관련 ${message['contents']}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  // [자세히] 버튼을 중앙에 위치시키고, '삭제' 버튼을 오른쪽 끝에 배치
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    // 자식 위젯들을 양 끝에 정렬함
                                     children: [
-                                      Spacer(), // 왼쪽을 비우기 위해 Spacer 추가
+                                      Spacer(), // 자식 위젯들 간에 빈 공간을 추가함
                                       TextButton(
                                         onPressed: () {
-                                          showAlertDialog(context);
+                                          showMessageDetailDialog(context); // '[자세히]' 버튼을 클릭했을 때 showMessageDetailDialog 함수를 호출함
                                         },
                                         child: Text(
-                                          '[자세히]', // [자세히] 텍스트를 표시
+                                          '[자세히]', // '[자세히]' 버튼 텍스트 설정
                                           style: TextStyle(
-                                            color: Colors.blue, // 텍스트 색상을 파란색으로 설정
-                                            fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                            fontSize: 16, // 텍스트 크기 설정
+                                            color: Colors.blue, // 텍스트 색상을 파란색으로 설정함
+                                            fontWeight: FontWeight.bold, // 텍스트를 Bold로 설정함
+                                            fontSize: 16, // 텍스트 크기를 16으로 설정함
                                           ),
                                         ),
                                       ),
-                                      Spacer(), // 중앙에 위치시키기 위해 Spacer 추가
-                                      // 카드뷰 내부 오른쪽 끝에 위치하는 삭제 버튼
+                                      Spacer(), // 자식 위젯들 간에 빈 공간을 추가함
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          foregroundColor: BUTTON_COLOR,
-                                          backgroundColor: BACKGROUND_COLOR,
-                                          side: BorderSide(color: BUTTON_COLOR),
-                                          padding: EdgeInsets.symmetric(vertical: 8),
+                                          foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상을 BUTTON_COLOR로 설정함
+                                          backgroundColor: BACKGROUND_COLOR, // 버튼 배경색을 BACKGROUND_COLOR로 설정함
+                                          side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상을 BUTTON_COLOR로 설정함
+                                          padding: EdgeInsets.symmetric(vertical: 8), // 버튼의 수직 패딩을 8로 설정함
                                         ),
                                         onPressed: () {
                                           ref.read(fetchDeleteAllMessageProvider({
                                             'messageId': message['id'],
                                             'recipient': message['recipient'],
-                                          }).future);
+                                          }).future); // '삭제' 버튼 클릭 시 쪽지를 삭제하는 함수 호출함
                                         },
                                         child: Text(
-                                          '삭제',
+                                          '삭제', // '삭제' 버튼 텍스트 설정
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16, // 텍스트 크기 설정
+                                            fontWeight: FontWeight.bold, // 텍스트를 Bold로 설정함
+                                            fontSize: 16, // 텍스트 크기를 16으로 설정함
                                           ),
                                         ),
                                       ),
@@ -668,11 +656,11 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                     ],
                   ),
                 );
-              }).toList(), // 쪽지 목록을 반복하여 각 항목을 리스트로 구성
+              }).toList(),
             );
           },
-          loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
-          error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
+          loading: () => Center(child: CircularProgressIndicator()), // 데이터 로딩 중에는 로딩 애니메이션 표시함
+          error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 발생 시 오류 메시지를 표시함
         ),
       ],
     );
