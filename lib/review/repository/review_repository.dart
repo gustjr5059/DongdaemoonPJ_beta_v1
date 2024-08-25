@@ -36,7 +36,9 @@ class ReviewRepository {
         final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
         final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
         final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
-        final productInfoQuery = await orderDoc.reference.collection('product_info').get();
+        final productInfoQuery = await orderDoc.reference.collection('product_info')
+            .where('boolReviewCompleteBtn', isEqualTo: false) // boolReviewCompleteBtn 필드값이 'false'인 데이터만 가져오도록 조건절
+            .get();
 
         // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
         final productInfo = productInfoQuery.docs.map((doc) {
@@ -134,6 +136,10 @@ class ReviewRepository {
 
       // separator_key 필드를 productInfo에서 가져옴
       final String separatorKey = productInfo['separator_key'] ?? '';
+
+      // 현재 시간을 가져옴
+      final DateTime reviewWriteTime = DateTime.now();
+
       // 리뷰 데이터 생성
       final data = {
         'order_number': orderNumber,  // 주문 번호를 포함함
@@ -159,6 +165,7 @@ class ReviewRepository {
         'review_image2': uploadedImageUrls.length > 1 ? uploadedImageUrls[1] : null,  // 두 번째 리뷰 이미지를 포함함 (없으면 null)
         'review_image3': uploadedImageUrls.length > 2 ? uploadedImageUrls[2] : null,  // 세 번째 리뷰 이미지를 포함함 (없으면 null)
         'user_name': userName.isNotEmpty ? userName : null,  // 유저 이름을 포함함 (없으면 null)
+        'review_write_time': reviewWriteTime,  // 리뷰 작성 시간을 포함함
       };
 
       // 파이어스토어에 리뷰 데이터를 저장함
@@ -167,6 +174,17 @@ class ReviewRepository {
           .collection('reviews')  // 'reviews' 컬렉션에 저장
           .doc(separatorKey)  // separator_key로 문서 ID 설정
           .set(data);  // 데이터 저장
+
+      // 리뷰 작성 완료 후, 해당 발주에 대한 'boolReviewCompleteBtn' 필드를 true로 업데이트함
+      await firestore.collection('order_list')
+          .doc(userEmail)
+          .collection('orders')
+          .doc(orderNumber)
+          .collection('product_info')
+          .doc(separatorKey)
+          .update({
+        'boolReviewCompleteBtn': true,  // 리뷰 작성 완료 버튼 필드를 true로 설정
+      });
     } catch (e) {
       // 리뷰 제출 중 발생한 오류를 출력함
       print('Failed to submit review: $e');

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
+import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../message/provider/message_all_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../product/layout/product_body_parts_layout.dart';
@@ -15,7 +16,9 @@ import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 import '../view/review_create_detail_screen.dart';
 import 'package:image_picker/image_picker.dart'; // image_picker 패키지를 가져옴.
-import 'dart:io'; // 파일 처리를 위해 dart:io 패키지를 가져옴.
+import 'dart:io';
+
+import '../view/review_screen.dart'; // 파일 처리를 위해 dart:io 패키지를 가져옴.
 
 
 // ------ 마이페이지용 리뷰 관리 화면 내 '리뷰 작성', '리뷰 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 PrivateReviewScreenTabs 클래스 내용 시작
@@ -1108,6 +1111,14 @@ class _PrivateReviewCreateDetailFormScreenState
               userName: await ref.read(userNameProvider(widget.userEmail).future),  // 사용자 이름을 비동기로 받아 전달함
               paymentCompleteDate: await ref.read(paymentCompleteDateProvider(widget.numberInfo['order_number']).future),  // 결제 완료 날짜를 비동기로 받아 전달함
               deliveryStartDate: await ref.read(deliveryStartDateProvider(widget.numberInfo['order_number']).future),  // 배송 시작 날짜를 비동기로 받아 전달함
+            );
+
+            // 리뷰 작성 완료 후 스택 제거 및 화면 이동
+            navigateToScreenAndRemoveUntil(
+              context,
+              ref,
+              ReviewMainScreen(email: widget.userEmail),  // 이동할 화면
+              4,  // 하단 탭바의 인덱스 초기화 (필요시 변경)
             );
 
             ScaffoldMessenger.of(context).showSnackBar(  // 리뷰 작성 성공 메시지를 표시함

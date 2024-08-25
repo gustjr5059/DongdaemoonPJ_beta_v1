@@ -170,6 +170,7 @@ class OrderRepository {
         'selected_color_image': item.selectedColorImage, // 선택한 색상 이미지
         'selected_color_text': item.selectedColorText, // 선택한 색상 텍스트
         'selected_size': item.selectedSize, // 선택한 사이즈
+        'boolReviewCompleteBtn': false, // 초기값은 false로 설정
       });
     }
 
