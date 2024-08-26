@@ -1345,7 +1345,9 @@ class _OrderListDetailItemWidgetState
                                     fontWeight: FontWeight.bold)),
                           ),
                           ElevatedButton(
-                            onPressed: boolReviewWriteBtn
+                            // 'boolReviewWriteBtn' 필드값과 'boolReviewCompleteBtn' 필드값을 조건으로 활성화 / 비활성화를 동작
+                            // 'boolReviewWriteBtn' 필드값이 'true'가 되면 활성화되자만, 이 중 'boolReviewCompleteBtn' 필드값이 'ture'가 되면 비활성화로 변경
+                            onPressed: boolReviewWriteBtn && !(productInfo['boolReviewCompleteBtn'] ?? false)
                                 ? () {
                               Navigator.push(
                                 context,

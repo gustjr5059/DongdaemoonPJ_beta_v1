@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일 임포트
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함함
+import '../../message/provider/message_all_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../layout/review_body_parts_layout.dart';
 import '../provider/review_all_provider.dart';
@@ -53,9 +54,11 @@ import '../provider/review_state_provider.dart';
 // PrivateReviewMainScreen 클래스는 ConsumerStatefulWidget을 상속받으며, Riverpod를 통한 상태 관리 기능을 지원함
 class PrivateReviewMainScreen extends ConsumerStatefulWidget {
   final String email; // 이메일 정보를 저장하는 변수
+  final bool navigateToListTab; // 리뷰 목록 탭으로 이동할지 여부를 결정하는 플래그
 
-  // ReviewMainScreen 생성자, email 매개변수를 필수로 받음
-  const PrivateReviewMainScreen({Key? key, required this.email}) : super(key: key);
+  // ReviewMainScreen 생성자, email, navigateToListTab 매개변수를 필수로 받음
+  const PrivateReviewMainScreen({Key? key, required this.email, this.navigateToListTab = false}) : super(key: key);
+
 
   @override
   _PrivateReviewMainScreenState createState() => _PrivateReviewMainScreenState(); // 상태 관리 객체 생성
@@ -114,9 +117,17 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
       // -> 리뷰 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼을 비활성화함
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-      ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+      // navigateToListTab 플래그에 따라 초기 탭 설정
+      if (widget.navigateToListTab) {
+        ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.list;
+      } else {
+        ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create;
+      }
       // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
       ref.invalidate(buttonInfoProvider);
+      ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+      ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+      ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함
@@ -129,6 +140,9 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
         ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
         // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
         ref.invalidate(buttonInfoProvider);
+        ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+        ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+        ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
       }
     });
 
@@ -147,10 +161,15 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-      ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
-      // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-      ref.invalidate(buttonInfoProvider);
+      // // ref.read(privateReviewScrollPositionProvider.notifier).state =
+      // // 0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+      // ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
+      // ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+      // // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
+      // ref.invalidate(buttonInfoProvider);
+      // ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+      // ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+      // ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
       _updateStatusBar(); // 앱이 다시 활성화될 때 상태표시줄 업데이트
     }
   }

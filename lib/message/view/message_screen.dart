@@ -112,8 +112,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
       ref.read(tabIndexProvider.notifier).state = -1;
       // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
       ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      // ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      // ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -124,8 +124,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
         ref.read(privateMessageScrollPositionProvider.notifier).state = 0;
         // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
         ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-        // ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-        // ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+        ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+        ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
       }
     });
 
@@ -145,8 +145,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
     if (state == AppLifecycleState.resumed) {
       // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
       ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      // ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      // ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
       _updateStatusBar();
     }
   }

@@ -192,5 +192,51 @@ class ReviewRepository {
       throw e;
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchReviewList(String userEmail) async {
+    // 사용자의 이메일을 인자로 받아 해당 사용자의 리뷰 목록을 가져오는 비동기 함수임.
+
+    try {
+      // Firestore에서 리뷰 데이터를 가져오는 과정에서 발생할 수 있는 예외를 처리하기 위해 try-catch 블록을 사용함.
+
+      // 리뷰 컬렉션에 대한 참조를 가져오고,
+      // 'review_write_time' 필드를 기준으로 내림차순으로 정렬하도록 쿼리를 작성함.
+      final userReviewsRef = firestore
+          .collection('review_list')
+          .doc(userEmail)
+          .collection('reviews')
+          .orderBy('review_write_time', descending: true);
+      // 'review_list' 컬렉션 안에 특정 사용자의 이메일에 해당하는
+      // 문서를 참조한 후, 'reviews' 하위 컬렉션을 가져옴.
+      // 리뷰는 'review_write_time' 필드를 기준으로 최신순으로 정렬됨.
+
+      // 작성된 쿼리를 실행하여 쿼리 결과를 가져옴.
+      final querySnapshot = await userReviewsRef.get();
+      // get() 메서드를 호출하여 Firestore에서 해당 사용자의 리뷰 데이터를 가져옴.
+      // 이 데이터는 QuerySnapshot 형태로 반환됨.
+
+      // 쿼리 결과가 비어 있는지 확인하고,
+      // 리뷰가 없는 경우 빈 리스트를 반환함.
+      if (querySnapshot.docs.isEmpty) {
+        print('No reviews found for user: $userEmail');
+        return [];
+        // 쿼리 결과가 비어 있는 경우, 로그 메시지를 출력하고
+        // 빈 리스트를 반환하여 리뷰가 없음을 나타냄.
+      }
+
+      // 쿼리 결과를 Map<String, dynamic> 형식으로 변환하여 리스트로 반환함.
+      return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      // 쿼리에서 가져온 각 문서를 Map 형식으로 변환하고, 이를 리스트로 만듦.
+      // 이 리스트는 리뷰 데이터를 포함한 맵들의 리스트임.
+
+    } catch (e) {
+      // 리뷰 데이터를 가져오는 중 예외가 발생했을 때 처리하는 부분임.
+      print('Failed to fetch reviews for user $userEmail: $e');
+      // 예외 발생 시, 로그에 오류 메시지를 출력하여 문제를 기록함.
+
+      throw Exception('Failed to fetch reviews: $e');
+      // 예외를 다시 던져서 호출한 쪽에서 이 오류를 처리할 수 있도록 함.
+    }
+  }
 }
 // ------ 리뷰 관리 화면 내 데이터 처리 로직인 ReviewRepository 내용 끝 부분

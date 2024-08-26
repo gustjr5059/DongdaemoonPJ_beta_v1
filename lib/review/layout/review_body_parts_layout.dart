@@ -12,6 +12,7 @@ import '../../message/provider/message_all_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
+import '../../product/view/detail_screen/product_detail_original_image_screen.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 import '../view/review_create_detail_screen.dart';
@@ -22,7 +23,7 @@ import '../view/review_screen.dart'; // 파일 처리를 위해 dart:io 패키�
 
 
 // ------ 마이페이지용 리뷰 관리 화면 내 '리뷰 작성', '리뷰 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 PrivateReviewScreenTabs 클래스 내용 시작
-// 마이페이지용 리뷰 관리 화면에서 '리뷰 작성'과 '리뷰 목록' 탭을 선택하여 해당 내용을 보여주는 UI 클래스인 PrivateReviewScreenTabs 정의
+// 마이페이지용 리뷰 관리 화면 내 '리뷰 작성', '리뷰 목록' 탭 선택해서 해당 내용을 보여주는 UI 관련 PrivateReviewScreenTabs 클래스
 class PrivateReviewScreenTabs extends ConsumerWidget {
   final List<Map<String, dynamic>> orders; // 여러 발주 데이터를 받도록 변경
 
@@ -41,7 +42,7 @@ class PrivateReviewScreenTabs extends ConsumerWidget {
         _buildTabButtons(ref, currentTab),
         SizedBox(height: 20),
         // 현재 선택된 탭의 내용을 빌드하는 메서드를 호출.
-        _buildTabContent(currentTab),  // 'order' 데이터를 _buildTabContent로 전달
+        _buildTabContent(ref, currentTab), // ref와 currentTab을 올바른 순서로 전달
       ],
     );
   }
@@ -60,13 +61,16 @@ class PrivateReviewScreenTabs extends ConsumerWidget {
   }
 
   // 개별 탭 버튼을 빌드하는 메서드.
-  Widget _buildTabButton(WidgetRef ref, ReviewScreenTab tab, ReviewScreenTab currentTab, String text) {
+  Widget _buildTabButton(WidgetRef ref, ReviewScreenTab tab,
+      ReviewScreenTab currentTab, String text) {
     final isSelected = tab == currentTab; // 현재 선택된 탭인지 확인.
 
     return GestureDetector(
       onTap: () {
         // 탭을 클릭했을 때 현재 탭 상태를 변경.
-        ref.read(privateReviewScreenTabProvider.notifier).state = tab;
+        ref
+            .read(privateReviewScreenTabProvider.notifier)
+            .state = tab;
       },
       child: Column(
         children: [
@@ -91,20 +95,40 @@ class PrivateReviewScreenTabs extends ConsumerWidget {
     );
   }
 
-  // 현재 선택된 탭의 내용을 빌드하는 메서드.
-  Widget _buildTabContent(ReviewScreenTab tab) {
+// 현재 선택된 탭의 내용을 빌드하는 메서드.
+  Widget _buildTabContent(WidgetRef ref, ReviewScreenTab tab) {
     switch (tab) {
       case ReviewScreenTab.create:
-      // '리뷰 작성' 화면을 반환. 각 order 전달
         return Column(
           children: orders.map((order) {
             return PrivateReviewCreateFormScreen(order: order);
           }).toList(),
         );
-    // case ReviewScreenTab.list:
-    //   return PrivateReviewListScreen(); // '리뷰 목록' 화면을 반환.
+      case ReviewScreenTab.list:
+        final userEmail = FirebaseAuth.instance.currentUser!
+            .email!; // 현재 로그인한 사용자의 이메일을 가져옴
+        final reviewListAsyncValue = ref.watch(
+            reviewListProvider(userEmail)); // 특정 사용자의 리뷰만 불러옴
+
+        return reviewListAsyncValue.when(
+          data: (reviews) {
+            // 데이터를 정상적으로 불러왔을 때
+            if (reviews.isEmpty) {
+              return Center(child: Text('리뷰가 없습니다.'));
+            }
+            // PrivateReviewListScreen 위젯에 userEmail을 전달
+            return PrivateReviewListScreen(
+                userEmail: userEmail);
+          },
+          loading: () => Center(child: CircularProgressIndicator()),
+          error: (error, stack) {
+            // 오류 발생 시 오류 메시지를 출력
+            print('Error: $error');
+            return Center(child: Text('리뷰를 불러오는 중 오류가 발생했습니다.'));
+          },
+        );
       default:
-        return Container(); // 기본적으로 빈 컨테이너를 반환.
+        return Container();
     }
   }
 }
@@ -1164,11 +1188,12 @@ class _PrivateReviewCreateDetailFormScreenState
                     deliveryStartDate: await ref.read(deliveryStartDateProvider(widget.numberInfo['order_number']).future), // 배송 시작 날짜를 비동기로 가져와 전달함
                   );
 
-                  // 리뷰 작성 완료 후 화면을 이동함
+                  ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+
                   navigateToScreenAndRemoveUntil(
                     context,
                     ref,
-                    PrivateReviewMainScreen(email: widget.userEmail), // 리뷰 메인 화면으로 이동함
+                    PrivateReviewMainScreen(email: widget.userEmail, navigateToListTab: true), // 리뷰 메인 화면으로 이동함
                     4, // 하단 탭바의 인덱스를 초기화함 (필요시 변경)
                   );
 
@@ -1200,3 +1225,428 @@ class _PrivateReviewCreateDetailFormScreenState
 }
 // ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 끝 부분
 
+// ------ 리뷰 목록 탭 화면 관련 UI 내용인 PrivateReviewListScreen 클래스 내용 시작 부분
+class PrivateReviewListScreen extends ConsumerStatefulWidget {
+  final String userEmail;
+
+  PrivateReviewListScreen({required this.userEmail});
+  // PrivateReviewListScreen 클래스는 특정 사용자의 이메일을 받아
+  // 해당 사용자의 리뷰 목록을 표시하는 화면을 구현하는 UI 클래스임.
+
+  @override
+  _PrivateReviewListScreenState createState() => _PrivateReviewListScreenState();
+// PrivateReviewListScreen 클래스의 상태를 관리하기 위해
+// _PrivateReviewListScreenState 상태 객체를 생성함.
+}
+
+class _PrivateReviewListScreenState extends ConsumerState<PrivateReviewListScreen> {
+  Map<int, bool> _expandedReviews = {};
+  // 리뷰 항목의 펼침 상태를 관리하는 변수로,
+  // 각 리뷰의 인덱스(index)를 키(key)로 사용하여 펼침 상태를 저장함.
+
+  bool _isLoading = false;
+  // 현재 로딩 상태를 나타내는 변수로, 데이터를 불러올 때 true로 설정됨.
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 이 메서드는 위젯의 종속성이 변경될 때 호출되며,
+    // 주로 새로운 데이터를 불러와야 할 때 사용됨.
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshReviews();
+      // 화면의 첫 번째 프레임이 렌더링된 후에 리뷰 데이터를 새로고침하는 함수를 호출함.
+    });
+  }
+
+  Future<void> _refreshReviews() async {
+    setState(() {
+      _isLoading = true; // 로딩 상태를 true로 설정하여 로딩 중임을 나타냄.
+    });
+    // 리뷰 데이터를 새로 불러올 때 로딩 상태를 표시하기 위해
+    // _isLoading을 true로 설정함.
+
+    Future<void> refreshFuture = ref.refresh(reviewListProvider(widget.userEmail).future);
+    // reviewListProvider를 사용하여 특정 사용자의 리뷰 데이터를 새로고침함.
+    // 현재 위젯에 전달된 사용자의 이메일을 기반으로 리뷰 데이터를 새로 불러옴.
+
+    try {
+      await refreshFuture;
+      // 새로고침 작업이 완료될 때까지 대기함.
+      // 데이터가 성공적으로 새로 고쳐졌을 경우 아래 코드를 실행함.
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false; // 로딩이 완료되었으므로 로딩 상태를 false로 설정함.
+        });
+        // 위젯이 여전히 화면에 존재하는 경우, 로딩 상태를 종료하고
+        // 화면을 갱신하여 새 데이터를 반영함.
+      }
+    } catch (error) {
+      print("리뷰를 새로 고치는 중 에러가 발생했습니다: $error");
+      // 리뷰 데이터를 새로 고치는 중 오류가 발생한 경우,
+      // 오류 메시지를 로그에 출력함.
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false; // 오류가 발생해도 로딩 상태를 종료함.
+        });
+        // 위젯이 여전히 화면에 존재하는 경우,
+        // 로딩 상태를 false로 설정하여 오류 발생 후에도 화면을 갱신함.
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final reviewListAsyncValue = ref.watch(reviewListProvider(widget.userEmail));
+    // reviewListProvider를 사용하여 현재 사용자의 이메일에 해당하는
+    // 리뷰 데이터를 감시하고, 데이터의 상태를 비동기적으로 관리함.
+
+    return _isLoading
+        ? Center(child: CircularProgressIndicator()) // 로딩 중일 때 로딩 인디케이터를 중앙에 표시함.
+        : reviewListAsyncValue.when(
+      data: (reviews) {
+        if (reviews.isEmpty) {
+          return Center(child: Text('리뷰가 없습니다.'));
+          // 리뷰 데이터가 비어 있을 경우, "리뷰가 없습니다."라는 메시지를 화면에 중앙에 표시함.
+        }
+
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: reviews.asMap().entries.map((entry) {
+              final index = entry.key;
+              final review = entry.value;
+              final reviewImages = [
+                review['review_image1'],
+                review['review_image2'],
+                review['review_image3']
+              ].where((image) => image != null).map((image) => image.toString()).toList();
+              // 각 리뷰에 첨부된 이미지를 리스트로 저장함.
+              // 이미지가 null이 아닌 경우에만 리스트에 포함시키고,
+              // 이미지를 문자열로 변환하여 리스트에 추가함.
+
+              return CommonCardView(
+                backgroundColor: BEIGE_COLOR,
+                content: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (review['product_number'] != null)
+                        _buildReviewInfoRow('상품번호: ', review['product_number'], bold: true),
+                      // 상품 번호가 존재할 경우, 이를 표시하는 행(Row)을 생성하여
+                      // 화면에 출력함. '상품번호:'라는 라벨과 함께 bold로 표시함.
+
+                      SizedBox(height: 2.0),
+                      if (review['brief_introduction'] != null)
+                        _buildReviewInfoRow(review['brief_introduction'], '', bold: true),
+                      // 리뷰에 간단한 소개가 있을 경우, 이를 표시하는 행(Row)을 생성하여
+                      // 화면에 출력함. 텍스트는 굵게(bold) 표시함.
+
+                      SizedBox(height: 2.0),
+                      GestureDetector(
+                        onTap: () {
+                          final product = ProductContent(
+                            docId: review['product_id'] ?? '',
+                            category: review['category']?.toString() ?? '에러 발생',
+                            productNumber: review['product_number']?.toString() ?? '에러 발생',
+                            thumbnail: review['thumbnails']?.toString() ?? '',
+                            briefIntroduction: review['brief_introduction']?.toString() ?? '에러 발생',
+                            originalPrice: review['original_price'] ?? 0,
+                            discountPrice: review['discount_price'] ?? 0,
+                            discountPercent: review['discount_percent'] ?? 0,
+                          );
+                          final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
+                          navigatorProductDetailScreen.navigateToDetailScreen(context, product);
+                          // 사용자가 리뷰 항목을 클릭했을 때 제품 상세 화면으로 이동함.
+                          // 리뷰에 포함된 제품 정보를 기반으로 ProductContent 객체를 생성하여,
+                          // 상세 화면으로 해당 데이터를 전달함.
+                        },
+                        child: CommonCardView(
+                          backgroundColor: Colors.white,
+                          content: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: review['thumbnails']?.toString().isNotEmpty == true
+                                          ? Image.network(review['thumbnails'], fit: BoxFit.cover)
+                                          : Icon(Icons.image_not_supported),
+                                    ),
+                                    // 리뷰에 썸네일 이미지가 존재하면 이를 네트워크에서 불러와 표시함.
+                                    // 썸네일 이미지가 없을 경우 대체 아이콘(이미지 미지원)을 표시함.
+
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      flex: 7,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          if (review['original_price'] != null)
+                                            Text(
+                                              '${NumberFormat('###,###').format(review['original_price'])} 원',
+                                              style: TextStyle(
+                                                color: Colors.grey[500],
+                                                fontSize: 14,
+                                                decoration: TextDecoration.lineThrough,
+                                              ),
+                                            ),
+                                          // 원래 가격이 존재할 경우 이를 취소선과 함께 표시함.
+                                          // 가격은 세 자리마다 쉼표로 구분하여 표시하며,
+                                          // 회색 텍스트로 렌더링함.
+
+                                          if (review['discount_price'] != null)
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '${NumberFormat('###,###').format(review['discount_price'])} 원',
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                                SizedBox(width: 8),
+                                                if (review['discount_percent'] != null)
+                                                  Text(
+                                                    '${(review['discount_percent']).toInt()}%',
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          // 할인 가격과 할인율이 존재할 경우 이를 표시함.
+                                          // 할인 가격은 굵은 글씨로, 할인율은 빨간색 굵은 글씨로 표시함.
+
+                                          if (review['selected_color_text'] != null)
+                                            Row(
+                                              children: [
+                                                review['selected_color_image']?.toString().isNotEmpty == true
+                                                    ? Image.network(
+                                                  review['selected_color_image'],
+                                                  height: 18,
+                                                  width: 18,
+                                                  fit: BoxFit.cover,
+                                                )
+                                                    : Icon(Icons.image_not_supported, size: 20),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  review['selected_color_text'] ?? '에러 발생',
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          // 선택된 색상 텍스트와 색상 이미지를 표시함.
+                                          // 색상 이미지는 네트워크에서 불러오며, 이미지가 없을 경우 대체 아이콘을 표시함.
+                                          // 색상 텍스트는 줄임말로 표시하여 공간을 절약함.
+
+                                          if (review['selected_size'] != null)
+                                            Text('사이즈: ${review['selected_size']}'),
+                                          // 선택된 사이즈 정보를 표시함.
+                                          // "사이즈: "라는 라벨과 함께 텍스트로 표시함.
+
+                                          if (review['selected_count'] != null)
+                                            Text('수량: ${review['selected_count']} 개'),
+                                          // 선택된 수량 정보를 표시함.
+                                          // "수량: "라는 라벨과 함께 텍스트로 표시함.
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      if (_expandedReviews[index] == true) ...[
+                        if (review['review_title'] != null)
+                          _buildReviewInfoRow('제목: ', review['review_title'], bold: true),
+                        // 리뷰 제목이 있을 경우 이를 표시함.
+                        // '제목:' 라벨과 함께 굵은 텍스트로 제목을 표시함.
+
+                        SizedBox(height: 2.0),
+                        if (review['review_contents'] != null)
+                          _buildReviewInfoRow('내용: ', review['review_contents'], bold: true),
+                        // 리뷰 내용이 있을 경우 이를 표시함.
+                        // '내용:' 라벨과 함께 굵은 텍스트로 내용을 표시함.
+
+                        SizedBox(height: 2.0),
+                        if (reviewImages.isNotEmpty) _buildReviewImagesRow(reviewImages, context),
+                        // 리뷰에 첨부된 이미지가 있을 경우, 이미지를 표시하는 행(Row)을 추가함.
+                        // 이미지가 존재하지 않을 경우 해당 부분은 렌더링되지 않음.
+
+                        SizedBox(height: 4.0),
+                        if (review['review_write_time'] != null)
+                          _buildReviewInfoRow(
+                            '작성일자: ',
+                            DateFormat('yyyy-MM-dd').format(
+                              (review['review_write_time'] as Timestamp).toDate(),
+                            ),
+                            bold: true,
+                          ),
+                        // 리뷰 작성일자가 존재할 경우 이를 표시함.
+                        // 작성일자는 'yyyy-MM-dd' 형식으로 변환하여 표시되며, 굵은 텍스트로 렌더링됨.
+
+                        SizedBox(height: 2.0),
+                      ],
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _expandedReviews[index] = !(_expandedReviews[index] ?? false);
+                            });
+                            // 사용자가 펼치기/닫기 버튼을 눌렀을 때,
+                            // 해당 리뷰의 펼침 상태를 토글함.
+                          },
+                          child: Text(
+                            _expandedReviews[index] == true ? '[닫기]' : '[펼치기]',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          // 펼침 상태에 따라 '닫기' 또는 '펼치기' 텍스트를 표시함.
+                          // 버튼 텍스트는 굵게 표시되고, 색상은 파란색으로 설정됨.
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+      loading: () => Center(child: CircularProgressIndicator()),
+      // 데이터를 로딩 중일 때 로딩 인디케이터를 화면 중앙에 표시함.
+
+      error: (error, stack) => Center(child: Text('리뷰를 불러오는 중 오류가 발생했습니다.')),
+      // 데이터 로딩 중 오류가 발생한 경우, 오류 메시지를 화면 중앙에 표시함.
+    );
+  }
+
+  // _buildReviewInfoRow 함수는 리뷰의 정보 항목을 텍스트 형태로 표시하는 행(Row)을 생성함.
+  // 리뷰 정보의 라벨과 값은 파라미터로 전달되며, 필요에 따라 굵은 텍스트로 표시할 수 있음.
+  Widget _buildReviewInfoRow(String label, String value, {bool bold = false, double fontSize = 16}) {
+    if (label.length + value.length <= 30) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
+
+            SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+                ),
+                textAlign: TextAlign.start,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            // 정보의 값을 텍스트로 표시함. 값이 길 경우 줄임말로 표시되고,
+            // 텍스트가 여러 줄에 걸쳐 표시될 수 있도록 설정됨.
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
+
+            SizedBox(height: 4),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              ),
+              textAlign: TextAlign.start,
+              softWrap: true,
+              overflow: TextOverflow.visible,
+            ),
+            // 정보의 값을 텍스트로 표시함. 텍스트가 여러 줄에 걸쳐 표시될 수 있도록 설정되며,
+            // 줄임말이 아닌 전체 텍스트가 표시됨.
+          ],
+        ),
+      );
+    }
+    // 정보의 길이에 따라 Row 또는 Column으로 구성된 정보를 표시함.
+    // 정보의 라벨과 값이 짧을 경우 Row로 표시되며, 길 경우 Column으로 표시됨.
+  }
+
+  // _buildReviewImagesRow 함수는 리뷰에 첨부된 이미지들을 가로로 나열하여 표시함.
+  // 이미지의 크기는 화면의 너비를 기준으로 설정되며,
+  // 사용자가 이미지를 클릭할 경우 원본 이미지 상세 화면으로 이동함.
+  Widget _buildReviewImagesRow(List<String> images, BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final imageWidth = width / 4;
+    // 화면의 가로 너비를 기준으로 각 이미지의 크기를 설정함.
+    // 이미지 하나의 너비는 화면 너비의 1/4로 설정됨.
+
+    return Row(
+      children: images.map((image) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductDetailOriginalImageScreen(
+                  images: images,
+                  initialPage: images.indexOf(image),
+                ),
+              ),
+            );
+            // 사용자가 이미지를 클릭하면,
+            // 해당 이미지를 포함한 원본 이미지 상세 화면으로 이동함.
+          },
+          child: Container(
+            width: imageWidth,
+            height: imageWidth,
+            margin: const EdgeInsets.only(right: 8.0),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image.network(image, fit: BoxFit.cover),
+            ),
+            // 네트워크에서 이미지를 불러와 표시함.
+            // 이미지는 컨테이너에 맞춰서 표시되며,
+            // 이미지를 완전히 채우도록 설정됨.
+          ),
+        );
+      }).toList(),
+    );
+    // 리뷰 이미지들을 가로로 나열하여 표시함.
+    // 각 이미지는 동일한 크기로 설정되며,
+    // 이미지를 클릭할 경우 원본 이미지를 볼 수 있도록 설정됨.
+  }
+}
+// ------ 리뷰 목록 탭 화면 관련 UI 내용인 PrivateReviewListScreen 클래스 내용 끝 부분

@@ -353,7 +353,8 @@ class OrderlistRepository {
   OrderlistRepository({required this.firestore});
 
   // 특정 사용자의 발주 데이터를 가져오는 함수
-  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(String userEmail) async {
+  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(
+      String userEmail) async {
     try {
       print('Fetching orders for email: $userEmail');
       // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
@@ -361,7 +362,8 @@ class OrderlistRepository {
 
       // 해당 문서의 'orders' 하위 컬렉션의 모든 문서를 가져옴
       final ordersQuerySnapshot = await userDocRef.collection('orders').get();
-      print('Fetched orders: ${ordersQuerySnapshot.docs.length} for email: $userEmail');
+      print('Fetched orders: ${ordersQuerySnapshot.docs
+          .length} for email: $userEmail');
 
       if (ordersQuerySnapshot.docs.isEmpty) {
         print('No orders found for email $userEmail');
@@ -376,11 +378,18 @@ class OrderlistRepository {
         print('Processing order: ${orderDoc.id}');
 
         // 각 발주 문서의 하위 컬렉션에서 필요한 정보를 가져옴
-        final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
-        final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
-        final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
-        final productInfoQuery = await orderDoc.reference.collection('product_info').get();
-        final orderStatusDoc = await orderDoc.reference.collection('order_status_info').doc('info').get();
+        final numberInfoDoc = await orderDoc.reference.collection('number_info')
+            .doc('info')
+            .get();
+        final ordererInfoDoc = await orderDoc.reference.collection(
+            'orderer_info').doc('info').get();
+        final amountInfoDoc = await orderDoc.reference.collection('amount_info')
+            .doc('info')
+            .get();
+        final productInfoQuery = await orderDoc.reference.collection(
+            'product_info').get();
+        final orderStatusDoc = await orderDoc.reference.collection(
+            'order_status_info').doc('info').get();
 
         // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
         final productInfo = productInfoQuery.docs.map((doc) {
@@ -394,7 +403,8 @@ class OrderlistRepository {
           'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
           'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
           'productInfo': productInfo,
-          'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음', // order_status 필드 추가
+          'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음',
+          // order_status 필드 추가
         });
       }
 
@@ -408,9 +418,13 @@ class OrderlistRepository {
     }
   }
 
-  // 특정 발주 번호에 해당하는 데이터를 가져오는 메서드
-  Future<Map<String, dynamic>?> fetchOrderByOrderNumber(String userEmail, String orderNumber) async {
+// 특정 발주 번호에 해당하는 데이터를 가져오는 메서드
+  Future<Map<String, dynamic>?> fetchOrderByOrderNumber(String userEmail,
+      String orderNumber) async {
     try {
+      print(
+          'Fetching order details for order number: $orderNumber for email: $userEmail');
+
       // Firestore의 'order_list' 컬렉션에서 사용자의 이메일을 기준으로 문서 참조를 가져옴
       final userDocRef = firestore.collection('order_list').doc(userEmail);
 
@@ -418,47 +432,86 @@ class OrderlistRepository {
       final ordersQuerySnapshot = await userDocRef.collection('orders')
           .where('numberInfo.order_number', isEqualTo: orderNumber)
           .get();
+      print('Fetched orders: ${ordersQuerySnapshot.docs
+          .length} for order number: $orderNumber');
 
       // 조회된 문서가 없을 경우, null을 반환하여 주문이 없음을 알림
       if (ordersQuerySnapshot.docs.isEmpty) {
+        print('No order found for order number: $orderNumber');
         return null; // 일치하는 문서가 없을 경우 null 반환
       }
 
       // 첫 번째로 조회된 문서의 참조를 가져옴
       final orderDocRef = ordersQuerySnapshot.docs.first.reference;
+      print('Processing order document: ${orderDocRef.id}');
 
       // 'number_info' 서브 컬렉션에서 'info' 문서를 가져옴
-      final numberInfoDoc = await orderDocRef.collection('number_info').doc('info').get();
+      final numberInfoDoc = await orderDocRef.collection('number_info').doc(
+          'info').get();
+      print('Fetched numberInfo: ${numberInfoDoc.exists
+          ? 'exists'
+          : 'does not exist'}');
 
       // 'orderer_info' 서브 컬렉션에서 'info' 문서를 가져옴
-      final ordererInfoDoc = await orderDocRef.collection('orderer_info').doc('info').get();
+      final ordererInfoDoc = await orderDocRef.collection('orderer_info').doc(
+          'info').get();
+      print('Fetched ordererInfo: ${ordererInfoDoc.exists
+          ? 'exists'
+          : 'does not exist'}');
 
       // 'amount_info' 서브 컬렉션에서 'info' 문서를 가져옴
-      final amountInfoDoc = await orderDocRef.collection('amount_info').doc('info').get();
+      final amountInfoDoc = await orderDocRef.collection('amount_info').doc(
+          'info').get();
+      print('Fetched amountInfo: ${amountInfoDoc.exists
+          ? 'exists'
+          : 'does not exist'}');
 
       // 'recipient_info' 서브 컬렉션에서 'info' 문서를 가져옴
-      final recipientInfoDoc = await orderDocRef.collection('recipient_info').doc('info').get();
+      final recipientInfoDoc = await orderDocRef.collection('recipient_info')
+          .doc('info')
+          .get();
+      print('Fetched recipientInfo: ${recipientInfoDoc.exists
+          ? 'exists'
+          : 'does not exist'}');
 
       // 'product_info' 서브 컬렉션의 모든 문서를 조회하여 제품 정보를 가져옴
-      final productInfoQuery = await orderDocRef.collection('product_info').get();
+      final productInfoQuery = await orderDocRef.collection('product_info')
+          .get();
+      print('Fetched productInfo: ${productInfoQuery.docs
+          .length} products found');
 
       // 'order_status_info' 서브 컬렉션에서 'info' 문서를 가져옴
-      final orderStatusDoc = await orderDocRef.collection('order_status_info').doc('info').get();
+      final orderStatusDoc = await orderDocRef.collection('order_status_info')
+          .doc('info')
+          .get();
+      print('Fetched orderStatus: ${orderStatusDoc.exists
+          ? 'exists'
+          : 'does not exist'}');
 
       // 조회된 제품 정보 문서들을 순회하며 Map 형식으로 변환
       final productInfo = productInfoQuery.docs.map((doc) {
+        print('Processing product: ${doc.id}');
         return doc.data() as Map<String, dynamic>;
       }).toList();
 
       // 각 정보들을 하나의 Map으로 합쳐 반환, 없을 경우 빈 맵을 반환
-      return {
-        'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {}, // 주문 번호 정보
-        'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {}, // 주문자 정보
-        'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {}, // 금액 정보
-        'recipientInfo': recipientInfoDoc.data() as Map<String, dynamic>? ?? {}, // 수령인 정보
-        'productInfo': productInfo, // 제품 정보 리스트
-        'orderStatus': orderStatusDoc.data()?['order_status'] ?? '에러 발생', // 주문 상태 정보
+      final orderData = {
+        'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
+        // 주문 번호 정보
+        'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
+        // 주문자 정보
+        'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
+        // 금액 정보
+        'recipientInfo': recipientInfoDoc.data() as Map<String, dynamic>? ?? {},
+        // 수령인 정보
+        'productInfo': productInfo,
+        // 제품 정보 리스트
+        'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음',
+        // 주문 상태 정보
       };
+
+      print('Finished fetching order details for order number: $orderNumber');
+      return orderData;
     } catch (e) {
       // 오류 발생 시 로그를 출력하고 null을 반환
       print('Failed to fetch order details for order number $orderNumber: $e');

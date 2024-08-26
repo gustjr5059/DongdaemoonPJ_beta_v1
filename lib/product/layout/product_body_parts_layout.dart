@@ -570,8 +570,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
   // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
   ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  // ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  // ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+  ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+  ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+  ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+  ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
   // 쪽지 관리 화면 관련 초기화 부분 끝
 
   // 리뷰 관리 화면 관련 초기화 부분 시작
@@ -581,6 +583,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
   // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
   ref.invalidate(buttonInfoProvider);
+  ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
   // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작

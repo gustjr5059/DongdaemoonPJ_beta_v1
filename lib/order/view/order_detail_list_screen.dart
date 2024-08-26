@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
+import '../../message/provider/message_all_provider.dart';
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart'; // 공통 UI 컴포넌트 파일
@@ -101,6 +102,7 @@ class _OrderListDetailScreenState
       ref.invalidate(orderListDetailProvider);
       // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
       ref.invalidate(buttonInfoProvider);
+      ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -115,6 +117,7 @@ class _OrderListDetailScreenState
         ref.invalidate(orderListDetailProvider);
         // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
         ref.invalidate(buttonInfoProvider);
+        ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
       }
     });
 
@@ -132,8 +135,13 @@ class _OrderListDetailScreenState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      // 앱이 다시 포커스를 얻었을 때 상태를 업데이트 (다른 화면 이동 후 복귀 시, 해당 초기화 로직이 동작함)
-      ref.invalidate(buttonInfoProvider);  // 초기화
+      // // 앱이 다시 포커스를 얻었을 때 상태를 업데이트 (다른 화면 이동 후 복귀 시, 해당 초기화 로직이 동작함)
+      // ref.read(orderListDetailScrollPositionProvider.notifier).state =
+      // 0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+      // // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
+      // ref.invalidate(orderListDetailProvider);
+      // ref.invalidate(buttonInfoProvider);  // 초기화
+      // ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
       _updateStatusBar();
     }
   }

@@ -145,7 +145,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      ref.invalidate(orderListProvider);
+      // ref.invalidate(orderListProvider);
       _updateStatusBar();
     }
   }
