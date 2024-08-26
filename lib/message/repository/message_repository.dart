@@ -86,9 +86,14 @@ class PrivateMessageRepository {
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .doc(messageId); // 주어진 메시지 ID에 해당하는 문서에 접근
 
-    // 해당 문서의 'private_email_closed_button' 필드값을 'true'로 업데이트.
+    // 삭제 시간 기록을 위한 현재 시간 저장
+    final DateTime messageDeleteTime = DateTime.now();
+
+    // 해당 문서의 'private_email_closed_button' 필드값을 'true'로 업데이트하고
+    // 'message_delete_time': messageDeleteTime로 쪽지 삭제 시간도 저장
     await messageDoc.update({
       'private_email_closed_button': true, // 해당 필드를 true로 변경
+      'message_delete_time': messageDeleteTime, // 쪽지 삭제 시간
     });
   }
 // ------ 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 끝

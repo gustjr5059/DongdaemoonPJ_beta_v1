@@ -99,35 +99,64 @@ class PrivateReviewScreenTabs extends ConsumerWidget {
   Widget _buildTabContent(WidgetRef ref, ReviewScreenTab tab) {
     switch (tab) {
       case ReviewScreenTab.create:
-        return Column(
-          children: orders.map((order) {
-            return PrivateReviewCreateFormScreen(order: order);
-          }).toList(),
+      // 현재 로그인한 사용자의 이메일을 가져옴
+        final userEmail = FirebaseAuth.instance.currentUser!.email!;
+        // 사용자의 발주 데이터를 비동기적으로 제공하는 Provider를 구독함
+        final ordersAsyncValue = ref.watch(reviewUserOrdersProvider(userEmail));
+
+        // 발주 데이터가 로드되었을 때의 처리를 정의함
+        return ordersAsyncValue.when(
+          data: (orders) {
+            // 발주 데이터가 비어 있는지 확인함
+            if (orders.isEmpty) {
+              // 발주 데이터가 없을 경우 표시할 메시지
+              return Center(child: Text('발주 데이터가 없습니다.'));
+            }
+
+            // 발주 데이터를 기반으로 리뷰 생성 폼을 표시함
+            return Column(
+              children: orders.map((order) {
+                return PrivateReviewCreateFormScreen(order: order);
+              }).toList(),
+            );
+          },
+          // 로딩 중일 때의 UI를 정의함
+          loading: () => Center(child: CircularProgressIndicator()),
+          // 오류가 발생했을 때의 처리
+          error: (error, stack) {
+            print('Error: $error');
+            return Center(child: Text('발주 데이터를 불러오는 중 오류가 발생했습니다.'));
+          },
         );
       case ReviewScreenTab.list:
-        final userEmail = FirebaseAuth.instance.currentUser!
-            .email!; // 현재 로그인한 사용자의 이메일을 가져옴
+      // 현재 로그인한 사용자의 이메일을 가져옴
+        final userEmail = FirebaseAuth.instance.currentUser!.email!;
+        // 특정 사용자의 리뷰 데이터를 비동기적으로 제공하는 Provider를 구독함
         final reviewListAsyncValue = ref.watch(
-            reviewListProvider(userEmail)); // 특정 사용자의 리뷰만 불러옴
+            reviewListProvider(userEmail));
 
+        // 리뷰 데이터가 로드되었을 때의 처리를 정의함
         return reviewListAsyncValue.when(
           data: (reviews) {
-            // 데이터를 정상적으로 불러왔을 때
+            // 리뷰 데이터가 비어 있는지 확인함
             if (reviews.isEmpty) {
+              // 리뷰가 없을 경우 표시할 메시지
               return Center(child: Text('리뷰가 없습니다.'));
             }
-            // PrivateReviewListScreen 위젯에 userEmail을 전달
+            // 리뷰 리스트 화면을 표시하며, 사용자 이메일을 전달함
             return PrivateReviewListScreen(
                 userEmail: userEmail);
           },
+          // 로딩 중일 때의 UI를 정의함
           loading: () => Center(child: CircularProgressIndicator()),
+          // 오류가 발생했을 때의 처리
           error: (error, stack) {
-            // 오류 발생 시 오류 메시지를 출력
             print('Error: $error');
             return Center(child: Text('리뷰를 불러오는 중 오류가 발생했습니다.'));
           },
         );
       default:
+      // 기본적으로 빈 컨테이너를 반환함
         return Container();
     }
   }
@@ -1496,24 +1525,100 @@ class _PrivateReviewListScreenState extends ConsumerState<PrivateReviewListScree
                         SizedBox(height: 2.0),
                       ],
                       Center(
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _expandedReviews[index] = !(_expandedReviews[index] ?? false);
-                            });
-                            // 사용자가 펼치기/닫기 버튼을 눌렀을 때,
-                            // 해당 리뷰의 펼침 상태를 토글함.
-                          },
-                          child: Text(
-                            _expandedReviews[index] == true ? '[닫기]' : '[펼치기]',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: TextButton(
+                                  onPressed: () {
+                                    // 버튼 클릭 시 해당 리뷰의 확장 상태를 토글함
+                                    setState(() {
+                                      _expandedReviews[index] = !(_expandedReviews[index] ?? false);
+                                    });
+                                  },
+                                  child: Text(
+                                    // 리뷰가 확장되었는지 여부에 따라 '[닫기]' 또는 '[펼치기]' 텍스트를 표시함
+                                    _expandedReviews[index] == true ? '[닫기]' : '[펼치기]',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          // 펼침 상태에 따라 '닫기' 또는 '펼치기' 텍스트를 표시함.
-                          // 버튼 텍스트는 굵게 표시되고, 색상은 파란색으로 설정됨.
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                // 버튼의 전경색을 BUTTON_COLOR로 설정함
+                                foregroundColor: BUTTON_COLOR,
+                                // 버튼의 배경색을 BACKGROUND_COLOR로 설정함
+                                backgroundColor: BACKGROUND_COLOR,
+                                // 버튼의 테두리 색상을 BUTTON_COLOR로 설정함
+                                side: BorderSide(color: BUTTON_COLOR),
+                                // 버튼의 수직 패딩을 8로 설정함
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                              ),
+                              onPressed: () async {
+                                // 리뷰 삭제 버튼 클릭 시 확인 다이얼로그를 표시함
+                                await showSubmitAlertDialog(
+                                  context,
+                                  // 다이얼로그의 제목을 설정함
+                                  title: '리뷰 삭제',
+                                  // 다이얼로그의 내용을 설정함
+                                  content: '리뷰를 삭제하시면 해당 발주 상품에 대해 리뷰를 재작성하실 수 없습니다.\n작성하신 리뷰를 삭제하시겠습니까?',
+                                  // 다이얼로그에 표시할 버튼들을 생성함
+                                  actions: buildAlertActions(
+                                    context,
+                                    // '아니요' 버튼 텍스트를 설정함
+                                    noText: '아니요',
+                                    // '예' 버튼 텍스트를 설정함
+                                    yesText: '예',
+                                    // '아니요' 버튼 텍스트 스타일을 설정함
+                                    noTextStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    // '예' 버튼 텍스트 스타일을 설정함
+                                    yesTextStyle: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    // '예' 버튼이 눌렸을 때 실행되는 비동기 함수
+                                    onYesPressed: () async {
+                                      try {
+                                        // 리뷰 삭제 요청을 수행함
+                                        await ref.read(deleteReviewProvider({
+                                          'userEmail': widget.userEmail, // 사용자의 이메일을 전달함
+                                          'separatorKey': review['separator_key'], // 리뷰의 고유 키를 전달함
+                                        }).future);
+                                        // 다이얼로그를 닫음
+                                        Navigator.of(context).pop();
+
+                                        // 리뷰 삭제 완료 메시지를 표시함
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('리뷰가 삭제되었습니다.')),
+                                        );
+                                      } catch (e) {
+                                        // 리뷰 삭제 중 오류가 발생한 경우 오류 메시지를 표시함
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('리뷰 삭제 중 오류가 발생했습니다: $e')),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                              // 삭제 버튼의 텍스트를 설정함
+                              child: Text(
+                                '삭제',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

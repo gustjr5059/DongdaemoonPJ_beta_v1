@@ -125,9 +125,10 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
       }
       // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
       ref.invalidate(buttonInfoProvider);
-      ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
       ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
       ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
+      ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+      ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함
@@ -140,9 +141,10 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
         ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
         // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
         ref.invalidate(buttonInfoProvider);
-        ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
         ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
         ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
+        ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+        ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
       }
     });
 

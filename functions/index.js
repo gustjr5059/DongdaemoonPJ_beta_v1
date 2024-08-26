@@ -194,6 +194,7 @@ exports.updateButtonStatusOnMessage = functions.firestore
                 if (!ordersSnapshot.empty) {
                     const orderDoc = ordersSnapshot.docs[0];
                     const buttonInfoRef = orderDoc.ref.collection('button_info').doc('info');
+                    const productInfoRef = orderDoc.ref.collection('product_info');
 
                     // 버튼 활성화 상태로 업데이트
                     await buttonInfoRef.update({
@@ -207,7 +208,16 @@ exports.updateButtonStatusOnMessage = functions.firestore
                             'boolRefundBtn': false,
                             'boolReviewWriteBtn': false,
                         });
-                    }, 864000000); // 10일(10일 = 10 * 24 * 60 * 60 * 1000밀리초) 후 비활성화
+
+                        // product_info 하위 컬렉션의 모든 문서에서 'boolReviewCompleteBtn' 필드를 true로 업데이트
+                        const productDocs = await productInfoRef.get();
+                        productDocs.forEach(async (doc) => {
+                            await doc.ref.update({
+                                'boolReviewCompleteBtn': true,
+                            });
+                        });
+
+                    }, 864000000); // 10일(10일 = 10 * 24 * 60 * 60 * 1000밀리초) 후 비활성화 864000000
                 }
             }
         }

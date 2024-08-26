@@ -584,6 +584,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
   ref.invalidate(buttonInfoProvider);
   ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
+  ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
   // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작

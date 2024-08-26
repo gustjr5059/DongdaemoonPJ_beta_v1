@@ -6,70 +6,65 @@ import 'package:firebase_storage/firebase_storage.dart';
 // ------ 리뷰 관리 화면 내 데이터 처리 로직인 ReviewRepository 내용 시작 부분
 // Firestore와 상호작용하여 리뷰 관련 데이터를 처리하는 ReviewRepository 클래스 정의
 class ReviewRepository {
-  final FirebaseFirestore firestore; // Firestore 인스턴스를 저장하는 변수
+  final FirebaseFirestore firestore;
 
-  // ReviewRepository 생성자, firestore 매개변수를 필수로 받음
   ReviewRepository({required this.firestore});
 
-  // 특정 사용자의 발주 데이터를 가져오는 함수
-  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(String userEmail) async {
+  // 특정 사용자의 발주 데이터를 실시간으로 가져오는 함수
+  Stream<List<Map<String, dynamic>>> streamOrdersByEmail(String userEmail) {
     try {
-      print('Fetching orders for email: $userEmail');
-      // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
+      print('Streaming orders for email: $userEmail');
       final userDocRef = firestore.collection('order_list').doc(userEmail);
 
-      // 해당 문서의 'orders' 하위 컬렉션의 모든 문서를 가져옴
-      final ordersQuerySnapshot = await userDocRef.collection('orders').get();
-      print('Fetched orders: ${ordersQuerySnapshot.docs.length} for email: $userEmail');
+      // orders 컬렉션을 실시간으로 스트리밍
+      return userDocRef.collection('orders').snapshots().asyncMap((ordersQuerySnapshot) async {
+        print('Fetched orders: ${ordersQuerySnapshot.docs.length} for email: $userEmail');
 
-      if (ordersQuerySnapshot.docs.isEmpty) {
-        print('No orders found for email $userEmail');
-        return []; // 빈 리스트 반환
-      }
-
-      final List<Map<String, dynamic>> allOrders = []; // 발주 데이터를 저장할 리스트
-
-      for (var orderDoc in ordersQuerySnapshot.docs) {
-        print('Processing order: ${orderDoc.id}');
-
-        // 각 발주 문서의 하위 컬렉션에서 필요한 정보를 가져옴
-        final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
-        final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
-        final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
-        final productInfoQuery = await orderDoc.reference.collection('product_info')
-            .where('boolReviewCompleteBtn', isEqualTo: false) // boolReviewCompleteBtn 필드값이 'false'인 데이터만 가져오도록 조건절
-            .get();
-
-        // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
-        final productInfo = productInfoQuery.docs.map((doc) {
-          print('Processing product: ${doc.id}');
-          return doc.data() as Map<String, dynamic>;
-        }).toList();
-
-        // 발주 데이터를 리스트에 추가
-        allOrders.add({
-          'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
-          'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
-          'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
-          'productInfo': productInfo,
-        });
-      }
-
-      // 발주일자 기준으로 내림차순 정렬
-      allOrders.sort((a, b) {
-        final dateA = a['numberInfo']['order_date'] as Timestamp?;
-        final dateB = b['numberInfo']['order_date'] as Timestamp?;
-        if (dateA != null && dateB != null) {
-          return dateB.compareTo(dateA); // 내림차순 정렬
+        if (ordersQuerySnapshot.docs.isEmpty) {
+          print('No orders found for email $userEmail');
+          return [];
         }
-        return 0;
-      });
 
-      print('Finished fetching and sorting orders for email: $userEmail');
-      return allOrders; // 정렬된 발주 데이터를 반환
+        final List<Map<String, dynamic>> allOrders = [];
+
+        for (var orderDoc in ordersQuerySnapshot.docs) {
+          print('Processing order: ${orderDoc.id}');
+
+          final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
+          final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
+          final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
+          final productInfoQuery = await orderDoc.reference.collection('product_info')
+              .where('boolReviewCompleteBtn', isEqualTo: false)
+              .get();
+
+          final productInfo = productInfoQuery.docs.map((doc) {
+            print('Processing product: ${doc.id}');
+            return doc.data() as Map<String, dynamic>;
+          }).toList();
+
+          allOrders.add({
+            'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
+            'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
+            'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
+            'productInfo': productInfo,
+          });
+        }
+
+        allOrders.sort((a, b) {
+          final dateA = a['numberInfo']['order_date'] as Timestamp?;
+          final dateB = b['numberInfo']['order_date'] as Timestamp?;
+          if (dateA != null && dateB != null) {
+            return dateB.compareTo(dateA);
+          }
+          return 0;
+        });
+
+        print('Finished streaming and sorting orders for email: $userEmail');
+        return allOrders;
+      });
     } catch (e) {
-      print('Failed to fetch orders for email $userEmail: $e');
-      return []; // 오류 발생 시 빈 리스트 반환
+      print('Failed to stream orders for email $userEmail: $e');
+      return Stream.value([]); // 오류 발생 시 빈 리스트 스트림 반환
     }
   }
 
@@ -137,6 +132,9 @@ class ReviewRepository {
       // separator_key 필드를 productInfo에서 가져옴
       final String separatorKey = productInfo['separator_key'] ?? '';
 
+      // 디버그 메시지 추가
+      print("Submitting review with separatorKey: $separatorKey");
+
       // 현재 시간을 가져옴
       final DateTime reviewWriteTime = DateTime.now();
 
@@ -166,6 +164,7 @@ class ReviewRepository {
         'review_image3': uploadedImageUrls.length > 2 ? uploadedImageUrls[2] : null,  // 세 번째 리뷰 이미지를 포함함 (없으면 null)
         'user_name': userName.isNotEmpty ? userName : null,  // 유저 이름을 포함함 (없으면 null)
         'review_write_time': reviewWriteTime,  // 리뷰 작성 시간을 포함함
+        'private_review_closed_button': false, // 리뷰 삭제 버튼 활성화 관련 데이터 포함함
       };
 
       // 파이어스토어에 리뷰 데이터를 저장함
@@ -185,6 +184,9 @@ class ReviewRepository {
           .update({
         'boolReviewCompleteBtn': true,  // 리뷰 작성 완료 버튼 필드를 true로 설정
       });
+
+      print("Review submitted with separatorKey: $separatorKey");
+
     } catch (e) {
       // 리뷰 제출 중 발생한 오류를 출력함
       print('Failed to submit review: $e');
@@ -193,49 +195,60 @@ class ReviewRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchReviewList(String userEmail) async {
-    // 사용자의 이메일을 인자로 받아 해당 사용자의 리뷰 목록을 가져오는 비동기 함수임.
-
+  // 특정 사용자의 리뷰 목록을 실시간으로 가져오는 함수
+  Stream<List<Map<String, dynamic>>> streamReviewList(String userEmail) {
     try {
-      // Firestore에서 리뷰 데이터를 가져오는 과정에서 발생할 수 있는 예외를 처리하기 위해 try-catch 블록을 사용함.
-
-      // 리뷰 컬렉션에 대한 참조를 가져오고,
-      // 'review_write_time' 필드를 기준으로 내림차순으로 정렬하도록 쿼리를 작성함.
       final userReviewsRef = firestore
           .collection('review_list')
           .doc(userEmail)
           .collection('reviews')
+          .where('private_review_closed_button', isEqualTo: false) // 추가된 조건
           .orderBy('review_write_time', descending: true);
-      // 'review_list' 컬렉션 안에 특정 사용자의 이메일에 해당하는
-      // 문서를 참조한 후, 'reviews' 하위 컬렉션을 가져옴.
-      // 리뷰는 'review_write_time' 필드를 기준으로 최신순으로 정렬됨.
 
-      // 작성된 쿼리를 실행하여 쿼리 결과를 가져옴.
-      final querySnapshot = await userReviewsRef.get();
-      // get() 메서드를 호출하여 Firestore에서 해당 사용자의 리뷰 데이터를 가져옴.
-      // 이 데이터는 QuerySnapshot 형태로 반환됨.
-
-      // 쿼리 결과가 비어 있는지 확인하고,
-      // 리뷰가 없는 경우 빈 리스트를 반환함.
-      if (querySnapshot.docs.isEmpty) {
-        print('No reviews found for user: $userEmail');
-        return [];
-        // 쿼리 결과가 비어 있는 경우, 로그 메시지를 출력하고
-        // 빈 리스트를 반환하여 리뷰가 없음을 나타냄.
-      }
-
-      // 쿼리 결과를 Map<String, dynamic> 형식으로 변환하여 리스트로 반환함.
-      return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      // 쿼리에서 가져온 각 문서를 Map 형식으로 변환하고, 이를 리스트로 만듦.
-      // 이 리스트는 리뷰 데이터를 포함한 맵들의 리스트임.
-
+      return userReviewsRef.snapshots().map((snapshot) =>
+          snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList());
     } catch (e) {
-      // 리뷰 데이터를 가져오는 중 예외가 발생했을 때 처리하는 부분임.
       print('Failed to fetch reviews for user $userEmail: $e');
-      // 예외 발생 시, 로그에 오류 메시지를 출력하여 문제를 기록함.
-
       throw Exception('Failed to fetch reviews: $e');
-      // 예외를 다시 던져서 호출한 쪽에서 이 오류를 처리할 수 있도록 함.
+    }
+  }
+
+// 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
+  Future<void> privatDeleteReview({
+    required String userEmail,
+    required String separatorKey,
+  }) async {
+    try {
+      print("Hiding review with separatorKey: $separatorKey for user: $userEmail");
+
+      // Firestore 경로 확인
+      final reviewDoc = firestore
+          .collection('review_list')
+          .doc(userEmail)
+          .collection('reviews')
+          .doc(separatorKey);
+
+      // 문서 존재 여부 확인
+      final docSnapshot = await reviewDoc.get();
+
+      if (docSnapshot.exists) {
+        // 삭제 시간 기록을 위한 현재 시간 저장
+        final DateTime reviewDeleteTime = DateTime.now();
+
+        // 리뷰 관련 데이터가 있는 문서 내 해당 필드값 수정
+        await reviewDoc.update({
+          'private_review_closed_button': true,
+          'review_delete_time': reviewDeleteTime,
+        });
+
+        print("Review hidden successfully");
+      } else {
+        print("Document not found for separatorKey: $separatorKey");
+        throw Exception('Document not found for separatorKey: $separatorKey');
+      }
+    } catch (e) {
+      print('Failed to hide review: $e');
+      throw Exception('Failed to hide review: $e');
     }
   }
 }
