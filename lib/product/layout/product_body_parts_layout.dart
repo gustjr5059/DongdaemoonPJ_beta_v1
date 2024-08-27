@@ -586,6 +586,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(buttonInfoProvider);
   ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
   ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
+  ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
   // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
@@ -1755,7 +1756,9 @@ class ProductDetailScreenTabs extends ConsumerWidget {
       case ProdDetailScreenTabSection.productInfo: // '상품정보' 섹션이면
         return productInfoContent; // '상품정보' 내용을 반환
       case ProdDetailScreenTabSection.reviews: // '리뷰' 섹션이면
-        return Column(children: reviewsContent); // '리뷰' 내용을 반환
+        return reviewsContent.isEmpty
+            ? Center(child: Text('리뷰가 없습니다.')) // 리뷰 데이터가 없을 때 표시
+            : Column(children: reviewsContent); // '리뷰' 내용을 반환
       case ProdDetailScreenTabSection.inquiry: // '문의' 섹션이면
         return ProductInquiryContents(); // '문의' 내용을 반환
       default:
@@ -1893,60 +1896,177 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
 // ProductReviewContents 클래스는 StatelessWidget을 상속받아 정의됨
 // 해당 리뷰 부분은 리뷰 작성 화면에서 작성한 내용을 파이어베이스에 저장 후 저장된 내용을 불러오도록 로직을 재설계해야함!!
 class ProductReviewContents extends StatelessWidget {
-  // 클래스의 필드들을 final로 선언
-  final String thumbnailUrl;
-  final String productName;
-  final String orderNumber;
-  final String orderDate;
+  // 리뷰 작성자의 이름
   final String reviewerName;
+  // 리뷰 작성 날짜
   final String reviewDate;
-  final String reviewImageUrl;
+  // 리뷰 내용
   final String reviewContent;
+  // 리뷰 제목
+  final String reviewTitle;  // 리뷰 제목 추가
+  // 리뷰에 첨부된 이미지 리스트
+  final List<String> reviewImages;  // 리뷰에 첨부된 이미지들
+  // 리뷰에서 선택된 색상
+  final String reviewSelectedColor;  // 선택된 색상 추가
+  // 리뷰에서 선택된 사이즈
+  final String reviewSelectedSize;  // 선택된 사이즈 추가
 
-  // 생성자를 통해 필드들을 초기화
+  // 생성자에서 모든 필드를 필수로 받아 초기화함
   const ProductReviewContents({
-    required this.thumbnailUrl, // 상품 썸네일 URL
-    required this.productName, // 상품명
-    required this.orderNumber, // 발주 번호
-    required this.orderDate, // 발주 일자
-    required this.reviewerName, // 작성자 이름
-    required this.reviewDate, // 리뷰 등록 일자
-    required this.reviewImageUrl, // 리뷰 이미지 URL
-    required this.reviewContent, // 리뷰 내용
+    required this.reviewerName,
+    required this.reviewDate,
+    required this.reviewContent,
+    required this.reviewTitle,  // 리뷰 제목 추가
+    required this.reviewImages,  // 리뷰 이미지들 추가
+    required this.reviewSelectedColor,  // 선택된 색상 추가
+    required this.reviewSelectedSize,  // 선택된 사이즈 추가
   });
 
-  // build 메서드를 오버라이드하여 UI를 구성
   @override
   Widget build(BuildContext context) {
-    // CommonCardView 위젯을 반환, content에 Column 위젯을 사용하여 여러 위젯을 세로로 배치
+    // 작성자 이름을 마스킹 처리함
+    String maskedReviewerName = reviewerName.isNotEmpty
+        ? reviewerName[0] + '*' * (reviewerName.length - 1)
+        : '';
+
     return CommonCardView(
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // 좌측 정렬
+      // 배경색을 설정함
+      backgroundColor: BEIGE_COLOR,
+      content: Padding(
+        padding: const EdgeInsets.all(8.0),
+        // 리뷰 내용 전체를 세로로 정렬된 컬럼 위젯으로 구성함
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 작성자 이름을 마스킹 처리된 값으로 출력함
+            _buildReviewInfoRow('작성자: ', maskedReviewerName, bold: true),
+            SizedBox(height: 4),
+            // 리뷰 작성일자를 출력함
+            _buildReviewInfoRow('리뷰 등록 일자: ', reviewDate, bold: true),
+            SizedBox(height: 4),
+            // 선택된 색상 및 사이즈가 존재할 경우 이를 출력함
+            if (reviewSelectedColor.isNotEmpty || reviewSelectedSize.isNotEmpty)
+              _buildReviewInfoRow('색상 / 사이즈: ', '$reviewSelectedColor / $reviewSelectedSize', bold: true),
+            SizedBox(height: 8),
+            // 리뷰 제목이 존재할 경우 이를 출력함
+            if (reviewTitle.isNotEmpty)
+              _buildReviewInfoColumn('제목: ', reviewTitle, bold: true),
+            SizedBox(height: 8),
+            // 리뷰 내용이 존재할 경우 이를 출력함
+            if (reviewContent.isNotEmpty)
+              _buildReviewInfoColumn('내용: ', reviewContent, bold: true),
+            SizedBox(height: 8),
+            // 리뷰 이미지가 존재할 경우 이를 출력함
+            if (reviewImages.isNotEmpty)
+              _buildReviewImagesRow(reviewImages, context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 리뷰 정보를 세로로 구성하여 표시하는 함수
+  Widget _buildReviewInfoColumn(String label, String value, {bool bold = false, double fontSize = 14}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10), // 위쪽 여백 설정
-          // 상품 썸네일
-          Image.network(thumbnailUrl, height: 100, width: 100, fit: BoxFit.cover),
-          const SizedBox(height: 8), // 여백
-          // 상품 정보
-          Text('상품명: $productName', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4), // 여백
-          Text('발주 번호: $orderNumber'),
-          const SizedBox(height: 4), // 여백
-          Text('발주 일자: $orderDate'),
-          const SizedBox(height: 4), // 여백
-          Text('작성자: $reviewerName'),
-          const SizedBox(height: 4), // 여백
-          Text('리뷰 등록 일자: $reviewDate'),
-          const SizedBox(height: 8), // 여백
-          // 리뷰 이미지가 있을 경우만 이미지 위젯을 표시
-          if (reviewImageUrl.isNotEmpty)
-            Image.network(reviewImageUrl, height: 200, width: double.infinity, fit: BoxFit.cover),
-          const SizedBox(height: 8), // 여백
-          // 리뷰 내용
-          Text(reviewContent),
+          // 라벨 텍스트를 출력함
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.normal, // 라벨 텍스트는 기본 스타일로 표시함
+            ),
+          ),
+          SizedBox(height: 4),
+          // 데이터 텍스트를 출력함
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal, // 데이터 텍스트만 bold로 표시함
+            ),
+            textAlign: TextAlign.start,
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
         ],
       ),
-      backgroundColor: BEIGE_COLOR, // 카드의 배경색 설정
+    );
+  }
+
+  // 리뷰 정보를 가로로 구성하여 표시하는 함수
+  Widget _buildReviewInfoRow(String label, String value, {bool bold = false, double fontSize = 14}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 라벨 텍스트를 출력함
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.normal, // 라벨 텍스트는 기본 스타일로 표시함
+            ),
+          ),
+          SizedBox(height: 4),
+          // 데이터 텍스트를 확장 가능한 위젯으로 출력함
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal, // 데이터 텍스트만 bold로 표시함
+              ),
+              textAlign: TextAlign.start,
+              softWrap: true,
+              overflow: TextOverflow.visible,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 리뷰 이미지를 가로로 구성하여 표시하는 함수
+  Widget _buildReviewImagesRow(List<String> images, BuildContext context) {
+    // 화면 너비를 계산함
+    final width = MediaQuery.of(context).size.width;
+    // 이미지 하나의 너비를 설정함
+    final imageWidth = width / 4;
+
+    // 각 이미지를 가로로 나열하여 출력함
+    return Row(
+      children: images.map((image) {
+        return GestureDetector(
+          // 이미지를 클릭했을 때 원본 이미지를 보여주는 화면으로 이동함
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductDetailOriginalImageScreen(
+                  images: images,
+                  initialPage: images.indexOf(image),
+                ),
+              ),
+            );
+          },
+          // 이미지 컨테이너를 설정함
+          child: Container(
+            width: imageWidth,
+            height: imageWidth,
+            margin: const EdgeInsets.only(right: 8.0),
+            child: AspectRatio(
+              aspectRatio: 1,
+              // 네트워크에서 이미지를 불러와 출력함
+              child: Image.network(image, fit: BoxFit.cover),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

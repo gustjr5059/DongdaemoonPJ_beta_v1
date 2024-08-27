@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
+import '../../../review/provider/review_all_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
 import '../../provider/product_state_provider.dart';
@@ -111,6 +112,8 @@ class _PaedingDetailProductScreenState
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         paedingDetailProductScreenPointScrollController
             .jumpTo(savedScrollPosition);
+
+        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
       }
     });
 
@@ -122,6 +125,7 @@ class _PaedingDetailProductScreenState
         ref.read(paedingDetailScrollPositionProvider.notifier).state = 0; // paedingDetailScrollPositionProvider의 상태를 0으로 설정
         ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0; // getImagePageProvider의 상태를 0으로 설정
         pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
+        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
       }
     });
 
@@ -188,6 +192,7 @@ class _PaedingDetailProductScreenState
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(paedingDetailProdFirestoreDataProvider(widget.fullPath));
+    final productReviews = ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -230,56 +235,37 @@ class _PaedingDetailProductScreenState
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.zero, // 컨텐츠 내용 부분 패딩이 없음.
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                padding: EdgeInsets.zero,
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                        (BuildContext context, int index) {
                       return Column(
-                          children: [
-                            // productContent의 상태에 따라 위젯을 빌드.
-                            productContent.when(
-                              // 데이터가 로드되었을 때 실행되는 코드 블록.
-                              // data 함수에서 product를 받아옴
-                              data: (product) {
-                                // 리뷰 내용 리스트를 생성하여 reviewsContent에 할당
-                                final List<ProductReviewContents> reviewsContent = [
-                                  // 첫 번째 리뷰 내용을 ProductReviewContents 객체로 생성
-                                  // 임시로 데이터를 생성한 부분
-                                  // - 리뷰 작성 화면에서 작성한 내용을 파이어베이스에 저장 후 저장된 내용을 불러오도록 로직을 재설계해야함!!
-                                  ProductReviewContents(
-                                    thumbnailUrl: 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2Fshirt_new.png?alt=media', // 상품 썸네일 URL
-                                    productName: 'Example Product', // 상품명
-                                    orderNumber: '12345', // 발주 번호
-                                    orderDate: '2024-06-30', // 발주 일자
-                                    reviewerName: '고딩12', // 리뷰 작성자
-                                    reviewDate: '2024-06-30', // 리뷰 작성 일자
-                                    reviewImageUrl: 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media', // 리뷰 이미지 URL
-                                    reviewContent: '만족해요', // 리뷰 내용
+                        children: [
+                          productContent.when(
+                            data: (product) {
+                              return Column(
+                                children: [
+                                  buildProdDetailScreenContents(context, ref, product, pageController),
+                                  SizedBox(height: 40),
+                                  // ProductDetailScreenTabs를 사용하여 탭을 생성하고 리뷰 데이터를 전달
+                                  productReviews.when(
+                                    data: (reviewsContent) {
+                                      return ProductDetailScreenTabs(
+                                        productInfoContent: ProductInfoContents(product: product),
+                                        reviewsContent: reviewsContent, // Firestore에서 가져온 리뷰 데이터를 전달
+                                        inquiryContent: ProductInquiryContents(),
+                                      );
+                                    },
+                                    loading: () => CircularProgressIndicator(),
+                                    error: (error, _) => Text('오류 발생: $error'),
                                   ),
-                                  // 더 많은 리뷰 내용을 여기에 추가할 수 있습니다.
-                                ];
-                                // Column 위젯을 반환하여 여러 위젯을 세로로 배치
-                                return Column(
-                                  children: [
-                                    // buildProdDetailScreenContents 함수를 호출하여 상품 상세 화면 콘텐츠를 생성
-                                    buildProdDetailScreenContents(context, ref, product, pageController),
-                                    SizedBox(height: 40), // 여백
-                                    // ProductDetailScreenTabs 위젯을 사용하여 탭을 생성
-                                    ProductDetailScreenTabs(
-                                      productInfoContent: ProductInfoContents(product: product), // 상품 정보 콘텐츠
-                                      reviewsContent: reviewsContent, // 리뷰 내용 리스트
-                                      inquiryContent: ProductInquiryContents(), // 상품 문의 콘텐츠
-                                    ),
-                                  ],
-                                );
-                              },
-                              // 로딩 중일 때 실행되는 코드 블록.
-                              loading: () => Center(child: CircularProgressIndicator()),
-                              // 에러가 발생했을 때 실행되는 코드 블록.
-                              error: (error, _) => Center(child: Text('오류 발생: $error')),
-                            ),
-                          ],
+                                ],
+                              );
+                            },
+                            loading: () => Center(child: CircularProgressIndicator()),
+                            error: (error, _) => Center(child: Text('오류 발생: $error')),
+                          ),
+                        ],
                       );
                     },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
