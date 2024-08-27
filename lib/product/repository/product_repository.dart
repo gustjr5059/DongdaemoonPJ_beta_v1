@@ -16,7 +16,6 @@ class NewProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b1', 'a2b1', 'a3b1', 'a4b1', 'a5b1', 'a6b1',
     'a7b1', 'a8b1', 'a9b1', 'a10b1', 'a11b1', 'a12b1'
   ];
@@ -31,31 +30,39 @@ class NewProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -67,7 +74,6 @@ class BestProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b2', 'a2b2', 'a3b2', 'a4b2', 'a5b2', 'a6b2',
     'a7b2', 'a8b2', 'a9b2', 'a10b2', 'a11b2', 'a12b2'
   ];
@@ -82,31 +88,39 @@ class BestProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -118,7 +132,6 @@ class SaleProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b3', 'a2b3', 'a3b3', 'a4b3', 'a5b3', 'a6b3',
     'a7b3', 'a8b3', 'a9b3', 'a10b3', 'a11b3', 'a12b3'
   ];
@@ -133,31 +146,39 @@ class SaleProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -169,7 +190,6 @@ class SpringProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b4', 'a2b4', 'a3b4', 'a4b4', 'a5b4', 'a6b4',
     'a7b4', 'a8b4', 'a9b4', 'a10b4', 'a11b4', 'a12b4'
   ];
@@ -185,31 +205,39 @@ class SpringProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -221,7 +249,6 @@ class SummerProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b5', 'a2b5', 'a3b5', 'a4b5', 'a5b5', 'a6b5',
     'a7b5', 'a8b5', 'a9b5', 'a10b5', 'a11b5', 'a12b5'
   ];
@@ -237,31 +264,39 @@ class SummerProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -273,7 +308,6 @@ class AutumnProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b6', 'a2b6', 'a3b6', 'a4b6', 'a5b6', 'a6b6',
     'a7b6', 'a8b6', 'a9b6', 'a10b6', 'a11b6', 'a12b6'
   ];
@@ -289,31 +323,39 @@ class AutumnProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -325,7 +367,6 @@ class WinterProductRepository {
   DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷
   int currentCollectionIndex = 0; // 현재 컬렉션 인덱스
   List<String> collections = [
-    // 컬렉션 이름 리스트
     'a1b7', 'a2b7', 'a3b7', 'a4b7', 'a5b7', 'a6b7',
     'a7b7', 'a8b7', 'a9b7', 'a10b7', 'a11b7', 'a12b7'
   ];
@@ -341,31 +382,39 @@ class WinterProductRepository {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
-          collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      collections[currentCollectionIndex]; // 현재 컬렉션 이름
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 쿼리 설정
       if (lastDocument != null) {
+        print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 제품 리스트에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 제품 리스트 반환
   }
 
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
   }
@@ -388,9 +437,11 @@ class GeneralProductRepository<T> {
     final docRef = firestore.doc(fullPath); // 경로에 해당하는 문서 참조
     final snapshot = await docRef.get(); // 문서 스냅샷 가져오기
     if (snapshot.exists) {
+      print('문서 조회 성공: $fullPath');
       return ProductContent.fromFirestore(
           snapshot); // 데이터가 존재하면 ProductContent로 변환하여 반환
     } else {
+      print('문서 조회 실패: Firestore 데이터가 없습니다. 경로: $fullPath');
       throw Exception('Firestore 데이터가 없습니다.'); // 데이터가 없으면 예외 발생
     }
   }
@@ -404,32 +455,40 @@ class GeneralProductRepository<T> {
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection = collections[currentCollectionIndex]; // 현재 컬렉션
+      print('현재 조회 중인 컬렉션: $currentCollection');
+
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
 
       // 상품 데이터를 가져올 때, 마지막 데이터 이후부터 새롭게 가져오도록 하는 로직 부분
       if (startAfter != null) {
+        print('이전 문서 이후부터 조회 시작: ${startAfter.id}');
         query = query.startAfterDocument(startAfter); // 마지막 문서 이후부터 시작
       }
 
       final snapshots = await query.get(); // 쿼리 실행하여 스냅샷 가져오기
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+        print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+
         products.addAll(snapshots.docs
             .map((doc) => ProductContent.fromFirestore(doc))
             .toList()); // 상품 목록에 추가
       } else {
+        print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
         lastDocument = null; // 문서가 없으면 마지막 문서 초기화
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
     }
 
+    print('가져온 제품 총 수: ${products.length}');
     return products; // 가져온 상품 목록 반환
   }
 
   // 각 리포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
+    print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null; // 마지막 문서 초기화
     currentCollectionIndex = 0; // 컬렉션 인덱스 초기화
   }

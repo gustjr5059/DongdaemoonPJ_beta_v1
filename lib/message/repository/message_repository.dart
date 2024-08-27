@@ -7,8 +7,7 @@ class PrivateMessageRepository {
   // PrivateMessageRepository 클래스의 생성자.
   PrivateMessageRepository({required this.firestore});
 
-
-// ------ 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 시작
+  // ------ 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 시작
   // <원리>
   // 해당 쿼리 로직 :
   // 파이어스토어 내 인덱스 저장 (컬렉션 ID: message, 'private_email_closed_button' : ascending, 'message_sendingTime' : ascending)
@@ -17,8 +16,9 @@ class PrivateMessageRepository {
   // 'x' 버튼을 클릭하면 fetchDeleteMessages 함수를 활용한 'private_email_closed_button' 필드값이 'true'로 변경되는 것을 활용해서 'false' 값만 가져옴
   // 이러면 UI 상으로는 해당 쪽지를 삭제한 것으로 보이지만, 파이어스토어 내에선 해당 데이터가 존재하도록 함
 
-// 특정 이메일 계정의 1분 이내에 발송된 쪽지 목록을 실시간으로 가져오는 함수.
+  // 특정 이메일 계정의 1분 이내에 발송된 쪽지 목록을 실시간으로 가져오는 함수.
   Stream<List<Map<String, dynamic>>> fetchMinutesMessages(String email, int minutes) {
+    print('Fetching messages from the last $minutes minutes for email: $email');
     // 1분 전의 날짜와 시간을 계산
     final oneMinuteAgo = DateTime.now().subtract(Duration(minutes: minutes));
 
@@ -31,14 +31,18 @@ class PrivateMessageRepository {
         .where('private_email_closed_button', isEqualTo: false) // 'private_email_closed_button' 필드가 false인 문서들만 필터링
         .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
         .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
-        .map((snapshot) => snapshot.docs.map((doc) => {
-      'id': doc.id,  // 문서 ID를 'id'로 포함
-      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
-    }).toList()); // 각 문서를 맵으로 변환한 후 리스트로 변환
+        .map((snapshot) {
+      print('Fetched ${snapshot.docs.length} messages from the last $minutes minutes for email: $email');
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,  // 문서 ID를 'id'로 포함
+        ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
+      }).toList();
+    });
   }
 
-// 특정 이메일 계정의 30일 이내에 발송된 쪽지 목록을 실시간으로 가져오는 함수.
+  // 특정 이메일 계정의 30일 이내에 발송된 쪽지 목록을 실시간으로 가져오는 함수.
   Stream<List<Map<String, dynamic>>> fetchDaysMessages(String email, int days) {
+    print('Fetching messages from the last $days days for email: $email');
     // 30일 전의 날짜와 시간을 계산
     final thirtyDaysAgo = DateTime.now().subtract(Duration(days: days));
 
@@ -51,14 +55,18 @@ class PrivateMessageRepository {
         .where('private_email_closed_button', isEqualTo: false) // 'private_email_closed_button' 필드가 false인 문서들만 필터링
         .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
         .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
-        .map((snapshot) => snapshot.docs.map((doc) => {
-      'id': doc.id,  // 문서 ID를 'id'로 포함
-      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
-    }).toList()); // 각 문서를 맵으로 변환한 후 리스트로 변환
+        .map((snapshot) {
+      print('Fetched ${snapshot.docs.length} messages from the last $days days for email: $email');
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,  // 문서 ID를 'id'로 포함
+        ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
+      }).toList();
+    });
   }
 
-// 특정 이메일 계정의 1년 이내에 발송된 쪽지 목록을 실시간으로 가져오는 함수.
+  // 특정 이메일 계정의 1년 이내에 발송된 쪽지 목록을 실시간으로 가져오는 함수.
   Stream<List<Map<String, dynamic>>> fetchYearMessages(String email, int days) {
+    print('Fetching messages from the last $days days (up to 1 year) for email: $email');
     // 1년(365일) 전의 날짜와 시간을 계산
     final oneYearAgo = DateTime.now().subtract(Duration(days: days));
 
@@ -71,14 +79,18 @@ class PrivateMessageRepository {
         .where('private_email_closed_button', isEqualTo: false) // 'private_email_closed_button' 필드가 false인 문서들만 필터링
         .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
         .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
-        .map((snapshot) => snapshot.docs.map((doc) => {
-      'id': doc.id,  // 문서 ID를 'id'로 포함
-      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
-    }).toList()); // 각 문서를 맵으로 변환한 후 리스트로 변환
+        .map((snapshot) {
+      print('Fetched ${snapshot.docs.length} messages from the last $days days (up to 1 year) for email: $email');
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,  // 문서 ID를 'id'로 포함
+        ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
+      }).toList();
+    });
   }
 
-// 특정 쪽지의 'private_email_closed_button' 필드값을 'true'로 변경하는 함수.
+  // 특정 쪽지의 'private_email_closed_button' 필드값을 'true'로 변경하는 함수.
   Future<void> fetchDeleteMessages(String email, String messageId) async {
+    print('Deleting message with ID: $messageId for email: $email');
     // Firestore에서 특정 이메일의 메시지 컬렉션을 참조하여 해당 문서 ID를 찾음.
     final messageDoc = firestore
         .collection('message_list') // 'message_list' 컬렉션에 접근
@@ -95,11 +107,14 @@ class PrivateMessageRepository {
       'private_email_closed_button': true, // 해당 필드를 true로 변경
       'message_delete_time': messageDeleteTime, // 쪽지 삭제 시간
     });
+
+    print('Message with ID: $messageId for email: $email marked as deleted');
   }
-// ------ 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 끝
+  // ------ 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 끝
 
   // 특정 발주번호에 해당하는 결제완료일을 가져오는 함수.
   Future<DateTime?> fetchPaymentCompleteDate(String email, String orderNumber) async {
+    print('Fetching payment complete date for order number: $orderNumber for email: $email');
     // Firestore에서 'message_list' 컬렉션 내의 특정 이메일에 해당하는 문서(doc)를 참조하고,
     // 그 하위 컬렉션인 'message'에서 주어진 발주번호(order_number)와 특정 내용('해당 발주 건은 결제 완료 되었습니다.')을 가진 문서를 조회하도록 했음.
     final querySnapshot = await firestore
@@ -113,16 +128,18 @@ class PrivateMessageRepository {
     // 조회된 문서가 하나라도 있을 경우, 첫 번째 문서의 'message_sendingTime' 필드를 Timestamp로 가져오도록 했음.
     if (querySnapshot.docs.isNotEmpty) {
       final sendingTime = querySnapshot.docs.first.data()['message_sendingTime'] as Timestamp?;
+      print('Found payment complete date for order number: $orderNumber for email: $email');
       // Timestamp가 존재하면 이를 DateTime으로 변환하여 반환하도록 했음.
       return sendingTime?.toDate();
     }
+    print('No payment complete date found for order number: $orderNumber for email: $email');
     // 조건에 맞는 문서가 없으면 null을 반환하도록 했음.
     return null;
   }
 
-// 특정 발주번호에 해당하는 배송 시작일을 가져오는 함수
+  // 특정 발주번호에 해당하는 배송 시작일을 가져오는 함수
   Future<DateTime?> fetchDeliveryStartDate(String email, String orderNumber) async {
-
+    print('Fetching delivery start date for order number: $orderNumber for email: $email');
     // Firestore에서 'message_list' 컬렉션의 특정 이메일 문서 안의 'message' 하위 컬렉션을 참조하는 쿼리 스냅샷을 가져옴
     final querySnapshot = await firestore
         .collection('message_list')
@@ -138,9 +155,11 @@ class PrivateMessageRepository {
     if (querySnapshot.docs.isNotEmpty) {
       // 첫 번째 문서의 'message_sendingTime' 필드를 Timestamp 타입으로 가져옴
       final sendingTime = querySnapshot.docs.first.data()['message_sendingTime'] as Timestamp?;
+      print('Found delivery start date for order number: $orderNumber for email: $email');
       // Timestamp를 DateTime으로 변환하여 반환함
       return sendingTime?.toDate();
     }
+    print('No delivery start date found for order number: $orderNumber for email: $email');
     // 쿼리 결과가 비어 있으면 null을 반환함
     return null;
   }

@@ -31,11 +31,18 @@ class ReviewRepository {
           print('Processing order: ${orderDoc.id}');
 
           final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
+          print('Fetched numberInfo for order: ${orderDoc.id}');
+
           final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
+          print('Fetched ordererInfo for order: ${orderDoc.id}');
+
           final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
+          print('Fetched amountInfo for order: ${orderDoc.id}');
+
           final productInfoQuery = await orderDoc.reference.collection('product_info')
               .where('boolReviewCompleteBtn', isEqualTo: false)
               .get();
+          print('Fetched productInfo for order: ${orderDoc.id}');
 
           final productInfo = productInfoQuery.docs.map((doc) {
             print('Processing product: ${doc.id}');
@@ -71,15 +78,18 @@ class ReviewRepository {
   // 사용자 이메일을 통해 이름 가져오는 함수
   Future<String> fetchUserNameByEmail(String email) async { // 사용자 이메일을 통해 이름을 가져오는 비동기 함수 선언
     try { // 오류 발생 가능성이 있는 코드 블록을 시도함
+      print('Fetching user name for email: $email');
       DocumentSnapshot userDoc = await firestore.collection('users').doc(email).get(); // Firestore에서 'users' 컬렉션의 문서를 이메일로 가져옴
       if (userDoc.exists) { // 해당 문서가 존재하는지 확인
         String userName = userDoc['name']; // 문서에서 'name' 필드의 값을 가져옴
+        print('User name found: $userName');
         return userName; // 사용자 이름을 반환
       } else { // 문서가 존재하지 않는 경우
+        print('No user name found for email: $email');
         return '알 수 없음'; // '알 수 없음'이라는 문자열을 반환
       }
     } catch (e) { // 오류가 발생한 경우 처리
-      print('Error fetching user name: $e'); // 오류 메시지를 콘솔에 출력
+      print('Error fetching user name for email $email: $e'); // 오류 메시지를 콘솔에 출력
       return '알 수 없음'; // 오류 발생 시 '알 수 없음'이라는 문자열을 반환
     }
   }
@@ -87,15 +97,18 @@ class ReviewRepository {
   // 파이어스토리지에 이미지를 업로드하고 URL을 반환하는 함수
   Future<String?> uploadImage(File image, String storagePath) async {
     try {
+      print('Uploading image to: $storagePath');
       // 파이어스토리지 참조 경로 설정
       final ref = FirebaseStorage.instance.ref().child(storagePath);
       // 이미지를 파이어스토리지에 업로드함
       await ref.putFile(image);
       // 업로드된 이미지의 다운로드 URL을 반환함
-      return await ref.getDownloadURL();
+      final downloadUrl = await ref.getDownloadURL();
+      print('Image uploaded successfully: $downloadUrl');
+      return downloadUrl;
     } catch (e) {
       // 업로드 중 발생한 오류를 출력함
-      print('Image upload error: $e');
+      print('Image upload error for $storagePath: $e');
       // 오류 발생 시 null을 반환함
       return null;
     }
@@ -185,7 +198,7 @@ class ReviewRepository {
         'boolReviewCompleteBtn': true,  // 리뷰 작성 완료 버튼 필드를 true로 설정
       });
 
-      print("Review submitted with separatorKey: $separatorKey");
+      print("Review submitted successfully with separatorKey: $separatorKey");
 
     } catch (e) {
       // 리뷰 제출 중 발생한 오류를 출력함
@@ -198,6 +211,7 @@ class ReviewRepository {
   // 특정 사용자의 리뷰 목록을 실시간으로 가져오는 함수
   Stream<List<Map<String, dynamic>>> streamReviewList(String userEmail) {
     try {
+      print('Streaming review list for user: $userEmail');
       final userReviewsRef = firestore
           .collection('review_list')
           .doc(userEmail)
@@ -205,15 +219,17 @@ class ReviewRepository {
           .where('private_review_closed_button', isEqualTo: false) // 추가된 조건
           .orderBy('review_write_time', descending: true);
 
-      return userReviewsRef.snapshots().map((snapshot) =>
-          snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList());
+      return userReviewsRef.snapshots().map((snapshot) {
+        print('Fetched ${snapshot.docs.length} reviews for user: $userEmail');
+        return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      });
     } catch (e) {
       print('Failed to fetch reviews for user $userEmail: $e');
       throw Exception('Failed to fetch reviews: $e');
     }
   }
 
-// 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
+  // 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
   Future<void> privatDeleteReview({
     required String userEmail,
     required String separatorKey,
@@ -241,13 +257,13 @@ class ReviewRepository {
           'review_delete_time': reviewDeleteTime,
         });
 
-        print("Review hidden successfully");
+        print("Review hidden successfully for separatorKey: $separatorKey");
       } else {
         print("Document not found for separatorKey: $separatorKey");
         throw Exception('Document not found for separatorKey: $separatorKey');
       }
     } catch (e) {
-      print('Failed to hide review: $e');
+      print('Failed to hide review for separatorKey: $separatorKey: $e');
       throw Exception('Failed to hide review: $e');
     }
   }

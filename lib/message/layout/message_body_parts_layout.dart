@@ -180,19 +180,50 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                   // 카드뷰 내부 오른쪽 끝에 위치하는 삭제 버튼
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      foregroundColor: BUTTON_COLOR,
-                                      backgroundColor: BACKGROUND_COLOR,
-                                      side: BorderSide(color: BUTTON_COLOR),
-                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                      foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상을 BUTTON_COLOR로 설정함
+                                      backgroundColor: BACKGROUND_COLOR, // 버튼 배경색을 BACKGROUND_COLOR로 설정함
+                                      side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상을 BUTTON_COLOR로 설정함
+                                      padding: EdgeInsets.symmetric(vertical: 8), // 버튼의 수직 패딩을 8로 설정함
                                     ),
-                                    onPressed: () {
-                                      ref.read(fetchDeleteMessagesProvider(message['id']));
+                                    onPressed: () async {
+                                      // 쪽지 삭제 버튼 클릭 시 확인 다이얼로그를 표시함
+                                      await showSubmitAlertDialog(
+                                        context,
+                                        title: '쪽지 삭제', // 다이얼로그 제목 설정
+                                        content: '쪽지를 삭제하시면 더이상 해당 쪽지를 확인하실 수 없습니다.\n해당 쪽지를 삭제하시겠습니까?', // 다이얼로그 내용 설정
+                                        actions: buildAlertActions(
+                                          context,
+                                          noText: '아니요', // 아니요 버튼 텍스트 설정
+                                          yesText: '예', // 예 버튼 텍스트 설정
+                                          noTextStyle: TextStyle(
+                                            color: Colors.black, // 아니요 버튼 텍스트 색상 설정
+                                            fontWeight: FontWeight.bold, // 아니요 버튼 텍스트 굵기 설정
+                                          ),
+                                          yesTextStyle: TextStyle(
+                                            color: Colors.red, // 예 버튼 텍스트 색상 설정
+                                            fontWeight: FontWeight.bold, // 예 버튼 텍스트 굵기 설정
+                                          ),
+                                          onYesPressed: () async {
+                                            try{
+                                              await ref.read(fetchDeleteMessagesProvider(message['id']));
+                                              Navigator.of(context).pop(); // 다이얼로그 닫기
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('쪽지가 삭제되었습니다.')), // 리뷰 삭제 완료 메시지 표시
+                                              );
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('쪽지 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 표시
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      );
                                     },
                                     child: Text(
-                                      '삭제',
+                                      '삭제', // '삭제' 버튼 텍스트 설정
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16, // 텍스트 크기 설정
+                                        fontWeight: FontWeight.bold, // 텍스트를 Bold로 설정함
+                                        fontSize: 16, // 텍스트 크기를 16으로 설정함
                                       ),
                                     ),
                                   ),

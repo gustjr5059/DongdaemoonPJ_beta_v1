@@ -1,7 +1,9 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
@@ -420,6 +422,16 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
     });
   }
 
+// message_delete_time 필드의 데이터 타입이 Timestamp로 되어 있어, 이를 DateTime으로 변환한 후, 문자열로 포맷팅하는 함수
+  String formatTimestamp(dynamic timestamp) {
+    if (timestamp is Timestamp) {
+      DateTime dateTime = timestamp.toDate(); // Timestamp를 DateTime으로 변환하는 코드
+      return DateFormat('[yyyy년 MM월 dd일 HH시 mm분] ').format(dateTime); // 변환된 DateTime을 포맷팅하여 문자열로 반환하는 코드
+    } else {
+      return ''; // timestamp가 Timestamp 타입이 아닌 경우 빈 문자열을 반환하는 코드
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -444,7 +456,7 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
         receivers.when(
           data: (receiversList) {
             return DropdownButton<String>(
-              hint: Text('수신자 선택'), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
+              hint: Text('쪽지 수신자 선택'), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
               value: selectedReceiver, // 현재 선택된 수신자 이메일 값 설정
               onChanged: (value) {
                 // 선택한 수신자 이메일을 상태로 업데이트
@@ -479,6 +491,12 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                 String statusIcon = message['private_email_closed_button'] == true ? '[삭제 O]  ' : '[삭제 X]  '; // private_email_closed_button 값에 따라 상태 아이콘 설정
                 String recipientText = '${message['recipient']}'; // 수신자 이메일 텍스트 설정
                 String orderNumberText = '[발주번호: ${message['order_number']}]'; // 발주번호 텍스트 설정
+                String deleteTime = '';
+
+                // 'message_delete_time' 필드값이 존재 유무에 따라 해당 필드값을 노출
+                if (message.containsKey('message_delete_time')) {
+                  deleteTime = formatTimestamp(message['message_delete_time']);
+                }
 
                 // '[자세히]' 버튼을 클릭했을 때 팝업을 띄우는 함수
                 void showMessageDetailDialog(BuildContext context) async {
@@ -490,6 +508,14 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                       // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 구성함
                       text: TextSpan(
                         children: [
+                          if (deleteTime.isNotEmpty)
+                            TextSpan(
+                              text: deleteTime,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
                           // $statusIcon 부분을 파란색으로 설정하고 Bold로 표시함
                           TextSpan(
                             text: statusIcon,
@@ -562,6 +588,14 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                                     overflow: TextOverflow.ellipsis, // 넘치는 텍스트는 '...'로 표시함
                                     text: TextSpan(
                                       children: [
+                                        if (deleteTime.isNotEmpty)
+                                          TextSpan(
+                                            text: deleteTime,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
                                         // $statusIcon 부분을 파란색으로 설정하고 Bold로 표시함
                                         TextSpan(
                                           text: statusIcon,
@@ -631,11 +665,42 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                                           side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상을 BUTTON_COLOR로 설정함
                                           padding: EdgeInsets.symmetric(vertical: 8), // 버튼의 수직 패딩을 8로 설정함
                                         ),
-                                        onPressed: () {
-                                          ref.read(fetchDeleteAllMessageProvider({
-                                            'messageId': message['id'],
-                                            'recipient': message['recipient'],
-                                          }).future); // '삭제' 버튼 클릭 시 쪽지를 삭제하는 함수 호출함
+                                        onPressed: () async {
+                                          // 쪽지 삭제 버튼 클릭 시 확인 다이얼로그를 표시함
+                                          await showSubmitAlertDialog(
+                                            context,
+                                            title: '쪽지 삭제', // 다이얼로그 제목 설정
+                                            content: '쪽지를 삭제하면 데이터베이스에서 영구적으로 삭제됩니다.\n해당 쪽지를 삭제하시겠습니까?', // 다이얼로그 내용 설정
+                                            actions: buildAlertActions(
+                                              context,
+                                              noText: '아니요', // 아니요 버튼 텍스트 설정
+                                              yesText: '예', // 예 버튼 텍스트 설정
+                                              noTextStyle: TextStyle(
+                                                color: Colors.black, // 아니요 버튼 텍스트 색상 설정
+                                                fontWeight: FontWeight.bold, // 아니요 버튼 텍스트 굵기 설정
+                                              ),
+                                              yesTextStyle: TextStyle(
+                                                color: Colors.red, // 예 버튼 텍스트 색상 설정
+                                                fontWeight: FontWeight.bold, // 예 버튼 텍스트 굵기 설정
+                                              ),
+                                              onYesPressed: () async {
+                                                try{
+                                                  await ref.read(fetchDeleteAllMessageProvider({
+                                                    'messageId': message['id'],
+                                                    'recipient': message['recipient'],
+                                                    }).future); // '삭제' 버튼 클릭 시 쪽지를 삭제하는 함수 호출함
+                                                    Navigator.of(context).pop(); // 다이얼로그 닫기
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                      SnackBar(content: Text('쪽지가 삭제되었습니다.')), // 리뷰 삭제 완료 메시지 표시
+                                                    );
+                                                 } catch (e) {
+                                                   ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text('쪽지 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 표시
+                                                   );
+                                                 }
+                                               },
+                                            ),
+                                          );
                                         },
                                         child: Text(
                                           '삭제', // '삭제' 버튼 텍스트 설정

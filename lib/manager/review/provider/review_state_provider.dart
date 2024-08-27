@@ -19,3 +19,6 @@ final adminReviewScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 // -------- review_screen.dart 관련 ScrollControllerProvider 끝
+
+// 특정 사용자의 이메일을 선택하는 상태 프로바이더
+final adminSelectedUserEmailProvider = StateProvider<String?>((ref) => null);

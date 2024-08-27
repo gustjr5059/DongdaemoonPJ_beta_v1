@@ -28,7 +28,7 @@ class AdminOrderListContents extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButton<String>(
-              hint: Text('발주자 계정 선택'),
+              hint: Text('발주자 선택'),
               // 드롭다운 버튼에 힌트 텍스트 설정
               value: selectedUserEmail.isNotEmpty ? selectedUserEmail : null,
               // 선택된 사용자 이메일이 비어있지 않으면 해당 이메일을 드롭다운 값으로 설정
