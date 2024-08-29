@@ -223,3 +223,44 @@ exports.updateButtonStatusOnMessage = functions.firestore
         }
     });
 // ------ Firestore에서 '배송 중 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 끝 부분
+
+// ------ Firestore에서 '환불 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 시작 부분
+exports.updateButtonStatusOnRefundMessage = functions.firestore
+    .document('message_list/{recipientId}/message/{messageId}')
+    .onCreate(async (snap, context) => {
+        const messageData = snap.data();
+        // Firestore의 새 문서가 생성되었을 때 실행되는 함수임. 생성된 문서의 데이터를 가져옴.
+
+        if (messageData.contents === '해당 발주 건은 환불 처리 되었습니다.') {
+            const recipientId = context.params.recipientId;
+            const orderNumber = messageData.order_number;
+            const selectedSeparatorKey = messageData.selected_separator_key;
+            // 메시지의 내용이 특정 문구와 일치할 경우 실행됨. 메시지에 포함된 수신자 ID, 주문 번호, 선택된 separator_key를 가져옴.
+
+            const ordersSnapshot = await admin.firestore()
+                .collection('order_list')
+                .doc(recipientId)
+                .collection('orders')
+                .where('numberInfo.order_number', '==', orderNumber)
+                .get();
+            // Firestore에서 해당 수신자 ID의 주문 목록을 가져옴. 주문 번호와 일치하는 주문을 조회함.
+
+            if (!ordersSnapshot.empty) {
+                const orderDoc = ordersSnapshot.docs[0];
+                const productInfoRef = orderDoc.ref.collection('product_info');
+                // 주문이 존재할 경우 해당 주문 문서를 가져오고, 그 주문의 product_info 하위 컬렉션을 참조함.
+
+                const productDocs = await productInfoRef.where('separator_key', '==', selectedSeparatorKey).get();
+                // 선택된 separator_key와 일치하는 product_info 문서를 조회함.
+
+                if (!productDocs.empty) {
+                    const productDoc = productDocs.docs[0];
+                    await productDoc.ref.update({
+                        'boolRefundCompleteBtn': true,
+                    });
+                    // 일치하는 문서가 존재하면, 해당 문서의 'boolRefundCompleteBtn' 필드를 'true'로 업데이트함.
+                }
+            }
+        }
+    });
+// ------ Firestore에서 '환불 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 끝 부분

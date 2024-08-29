@@ -97,6 +97,8 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
   String? selectedReceiver; // 선택된 수신자를 저장하는 변수.
   String? selectedOrderNumber; // 선택된 발주번호를 저장하는 변수.
   String? messageContentText; // 메시지 내용을 저장하는 변수.
+  String? selectedProduct; // 선택된 상품 저장
+  String? selectedSeparatorKey; // 선택된 separator_key 저장
 
   @override
   void initState() {
@@ -134,6 +136,7 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
       // 상태 관리에서 adminCustomMessageProvider의 상태를 초기화 (null로 설정)
       ref.read(adminCustomMessageProvider.notifier).state = null;
       messageContentText = ''; // 초기 메시지 내용을 빈 문자열로 설정
+      selectedProduct = null; // 상품 선택 초기화
     });
   }
 
@@ -289,6 +292,8 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                             messageContentText = '해당 발주 건은 결제 완료 되었습니다.';
                           } else if (value == '배송 중 메세지') {
                             messageContentText = '해당 발주 건은 배송이 진행되었습니다.';
+                          } else if (value == '환불 메세지') {
+                            messageContentText = '해당 발주 건은 환불 처리 되었습니다.';
                           } else if (value == '직접입력') {
                             messageContentText = '';  // 직접입력 시 초기화
                           } else {
@@ -308,6 +313,10 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                         DropdownMenuItem<String>(
                           value: '배송 중 메세지',
                           child: Text('배송 중 메세지'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '환불 메세지',
+                          child: Text('환불 메세지'),
                         ),
                         DropdownMenuItem<String>(
                           value: '직접입력',
@@ -353,13 +362,71 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
               onChanged: (value) {
                 ref.read(adminCustomMessageProvider.notifier).state = value;
               },
-            ),
-          SizedBox(height: 50), // 입력칸 아래에 간격을 추가.
-          // 메시지 내용이 선택된 경우, 발송 버튼을 표시.
+            )
+          else if (messageContent == '환불 메세지')
+              FutureBuilder<List<String>>(
+                future: ref.read(orderNumbersProvider(selectedReceiver)).whenData(
+                      (orderNumbersList) async {
+                    final repository = ref.read(adminMessageRepositoryProvider);
+                    return await repository.fetchProductOptions(selectedReceiver!, selectedOrderNumber!);
+                  },
+                ).value,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('상품이 없습니다.');
+                  }
+
+                  // 중복된 value가 없도록 확인하는 로직 추가
+                  final items = snapshot.data!.toSet().toList().map((productOption) {
+                    return DropdownMenuItem<String>(
+                      value: productOption,
+                      child: Text(productOption),
+                    );
+                  }).toList();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // "환불 신청 상품:" 라벨을 상단에 배치
+                      Text('환불 신청 상품:', style: TextStyle(fontSize: 16)),
+                      SizedBox(height: 8), // 라벨과 드롭다운 메뉴 사이에 간격 추가
+                      // 드롭다운 메뉴를 아래에 배치
+                      _buildRefundProdSelectDropdown(
+                        value: selectedProduct,
+                        items: items,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedProduct = value;
+                            selectedSeparatorKey = value?.split(' ')[0];
+                            messageContentText = '해당 발주 건은 환불 처리 되었습니다.';
+                            ref.read(adminCustomMessageProvider.notifier).state = messageContentText;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      AbsorbPointer(
+                        absorbing: true, // 입력 비활성화
+                        child: TextFormField(
+                          key: ValueKey(messageContentText),
+                          initialValue: messageContentText,
+                          style: TextStyle(fontSize: 16),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+          SizedBox(height: 50),
+
           if (messageContent != null && messageContent!.isNotEmpty)
             Center(
               child: ElevatedButton(
-                // 발송 버튼을 눌렀을 때 메시지를 전송.
                 onPressed: () async {
                   final customMessage = ref.read(adminCustomMessageProvider);
                   await ref.read(sendMessageProvider({
@@ -367,9 +434,9 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                     'recipient': selectedReceiver!,
                     'order_number': selectedOrderNumber!,
                     'contents': customMessage!,
+                    'selected_separator_key': selectedSeparatorKey,
                   }).future);
 
-                  // 쪽지 발송 성공 시 스낵바를 이용해 메시지를 표시.
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('쪽지 발송에 성공했습니다.'),
@@ -377,16 +444,46 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-                  backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-                  side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50), // 버튼 패딩
+                  foregroundColor: BUTTON_COLOR,
+                  backgroundColor: BACKGROUND_COLOR,
+                  side: BorderSide(color: BUTTON_COLOR),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                 ),
-                child: Text('발송하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼 텍스트
+                child: Text('발송하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildRefundProdSelectDropdown({
+    required String? value, // 현재 선택된 값을 저장하는 매개변수임.
+    required List<DropdownMenuItem<String>>? items, // 드롭다운 메뉴 항목들의 리스트임.
+    required ValueChanged<String?>? onChanged, // 값이 변경될 때 호출되는 콜백 함수임.
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center, // 행의 수직 정렬을 중앙에 맞춤.
+      children: [
+        Expanded( // 드롭다운 메뉴가 가능한 공간을 모두 차지하도록 확장함.
+          child: InputDecorator(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5.0), // 테두리 모서리를 둥글게 만듦.
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10.0), // 입력 필드 내부의 좌우 여백을 설정함.
+            ),
+            child: DropdownButtonHideUnderline( // 드롭다운 메뉴에서 기본 밑줄을 숨김.
+              child: DropdownButton<String>(
+                hint: Text('선택'), // 드롭다운 메뉴에서 아무것도 선택되지 않았을 때 표시되는 힌트 텍스트임.
+                value: value, // 현재 선택된 값으로, 드롭다운의 기본 선택 항목을 나타냄.
+                onChanged: onChanged, // 드롭다운 항목이 선택될 때 호출되는 함수임.
+                items: items, // 드롭다운 메뉴의 항목들을 나타냄.
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

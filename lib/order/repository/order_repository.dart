@@ -192,6 +192,7 @@ class OrderRepository {
         'selected_color_text': item.selectedColorText, // 선택한 색상 텍스트
         'selected_size': item.selectedSize, // 선택한 사이즈
         'boolReviewCompleteBtn': false, // 초기값은 false로 설정
+        'boolRefundCompleteBtn': false, // 초기값은 false로 설정
       });
       print('Product info saved for product ID: ${item.docId}');
     }
@@ -375,12 +376,15 @@ class OrderlistRepository {
       // 조회된 문서가 있을 경우 첫 번째 문서를 참조하여 필드값을 업데이트
       if (ordersQuerySnapshot.docs.isNotEmpty) {
         final orderDocRef = ordersQuerySnapshot.docs.first.reference;
+        // 삭제 시간 기록을 위한 현재 시간 저장
+        final DateTime orderListDeleteTime = DateTime.now();
 
         // 'button_info' 컬렉션의 'info' 문서를 참조하여 업데이트
         final buttonInfoDocRef = orderDocRef.collection('button_info').doc('info');
 
         await buttonInfoDocRef.update({
           'private_orderList_closed_button': true, // 해당 필드값을 true로 변경
+          'orderList_delete_time': orderListDeleteTime, // 발주 내역 삭제 시간 생성
         });
       }
     } catch (e) {

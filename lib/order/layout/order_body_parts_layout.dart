@@ -1217,6 +1217,19 @@ class _OrderListDetailItemWidgetState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 환불 완료 상태인 경우 '환불 완료' 텍스트를 표시함.
+                  if (productInfo['boolRefundCompleteBtn'] == true)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0), // 하단에 8.0의 패딩을 추가함.
+                      child: Text(
+                        '환불 완료', // '환불 완료' 텍스트를 표시함.
+                        style: TextStyle(
+                          color: Colors.red, // 텍스트 색상을 빨간색으로 설정함.
+                          fontWeight: FontWeight.bold, // 텍스트를 굵게 표시함.
+                          fontSize: 16, // 텍스트 크기를 16으로 설정함.
+                        ),
+                      ),
+                    ),
                   // 상품 번호와 간략 소개를 표시하는 _buildProductInfoRow 함수 호출
                   _buildProductInfoRow(
                       productInfo['product_number']?.toString().isNotEmpty ==
@@ -1373,7 +1386,7 @@ class _OrderListDetailItemWidgetState
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                            onPressed: boolRefundBtn
+                            onPressed: boolRefundBtn && !(productInfo['boolRefundCompleteBtn'] ?? false)
                                 ? () {
                               Navigator.push(
                                 context,

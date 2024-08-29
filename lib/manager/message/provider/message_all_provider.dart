@@ -51,7 +51,7 @@ final orderNumbersProvider = FutureProvider.family<List<String>, String?>((ref, 
 });
 
 // 메시지 발송을 위한 프로바이더인 sendMessageProvider
-final sendMessageProvider = FutureProvider.family<void, Map<String, String>>((ref, data) async {
+final sendMessageProvider = FutureProvider.family<void, Map<String, String?>>((ref, data) async {
   // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
   final AdminMessageRepository = ref.read(adminMessageRepositoryProvider);
 
@@ -62,6 +62,7 @@ final sendMessageProvider = FutureProvider.family<void, Map<String, String>>((re
     recipient: data['recipient']!,    // 수신자 정보를 전달.
     orderNumber: data['order_number']!, // 주문 번호를 전달.
     contents: data['contents']!,      // 메시지 내용을 전달.
+    selectedSeparatorKey: data['selected_separator_key'], // 선택된 separator_key 포함
   );
 });
 

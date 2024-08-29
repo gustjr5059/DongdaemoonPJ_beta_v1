@@ -77,12 +77,50 @@ class AdminMessageRepository {
     }
   }
 
+  // 쪽지 작성 탭 화면 내 환불 신청 상품 관련 드롭다운 메뉴 버튼 내 메뉴 내용
+  Future<List<String>> fetchProductOptions(String receiver, String orderNumber) async {
+    try {
+      // Firestore에서 특정 수신자와 발주번호에 해당하는 문서를 조회함.
+      final querySnapshot = await firestore
+          .collection('order_list')
+          .doc(receiver)
+          .collection('orders')
+          .where('numberInfo.order_number', isEqualTo: orderNumber)
+          .get();
+
+      // 조회된 문서가 없으면 '상품 없음'을 반환함.
+      if (querySnapshot.docs.isEmpty) {
+        return ['상품 없음'];
+      }
+
+      List<String> productOptions = []; // 상품 옵션을 저장할 리스트임.
+      for (var doc in querySnapshot.docs) {
+        // 각 주문 문서의 'product_info' 하위 컬렉션을 가져옴.
+        final productInfoDocs = await doc.reference.collection('product_info').get();
+        for (var productDoc in productInfoDocs.docs) {
+          final separatorKey = productDoc.data()['separator_key']; // 상품의 separator_key를 가져옴.
+          final selectedSize = productDoc.data()['selected_size']; // 선택된 사이즈를 가져옴.
+          final selectedColorText = productDoc.data()['selected_color_text']; // 선택된 색상을 가져옴.
+          // 상품 옵션을 'separator_key (selected_size / selected_color_text)' 형식으로 리스트에 추가함.
+          productOptions.add('$separatorKey ($selectedSize / $selectedColorText)');
+        }
+      }
+
+      return productOptions; // 상품 옵션 리스트를 반환함.
+    } catch (e) {
+      // 오류가 발생하면 오류 메시지를 출력하고 '상품 없음'을 반환함.
+      print('상품 옵션을 가져오는 중 오류 발생: $e');
+      return ['상품 없음'];
+    }
+  }
+
   // Firestore에 메시지를 저장하는 함수.
   Future<void> sendMessage({
     required String sender,    // 발신자 ID를 나타내는 필수 파라미터
     required String recipient, // 수신자 ID를 나타내는 필수 파라미터
     required String orderNumber, // 주문 번호를 나타내는 필수 파라미터
     required String contents, // 메시지 내용을 나타내는 필수 파라미터
+    String? selectedSeparatorKey, // 선택된 separator_key, nullable로 변경
   }) async {
     print('메시지를 Firestore에 저장하는 중...');
     print('발신자: $sender, 수신자: $recipient, 주문 번호: $orderNumber, 내용: $contents');
@@ -93,15 +131,23 @@ class AdminMessageRepository {
         .collection('message') // 수신자별 메시지를 저장하는 하위 컬렉션 'message'에 접근
         .doc('${DateTime.now().millisecondsSinceEpoch}'); // 현재 시간을 기반으로 고유한 문서 ID를 생성
 
-    // 문서에 데이터를 설정하여 메시지를 저장.
-    await messageDoc.set({
+    // 저장할 데이터 맵 생성
+    final messageData = {
       'sender': sender, // 발신자 ID를 저장
       'recipient': recipient, // 수신자 ID를 저장
       'order_number': orderNumber, // 주문 번호를 저장
       'contents': contents, // 메시지 내용을 저장
       'message_sendingTime': FieldValue.serverTimestamp(), // 서버 시간을 기준으로 메시지 전송 시간을 저장
       'private_email_closed_button': false, // 'private_email_closed_button' 필드에 기본값으로 false를 저장
-    });
+    };
+
+        // 만약 쪽지 내용이 '환불 처리'인 경우 selected_separator_key 추가
+        if (contents == '해당 발주 건은 환불 처리 되었습니다.' && selectedSeparatorKey != null) {
+      messageData['selected_separator_key'] = selectedSeparatorKey;
+    }
+
+    // 문서에 데이터를 설정하여 메시지를 저장.
+    await messageDoc.set(messageData);
 
     print('메시지 저장 완료');
 
