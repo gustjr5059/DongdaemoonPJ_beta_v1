@@ -842,21 +842,28 @@ class OrderItemWidget extends StatelessWidget {
 // ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
 class OrderListItemWidget extends ConsumerWidget {
   // 발주 데이터를 담고 있는 맵 객체를 멤버 변수로 선언.
-  final Map<String, dynamic> order;
+  final Map<String, dynamic>? order;
 
   // 생성자를 통해 발주 데이터를 초기화.
   OrderListItemWidget({required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
+    if (order == null || order!.isEmpty) {
+      return Center(
+        child: Text('발주 내역이 없습니다.'),
+      );
+    }
+
     // 날짜 포맷을 지정.
     final dateFormat = DateFormat('yyyy-MM-dd');
     // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
-    final orderDate = (order['numberInfo']['order_date'] as Timestamp).toDate();
+    final orderDate = (order!['numberInfo']['order_date'] as Timestamp).toDate();
     // 발주번호를 가져옴.
-    final orderNumber = order['numberInfo']['order_number'];
+    final orderNumber = order!['numberInfo']['order_number'];
     // 발주 상태를 orderStatus 필드에서 가져옴.
-    final orderStatus = order['orderStatus']; // 발주 상태 데이터
+    final orderStatus = order!['orderStatus']; // 발주 상태 데이터
 
     // 공통 카드 뷰 위젯을 사용하여 발주 아이템을 표시.
     return CommonCardView(
@@ -895,28 +902,81 @@ class OrderListItemWidget extends ConsumerWidget {
           SizedBox(height: 8),
           // 버튼을 가운데 배치.
           Center(
-            // 발주 내역 상세보기 버튼을 생성.
-            child: ElevatedButton(
-              // 버튼이 클릭되었을 때 실행되는 동작을 정의
-              onPressed: () {
-                // Navigator를 사용하여 화면 이동을 수행
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    // OrderListDetailScreen 화면으로 이동하며, 발주번호(orderNumber)를 전달
-                    builder: (context) => OrderListDetailScreen(orderNumber: orderNumber),
+            child: Row( // Row 위젯을 자식으로 설정함
+              children: [ // Row 위젯의 자식 위젯 목록을 설정함
+                Expanded( // 버튼이 남은 공간을 차지하도록 Expanded 위젯을 사용함
+                  child: ElevatedButton( // ElevatedButton 위젯을 사용하여 버튼을 생성함
+                    onPressed: () { // 버튼이 눌렸을 때 실행될 함수를 정의함
+                      Navigator.push( // 새 화면으로 전환하기 위해 Navigator.push를 호출함
+                        context, // 현재 화면의 컨텍스트를 전달함
+                        MaterialPageRoute( // 새로운 화면으로 전환하기 위한 MaterialPageRoute를 생성함
+                          builder: (context) => // 새 화면을 빌드할 함수를 전달함
+                          OrderListDetailScreen(orderNumber: orderNumber), // OrderListDetailScreen을 생성하고, orderNumber를 전달함
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
+                      foregroundColor: BUTTON_COLOR, // 버튼의 글자 색상을 설정함
+                      backgroundColor: BACKGROUND_COLOR, // 버튼의 배경 색상을 설정함
+                      side: BorderSide(color: BUTTON_COLOR), // 버튼의 테두리 색상을 설정함
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 버튼의 내부 여백을 설정함
+                    ),
+                    child: Text( // 버튼에 표시될 텍스트를 정의함
+                      '발주 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트의 스타일을 설정함
+                    ),
                   ),
-                );
-              },
-              // 버튼 스타일을 정의
-              style: ElevatedButton.styleFrom(
-                foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-                backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-                side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 버튼 패딩
-              ),
-              // 버튼 텍스트를 정의.
-              child: Text('발주 내역 상세보기', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                ),
+                SizedBox(width: 8), // 버튼 사이에 8픽셀의 간격을 추가함
+                ElevatedButton( // 두 번째 ElevatedButton 위젯을 생성함
+                  onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
+                    await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
+                      context, // 현재 화면의 컨텍스트를 전달함
+                      title: '발주 내역 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
+                      content: '발주 내역을 삭제하시면 해당 발주 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
+                      actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
+                        context, // 현재 화면의 컨텍스트를 전달함
+                        noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
+                        yesText: '예', // '예' 버튼의 텍스트를 설정함
+                        noTextStyle: TextStyle( // '아니요' 버튼의 텍스트 스타일을 설정함
+                          color: Colors.black, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
+                          fontWeight: FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
+                        ),
+                        yesTextStyle: TextStyle( // '예' 버튼의 텍스트 스타일을 설정함
+                          color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
+                          fontWeight: FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
+                        ),
+                        onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
+                          try {
+                            await ref.read(deleteOrderProvider({ // deleteOrderProvider를 호출하여 발주 내역을 삭제함
+                              'orderNumber': orderNumber, // 발주 번호를 전달함
+                            }).future);
+                            Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
+
+                            ScaffoldMessenger.of(context).showSnackBar( // 삭제 성공 메시지를 스낵바로 표시함
+                              SnackBar(content: Text('발주 내역이 삭제되었습니다.')), // 성공 메시지 텍스트를 설정함
+                            );
+                          } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
+                            ScaffoldMessenger.of(context).showSnackBar( // 오류 메시지를 스낵바로 표시함
+                              SnackBar(content: Text('발주 내역 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 텍스트를 설정함
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom( // 두 번째 버튼의 스타일을 설정함
+                    foregroundColor: BUTTON_COLOR, // 두 번째 버튼의 글자 색상을 설정함
+                    backgroundColor: BACKGROUND_COLOR, // 두 번째 버튼의 배경 색상을 설정함
+                    side: BorderSide(color: BUTTON_COLOR), // 두 번째 버튼의 테두리 색상을 설정함
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 두 번째 버튼의 내부 여백을 설정함
+                  ),
+                  child: Text( // 두 번째 버튼에 표시될 텍스트를 정의함
+                    '삭제', // 텍스트 내용으로 '삭제'를 설정함
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트의 스타일을 설정함
+                  ),
+                ),
+              ],
             ),
           ),
         ],

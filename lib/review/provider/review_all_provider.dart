@@ -41,7 +41,7 @@ final deleteReviewProvider = FutureProvider.family<void, Map<String, String>>((r
   final userEmail = params['userEmail']!;
   final separatorKey = params['separatorKey']!;
 
-  await repository.privatDeleteReview(
+  await repository.privateDeleteReview(
     userEmail: userEmail,
     separatorKey: separatorKey,
   );

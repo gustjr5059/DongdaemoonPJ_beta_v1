@@ -110,22 +110,19 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-      // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      // 초기화된 상태로 모든 메시지 데이터 불러오기
+      _resetMessageProviders();
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
-        // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(privateMessageScrollPositionProvider.notifier).state = 0;
-        // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-        ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-        ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-        ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+        // 초기화된 상태로 모든 메시지 데이터 불러오기
+        _resetMessageProviders();
+      } else {
+        // 재로그인 시 상태를 다시 초기화
+        _resetMessageProviders();
       }
     });
 
@@ -135,8 +132,22 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     _updateStatusBar();
   }
-
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
+
+// 상태 초기화 함수
+  void _resetMessageProviders() {
+    // 쪽지 관리 화면 관련 초기화 부분 시작
+    ref.read(privateMessageScrollPositionProvider.notifier).state =
+    0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
+    // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
+    ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
+    ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+    ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+    ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+    ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
+    // 필요한 경우 다른 상태들도 초기화
+  }
 
   // didChangeAppLifecycleState 함수 관련 구현 내용 시작
   @override

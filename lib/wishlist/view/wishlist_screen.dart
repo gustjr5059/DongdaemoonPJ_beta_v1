@@ -138,6 +138,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 찜 목록 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+      ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
     });
     // // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 wishlistScreenPointScrollController에 저장하는 코드
     // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -150,6 +151,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(wishlistScrollPositionProvider.notifier).state = 0;
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 

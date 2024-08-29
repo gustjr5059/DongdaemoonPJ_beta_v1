@@ -89,6 +89,23 @@ final orderListProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async
   return repository.fetchOrdersByEmail(userEmail);
 });
 
+// 발주 삭제를 위한 provider
+final deleteOrderProvider = FutureProvider.family<void, Map<String, String>>((ref, params) async {
+  final repository = OrderlistRepository(firestore: FirebaseFirestore.instance);
+  final userEmail = FirebaseAuth.instance.currentUser?.email;
+
+  if (userEmail == null) {
+    throw Exception('User not logged in');
+  }
+
+  // 발주 삭제 함수 호출
+  await repository.fetchDeleteOrders(userEmail, params['orderNumber']!);
+
+  // 삭제 후 발주 목록을 다시 불러오도록 orderListProvider를 무효화
+  ref.invalidate(orderListProvider);
+});
+
+
 // 발주 목록 상세 화면 내 특정 발주번호의 발주 관련 데이터를 불러오는 OrderlistRepository 인스턴스를 제공하여
 // 해당 레퍼지토리의 fetchOrderByOrderNumber 메서드를 활용하는 FutureProvider
 final orderListDetailProvider = FutureProvider.family<Map<String, dynamic>?, String>((ref, orderNumber) async {

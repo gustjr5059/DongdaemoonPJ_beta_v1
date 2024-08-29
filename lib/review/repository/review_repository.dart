@@ -277,7 +277,7 @@ class ReviewRepository {
   }
 
   // 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
-  Future<void> privatDeleteReview({
+  Future<void> privateDeleteReview({
     required String userEmail,
     required String separatorKey,
   }) async {

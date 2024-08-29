@@ -169,6 +169,7 @@ class OrderRepository {
     await orderDoc.collection('button_info').doc('info').set({
       'boolRefundBtn': false, // 초기값은 false로 설정
       'boolReviewWriteBtn': false, // 초기값은 false로 설정
+      'private_orderList_closed_button': false // 초기값은 false로 설정
     });
     print('Button info saved.');
 
@@ -293,18 +294,16 @@ class OrderlistRepository {
   // OrderlistRepository 클래스의 생성자, FirebaseFirestore 인스턴스를 받아옴
   OrderlistRepository({required this.firestore});
 
-  // 특정 사용자의 발주 데이터를 가져오는 함수
-  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(
-      String userEmail) async {
+// 특정 사용자의 발주 데이터를 가져오는 함수
+  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(String userEmail) async {
     try {
       print('Fetching orders for email: $userEmail');
       // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
       final userDocRef = firestore.collection('order_list').doc(userEmail);
 
-      // 해당 문서의 'orders' 하위 컬렉션의 모든 문서를 가져옴
+      // 'orders' 서브 컬렉션의 모든 문서를 가져옴
       final ordersQuerySnapshot = await userDocRef.collection('orders').get();
-      print('Fetched orders: ${ordersQuerySnapshot.docs
-          .length} for email: $userEmail');
+      print('Fetched orders: ${ordersQuerySnapshot.docs.length} for email: $userEmail');
 
       if (ordersQuerySnapshot.docs.isEmpty) {
         print('No orders found for email $userEmail');
@@ -316,35 +315,42 @@ class OrderlistRepository {
       for (var orderDoc in ordersQuerySnapshot.docs) {
         print('Processing order: ${orderDoc.id}');
 
-        // 각 발주 문서의 하위 컬렉션에서 필요한 정보를 가져옴
-        final numberInfoDoc = await orderDoc.reference.collection('number_info')
-            .doc('info')
-            .get();
-        final ordererInfoDoc = await orderDoc.reference.collection(
-            'orderer_info').doc('info').get();
-        final amountInfoDoc = await orderDoc.reference.collection('amount_info')
-            .doc('info')
-            .get();
-        final productInfoQuery = await orderDoc.reference.collection(
-            'product_info').get();
-        final orderStatusDoc = await orderDoc.reference.collection(
-            'order_status_info').doc('info').get();
+        // 'button_info' 컬렉션의 'info' 문서를 가져와서 필드값을 체크
+        final buttonInfoDoc = await orderDoc.reference.collection('button_info').doc('info').get();
 
-        // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
-        final productInfo = productInfoQuery.docs.map((doc) {
-          print('Processing product: ${doc.id}');
-          return doc.data() as Map<String, dynamic>;
-        }).toList();
+        // 'private_orderList_closed_button' 필드가 false인 경우에만 처리
+        if (buttonInfoDoc.exists && buttonInfoDoc['private_orderList_closed_button'] == false) {
+          // 각 발주 문서의 하위 컬렉션에서 필요한 정보를 가져옴
+          final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
+          print('Fetched numberInfo: ${numberInfoDoc.exists ? 'exists' : 'does not exist'}');
 
-        // 발주 데이터를 리스트에 추가
-        allOrders.add({
-          'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
-          'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
-          'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
-          'productInfo': productInfo,
-          'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음',
-          // order_status 필드 추가
-        });
+          final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
+          print('Fetched ordererInfo: ${ordererInfoDoc.exists ? 'exists' : 'does not exist'}');
+
+          final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
+          print('Fetched amountInfo: ${amountInfoDoc.exists ? 'exists' : 'does not exist'}');
+
+          final productInfoQuery = await orderDoc.reference.collection('product_info').get();
+          print('Fetched productInfo: ${productInfoQuery.docs.length} products found');
+
+          final orderStatusDoc = await orderDoc.reference.collection('order_status_info').doc('info').get();
+          print('Fetched orderStatus: ${orderStatusDoc.exists ? 'exists' : 'does not exist'}');
+
+          // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
+          final productInfo = productInfoQuery.docs.map((doc) {
+            print('Processing product: ${doc.id}');
+            return doc.data() as Map<String, dynamic>;
+          }).toList();
+
+          // 발주 데이터를 리스트에 추가
+          allOrders.add({
+            'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
+            'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
+            'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
+            'productInfo': productInfo,
+            'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음',
+          });
+        }
       }
 
       print('Finished fetching orders for email: $userEmail');
@@ -352,6 +358,34 @@ class OrderlistRepository {
     } catch (e) {
       print('Failed to fetch orders for email $userEmail: $e');
       return []; // 에러 발생 시 빈 리스트 반환
+    }
+  }
+
+  // 발주를 삭제하는 함수
+  Future<void> fetchDeleteOrders(String userEmail, String orderNumber) async {
+    try {
+      // 사용자의 이메일을 기준으로 order_list 컬렉션의 문서 참조를 가져옴
+      final userDocRef = firestore.collection('order_list').doc(userEmail);
+
+      // orders 서브 컬렉션에서 발주 번호가 일치하는 문서를 조회
+      final ordersQuerySnapshot = await userDocRef.collection('orders')
+          .where('numberInfo.order_number', isEqualTo: orderNumber)
+          .get();
+
+      // 조회된 문서가 있을 경우 첫 번째 문서를 참조하여 필드값을 업데이트
+      if (ordersQuerySnapshot.docs.isNotEmpty) {
+        final orderDocRef = ordersQuerySnapshot.docs.first.reference;
+
+        // 'button_info' 컬렉션의 'info' 문서를 참조하여 업데이트
+        final buttonInfoDocRef = orderDocRef.collection('button_info').doc('info');
+
+        await buttonInfoDocRef.update({
+          'private_orderList_closed_button': true, // 해당 필드값을 true로 변경
+        });
+      }
+    } catch (e) {
+      print('Failed to delete order $orderNumber for user $userEmail: $e');
+      throw e; // 오류 발생 시 예외를 다시 던짐
     }
   }
 

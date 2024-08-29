@@ -144,8 +144,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      // ref.invalidate(orderListProvider);
       _updateStatusBar();
     }
   }
@@ -191,6 +189,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+    // orderListProvider를 통해 발주 데이터를 구독.
+    final ordersAsyncValue = ref.watch(orderListProvider);
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -230,51 +231,33 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                 backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // 슬리버 패딩을 추가하여 위젯 간 간격을 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 5), // 위쪽에 5픽셀의 여백을 추가함.
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                        (BuildContext context, int index) { // 각 아이템을 빌드하기 위한 빌더 함수를 정의함.
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 5), // 높이 5로 간격 설정
-                            // orderListProvider를 구독하여 데이터, 로딩 상태, 에러 상태를 처리
-                            ref.watch(orderListProvider).when(
-                              data: (orders) {
-                                // 데이터를 성공적으로 가져온 경우
-                                if (orders.isEmpty) {
-                                  // 발주 내역이 비어있는 경우
-                                  return Center(
-                                      child: Text('발주 내역이 없습니다.'));
-                                  // "발주 내역이 없습니다."라는 메시지를 화면 중앙에 표시
-                                }
-                                // 발주 내역이 존재하는 경우, 각 발주 항목을 표시하는 위젯을 생성
-                                return Column(
-                                  children: orders.map((order) {
-                                    // 각 발주 항목을 OrderListItemWidget으로 변환하여 열거
-                                    return OrderListItemWidget(order: order);
-                                  }).toList(),
-                                );
-                              },
-                              // 데이터를 로딩 중일 때 로딩 인디케이터를 화면 중앙에 표시
-                              loading: () =>
-                                  Center(child: CircularProgressIndicator()),
-                              // 데이터를 가져오는 중 에러가 발생했을 때 에러 메시지를 화면 중앙에 표시
-                              error: (error, stack) => Center(
-                                  child: Text('에러가 발생했습니다: $error')),
-                            ),
-                            // 위의 내용과 아래 내용 사이에 20픽셀 높이의 공간을 추가
-                            SizedBox(height: 20),
-                          ],
+                        child: ordersAsyncValue.when( // 비동기 데이터의 상태에 따라 다른 위젯을 반환함.
+                          data: (orders) { // 데이터가 성공적으로 로드되었을 때의 동작을 정의함.
+                            // 리스트를 역순으로 정렬함.
+                            final reversedOrders = orders.reversed.toList();
+                            // 역순으로 정렬된 리스트에서 현재 인덱스에 해당하는 아이템을 OrderListItemWidget으로 반환함.
+                            return OrderListItemWidget(order: reversedOrders.isNotEmpty ? reversedOrders[index] : null);
+                          },
+                          loading: () => Center(child: CircularProgressIndicator()), // 데이터가 로딩 중일 때 로딩 인디케이터를 표시함.
+                          error: (error, stack) => Center(child: Text('에러가 발생했습니다: $error')), // 에러가 발생했을 때 에러 메시지를 표시함.
                         ),
                       );
                     },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                    childCount: ordersAsyncValue.when( // 목록의 아이템 개수를 설정함.
+                      data: (orders) => orders.isNotEmpty ? orders.length : 1, // 데이터가 있을 때 리스트의 길이를 반환하고, 없을 때 1을 반환함.
+                      loading: () => 1, // 로딩 중일 때 1을 반환함.
+                      error: (error, stack) => 1, // 에러가 발생했을 때 1을 반환함.
+                    ),
                   ),
                 ),
               ),
