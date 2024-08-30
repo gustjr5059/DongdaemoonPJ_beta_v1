@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
+import '../../announcement/provider/announce_all_provider.dart';
 import '../../announcement/provider/announce_state_provider.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
@@ -558,6 +559,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 공지사항 화면 관련 초기화 부분 시작
   ref.read(announceScrollPositionProvider.notifier).state =
   0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(announceDetailScrollPositionProvider.notifier).state =
+  0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.invalidate(announcementsProvider); // 전체 공지사항 목록 프로바이더 초기화
+  ref.invalidate(announcementDetailProvider); // 공지사항 상세 프로바이더 초기화
   // 공지사항 화면 관련 초기화 부분 끝
 
   // 문의하기 화면 관련 초기화 부분 시작
