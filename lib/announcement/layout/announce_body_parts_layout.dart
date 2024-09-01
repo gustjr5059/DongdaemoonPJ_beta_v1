@@ -88,7 +88,6 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
 }
 // ------ 공지사항 화면 내 UI를 구현하는 AnnounceBodyPartsLayout 클래스 내용 끝 부분
 
-
 // ------ 공지사항 상세 화면 내 UI를 구현하는 AnnounceDetailBodyPartsLayout 클래스 내용 시작 부분
 class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
   final String documentId; // 공지사항의 고유 ID를 저장하는 변수 선언
