@@ -372,6 +372,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+
   // URL을 여는 함수 정의
   void _launchURL(String url) async {
     Uri uri = Uri.parse(url);
