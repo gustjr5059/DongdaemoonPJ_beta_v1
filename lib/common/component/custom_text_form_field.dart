@@ -11,6 +11,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final FocusNode? focusNode;
+  final TextStyle? hintStyle;
+  final EdgeInsetsGeometry? hintTextPadding; // hintText의 위치 조정을 위한 padding 추가
 
   const CustomTextFormField({
     this.controller,
@@ -21,6 +23,8 @@ class CustomTextFormField extends StatelessWidget {
     this.errorText,
     this.keyboardType,
     this.focusNode, // FocusNode 초기화
+    this.hintStyle,
+    this.hintTextPadding, // hintText 위치 조정을 위한 padding 초기화
     Key? key,
   }) : super(key: key);
 
@@ -49,14 +53,14 @@ class CustomTextFormField extends StatelessWidget {
       onChanged: onChanged,
       // 값이 변경될 때 호출되는 콜백 함수.
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(20),
+        contentPadding: hintTextPadding ?? EdgeInsets.all(20), // hintText의 위치를 조정하기 위한 padding 적용
         // 내부 패딩 설정.
         hintText: hintText,
         // 힌트 텍스트 설정.
         errorText: errorText,
         // 에러 텍스트 설정.
-        hintStyle: TextStyle(
-          color: BODY_TEXT_COLOR, // 힌트 텍스트 스타일 설정.
+        hintStyle: hintStyle ?? TextStyle(
+          color: BODY_TEXT_COLOR, // 기본 힌트 텍스트 스타일
           fontSize: 14.0,
         ),
         fillColor: INPUT_BG_COLOR,

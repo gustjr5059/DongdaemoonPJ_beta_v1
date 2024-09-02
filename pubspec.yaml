@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^10.4.5
   flutter_pdfview: ^1.3.2
   pdfx: ^2.0.2
+  flutter_svg: ^2.0.10+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -127,6 +128,9 @@ flutter:
     - asset/img/misc/poster_img/refund_policy_image.png
     - asset/img/misc/logo_img/couture_logo_image.png
     - config.json
+    - asset/img/misc/splash_image/couture_splash1_bg_img.png
+    - asset/img/misc/splash_image/couture_splash2_bg_img.png
+    - asset/img/misc/login_image/couture_login_bg_img.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
