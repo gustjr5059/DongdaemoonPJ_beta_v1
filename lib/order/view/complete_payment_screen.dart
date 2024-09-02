@@ -44,6 +44,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../product/model/product_model.dart';
 import '../layout/complete_body_parts_layout.dart';
 import '../provider/complete_payment_provider.dart';
 import '../provider/order_all_providers.dart';
@@ -189,10 +190,9 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     return orderDataFuture.when(
       data: (data) {
         // 주문 데이터를 각각의 변수로 분리
-        final amountInfo = data['amountInfo'];
         final ordererInfo = data['ordererInfo'];
-        final recipientInfo = data['recipientInfo'];
         final numberInfo = data['numberInfo'];
+        final orderItems = data['orderItems'] ?? []; // null일 경우 빈 리스트로 대체
         final orderNumber = numberInfo['order_number'];
         // 주문 날짜를 원하는 형식으로 포맷
         final orderDate = DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(numberInfo['order_date'].toDate());
@@ -211,7 +211,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                     title: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '발주 완료', // 앱바 제목 설정
+                      title: '업데이트 요청 완료', // 앱바 제목 설정
                       leadingType: LeadingType.none, // 리딩 아이콘 없음
                       buttonCase: 1, // 버튼 타입 설정
                     ),
@@ -228,14 +228,14 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                             child: Column(
                               children: [
                                 SizedBox(height: 10),
-                                CompletePaymentInfoWidget(
+                                UpdateRequestCompleteInfoWidget(
                                   orderNumber: orderNumber,
                                   orderDate: orderDate,
-                                  totalPayment: amountInfo['total_payment_price'],
                                   customerName: ordererInfo['name'],
-                                  recipientInfo: recipientInfo,
+                                  orderItems: orderItems.map<ProductContent>((item) {
+                                    return ProductContent.fromMap(item);
+                                  }).toList(), // 데이터가 null일 경우에도 안전하게 처리
                                 ),
-                                SizedBox(height: 3000), // 추가 패딩
                               ],
                             ),
                           );

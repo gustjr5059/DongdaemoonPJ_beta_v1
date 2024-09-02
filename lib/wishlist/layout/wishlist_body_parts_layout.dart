@@ -137,7 +137,7 @@ class WishlistItemsList extends ConsumerWidget {
         // 장바구니 항목이 비어있을 경우의 조건문.
         if (wishlistItems.isEmpty) {
           // 장바구니가 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
-          return Center(child: Text('장바구니가 비어 있습니다.'));
+          return Center(child: Text('찜 목록이 비어 있습니다.'));
         }
 
         // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
@@ -239,22 +239,49 @@ class WishlistItemsList extends ConsumerWidget {
                           ),
                           SizedBox(height: 8),
                           // 삭제 버튼
-                          ElevatedButton(
-                            onPressed: () {
-                              final String? itemId = wishlistItem['product_id'];
-                              if (itemId != null) {
-                                // 찜 목록에서 상품 제거
-                                ref.read(wishlistItemProvider(userEmail).notifier).removeItem(itemId);
-                                // 스낵바로 삭제 메시지 표시
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
-                                );
-                              } else {
-                                // 유효하지 않은 상품 ID 메시지 표시
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('상품 ID가 유효하지 않습니다.')),
-                                );
-                              }
+                          ElevatedButton( // 두 번째 ElevatedButton 위젯을 생성함
+                            onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
+                              await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
+                                context, // 현재 화면의 컨텍스트를 전달함
+                                title: '찜 목록 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
+                                content: '찜 목록을 삭제하시면 해당 상품을 찜 목록에서 영구적으로 삭제됩니다.\n찜 목록에서 해당 상품을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
+                                actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
+                                  context, // 현재 화면의 컨텍스트를 전달함
+                                  noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
+                                  yesText: '예', // '예' 버튼의 텍스트를 설정함
+                                  noTextStyle: TextStyle( // '아니요' 버튼의 텍스트 스타일을 설정함
+                                    color: Colors.black, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
+                                    fontWeight: FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
+                                  ),
+                                  yesTextStyle: TextStyle( // '예' 버튼의 텍스트 스타일을 설정함
+                                    color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
+                                    fontWeight: FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
+                                  ),
+                                  onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
+                                    try {
+                                      final String? itemId = wishlistItem['product_id'];
+                                      if (itemId != null) {
+                                        // 찜 목록에서 상품 제거
+                                        ref.read(wishlistItemProvider(userEmail).notifier).removeItem(itemId);
+                                        Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
+                                        // 스낵바로 삭제 메시지 표시
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
+                                        );
+                                      } else {
+                                        // 유효하지 않은 상품 ID 메시지 표시
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('해당 상품을 찜 목록에서 삭제하는 중 오류가 발생했습니다.')),
+                                        );
+                                      }
+                                    } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
+                                      ScaffoldMessenger.of(context).showSnackBar( // 오류 메시지를 스낵바로 표시함
+                                        SnackBar(content: Text('찜 목록 내 상품 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 텍스트를 설정함
+                                      );
+                                    }
+                                  },
+                                ),
+                              );
                             },
                             // 버튼 스타일 설정
                             style: ElevatedButton.styleFrom(
@@ -265,6 +292,7 @@ class WishlistItemsList extends ConsumerWidget {
                             ),
                             child: Text('삭제', style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
+
                         ],
                       ),
                     ),

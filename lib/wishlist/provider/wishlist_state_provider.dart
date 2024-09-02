@@ -38,7 +38,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // Firestore의 실시간 데이터를 구독하는 메서드
   void _listenToWishlistItems() {
     _subscription = wishlistItemRepository.firestore
-        .collection('wishlist_item')
+        .collection('couture_wishlist_item')
         .doc(userEmail)
         .collection('items')
         .snapshots()

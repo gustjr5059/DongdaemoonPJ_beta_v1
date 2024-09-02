@@ -213,7 +213,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '장바구니',
+                  title: '요청품목',
                   // AppBar의 제목을 '장바구니'로 설정
                   leadingType: LeadingType.none,
                   // 버튼 없음.
@@ -238,7 +238,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
-                            child: Center(child: Text('장바구니가 비어 있습니다.')),
+                            child: Center(child: Text('요청품목이 비어 있습니다.')),
                           )
                         // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(

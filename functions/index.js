@@ -131,6 +131,75 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
 }
 // ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
 
+// Firestore 문서 생성 시 이메일 발송 함수 - Couture 버전
+exports.coutureSendOrderEmail = functions.firestore
+  .document('couture_order_list/{userId}/orders/{order_number}') // Firestore의 order_list/{userId}/orders/{order_number} 문서 생성 시 트리거됨.
+  .onCreate(async (snap, context) => { // 문서 생성 이벤트 핸들러를 비동기로 정의.
+    const userId = context.params.userId; // URL 파라미터에서 userId를 가져옴.
+    const orderNumber = context.params.order_number; // URL 파라미터에서 order_number를 가져옴.
+
+    const ordererInfoDoc = await admin.firestore().collection('couture_order_list').doc(userId).collection('orders').doc(orderNumber).collection('orderer_info').doc('info').get();
+    // Firestore에서 orderer_info 컬렉션의 info 문서를 가져옴.
+    const numberInfoDoc = await admin.firestore().collection('couture_order_list').doc(userId).collection('orders').doc(orderNumber).collection('number_info').doc('info').get();
+    // Firestore에서 number_info 컬렉션의 info 문서를 가져옴.
+    const productInfoQuery = await admin.firestore().collection('couture_order_list').doc(userId).collection('orders').doc(orderNumber).collection('product_info').get();
+    // Firestore에서 product_info 컬렉션의 모든 문서를 가져옴.
+
+    if (!ordererInfoDoc.exists || !numberInfoDoc.exists) {
+      // 필요한 정보가 하나라도 없을 경우 로그를 출력하고 함수를 종료함.
+      console.log('Missing order information.');
+      return null;
+    }
+
+    const ordererInfo = ordererInfoDoc.data(); // 주문자 정보를 가져옴.
+    const numberInfo = numberInfoDoc.data(); // 주문 번호 정보를 가져옴.
+    const productInfo = productInfoQuery.docs.map(doc => doc.data()); // 상품 정보를 배열로 가져옴.
+
+    const mailOptions = { // 이메일 옵션을 설정함.
+      from: gmailEmail, // 발신자 이메일 주소를 설정함.
+      to: 'stonehead0627@gmail.com', // 수신자 이메일 주소를 설정함.
+      subject: `신규 발주 내역: [${numberInfo.order_number}] ${ordererInfo.email}`, // 이메일 제목을 설정함.
+      html: generateOrderEmailBody(ordererInfo, productInfo, numberInfo.order_number) // 이메일 본문을 설정함.
+    };
+
+    try {
+      await mailTransport.sendMail(mailOptions); // 이메일을 전송함.
+      console.log('Email sent successfully'); // 이메일 전송 성공 메시지를 로그에 출력함.
+    } catch (error) {
+      console.error('Error sending email:', error); // 이메일 전송 실패 메시지를 로그에 출력함.
+    }
+
+    return null; // 함수 종료를 명시함.
+  });
+
+// 이메일 본문 생성 함수
+function generateOrderEmailBody(ordererInfo, productInfo, orderNumber) {
+  // 이메일 본문을 생성하는 함수.
+  let body = `<html><body>`;
+  body += `<h2>발주자 정보</h2>`;
+  body += `<table border="1" cellpadding="5" cellspacing="0">`;
+  body += `<tr><td><b>이름</b></td><td>${ordererInfo.name}</td></tr>`;
+  body += `<tr><td><b>이메일</b></td><td>${ordererInfo.email}</td></tr>`;
+  body += `<tr><td><b>휴대폰 번호</b></td><td>${ordererInfo.phone_number}</td></tr>`;
+  body += `</table><br>`;
+
+  body += `<h2>상품 정보</h2>`;
+  productInfo.forEach(item => {
+    body += `<table border="1" cellpadding="5" cellspacing="0">`;
+    body += `<tr><td><b>상품</b></td><td>${item.brief_introduction}</td></tr>`;
+    body += `<tr><td><b>상품 번호</b></td><td>${item.product_number}</td></tr>`;
+    body += `<tr><td><b>원래 가격</b></td><td>${formatNumber(item.original_price)}원</td></tr>`;
+    body += `<tr><td><b>할인 가격</b></td><td>${formatNumber(item.discount_price)}원</td></tr>`;
+    body += `<tr><td><b>할인 퍼센트</b></td><td>${item.discount_percent}%</td></tr>`;
+    body += `<tr><td><b>선택한 색상</b></td><td>${item.selected_color_text}</td></tr>`;
+    body += `<tr><td><b>선택한 사이즈</b></td><td>${item.selected_size}</td></tr>`;
+    body += `</table><br>`;
+  });
+
+  body += `</body></html>`;
+  return body;
+}
+
 // ------ "배송 중 메세지" 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
 // Firestore에 새로운 문서가 생성될 때, 특정 "배송 중 메세지"를 감지하고 발주 상태를 자동으로 업데이트
 exports.orderlistOrderStatusAutoUpdate = functions.firestore

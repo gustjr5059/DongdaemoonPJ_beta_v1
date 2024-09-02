@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
-import '../../../review/provider/review_all_provider.dart';
+import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
 import '../../provider/product_state_provider.dart';
@@ -112,8 +112,7 @@ class _CardiganDetailProductScreenState
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         cardiganDetailProductScreenPointScrollController
             .jumpTo(savedScrollPosition);
-
-        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 
@@ -125,7 +124,7 @@ class _CardiganDetailProductScreenState
         ref.read(cardiganDetailScrollPositionProvider.notifier).state = 0; // cardiganDetailScrollPositionProvider의 상태를 0으로 설정
         ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0; // getImagePageProvider의 상태를 0으로 설정
         pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
-        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 
@@ -192,7 +191,6 @@ class _CardiganDetailProductScreenState
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(cardiganDetailProdFirestoreDataProvider(widget.fullPath));
-    final productReviews = ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -247,18 +245,10 @@ class _CardiganDetailProductScreenState
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
                                   SizedBox(height: 40),
-                                  // ProductDetailScreenTabs를 사용하여 탭을 생성하고 리뷰 데이터를 전달
-                                  productReviews.when(
-                                    data: (reviewsContent) {
-                                      return ProductDetailScreenTabs(
+                                  ProductDetailScreenTabs(
                                         productInfoContent: ProductInfoContents(product: product),
-                                        reviewsContent: reviewsContent, // Firestore에서 가져온 리뷰 데이터를 전달
                                         inquiryContent: ProductInquiryContents(),
-                                      );
-                                    },
-                                    loading: () => CircularProgressIndicator(),
-                                    error: (error, _) => Text('오류 발생: $error'),
-                                  ),
+                                      ),
                                 ],
                               );
                             },

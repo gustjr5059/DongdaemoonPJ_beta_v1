@@ -51,15 +51,9 @@ import '../provider/order_state_provider.dart';
 // GlobalKey 대신 local context 사용 방법 설명 클래스
 // OrderMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
 class OrderMainScreen extends ConsumerStatefulWidget {
-  final double totalPaymentPrice; // 총 결제금액을 저장하는 변수
-  final double totalProductPrice; // 총 상품금액을 저장하는 변수
-  final double productDiscountPrice; // 상품 할인금액을 저장하는 변수
 
   const OrderMainScreen({
     Key? key, // 위젯의 키를 전달받음
-    required this.totalPaymentPrice, // 필수 매개변수로 총 결제금액을 받음
-    required this.totalProductPrice, // 필수 매개변수로 총 상품금액을 받음
-    required this.productDiscountPrice, // 필수 매개변수로 상품 할인금액을 받음
   }) : super(key: key); // 상위 클래스의 생성자를 호출하여 key를 전달
 
   @override
@@ -93,36 +87,6 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController orderMainScreenPointScrollController; // 스크롤 컨트롤러 선언
-
-
-// ----- 수령자 정보 관련 컨트롤러 및 설정값 시작 부분
-// 이름을 입력받는 컨트롤러 생성
-  TextEditingController nameController = TextEditingController();
-
-// 휴대폰 번호를 입력받는 컨트롤러 생성
-  TextEditingController phoneNumberController = TextEditingController();
-
-// 주소를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
-  TextEditingController addressController = TextEditingController(text: '없음');
-
-// 우편번호를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
-  TextEditingController postalCodeController = TextEditingController(text: '없음');
-
-// 상세 주소를 입력받는 컨트롤러 생성
-  TextEditingController detailAddressController = TextEditingController();
-
-// 사용자 지정 메모를 입력받는 컨트롤러 생성
-  TextEditingController customMemoController = TextEditingController();
-
-// 드롭다운에서 선택된 메모를 저장하는 변수, 초기값 설정
-  String selectedMemo = "기사님께 보여지는 메모입니다.";
-
-// 사용자 지정 메모 여부를 나타내는 변수, 초기값은 false
-  bool isCustomMemo = false;
-
-// 사용자 지정 메모 내용을 저장하는 변수, 초기값 설정
-  String customMemo = ""; // customMemo 변수를 추가
-// ----- 수령자 정보 관련 컨트롤러 및 설정값 끝 부분
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -169,27 +133,6 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     _updateStatusBar();
-
-// ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 시작 부분
-// 이름을 입력받는 컨트롤러를 생성
-    nameController = TextEditingController();
-
-// 휴대폰 번호를 입력받는 컨트롤러를 생성
-    phoneNumberController = TextEditingController();
-
-// 주소를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
-    addressController = TextEditingController(text: '없음');
-
-// 우편번호를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
-    postalCodeController = TextEditingController(text: '없음');
-
-// 상세 주소를 입력받는 컨트롤러를 생성
-    detailAddressController = TextEditingController();
-
-// 사용자 지정 메모를 입력받는 컨트롤러를 생성
-    customMemoController = TextEditingController();
-// ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 끝 부분
-
   }
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
@@ -293,7 +236,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                   background: buildCommonAppBar(
                     context: context,
                     ref: ref,
-                    title: '발주',
+                    title: '업데이트 요청',
                     leadingType: LeadingType.back,
                     // 이전화면으로 이동 버튼.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
@@ -319,60 +262,21 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                           children: [
                             SizedBox(height: 10), // 높이를 10으로 설정하여 간격 조정
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자가 로그인된 경우 사용자 정보를 표시
-                            if (user != null)
-                              RecipientInfoWidget(
-                                email: user.email!, // 수령자 정보 위젯에 이메일 전달
-                                nameController: nameController, // 이름 입력 컨트롤러 전달
-                                phoneNumberController: phoneNumberController, // 휴대폰 번호 입력 컨트롤러 전달
-                                addressController: addressController, // 주소 입력 컨트롤러 전달
-                                postalCodeController: postalCodeController, // 우편번호 입력 컨트롤러 전달
-                                detailAddressController: detailAddressController, // 상세 주소 입력 컨트롤러 전달
-                                customMemoController: customMemoController, // 사용자 지정 메모 입력 컨트롤러 전달
-                                selectedMemo: selectedMemo, // 선택된 메모 전달
-                                isCustomMemo: isCustomMemo, // 사용자 지정 메모 여부 전달
-                                onMemoChanged: (bool isCustom, String newMemo, String newSelectedMemo) {
-                                  setState(() {
-                                    isCustomMemo = isCustom; // 사용자 지정 메모 여부 업데이트
-                                    if (isCustom) {
-                                      customMemo = newMemo; // 새로운 사용자 지정 메모 업데이트
-                                    }
-                                    selectedMemo = newSelectedMemo; // 새로운 선택된 메모 업데이트
-                                  });
-                                },
-                              ),
-                            TotalPaymentWidget(
-                              totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액을 TotalPaymentWidget에 전달
-                              totalProductPrice: widget.totalProductPrice, // 총 상품금액을 TotalPaymentWidget에 전달
-                              productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액을 TotalPaymentWidget에 전달
-                            ),
-                            PaymentMethodInfoWidget(), // 결제 방법 정보를 표시하는 위젯
+                            UpdateInfoWidget(), // 업데이트 정보를 표시하는 위젯
                             // for (var item in orderItems) OrderItemWidget(product: item), // 주문 상품 목록을 표시하는 위젯
                             SizedBox(height: 40),
                             userInfoAsyncValue.when(
-                              data: (userInfo) => CompleteOrderButton(
-                                totalProductPrice: widget.totalProductPrice, // 총 상품금액 전달
-                                productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액 전달
-                                totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액 전달
+                              data: (userInfo) => UpdateOrderButton(
                                 ordererInfo: {
                                   'name': userInfo?['name'] ?? '-', // 발주자 이름
                                   'email': userInfo?['email'] ?? '-', // 발주자 이메일
                                   'phone_number': userInfo?['phone_number'] ?? '-', // 발주자 휴대폰 번호
                                 },
-                                nameController: nameController, // 이름 입력 컨트롤러 전달
-                                phoneNumberController: phoneNumberController, // 휴대폰 번호 입력 컨트롤러 전달
-                                addressController: addressController, // 주소 입력 컨트롤러 전달
-                                postalCodeController: postalCodeController, // 우편번호 입력 컨트롤러 전달
-                                detailAddressController: detailAddressController, // 상세 주소 입력 컨트롤러 전달
-                                customMemoController: customMemoController, // 사용자 지정 메모 입력 컨트롤러 전달
-                                selectedMemo: selectedMemo, // 선택된 메모 전달
-                                isCustomMemo: isCustomMemo, // 사용자 지정 메모 여부 전달
                                 orderItems: orderItems, // 주문 상품 목록 전달
                               ),
                               loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 위젯
                               error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 위젯
                             ),
-                            // AddressSearchWidget(), // 주소 검색 위젯 추가
-                            SizedBox(height: 20), // 높이를 3000으로 설정하여 간격 조정
                           ],
                         ),
                       );
@@ -383,9 +287,9 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
               ),
             ],
           ),
-          // buildTopButton 함수는 주어진 context와 orderMainScreenPointScrollController를 사용하여
-          // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-          buildTopButton(context, orderMainScreenPointScrollController),
+          // // buildTopButton 함수는 주어진 context와 orderMainScreenPointScrollController를 사용하여
+          // // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
+          // buildTopButton(context, orderMainScreenPointScrollController),
         ],
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.

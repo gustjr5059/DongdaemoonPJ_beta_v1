@@ -90,30 +90,6 @@ final autumnSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 final winterSubMainSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 
 // ------- 상품 상세 화면 관련 StateProvider 시작
-// // 티셔츠 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final shirtDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 블라우스 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final blouseDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 맨투맨 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final mtmDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 니트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final neatDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 폴라티 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final polaDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 원피스 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final onepieceDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 팬츠 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final pantsDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 청바지 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final jeanDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 스커트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final skirtDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 패딩 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final paedingDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 코트 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final coatDetailImagePageProvider = StateProvider<int>((ref) => 0);
-// // 가디건 디테일 상품 화면의 이미지 페이지 인덱스를 관리하기 위한 StateProvider
-// final cardiganDetailImagePageProvider = StateProvider<int>((ref) => 0);
 
 // 각 카테고리별 상세화면에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
 final blouseDetailScrollPositionProvider = StateProvider<double>((ref) => 0);
@@ -149,11 +125,9 @@ final colorSelectionTextProvider = StateProvider<String?>((ref) => null);
 final colorSelectionIndexProvider = StateProvider<int>((ref) => 0);
 // 사이즈 선택을 위한 상태 관리용 StateProvider
 final sizeSelectionIndexProvider = StateProvider<String?>((ref) => null);
-// 상품 상세 화면에서 수량 부분의 숫자 인덱스 상태관리 관련 StateProvider
-final detailQuantityIndexProvider = StateProvider<int>((ref) => 1);
-// 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스
+// 상품 상세 화면에서 '상품 정보', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스
 // 관련 탭 섹션 상수 부분
-enum ProdDetailScreenTabSection { productInfo, reviews, inquiry }
+enum ProdDetailScreenTabSection { productInfo, inquiry }
 // 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스
 // 관련 탭 섹션 상태관리 관련 StateProvider
 final prodDetailScreenTabSectionProvider = StateProvider<ProdDetailScreenTabSection>((ref) => ProdDetailScreenTabSection.productInfo);
@@ -238,258 +212,6 @@ final autumnSubMainSortButtonProvider =
     StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 final winterSubMainSortButtonProvider =
     StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
-
-// 주석처리한 해당 프로바이더는 현재 사용하지 않는 부분
-// // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
-// // 2차 메인 화면-블라우스 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 blouseMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-가디건 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 cardiganMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final cardiganMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-코트 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 coatMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-청바지 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 jeanMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final jeanMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-맨투맨 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 mtmMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-니트 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 neatMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final neatMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-원피스 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 onepieceMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-패딩 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 paedingMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final paedingMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-팬츠 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 pantsMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-폴라티 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 polaMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final polaMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-티셔츠 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 shirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-스커트 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-// // -------- product_main_screen.dart 관련 ScrollControllerProvider 끝
-//
-// // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 시작
-// // 신상 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 최고 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 bestSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final bestSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 할인 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 saleSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 봄 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 springSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final springSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 여름 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 summerSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 가을 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 autumnSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final autumnSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 겨울 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 winterSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-// // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝
 
 // ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트)과 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 기본 추상 클래스 시작
 // ------- BaseProductListNotifier 클래스 내용 구현 시작
@@ -647,9 +369,9 @@ class ProductMainListNotifier extends BaseProductListNotifier {
     switch (category) {
       case '신상':
         return ['${baseCollection}1'];
-      case '최고':
+      case '스테디 셀러':
         return ['${baseCollection}2'];
-      case '할인':
+      case '특가 상품':
         return ['${baseCollection}3'];
       case '봄':
         return ['${baseCollection}4'];
@@ -765,9 +487,9 @@ class SectionMoreProductListNotifier extends BaseProductListNotifier {
     switch (category) {
       case '신상':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
-      case '최고':
+      case '스테디 셀러':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b2');
-      case '할인':
+      case '특가 상품':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b3');
       case '봄':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b4');
@@ -796,14 +518,14 @@ final newSubMainProductListProvider =
 final bestSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
-  // 최고 섹션
+  // 스테디 셀러 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 
 final saleSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
-  // 할인 섹션
+  // 특가 상품 섹션
   return SectionMoreProductListNotifier(ref, 'a');
 });
 

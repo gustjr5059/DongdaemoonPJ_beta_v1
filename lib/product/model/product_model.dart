@@ -21,7 +21,6 @@ class ProductContent {
   final String? detailWashingImage; // detail_washing_image1을 저장하는 필드.
   final DocumentSnapshot?
       documentSnapshot; // 홈 화면 내 섹션에서 데이터 불러올 때, 4개 단위로 분할하여 가져오기 위해 필요한 필드.
-  final int? selectedCount; // 선택된 수량을 저장하는 필드.
   final String? selectedColorImage; // 선택된 색상 이미지를 저장하는 필드.
   final String? selectedColorText; // 선택된 색상 텍스트를 저장하는 필드.
   final String? selectedSize; // 선택된 사이즈를 저장하는 필드.
@@ -47,7 +46,6 @@ class ProductContent {
     this.detailSizeImage,
     this.detailWashingImage,
     this.documentSnapshot,
-    this.selectedCount,
     this.selectedColorImage,
     this.selectedColorText,
     this.selectedSize,
@@ -79,7 +77,6 @@ class ProductContent {
         detailSizeImage: null,
         detailWashingImage: null,
         documentSnapshot: doc,
-        selectedCount: null,
         selectedColorImage: null,
         selectedColorText: null,
         selectedSize: null,
@@ -205,7 +202,6 @@ class ProductContent {
       detailWashingImage: detailWashingImage,
       // 상세 세탁 이미지.
       documentSnapshot: doc, // 문서 스냅샷.
-      selectedCount: data['selected_count'] as int?, // 선택된 수량
       selectedColorImage: data['selected_color_image'] as String?, // 선택된 색상 이미지
       selectedColorText: data['selected_color_text'] as String?, // 선택된 색상 텍스트
       selectedSize: data['selected_size'] as String?, // 선택된 사이즈
@@ -234,11 +230,27 @@ class ProductContent {
       'detailIntroImages': detailIntroImages,
       'detailSizeImage': detailSizeImage,
       'detailWashingImage': detailWashingImage,
-      'selectedCount': selectedCount,
       'selectedColorImage': selectedColorImage,
       'selectedColorText': selectedColorText,
       'selectedSize': selectedSize,
       'productNumber': productNumber,
     };
+  }
+
+  // fromMap 메서드 추가
+  factory ProductContent.fromMap(Map<String, dynamic> map) {
+    return ProductContent(
+      docId: map['docId'] as String,
+      category: map['category'] as String,
+      productNumber: map['productNumber'] as String,
+      thumbnail: map['thumbnail'] as String?,
+      briefIntroduction: map['briefIntroduction'] as String?,
+      originalPrice: map['originalPrice'] as double?,
+      discountPrice: map['discountPrice'] as double?,
+      discountPercent: map['discountPercent'] as double?,
+      selectedColorImage: map['selectedColorImage'] as String?,
+      selectedColorText: map['selectedColorText'] as String?,
+      selectedSize: map['selectedSize'] as String?,
+    );
   }
 }

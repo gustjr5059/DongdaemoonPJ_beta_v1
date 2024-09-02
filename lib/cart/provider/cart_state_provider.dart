@@ -81,24 +81,6 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     _updateAllCheckedState(state); // 모든 체크 상태를 업데이트
   }
 
-  // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수
-  Future<void> updateItemQuantity(String id, int newQuantity) async {
-    // Firestore에서 수량 업데이트
-    await cartItemRepository.updateCartItemQuantity(id, newQuantity);
-    // 상태를 새로운 수량으로 업데이트
-    state = [
-      for (final item in state)
-        if (item['id'] == id)
-          // 수량이 변경된 아이템 업데이트
-          {...item, 'selected_count': newQuantity}
-        else
-          // 수량이 변경되지 않은 아이템은 그대로 유지
-          item
-    ];
-    // 전체 체크박스 상태 업데이트
-    _updateAllCheckedState(state);
-  }
-
   // 장바구니에서 아이템을 제거하고 상태를 갱신하는 함수
   Future<void> removeItem(String id) async {
     // Firestore에서 아이템 제거

@@ -54,6 +54,7 @@ import '../../../common/provider/common_all_providers.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_state_provider.dart';
 
@@ -202,6 +203,7 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 코트 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+      ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 coatMainScreenPointScrollController에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -250,6 +252,7 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen>
         ref.read(coatMainSortButtonProvider.notifier).state =
             ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 
@@ -354,9 +357,9 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen>
       case 1:
         return '신상';
       case 2:
-        return '최고';
+        return '스테디 셀러';
       case 3:
-        return '할인';
+        return '특가 상품';
       case 4:
         return '봄';
       case 5:

@@ -301,15 +301,15 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: 16),
         child: Text(
-          '최고', // 섹션 제목을 '최고'로 설정
+          '스테디 셀러', // 섹션 제목을 '최고'로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       ProductsSectionList(
-        category: '최고', // '최고' 카테고리를 설정
+        category: '스테디 셀러', // '스테디 셀러' 카테고리를 설정
         fetchProducts: (limit, startAfter) async {
-          // 최고 상품 데이터를 가져오는 비동기 함수를 설정
+          // 스테디 셀러 상품 데이터를 가져오는 비동기 함수를 설정
           final repository = ref.watch(
               bestProductRepositoryProvider); // bestProductRepositoryProvider를 사용하여 레포지토리를 가져옴
           return await repository.fetchBestProductContents(
@@ -320,8 +320,8 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
   );
 }
 
-// 할인 섹션을 위젯으로 구현한 부분
-// 할인 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
+// 특가 상품 섹션을 위젯으로 구현한 부분
+// 특가 상품 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,13 +329,13 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: 16),
         child: Text(
-          '할인', // 섹션 제목을 '할인'으로 설정
+          '특가 상품', // 섹션 제목을 '할인'으로 설정
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       ProductsSectionList(
-        category: '할인', // '할인' 카테고리를 설정
+        category: '특가 상품', // '특가 상품' 카테고리를 설정
         fetchProducts: (limit, startAfter) async {
           // 할인 상품 데이터를 가져오는 비동기 함수를 설정
           final repository = ref.watch(

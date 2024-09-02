@@ -10,7 +10,6 @@ import '../../message/view/message_screen.dart'; // 메시지 화면을 가져�
 import '../../order/provider/order_all_providers.dart'; // 주문 관련 프로바이더를 가져옴
 import '../../order/view/order_list_screen.dart'; // 주문 목록 화면을 가져옴
 import '../../product/layout/product_body_parts_layout.dart'; // 제품 관련 레이아웃을 가져옴
-import '../../review/view/review_screen.dart'; // 리뷰 화면을 가져옴
 import '../../wishlist/view/wishlist_screen.dart'; // 찜 목록 화면을 가져옴
 import '../view/login_screen.dart'; // 로그인 화면을 가져옴
 
@@ -115,7 +114,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 }
 // ------- 마이페이지 화면 내 회원정보 관련 데이터를 파이어베이스에서 불러와서 UI로 구현하는 UserProfileInfo 클래스 내용 끝 부분
 
-// ------- 마이페이지 화면 내 리뷰 관리 ~ 문의하기 관련 옵션 선택 UI 구현하는 UserProfileOptions 클래스 내용 시작 부분
+// ------- 마이페이지 화면 내 발주내역 관리 ~ 문의하기 관련 옵션 선택 UI 구현하는 UserProfileOptions 클래스 내용 시작 부분
 class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받아 UserProfileOptions 클래스를 정의
   final String email;
 
@@ -127,22 +126,6 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
       backgroundColor: BEIGE_COLOR, // 배경색 설정
       content: Column( // 컬럼 위젯으로 구성
         children: [
-          _buildOptionTile( // 옵션 타일 생성
-            context,
-            icon: Icons.star, // 아이콘 설정
-            title: '리뷰 관리', // 제목 설정
-            onTap: () { // 클릭 시 실행될 함수
-              onReviewListClick(context, ref, email); // 리뷰 목록 클릭 함수 실행
-            },
-          ),
-          _buildOptionTile( // 옵션 타일 생성
-            context,
-            icon: Icons.message, // 아이콘 설정
-            title: '쪽지함', // 제목 설정
-            onTap: () { // 클릭 시 실행될 함수
-              onMessageListClick(context, ref); // 메시지 목록 클릭 함수 실행
-            },
-          ),
           _buildOptionTile( // 옵션 타일 생성
             context,
             icon: Icons.receipt_long_outlined, // 아이콘 설정
@@ -206,14 +189,6 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     navigateToScreenAndRemoveUntil(context, ref, WishlistMainScreen(), 4); // 화면 이동 함수 호출
   }
 
-  void onReviewListClick(BuildContext context, WidgetRef ref, String email) { // 리뷰 목록 클릭 함수
-    navigateToScreenAndRemoveUntil(context, ref, PrivateReviewMainScreen(email: email), 4); // 화면 이동 함수 호출
-  }
-
-  void onMessageListClick(BuildContext context, WidgetRef ref) { // 메시지 목록 클릭 함수
-    navigateToScreenAndRemoveUntil(context, ref, PrivateMessageMainScreen(), 4); // 화면 이동 함수 호출
-  }
-
   void onAnnounceListClick(BuildContext context, WidgetRef ref) { // 공지사항 클릭 함수
     navigateToScreenAndRemoveUntil(context, ref, AnnounceMainScreen(), 4); // 화면 이동 함수 호출
   }
@@ -223,4 +198,4 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
   }
 }
 // ------ 각 옵션마다 클릭 시, 각 해당 화면으로 이동하는 로직 끝 부분
-// ------- 마이페이지 화면 내 리뷰 관리 ~ 문의하기 관련 옵션 선택 UI 구현하는 UserProfileOptions 위젯 내용 끝 부분
+// ------- 마이페이지 화면 내 발주내역 관리 ~ 문의하기 관련 옵션 선택 UI 구현하는 UserProfileOptions 위젯 내용 끝 부분

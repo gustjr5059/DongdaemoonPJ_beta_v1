@@ -51,6 +51,7 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/home_body_parts_layout.dart';
 
 // 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 home_all_providers.dart 파일을 가져옵니다.
@@ -276,6 +277,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 홈 버튼 인덱스인 0과 매핑
       // -> 홈 화면 초기화 시, 하단 탭 바 내 홈 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 0;
+      ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
     });
 
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
@@ -362,6 +364,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
             0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
         ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
             false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 
@@ -475,10 +478,10 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       switch (sectionTitle) {
         case '신상': //260  360
           return 650.0; // '신상품 섹션'의 스크롤 위치
-        case '최고':
-          return 910.0; // '최고의 제품 섹션'의 스크롤 위치
-        case '할인':
-          return 1170.0; // '할인 제품 섹션'의 스크롤 위치
+        case '스테디 셀러':
+          return 910.0; // '스테디 셀러 제품 섹션'의 스크롤 위치
+        case '특가 상품':
+          return 1170.0; // '특가 상품 섹션'의 스크롤 위치
         case '봄':
           return 1530.0; // '봄 제품 섹션'의 스크롤 위치
         case '여름':
@@ -500,9 +503,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         case 1:
           return '신상'; // 신상품 항목
         case 2:
-          return '최고'; // 최고의 제품 항목
+          return '스테디 셀러'; // 스테디 셀러 상품 항목
         case 3:
-          return '할인'; // 할인 제품 항목
+          return '특가 상품'; // 특가 상품 항목
         case 4:
           return '봄'; // 봄 제품 항목
         case 5:
@@ -734,12 +737,12 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                             SizedBox(height: 10), // 높이 10으로 간격 설정
                             // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
                             // 베스트 제품 섹션
-                            _buildSectionCard(context, ref, "최고",
+                            _buildSectionCard(context, ref, "스테디 셀러",
                                 buildBestProductsSection, BestSubMainScreen()),
                             SizedBox(height: 10), // 높이 10으로 간격 설정
                             // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
                             // 할인 제품 섹션
-                            _buildSectionCard(context, ref, "할인",
+                            _buildSectionCard(context, ref, "특가 상품",
                                 buildSaleProductsSection, SaleSubMainScreen()),
                             SizedBox(height: 15), // 높이 15로 간격 설정
                             // 두 번째 작은 배너 섹션
@@ -861,7 +864,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
           buildTopButton(context, homeScreenPointScrollController),
         ],
       ),
-      // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
+      // 하단 탭 바 - 1번 케이스인 '홈','요청품목', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context, 1, 1),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
@@ -882,9 +885,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       String title,
       Widget Function(WidgetRef, BuildContext) contentBuilder,
       Widget destinationScreen) {
-    // 제목에 따라 다른 배경색을 설정함. '신상', '할인', '여름', '겨울' 일 경우 BEIGE_COLOR를, 그 외의 경우는 LIGHT_YELLOW_COLOR를 배경색으로 사용함.
+    // 제목에 따라 다른 배경색을 설정함. '신상', '특가 상품', '여름', '겨울' 일 경우 BEIGE_COLOR를, 그 외의 경우는 LIGHT_YELLOW_COLOR를 배경색으로 사용함.
     Color backgroundColor =
-        (title == '신상' || title == '할인' || title == '여름' || title == '겨울')
+        (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
             ? BEIGE_COLOR
             : LIGHT_YELLOW_COLOR;
 

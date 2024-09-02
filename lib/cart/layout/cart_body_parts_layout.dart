@@ -30,19 +30,17 @@ void onCartButtonPressed(
       ''; // 선택된 색상 옵션에서 'text' 값을 가져오고, 없다면 빈 문자열을 반환
   final selectedSize = ref.read(
       sizeSelectionIndexProvider); // sizeSelectionIndexProvider를 사용하여 선택된 사이즈 인덱스를 읽음
-  final selectedCount = ref.read(
-      detailQuantityIndexProvider); // detailQuantityIndexProvider를 사용하여 선택된 수량을 읽음
 
   cartRepository
       .addToCartItem(
-      product, selectedColorText, selectedColorUrl, selectedSize, selectedCount)
+      product, selectedColorText, selectedColorUrl, selectedSize)
       .then((_) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('해당 상품이 장바구니 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
+        SnackBar(content: Text('해당 상품이 요청품목 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
   }).catchError((error) {
     // 에러가 발생할 경우
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('장바구니에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시
+        content: Text('요청품목에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시
   });
 }
 
@@ -66,7 +64,7 @@ class CartItemsList extends ConsumerWidget {
 
     // 장바구니가 비어 있을 경우 화면에 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
     return cartItems.isEmpty
-        ? Center(child: Text('장바구니가 비어 있습니다.'))
+        ? Center(child: Text('요청품목이 비어 있습니다.'))
         : Column(
       // 장바구니 아이템을 반복하여 UI를 생성
       children: cartItems.map((cartItem) {
@@ -74,12 +72,6 @@ class CartItemsList extends ConsumerWidget {
         final int originalPrice = cartItem['original_price']?.round() ?? 0;
         // 상품의 할인 가격을 정수형으로 변환, 값이 없을 경우 0으로 설정
         final int discountPrice = cartItem['discount_price']?.round() ?? 0;
-        // 선택된 상품의 수량을 가져옴, 값이 없을 경우 1로 설정
-        final int selectedCount = cartItem['selected_count'] ?? 1;
-        // 원래 가격에 선택된 수량을 곱한 값을 계산
-        final int totalOriginalPrice = originalPrice * selectedCount;
-        // 할인 가격에 선택된 수량을 곱한 값을 계산
-        final int totalDiscountPrice = discountPrice * selectedCount;
 
         // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장
         final product = ProductContent(
@@ -162,7 +154,7 @@ class CartItemsList extends ConsumerWidget {
                       children: [
                         // 원래 가격을 취소선과 함께 표시
                         Text(
-                          '${numberFormat.format(totalOriginalPrice)}원',
+                          '${numberFormat.format(originalPrice)}원',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],
@@ -173,7 +165,7 @@ class CartItemsList extends ConsumerWidget {
                           children: [
                             // 할인 가격을 Bold체로 표시
                             Text(
-                              '${numberFormat.format(totalDiscountPrice)}원',
+                              '${numberFormat.format(discountPrice)}원',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -224,87 +216,9 @@ class CartItemsList extends ConsumerWidget {
                   ],
                 ),
                 Center(
-                  // 수량 조절 버튼과 삭제 버튼을 중앙에 정렬하여 표시
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // 수량 감소 버튼, 1보다 큰 경우에만 수량 감소
-                      IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          if (cartItem['selected_count'] > 1) {
-                            ref.read(cartItemsProvider.notifier)
-                                .updateItemQuantity(cartItem['id'], cartItem['selected_count'] - 1);
-                          }
-                        },
-                      ),
-                      // 현재 선택된 수량을 중앙에 표시
-                      Container(
-                        width: 50,
-                        alignment: Alignment.center,
-                        child: Text(
-                          '${cartItem['selected_count'] ?? 0}',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      // 수량 증가 버튼
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          ref.read(cartItemsProvider.notifier)
-                              .updateItemQuantity(cartItem['id'], cartItem['selected_count'] + 1);
-                        },
-                      ),
-                      // 수량 직접 입력 버튼
-                      TextButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              final TextEditingController controller = TextEditingController();
-                              String input = '';
-                              // 수량 입력을 위한 AlertDialog 생성
-                              return AlertDialog(
-                                title: Text('수량 입력', style: TextStyle(color: Colors.black)),
-                                content: TextField(
-                                  controller: controller,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  autofocus: true,
-                                  onChanged: (value) {
-                                    input = value;
-                                  },
-                                  decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                                actions: <TextButton>[
-                                  TextButton(
-                                    child: Text('확인', style: TextStyle(color: Colors.black)),
-                                    onPressed: () {
-                                      // 입력값이 비어 있지 않을 경우 수량 업데이트
-                                      if (input.isNotEmpty) {
-                                        ref.read(cartItemsProvider.notifier)
-                                            .updateItemQuantity(cartItem['id'], int.parse(input));
-                                      }
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)),
-                      ),
-                      SizedBox(width: 50),
-                      // 삭제 버튼, 클릭 시 장바구니에서 해당 상품을 삭제하고 스낵바 표시
-                      ElevatedButton(
-                        onPressed: () {
+                  // 삭제 버튼, 클릭 시 장바구니에서 해당 상품을 삭제하고 스낵바 표시
+                  child: ElevatedButton(
+                          onPressed: () {
                           ref.read(cartItemsProvider.notifier)
                               .removeItem(cartItem['id']);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -319,8 +233,6 @@ class CartItemsList extends ConsumerWidget {
                         ),
                         child: Text('삭제', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                    ],
-                  ),
                 ),
               ],
             ),

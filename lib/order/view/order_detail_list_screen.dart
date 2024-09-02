@@ -100,9 +100,6 @@ class _OrderListDetailScreenState
       ref.read(tabIndexProvider.notifier).state = 2;
       // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
       ref.invalidate(orderListDetailProvider);
-      // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-      ref.invalidate(buttonInfoProvider);
-      ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -115,9 +112,6 @@ class _OrderListDetailScreenState
         0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
         // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
         ref.invalidate(orderListDetailProvider);
-        // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-        ref.invalidate(buttonInfoProvider);
-        ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
       }
     });
 
@@ -135,13 +129,6 @@ class _OrderListDetailScreenState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      // // 앱이 다시 포커스를 얻었을 때 상태를 업데이트 (다른 화면 이동 후 복귀 시, 해당 초기화 로직이 동작함)
-      // ref.read(orderListDetailScrollPositionProvider.notifier).state =
-      // 0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
-      // // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      // ref.invalidate(orderListDetailProvider);
-      // ref.invalidate(buttonInfoProvider);  // 초기화
-      // ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
       _updateStatusBar();
     }
   }
@@ -216,7 +203,7 @@ class _OrderListDetailScreenState
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '발주 목록 상세',
+                  title: '발주 내역 상세',
                   // AppBar의 제목을 '발주 목록 상세'로 설정
                   leadingType: LeadingType.back,
                   // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

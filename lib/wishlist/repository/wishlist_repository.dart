@@ -47,7 +47,7 @@ class WishlistItemRepository {
       };
 
       // 파이어스토리지에 저장할 경로 생성
-      final storagePath = 'wishlist_item_image/$userEmail/wishlist_${DateTime.now().millisecondsSinceEpoch}';
+      final storagePath = 'couture_wishlist_item_image/$userEmail/wishlist_${DateTime.now().millisecondsSinceEpoch}';
       // 저장할 경로 생성
 
       // 썸네일 이미지 저장
@@ -61,7 +61,7 @@ class WishlistItemRepository {
       // Firestore에 데이터 저장
       final docId = '${DateTime.now().millisecondsSinceEpoch}';
       print('Saving wishlist item with ID: $docId to Firestore'); // 디버깅 메시지 추가
-      await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(docId).set(data);
+      await firestore.collection('couture_wishlist_item').doc(userEmail).collection('items').doc(docId).set(data);
       print('Wishlist item added successfully for product: ${product.docId}'); // 성공 메시지 출력
     } catch (e) {
       print('Error adding to wishlist: $e'); // 오류 메시지 출력
@@ -75,14 +75,14 @@ class WishlistItemRepository {
       final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일 가져옴
       print('Removing product from wishlist for user: $userEmail'); // 디버깅 메시지 추가
       // Firestore에서 해당 상품 ID를 가진 문서를 검색
-      final snapshot = await firestore.collection('wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
+      final snapshot = await firestore.collection('couture_wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
       for (var doc in snapshot.docs) {
         print('Deleting wishlist item with ID: ${doc.id}'); // 삭제할 항목의 ID 출력
         // 해당 문서를 Firestore에서 삭제
-        await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(doc.id).delete();
+        await firestore.collection('couture_wishlist_item').doc(userEmail).collection('items').doc(doc.id).delete();
         try {
           // Firebase Storage에서 해당 이미지를 삭제
-          await storage.ref('wishlist_item_image/$userEmail/${doc.id}').delete();
+          await storage.ref('couture_wishlist_item_image/$userEmail/${doc.id}').delete();
           print('Deleted image from storage with path: wishlist_item_image/$userEmail/${doc.id}'); // 삭제 완료 메시지 출력
         } catch (e) {
           if (e is FirebaseException && e.code == 'object-not-found') {

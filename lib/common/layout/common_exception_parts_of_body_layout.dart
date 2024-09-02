@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
@@ -18,17 +17,11 @@ import '../../cart/layout/cart_body_parts_layout.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../cart/view/cart_screen.dart';
 
-// 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
-import '../../home/layout/home_body_parts_layout.dart';
-
 // 애플리케이션의 메인 홈 화면을 구성하는 파일을 임포트합니다.
 import '../../home/provider/home_state_provider.dart';
 import '../../home/view/home_screen.dart';
 
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
-import '../../manager/message/view/message_screen.dart';
-import '../../manager/orderlist/view/orderlist_screen.dart';
-import '../../manager/review/view/review_screen.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../order/view/order_list_screen.dart';
 
@@ -327,7 +320,7 @@ Widget buildCommonBottomNavigationBar(
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.shopping_cart_outlined), // 장바구니 아이콘
-        label: '장바구니', // 장바구니 라벨
+        label: '요청품목', // 요청품목 라벨
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.receipt_long_outlined), // 발주 내역 아이콘
@@ -347,7 +340,7 @@ Widget buildCommonBottomNavigationBar(
     unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
   );
 
-  // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
+  // '요청품목', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:
       if (product == null) {
         throw ArgumentError('Product must be provided for navigation case 2'); // 제품이 제공되지 않은 경우 예외 처리
@@ -357,12 +350,6 @@ Widget buildCommonBottomNavigationBar(
       final selectedColorUrl = ref.watch(colorSelectionUrlProvider); // 선택된 색상 URL 상태 값 가져오기
       final selectedColorText = ref.watch(colorSelectionTextProvider); // 선택된 색상 텍스트 상태 값 가져오기
       final selectedSize = ref.watch(sizeSelectionIndexProvider); // 선택된 사이즈 상태 값 가져오기
-      final quantity = ref.watch(detailQuantityIndexProvider); // 선택된 수량 상태 값 가져오기
-
-      // 선택된 수량을 반영하여 가격 계산
-      double totalProductPrice = (product.originalPrice ?? 0).toDouble() * quantity; // 총 제품 가격 계산
-      double productDiscountPrice = ((product.originalPrice ?? 0).toDouble() - (product.discountPrice ?? 0).toDouble()) * quantity; // 할인된 금액 계산
-      double totalPaymentPrice = (product.discountPrice ?? 0).toDouble() * quantity; // 총 결제 금액 계산
 
       // 선택된 옵션과 수량을 반영한 ProductContent 객체 생성
       final orderProduct = ProductContent(
@@ -374,7 +361,6 @@ Widget buildCommonBottomNavigationBar(
         originalPrice: (product.originalPrice ?? 0), // 원래 가격 설정
         discountPrice: (product.discountPrice ?? 0), // 할인 가격 설정
         discountPercent: (product.discountPercent ?? 0), // 할인 퍼센트 설정
-        selectedCount: quantity, // 선택한 수량 설정
         selectedColorImage: selectedColorUrl ?? '', // 선택한 색상 이미지 URL 설정
         selectedColorText: selectedColorText ?? '', // 선택한 색상 텍스트 설정
         selectedSize: selectedSize ?? '', // 선택한 사이즈 설정
@@ -388,12 +374,12 @@ Widget buildCommonBottomNavigationBar(
           children: [
             Expanded( // 내부 위젯의 가로 공간을 최대한 확장
               child: ElevatedButton(
-                onPressed: () => onCartButtonPressed(context, ref, product), // 장바구니 버튼 클릭 시 실행될 함수 지정
+                onPressed: () => onCartButtonPressed(context, ref, product), // 요청품목 버튼 클릭 시 실행될 함수 지정
                 style: ElevatedButton.styleFrom(
                   backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
                   foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
                 ),
-                child: Text('장바구니'), // 버튼 텍스트 설정
+                child: Text('요청품목 담기'), // 버튼 텍스트 설정
               ),
             ),
             SizedBox(width: 10), // 버튼들 사이에 10픽셀 너비의 여백 추가
@@ -405,9 +391,6 @@ Widget buildCommonBottomNavigationBar(
                   // OrderMainScreen으로 화면 전환
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => OrderMainScreen(
-                      totalProductPrice: totalProductPrice.toDouble(), // 총 제품 가격 전달
-                      productDiscountPrice: productDiscountPrice.toDouble(), // 할인된 금액 전달
-                      totalPaymentPrice: totalPaymentPrice.toDouble(), // 총 결제 금액 전달
                     )),
                   );
                 },
@@ -428,23 +411,6 @@ Widget buildCommonBottomNavigationBar(
       final allChecked = ref.watch(allCheckedProvider);
       // 장바구니 아이템 목록을 상태로 관리
       final cartItems = ref.watch(cartItemsProvider);
-
-      // 선택된 아이템들의 합계 금액 계산
-      int totalSelectedPrice = cartItems
-          // 아이템 목록 중 선택된 아이템만 필터링
-          .where((item) => item['bool_checked'] == true)
-          // 선택된 아이템들의 합계 금액을 계산
-          .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt());
-
-      int totalProductPrice = cartItems
-          .where((item) => item['bool_checked'] == true) // 선택된 아이템들만 필터링
-          .fold(0, (sum, item) => sum + (item['original_price'] as num).toInt() * (item['selected_count'] as num).toInt()); // 원래 가격과 선택된 수량을 곱한 값을 더하여 총 상품금액 계산
-
-      int totalPaymentPrice = cartItems
-          .where((item) => item['bool_checked'] == true) // 선택된 아이템들만 필터링
-          .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt()); // 할인된 가격과 선택된 수량을 곱한 값을 더하여 총 결제금액 계산
-
-      int totalDiscountPrice = totalProductPrice - totalPaymentPrice; // 총 상품금액에서 총 결제금액을 빼서 총 할인금액 계산
 
 // 발주 화면에서 사용할 선택된 아이템들을 필터링하고 ProductContent 객체로 변환하여 리스트로 저장
       final orderProducts = cartItems
@@ -469,8 +435,6 @@ Widget buildCommonBottomNavigationBar(
           discountPrice: item['discount_price'],
           // ProductContent 객체의 discountPercent 필드를 item의 'discount_percent' 값으로 설정
           discountPercent: item['discount_percent'],
-          // ProductContent 객체의 selectedCount 필드를 item의 'selected_count' 값으로 설정
-          selectedCount: item['selected_count'],
           // ProductContent 객체의 selectedColorImage 필드를 item의 'selected_color_image' 값으로 설정
           selectedColorImage: item['selected_color_image'],
           // ProductContent 객체의 selectedColorText 필드를 item의 'selected_color_text' 값으로 설정
@@ -520,12 +484,6 @@ Widget buildCommonBottomNavigationBar(
                 ),
               ],
             ),
-            // 합계 금액을 표시하는 텍스트
-            Text(
-              '합계: ${numberFormat.format(totalSelectedPrice)}원',
-              // 텍스트 스타일 설정 (크기: 18, 굵게)
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
             // 발주하기 버튼
             ElevatedButton(
               // 버튼 클릭 시 호출되는 함수
@@ -535,9 +493,6 @@ Widget buildCommonBottomNavigationBar(
                 // OrderMainScreen으로 화면 전환
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => OrderMainScreen(
-                    totalProductPrice: totalProductPrice.toDouble(), // 총 상품금액을 실수형으로 변환하여 OrderMainScreen에 전달
-                    productDiscountPrice: totalDiscountPrice.toDouble(), // 총 할인금액을 실수형으로 변환하여 OrderMainScreen에 전달
-                    totalPaymentPrice: totalPaymentPrice.toDouble(), // 총 결제금액을 실수형으로 변환하여 OrderMainScreen에 전달
                   )),
                 );
               },
@@ -547,7 +502,7 @@ Widget buildCommonBottomNavigationBar(
                 foregroundColor: INPUT_BG_COLOR,
               ),
               // 버튼에 표시될 텍스트
-              child: Text('발주하기'),
+              child: Text('업데이트 요청하기'),
             ),
           ],
         ),
@@ -646,8 +601,8 @@ Widget buildTopBarList(
     // 카테고리 리스트를 정의
     {"type": "text", "data": "전체"},
     {"type": "text", "data": "신상"},
-    {"type": "text", "data": "최고"},
-    {"type": "text", "data": "할인"},
+    {"type": "text", "data": "스테디 셀러"},
+    {"type": "text", "data": "특가 상품"},
     {"type": "text", "data": "봄"},
     {"type": "text", "data": "여름"},
     {"type": "text", "data": "가을"},
@@ -698,8 +653,6 @@ Widget buildTopBarList(
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
-  // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
-  final bool isAdmin = userEmail == 'gshe.couture@gmail.com';
 
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
@@ -742,7 +695,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     children: [
                       Icon(Icons.logout, color: Colors.white), // 로그아웃 아이콘
                       SizedBox(width: 10), // 아이콘과 텍스트 사이의 간격
-                      Text('Logout', style: TextStyle(color: Colors.white)), // 로그아웃 텍스트
+                      Text('로그아웃', style: TextStyle(color: Colors.white)), // 로그아웃 텍스트
                     ],
                   ),
                 ),
@@ -763,77 +716,12 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
           _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
               'asset/img/misc/drawer_img/kakao.logo.png'),
           SizedBox(height: 20), // 간격을 위한 SizedBox
-
-          // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
-          if (isAdmin) ...[
-            _buildAdminListTile(
-              context,
-              Icons.star,
-              '리뷰 관리',
-                  () => onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
-            ),
-            SizedBox(width: 50), // 간격을 위한 SizedBox
-            _buildAdminListTile(
-              context,
-              Icons.message,
-              '쪽지 관리',
-                  () => onMessageManagementClick(context, ref), // 클릭 시 실행될 함수 전달
-            ),
-            SizedBox(width: 50), // 간격을 위한 SizedBox
-            _buildAdminListTile(
-              context,
-              Icons.receipt_long_outlined,
-              '발주내역 관리',
-                  () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
-            ),
-          ],
         ],
       ),
     ),
   );
 }
 // ------ buildCommonDrawer 위젯 내용 구현 끝
-
-
-// Widget _buildAdminListTile(
-//     BuildContext context, IconData icon, String title, Widget screen) {
-//   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
-//   return ListTile(
-//     leading: Icon(icon, color: Colors.black), // 아이콘을 왼쪽에 배치
-//     title: Text(title), // 제목을 설정
-//     onTap: () {
-//       // 탭 이벤트 핸들러
-//       Navigator.push(
-//         context,
-//         MaterialPageRoute(builder: (context) => screen), // 새로운 화면으로 이동
-//       );
-//     },
-//   );
-// }
-// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
-Widget _buildAdminListTile(BuildContext context, IconData icon, String title, void Function()? onTap) {
-  // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
-  return ListTile(
-    leading: Icon(icon, color: Colors.black, size: 40), // 아이콘을 왼쪽에 배치
-    title: Text(title), // 제목을 설정
-    contentPadding: EdgeInsets.symmetric(horizontal: 16), // 좌우 간격 조정
-    onTap: onTap, // 탭 이벤트 핸들러를 외부에서 전달받은 함수로 설정
-  );
-}
-
-// 관리자 계정 항목 클릭 시, 실행될 함수들
-void onReviewManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, AdminReviewMainScreen(), 4); // 화면 이동 함수 호출
-}
-
-void onMessageManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, AdminMessageMainScreen(), 4); // 화면 이동 함수 호출
-}
-
-void onOrderListClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, AdminOrderlistMainScreen(), 4); // 화면 이동 함수 호출
-}
-// ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 끝
 
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
 Widget _buildListTile(

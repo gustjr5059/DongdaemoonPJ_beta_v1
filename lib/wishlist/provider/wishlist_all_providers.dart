@@ -17,7 +17,7 @@ final wishlistItemsStreamProvider = StreamProvider.family.autoDispose((ref, Stri
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
   // Firestore에서 wishlist_item 컬렉션을 구독하여 실시간 스트림을 반환
   return wishlistRepository.firestore
-      .collection('wishlist_item')
+      .collection('couture_wishlist_item')
       .doc(userEmail)
       .collection('items')
       .orderBy('timestamp', descending: true) // timestamp 필드 기준으로 내림차순 정렬

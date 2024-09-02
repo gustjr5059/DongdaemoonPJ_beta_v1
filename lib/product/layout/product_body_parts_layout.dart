@@ -28,19 +28,9 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../inquiry/provider/inquiry_state_provider.dart';
-import '../../manager/message/provider/message_all_provider.dart';
-import '../../manager/message/provider/message_state_provider.dart';
-import '../../manager/orderlist/provider/orderlist_all_provider.dart';
-import '../../manager/orderlist/provider/orderlist_state_provider.dart';
-import '../../manager/review/provider/review_all_provider.dart';
-import '../../manager/review/provider/review_state_provider.dart';
-import '../../message/provider/message_all_provider.dart';
-import '../../message/provider/message_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../order/provider/order_state_provider.dart';
-import '../../review/provider/review_all_provider.dart';
-import '../../review/provider/review_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
@@ -527,8 +517,6 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
   // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
   ref.invalidate(orderListDetailProvider);
-  // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-  ref.invalidate(buttonInfoProvider);
   // 발주 내역 상세 화면 관련 초기화 부분 끝
 
   // 발주 화면 관련 초기화 부분 시작
@@ -569,77 +557,6 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(inquiryScrollPositionProvider.notifier).state =
   0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 문의하기 화면 관련 초기화 부분 끝
-
-  // 쪽지 관리 화면 관련 초기화 부분 시작
-  ref.read(privateMessageScrollPositionProvider.notifier).state =
-  0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
-  // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
-  ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
-  // 쪽지 관리 화면 관련 초기화 부분 끝
-
-  // 리뷰 관리 화면 관련 초기화 부분 시작
-  ref.read(privateReviewScrollPositionProvider.notifier).state =
-  0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-  ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
-  // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-  ref.invalidate(buttonInfoProvider);
-  ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
-  ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
-  ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
-  // 리뷰 관리 화면 관련 초기화 부분 끝
-
-  // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
-  // 리뷰 관리 화면 초기화 시작
-  ref.read(adminReviewScrollPositionProvider.notifier).state = 0.0;
-  ref.invalidate(adminUsersEmailProvider); // 사용자 이메일 목록 초기화
-  ref.invalidate(adminReviewListProvider); // 리뷰 목록 초기화
-  ref.invalidate(adminDeleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
-  ref.read(adminSelectedUserEmailProvider.notifier).state = null; // 선택된 사용자 이메일 초기화
-  // 리뷰 관리 화면 초기화 끝
-
-  // 쪽지 관리 화면 초기화 시작
-  ref.read(adminMessageScrollPositionProvider.notifier).state = 0.0;
-  // 쪽지 관리 화면 내 발신자 관련 로그인한 이메일 계정 데이터 불러오는 로직 초기화
-  ref.invalidate(currentUserProvider);
-  // 쪽지 관리 화면 내 users에 있는 이메일 계정 데이터 불러오는 로직 초기화
-  ref.invalidate(receiversProvider);
-  // 쪽지 관리 화면 내 선택된 이메일 계정 관련 발주번호 데이터 불러오는 로직 초기화
-  ref.invalidate(orderNumbersProvider);
-  // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
-  ref.read(adminMessageContentProvider.notifier).state = null;
-  // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
-  ref.read(adminCustomMessageProvider.notifier).state = null;
-  // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
-  ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
-  // 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 화면에서 선택된 수신자 이메일 상태 초기화
-  ref.read(selectedReceiverProvider.notifier).state = null;
-  // 쪽지 관리 화면 초기화 시, 모든 계정의 쪽지 목록 상태 초기화
-  ref.invalidate(fetchMinutesAllMessagesProvider); // 1분 이내 타임의 쪽지 목록 불러옴
-  ref.invalidate(fetchDaysAllMessagesProvider); // 30일 이내 타임의 쪽지 목록 불러옴
-  ref.invalidate(fetchYearsAllMessagesProvider); // 1년(365일) 이내 타임의 쪽지 목록 불러옴
-
-  // 쪽지 관리 화면 초기화 끝
-
-  // 발주내역 관리 화면 초기화 시작
-  // 발주내역 관리 화면 자체의 스크롤 초기화
-  ref.read(adminOrderlistScrollPositionProvider.notifier).state = 0.0;
-  // 발주내역 관리 화면 초기화
-  ref.read(selectedUserEmailProvider.notifier).state = '';
-  // 발주내역 관리 화면 내 모든 사용자 이메일 계정 데이터 불러오는 로직 초기화
-  ref.invalidate(allUserEmailsProvider);
-  // 발주내역 관리 화면 내 선택된 이메일 계정 관련 발주 데이터 불러오는 로직 초기화
-  ref.invalidate(userOrdersProvider);
-  // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
-  ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
-  // 발주내역 관리 화면 초기화 끝
-
-  // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 끝
 
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작
@@ -824,7 +741,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(newSubMainSmall1BannerPageProvider.notifier).state = 0; // 신상 더보기 화면 소배너 페이지뷰 초기화
   // 신상 더보기 화면 관련 초기화 부분 끝
 
-  // 최고 더보기 화면 관련 초기화 부분 시작
+  // 스테디 셀러 더보기 화면 관련 초기화 부분 시작
   ref.read(bestSubMainScrollPositionProvider.notifier).state =
       0.0; // 최고 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
   ref
@@ -836,7 +753,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(bestSubMainSmall1BannerPageProvider.notifier).state = 0; // 최고 더보기 화면 소배너 페이지뷰 초기화
   // 최고 더보기 화면 관련 초기화 부분 끝
 
-  // 할인 더보기 화면 관련 초기화 부분 시작
+  // 특가 상품 더보기 화면 관련 초기화 부분 시작
   ref.read(saleSubMainScrollPositionProvider.notifier).state =
       0.0; // 할인 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
   ref
@@ -903,20 +820,6 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(colorSelectionTextProvider.notifier).state = null;
   ref.read(colorSelectionUrlProvider.notifier).state = null;
   ref.read(sizeSelectionIndexProvider.notifier).state = null;
-  // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
-  ref.read(detailQuantityIndexProvider.notifier).state = 1;
-  // ref.read(blouseDetailImagePageProvider.notifier).state = 0; // 블라우스 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(cardiganDetailImagePageProvider.notifier).state = 0; // 가디건 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(coatDetailImagePageProvider.notifier).state = 0; // 코트 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(jeanDetailImagePageProvider.notifier).state = 0; // 청바지 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(mtmDetailImagePageProvider.notifier).state = 0; // 맨투맨 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(neatDetailImagePageProvider.notifier).state = 0; // 니트 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(onepieceDetailImagePageProvider.notifier).state = 0; // 원피스 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(paedingDetailImagePageProvider.notifier).state = 0; // 패딩 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(pantsDetailImagePageProvider.notifier).state = 0; // 팬츠 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(polaDetailImagePageProvider.notifier).state = 0; // 폴라티 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(shirtDetailImagePageProvider.notifier).state = 0; // 티셔츠 상세 화면 내 이미지 부분 관련 초기화
-  // ref.read(skirtDetailImagePageProvider.notifier).state = 0; // 스커트 상세 화면 내 이미지 부분 관련 초기화
   // // ------ 상품 상세 화면 관련 초기화 부분 끝
 }
 
@@ -1080,9 +983,7 @@ class ProductInfoDetailScreenNavigation {
       ref.read(colorSelectionUrlProvider.notifier).state = null;
       // 화면을 돌아왔을 때 선택된 사이즈의 상태를 초기화함
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
-      // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
-      ref.read(detailQuantityIndexProvider.notifier).state = 1;
-      // 화면을 돌아왔을 때 '상품정보', '리뷰', '문의'탭 상태를 초기화함
+      // 화면을 돌아왔을 때 '상품정보', '문의'탭 상태를 초기화함
       ref.read(prodDetailScreenTabSectionProvider.notifier).state = ProdDetailScreenTabSection.productInfo;
     });
   }
@@ -1245,7 +1146,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         ),
         SizedBox(height: 10),
         CommonCardView(
-          content: buildProductAllCountAndPriceSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
+          content: buildProductSelectOptionsSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
           backgroundColor: BEIGE_COLOR,
           elevation: 4.0,
           margin: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -1525,31 +1426,15 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
 }
 // ------ buildColorAndSizeSelection 클래스 끝: 색상 및 사이즈 선택 부분을 구현.
 
-// ------ buildProductAllCountAndPriceSelection 위젯 시작: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
+// ------ buildProductSelectOptionsSelection 위젯 시작: 선택한 색상, 선택한 사이즈 부분을 구현.
 // 선택한 색상, 사이즈, 수량, 총 가격을 표시하는 위젯을 생성하는 함수.
-Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref, ProductContent product) {
+Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, ProductContent product) {
   // 선택한 색상 URL을 가져옴.
   final selectedColorUrl = ref.watch(colorSelectionUrlProvider);
   // 선택한 색상 텍스트를 가져옴.
   final selectedColorText = ref.watch(colorSelectionTextProvider);
   // 선택한 사이즈를 가져옴.
   final selectedSize = ref.watch(sizeSelectionIndexProvider);
-  // 선택한 수량을 가져옴.
-  final quantity = ref.watch(detailQuantityIndexProvider);
-
-  // 할인된 가격을 가져오고, 없으면 0을 설정.
-  double discountPrice = product.discountPrice ?? 0;
-  // 총 가격을 계산.
-  double totalPrice = discountPrice * quantity;
-
-  // 선택한 색상 정보를 가져옴.
-  final selectedColorOption = product.colorOptions?.firstWhere(
-        (option) => option['url'] == selectedColorUrl,
-    orElse: () => {'url': '', 'text': ''}, // 기본 값 설정.
-  );
-
-  // 정규식을 사용하여 천 단위로 쉼표를 추가.
-  final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1585,114 +1470,20 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
             ],
           ),
         ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-        // 좌우 여백 20, 수직 여백 8로 설정.
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // 자식 위젯들을 좌우로 배치.
-          children: [
-            // '수량' 텍스트를 표시함.
-            Text('수량', style: TextStyle(fontSize: 16)),
-            Row(
-              children: [
-                // 수량 감소 버튼. 수량이 1보다 클 때만 작동함.
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: quantity > 1 ? () {
-                    ref.read(detailQuantityIndexProvider.notifier).state--;
-                  } : null,
-                ),
-                // 현재 수량을 표시하는 컨테이너.
-                Container(
-                  width: 50,
-                  alignment: Alignment.center,
-                  child: Text('$quantity', style: TextStyle(fontSize: 16)),
-                ),
-                // 수량 증가 버튼.
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    ref.read(detailQuantityIndexProvider.notifier).state++;
-                  },
-                ),
-                // 수량을 직접 입력할 수 있는 버튼.
-                TextButton(
-                  onPressed: () {
-                    // 수량 입력을 위한 다이얼로그를 표시.
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        final TextEditingController controller = TextEditingController();
-                        // 텍스트 입력 컨트롤러를 생성.
-                        String input = ''; // 입력 값을 저장할 변수.
-                        return AlertDialog(
-                          // 다이얼로그 제목.
-                          title: Text('수량 입력', style: TextStyle(color: Colors.black)), // 색상 수정
-                          content: TextField(
-                            controller: controller, // 컨트롤러 연결.
-                            keyboardType: TextInputType.number,
-                            // 숫자만 입력 가능하게 설정.
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            autofocus: true, // 자동으로 포커스.
-                            onChanged: (value) {
-                              input = value;
-                            },
-                            decoration: InputDecoration(
-                              // 포커스된 상태의 밑줄 색상을 검정으로 변경.
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black), // 밑줄 색상 변경
-                              ),
-                            ),
-                          ),
-                          actions: <TextButton>[
-                            // 확인 버튼을 누르면 수량을 설정하고 다이얼로그를 닫음.
-                            TextButton(
-                              child: Text('확인', style: TextStyle(color: Colors.black)), // 색상 수정
-                              onPressed: () {
-                                if (input.isNotEmpty) {
-                                  ref.read(detailQuantityIndexProvider.notifier).state = int.parse(input);
-                                  // 입력된 값을 정수로 변환하여 상태를 업데이트.
-                                }
-                                Navigator.of(context).pop();
-                                // 다이얼로그 닫기.
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)), // 색상 수정
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      // 총 가격을 표시.
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-        child: Text('총 가격: ${totalPrice.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      ),
     ],
   );
 }
-// ------ buildProductAllCountAndPriceSelection 위젯 끝: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
+// ------ buildProductSelectOptionsSelection 위젯 끝: 선택한 색상, 선택한 사이즈 부분을 구현.
 // ------ 상품 상세 화면 내 UI 관련 위젯 공통 코드 내용 끝
 
-// ------ 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 시작
+// ------ 상품 상세 화면에서 '상품 정보', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 시작
 class ProductDetailScreenTabs extends ConsumerWidget {
   final Widget productInfoContent; // '상품 정보' 탭의 내용을 담는 위젯
-  final List<ProductReviewContents> reviewsContent; // '리뷰' 탭의 내용을 담는 리스트
   final Widget inquiryContent; // '문의' 탭의 내용을 담는 위젯
 
   // 생성자, 각 탭의 내용을 받음.
   ProductDetailScreenTabs({
     required this.productInfoContent,
-    required this.reviewsContent,
     required this.inquiryContent,
   });
 
@@ -1718,8 +1509,6 @@ class ProductDetailScreenTabs extends ConsumerWidget {
       children: [
         // '상품정보' 탭 버튼을 빌드
         _buildTabButton(ref, ProdDetailScreenTabSection.productInfo, currentTabSection, '상품정보'),
-        // '리뷰' 탭 버튼을 빌드
-        _buildTabButton(ref, ProdDetailScreenTabSection.reviews, currentTabSection, '리뷰'),
         // '문의' 탭 버튼을 빌드
         _buildTabButton(ref, ProdDetailScreenTabSection.inquiry, currentTabSection, '문의'),
       ],
@@ -1760,10 +1549,6 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     switch (section) {
       case ProdDetailScreenTabSection.productInfo: // '상품정보' 섹션이면
         return productInfoContent; // '상품정보' 내용을 반환
-      case ProdDetailScreenTabSection.reviews: // '리뷰' 섹션이면
-        return reviewsContent.isEmpty
-            ? Center(child: Text('리뷰가 없습니다.')) // 리뷰 데이터가 없을 때 표시
-            : Column(children: reviewsContent); // '리뷰' 내용을 반환
       case ProdDetailScreenTabSection.inquiry: // '문의' 섹션이면
         return ProductInquiryContents(); // '문의' 내용을 반환
       default:
@@ -1771,7 +1556,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     }
   }
 }
-// ------ 상품 상세 화면에서 '상품 정보', '리뷰', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 끝
+// ------ 상품 상세 화면에서 '상품 정보', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 끝
 
 // -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 시작
 class ProductInfoContents extends StatefulWidget {
@@ -1896,186 +1681,6 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
   }
 }
 // -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 끝
-
-// ------ 상품 상세 화면 내 리뷰에서 UI로 구현되는 내용 관련 ProductReviewContents 클래스 시작
-// ProductReviewContents 클래스는 StatelessWidget을 상속받아 정의됨
-// 해당 리뷰 부분은 리뷰 작성 화면에서 작성한 내용을 파이어베이스에 저장 후 저장된 내용을 불러오도록 로직을 재설계해야함!!
-class ProductReviewContents extends StatelessWidget {
-  // 리뷰 작성자의 이름
-  final String reviewerName;
-  // 리뷰 작성 날짜
-  final String reviewDate;
-  // 리뷰 내용
-  final String reviewContent;
-  // 리뷰 제목
-  final String reviewTitle;  // 리뷰 제목 추가
-  // 리뷰에 첨부된 이미지 리스트
-  final List<String> reviewImages;  // 리뷰에 첨부된 이미지들
-  // 리뷰에서 선택된 색상
-  final String reviewSelectedColor;  // 선택된 색상 추가
-  // 리뷰에서 선택된 사이즈
-  final String reviewSelectedSize;  // 선택된 사이즈 추가
-
-  // 생성자에서 모든 필드를 필수로 받아 초기화함
-  const ProductReviewContents({
-    required this.reviewerName,
-    required this.reviewDate,
-    required this.reviewContent,
-    required this.reviewTitle,  // 리뷰 제목 추가
-    required this.reviewImages,  // 리뷰 이미지들 추가
-    required this.reviewSelectedColor,  // 선택된 색상 추가
-    required this.reviewSelectedSize,  // 선택된 사이즈 추가
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // 작성자 이름을 마스킹 처리함
-    String maskedReviewerName = reviewerName.isNotEmpty
-        ? reviewerName[0] + '*' * (reviewerName.length - 1)
-        : '';
-
-    return CommonCardView(
-      // 배경색을 설정함
-      backgroundColor: BEIGE_COLOR,
-      content: Padding(
-        padding: const EdgeInsets.all(8.0),
-        // 리뷰 내용 전체를 세로로 정렬된 컬럼 위젯으로 구성함
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 작성자 이름을 마스킹 처리된 값으로 출력함
-            _buildReviewInfoRow('작성자: ', maskedReviewerName, bold: true),
-            SizedBox(height: 4),
-            // 리뷰 작성일자를 출력함
-            _buildReviewInfoRow('리뷰 등록 일자: ', reviewDate, bold: true),
-            SizedBox(height: 4),
-            // 선택된 색상 및 사이즈가 존재할 경우 이를 출력함
-            if (reviewSelectedColor.isNotEmpty || reviewSelectedSize.isNotEmpty)
-              _buildReviewInfoRow('색상 / 사이즈: ', '$reviewSelectedColor / $reviewSelectedSize', bold: true),
-            SizedBox(height: 8),
-            // 리뷰 제목이 존재할 경우 이를 출력함
-            if (reviewTitle.isNotEmpty)
-              _buildReviewInfoColumn('제목: ', reviewTitle, bold: true),
-            SizedBox(height: 8),
-            // 리뷰 내용이 존재할 경우 이를 출력함
-            if (reviewContent.isNotEmpty)
-              _buildReviewInfoColumn('내용: ', reviewContent, bold: true),
-            SizedBox(height: 8),
-            // 리뷰 이미지가 존재할 경우 이를 출력함
-            if (reviewImages.isNotEmpty)
-              _buildReviewImagesRow(reviewImages, context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 리뷰 정보를 세로로 구성하여 표시하는 함수
-  Widget _buildReviewInfoColumn(String label, String value, {bool bold = false, double fontSize = 14}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 라벨 텍스트를 출력함
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.normal, // 라벨 텍스트는 기본 스타일로 표시함
-            ),
-          ),
-          SizedBox(height: 4),
-          // 데이터 텍스트를 출력함
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: bold ? FontWeight.bold : FontWeight.normal, // 데이터 텍스트만 bold로 표시함
-            ),
-            textAlign: TextAlign.start,
-            softWrap: true,
-            overflow: TextOverflow.visible,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 리뷰 정보를 가로로 구성하여 표시하는 함수
-  Widget _buildReviewInfoRow(String label, String value, {bool bold = false, double fontSize = 14}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 라벨 텍스트를 출력함
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.normal, // 라벨 텍스트는 기본 스타일로 표시함
-            ),
-          ),
-          SizedBox(height: 4),
-          // 데이터 텍스트를 확장 가능한 위젯으로 출력함
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: bold ? FontWeight.bold : FontWeight.normal, // 데이터 텍스트만 bold로 표시함
-              ),
-              textAlign: TextAlign.start,
-              softWrap: true,
-              overflow: TextOverflow.visible,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 리뷰 이미지를 가로로 구성하여 표시하는 함수
-  Widget _buildReviewImagesRow(List<String> images, BuildContext context) {
-    // 화면 너비를 계산함
-    final width = MediaQuery.of(context).size.width;
-    // 이미지 하나의 너비를 설정함
-    final imageWidth = width / 4;
-
-    // 각 이미지를 가로로 나열하여 출력함
-    return Row(
-      children: images.map((image) {
-        return GestureDetector(
-          // 이미지를 클릭했을 때 원본 이미지를 보여주는 화면으로 이동함
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ProductDetailOriginalImageScreen(
-                  images: images,
-                  initialPage: images.indexOf(image),
-                ),
-              ),
-            );
-          },
-          // 이미지 컨테이너를 설정함
-          child: Container(
-            width: imageWidth,
-            height: imageWidth,
-            margin: const EdgeInsets.only(right: 8.0),
-            child: AspectRatio(
-              aspectRatio: 1,
-              // 네트워크에서 이미지를 불러와 출력함
-              child: Image.network(image, fit: BoxFit.cover),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-}
-// ------ 상품 상세 화면 내 리뷰에서 UI로 구현되는 내용 관련 ProductReviewContents 클래스 끝
 
 // ------ 연결된 링크로 이동하는 '상품 문의하기' 버튼을 UI로 구현하는 ProductInquiryContents 클래스 내용 구현 시작
 // ProductInquiryContents 클래스는 StatelessWidget을 상속받아 정의됨
