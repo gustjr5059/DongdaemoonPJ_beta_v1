@@ -1,4 +1,6 @@
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
@@ -52,19 +54,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   // 자동 로그인 여부 저장 변수
   bool autoLogin = false;
 
+  // 로그인 오류 메시지 저장 변수
+  String? errorMessage;
+
+  // 로그인 성공 시 버튼 색상을 변경하기 위한 변수
+  Color buttonColor = Color(0xFF303030); // 기본 색상
+
   @override
   void initState() {
     super.initState();
     // 자동 로그인 정보 불러옴
     _loadAutoLogin();
+
+    // 이메일 필드에 포커스가 생기면 오류 메시지를 초기화
     emailFocusNode.addListener(() {
       if (emailFocusNode.hasFocus) {
-        // 이메일 필드에 포커스가 생겼을 때 수행할 동작
+        setState(() {
+          errorMessage = null;
+        });
       }
     });
+
+    // 비밀번호 필드에 포커스가 생기면 오류 메시지를 초기화
     passwordFocusNode.addListener(() {
       if (passwordFocusNode.hasFocus) {
-        // 비밀번호 필드에 포커스가 생겼을 때 수행할 동작
+        setState(() {
+          errorMessage = null;
+        });
       }
     });
   }
@@ -123,34 +139,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       // 로그인한 사용자 정보 가져옴
       User? user = userCredential.user;
       if (user != null) {
-        // userMeProvider를 통해 사용자 정보 저장
-        await ref.read(userMeProvider.notifier).login(
-          email: username,
-          password: password,
-        );
-        // cartItemsProvider를 통해 장바구니 데이터 로드
-        await ref.read(cartItemsProvider.notifier).loadCartItems(); // 장바구니 데이터 로드
+        // 로그인 성공 시 버튼 색상을 변경
+        setState(() {
+          buttonColor = Color(0xFF4934CE); // 피그마에서 지정한 색상으로 변경
+        });
 
-        // 로그인 성공 메시지 출력
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("로그인이 되었습니다."),
-          ),
-        );
-        // 탭 인덱스를 0으로 설정
-        ref.read(tabIndexProvider.notifier).state = 0;
-        // 홈 화면으로 이동 및 현재 화면을 대체
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => HomeMainScreen()),
-        );
+        // 2초 후에 홈 화면으로 이동
+        Timer(Duration(seconds: 2), () {
+          // userMeProvider를 통해 사용자 정보 저장
+          ref.read(userMeProvider.notifier).login(
+            email: username,
+            password: password,
+          );
+          // cartItemsProvider를 통해 장바구니 데이터 로드
+          ref.read(cartItemsProvider.notifier).loadCartItems(); // 장바구니 데이터 로드
+
+          // 탭 인덱스를 0으로 설정
+          ref.read(tabIndexProvider.notifier).state = 0;
+          // 홈 화면으로 이동 및 현재 화면을 대체
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => HomeMainScreen()),
+          );
+        });
       }
     } on FirebaseAuthException catch (e) {
-      // 로그인 실패 시 오류 메시지 출력
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("아이디 혹은 비밀번호가 일치하지 않습니다."),
-        ),
-      );
+      setState(() {
+        errorMessage = "입력하신 아이디 또는 비밀번호가 일치하지 않습니다.";
+      });
     }
   }
 
@@ -167,17 +182,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               alignment: Alignment.center, // 화면 중앙에 맞춰서 배경을 배치
             ),
           ),
-          // 텍스트 및 입력 필드 추가
-          // SingleChildScrollView(
-            // child: SafeArea(
-            //   Stack(
-            //     children: [
-            //       // 화면 이름 텍스트
-            //       Positioned(
-            //         left: 0,
-            //         right: 0,
-            //         child: _ScreenName(),
-            //       ),
                   _ScreenName(),
                   // 타이틀 텍스트 위치 및 스타일 설정
                   _Title(),
@@ -207,6 +211,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onChanged: (String value) {
                         username = value;
                       },
+                      textStyle: TextStyle(
+                        fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                        fontSize: 14, // 피그마에서 지정된 폰트 크기
+                        fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
+                        color: Color(0xFF4933CE), // 텍스트 색상
+                      ),
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent, // 비활성 상태에서는 투명한 테두리
+                          ),
+                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF4933CE), // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
+                            width: 2.0, // 테두리 두께
+                          ),
+                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                        ),
+                        fillColor: Colors.white.withOpacity(0.85), // 배경색
+                        filled: true, // 배경색 채우기
+                      ),
                     ),
                   ),
                   // 비밀번호 입력 필드
@@ -234,6 +261,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onChanged: (String value) {
                         password = value;
                       },
+                      textStyle: TextStyle(
+                        fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                        fontSize: 14, // 피그마에서 지정된 폰트 크기
+                        fontWeight: FontWeight.normal, // 피그마에서 설정된 굵기
+                        color: Color(0xFF4933CE), // 텍스트 색상
+                      ),
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent, // 비활성 상태에서는 투명한 테두리
+                          ),
+                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF4933CE), // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
+                            width: 2.0, // 테두리 두께
+                          ),
+                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                        ),
+                        fillColor: Colors.white.withOpacity(0.85), // 배경색
+                        filled: true, // 배경색 채우기
+                      ),
                     ),
                   ),
                   Positioned(
@@ -253,8 +303,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             autoLogin = value ?? false;
                           });
                         },
-                        activeColor: Colors.transparent, // 피그마에서 체크박스 색상을 투명하게 설정
-                        checkColor: Colors.black, // 체크 표시 색상
+                        activeColor: Color(0xFF4933CE), // 피그마에서 체크박스 색상을 투명하게 설정
+                        checkColor: Colors.white, // 체크 표시 색상
                       ),
                     ),
                   ),
@@ -287,7 +337,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         _saveAutoLogin();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent, // 배경색 투명 설정
+                        backgroundColor: buttonColor,
                         elevation: 0, // 그림자 효과 제거
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0), // 모서리 둥글게 설정
@@ -304,6 +354,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
+                  if (errorMessage != null) // 오류 메시지가 있을 때만 표시
+                    Positioned(
+                    left: 40.0,
+                    top: 456.0,
+                      child: Container(
+                        width: 313,
+                        height: 24,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFFF0000), // 피그마에서 지정한 배경색
+                          borderRadius: BorderRadius.circular(5.0), // 피그마에서 설정된 둥근 모서리
+                        ),
+                        child: Align(
+                          alignment: Alignment.center, // 피그마에서의 텍스트 정렬
+                          child: Text(
+                            errorMessage!,
+                            style: TextStyle(
+                              fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                              fontSize: 12, // 피그마에서 지정한 폰트 크기
+                              fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
+                              color: Colors.white, // 피그마에서 지정한 텍스트 색상
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
