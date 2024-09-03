@@ -157,7 +157,7 @@ exports.coutureSendOrderEmail = functions.firestore
 
     const mailOptions = { // 이메일 옵션을 설정함.
       from: gmailEmail, // 발신자 이메일 주소를 설정함.
-      to: 'stonehead0627@gmail.com', // 수신자 이메일 주소를 설정함.
+      to: ['stonehead0627@gmail.com','gshe.couture@gmail.com'], // 수신자 이메일 주소를 설정함.
       subject: `신규 발주 내역: [${numberInfo.order_number}] ${ordererInfo.email}`, // 이메일 제목을 설정함.
       html: generateOrderEmailBody(ordererInfo, productInfo, numberInfo.order_number) // 이메일 본문을 설정함.
     };
