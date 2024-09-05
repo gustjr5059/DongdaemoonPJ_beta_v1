@@ -132,7 +132,7 @@ class _OnepieceDetailProductScreenState
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -142,7 +142,7 @@ class _OnepieceDetailProductScreenState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -166,24 +166,6 @@ class _OnepieceDetailProductScreenState
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
-
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
 
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
@@ -228,7 +210,7 @@ class _OnepieceDetailProductScreenState
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.

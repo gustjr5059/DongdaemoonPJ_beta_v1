@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Riverpod 패키지를 사용한 상태 관리 기능을 추가합니다. Riverpod는 상태 관리를 위한 외부 패키지입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +44,27 @@ import '../const/colors.dart';
 // 애플리케이션의 공통적인 상태 관리 로직을 포함하는 파일을 임포트합니다.
 import '../provider/common_state_provider.dart';
 
+import 'dart:io' show Platform;
+
+
+// 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
+void updateStatusBar() {
+  // Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
+
+  if (Platform.isAndroid) {
+    // 안드로이드에서는 상태표시줄 색상을 직접 지정
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // statusBarColor: statusBarColor,
+      statusBarIconBrightness: Brightness.light,
+    ));
+  } else if (Platform.isIOS) {
+    // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
+    ));
+  }
+}
+
 // ------ AppBar 생성 함수 내용 구현 시작
 // 공통 앱 바
 AppBar buildCommonAppBar({
@@ -54,38 +76,73 @@ AppBar buildCommonAppBar({
       LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
 }) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+
+  // 앱 바 부분 수치
+  final double appBarHeight =
+      screenSize.height * (44 / referenceHeight); // 세로 비율
+  final double appBarTitleWidth = screenSize.width * (77 / referenceWidth); // 텍스트 너비
+  final double appBarTitleHeight = screenSize.height * (22 / referenceHeight); // 텍스트 높이
+  final double appBarTitleY = screenSize.height * (11 / referenceHeight); // 텍스트 Y 좌표
+  final double appBarLeadingIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
+  final double appBarLeadingIconHeight = screenSize.height * (28 / referenceHeight); // 아이콘 높이
+  final double appBarLeadingIconX = screenSize.width * (18 / referenceWidth); // 아이콘 X 좌표
+  final double appBarLeadingIconY = screenSize.height * (6 / referenceHeight); // 아이콘 Y 좌표
+  // 찜 목록 버튼의 크기와 위치 설정
+  final double wishlistButtonWidth = screenSize.width * (44 / referenceWidth); // 찜 목록 버튼 너비
+  final double wishlistButtonHeight = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
+  final double wishlistButtonX = screenSize.width * (10 / referenceWidth); // 찜 목록 버튼 X 좌표
+  final double wishlistButtonY = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
+
+
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
   switch (leadingType) {
-    // 이전 화면으로 이동 버튼인 경우
+  // 이전 화면으로 이동 버튼인 경우
     case LeadingType.back:
-      leadingWidget = IconButton(
-        icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘을 사용함.
-        onPressed: () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content:
-                        Text('이전 화면으로 이동할 수 없습니다.')) // 이전 페이지로 돌아갈 수 없다는 메시지 표시
-                );
-          }
-        },
+      leadingWidget = Container(
+        width: appBarLeadingIconWidth,
+        height: appBarLeadingIconHeight,
+        margin: EdgeInsets.only(left: appBarLeadingIconX, top: appBarLeadingIconY), // 아이콘 위치 설정
+        child: IconButton(
+          icon: Icon(Icons.arrow_back, size: appBarLeadingIconHeight), // 뒤로 가기 아이콘을 설정
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('이전 화면으로 이동할 수 없습니다.') // 이전 페이지로 돌아갈 수 없다는 메시지 표시
+              ));
+            }
+          },
+        ),
       );
       break;
-    // 드로워화면 버튼인 경우
+  // 드로워화면 버튼인 경우
     case LeadingType.drawer:
-      leadingWidget = Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: Icon(Icons.menu), // 메뉴 아이콘을 사용함.
-            onPressed: () =>
-                Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
-          );
-        },
+      leadingWidget = Container(
+        width: appBarLeadingIconWidth,
+        height: appBarLeadingIconHeight,
+        margin: EdgeInsets.only(left: appBarLeadingIconX, top: appBarLeadingIconY), // 아이콘 위치 설정
+        child: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu, size: appBarLeadingIconHeight), // 메뉴 아이콘 크기 설정
+              onPressed: () => Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
+            );
+          },
+        ),
       );
       break;
-    // 버튼이 없는 경우
+  // 버튼이 없는 경우
     case LeadingType.none:
       leadingWidget = null; // 아무런 위젯도 표시하지 않음.
       break;
@@ -101,15 +158,23 @@ AppBar buildCommonAppBar({
     case 2:
       // 케이스 2: 찜 목록 버튼만 노출
       actions.add(
-        IconButton(
-          icon: Icon(Icons.favorite, color: Colors.red),
-          // 찜 목록 아이콘을 사용함.
-          // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
-          // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
-          // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
-          onPressed: () => navigateToScreenAndRemoveUntil(
-              context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
-        ),
+        Container(
+          width: wishlistButtonWidth,
+          height: wishlistButtonHeight,
+          margin: EdgeInsets.only(
+            right: wishlistButtonX,
+            top: wishlistButtonY
+            ), // 찜 목록 버튼의 위치 설정
+            child:IconButton(
+              icon: Icon(Icons.favorite, color: Colors.red),
+              // 찜 목록 아이콘을 사용함.
+              // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
+              // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
+              // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+            ),
+         ),
       );
       break;
     case 3:
@@ -152,39 +217,48 @@ AppBar buildCommonAppBar({
 
   // AppBar를 반환
   return AppBar(
-    backgroundColor: BUTTON_COLOR,
+    // backgroundColor: BUTTON_COLOR,
     // AppBar 색상 설정
+    toolbarHeight: appBarHeight, // 앱 바의 높이를 설정
     title: Container(
-      height: kToolbarHeight, // AppBar 높이를 설정
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // 세로 방향 가운데 정렬
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 1, // 가로 세로 비율을 1:1로 설정
-                child: Image.asset(
-                  'asset/img/misc/logo_img/couture_logo_image.png',
-                  // 로고 이미지 경로 설정
-                  fit: BoxFit.contain, // 이미지를 포함하여 맞춤
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
+      alignment: Alignment.center,
+      width: appBarTitleWidth, // 텍스트 너비 설정
+      height: appBarTitleHeight, // 텍스트 높이 설정
+      margin: EdgeInsets.only(top: appBarTitleY), // 텍스트 위치 설정
+        // children: <Widget>[
+        //   Expanded(
+        //     child: Center(
+        //       child: AspectRatio(
+        //         aspectRatio: 1, // 가로 세로 비율을 1:1로 설정
+        //         child: Image.asset(
+        //           'asset/img/misc/logo_img/couture_logo_image.png',
+        //           // 로고 이미지 경로 설정
+        //           fit: BoxFit.contain, // 이미지를 포함하여 맞춤
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        //   Expanded(
+        //     child: Center(
+        //       child: Text(
+        //         title, // 제목 설정
+        //         style: TextStyle(
+        //           color: Colors.black, // 제목 텍스트 색상
+        //           fontSize: 20, // 제목 텍스트 크기
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ],
               child: Text(
                 title, // 제목 설정
                 style: TextStyle(
                   color: Colors.black, // 제목 텍스트 색상
-                  fontSize: 20, // 제목 텍스트 크기
+                  fontSize: 17, // 제목 텍스트 크기
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    ),
     centerTitle: true,
     // 제목을 중앙에 위치시킴.
     leading: leadingWidget,

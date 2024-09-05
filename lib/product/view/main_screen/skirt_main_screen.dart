@@ -252,7 +252,7 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
 
     // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
     Future.delayed(Duration.zero, () {
@@ -269,7 +269,7 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
     // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
     if (state == AppLifecycleState.resumed) {
@@ -324,24 +324,6 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
-
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
 
   // skirtMainProductListProvider 관련 카테고리 인덱스를 받아 해당 카테고리 이름을 반환하는 함수
   String _getCategory(int index) {
@@ -445,12 +427,12 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(60.0),
                   // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
                   child: Container(
-                    color: BUTTON_COLOR, // 상단 탭 바 색상 설정
+                    // color: BUTTON_COLOR, // 상단 탭 바 색상 설정
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
                   ),
                 ),
