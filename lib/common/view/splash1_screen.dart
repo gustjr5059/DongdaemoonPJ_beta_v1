@@ -83,28 +83,9 @@ class _SplashScreenState extends State<SplashScreen1>
           Positioned.fill(
             child: Image.asset(
               'asset/img/misc/splash_image/couture_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
-              fit: BoxFit.contain, // 화면 전체에 맞게 조정
+              fit: BoxFit.cover, // 화면 전체에 맞게 조정
             ),
           ),
-          // Align(
-          //   alignment: Alignment.topCenter, // 상단 중앙에 배치함.
-          //   child: Padding(
-          //     padding: EdgeInsets.only(top: 150), // 상단에서부터 150의 여백을 줌.
-          //     child: AnimatedBuilder(
-          //       animation: _animation,
-          //       builder: (context, child) => Opacity(
-          //         opacity: _animation.value, // 애니메이션 값에 따라 투명도를 조절함.
-          //         child: child,
-          //       ),
-          //       child: Container(
-          //         width: 130, // 이미지의 너비를 130으로 설정함.
-          //         height: 130, // 이미지의 높이를 130으로 설정함.
-          //         // 기존의 PNG 이미지 대신 SVG 로고 이미지를 추가
-          //         child: Image.asset('asset/img/misc/splash_img/couture_splash1_logo_img.png'),
-          //       ),
-          //     ),
-          //   ),
-          // ),
           Align(
             alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
             child: Padding(

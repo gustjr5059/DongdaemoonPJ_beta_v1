@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen2> {
             // 'asset/img/misc/splash_img/splash2_image.png',
             // 'asset/img/misc/splash_img/ssamjang.png',
             'asset/img/misc/splash_image/couture_splash2_bg_img.png', // 이미지 파일 경로를 설정.
-            fit: BoxFit.contain, // 이미지 비율을 유지하면서 화면에 맞게 조절
+            fit: BoxFit.cover, // 이미지 비율을 유지하면서 화면에 맞게 조절
           ),
          ),
         ],

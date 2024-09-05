@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../common/component/custom_text_form_field.dart';
-import '../../common/const/colors.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/view/home_screen.dart';
 import '../provider/user_me_provider.dart';
@@ -148,9 +147,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Timer(Duration(seconds: 2), () {
           // userMeProvider를 통해 사용자 정보 저장
           ref.read(userMeProvider.notifier).login(
-            email: username,
-            password: password,
-          );
+                email: username,
+                password: password,
+              );
           // cartItemsProvider를 통해 장바구니 데이터 로드
           ref.read(cartItemsProvider.notifier).loadCartItems(); // 장바구니 데이터 로드
 
@@ -171,283 +170,453 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 화면 이름 부분 수치
+    final double screenNameTop =
+        screenSize.height * (54 / referenceHeight); // 위쪽 여백 비율
+
+    // 화면 제목 부분 수치
+    final double screenTitleLeft =
+        screenSize.width * (51 / referenceWidth); // 왼쪽 여백 비율
+    final double screenTitleTop =
+        screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
+
+    // 화면 서브제목 부분 수치
+    final double screenSubTitleLeft =
+        screenSize.width * (49 / referenceWidth); // 왼쪽 여백 비율
+    final double screenSubTitleTop =
+        screenSize.height * (268 / referenceHeight); // 위쪽 여백 비율
+
+    // 이메일 입력 필드 및 비밀번호 입력 필드 수치
+    final double insertFieldWidth =
+        screenSize.width * (313 / referenceWidth); // 가로 비율
+    final double insertFieldHeight =
+        screenSize.height * (42 / referenceHeight); // 세로 비율
+    final double insertFieldLeft =
+        screenSize.width * (40 / referenceWidth); // 왼쪽 여백 비율
+    final double emailFieldTop =
+        screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
+    final double passwordFieldTop =
+        screenSize.height * (380 / referenceHeight); // 위쪽 여백 비율
+
+    // 자동로그인 부분 수치
+    final double autoLoginCheckboxLeft =
+        screenSize.width * (56 / referenceWidth); // 왼쪽 여백 비율
+    final double autoLoginCheckboxTop =
+        screenSize.height * (434 / referenceHeight); // 위쪽 여백 비율
+    final double autoLoginCheckboxWidth =
+        screenSize.width * (16 / referenceWidth); // 너비 비율
+    final double autoLoginCheckboxHeight =
+        screenSize.height * (16 / referenceHeight); // 높이 비율
+    final double autoLoginTextLeft =
+        screenSize.width * (80 / referenceWidth); // 왼쪽 여백 비율
+    final double autoLoginTextTop =
+        screenSize.height * (436 / referenceHeight); // 위쪽 여백 비율
+
+    // 로그인 버튼 부분 수치
+    final double loginBtnLeft =
+        screenSize.width * (40 / referenceWidth); // 왼쪽 여백 비율
+    final double loginBtnTop =
+        screenSize.height * (487 / referenceHeight); // 위쪽 여백 비율
+    final double loginBtnWidth =
+        screenSize.width * (313 / referenceWidth); // 너비 비율
+    final double loginBtnHeight =
+        screenSize.height * (42 / referenceHeight); // 높이 비율
+
+    // 로그인 에러 메세지 바 부분 수치
+    final double loginErrorMessageBarLeft =
+        screenSize.width * (40 / referenceWidth); // 왼쪽 여백 비율
+    final double loginErrorMessageBarTop =
+        screenSize.height * (456 / referenceHeight); // 위쪽 여백 비율
+    final double loginErrorMessageBarWidth =
+        screenSize.width * (313 / referenceWidth); // 너비 비율
+    final double loginErrorMessageBarHeight =
+        screenSize.height * (24 / referenceHeight); // 높이 비율
+
+    // 회원가입 및 아이디/비밀번호 찾기 버튼 부분 수치
+    final double joinAndFindBtnLeft =
+        screenSize.width * (88 / referenceWidth); // 왼쪽 여백 비율
+    final double joinAndFindBtnTop =
+        screenSize.height * (543 / referenceHeight); // 위쪽 여백 비율
+    final double joinAndFindBtnWidth =
+        screenSize.width * (218 / referenceWidth); // 너비 비율
+    final double joinAndFindBtnHeight =
+        screenSize.height * (24 / referenceHeight); // 높이 비율
+
     return Scaffold(
       body: Stack(
         children: [
-          // 배경 이미지 추가
+          // 화면 크기에 맞게 배경 이미지 설정
           Positioned.fill(
             child: Image.asset(
               'asset/img/misc/login_image/couture_login_bg_img.png',
-              fit: BoxFit.cover, // 이미지가 화면을 꽉 채우도록 설정
-              alignment: Alignment.center, // 화면 중앙에 맞춰서 배경을 배치
+              fit: BoxFit.cover, // 화면을 꽉 채우도록 설정
+              width: screenSize.width, // 화면 너비
+              height: screenSize.height, // 화면 높이
             ),
           ),
-                  _ScreenName(),
-                  // 타이틀 텍스트 위치 및 스타일 설정
-                  _Title(),
-                  _SubTitle(),
-                  // 이메일 입력 필드
-                  Container(
-                    width: 313, // Figma에서 지정한 너비 반영
-                    height: 42, // Figma에서 지정한 높이 반영
-                    margin: const EdgeInsets.only(left: 40.0, top: 330.0), // Figma에서 지정한 위치 반영
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85), // Figma에서 지정한 투명도 반영
+          // 화면 제목 (Login)
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: screenNameTop),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          // 타이틀 텍스트
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: screenTitleLeft, top: screenTitleTop),
+              child: Text(
+                '오늘도 나만의 옷을 PICK!',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          // 서브 타이틀 텍스트
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: screenSubTitleLeft, top: screenSubTitleTop),
+              child: Text(
+                '이메일과 비밀번호를 입력해서 로그인해주세요! :)',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          // 이메일 입력 필드
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: insertFieldLeft, top: emailFieldTop),
+              child: Container(
+                width: insertFieldWidth,
+                height: insertFieldHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.85), // Figma에서 지정한 투명도 반영
+                  borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                  // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
+                ),
+                child: CustomTextFormField(
+                  controller: emailController,
+                  focusNode: emailFocusNode,
+                  hintText: '이메일을 입력해주세요.',
+                  hintStyle: TextStyle(
+                    fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
+                    fontSize: 12, // Figma에서 설정된 폰트 크기
+                    fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
+                    color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
+                  ),
+                  hintTextPadding: EdgeInsets.only(left: 10.0, top: 5.0),
+                  // Figma에서 제공된 위치 반영
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (String value) {
+                    username = value;
+                  },
+                  textStyle: TextStyle(
+                    fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                    fontSize: 14, // 피그마에서 지정된 폰트 크기
+                    fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
+                    color: Color(0xFF4933CE), // 텍스트 색상
+                  ),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.transparent, // 비활성 상태에서는 투명한 테두리
+                      ),
                       borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
-                      // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
                     ),
-                    child: CustomTextFormField(
-                      controller: emailController,
-                      focusNode: emailFocusNode,
-                      hintText: '이메일을 입력해주세요.',
-                      hintStyle: TextStyle(
-                        fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-                        fontSize: 12, // Figma에서 설정된 폰트 크기
-                        fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
-                        color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF4933CE),
+                        // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
+                        width: 2.0, // 테두리 두께
                       ),
-                      hintTextPadding: EdgeInsets.only(left: 10.0, top: 5.0), // Figma에서 제공된 위치 반영
-                      keyboardType: TextInputType.emailAddress,
-                      onChanged: (String value) {
-                        username = value;
-                      },
-                      textStyle: TextStyle(
-                        fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                        fontSize: 14, // 피그마에서 지정된 폰트 크기
-                        fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
-                        color: Color(0xFF4933CE), // 텍스트 색상
-                      ),
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent, // 비활성 상태에서는 투명한 테두리
-                          ),
-                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF4933CE), // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
-                            width: 2.0, // 테두리 두께
-                          ),
-                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
-                        ),
-                        fillColor: Colors.white.withOpacity(0.85), // 배경색
-                        filled: true, // 배경색 채우기
-                      ),
-                    ),
-                  ),
-                  // 비밀번호 입력 필드
-                  Container(
-                    width: 313, // Figma에서 지정한 너비 반영
-                    height: 42, // Figma에서 지정한 높이 반영
-                    margin: const EdgeInsets.only(left: 40.0, top: 380.0), // Figma에서 지정한 위치 반영
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85), // Figma에서 지정한 투명도 반영
                       borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
-                      // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
                     ),
-                    child: CustomTextFormField(
-                      controller: passwordController,
-                      focusNode: passwordFocusNode,
-                      hintText: '비밀번호를 입력해주세요.',
-                      hintStyle: TextStyle(
-                        fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-                        fontSize: 12, // Figma에서 설정된 폰트 크기
-                        fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
-                        color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
+                    fillColor: Colors.white.withOpacity(0.85), // 배경색
+                    filled: true, // 배경색 채우기
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // 비밀번호 입력 필드
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: insertFieldLeft, top: passwordFieldTop),
+              child: Container(
+                width: insertFieldWidth,
+                height: insertFieldHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.85), // Figma에서 지정한 투명도 반영
+                  borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                  // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
+                ),
+                child: CustomTextFormField(
+                  controller: passwordController,
+                  focusNode: passwordFocusNode,
+                  hintText: '비밀번호를 입력해주세요.',
+                  hintStyle: TextStyle(
+                    fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
+                    fontSize: 12, // Figma에서 설정된 폰트 크기
+                    fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
+                    color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
+                  ),
+                  hintTextPadding: EdgeInsets.only(left: 10.0, top: 5.0),
+                  // Figma에서 제공된 위치 반영
+                  obscureText: true,
+                  onChanged: (String value) {
+                    password = value;
+                  },
+                  textStyle: TextStyle(
+                    fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                    fontSize: 14, // 피그마에서 지정된 폰트 크기
+                    fontWeight: FontWeight.normal, // 피그마에서 설정된 굵기
+                    color: Color(0xFF4933CE), // 텍스트 색상
+                  ),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.transparent, // 비활성 상태에서는 투명한 테두리
                       ),
-                      hintTextPadding: EdgeInsets.only(left: 10.0, top: 5.0), // Figma에서 제공된 위치 반영
-                      obscureText: true,
-                      onChanged: (String value) {
-                        password = value;
-                      },
-                      textStyle: TextStyle(
-                        fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                        fontSize: 14, // 피그마에서 지정된 폰트 크기
-                        fontWeight: FontWeight.normal, // 피그마에서 설정된 굵기
-                        color: Color(0xFF4933CE), // 텍스트 색상
+                      borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF4933CE),
+                        // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
+                        width: 2.0, // 테두리 두께
                       ),
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent, // 비활성 상태에서는 투명한 테두리
-                          ),
-                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF4933CE), // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
-                            width: 2.0, // 테두리 두께
-                          ),
-                          borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
-                        ),
-                        fillColor: Colors.white.withOpacity(0.85), // 배경색
-                        filled: true, // 배경색 채우기
-                      ),
+                      borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
+                    ),
+                    fillColor: Colors.white.withOpacity(0.85), // 배경색
+                    filled: true, // 배경색 채우기
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // 자동 로그인 체크박스
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: autoLoginCheckboxLeft, top: autoLoginCheckboxTop),
+              child: Container(
+                width: autoLoginCheckboxWidth, // Figma에서 지정한 너비
+                height: autoLoginCheckboxHeight, // Figma에서 지정한 높이
+                decoration: BoxDecoration(
+                  color: Colors.white, // Figma에서 지정한 색상
+                  borderRadius:
+                      BorderRadius.circular(2.0), // Figma에서 지정한 둥근 모서리
+                ),
+                child: Checkbox(
+                  value: autoLogin,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      autoLogin = value ?? false;
+                    });
+                  },
+                  activeColor: Color(0xFF4933CE), // 피그마에서 체크박스 색상을 투명하게 설정
+                  checkColor: Colors.white, // 체크 표시 색상
+                ),
+              ),
+            ),
+          ),
+          // 자동 로그인 텍스트
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: autoLoginTextLeft, top: autoLoginTextTop),
+              child: Text(
+                '자동로그인',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                  fontSize: 12, // 피그마에서 지정된 폰트 크기
+                  fontWeight: FontWeight.bold, // 피그마에서 지정된 굵기
+                  color: Colors.white.withOpacity(0.9), // 피그마에서 지정된 색상 및 투명도
+                ),
+              ),
+            ),
+          ),
+          // 로그인 버튼
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: loginBtnLeft, top: loginBtnTop),
+              child: Container(
+                width: loginBtnWidth,
+                height: loginBtnHeight,
+                decoration: BoxDecoration(
+                  color: Color(0xFF303030), // Figma에서 지정한 버튼 배경 색상
+                  borderRadius:
+                      BorderRadius.circular(5.0), // Figma에서 지정한 둥근 모서리 반영
+                  // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    _login();
+                    _saveAutoLogin();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: buttonColor,
+                    elevation: 0, // 그림자 효과 제거
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0), // 모서리 둥글게 설정
                     ),
                   ),
-                  Positioned(
-                    left: 56.0, // Figma에서 지정한 X 위치
-                    top: 434.0, // Figma에서 지정한 Y 위치
-                    child: Container(
-                      width: 16, // Figma에서 지정한 너비
-                      height: 16, // Figma에서 지정한 높이
-                      decoration: BoxDecoration(
-                        color: Colors.white, // Figma에서 지정한 색상
-                        borderRadius: BorderRadius.circular(2.0), // Figma에서 지정한 둥근 모서리
-                      ),
-                      child: Checkbox(
-                        value: autoLogin,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            autoLogin = value ?? false;
-                          });
-                        },
-                        activeColor: Color(0xFF4933CE), // 피그마에서 체크박스 색상을 투명하게 설정
-                        checkColor: Colors.white, // 체크 표시 색상
-                      ),
+                  child: Text(
+                    '로그인',
+                    style: TextStyle(
+                      fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
+                      fontSize: 16, // Figma에서 지정한 폰트 크기
+                      fontWeight: FontWeight.bold, // Figma에서 지정한 굵기
+                      color: Colors.white
+                          .withOpacity(0.9), // Figma에서 지정한 텍스트 색상 및 투명도
                     ),
                   ),
-                  Positioned(
-                    left: 80.0, // Figma에서 지정한 X 위치
-                    top: 436.0, // Figma에서 지정한 Y 위치
+                ),
+              ),
+            ),
+          ),
+          // 오류 메시지 바
+          if (errorMessage != null)
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: loginErrorMessageBarLeft,
+                    top: loginErrorMessageBarTop),
+                child: Container(
+                  width: loginErrorMessageBarWidth,
+                  height: loginErrorMessageBarHeight,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFF0000), // 피그마에서 지정한 배경색
+                    borderRadius:
+                        BorderRadius.circular(5.0), // 피그마에서 설정된 둥근 모서리
+                  ),
+                  child: Align(
+                    alignment: Alignment.center, // 피그마에서의 텍스트 정렬
                     child: Text(
-                      '자동로그인',
+                      errorMessage!,
                       style: TextStyle(
                         fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                        fontSize: 12, // 피그마에서 지정된 폰트 크기
-                        fontWeight: FontWeight.bold, // 피그마에서 지정된 굵기
-                        color: Colors.white.withOpacity(0.9), // 피그마에서 지정된 색상 및 투명도
+                        fontSize: 12, // 피그마에서 지정한 폰트 크기
+                        fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
+                        color: Colors.white, // 피그마에서 지정한 텍스트 색상
                       ),
                     ),
                   ),
-                  // 로그인 버튼
-                  Container(
-                    width: 313, // Figma에서 지정한 너비 반영
-                    height: 42, // Figma에서 지정한 높이 반영
-                    margin: const EdgeInsets.only(left: 40.0, top: 487.0), // Figma에서 지정한 위치 반영
-                    decoration: BoxDecoration(
-                      color: Color(0xFF303030), // Figma에서 지정한 버튼 배경 색상
-                      borderRadius: BorderRadius.circular(5.0), // Figma에서 지정한 둥근 모서리 반영
-                      // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        _login();
-                        _saveAutoLogin();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: buttonColor,
-                        elevation: 0, // 그림자 효과 제거
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0), // 모서리 둥글게 설정
-                        ),
-                      ),
-                      child: Text(
-                        '로그인',
-                        style: TextStyle(
-                          fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-                          fontSize: 16, // Figma에서 지정한 폰트 크기
-                          fontWeight: FontWeight.bold, // Figma에서 지정한 굵기
-                          color: Colors.white.withOpacity(0.9), // Figma에서 지정한 텍스트 색상 및 투명도
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (errorMessage != null) // 오류 메시지가 있을 때만 표시
-                    Positioned(
-                    left: 40.0,
-                    top: 456.0,
-                      child: Container(
-                        width: 313,
-                        height: 24,
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFF0000), // 피그마에서 지정한 배경색
-                          borderRadius: BorderRadius.circular(5.0), // 피그마에서 설정된 둥근 모서리
-                        ),
-                        child: Align(
-                          alignment: Alignment.center, // 피그마에서의 텍스트 정렬
-                          child: Text(
-                            errorMessage!,
-                            style: TextStyle(
-                              fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                              fontSize: 12, // 피그마에서 지정한 폰트 크기
-                              fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
-                              color: Colors.white, // 피그마에서 지정한 텍스트 색상
+                ),
+              ),
+            ),
+          Row(
+            children: [
+              // 회원가입 및 아이디/비밀번호 찾기 버튼
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: joinAndFindBtnLeft, top: joinAndFindBtnTop),
+                  // Figma에서 지정한 위치를 Padding으로 적용
+                  child: Container(
+                    width: joinAndFindBtnWidth, // Figma에서 지정한 전체 너비
+                    height: joinAndFindBtnHeight, // Figma에서 지정한 전체 높이
+                    child: Row(
+                      children: [
+                        // 회원가입 텍스트 버튼
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MembershipRegistrationInfoScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              '회원가입',
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                                fontSize: 12, // 피그마에서 지정된 폰트 크기
+                                fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
+                                color: Colors.white, // 피그마에서 지정된 텍스트 색상
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero, // 여백 제거
+                              alignment: Alignment.centerLeft, // 텍스트 정렬
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    // 회원가입 및 아이디/비밀번호 찾기 버튼
-                      Container(
-                        width: 218, // Figma에서 지정한 전체 너비
-                        height: 14, // Figma에서 지정한 전체 높이
-                        margin: const EdgeInsets.only(left: 88.0, top: 543.0), // Figma에서 지정한 위치 반영
-                        child: Row(
-                          children: [
-                            // 회원가입 텍스트 버튼
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => MembershipRegistrationInfoScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  '회원가입',
-                                  style: TextStyle(
-                                    fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                    fontSize: 12, // 피그마에서 지정된 폰트 크기
-                                    fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                    color: Colors.white, // 피그마에서 지정된 텍스트 색상
-                                  ),
-                                ),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero, // 여백 제거
-                                  alignment: Alignment.centerLeft, // 텍스트 정렬
-                                ),
+                        // 아이디/비밀번호 찾기 텍스트 버튼
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              const url = 'https://pf.kakao.com/_xjVrbG';
+                              _launchURL(url);
+                            },
+                            child: Text(
+                              '아이디/비밀번호 찾기',
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                                fontSize: 12, // 피그마에서 지정된 폰트 크기
+                                fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
+                                color: Colors.white, // 피그마에서 지정된 텍스트 색상
                               ),
                             ),
-                            // 아이디/비밀번호 찾기 텍스트 버튼
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  const url = 'https://pf.kakao.com/_xjVrbG';
-                                  _launchURL(url);
-                                },
-                                child: Text(
-                                  '아이디/비밀번호 찾기',
-                                  style: TextStyle(
-                                    fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                    fontSize: 12, // 피그마에서 지정된 폰트 크기
-                                    fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                    color: Colors.white, // 피그마에서 지정된 텍스트 색상
-                                  ),
-                                ),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero, // 여백 제거
-                                  alignment: Alignment.centerRight, // 텍스트 정렬
-                                ),
-                              ),
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero, // 여백 제거
+                              alignment: Alignment.centerRight, // 텍스트 정렬
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 860), // 빈 공간 추가
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
-
 
   // URL을 여는 함수 정의
   void _launchURL(String url) async {
@@ -457,72 +626,5 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } else {
       throw 'Could not launch $url';
     }
-  }
-}
-
-// 로그인 화면 화면 이름 위젯
-class _ScreenName extends StatelessWidget {
-  const _ScreenName({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: 0.0,
-      right: 0.0,
-      top: 54.0,
-      child: Text(
-      'Login',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 24, // Figma에서 사용된 글꼴 크기에 맞춤
-        fontWeight: FontWeight.w600, // Figma에서 사용된 굵기에 맞춤
-        color: Colors.black, // Figma에서 사용된 텍스트 색상
-      ),
-      ),
-    );
-  }
-}
-
-// 로그인 화면 타이틀 위젯
-class _Title extends StatelessWidget {
-  const _Title({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: 51.0, // Figma에서 지정한 X 위치 반영
-      top: 227.0, // Figma에서 지정한 Y 위치 반영
-      child: Text(
-        '오늘도 나만의 옷을 PICK!',
-        style: TextStyle(
-          fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-          fontWeight: FontWeight.bold, // Figma에서 설정된 Bold
-          fontSize: 26, // Figma에서 설정된 폰트 크기
-          color: Colors.white, // Figma에서 설정된 색상
-        ),
-      ),
-    );
-  }
-}
-
-// 로그인 화면 서브 타이틀 위젯
-class _SubTitle extends StatelessWidget {
-  const _SubTitle({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: 49.0, // Figma에서 지정한 X 위치 반영
-      top: 268.0, // Figma에서 지정한 Y 위치 반영
-      child: Text(
-        '이메일과 비밀번호를 입력해서 로그인해주세요! :)',
-        style: TextStyle(
-          fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-          fontWeight: FontWeight.normal, // Figma에서 설정된 Bold
-          fontSize: 14, // Figma에서 설정된 폰트 크기
-          color: Colors.white, // Figma에서 설정된 색상
-        ),
-      ),
-    );
   }
 }
