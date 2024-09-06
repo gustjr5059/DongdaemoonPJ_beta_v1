@@ -240,7 +240,7 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: privateMessageScreenPointScrollController),
     );
   }
 }

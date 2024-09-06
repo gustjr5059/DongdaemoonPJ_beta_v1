@@ -236,7 +236,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: inquiryScreenPointScrollController),
     );
   }
 }

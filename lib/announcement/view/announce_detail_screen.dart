@@ -220,7 +220,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: announceDetailScreenPointScrollController),
     );
   }
 }

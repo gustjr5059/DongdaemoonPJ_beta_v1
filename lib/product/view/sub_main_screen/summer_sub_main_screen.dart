@@ -318,7 +318,7 @@ class _SummerSubMainScreenState extends ConsumerState<SummerSubMainScreen>
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '여름 섹션 더보기',
+                  title: '여름 섹션',
                   // AppBar의 제목을 '여름 섹션 더보기'로 설정
                   leadingType: LeadingType.back,
                   // 이전 화면으로 이동 버튼 설정
@@ -446,7 +446,7 @@ class _SummerSubMainScreenState extends ConsumerState<SummerSubMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          5, 1, scrollController: summerSubMainScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

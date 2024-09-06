@@ -254,7 +254,7 @@ class _ShirtDetailProductScreenState
       bottomNavigationBar: productContent.when(
         data: (product) {
           return buildCommonBottomNavigationBar(
-              ref.watch(tabIndexProvider), ref, context, 5, 2, product: product);
+              ref.watch(tabIndexProvider), ref, context, 5, 2, product: product, scrollController: shirtDetailProductScreenPointScrollController);
         },
         loading: () => SizedBox.shrink(),  // 로딩 중일 때는 빈 공간으로 처리
         error: (error, _) => SizedBox.shrink(),  // 에러가 발생했을 때는 빈 공간으로 처리

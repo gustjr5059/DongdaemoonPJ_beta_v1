@@ -100,10 +100,23 @@ class BannerImageClass extends StatelessWidget {
   // build 메소드는 위젯의 UI를 구성함.
   @override
   Widget build(BuildContext context) {
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // Figma 수치를 기준으로 동적으로 이미지 크기와 위치를 설정
+    final double largeBannerWidth = screenSize.width * (393 / referenceWidth); // 배너 너비
+    final double largeBannerHeight = screenSize.height * (378 / referenceHeight); // 배너 높이
+
     // CachedNetworkImage 위젯을 사용하여 네트워크 이미지를 로딩하고 캐싱함.
     return CachedNetworkImage(
       imageUrl: imageUrl, // imageUrl 프로퍼티를 통해 이미지 URL을 지정함.
-      fit: BoxFit.contain, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
+      width: largeBannerWidth, // 배너의 너비 설정
+      height: largeBannerHeight, // 배너의 높이 설정
+      fit: BoxFit.cover, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
       // 이미지 로딩 중 에러가 발생한 경우 errorWidget을 통해 에러 아이콘을 표시함.
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
@@ -144,6 +157,17 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   required FutureProvider<List<T>> bannerImagesProvider,
   required void Function(BuildContext, int) onPageTap, // 콜백 함수의 반환 타입을 void로 변경
 }) {
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  final double largeBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
+  final double largeBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
+
   final asyncBannerImages = ref.watch(bannerImagesProvider);
 
   return asyncBannerImages.when(
@@ -168,13 +192,15 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
             context: context,
           ),
           Positioned(
-            right: 40,
-            bottom: 10,
+            right: 20,
+            bottom: 7,
             child: Consumer(
               builder: (context, ref, child) {
                 final currentPage = ref.watch(currentPageProvider);
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  width: largeBannerViewPageIndicatorWidth, // 페이지 번호 너비 설정
+                  height: largeBannerViewPageIndicatorHeight, // 페이지 번호 높이 설정
+                  alignment: Alignment.center, // 중앙 정렬
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(12),
@@ -248,8 +274,8 @@ class CommonCardView extends StatelessWidget {
 // 'Top' 버튼을 구현하는 위젯
 Widget buildTopButton(BuildContext context, ScrollController scrollController) {
   return Positioned(
-    top: MediaQuery.of(context).size.height - 200, // 화면 하단에서 200px 위로 위치
-    right: 20, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
+    top: MediaQuery.of(context).size.height - 170, // 화면 하단에서 200px 위로 위치
+    right: 22, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
     child: FloatingActionButton(
       mini: true, // 버튼을 작게 설정
       backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
@@ -273,9 +299,9 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
           });
         }
       },
-      child: Text(
-        'Top', // 버튼에 표시할 텍스트
-        style: TextStyle(color: Colors.black), // 텍스트 색상을 검은색으로 설정
+      child: Icon(
+        Icons.arrow_upward, // 위로 가리키는 화살표 아이콘
+        color: Colors.black, // 아이콘 색상은 검은색으로 설정
       ),
     ),
   );

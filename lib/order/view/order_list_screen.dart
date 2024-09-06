@@ -255,7 +255,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          3, 1), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          3, 1, scrollController: orderListScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

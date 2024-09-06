@@ -235,7 +235,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           ),
           // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
           bottomNavigationBar: buildCommonBottomNavigationBar(
-              ref.watch(tabIndexProvider), ref, context, 5, 1
+              ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: completePaymentScreenPointScrollController
           ),
         );
       },

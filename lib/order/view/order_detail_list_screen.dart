@@ -235,7 +235,7 @@ class _OrderListDetailScreenState
           ref.watch(tabIndexProvider),
           ref,
           context,
-          3, 1),
+          3, 1, scrollController: orderListDetailScreenPointScrollController),
     );
     // ------ 화면구성 끝
   }

@@ -315,7 +315,7 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '신상 섹션 더보기',
+                  title: '신상 섹션',
                   // AppBar의 제목을 '신상 섹션 더보기'로 설정
                   leadingType: LeadingType.back,
                   // 이전 화면으로 이동 버튼 설정
@@ -440,7 +440,7 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1),
+          ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: newSubMainScreenPointScrollController),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );

@@ -359,7 +359,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          4, 1), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          4, 1, scrollController: profileScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

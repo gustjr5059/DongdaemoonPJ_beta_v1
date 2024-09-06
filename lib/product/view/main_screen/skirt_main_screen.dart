@@ -555,7 +555,7 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1),
+          ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: skirtMainScreenPointScrollController),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );

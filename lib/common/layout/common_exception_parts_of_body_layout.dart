@@ -89,7 +89,7 @@ AppBar buildCommonAppBar({
   // 앱 바 부분 수치
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
-  final double appBarTitleWidth = screenSize.width * (77 / referenceWidth); // 텍스트 너비
+  final double appBarTitleWidth = screenSize.width * (160 / referenceWidth); // 텍스트 너비
   final double appBarTitleHeight = screenSize.height * (22 / referenceHeight); // 텍스트 높이
   final double appBarTitleY = screenSize.height * (11 / referenceHeight); // 텍스트 Y 좌표
   final double appBarLeadingIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
@@ -99,7 +99,7 @@ AppBar buildCommonAppBar({
   // 찜 목록 버튼의 크기와 위치 설정
   final double wishlistButtonWidth = screenSize.width * (44 / referenceWidth); // 찜 목록 버튼 너비
   final double wishlistButtonHeight = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
-  final double wishlistButtonX = screenSize.width * (10 / referenceWidth); // 찜 목록 버튼 X 좌표
+  final double wishlistButtonX = screenSize.width * (20 / referenceWidth); // 찜 목록 버튼 X 좌표
   final double wishlistButtonY = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
 
 
@@ -217,7 +217,8 @@ AppBar buildCommonAppBar({
 
   // AppBar를 반환
   return AppBar(
-    // backgroundColor: BUTTON_COLOR,
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+    // 앱 바 배경 색상 : 앱 기본 배경색
     // AppBar 색상 설정
     toolbarHeight: appBarHeight, // 앱 바의 높이를 설정
     title: Container(
@@ -271,148 +272,225 @@ AppBar buildCommonAppBar({
 // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
 // BottomNavigationBar 생성 함수
 Widget buildCommonBottomNavigationBar(
-    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase, {ProductContent? product}) {
+    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase, {ProductContent? product, required ScrollController scrollController}) {
 
   // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
   final numberFormat = NumberFormat('###,###'); // 천 단위일때마다 쉼표 표시
 
   switch (navigationCase) {
-    // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
+  // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
     case 1:
-  // 선택된 아이템의 색상을 초기화
-  Color selectedColor = DRAWER_COLOR;
-  // 선택되지 않은 아이템의 색상을 초기화
-  Color unselectedColor = BODY_TEXT_COLOR;
+    // 선택된 아이템의 색상을 초기화
+      Color selectedColor = Colors.black;
+      // 선택되지 않은 아이템의 색상을 초기화
+      Color unselectedColor = Colors.white;
 
-  // colorCase 값에 따라 선택된 아이템의 색상을 설정
-  switch (colorCase) {
-    case 1: // 홈 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 2: // 장바구니 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 3: // 발주 내역 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 4: // 마이페이지 버튼만 선택된 경우
-      selectedColor = DRAWER_COLOR;
-      break;
-    case 5: // 모든 버튼이 선택되지 않은 경우
-      selectedColor = BODY_TEXT_COLOR;
-      break;
-  }
-
-  // BottomNavigationBar를 반환
-  return BottomNavigationBar(
-    type: BottomNavigationBarType.fixed,
-    // BottomNavigationBar 타입을 고정형으로 설정
-    currentIndex: selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0,
-    // 현재 선택된 인덱스를 설정, 범위가 벗어나면 0으로 설정
-    onTap: (index) {
-      // 다른 인덱스가 선택된 경우
-      if (index != selectedIndex) {
-        // 선택된 인덱스를 상태로 업데이트
-        ref.read(tabIndexProvider.notifier).state = index;
-
-        // 화면 전환
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) {
-            // 선택된 인덱스에 따라 다른 화면을 반환
-            switch (index) {
-              case 0:
-                return HomeMainScreen();
-              case 1:
-                return CartMainScreen();
-              case 2:
-                return OrderListMainScreen();
-              case 3:
-                return ProfileMainScreen();
-              default:
-                return HomeMainScreen();
-            }
-          }),
-          (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
-        );
-      } else {
-        // 현재 화면이 이미 선택된 화면인 경우, 스크롤 위치를 초기화
-        switch (index) {
-          case 0:
-            // 홈 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-            final homeScrollController = ref.read(homeScrollControllerProvider);
-            if (homeScrollController.hasClients) {
-              homeScrollController.animateTo(
-                0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-            }
-            break;
-          case 1:
-            // 장바구니 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-            final cartScrollController = ref.read(cartScrollControllerProvider);
-            if (cartScrollController.hasClients) {
-              cartScrollController.animateTo(
-                0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-            }
-            break;
-          case 2:
-            // 발주 내역 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-            final orderScrollController =
-                ref.read(orderListScrollControllerProvider);
-            if (orderScrollController.hasClients) {
-              orderScrollController.animateTo(
-                0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-            }
-            break;
-          case 3:
-            // 마이페이지 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-            final profileScrollController =
-                ref.read(profileScrollControllerProvider);
-            if (profileScrollController.hasClients) {
-              profileScrollController.animateTo(
-                0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-            }
-            break;
-        }
+      // colorCase 값에 따라 선택된 아이템의 색상을 설정
+      switch (colorCase) {
+        case 1: // 홈 버튼만 선택된 경우
+          selectedColor = Colors.black;
+          break;
+        case 2: // 장바구니 버튼만 선택된 경우
+          selectedColor = Colors.black;
+          break;
+        case 3: // 발주 내역 버튼만 선택된 경우
+          selectedColor = Colors.black;
+          break;
+        case 4: // 마이페이지 버튼만 선택된 경우
+          selectedColor = Colors.black;
+          break;
+        case 5: // 모든 버튼이 선택되지 않은 경우
+          selectedColor = Colors.white;
+          break;
       }
-    },
-    // BottomNavigationBar의 아이템들을 정의
-    items: [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home_outlined), // 홈 아이콘
-        label: '홈', // 홈 라벨
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.shopping_cart_outlined), // 장바구니 아이콘
-        label: '요청품목', // 요청품목 라벨
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.receipt_long_outlined), // 발주 내역 아이콘
-        label: '발주내역', // 발주 내역 라벨
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person_outlined), // 마이페이지 아이콘
-        label: '마이페이지', // 마이페이지 라벨
-      ),
-    ],
-    selectedItemColor: selectedColor,
-    // 선택된 아이템의 색상
-    unselectedItemColor: unselectedColor,
-    // 선택되지 않은 아이템의 색상
-    selectedFontSize: 10,
-    // 선택된 아이템의 폰트 크기
-    unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
-  );
+
+      // BottomNavigationBar를 반환
+      return Container(
+        height: 88, // 높이를 88로 지정
+        child: Stack( // Stack을 사용하여 바를 배치
+          children: [
+            BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              // BottomNavigationBar 타입을 고정형으로 설정
+              backgroundColor: Color(0xFF6FAD96), // 배경색을 0xFF6FAD96으로 설정,
+              currentIndex: selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0,
+              // 현재 선택된 인덱스를 설정, 범위가 벗어나면 0으로 설정
+              onTap: (index) {
+                // 다른 인덱스가 선택된 경우
+                if (index != selectedIndex) {
+                  // 선택된 인덱스를 상태로 업데이트
+                  ref.read(tabIndexProvider.notifier).state = index;
+
+                  // 화면 전환
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) {
+                      // 선택된 인덱스에 따라 다른 화면을 반환
+                      switch (index) {
+                        case 0:
+                          return HomeMainScreen();
+                        case 1:
+                          return CartMainScreen();
+                        case 2:
+                          return OrderListMainScreen();
+                        case 3:
+                          return ProfileMainScreen();
+                        default:
+                          return HomeMainScreen();
+                      }
+                    }),
+                        (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
+                  );
+                } else {
+                  // 현재 화면이 이미 선택된 화면인 경우, 스크롤 위치를 초기화
+                  if (scrollController.hasClients) {
+                    scrollController.animateTo(
+                      0,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                }
+              },
+              //   } else {
+              //     // 현재 화면이 이미 선택된 화면인 경우, 스크롤 위치를 초기화
+              //     switch (index) {
+              //       case 0:
+              //       // 홈 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+              //         final homeScrollController = ref.read(homeScrollControllerProvider);
+              //         if (homeScrollController.hasClients) {
+              //           homeScrollController.animateTo(
+              //             0,
+              //             duration: Duration(milliseconds: 500),
+              //             curve: Curves.easeInOut,
+              //           );
+              //         }
+              //         break;
+              //       case 1:
+              //       // 장바구니 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+              //         final cartScrollController = ref.read(cartScrollControllerProvider);
+              //         if (cartScrollController.hasClients) {
+              //           cartScrollController.animateTo(
+              //             0,
+              //             duration: Duration(milliseconds: 500),
+              //             curve: Curves.easeInOut,
+              //           );
+              //         }
+              //         break;
+              //       case 2:
+              //       // 발주 내역 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+              //         final orderScrollController = ref.read(orderListScrollControllerProvider);
+              //         if (orderScrollController.hasClients) {
+              //           orderScrollController.animateTo(
+              //             0,
+              //             duration: Duration(milliseconds: 500),
+              //             curve: Curves.easeInOut,
+              //           );
+              //         }
+              //         break;
+              //       case 3:
+              //       // 마이페이지 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
+              //         final profileScrollController = ref.read(profileScrollControllerProvider);
+              //         if (profileScrollController.hasClients) {
+              //           profileScrollController.animateTo(
+              //             0,
+              //             duration: Duration(milliseconds: 500),
+              //             curve: Curves.easeInOut,
+              //           );
+              //         }
+              //         break;
+              //     }
+              //   }
+              // },
+              // BottomNavigationBar의 아이템들을 정의
+              items: [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.5), // 간격을 51로 설정 (좌우 25.5씩)
+                    child: Icon(Icons.home_outlined, size: 24,), // 홈 아이콘
+                  ),
+                  label: '홈', // 홈 라벨
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
+                    child: Icon(Icons.shopping_cart_outlined, size: 24), // 장바구니 아이콘
+                  ),
+                  label: '요청품목', // 요청품목 라벨
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
+                    child: Icon(Icons.receipt_long_outlined, size: 24), // 발주 내역 아이콘
+                  ),
+                  label: '발주내역', // 발주 내역 라벨
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
+                    child: Icon(Icons.person_outlined, size: 24), // 마이페이지 아이콘
+                  ),
+                  label: '마이페이지', // 마이페이지 라벨
+                ),
+              ],
+              selectedItemColor: selectedColor,
+              unselectedItemColor: unselectedColor,
+              selectedFontSize: 10, // 선택된 아이템의 폰트 크기
+              unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
+              selectedLabelStyle: TextStyle(
+                fontFamily: 'NanumGothic', // 폰트 패밀리 설정
+                fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
+                fontSize: 10, // 텍스트 크기를 10으로 설정
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontFamily: 'NanumGothic', // 폰트 패밀리 설정
+                fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
+                fontSize: 10, // 텍스트 크기를 10으로 설정
+              ),
+            ),
+            if (selectedIndex == 0) // 선택된 항목에만 하단 바 표시
+              Positioned(
+                bottom: 35,
+                left: 34.5, // 홈 아이템의 위치에 맞게 바를 배치
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 12, // 바의 너비를 화면의 1/12로 설정
+                  height: 3, // 바의 높이
+                  color: selectedColor, // 선택된 색상
+                ),
+              ),
+            // 다른 선택된 항목들에 대해서도 같은 방식으로 적용
+            if (selectedIndex == 1)
+              Positioned(
+                bottom: 35,
+                left: 125, // 요청품목 위치
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 10,
+                  height: 3,
+                  color: selectedColor,
+                ),
+              ),
+            if (selectedIndex == 2)
+              Positioned(
+                bottom: 35,
+                left: 225, // 발주내역 위치
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 10,
+                  height: 3,
+                  color: selectedColor,
+                ),
+              ),
+            if (selectedIndex == 3)
+              Positioned(
+                bottom: 35,
+                left: 320, // 마이페이지 위치
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 8,
+                  height: 3,
+                  color: selectedColor,
+                ),
+              ),
+          ],
+        ),
+      );
 
   // '요청품목', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:
@@ -624,41 +702,49 @@ void navigateToScreenAndRemoveUntil(
 
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작
 // 상단 탭 바 텍스트 스타일 설정 함수
+// TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
+//   return TextStyle(
+//     fontSize: 14,
+//     // 텍스트 크기를 16으로 설정
+//     fontWeight: FontWeight.bold,
+//     // 텍스트 굵기를 굵게 설정
+//     color: currentIndex == buttonIndex ? GOLD_COLOR : INPUT_BORDER_COLOR,
+//     // 현재 선택된 탭과 탭 인덱스가 같다면 금색, 아니면 입력창 테두리 색상으로 설정
+//     shadows: [
+//       // 텍스트에 그림자 효과를 추가
+//       Shadow(
+//         // 하단에 그림자 설정
+//         offset: Offset(0, 2), // 그림자의 위치를 하단으로 설정
+//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
+//         blurRadius: 0, // 흐림 효과 없음
+//       ),
+//       Shadow(
+//         // 오른쪽에 그림자 설정
+//         offset: Offset(2, 0), // 그림자의 위치를 오른쪽으로 설정
+//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
+//         blurRadius: 0, // 흐림 효과 없음
+//       ),
+//       Shadow(
+//         // 상단에 그림자 설정
+//         offset: Offset(0, -2), // 그림자의 위치를 상단으로 설정
+//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
+//         blurRadius: 0, // 흐림 효과 없음
+//       ),
+//       Shadow(
+//         // 왼쪽에 그림자 설정
+//         offset: Offset(-2, 0), // 그림자의 위치를 왼쪽으로 설정
+//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
+//         blurRadius: 0, // 흐림 효과 없음
+//       ),
+//     ],
+//   );
+// }
 TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
   return TextStyle(
-    fontSize: 16,
-    // 텍스트 크기를 16으로 설정
-    fontWeight: FontWeight.bold,
-    // 텍스트 굵기를 굵게 설정
-    color: currentIndex == buttonIndex ? GOLD_COLOR : INPUT_BORDER_COLOR,
-    // 현재 선택된 탭과 탭 인덱스가 같다면 금색, 아니면 입력창 테두리 색상으로 설정
-    shadows: [
-      // 텍스트에 그림자 효과를 추가
-      Shadow(
-        // 하단에 그림자 설정
-        offset: Offset(0, 2), // 그림자의 위치를 하단으로 설정
-        color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-        blurRadius: 0, // 흐림 효과 없음
-      ),
-      Shadow(
-        // 오른쪽에 그림자 설정
-        offset: Offset(2, 0), // 그림자의 위치를 오른쪽으로 설정
-        color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-        blurRadius: 0, // 흐림 효과 없음
-      ),
-      Shadow(
-        // 상단에 그림자 설정
-        offset: Offset(0, -2), // 그림자의 위치를 상단으로 설정
-        color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-        blurRadius: 0, // 흐림 효과 없음
-      ),
-      Shadow(
-        // 왼쪽에 그림자 설정
-        offset: Offset(-2, 0), // 그림자의 위치를 왼쪽으로 설정
-        color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-        blurRadius: 0, // 흐림 효과 없음
-      ),
-    ],
+    fontSize: 16, // Figma에서 확인한 텍스트 크기
+    fontWeight: FontWeight.bold, // 폰트 굵기 설정
+    color: currentIndex == buttonIndex ? Color(0xFF6FAD96) : Color(0xFF737373),
+    // 현재 탭이 활성화된 경우 연한 초록색, 비활성화된 경우 회색 적용
   );
 }
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 끝
@@ -683,12 +769,27 @@ Widget buildTopBarList(
     {"type": "text", "data": "겨울"},
   ];
 
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+
+  // 탑 바 부분 수치
+  final double topBarListHeight = screenSize.width * (60 / referenceWidth); // 탑 바 리스트 높이
+  final double topBarListX = screenSize.width * (16 / referenceWidth); // 탑 바 리스트 X 좌표
+  final double topBarBtnHeight = screenSize.height * (60 / referenceHeight); // 탑 바 버튼 높이
+
   // 각 카테고리를 탭했을 때 실행될 함수. 카테고리에 따라 다른 페이지로 이동함.
   return Consumer(
     builder: (context, ref, child) {
       int currentIndex = ref.watch(currentTabProvider); // 현재 선택된 탭의 인덱스를 가져옴
-      return SizedBox(
-        height: 60, // 높이를 60으로 설정
+      return Container(
+        height: topBarListHeight,
+        margin: EdgeInsets.only(left: topBarListX),
         child: ListView.builder(
           controller: topBarAutoScrollController,
           // 상단 탭 바 자동 스크롤을 위한 컨트롤러 설정
@@ -708,7 +809,8 @@ Widget buildTopBarList(
               child: Container(
                 // 수정된 부분: Padding을 Container로 변경
                 alignment: Alignment.center, // Container 내부 내용을 중앙 정렬
-                padding: EdgeInsets.symmetric(horizontal: 20), // 좌우로 패딩 적용
+                height: topBarBtnHeight,
+                padding: EdgeInsets.symmetric(horizontal: 22), // 좌우로 패딩 적용
                 child:
                     Text(category, style: topBarTextStyle(currentIndex, index)),
               ),
@@ -728,33 +830,102 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
 
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 260.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  // 드로워 화면 내 아이콘 요소 수치
+  final double drawerLogoIconWidth =
+      screenSize.width * (130 / referenceWidth); // 가로 비율
+  final double drawerLogoIconHeight =
+      screenSize.height * (65 / referenceWidth); // 세로 비율
+  final double drawerHeaderHeight =
+      screenSize.height * (70 / referenceWidth); // 세로 비율
+  final double drawerLogoIconX =
+      screenSize.width * (33 / referenceWidth); // 왼쪽 여백 비율
+  final double drawerLogoIconY =
+      screenSize.width * (50 / referenceHeight); // 위쪽 여백 비율
+
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
-    // SingleChildScrollView를 자식으로 사용하여 드로어 내용물을 스크롤 가능하게 함.
-    child: SingleChildScrollView(
-      padding: EdgeInsets.zero, // SingleChildScrollView의 패딩을 0으로 설정하여 상단 여백을 제거함.
-      child: Column(
-        children: <Widget>[
-          // 드로어의 헤더 부분을 구성. 헤더는 사용자 정보를 표시하는 영역.
-          DrawerHeader(
-            decoration: BoxDecoration(color: DRAWER_COLOR), // 헤더 배경색을 설정함.
+    child: Container(
+      color: Colors.white, // 전체 드로어의 배경색을 흰색으로 설정
+      child: Stack(
+        children: [
+          // 로고 및 이메일 배치
+          Positioned(
+            left: drawerLogoIconX, // 로고의 X 좌표 설정 (왼쪽 여백)
+            top: drawerLogoIconY, // 로고의 Y 좌표 설정 (위쪽 여백)
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // 세로 방향으로 중앙 정렬
-              crossAxisAlignment: CrossAxisAlignment.start, // 가로 방향으로 왼쪽 정렬
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Flexible 위젯을 사용하여 로고 이미지가 가변적인 높이를 가질 수 있도록 함.
-                // 이 위젯을 통해서 드로워헤더의 정해진 높이에 맞춰서 내용이 들어가도록 이미지 크기를 동적으로 변경해줌.
-                Flexible(
+                Container(
+                  width: drawerLogoIconWidth,
+                  height: drawerLogoIconHeight,
+                  padding: EdgeInsets.zero, // 패딩 제거
+                  margin: EdgeInsets.zero, // 마진 제거
+                  // decoration: BoxDecoration(
+                  //   color: Colors.grey, // 회색 배경 설정 (테스트용)
+                  // ),
                   child: Image.asset(
-                      'asset/img/misc/logo_img/couture_logo_image.png',
-                      width: 100,
-                      height: 100),
+                    'asset/img/misc/logo_img/couture_logo_v1.png',
+                    // fit: BoxFit.contain, // 이미지의 fit 속성 설정
+                  ),
                 ),
-                SizedBox(height: 10), // 간격을 위한 SizedBox
-                // 현재 로그인한 사용자의 이메일을 표시함.
-                Text(userEmail,
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
-                SizedBox(height: 10), // 텍스트 사이의 간격을 위한 SizedBox
+                Padding(
+                  padding: EdgeInsets.zero, // 이메일의 패딩 제거
+                  child: Text(
+                    userEmail,
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.black, // 텍스트 색상
+                      fontFamily: 'NanumGothic',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 콘텐츠 영역 관리
+          Positioned(
+            top: drawerLogoIconY + 1.3 * drawerLogoIconHeight, // 로고 아래의 간격을 최소화
+            left: 32,
+            right: 0,
+            child: Column(
+              children: <Widget>[
+                _buildListTile(
+                  context,
+                  '네이버 카페',
+                  'https://cafe.naver.com/ottbayo',
+                  'asset/img/misc/drawer_img/naver_logo_v1.png',
+                ),
+                SizedBox(height: 20), // 간격을 위한 SizedBox
+                _buildListTile(
+                  context,
+                  '유튜브',
+                  'https://www.youtube.com/@OTTBAYO',
+                  'asset/img/misc/drawer_img/youtube_logo_v1.png',
+                ),
+                SizedBox(height: 20), // 간격을 위한 SizedBox
+                _buildListTile(
+                  context,
+                  '인스타그램',
+                  'https://www.instagram.com/ottbayo',
+                  'asset/img/misc/drawer_img/instagram_logo_v1.png',
+                ),
+                SizedBox(height: 20), // 간격을 위한 SizedBox
+                _buildListTile(
+                  context,
+                  '카카오톡',
+                  'https://pf.kakao.com/_xjVrbG',
+                  'asset/img/misc/drawer_img/kakao_logo_v1.png',
+                ),
+                SizedBox(height: 130), // 간격을 위한 SizedBox
                 // 로그아웃 버튼 항목
                 GestureDetector(
                   onTap: () async {
@@ -765,31 +936,20 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => LoginScreen()));
                   },
-                  child: Row(
-                    children: [
-                      Icon(Icons.logout, color: Colors.white), // 로그아웃 아이콘
-                      SizedBox(width: 10), // 아이콘과 텍스트 사이의 간격
-                      Text('로그아웃', style: TextStyle(color: Colors.white)), // 로그아웃 텍스트
-                    ],
+                  child: Center( // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min, // Row 안의 요소들에 맞게 크기 조정
+                      children: [
+                        Text('Logout', style: TextStyle(color: Color(0xFF777777), fontSize: 20)), // 로그아웃 텍스트
+                        SizedBox(width: 15), // 아이콘과 텍스트 사이의 간격
+                        Icon(Icons.logout, color: Color(0xFF777777), size: 20), // 로그아웃 아이콘
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 20), // 간격을 위한 SizedBox
-          // 관리자 여부에 상관없이 항상 표시되는 항목들
-          _buildListTile(context, '네이버 카페', 'https://cafe.naver.com/ottbayo',
-              'asset/img/misc/drawer_img/navercafe.logo.png'),
-          SizedBox(height: 10), // 간격을 위한 SizedBox
-          _buildListTile(context, '유튜브', 'https://www.youtube.com/@OTTBAYO',
-              'asset/img/misc/drawer_img/youtube.logo.png'),
-          SizedBox(height: 10), // 간격을 위한 SizedBox
-          _buildListTile(context, '인스타그램', 'https://www.instagram.com/ottbayo',
-              'asset/img/misc/drawer_img/instagram.logo.png'),
-          SizedBox(height: 10), // 간격을 위한 SizedBox
-          _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
-              'asset/img/misc/drawer_img/kakao.logo.png'),
-          SizedBox(height: 20), // 간격을 위한 SizedBox
         ],
       ),
     ),
@@ -803,7 +963,14 @@ Widget _buildListTile(
   // ListTile 위젯 반환
   return ListTile(
     leading: Image.asset(leadingImage, width: 40), // 이미지를 왼쪽에 배치
-    title: Text(title), // 제목을 설정
+    title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 17,
+          color: Colors.black, // 텍스트 색상
+          fontFamily: 'NanumGothic',
+          fontWeight: FontWeight.bold,
+        )), // 제목을 설정
     contentPadding: EdgeInsets.symmetric(horizontal: 16), // 좌우 간격 조정
     onTap: () async {
       // 탭 이벤트 핸들러

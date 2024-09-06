@@ -251,7 +251,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
       bottomNavigationBar:
-          buildCommonBottomNavigationBar(0, ref, context, 0, 3),
+          buildCommonBottomNavigationBar(0, ref, context, 0, 3, scrollController: cartScreenPointScrollController),
     );
   }
 }
