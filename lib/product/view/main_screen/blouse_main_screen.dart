@@ -479,11 +479,13 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
                   ),
                 ),
               ),
+              // // 실제 컨텐츠를 나타내는 슬리버 리스트
+              // // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // SliverPadding(
+              //   padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
+              //   sliver: SliverList(
               // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              SliverPadding(
-                padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
-                sliver: SliverList(
+              SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return Padding(
@@ -599,7 +601,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
                     childCount: 1, // 자식 위젯 수 설정
                   ),
                 ),
-              ),
+              // ),
             ],
           ),
           // buildTopButton 함수는 주어진 context와 blouseMainScreenPointScrollController를 사용하여

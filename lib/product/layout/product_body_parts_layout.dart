@@ -181,20 +181,26 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
             // print("정렬 버튼 클릭: $title");
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: BUTTON_COLOR,
-            // 버튼 배경 색상 설정
-            foregroundColor: isSelected ? GOLD_COLOR : INPUT_BORDER_COLOR,
-            // 선택된 버튼의 텍스트 색상 설정
+            backgroundColor: isSelected ? Color(0xFF6FAD96) : Color(0xFFCACACA),
+            // 선택된 버튼 배경 색상 설정
             minimumSize: Size(0, 40),
             // 최소 버튼 크기 설정
             padding: EdgeInsets.symmetric(horizontal: 8.0), // 버튼 내 패딩 설정
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(67),
+            ),
           ),
           child: FittedBox(
             fit: BoxFit.scaleDown, // 텍스트 크기를 버튼 크기에 맞게 조절
             child: Text(
               title,
               textAlign: TextAlign.center, // 텍스트 가운데 정렬
-              style: TextStyle(fontSize: 14), // 텍스트 크기를 14로 설정
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFFFFFFFF),
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.w800, // ExtraBold
+              ),
             ),
           ),
         ),

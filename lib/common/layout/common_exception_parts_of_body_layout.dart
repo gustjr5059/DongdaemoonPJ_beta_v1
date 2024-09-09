@@ -113,7 +113,7 @@ AppBar buildCommonAppBar({
         height: appBarLeadingIconHeight,
         margin: EdgeInsets.only(left: appBarLeadingIconX, top: appBarLeadingIconY), // 아이콘 위치 설정
         child: IconButton(
-          icon: Icon(Icons.arrow_back, size: appBarLeadingIconHeight), // 뒤로 가기 아이콘을 설정
+          icon: Icon(Icons.chevron_left, size: appBarLeadingIconHeight), // 뒤로 가기 아이콘을 설정
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.

@@ -462,12 +462,14 @@ class _JeanMainScreenState extends ConsumerState<JeanMainScreen>
                   ),
                 ),
               ),
+              // // 실제 컨텐츠를 나타내는 슬리버 리스트
+              // // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // SliverPadding(
+              //   padding: EdgeInsets.only(top: 5),
+              //   // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+              //   sliver: SliverList(
               // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
+              SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return Padding(
@@ -583,7 +585,7 @@ class _JeanMainScreenState extends ConsumerState<JeanMainScreen>
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                   ),
                 ),
-              ),
+              // ),
             ],
           ),
           // buildTopButton 함수는 주어진 context와 jeanMainScreenPointScrollController를 사용하여
