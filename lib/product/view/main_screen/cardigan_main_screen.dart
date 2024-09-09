@@ -372,6 +372,31 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
       }
     }
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 앱 바 부분 수치
+    final double expandedHeight =
+        screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
+
+    // 대배너 부분 관련 수치
+    final double cardiganMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    final double cardiganMainScreenLargeBannerHeight = screenSize.height * (268 / referenceHeight); // 대배너 이미지 높이
+    final double cardiganMainLargeBannerViewHeight =
+        screenSize.height * (268 / referenceHeight); // 대배너 화면 세로 비율
+
+    // 소배너 부분 관련 수치
+    final double cardiganMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    final double cardiganMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    final double cardiganMainScreenSmallBannerViewHeight =
+        screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -390,7 +415,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
                 // 스크롤 시 SliverAppBar가 빠르게 나타남.
                 pinned: true,
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 120.0,
+                expandedHeight: expandedHeight,
                 // 확장 높이 설정
                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                 flexibleSpace: FlexibleSpaceBar(
@@ -429,64 +454,75 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
                     (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 1.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 5), // 높이 20으로 간격 설정
+                            // SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                             // 큰 배너 섹션을 카드뷰로 구성
                             CommonCardView(
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함.
-                                height: 150,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  context: context,
-                                  ref: ref,
-                                  currentPageProvider:
-                                      cardiganMainLargeBannerPageProvider,
-                                  pageController: _largeBannerPageController,
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  bannerLinks: largeBannerLinks,
-                                  bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
-                                  onPageTap: _onLargeBannerTap,
+                              content: Container(
+                                // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정함
+                                ),
+                                child: SizedBox(
+                                  // 배너 섹션의 높이를 설정함
+                                  height: cardiganMainLargeBannerViewHeight,
+                                  // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
+                                  child: buildCommonBannerPageViewSection<
+                                      AllLargeBannerImage>(
+                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    currentPageProvider:
+                                    cardiganMainLargeBannerPageProvider, // 큰 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _largeBannerPageController, // 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _largeBannerAutoScroll, // 큰 배너의 자동 스크롤 설정을 전달함
+                                    bannerLinks: largeBannerLinks, // 배너 이미지의 링크 목록을 전달함
+                                    bannerImagesProvider:
+                                    allLargeBannerImagesProvider, // 큰 배너 이미지의 상태 제공자를 전달함
+                                    onPageTap: _onLargeBannerTap, // 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                    width: cardiganMainScreenLargeBannerWidth, // 큰 배너 섹션의 너비를 설정함
+                                    height: cardiganMainScreenLargeBannerHeight, // 큰 배너 섹션의 높이를 설정함
+                                    borderRadius: 0, // 큰 배너의 모서리 반경을 0으로 설정함
+                                  ),
                                 ),
                               ),
-                              backgroundColor: LIGHT_PURPLE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              elevation: 4, // 카드뷰의 그림자 깊이를 설정함
+                              padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
                             ),
-                            SizedBox(height: 10), // 10의 높이를 가진 간격 추가
-                            // 첫 번째 작은 배너 섹션
+                            SizedBox(height: 10), // 10의 높이를 가진 간격을 추가함
                             CommonCardView(
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
-                                height: 30,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<
-                                    CardiganMainSmall1BannerImage>(
-                                  context: context,
-                                  ref: ref,
-                                  currentPageProvider:
-                                      cardiganMainSmall1BannerPageProvider,
-                                  pageController: _small1BannerPageController,
-                                  bannerAutoScroll: _small1BannerAutoScroll,
-                                  bannerLinks: small1BannerLinks,
-                                  bannerImagesProvider:
-                                      cardiganMainSmall1BannerImagesProvider,
-                                  onPageTap: _onSmall1BannerTap,
+                              content: Container(
+                                // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                                ),
+                                child: SizedBox(
+                                  // 작은 배너 섹션의 높이를 설정함
+                                  height: cardiganMainScreenSmallBannerViewHeight,
+                                  // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
+                                  child: buildCommonBannerPageViewSection<
+                                      CardiganMainSmall1BannerImage>(
+                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    currentPageProvider:
+                                    cardiganMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                                    bannerLinks: small1BannerLinks, // 작은 배너 이미지의 링크 목록을 전달함
+                                    bannerImagesProvider:
+                                    cardiganMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                                    onPageTap: _onSmall1BannerTap, // 작은 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                    width: cardiganMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
+                                    height: cardiganMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
+                                    borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
+                                  ),
                                 ),
                               ),
-                              backgroundColor: LIGHT_SKY_BLUE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
+                              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
                             ),
                             SizedBox(height: 3), // 3의 높이를 가진 간격 추가
                             PriceAndDiscountPercentSortButtons<

@@ -292,6 +292,27 @@ class _WinterSubMainScreenState extends ConsumerState<WinterSubMainScreen>
       }
     }
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 대배너 부분 관련 수치
+    final double winterSubMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    final double winterSubMainScreenLargeBannerHeight = screenSize.height * (268 / referenceHeight); // 대배너 이미지 높이
+    final double winterSubMainLargeBannerViewHeight =
+        screenSize.height * (268 / referenceHeight); // 대배너 화면 세로 비율
+
+    // 소배너 부분 관련 수치
+    final double winterSubMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    final double winterSubMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    final double winterSubMainScreenSmallBannerViewHeight =
+        screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -340,66 +361,75 @@ class _WinterSubMainScreenState extends ConsumerState<WinterSubMainScreen>
                     (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 1.0),
                         child: Column(
                           children: [
-                            SizedBox(height: 5),
-                            // 높이 20으로 간격 설정
+                            // SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                             // 큰 배너 섹션을 카드뷰로 구성
                             CommonCardView(
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 200으로 구현함.
-                                height: 200,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  context: context,
-                                  ref: ref,
-                                  currentPageProvider:
-                                      blouseMainLargeBannerPageProvider,
-                                  pageController: _largeBannerPageController,
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  bannerLinks: largeBannerLinks,
-                                  bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
-                                  onPageTap: _onLargeBannerTap,
+                              content: Container(
+                                // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정함
+                                ),
+                                child: SizedBox(
+                                  // 배너 섹션의 높이를 200으로 설정함
+                                  height: winterSubMainLargeBannerViewHeight,
+                                  // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
+                                  child: buildCommonBannerPageViewSection<
+                                      AllLargeBannerImage>(
+                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    currentPageProvider:
+                                    winterSubMainLargeBannerPageProvider, // 큰 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _largeBannerPageController, // 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _largeBannerAutoScroll, // 배너의 자동 스크롤 설정을 전달함
+                                    bannerLinks: largeBannerLinks, // 배너 이미지의 링크 목록을 전달함
+                                    bannerImagesProvider:
+                                    allLargeBannerImagesProvider, // 배너 이미지의 상태 제공자를 전달함
+                                    onPageTap: _onLargeBannerTap, // 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                    width: winterSubMainScreenLargeBannerWidth, // 배너 섹션의 너비를 설정함
+                                    height: winterSubMainScreenLargeBannerHeight, // 배너 섹션의 높이를 설정함
+                                    borderRadius: 0, // 배너의 모서리 반경을 0으로 설정함
+                                  ),
                                 ),
                               ),
-                              backgroundColor: LIGHT_PURPLE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              elevation: 4, // 카드뷰의 그림자 깊이를 설정함
+                              padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
                             ),
-                            SizedBox(height: 20),
-                            // 높이 임의로 50으로 간격 설정
-                            // 첫 번째 작은 배너 섹션
+                            SizedBox(height: 10), // 10의 높이를 가진 간격을 추가함
                             CommonCardView(
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
-                                height: 60,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<
-                                    BlouseMainSmall1BannerImage>(
-                                  context: context,
-                                  ref: ref,
-                                  currentPageProvider:
-                                      blouseMainSmall1BannerPageProvider,
-                                  pageController: _small1BannerPageController,
-                                  bannerAutoScroll: _small1BannerAutoScroll,
-                                  bannerLinks: small1BannerLinks,
-                                  bannerImagesProvider:
-                                      blouseMainSmall1BannerImagesProvider,
-                                  onPageTap: _onSmall1BannerTap,
+                              content: Container(
+                                // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                                ),
+                                child: SizedBox(
+                                  // 작은 배너 섹션의 높이를 60으로 설정함
+                                  height: winterSubMainScreenSmallBannerViewHeight,
+                                  // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
+                                  child: buildCommonBannerPageViewSection<
+                                      WinterSubMainSmall1BannerImage>(
+                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    currentPageProvider:
+                                    winterSubMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                                    bannerLinks: small1BannerLinks, // 작은 배너 이미지의 링크 목록을 전달함
+                                    bannerImagesProvider:
+                                    winterSubMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                                    onPageTap: _onSmall1BannerTap, // 작은 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                    width: winterSubMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
+                                    height: winterSubMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
+                                    borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
+                                  ),
                                 ),
                               ),
-                              backgroundColor: LIGHT_SKY_BLUE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
+                              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
                             ),
                             SizedBox(height: 3),
                             // 3의 높이를 가진 간격 추가

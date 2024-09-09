@@ -997,8 +997,6 @@ class ProductInfoDetailScreenNavigation {
 
     // 기준 화면 크기: 가로 393, 세로 852
     final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-    final double reference1Height = 1991.0;
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
@@ -1007,14 +1005,6 @@ class ProductInfoDetailScreenNavigation {
         screenSize.width * (160 / referenceWidth); // 가로 비율
     final double DetailDocThumnailWidth =
         screenSize.width * (152 / DetailDocWidth); // 가로 비율
-    final double DetailDocHeight =
-        screenSize.width * (240 / reference1Height); // 세로 비율
-    final double DetailDocThumnailHeight =
-        screenSize.width * (122 / DetailDocHeight); // 세로 비율
-    final double DetailDocX =
-        screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-    final double DetailDocY =
-        screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
@@ -1034,9 +1024,9 @@ class ProductInfoDetailScreenNavigation {
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3), // 그림자의 위치를 설정함
+              spreadRadius: 0, // 그림자의 퍼짐 정도
+              blurRadius: 1, // 그림자 흐림 정도 (숫자가 작을수록 선명함)
+              offset: Offset(0, 4), // 그림자의 위치를 설정함 (x: 0으로 수평 위치를 고정, y: 4로 하단에만 그림자 발생)
             ),
           ],
         ),

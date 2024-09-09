@@ -95,27 +95,19 @@ class BannerImageClass extends StatelessWidget {
 
   // 생성자에서는 imageUrl을 필수적으로 받으며, key는 선택적으로 받음.
   // super(key: key)를 통해 부모 클래스의 생성자에 key를 전달함.
-  const BannerImageClass({Key? key, required this.imageUrl}) : super(key: key);
+  const BannerImageClass({
+    Key? key,
+    required this.imageUrl,
+  }) : super(key: key);
 
   // build 메소드는 위젯의 UI를 구성함.
   @override
   Widget build(BuildContext context) {
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
 
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // Figma 수치를 기준으로 동적으로 이미지 크기와 위치를 설정
-    final double largeBannerWidth = screenSize.width * (393 / referenceWidth); // 배너 너비
-    final double largeBannerHeight = screenSize.height * (378 / referenceHeight); // 배너 높이
 
     // CachedNetworkImage 위젯을 사용하여 네트워크 이미지를 로딩하고 캐싱함.
     return CachedNetworkImage(
       imageUrl: imageUrl, // imageUrl 프로퍼티를 통해 이미지 URL을 지정함.
-      width: largeBannerWidth, // 배너의 너비 설정
-      height: largeBannerHeight, // 배너의 높이 설정
       fit: BoxFit.cover, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
       // 이미지 로딩 중 에러가 발생한 경우 errorWidget을 통해 에러 아이콘을 표시함.
       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -132,6 +124,9 @@ Widget buildBannerPageView({
   required IndexedWidgetBuilder itemBuilder, // 각 배너 아이템을 구성하는 위젯 빌더
   required StateProvider<int> currentPageProvider, // 현재 페이지 인덱스를 관리하는 상태 프로바이더
   required BuildContext context, // 현재 컨텍스트
+  required double width,  // 이미지의 너비
+  required double height, // 이미지의 높이
+  required double borderRadius, // 모서리 반경
 }) {
   // PageView.builder를 반환하여 동적으로 아이템을 생성하는 페이지 뷰를 구현
   return PageView.builder(
@@ -141,7 +136,17 @@ Widget buildBannerPageView({
       // 페이지가 변경될 때 호출될 함수. 새 페이지 인덱스를 상태 관리 도구를 통해 업데이트
       ref.read(currentPageProvider.notifier).state = index;
     },
-    itemBuilder: itemBuilder, // 각 페이지를 구성할 위젯을 빌드하는 함수
+    itemBuilder: (context, index) {
+      return Container(
+        width: width, // 외부에서 받은 너비 적용
+        height: height, // 외부에서 받은 높이 적용
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius), // 모서리 반경 적용
+        ),
+        clipBehavior: Clip.antiAlias, // borderRadius 적용을 위해 클리핑
+        child: itemBuilder(context, index), // 배너 이미지 로드
+      );
+    },
   );
 }
 // ------ buildBannerPageView 위젯 내용 구현 끝
@@ -156,6 +161,9 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   required List<String> bannerLinks,
   required FutureProvider<List<T>> bannerImagesProvider,
   required void Function(BuildContext, int) onPageTap, // 콜백 함수의 반환 타입을 void로 변경
+  required double width,  // 배너의 너비
+  required double height, // 배너의 높이
+  required double borderRadius, // 모서리 반경
 }) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -186,10 +194,14 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
                 onPageTap(context, index); // 콜백 함수 호출
               },
               child: BannerImageClass(
-                  imageUrl: commonBannerImages[index].imageUrl),
+                  imageUrl: commonBannerImages[index].imageUrl,
+              ),
             ),
             currentPageProvider: currentPageProvider,
             context: context,
+            width: width, // 배너의 너비 전달
+            height: height, // 배너의 높이 전달
+            borderRadius: borderRadius, // 모서리 반경 전달
           ),
           Positioned(
             right: 20,

@@ -250,6 +250,21 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       }
     }
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 소배너 부분 관련 수치
+    final double profileMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    final double profileMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    final double profileMainScreenSmallBannerViewHeight =
+        screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
+
     // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
     final User? user = FirebaseAuth.instance.currentUser;
 
@@ -301,37 +316,44 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                     (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 1.0),
                         child: Column(
                           children: [
                             SizedBox(height: 2), // 높이 임의로 10으로 간격 설정
                             if (user != null) UserProfileInfo(email: user.email!),
                             SizedBox(height: 10),
+                            // 첫 번째 작은 배너 섹션
                             CommonCardView(
-                              content: SizedBox(
-                                // buildCommonBannerPageViewSection 내용의 높이가 60으로 구현함.
-                                height: 50,
-                                // 카드뷰 내용으로 buildCommonBannerPageViewSection 재사용하여 구현함.
-                                child: buildCommonBannerPageViewSection<
-                                    ProfileMainSmall1BannerImage>(
-                                  context: context,
-                                  ref: ref,
-                                  currentPageProvider:
-                                  profileMainSmall1BannerPageProvider,
-                                  pageController: _small1BannerPageController,
-                                  bannerAutoScroll: _small1BannerAutoScroll,
-                                  bannerLinks: small1BannerLinks,
-                                  bannerImagesProvider:
-                                  profileMainSmall1BannerImagesProvider,
-                                  onPageTap: _onSmall1BannerTap,
+                              content: Container(
+                                // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                                ),
+                                child: SizedBox(
+                                  // 배너 섹션의 높이를 60으로 설정함
+                                  height: profileMainScreenSmallBannerViewHeight,
+                                  // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
+                                  child: buildCommonBannerPageViewSection<
+                                      ProfileMainSmall1BannerImage>(
+                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    currentPageProvider:
+                                    profileMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                                    bannerLinks: small1BannerLinks, // 작은 배너 이미지의 링크 목록을 전달함
+                                    bannerImagesProvider:
+                                    profileMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                                    onPageTap: _onSmall1BannerTap, // 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                    width: profileMainScreenSmallBannerWidth, // 배너 섹션의 너비를 설정함
+                                    height: profileMainScreenSmallBannerHeight, // 배너 섹션의 높이를 설정함
+                                    borderRadius: 8, // 배너의 모서리 반경을 8로 설정함
+                                  ),
                                 ),
                               ),
-                              backgroundColor: LIGHT_SKY_BLUE_COLOR,
-                              // 카드뷰 배경 색상 : LIGHT_PURPLE_COLOR
-                              elevation: 4,
-                              // 카드뷰 그림자 깊이
-                              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                                  8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
+                              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
                             ),
                             SizedBox(height: 10), // 높이 임의로 3000으로 간격 설정
                             // user 객체가 null이 아닌 경우 실행됨

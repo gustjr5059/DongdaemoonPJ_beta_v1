@@ -275,19 +275,12 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,20 +300,28 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '신상', // '신상' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 신상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                newProductRepositoryProvider); // newProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchNewProductContents(
-                limit: limit); // 레포지토리에서 신상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+              ),
+              child: ProductsSectionList(
+                category: '신상', // '신상' 카테고리를 설정
+                fetchProducts: (limit, startAfter) async {
+                  // 신상품 데이터를 가져오는 비동기 함수를 설정
+                  final repository = ref.watch(
+                      newProductRepositoryProvider); // newProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                  return await repository.fetchNewProductContents(
+                      limit: limit); // 레포지토리에서 신상품 데이터를 가져옴
+                },
+              ),
+            ),
+          ),
         ),
-      ),
-     ],
-   );
- }
+      ],
+    );
+  }
 
 // 최고 섹션을 위젯으로 구현한 부분
 // 최고 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
@@ -330,19 +331,12 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,15 +351,23 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '스테디 셀러', // '스테디 셀러' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 스테디 셀러 상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                bestProductRepositoryProvider); // bestProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchBestProductContents(
-                limit: limit); // 레포지토리에서 최고 상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: ProductsSectionList(
+              category: '스테디 셀러', // '스테디 셀러' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 스테디 셀러 상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    bestProductRepositoryProvider); // bestProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchBestProductContents(
+                    limit: limit); // 레포지토리에서 최고 상품 데이터를 가져옴
+              },
+            ),
+          ),
         ),
       ),
     ],
@@ -380,19 +382,12 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,15 +402,23 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '특가 상품', // '특가 상품' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 할인 상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                saleProductRepositoryProvider); // saleProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchSaleProductContents(
-                limit: limit); // 레포지토리에서 할인 상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: ProductsSectionList(
+              category: '특가 상품', // '특가 상품' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 할인 상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    saleProductRepositoryProvider); // saleProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchSaleProductContents(
+                    limit: limit); // 레포지토리에서 할인 상품 데이터를 가져옴
+              },
+            ),
+          ),
         ),
       ),
     ],
@@ -430,19 +433,12 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,15 +453,23 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '봄', // '봄' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 봄 상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                springProductRepositoryProvider); // springProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchSpringProductContents(
-                limit: limit); // 레포지토리에서 봄 상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: ProductsSectionList(
+              category: '봄', // '봄' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 봄 상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    springProductRepositoryProvider); // springProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchSpringProductContents(
+                    limit: limit); // 레포지토리에서 봄 상품 데이터를 가져옴
+              },
+            ),
+          ),
         ),
       ),
     ],
@@ -480,19 +484,12 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,15 +504,23 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '여름', // '여름' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 여름 상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                summerProductRepositoryProvider); // summerProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchSummerProductContents(
-                limit: limit); // 레포지토리에서 여름 상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: ProductsSectionList(
+              category: '여름', // '여름' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 여름 상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    summerProductRepositoryProvider); // summerProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchSummerProductContents(
+                    limit: limit); // 레포지토리에서 여름 상품 데이터를 가져옴
+              },
+            ),
+          ),
         ),
       ),
      ],
@@ -530,19 +535,12 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -557,15 +555,23 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '가을', // '가을' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 가을 상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                autumnProductRepositoryProvider); // autumnProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchAutumnProductContents(
-                limit: limit); // 레포지토리에서 가을 상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: ProductsSectionList(
+              category: '가을', // '가을' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 가을 상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    autumnProductRepositoryProvider); // autumnProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchAutumnProductContents(
+                    limit: limit); // 레포지토리에서 가을 상품 데이터를 가져옴
+              },
+            ),
+          ),
         ),
       ),
     ],
@@ -580,19 +586,12 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 신상 섹션 내 요소들의 수치
-  final double SectionWidth =
-      screenSize.width * (313 / referenceWidth); // 가로 비율
-  final double SectionHeight =
-      screenSize.height * (42 / referenceHeight); // 세로 비율
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -607,15 +606,23 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
       SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
-        child: ProductsSectionList(
-          category: '겨을', // '겨을' 카테고리를 설정
-          fetchProducts: (limit, startAfter) async {
-            // 겨을 상품 데이터를 가져오는 비동기 함수를 설정
-            final repository = ref.watch(
-                winterProductRepositoryProvider); // winterProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-            return await repository.fetchWinterProductContents(
-                limit: limit); // 레포지토리에서 겨을 상품 데이터를 가져옴
-          },
+        child: ClipRRect(
+        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: ProductsSectionList(
+              category: '겨을', // '겨을' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 겨을 상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    winterProductRepositoryProvider); // winterProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchWinterProductContents(
+                    limit: limit); // 레포지토리에서 겨을 상품 데이터를 가져옴
+              },
+            ),
+          ),
         ),
       ),
     ],
