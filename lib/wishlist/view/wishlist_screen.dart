@@ -232,11 +232,10 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return Padding(
-                      // 각 항목의 좌우 간격을 4.0으로 설정함.
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      // 각 항목의 좌우 간격을 17.0으로 설정함.
+                      padding: const EdgeInsets.symmetric(horizontal: 17.0),
                       child: Column(
                         children: [
-                          SizedBox(height: 8),
                           WishlistItemsList(), // WishlistItemsList 클래스 사용
                           SizedBox(height: 8),
                         ],

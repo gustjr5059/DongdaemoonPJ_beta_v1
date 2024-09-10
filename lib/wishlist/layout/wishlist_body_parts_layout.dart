@@ -127,6 +127,34 @@ class WishlistItemsList extends ConsumerWidget {
       throw Exception('User email not available');
     }
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 찜 목록 아이템별 카드뷰 섹션 부분 수치
+    final double wishlistCardViewWidth =
+        screenSize.width * (353 / referenceWidth); // 가로 비율
+    final double wishlistCardViewHeight =
+        screenSize.height * (143 / referenceHeight); // 세로 비율
+    // 썸네일 이미지 부분 수치
+    final double wishlistThumnailPartWidth =
+        screenSize.width * (126 / referenceWidth); // 가로 비율
+    final double wishlistThumnailPartHeight =
+        screenSize.height * (126 / referenceHeight); // 세로 비율
+    // 텍스트 데이터 부분 수치
+    final double wishlistTextDataPartHeight =
+        screenSize.height * (126 / referenceHeight); // 세로 비율
+    // 삭제 버튼 부분 수치
+    final double wishlistDeleteBtnWidth =
+        screenSize.width * (76 / referenceWidth); // 가로 비율
+    final double wishlistDeleteBtnHeight =
+        screenSize.height * (42 / referenceHeight); // 세로 비율
+
     // wishlistItemsStreamProvider를 통해 찜 목록 항목의 스트림을 감시하여, wishlistItemsAsyncValue에 할당.
     final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider(userEmail));
 
@@ -166,152 +194,192 @@ class WishlistItemsList extends ConsumerWidget {
             );
 
             return GestureDetector(
-              // 탭할 때 상세 화면으로 이동
+              // 탭(클릭) 시 상세 화면으로 이동하게 하는 기능을 정의함
               onTap: () {
                 navigatorProductDetailScreen.navigateToDetailScreen(context, product);
               },
-              child: CommonCardView(
-                content: Row(
-                  children: [
-                    Container(
-                      // 이미지 컨테이너 너비 설정
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      // 이미지 컨테이너 높이 설정
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      // 썸네일이 있을 경우 이미지 표시
-                      child: wishlistItem['thumbnails'] != null
-                          ? AspectRatio(
-                        aspectRatio: 1,
-                        child: FittedBox(
+              child: Container(
+                width: wishlistCardViewWidth,  // CommonCardView의 너비를 지정함
+                height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Color(0xFFCECECE), width: 1.0), // 하단 테두리 색상을 지정함
+                  ),
+                ),
+                child: CommonCardView(
+                  content: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 상단에 정렬함
+                    children: [
+                      Container(
+                        // 이미지 컨테이너의 너비를 설정함
+                        width: wishlistThumnailPartWidth,
+                        // 이미지 컨테이너의 높이를 설정함
+                        height: wishlistThumnailPartHeight,
+                        // 썸네일이 있을 경우 이미지를 표시하고, 없을 경우 빈 컨테이너를 표시함
+                        child: wishlistItem['thumbnails'] != null
+                            ? FittedBox(
                           fit: BoxFit.cover,
                           child: Image.network(
                             wishlistItem['thumbnails'] ?? '',
                           ),
-                        ),
-                      )
-                          : Container(), // 썸네일이 없을 경우 빈 컨테이너 표시
-                    ),
-                    SizedBox(width: 12),
-                    // 남은 공간을 차지하는 위젯
-                    Expanded(
-                      child: Column(
-                        // 자식 위젯들을 왼쪽 정렬
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 짧은 소개 텍스트
-                          Text(
-                            '${wishlistItem['brief_introduction'] ?? ''}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          // 원래 가격 텍스트
-                          Text(
-                            '${numberFormat.format(originalPrice)}원',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[500],
-                              decoration: TextDecoration.lineThrough,
-                            ),
-                          ),
-                          // 할인 가격과 할인율을 표시하는 행
-                          Row(
+                        )
+                            : Container(), // 썸네일이 없을 경우 빈 컨테이너를 표시함
+                      ),
+                      SizedBox(width: 12),
+                      // 텍스트 데이터와 삭제 버튼을 포함하는 컬럼(세로 정렬)을 정의함
+                      Expanded(
+                        child: Container(
+                          height: wishlistTextDataPartHeight, // 텍스트와 삭제 버튼을 포함하는 컬럼의 높이를 설정함
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽으로 정렬함
                             children: [
-                              Text(
-                                '${numberFormat.format(discountPrice)}원',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              // 텍스트 데이터 부분을 정의함
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬함
+                                  children: [
+                                    // 상품의 짧은 소개 텍스트를 표시함
+                                    Text(
+                                      '${wishlistItem['brief_introduction'] ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'NanumGothic',
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 1, // 한 줄로 표시되도록 설정함
+                                      overflow: TextOverflow.ellipsis, // 넘칠 경우 말줄임표로 처리함
+                                    ),
+                                    SizedBox(height: 4),
+                                    // 상품 원가 텍스트와 할인율을 함께 표시하는 행을 정의함
+                                    Row(
+                                      children: [
+                                        // 상품의 원래 가격 텍스트를 표시함
+                                        Text(
+                                          '${numberFormat.format(originalPrice)}원',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'NanumGothic',
+                                            color: Color(0xFF6C6C6C),
+                                            decoration: TextDecoration.lineThrough, // 가격에 줄을 긋는 스타일을 적용함
+                                          ),
+                                        ),
+                                        SizedBox(width: 19),
+                                        // 상품 할인율 텍스트를 표시함
+                                        Text(
+                                          '${wishlistItem['discount_percent']?.round() ?? 0}%',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
+                                            fontFamily: 'NanumGothic',
+                                            color: Colors.red, // 빨간색으로 할인율을 강조함
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // 상품 할인가 텍스트를 표시함
+                                    Text(
+                                      '${numberFormat.format(discountPrice)}원',
+                                      style: TextStyle(
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
+                                        fontFamily: 'NanumGothic',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Text(
-                                '${wishlistItem['discount_percent']?.round() ?? 0}%',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
+                              // 삭제 버튼을 우측에 배치함
+                              Container(
+                                alignment: Alignment.centerRight, // 버튼을 오른쪽 정렬함
+                                child: ElevatedButton(
+                                  // 삭제 버튼을 누를 때 실행되는 비동기 함수를 정의함
+                                  onPressed: () async {
+                                    await showSubmitAlertDialog(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      title: '찜 목록 삭제', // 대화상자의 제목을 설정함
+                                      content: '찜 목록에서 상품을 삭제하시겠습니까?', // 대화상자의 내용을 경고 메시지로 설정함
+                                      actions: buildAlertActions(
+                                        context, // 현재 화면의 컨텍스트를 전달함
+                                        noText: '아니요', // '아니요' 버튼 텍스트를 설정함
+                                        yesText: '예', // '예' 버튼 텍스트를 설정함
+                                        noTextStyle: TextStyle(
+                                          color: Colors.black, // '아니요' 텍스트 색상을 검정색으로 설정함
+                                          fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+                                        ),
+                                        yesTextStyle: TextStyle(
+                                          color: Colors.red, // '예' 텍스트 색상을 빨간색으로 설정함
+                                          fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+                                        ),
+                                        // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
+                                        onYesPressed: () async {
+                                          try {
+                                            final String? itemId = wishlistItem['product_id'];
+                                            if (itemId != null) {
+                                              // 찜 목록에서 상품을 제거함
+                                              ref.read(wishlistItemProvider(userEmail).notifier).removeItem(itemId);
+                                              Navigator.of(context).pop(); // 삭제 후 대화상자를 닫음
+                                              // 스낵바로 삭제 성공 메시지를 표시함
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
+                                              );
+                                            } else {
+                                              // 유효하지 않은 상품 ID 메시지를 표시함
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('삭제하는 중 오류가 발생했습니다.')),
+                                              );
+                                            }
+                                          } catch (e) { // 예외가 발생할 경우 에러 메시지를 처리함
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('삭제 중 오류 발생: $e')), // 오류 메시지를 텍스트로 표시함
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  // 삭제 버튼의 스타일을 정의함
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(wishlistDeleteBtnWidth, wishlistDeleteBtnHeight), // 삭제 버튼의 크기를 설정함
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(37), // 버튼을 둥글게 설정함
+                                      side: BorderSide(color: Color(0xFF6F6F6F)), // 테두리 색상을 설정함
+                                    ),
+                                    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색과 동일하게 설정함
+                                  ),
+                                  child: Text(
+                                    '삭제',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'NanumGothic',
+                                      color: Colors.black, // 버튼 텍스트 색상을 검정색으로 설정함
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
-                          // 삭제 버튼
-                          ElevatedButton( // 두 번째 ElevatedButton 위젯을 생성함
-                            onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
-                              await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
-                                context, // 현재 화면의 컨텍스트를 전달함
-                                title: '찜 목록 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
-                                content: '찜 목록을 삭제하시면 해당 상품을 찜 목록에서 영구적으로 삭제됩니다.\n찜 목록에서 해당 상품을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
-                                actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
-                                  context, // 현재 화면의 컨텍스트를 전달함
-                                  noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
-                                  yesText: '예', // '예' 버튼의 텍스트를 설정함
-                                  noTextStyle: TextStyle( // '아니요' 버튼의 텍스트 스타일을 설정함
-                                    color: Colors.black, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
-                                    fontWeight: FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
-                                  ),
-                                  yesTextStyle: TextStyle( // '예' 버튼의 텍스트 스타일을 설정함
-                                    color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
-                                    fontWeight: FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
-                                  ),
-                                  onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
-                                    try {
-                                      final String? itemId = wishlistItem['product_id'];
-                                      if (itemId != null) {
-                                        // 찜 목록에서 상품 제거
-                                        ref.read(wishlistItemProvider(userEmail).notifier).removeItem(itemId);
-                                        Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
-                                        // 스낵바로 삭제 메시지 표시
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
-                                        );
-                                      } else {
-                                        // 유효하지 않은 상품 ID 메시지 표시
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('해당 상품을 찜 목록에서 삭제하는 중 오류가 발생했습니다.')),
-                                        );
-                                      }
-                                    } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
-                                      ScaffoldMessenger.of(context).showSnackBar( // 오류 메시지를 스낵바로 표시함
-                                        SnackBar(content: Text('찜 목록 내 상품 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 텍스트를 설정함
-                                      );
-                                    }
-                                  },
-                                ),
-                              );
-                            },
-                            // 버튼 스타일 설정
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: BUTTON_COLOR,
-                              backgroundColor: BACKGROUND_COLOR,
-                              side: BorderSide(color: BUTTON_COLOR),
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                            ),
-                            child: Text('삭제', style: TextStyle(fontWeight: FontWeight.bold)),
-                          ),
-
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 카드의 배경색을 앱의 기본 배경색으로 설정함
+                  elevation: 0, // 그림자를 없앰
+                  padding: const EdgeInsets.all(4), // 카드 내부에 패딩을 추가함
                 ),
-                // 카드 배경색 설정
-                backgroundColor: BEIGE_COLOR,
-                elevation: 2,
-                padding: const EdgeInsets.all(4),
               ),
             );
-          }).toList(),
+              }).toList(),
+            );
+          },
+          // 로딩 중일 때 표시할 위젯
+          loading: () => Center(child: CircularProgressIndicator()),
+          // 에러 발생 시 표시할 위젯
+          error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
         );
-      },
-      // 로딩 중일 때 표시할 위젯
-      loading: () => Center(child: CircularProgressIndicator()),
-      // 에러 발생 시 표시할 위젯
-      error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
-    );
-  }
-}
+      }
+    }
 // ------- 찜 목록 화면 내 파이어베이스의 찜 목록 상품 데이터를 불러와서 UI로 구현하는 클래스 내용 끝

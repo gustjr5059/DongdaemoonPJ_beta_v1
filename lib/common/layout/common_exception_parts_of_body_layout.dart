@@ -86,22 +86,28 @@ AppBar buildCommonAppBar({
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
-  // 앱 바 부분 수치
+  // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
   final double appBarTitleWidth = screenSize.width * (160 / referenceWidth); // 텍스트 너비
   final double appBarTitleHeight = screenSize.height * (22 / referenceHeight); // 텍스트 높이
   final double appBarTitleY = screenSize.height * (11 / referenceHeight); // 텍스트 Y 좌표
-  final double appBarLeadingIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
-  final double appBarLeadingIconHeight = screenSize.height * (28 / referenceHeight); // 아이콘 높이
-  final double appBarLeadingIconX = screenSize.width * (18 / referenceWidth); // 아이콘 X 좌표
-  final double appBarLeadingIconY = screenSize.height * (6 / referenceHeight); // 아이콘 Y 좌표
-  // 찜 목록 버튼의 크기와 위치 설정
+  // 드로워화면 버튼 부분 수치
+  final double drawerIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
+  final double drawerIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
+  final double drawerIconX = screenSize.width * (18 / referenceWidth); // 아이콘 X 좌표
+  final double drawerIconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
+  // 이전화면으로 이동 버튼 부분 수치
+  final double chevronIconWidth = screenSize.width * (24 / referenceWidth); // 아이콘 너비
+  final double chevronIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
+  final double chevronIconX = screenSize.width * (12 / referenceWidth); // 아이콘 X 좌표
+  final double chevronconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
+  // 찜 목록 버튼 부분 수치
   final double wishlistButtonWidth = screenSize.width * (44 / referenceWidth); // 찜 목록 버튼 너비
   final double wishlistButtonHeight = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
   final double wishlistButtonX = screenSize.width * (20 / referenceWidth); // 찜 목록 버튼 X 좌표
   final double wishlistButtonY = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
-
+  // ----- 앱 바 부분 수치 끝 부분
 
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
@@ -109,11 +115,11 @@ AppBar buildCommonAppBar({
   // 이전 화면으로 이동 버튼인 경우
     case LeadingType.back:
       leadingWidget = Container(
-        width: appBarLeadingIconWidth,
-        height: appBarLeadingIconHeight,
-        margin: EdgeInsets.only(left: appBarLeadingIconX, top: appBarLeadingIconY), // 아이콘 위치 설정
+        width: chevronIconWidth,
+        height: chevronIconHeight,
+        margin: EdgeInsets.only(left: chevronIconX, top: chevronconY), // 아이콘 위치 설정
         child: IconButton(
-          icon: Icon(Icons.chevron_left, size: appBarLeadingIconHeight), // 뒤로 가기 아이콘을 설정
+          icon: Icon(Icons.chevron_left, size: chevronIconHeight), // 뒤로 가기 아이콘을 설정
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
@@ -129,13 +135,13 @@ AppBar buildCommonAppBar({
   // 드로워화면 버튼인 경우
     case LeadingType.drawer:
       leadingWidget = Container(
-        width: appBarLeadingIconWidth,
-        height: appBarLeadingIconHeight,
-        margin: EdgeInsets.only(left: appBarLeadingIconX, top: appBarLeadingIconY), // 아이콘 위치 설정
+        width: drawerIconWidth,
+        height: drawerIconHeight,
+        margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY), // 아이콘 위치 설정
         child: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: Icon(Icons.menu, size: appBarLeadingIconHeight), // 메뉴 아이콘 크기 설정
+              icon: Icon(Icons.menu, size: drawerIconHeight), // 메뉴 아이콘 크기 설정
               onPressed: () => Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
             );
           },
