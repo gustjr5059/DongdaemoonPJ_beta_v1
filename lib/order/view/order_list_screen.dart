@@ -171,6 +171,29 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double orderlistAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double orderlistAppBarTitleX = screenSize.height * (25 / referenceHeight);
+    final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double orderlistWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double orderlistWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double orderlistWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
+
     // orderListProvider를 통해 발주 데이터를 구독.
     final ordersAsyncValue = ref.watch(orderListProvider);
 
@@ -194,17 +217,31 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: 0.0,
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar(
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
                   // 공통 AppBar 빌드
-                  context: context,
-                  // 현재 context 전달
-                  ref: ref,
-                  // 참조(ref) 전달
-                  title: '발주 내역',
-                  // AppBar의 제목을 '발주 목록'로 설정
-                  leadingType: LeadingType.none,
-                  // 아무 버튼도 없음.
-                  buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    context: context,
+                    // 현재 context 전달
+                    ref: ref,
+                    // 참조(ref) 전달
+                    title: '발주 내역',
+                    // AppBar의 제목을 '발주 목록'로 설정
+                    leadingType: LeadingType.none,
+                    // 아무 버튼도 없음.
+                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    appBarTitleWidth: orderlistAppBarTitleWidth,
+                    appBarTitleHeight: orderlistAppBarTitleHeight,
+                    appBarTitleX: orderlistAppBarTitleX,
+                    appBarTitleY: orderlistAppBarTitleY,
+                    wishlistBtnWidth: orderlistWishlistBtnWidth,
+                    wishlistBtnHeight: orderlistWishlistBtnHeight,
+                    wishlistBtnX: orderlistWishlistBtnX,
+                    wishlistBtnY: orderlistWishlistBtnY,
+                  ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.

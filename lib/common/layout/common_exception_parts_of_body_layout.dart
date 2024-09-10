@@ -72,6 +72,30 @@ AppBar buildCommonAppBar({
       context, // BuildContext를 필수 인자로 받고, 각종 위젯에서 위치 정보 등을 제공받음.
   required WidgetRef ref, // WidgetRef를 필수 인자로 받음.
   required String title, // AppBar에 표시될 제목을 문자열로 받음.
+  required double appBarTitleWidth,
+  required double appBarTitleHeight,
+  required double appBarTitleX,
+  required double appBarTitleY,
+  double? drawerIconWidth,
+  double? drawerIconHeight,
+  double? drawerIconX,
+  double? drawerIconY,
+  double? chevronIconWidth,
+  double? chevronIconHeight,
+  double? chevronIconX,
+  double? chevronIconY,
+  double? wishlistBtnWidth,
+  double? wishlistBtnHeight,
+  double? wishlistBtnX,
+  double? wishlistBtnY,
+  double? homeBtnWidth,
+  double? homeBtnHeight,
+  double? homeBtnX,
+  double? homeBtnY,
+  double? cartlistBtnWidth,
+  double? cartlistBtnHeight,
+  double? cartlistBtnX,
+  double? cartlistBtnY,
   LeadingType leadingType =
       LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
@@ -80,8 +104,7 @@ AppBar buildCommonAppBar({
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
-  // 기준 화면 크기: 가로 393, 세로 852
-  final double referenceWidth = 393.0;
+  // 기준 화면 크기: 세로 852
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
@@ -89,24 +112,44 @@ AppBar buildCommonAppBar({
   // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
-  final double appBarTitleWidth = screenSize.width * (160 / referenceWidth); // 텍스트 너비
-  final double appBarTitleHeight = screenSize.height * (22 / referenceHeight); // 텍스트 높이
-  final double appBarTitleY = screenSize.height * (11 / referenceHeight); // 텍스트 Y 좌표
-  // 드로워화면 버튼 부분 수치
-  final double drawerIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
-  final double drawerIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
-  final double drawerIconX = screenSize.width * (18 / referenceWidth); // 아이콘 X 좌표
-  final double drawerIconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
-  // 이전화면으로 이동 버튼 부분 수치
-  final double chevronIconWidth = screenSize.width * (24 / referenceWidth); // 아이콘 너비
-  final double chevronIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
-  final double chevronIconX = screenSize.width * (12 / referenceWidth); // 아이콘 X 좌표
-  final double chevronconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
-  // 찜 목록 버튼 부분 수치
-  final double wishlistButtonWidth = screenSize.width * (44 / referenceWidth); // 찜 목록 버튼 너비
-  final double wishlistButtonHeight = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
-  final double wishlistButtonX = screenSize.width * (20 / referenceWidth); // 찜 목록 버튼 X 좌표
-  final double wishlistButtonY = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
+  // final double appBarTitleWidth = screenSize.width * (160 / referenceWidth); // 텍스트 너비
+  // final double appBarTitleHeight = screenSize.height * (22 / referenceHeight); // 텍스트 높이
+  // final double appBarTitleY = screenSize.height * (11 / referenceHeight); // 텍스트 Y 좌표
+  // // 드로워화면 버튼 부분 수치
+  // final double drawerIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
+  // final double drawerIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
+  // final double drawerIconX = screenSize.width * (18 / referenceWidth); // 아이콘 X 좌표
+  // final double drawerIconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
+  // // 이전화면으로 이동 버튼 부분 수치
+  // final double chevronIconWidth = screenSize.width * (24 / referenceWidth); // 아이콘 너비
+  // final double chevronIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
+  // final double chevronIconX = screenSize.width * (12 / referenceWidth); // 아이콘 X 좌표
+  // final double chevronconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
+
+  // // case 2
+  // // 찜 목록 버튼 부분 수치
+  // final double wishlistBtnC2Width = screenSize.width * (44 / referenceWidth); // 찜 목록 버튼 너비
+  // final double wishlistBtnC2Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
+  // final double wishlistBtnC2X = screenSize.width * (10 / referenceWidth); // 찜 목록 버튼 X 좌표
+  // final double wishlistBtnC2Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
+  //
+  // // case 3
+  // // 찜 목록 버튼 부분 수치
+  // final double wishlistBtnC3Width = screenSize.width * (36 / referenceWidth); // 찜 목록 버튼 너비
+  // final double wishlistBtnC3Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
+  // final double wishlistBtnC3X = screenSize.width * (6 / referenceWidth); // 찜 목록 버튼 X 좌표
+  // final double wishlistBtnC3Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
+  // // 홈 버튼 부분 수치
+  // final double homeBtnC3Width = screenSize.width * (36 / referenceWidth); // 찜 목록 버튼 너비
+  // final double homeBtnC3Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
+  // final double homeBtnC3X = screenSize.width * (6 / referenceWidth); // 찜 목록 버튼 X 좌표
+  // final double homeBtnC3Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
+  // // 요청목록 버튼 부분 수치
+  // final double cartlistBtnC3Width = screenSize.width * (36 / referenceWidth); // 찜 목록 버튼 너비
+  // final double cartlistBtnC3Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
+  // final double cartlistBtnC3X = screenSize.width * (6 / referenceWidth); // 찜 목록 버튼 X 좌표
+  // final double cartlistBtnC3Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
+
   // ----- 앱 바 부분 수치 끝 부분
 
   // 왼쪽 상단에 표시될 위젯을 설정함.
@@ -114,39 +157,54 @@ AppBar buildCommonAppBar({
   switch (leadingType) {
   // 이전 화면으로 이동 버튼인 경우
     case LeadingType.back:
-      leadingWidget = Container(
-        width: chevronIconWidth,
-        height: chevronIconHeight,
-        margin: EdgeInsets.only(left: chevronIconX, top: chevronconY), // 아이콘 위치 설정
-        child: IconButton(
-          icon: Icon(Icons.chevron_left, size: chevronIconHeight), // 뒤로 가기 아이콘을 설정
-          onPressed: () {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('이전 화면으로 이동할 수 없습니다.') // 이전 페이지로 돌아갈 수 없다는 메시지 표시
-              ));
-            }
-          },
-        ),
-      );
+      if (chevronIconWidth != null &&
+          chevronIconHeight != null &&
+          chevronIconX != null &&
+          chevronIconY != null) {
+        leadingWidget = Container(
+          width: chevronIconWidth,
+          height: chevronIconHeight,
+          margin: EdgeInsets.only(left: chevronIconX, top: chevronIconY),
+          // 아이콘 위치 설정
+          child: IconButton(
+            icon: Icon(Icons.chevron_left, size: chevronIconHeight),
+            // 뒤로 가기 아이콘을 설정
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        '이전 화면으로 이동할 수 없습니다.') // 이전 페이지로 돌아갈 수 없다는 메시지 표시
+                ));
+              }
+            },
+          ),
+        );
+      }
       break;
   // 드로워화면 버튼인 경우
     case LeadingType.drawer:
-      leadingWidget = Container(
-        width: drawerIconWidth,
-        height: drawerIconHeight,
-        margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY), // 아이콘 위치 설정
-        child: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(Icons.menu, size: drawerIconHeight), // 메뉴 아이콘 크기 설정
-              onPressed: () => Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
-            );
-          },
-        ),
-      );
+      if (drawerIconWidth != null &&
+          drawerIconHeight != null &&
+          drawerIconX != null &&
+          drawerIconY != null) {
+        leadingWidget = Container(
+          width: drawerIconWidth,
+          height: drawerIconHeight,
+          margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY),
+          // 아이콘 위치 설정
+          child: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.menu, size: drawerIconHeight), // 메뉴 아이콘 크기 설정
+                onPressed: () =>
+                    Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
+              );
+            },
+          ),
+        );
+      }
       break;
   // 버튼이 없는 경우
     case LeadingType.none:
@@ -163,61 +221,138 @@ AppBar buildCommonAppBar({
       break;
     case 2:
       // 케이스 2: 찜 목록 버튼만 노출
-      actions.add(
-        Container(
-          width: wishlistButtonWidth,
-          height: wishlistButtonHeight,
-          margin: EdgeInsets.only(
-            right: wishlistButtonX,
-            top: wishlistButtonY
+      if (wishlistBtnWidth != null &&
+          wishlistBtnHeight != null &&
+          wishlistBtnX != null &&
+          wishlistBtnY != null) {
+        actions.add(
+          Container(
+            width: wishlistBtnWidth,
+            height: wishlistBtnHeight,
+            margin: EdgeInsets.only(
+                right: wishlistBtnX,
+                top: wishlistBtnY
             ), // 찜 목록 버튼의 위치 설정
-            child:IconButton(
-              icon: Icon(Icons.favorite, color: Colors.red),
+            child: IconButton(
+              icon: Icon(Icons.favorite_border, color: Colors.black),
               // 찜 목록 아이콘을 사용함.
               // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
               // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
               // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
-              onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+              onPressed: () =>
+                  navigateToScreenAndRemoveUntil(
+                      context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
             ),
-         ),
-      );
+          ),
+        );
+      }
       break;
     case 3:
       // 케이스 3: 찜 목록 버튼, 홈 버튼 노출
-      actions.addAll([
-        IconButton(
-          icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreenAndRemoveUntil(
-              context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
-        ),
-        IconButton(
-          icon: Icon(Icons.home),
-          // HomeMainScreen()을 tabIndex=0으로 한 것은 BottomNavigationBar에서 홈 버튼을 0으로 지정한 것과 일치하게 설정
-          onPressed: () => navigateToScreenAndRemoveUntil(
-              context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
-        ),
-      ]);
+      if (wishlistBtnWidth != null &&
+          wishlistBtnHeight != null &&
+          wishlistBtnX != null &&
+          wishlistBtnY != null &&
+          homeBtnWidth != null &&
+          homeBtnHeight != null &&
+          homeBtnX != null &&
+          homeBtnY != null) {
+        actions.addAll([
+          // 찜 목록 버튼
+          Container(
+            width: wishlistBtnWidth,
+            height: wishlistBtnHeight,
+            margin: EdgeInsets.only(
+              right: wishlistBtnX,
+              top: wishlistBtnY,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.favorite_border, color: Colors.black),
+              onPressed: () =>
+                  navigateToScreenAndRemoveUntil(
+                      context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+            ),
+          ),
+          // 홈 버튼
+          Container(
+            width: homeBtnWidth,
+            height: homeBtnHeight,
+            margin: EdgeInsets.only(
+              right: homeBtnX,
+              top: homeBtnY,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.home_outlined, color: Colors.black),
+              onPressed: () =>
+                  navigateToScreenAndRemoveUntil(
+                      context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
+            ),
+          ),
+        ]);
+      }
       break;
     case 4:
-      // 케이스 4: 찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출
-      actions.addAll([
-        IconButton(
-          icon: Icon(Icons.favorite, color: Colors.red),
-          onPressed: () => navigateToScreenAndRemoveUntil(
-              context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
-        ),
-        IconButton(
-          icon: Icon(Icons.home),
-          onPressed: () => navigateToScreenAndRemoveUntil(
-              context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
-        ),
-        IconButton(
-          icon: Icon(Icons.shopping_cart),
-          onPressed: () => navigateToScreenAndRemoveUntil(
-              context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
-        ),
-      ]);
+    // 케이스 4: 찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출
+      if (wishlistBtnWidth != null &&
+          wishlistBtnHeight != null &&
+          wishlistBtnX != null &&
+          wishlistBtnY != null &&
+          homeBtnWidth != null &&
+          homeBtnHeight != null &&
+          homeBtnX != null &&
+          homeBtnY != null &&
+          cartlistBtnWidth != null &&
+          cartlistBtnHeight != null &&
+          cartlistBtnX != null &&
+          cartlistBtnY != null) {
+        actions.addAll([
+          // 찜 목록 버튼
+          Container(
+            width: wishlistBtnWidth,
+            height: wishlistBtnHeight,
+            margin: EdgeInsets.only(
+              right: wishlistBtnX,
+              top: wishlistBtnY,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.favorite_border, color: Colors.black),
+              onPressed: () =>
+                  navigateToScreenAndRemoveUntil(
+                      context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+            ),
+          ),
+          // 홈 버튼
+          Container(
+            width: homeBtnWidth,
+            height: homeBtnHeight,
+            margin: EdgeInsets.only(
+              right: homeBtnX,
+              top: homeBtnY,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.home_outlined, color: Colors.black),
+              onPressed: () =>
+                  navigateToScreenAndRemoveUntil(
+                      context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
+            ),
+          ),
+          // 장바구니 버튼
+          Container(
+            width: cartlistBtnWidth,
+            height: cartlistBtnHeight,
+            margin: EdgeInsets.only(
+              right: cartlistBtnX,
+              top: cartlistBtnY,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
+              onPressed: () =>
+                  navigateToScreenAndRemoveUntil(
+                      context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
+            ),
+          ),
+        ]);
+      }
       break;
   }
 
@@ -228,10 +363,10 @@ AppBar buildCommonAppBar({
     // AppBar 색상 설정
     toolbarHeight: appBarHeight, // 앱 바의 높이를 설정
     title: Container(
-      alignment: Alignment.center,
+      // alignment: Alignment.center,
       width: appBarTitleWidth, // 텍스트 너비 설정
       height: appBarTitleHeight, // 텍스트 높이 설정
-      margin: EdgeInsets.only(top: appBarTitleY), // 텍스트 위치 설정
+      margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY), // 텍스트 위치 설정
         // children: <Widget>[
         //   Expanded(
         //     child: Center(
@@ -785,9 +920,9 @@ Widget buildTopBarList(
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 탑 바 부분 수치
-  final double topBarListHeight = screenSize.width * (60 / referenceWidth); // 탑 바 리스트 높이
+  final double topBarListHeight = screenSize.width * (52 / referenceWidth); // 탑 바 리스트 높이
   final double topBarListX = screenSize.width * (16 / referenceWidth); // 탑 바 리스트 X 좌표
-  final double topBarBtnHeight = screenSize.height * (60 / referenceHeight); // 탑 바 버튼 높이
+  final double topBarBtnHeight = screenSize.height * (52 / referenceHeight); // 탑 바 버튼 높이
 
   // 각 카테고리를 탭했을 때 실행될 함수. 카테고리에 따라 다른 페이지로 이동함.
   return Consumer(

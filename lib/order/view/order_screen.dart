@@ -189,6 +189,34 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
     final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double orderAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double orderAppBarTitleX = screenSize.height * (75 / referenceHeight);
+    final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double orderChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double orderChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double orderChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double orderChevronIconY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double orderWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double orderWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double orderWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
+
 
     return GestureDetector(
         onTap: () {
@@ -222,6 +250,18 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                     leadingType: LeadingType.back,
                     // 이전화면으로 이동 버튼.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    appBarTitleWidth: orderAppBarTitleWidth,
+                    appBarTitleHeight: orderAppBarTitleHeight,
+                    appBarTitleX: orderAppBarTitleX,
+                    appBarTitleY: orderAppBarTitleY,
+                    chevronIconWidth: orderChevronIconWidth,
+                    chevronIconHeight: orderChevronIconHeight,
+                    chevronIconX: orderChevronIconX,
+                    chevronIconY: orderChevronIconY,
+                    wishlistBtnWidth: orderWishlistBtnWidth,
+                    wishlistBtnHeight: orderWishlistBtnHeight,
+                    wishlistBtnX: orderWishlistBtnX,
+                    wishlistBtnY: orderWishlistBtnY,
                   ),
                 ),
                 leading: null,

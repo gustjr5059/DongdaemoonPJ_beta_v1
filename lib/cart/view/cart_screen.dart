@@ -169,6 +169,33 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   @override
   Widget build(BuildContext context) {
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double cartlistAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
+    final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double cartlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 홈 버튼 수치 (Case 3)
+    final double cartlistHomeBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double cartlistHomeBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double cartlistHomeBtnX = screenSize.width * (1 / referenceWidth);
+    final double cartlistHomeBtnY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 3)
+    final double cartlistWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double cartlistWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
+    final double cartlistWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -189,17 +216,35 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: 0.0,
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar(
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
                   // 공통 AppBar 빌드
-                  context: context,
-                  // 현재 context 전달
-                  ref: ref,
-                  // 참조(ref) 전달
-                  title: '요청품목',
-                  // AppBar의 제목을 '장바구니'로 설정
-                  leadingType: LeadingType.none,
-                  // 버튼 없음.
-                  buttonCase: 3, // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
+                    context: context,
+                    // 현재 context 전달
+                    ref: ref,
+                    // 참조(ref) 전달
+                    title: '요청품목',
+                    // AppBar의 제목을 '장바구니'로 설정
+                    leadingType: LeadingType.none,
+                    // 버튼 없음.
+                    buttonCase: 3, // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
+                    appBarTitleWidth: cartlistAppBarTitleWidth,
+                    appBarTitleHeight: cartlistAppBarTitleHeight,
+                    appBarTitleX: cartlistAppBarTitleX,
+                    appBarTitleY: cartlistAppBarTitleY,
+                    homeBtnWidth: cartlistHomeBtnWidth,
+                    homeBtnHeight: cartlistHomeBtnHeight,
+                    homeBtnX: cartlistHomeBtnX,
+                    homeBtnY: cartlistHomeBtnY,
+                    wishlistBtnWidth: cartlistWishlistBtnWidth,
+                    wishlistBtnHeight: cartlistWishlistBtnHeight,
+                    wishlistBtnX: cartlistWishlistBtnX,
+                    wishlistBtnY: cartlistWishlistBtnY,
+                  ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.

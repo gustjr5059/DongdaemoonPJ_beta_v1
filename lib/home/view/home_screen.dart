@@ -596,6 +596,24 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double homeScreenSmallBannerViewHeight =
         screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
 
+    // AppBar 관련 수치 동적 적용
+    final double homeAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double homeAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 드로어 아이콘 관련 수치 동적 적용
+    final double homeDrawerIconWidth = screenSize.width * (28 / referenceWidth);
+    final double homeDrawerIconHeight = screenSize.height * (24 / referenceHeight);
+    final double homeDrawerIconX = screenSize.width * (18 / referenceWidth);
+    final double homeDrawerIconY = screenSize.height * (10 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double homeWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double homeWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double homeWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -628,6 +646,18 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                     leadingType: LeadingType.drawer,
                     // 아무 버튼도 없음.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    appBarTitleWidth: homeAppBarTitleWidth,
+                    appBarTitleHeight: homeAppBarTitleHeight,
+                    appBarTitleX: homeAppBarTitleX,
+                    appBarTitleY: homeAppBarTitleY,
+                    drawerIconWidth: homeDrawerIconWidth,
+                    drawerIconHeight: homeDrawerIconHeight,
+                    drawerIconX: homeDrawerIconX,
+                    drawerIconY: homeDrawerIconY,
+                    wishlistBtnWidth: homeWishlistBtnWidth,
+                    wishlistBtnHeight: homeWishlistBtnHeight,
+                    wishlistBtnX: homeWishlistBtnX,
+                    wishlistBtnY: homeWishlistBtnY,
                   ),
                 ),
                 leading: null,

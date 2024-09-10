@@ -17,7 +17,6 @@ import 'package:flutter/services.dart';
 
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
-import '../../message/provider/message_all_provider.dart';
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart'; // 공통 UI 컴포넌트 파일
@@ -157,6 +156,34 @@ class _OrderListDetailScreenState
   @override
   Widget build(BuildContext context) {
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double orderlistDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double orderlistDtAppBarTitleX = screenSize.width * (158 / referenceHeight);
+    final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double orderlistDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double orderlistDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double orderlistDtChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double orderlistDtChevronIconY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double orderlistDtWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double orderlistDtWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double orderlistDtWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double orderlistDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
+
     final orderListDetailAsyncValue = ref.watch(orderListDetailProvider(widget.orderNumber));
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -179,7 +206,12 @@ class _OrderListDetailScreenState
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: 0.0,
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar(
+            // 확장 높이 설정
+            // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.pin,
+              // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                background: buildCommonAppBar(
                   // 공통 AppBar 빌드
                   context: context,
                   // 현재 context 전달
@@ -190,6 +222,19 @@ class _OrderListDetailScreenState
                   leadingType: LeadingType.back,
                   // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
                   buttonCase: 2, // 버튼 케이스를 2로 설정
+                  appBarTitleWidth: orderlistDtAppBarTitleWidth,
+                  appBarTitleHeight: orderlistDtAppBarTitleHeight,
+                  appBarTitleX: orderlistDtAppBarTitleX,
+                  appBarTitleY: orderlistDtAppBarTitleY,
+                  chevronIconWidth: orderlistDtChevronIconWidth,
+                  chevronIconHeight: orderlistDtChevronIconHeight,
+                  chevronIconX: orderlistDtChevronIconX,
+                  chevronIconY: orderlistDtChevronIconY,
+                  wishlistBtnWidth: orderlistDtWishlistBtnWidth,
+                  wishlistBtnHeight: orderlistDtWishlistBtnHeight,
+                  wishlistBtnX: orderlistDtWishlistBtnX,
+                  wishlistBtnY: orderlistDtWishlistBtnY,
+                  ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.

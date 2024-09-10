@@ -200,6 +200,22 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
   @override
   Widget build(BuildContext context) {
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double wishlistAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
+    final double wishlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double wishlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double wishlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+
     // List<ProductContent> wishlistItems = ref.watch(wishlistProvider);
 
     return Scaffold(
@@ -213,12 +229,22 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                 floating: false,
                 pinned: true,
                 expandedHeight: 0.0,
-                title: buildCommonAppBar(
-                  context: context,
-                  ref: ref,
-                  title: '찜 목록',
-                  leadingType: LeadingType.none,
-                  buttonCase: 1,
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    context: context,
+                    ref: ref,
+                    title: '찜 목록',
+                    leadingType: LeadingType.none,
+                    buttonCase: 1,
+                    appBarTitleWidth: wishlistAppBarTitleWidth,
+                    appBarTitleHeight: wishlistAppBarTitleHeight,
+                    appBarTitleX: wishlistAppBarTitleX,
+                    appBarTitleY: wishlistAppBarTitleY,
+                  ),
                 ),
                 leading: null,
                 // backgroundColor: BUTTON_COLOR,

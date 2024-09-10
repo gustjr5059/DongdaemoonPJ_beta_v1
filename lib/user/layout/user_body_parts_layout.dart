@@ -6,7 +6,6 @@ import '../../common/const/colors.dart'; // 공통 색상 상수를 가져옴
 import '../../common/layout/common_body_parts_layout.dart'; // 공통 레이아웃을 가져옴
 import '../../common/layout/common_exception_parts_of_body_layout.dart'; // 공통 예외 처리 레이아웃을 가져옴
 import '../../inquiry/view/inquiry_screen.dart'; // 문의 화면을 가져옴
-import '../../message/view/message_screen.dart'; // 메시지 화면을 가져옴
 import '../../order/provider/order_all_providers.dart'; // 주문 관련 프로바이더를 가져옴
 import '../../order/view/order_list_screen.dart'; // 주문 목록 화면을 가져옴
 import '../../product/layout/product_body_parts_layout.dart'; // 제품 관련 레이아웃을 가져옴

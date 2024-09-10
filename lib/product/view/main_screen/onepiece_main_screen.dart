@@ -424,6 +424,25 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
 
+    // AppBar 관련 수치 동적 적용
+    final double productMainAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productMainAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.height * (75 / referenceHeight);
+    final double productMainAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double productMainChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double productMainChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double productMainChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double productMainChevronIconY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double productMainWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
+    final double productMainWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double productMainWishlistBtnX = screenSize.width * (1 / referenceWidth);
+    final double productMainWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -443,18 +462,35 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen>
                 pinned: true,
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: expandedHeight,
+                // 확장된 높이를 0으로 설정하여 확장 기능 제거
                 // 확장 높이 설정
                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
+                    // 공통 AppBar 빌드
                     context: context,
+                    // 현재 context 전달
                     ref: ref,
+                    // 참조(ref) 전달
                     title: '원피스 메인',
+                    // AppBar의 제목을 '원피스 메인'로 설정
                     leadingType: LeadingType.back,
-                    // 이전화면으로 이동 버튼.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
+                    buttonCase: 2, // 버튼 케이스를 2로 설정
+                    appBarTitleWidth: productMainAppBarTitleWidth,
+                    appBarTitleHeight: productMainAppBarTitleHeight,
+                    appBarTitleX: productMainAppBarTitleX,
+                    appBarTitleY: productMainAppBarTitleY,
+                    chevronIconWidth: productMainChevronIconWidth,
+                    chevronIconHeight: productMainChevronIconHeight,
+                    chevronIconX: productMainChevronIconX,
+                    chevronIconY: productMainChevronIconY,
+                    wishlistBtnWidth: productMainWishlistBtnWidth,
+                    wishlistBtnHeight: productMainWishlistBtnHeight,
+                    wishlistBtnX: productMainWishlistBtnX,
+                    wishlistBtnY: productMainWishlistBtnY,
                   ),
                 ),
                 leading: null,

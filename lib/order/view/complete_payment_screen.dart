@@ -165,6 +165,23 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
   // 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double completePaymentAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (90 / referenceHeight);
+    final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
     final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
 
@@ -190,12 +207,22 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                     floating: false, // 스크롤 시 앱바 고정
                     pinned: true, // 앱바를 상단에 고정
                     expandedHeight: 0.0, // 확장되지 않도록 설정
-                    title: buildCommonAppBar(
-                      context: context,
-                      ref: ref,
-                      title: '업데이트 요청 완료', // 앱바 제목 설정
-                      leadingType: LeadingType.none, // 리딩 아이콘 없음
-                      buttonCase: 1, // 버튼 타입 설정
+                    // 확장 높이 설정
+                    // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                      background: buildCommonAppBar(
+                        context: context,
+                        ref: ref,
+                        title: '업데이트 요청 완료', // 앱바 제목 설정
+                        leadingType: LeadingType.none, // 리딩 아이콘 없음
+                        buttonCase: 1, // 버튼 타입 설정
+                        appBarTitleWidth: completePaymentAppBarTitleWidth,
+                        appBarTitleHeight: completePaymentAppBarTitleHeight,
+                        appBarTitleX: completePaymentAppBarTitleX,
+                        appBarTitleY: completePaymentAppBarTitleY,
+                      ),
                     ),
                     leading: null,
                     // backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정
