@@ -291,7 +291,6 @@ class _PolaDetailProductScreenState
                               return Column(
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
-                                  SizedBox(height: 40),
                                   ProductDetailScreenTabs(
                                         productInfoContent: ProductInfoContents(product: product),
                                         inquiryContent: ProductInquiryContents(),

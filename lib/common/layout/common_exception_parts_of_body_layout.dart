@@ -574,44 +574,90 @@ Widget buildCommonBottomNavigationBar(
         selectedSize: selectedSize ?? '', // 선택한 사이즈 설정
       );
 
-      // UI 패딩 설정
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // 좌우 20.0, 상하 10.0의 여백 추가
-        child: Row( // 수평으로 배치되는 Row 위젯 사용
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Row 내부 위젯들을 양 끝에 배치
-          children: [
-            Expanded( // 내부 위젯의 가로 공간을 최대한 확장
-              child: ElevatedButton(
-                onPressed: () => onCartButtonPressed(context, ref, product), // 요청품목 버튼 클릭 시 실행될 함수 지정
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
-                  foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
+      // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+      final Size screenSize = MediaQuery.of(context).size;
+
+      // 기준 화면 크기: 가로 393, 세로 852
+      final double referenceWidth = 393.0;
+      final double referenceHeight = 852.0;
+
+      // 비율을 기반으로 동적으로 크기와 위치 설정
+
+      // 버튼 관련 수치 동적 적용
+      final double bottomBtnC2Width = screenSize.width * (166 / referenceWidth);
+      final double bottomBtnC2Height = screenSize.height * (50 / referenceHeight);
+      final double bottomBtnC2X = screenSize.width * (20 / referenceWidth);
+      final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
+      final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
+      final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
+
+
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
+      child: SafeArea(
+          bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.098, // 화면 높이에 비례하여 동적 높이 설정
+              padding: EdgeInsets.only(bottom: bottomBarC2Y),
+              // UI 패딩 설정
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: bottomBtnC2X, vertical: bottomBtnC2Y), // 좌우 bottomBtnC2X, 상하 bottomBtnC2Y의 여백 추가
+                child: Row( // 수평으로 배치되는 Row 위젯 사용
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Row 내부 위젯들을 양 끝에 배치
+                  children: [
+                    Container(
+                      width: bottomBtnC2Width,
+                      height: bottomBtnC2Height,
+                      child: ElevatedButton(
+                        onPressed: () => onCartButtonPressed(context, ref, product), // 요청품목 버튼 클릭 시 실행될 함수 지정
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor:  Colors.white, // 텍스트 색상
+                          backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                        ),
+                        child: Text('요청품목 담기',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: bottomBtnFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ), // 버튼 텍스트 설정
+                      ),
+                    ),
+                    SizedBox(width: 10), // 버튼들 사이에 10픽셀 너비의 여백 추가
+                    Container(
+                      width: bottomBtnC2Width,
+                      height: bottomBtnC2Height,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
+                          ref.read(orderItemsProvider.notifier).setOrderItems([orderProduct]); // 주문 아이템 상태 업데이트
+                          // OrderMainScreen으로 화면 전환
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => OrderMainScreen(
+                            )),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor:  Colors.white, // 텍스트 색상
+                          backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                        ),
+                        child: Text('바로 발주',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: bottomBtnFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            ),
+                        ),// 텍스트를 굵게 설정 // 버튼 텍스트 설정
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text('요청품목 담기'), // 버튼 텍스트 설정
               ),
             ),
-            SizedBox(width: 10), // 버튼들 사이에 10픽셀 너비의 여백 추가
-            Expanded( // 내부 위젯의 가로 공간을 최대한 확장
-              child: ElevatedButton(
-                onPressed: () {
-                  // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
-                  ref.read(orderItemsProvider.notifier).setOrderItems([orderProduct]); // 주문 아이템 상태 업데이트
-                  // OrderMainScreen으로 화면 전환
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => OrderMainScreen(
-                    )),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: BUTTON_COLOR, // 버튼의 배경색 설정
-                  foregroundColor: INPUT_BG_COLOR, // 버튼 텍스트 색상 설정
-                ),
-                child: Text('바로 발주'), // 버튼 텍스트 설정
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        );
 
   // '전체 체크박스', '합계' '발주하기' 버튼을 UI로 구현한 케이스 - 장바구니 화면에 구현
     case 3:

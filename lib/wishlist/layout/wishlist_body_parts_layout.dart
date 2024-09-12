@@ -347,7 +347,7 @@ class WishlistItemsList extends ConsumerWidget {
                                       borderRadius: BorderRadius.circular(37), // 버튼을 둥글게 설정함
                                       side: BorderSide(color: Color(0xFF6F6F6F)), // 테두리 색상을 설정함
                                     ),
-                                    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색과 동일하게 설정함
+                                    backgroundColor: Colors.white, // 버튼 배경색을 앱 배경색과 동일하게 설정함
                                   ),
                                   child: Text(
                                     '삭제',

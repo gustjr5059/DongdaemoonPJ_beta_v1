@@ -1169,32 +1169,50 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
         buildProductImageSliderSection(context, product, ref, pageController, product.docId), // 이미지 슬라이더 섹션
-        SizedBox(height: 10),
-        // 상단 여백을 10으로 설정.
-        CommonCardView(
-          content: buildProductBriefIntroAndPriceInfoSection(context, ref, product), // 제품 소개 및 가격 정보 부분 섹션
-          backgroundColor: BEIGE_COLOR, // 앱 배경색과 구분되는 흰색 계열
-          elevation: 4.0, // 그림자 효과
-          margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
-          padding: const EdgeInsets.all(1.0), // 카드 내부 여백을 1.0으로 설정.
-        ),
         // 제품 소개 부분과 가격 부분을 표시하는 위젯을 호출.
-        SizedBox(height: 10),
-        // 제품 소개와 가격 부분 다음 섹션 사이의 여백을 10으로 설정.
-        CommonCardView(
-          content: ProductColorAndSizeSelection(product: product), // 색상과 사이즈 선택 관련 섹션
-          backgroundColor: BEIGE_COLOR, // 앱 배경색과 구분되는 연한 회색 계열
-          elevation: 4.0, // 그림자 효과
-          margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
-          padding: const EdgeInsets.all(1.0), // 카드 내부 여백을 1.0으로 설정.
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+            ),
+          ),
+          child: CommonCardView(
+            content: buildProductBriefIntroAndPriceInfoSection(context, ref, product), // 제품 소개 및 가격 정보 부분 섹션
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0, // 그림자 효과 0
+            margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+            padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 0.0으로 설정.
+          ),
         ),
-        SizedBox(height: 10),
-        CommonCardView(
-          content: buildProductSelectOptionsSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
-          backgroundColor: BEIGE_COLOR,
-          elevation: 4.0,
-          margin: const EdgeInsets.symmetric(horizontal: 0.0),
-          padding: const EdgeInsets.all(1.0),
+        // 제품 색상과 사이즈 부분을 표시하는 클래스를 호출.
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+            ),
+          ),
+          child: CommonCardView(
+            content: ProductColorAndSizeSelection(product: product), // 색상과 사이즈 선택 관련 섹션
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0, // 그림자 효과 0
+            margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+            padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 1.0으로 설정.
+          ),
+        ),
+        // 제품 선택한 색상과 사이즈 부분을 표시하는 위젯을 호출.
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+            ),
+          ),
+          child: CommonCardView(
+            content: buildProductSelectOptionsSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
+            backgroundColor: Color(0xFFEEEEEE),
+            elevation: 0.0,
+            margin: const EdgeInsets.symmetric(horizontal: 0.0),
+            padding: const EdgeInsets.all(0.0),
+          ),
         ),
       ],
     ),
@@ -1294,64 +1312,110 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
 // ------ buildProductBriefIntroAndPriceInfoSection 위젯 시작: 제품 소개 및 가격 정보 부분을 구현.
 Widget buildProductBriefIntroAndPriceInfoSection(
     BuildContext context, WidgetRef ref, ProductContent product) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 섹션 내 x, y 부분 수치
+  final double sectionX = screenSize.width * (24 / referenceWidth);
+  final double section1Y = screenSize.width * (30 / referenceHeight);
+  final double section2Y = screenSize.width * (10 / referenceHeight);
+  final double section3Y = screenSize.width * (1 / referenceHeight);
+  final double width1X = screenSize.width * (15 / referenceWidth);
+
+  // 상품번호 텍스트 부분 수치
+  final double productNumberFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 크기
+  // 상품 설명 텍스트 부분 수치
+  final double productIntroductionFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+  // 상품 원가 텍스트 부분 수치
+  final double productOriginalPriceFontSize = screenSize.height * (18 / referenceHeight); // 텍스트 크기
+  // 상품 할인가 텍스트 부분 수치
+  final double productDiscountPriceFontSize = screenSize.height * (24 / referenceHeight); // 텍스트 크기
+  // 상품 할인율 텍스트 부분 수치
+  final double productDiscountPercentFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+
+
   final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'); // 정규식을 사용하여 천 단위로 쉼표를 추가.
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0), // 수평 패딩을 20.0으로 설정
+    padding: EdgeInsets.only(left: sectionX, right: sectionX), // 좌/우 패딩을 sectionX로 설정
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
       children: [
         // 제품 번호를 표시함.
         if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
           Padding(
-            padding: const EdgeInsets.only(top: 8.0), // 상단 패딩을 8.0으로 설정
+            padding: EdgeInsets.only(top: section1Y), // 상단 패딩을 section1Y로 설정
             child: Text(
               '상품번호: ${product.productNumber}', // productNumber 내용을 표시
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
+              style: TextStyle(
+                  fontSize: productNumberFontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  color: Colors.black,
+              ), // 글자 크기를 14로 설정
             ),
           ),
         // 제품 간단한 소개를 표시함.
         if (product.briefIntroduction != null) // briefIntroduction이 null이 아닌 경우에만 표시
           Padding(
-            padding: const EdgeInsets.only(top: 8.0), // 상단 패딩을 8.0으로 설정
+            padding: EdgeInsets.only(top: section2Y), // 상단 패딩을 section2Y로 설정
             child: Text(
               product.briefIntroduction!, // briefIntroduction 내용을 표시
-              style: TextStyle(fontSize: 23), // 글자 크기를 23으로 설정
+              style: TextStyle(
+                fontSize: productIntroductionFontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+                color: Colors.black,
+              ),
               maxLines: 2, // 최대 2줄로 표시
               overflow: TextOverflow.visible, // 넘치는 텍스트를 표시
             ),
           ),
-        SizedBox(height: 15), // 높이 15의 간격을 추가
         // 원래 가격을 표시함. 소수점은 표시하지 않음.
         if (product.originalPrice != null) // originalPrice가 null이 아닌 경우에만 표시
           Padding(
-            padding: const EdgeInsets.only(top: 2.0), // 상단 패딩을 2.0으로 설정
+            padding: EdgeInsets.only(top: section1Y), // 상단 패딩을 section1Y로 설정
             child: Text(
               '${product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', // 원래 가격을 표시, 소수점 없음
               style: TextStyle(
-                fontSize: 18, // 글자 크기를 18로 설정
+                fontSize: productOriginalPriceFontSize,
                 decoration: TextDecoration.lineThrough, // 취소선을 추가
-                color: Colors.grey[500], // 색상을 연한 회색으로 설정
-                decorationColor: Colors.grey[500], // 취소선 색상을 연한 회색으로 설정
+                color: Color(0xFF999999), // 색상을 연한 회색으로 설정
+                decorationColor: Colors.grey[700], // 취소선 색상을 진한 회색으로 설정
+                fontFamily: 'NanumGothic',
               ),
             ),
           ),
         // 할인된 가격을 표시함. 소수점은 표시하지 않음.
         if (product.discountPrice != null) // discountPrice가 null이 아닌 경우에만 표시
           Padding(
-            padding: const EdgeInsets.only(top: 2.0), // 상단 패딩을 2.0으로 설정
+            padding: EdgeInsets.only(top: section3Y), // 상단 패딩을 section2Y로 설정
             child: Row(
               children: [
                 Text(
                   '${product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', // 할인된 가격을 표시, 소수점 없음
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold), // 글자 크기를 25로 설정하고 볼드체 적용
+                    style: TextStyle(
+                      fontSize: productDiscountPriceFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'NanumGothic',
+                    ),
                 ),
-                SizedBox(width: 8), // 너비 8의 간격을 추가
+                SizedBox(width: width1X), // 간격을 추가
                 // 할인율을 빨간색으로 표시함.
                 if (product.discountPercent != null) // discountPercent가 null이 아닌 경우에만 표시
                   Text(
                     '${product.discountPercent!.toStringAsFixed(0)}%', // 할인율을 표시, 소수점 없음
                     style: TextStyle(
-                        fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold), // 글자 크기를 25로 설정하고, 색상을 빨간색으로 설정, 볼드체 적용
+                      fontSize: productDiscountPercentFontSize,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.red,
+                      fontFamily: 'NanumGothic',
+                    ),
                   ),
                 Spacer(), // 할인율과의 간격 공간 생성
                 // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
@@ -1361,7 +1425,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
               ],
             ),
           ),
-        SizedBox(height: 10), // 높이 10의 간격을 추가
+        SizedBox(height: section1Y),
       ],
     ),
   );
@@ -1406,21 +1470,56 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
   Widget build(BuildContext context) {
     final product = widget.product;
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 섹션 내 x, y 부분 수치
+    final double sectionX = screenSize.width * (24 / referenceWidth);
+    final double section1Y = screenSize.width * (40 / referenceHeight);
+    final double section2Y = screenSize.width * (8 / referenceHeight);
+    final double width1X = screenSize.width * (57 / referenceWidth);
+    final double width2X = screenSize.width * (12 / referenceWidth);
+    final double width3X = screenSize.width * (45 / referenceWidth);
+
+    // 색상 텍스트 부분 수치
+    final double colorFontSize = screenSize.height * (16 / referenceHeight);
+    // 색상 이미지 데이터 부분 수치
+    final double colorImageLength = screenSize.width * (24 / referenceWidth);
+    // 색상 텍스트 데이터 부분 수치
+    final double colorTextSize = screenSize.width * (16 / referenceWidth);
+    // 사이즈 텍스트 부분 수치
+    final double sizeFontSize = screenSize.height * (16 / referenceHeight);
+    // 사이즈 텍스트 데이터 부분 수치
+    final double sizeTextSize = screenSize.width * (16 / referenceWidth);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0), // 좌우 여백을 20으로 설정.
+      padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y), // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             // 자식 위젯들을 왼쪽 정렬로 배치.
             children: [
-              Text('색상', style: TextStyle(fontSize: 16)), // '색상' 라벨을 표시.
-              SizedBox(width: 63), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 63으로 설정.
+              Text('색상',
+                style: TextStyle(
+                  fontSize: colorFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'NanumGothic',
+                )
+              ),// '색상' 라벨을 표시.
+              SizedBox(width: width1X), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 width1X로 설정.
               Expanded(
                 // 드롭다운 버튼을 화면 너비에 맞게 확장.
                 child: DropdownButton<String>(
                   isExpanded: true,
                   // 드롭다운 버튼의 너비를 최대로 확장.
+                  underline: SizedBox.shrink(),
+                  // 아래 선을 보이지 않게 설정.
                   value: ref.watch(colorSelectionUrlProvider),
                   // 선택된 색상 값을 가져옴.
                   onChanged: (newValue) {
@@ -1439,9 +1538,16 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                     child: Row(
                       children: [
                         Image.network(option['url'],
-                            width: 20, height: 20), // 색상을 나타내는 이미지를 표시.
-                        SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
-                        Text(option['text']), // 색상의 텍스트 설명을 표시.
+                            width: colorImageLength, height: colorImageLength), // 색상을 나타내는 이미지를 표시.
+                        SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
+                        Text(option['text'],
+                          style: TextStyle(
+                            fontSize: colorTextSize,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontFamily: 'NanumGothic',
+                          ),
+                        ),// 색상의 텍스트 설명을 표시.
                       ],
                     ),
                   ))
@@ -1450,18 +1556,27 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
               ),
             ],
           ),
-          SizedBox(height: 10), // 색상 선택과 사이즈 선택 사이의 수직 간격을 10으로 설정.
+          SizedBox(height: section2Y), // 색상 선택과 사이즈 선택 사이의 수직 간격을 section2Y로 설정.
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             // 자식 위젯들을 왼쪽 정렬로 배치.
             children: [
-              Text('사이즈', style: TextStyle(fontSize: 16)), // '사이즈' 라벨을 표시.
-              SizedBox(width: 52), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 52로 설정.
+              Text('사이즈',
+                  style: TextStyle(
+                    fontSize: sizeFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'NanumGothic',
+                  )
+              ), // '사이즈' 라벨을 표시.
+              SizedBox(width: width3X), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 width3X로 설정.
               Expanded(
                 // 드롭다운 버튼을 화면 너비에 맞게 확장.
                 child: DropdownButton<String>(
                   isExpanded: true,
                   // 드롭다운 버튼의 너비를 최대로 확장.
+                  underline: SizedBox.shrink(),
+                  // 아래 선을 보이지 않게 설정.
                   value: ref.watch(sizeSelectionIndexProvider),
                   // 선택된 사이즈 값을 가져옴.
                   onChanged: (newValue) {
@@ -1471,11 +1586,19 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                   items: product.sizes
                       ?.map((size) => DropdownMenuItem<String>(
                     value: size, // 각 사이즈를 값으로 사용.
-                    child: Text(size), // 사이즈 텍스트를 표시.
+                    child: Text(size,
+                      style: TextStyle(
+                        fontSize: sizeTextSize,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'NanumGothic',
+                      )
+                    ), // 사이즈 텍스트를 표시.
                   ))
                       .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
                 ),
               ),
+              SizedBox(height: section1Y)
             ],
           ),
         ],
@@ -1486,7 +1609,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
 // ------ buildColorAndSizeSelection 클래스 끝: 색상 및 사이즈 선택 부분을 구현.
 
 // ------ buildProductSelectOptionsSelection 위젯 시작: 선택한 색상, 선택한 사이즈 부분을 구현.
-// 선택한 색상, 사이즈, 수량, 총 가격을 표시하는 위젯을 생성하는 함수.
+// 선택한 색상, 사이즈를 표시하는 위젯을 생성하는 함수.
 Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, ProductContent product) {
   // 선택한 색상 URL을 가져옴.
   final selectedColorUrl = ref.watch(colorSelectionUrlProvider);
@@ -1495,37 +1618,98 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
   // 선택한 사이즈를 가져옴.
   final selectedSize = ref.watch(sizeSelectionIndexProvider);
 
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 섹션 내 x, y 부분 수치
+  final double sectionX = screenSize.width * (24 / referenceWidth);
+  final double section1Y = screenSize.width * (40 / referenceHeight);
+  final double section2Y = screenSize.width * (30 / referenceHeight);
+  final double width1X = screenSize.width * (57 / referenceWidth);
+  final double width2X = screenSize.width * (12 / referenceWidth);
+  final double width3X = screenSize.width * (41 / referenceWidth);
+
+  // 선택한 색상 텍스트 부분 수치
+  final double selectedColorFontSize = screenSize.height * (16 / referenceHeight);
+  // 선택한 색상 이미지 데이터 부분 수치
+  final double selectedColorImageLength = screenSize.width * (24 / referenceWidth);
+  // 산텍힌 색상 텍스트 데이터 부분 수치
+  final double selectedColorTextSize = screenSize.width * (16 / referenceWidth);
+  // 선택한 사이즈 텍스트 부분 수치
+  final double selectedSizeFontSize = screenSize.height * (16 / referenceHeight);
+  // 선택한 사이즈 텍스트 데이터 부분 수치
+  final double selectedSizeTextSize = screenSize.width * (16 / referenceWidth);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       // 색상과 사이즈가 선택되었을 때만 보여줌.
       if (selectedColorUrl != null && selectedSize != null)
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          // 좌우 여백 20, 수직 여백 8로 설정.
+          padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y), // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   // 선택한 색상을 텍스트로 표시함.
-                  Text('선택한 색상:', style: TextStyle(fontSize: 16)),
-                  SizedBox(width: 8), // 텍스트와 이미지 사이의 간격을 8로 설정.
+                  Text('선택한 색상 :',
+                      style: TextStyle(
+                        fontSize: selectedColorFontSize,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'NanumGothic',
+                      )
+                  ),
+                  SizedBox(width: width1X), // 텍스트와 이미지 사이의 간격을 width1X로 설정.
                   // 선택한 색상이 존재하면 이미지를 표시함.
                   if (selectedColorUrl != null)
                     Image.network(
                       selectedColorUrl,
-                      width: 20,
-                      height: 20,
+                      width: selectedColorImageLength,
+                      height: selectedColorImageLength,
                     ),
-                  SizedBox(width: 8), // 이미지와 텍스트 사이의 간격을 8로 설정.
+                  SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
                   // 선택한 색상 이름을 텍스트로 표시함.
-                  Text(selectedColorText ?? '', style: TextStyle(fontSize: 16)),
+                  Text(selectedColorText ?? '',
+                    style: TextStyle(
+                      fontSize: selectedColorTextSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'NanumGothic',
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 8), // 색상과 사이즈 사이의 수직 간격을 8로 설정.
-              // 선택한 사이즈를 텍스트로 표시함.
-              Text('선택한 사이즈: $selectedSize', style: TextStyle(fontSize: 16)),
+              SizedBox(height: section2Y), // 색상과 사이즈 사이의 수직 간격을 section2Y로 설정.
+              Row(
+                children: [
+                  // 선택한 사이즈를 텍스트로 표시함.
+                  Text('선택한 사이즈 : ',
+                        style: TextStyle(
+                          fontSize: selectedSizeFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'NanumGothic',
+                      ),
+                  ),
+                  SizedBox(width: width3X), // 텍스트와 이미지 사이의 간격을 width3X로 설정.
+                  // 선택한 색상 이름을 텍스트로 표시함.
+                  Text(selectedSize ?? '',
+                    style: TextStyle(
+                      fontSize: selectedSizeTextSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'NanumGothic',
+                      )
+                  ),
+                ],
+              ),
+              SizedBox(height: section1Y),
             ],
           ),
         ),
@@ -1551,32 +1735,53 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     // 현재 선택된 탭 섹션을 가져옴.
     final currentTabSection = ref.watch(prodDetailScreenTabSectionProvider);
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 세로 852
+    final double referenceHeight = 852.0;
+
+    // 섹션 내 y 부분 수치
+    final double section1Y = screenSize.width * (60 / referenceHeight);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildTabButtons(ref, currentTabSection), // 탭 버튼들을 빌드
-        SizedBox(height: 20), // 탭과 컨텐츠 사이에 간격을 추가
+        SizedBox(height: section1Y), // 상단과 탭 사이에 간격을 추가
+        _buildTabButtons(context, ref, currentTabSection), // 탭 버튼들을 빌드
+        SizedBox(height: section1Y), // 탭과 컨텐츠 사이에 간격을 추가
         _buildSectionContent(currentTabSection), // 현재 선택된 탭의 내용을 빌드
       ],
     );
   }
 
   // 탭 버튼들을 빌드하는 위젯인 _buildTabButtons
-  Widget _buildTabButtons(WidgetRef ref, ProdDetailScreenTabSection currentTabSection) {
+  Widget _buildTabButtons(BuildContext context, WidgetRef ref, ProdDetailScreenTabSection currentTabSection) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         // '상품정보' 탭 버튼을 빌드
-        _buildTabButton(ref, ProdDetailScreenTabSection.productInfo, currentTabSection, '상품정보'),
+        _buildTabButton(context, ref, ProdDetailScreenTabSection.productInfo, currentTabSection, '상품정보'),
         // '문의' 탭 버튼을 빌드
-        _buildTabButton(ref, ProdDetailScreenTabSection.inquiry, currentTabSection, '문의'),
+        _buildTabButton(context, ref, ProdDetailScreenTabSection.inquiry, currentTabSection, '문의'),
       ],
     );
   }
 
   // 개별 탭 버튼을 빌드하는 위젯인 _buildTabButton
-  Widget _buildTabButton(WidgetRef ref, ProdDetailScreenTabSection section, ProdDetailScreenTabSection currentTabSection, String text) {
+  Widget _buildTabButton(BuildContext context, WidgetRef ref, ProdDetailScreenTabSection section, ProdDetailScreenTabSection currentTabSection, String text) {
     final isSelected = section == currentTabSection; // 현재 선택된 탭인지 확인
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 세로 852
+    final double referenceHeight = 852.0;
+
+    // 상품정보 및 문의 선택 버튼 부분 수치
+    final double _buildTabButtonFontSize = screenSize.height * (14 / referenceHeight);
+
+
     return GestureDetector(
       onTap: () {
         // 탭 버튼 클릭 시 선택된 탭 섹션을 변경
@@ -1588,13 +1793,15 @@ class ProductDetailScreenTabs extends ConsumerWidget {
           Text(
             text,
             style: TextStyle(
+              fontSize: _buildTabButtonFontSize,
+              fontFamily: 'NanumGothic',
               color: isSelected ? Colors.black : Colors.grey, // 선택된 탭이면 검정색, 아니면 회색
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // 선택된 탭이면 굵게, 아니면 일반
             ),
           ),
           if (isSelected) // 선택된 탭이면 밑줄 표시
             Container(
-              width: 60,
+              width: _buildTabButtonFontSize * 4.5,
               height: 2,
               color: Colors.black, // 밑줄 색상 검정
             ),
@@ -1648,36 +1855,68 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
 
   // 밑줄과 텍스트를 포함하는 위젯 생성하는 함수인 buildSectionTitle
   Widget buildSectionTitle(String title) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 상세정보 및 문의 버튼 아래 정보 선 내 텍스트 크기 부분 수치
+    final double buildSectionTitleFontSize = screenSize.height * (16 / referenceHeight);
+    // 상세정보 및 문의 버튼 아래 정보 선과 텍스트 사이 간격 부분 수치
+    final double buildSectionWidthX = screenSize.width * (8 / referenceWidth);
+    // 상세정보 및 문의 버튼 아래 정보 선 아래 간격 부분 수치
+    final double buildSectionLineY = screenSize.height * (10 / referenceHeight);
+
     return Column(
       children: [
-        SizedBox(height: 20), // 위쪽 여백 설정
         Row(
           children: [
-            Expanded(child: Divider(thickness: 2, color: Colors.grey)), // 좌측 선
+            Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 좌측 선
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0), // 좌우 여백 설정
+              padding: EdgeInsets.only(left: buildSectionWidthX, right: buildSectionWidthX), // 좌우 여백 설정
               child: Text(
                 title,
                 style: TextStyle(
+                  fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold, // 글자 굵게 설정
-                  fontSize: 16, // 글자 크기 설정
-                  color: Colors.grey, // 글자 색상 설정
+                  fontSize: buildSectionTitleFontSize, // 글자 크기 설정
+                  color: Color(0xFFDADADA), // 글자 색상 설정
                 ),
               ),
             ),
-            Expanded(child: Divider(thickness: 2, color: Colors.grey)), // 우측 선
+            Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 우측 선
           ],
         ),
-        SizedBox(height: 10), // 아래쪽 여백 설정
+        SizedBox(height: buildSectionLineY), // 아래쪽 여백 설정
       ],
     );
   }
 
   // 내용 확장 관련 버튼을 빌드하는 위젯인 buildExpandButton
   Widget buildExpandButton(String text, IconData icon) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    final double ExpandBtnWidth = screenSize.width * (345 / referenceWidth);
+    final double ExpandBtnHeight = screenSize.height * (54 / referenceHeight);
+    final double ExpandBtnX = screenSize.width * (24 / referenceWidth);
+    final double ExpandBtnFontSize = screenSize.height * (14 / referenceHeight);
+    // ExpandButton과 정보 사이의 간격 수치
+    final double ExpandBtnY = screenSize.height * (20 / referenceHeight);
+
     return Container(
-      width: double.infinity, // 버튼을 화면의 좌우로 꽉 차게 설정
-      margin: EdgeInsets.symmetric(vertical: 10), // 위아래 여백 설정
+      height: ExpandBtnHeight,
+      width: ExpandBtnWidth,
+      margin: EdgeInsets.only(left: ExpandBtnX, top: ExpandBtnY),
       child: ElevatedButton.icon(
         onPressed: () {
           // 버튼 클릭 시 showMoreImages 값 토글
@@ -1686,15 +1925,19 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
           });
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: BUTTON_COLOR, // 텍스트 색상
-          backgroundColor: BACKGROUND_COLOR, // 배경 색상
-          side: BorderSide(color: BUTTON_COLOR), // 테두리 색상
-          padding: EdgeInsets.symmetric(vertical: 15), // 버튼 높이 조절
+          foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
+          backgroundColor: Colors.white, // 배경 색상
+          side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
         ),
-        icon: Icon(icon, color: BUTTON_COLOR), // 아이콘 색상 설정
+        icon: Icon(icon, size: ExpandBtnFontSize, color: Color(0xFF6FAD96)), // 아이콘 색상 설정
         label: Text(
           text,
-          style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+          style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: ExpandBtnFontSize,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF6FAD96)
+          ), // 텍스트를 굵게 설정
         ),
       ),
     );
@@ -1702,10 +1945,19 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
 
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 세로 852
+    final double referenceHeight = 852.0;
+
+    // 상품정보 내 내용 간의 간격 수치
+    final double productInfoY = screenSize.height * (20 / referenceHeight);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 이미지가 세로로 나열되도록 설정
       children: [
-        SizedBox(height: 20), // 위쪽 여백 설정
         buildSectionTitle('INTRO INFO'), // 섹션 제목 설정
         if (widget.product.detailIntroImages != null)
         // product의 detailIntroImages가 null이 아니면
@@ -1718,19 +1970,19 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
           if (widget.product.detailIntroImages != null)
           // product의 detailIntroImages가 null이 아니면
             ...widget.product.detailIntroImages!.skip(2).map(buildProdInfoImage).toList(), // 나머지 이미지를 표시
-          SizedBox(height: 20), // 여백 설정
+          SizedBox(height: productInfoY), // 여백 설정
           buildSectionTitle('COLOR INFO'), // 섹션 제목 설정
           ...?widget.product.detailColorImages?.map(buildProdInfoImage).toList(), // 색상 정보 이미지 표시
-          SizedBox(height: 20), // 여백 설정
+          SizedBox(height: productInfoY), // 여백 설정
           buildSectionTitle('SIZE INFO'), // 섹션 제목 설정
           buildProdInfoImage(widget.product.detailSizeImage), // 사이즈 정보 이미지 표시
-          SizedBox(height: 20), // 여백 설정
+          SizedBox(height: productInfoY), // 여백 설정
           buildSectionTitle('DETAILS INFO'), // 섹션 제목 설정
           buildProdInfoImage(widget.product.detailDetailsImage), // 상세 정보 이미지 표시
-          SizedBox(height: 20), // 여백 설정
+          SizedBox(height: productInfoY), // 여백 설정
           buildSectionTitle('FABRIC INFO'), // 섹션 제목 설정
           buildProdInfoImage(widget.product.detailFabricImage), // 원단 정보 이미지 표시
-          SizedBox(height: 20), // 여백 설정
+          SizedBox(height: productInfoY), // 여백 설정
           buildSectionTitle('WASHING INFO'), // 섹션 제목 설정
           buildProdInfoImage(widget.product.detailWashingImage), // 세탁 정보 이미지 표시
           buildExpandButton('접기', Icons.arrow_upward), // 접기 버튼 표시
@@ -1747,6 +1999,20 @@ class ProductInquiryContents extends StatelessWidget {
   // build 메서드를 오버라이드하여 UI를 구성
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 버튼 관련 수치 동적 적용
+    final double productInquiryBtnFontSize = screenSize.height * (14 / referenceHeight);
+    final double productInquiryCardViewY = screenSize.height * (20 / referenceHeight);
+
     // CommonCardView 위젯을 반환, content에 Column 위젯을 사용하여 여러 위젯을 세로로 배치
     return CommonCardView(
       content: Column(
@@ -1755,9 +2021,9 @@ class ProductInquiryContents extends StatelessWidget {
           // ElevatedButton 위젯을 사용하여 버튼을 생성
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-              backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-              side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
+              foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
+              backgroundColor: Colors.white, // 배경 색상
+              side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
             ),
             // 버튼이 눌렸을 때의 동작 정의
             onPressed: () async {
@@ -1776,14 +2042,20 @@ class ProductInquiryContents extends StatelessWidget {
             // 버튼의 자식 위젯으로 텍스트를 설정
             child: Text(
               '상품 문의하기',
-              style: TextStyle(
-                fontWeight: FontWeight.bold, // 텍스트를 굵게 설정
-              ),
+                style: TextStyle(
+                    fontFamily: 'NanumGothic',
+                    fontSize: productInquiryBtnFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF6FAD96)
+                ),
             ),
           ),
         ],
       ),
-      backgroundColor: BEIGE_COLOR, // 카드의 배경색 설정
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0.0, // 그림자 효과 0
+      margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: productInquiryCardViewY), // 좌우 여백을 0으로 설정.
+      padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 0.0으로 설정.
     );
   }
 }
