@@ -990,7 +990,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
             child: GestureDetector(
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => destinationScreen)),
-              child: Image.asset('asset/img/misc/button_img/plus_button.png',
+              child: Image.asset('asset/img/misc/button_img/plus_button1.png',
                   width: 24, height: 24, color: Color(0xFF6FAD96)),
             ),
           ),
