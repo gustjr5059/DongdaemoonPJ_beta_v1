@@ -34,12 +34,13 @@ import '../../product/view/main_screen/pola_main_screen.dart'; // 폴라(터틀�
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 카테고리 메인 화면
 import '../../product/view/main_screen/skirt_main_screen.dart'; // 스커트 카테고리 메인 화면
 
+
 // ------ midCategories 부분의 버튼을 화면 크기에 동적으로 한 열당 버튼 갯수를 정해서 열로 정렬하기 위한 클래스 시작
 // MidCategoryButtonList 위젯 정의
 class MidCategoryButtonList extends ConsumerWidget {
   // 카테고리 버튼 클릭시 실행할 함수를 정의 (이 함수는 BuildContext와 카테고리의 인덱스를 매개변수로 받음)
   final void Function(BuildContext context, WidgetRef ref, int index)
-      onCategoryTap;
+  onCategoryTap;
 
   // 생성자에서 필수적으로 클릭 이벤트 함수를 받음
   MidCategoryButtonList({Key? key, required this.onCategoryTap})
@@ -51,7 +52,7 @@ class MidCategoryButtonList extends ConsumerWidget {
     final selectedMidCategoryIndex = ref.watch(selectedMidCategoryProvider);
     // 카테고리 확장 상태를 관리하는 상태 변수를 가져옴.
     final boolExpanded =
-        ref.watch(midCategoryViewBoolExpandedProvider);
+    ref.watch(midCategoryViewBoolExpandedProvider);
 
     // 현재 화면의 너비를 MediaQuery를 통해 얻음
     final screenWidth = MediaQuery.of(context).size.width;
@@ -59,22 +60,22 @@ class MidCategoryButtonList extends ConsumerWidget {
     int midCategoryPerRow = screenWidth > 900
         ? 6
         : screenWidth > 600
-            ? 5
-            : screenWidth > 300
-                ? 4
-                : 3;
+        ? 5
+        : screenWidth > 300
+        ? 4
+        : 3;
     // 전체적인 좌우 패딩 값을 설정
     double totalPadding = 16.0;
     // 버튼들 사이의 간격을 설정
     double spacingBetweenButtons = 8.0;
     // 버튼의 너비를 계산 (화면 너비에서 좌우 패딩과 버튼 사이 간격을 제외한 너비를 버튼 수로 나눔)
     double buttonWidth = (screenWidth -
-            totalPadding * 2 -
-            (midCategoryPerRow - 1) * spacingBetweenButtons) /
+        totalPadding * 2 -
+        (midCategoryPerRow - 1) * spacingBetweenButtons) /
         midCategoryPerRow;
 
-    // 지퍼 버튼의 높이 설정
-    final zipperButtonHeight = 80.0;
+    // 지퍼 버튼의 높이 설정 (기기마다의 다른 길이에 맞춰서 모두 구현되도록 재설정)
+    final zipperButtonHeight = buttonWidth * 0.9;
     // 전체 카테고리의 행 수를 계산함.
     final rowCount = (midCategories.length / midCategoryPerRow).ceil();
     // 확장 시 카테고리의 전체 줄 높이를 계산함.
@@ -87,7 +88,7 @@ class MidCategoryButtonList extends ConsumerWidget {
     // 카테고리 확장/축소 상태를 토글하는 함수
     void toggleCategoryView() {
       ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
-          !boolExpanded;
+      !boolExpanded;
     }
 
     // 카테고리 버튼을 포함하는 애니메이션 컨테이너를 반환하고, 이 컨테이너는 확장/축소 시 높이가 변경됨.

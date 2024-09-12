@@ -176,7 +176,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     // AppBar 관련 수치 동적 적용
     final double announceAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
     final double announceAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double announceAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double announceAppBarTitleX = screenSize.width * (10 / referenceHeight);
     final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     return Scaffold(

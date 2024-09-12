@@ -326,10 +326,10 @@ class _SpringSubMainScreenState extends ConsumerState<SpringSubMainScreen>
     final double sectionPlusChevronIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double sectionPlusWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double sectionPlusWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
-    final double sectionPlusWishlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double sectionPlusWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double sectionPlusWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double sectionPlusWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double sectionPlusWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double sectionPlusWishlistBtnY = screenSize.height * (6 / referenceHeight);
 
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작

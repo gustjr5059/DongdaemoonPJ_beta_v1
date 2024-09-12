@@ -178,7 +178,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // AppBar 관련 수치 동적 적용
     final double completePaymentAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double completePaymentAppBarTitleX = screenSize.width * (90 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (80 / referenceHeight);
     final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
 

@@ -599,18 +599,18 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     // AppBar 관련 수치 동적 적용
     final double homeAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
     final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double homeAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double homeAppBarTitleX = screenSize.width * (25 / referenceHeight);
     final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 드로어 아이콘 관련 수치 동적 적용
     final double homeDrawerIconWidth = screenSize.width * (28 / referenceWidth);
     final double homeDrawerIconHeight = screenSize.height * (24 / referenceHeight);
     final double homeDrawerIconX = screenSize.width * (18 / referenceWidth);
-    final double homeDrawerIconY = screenSize.height * (10 / referenceHeight);
+    final double homeDrawerIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double homeWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double homeWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
     final double homeWishlistBtnY = screenSize.height * (8 / referenceHeight);
 

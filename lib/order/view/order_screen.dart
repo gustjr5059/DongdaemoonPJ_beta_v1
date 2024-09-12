@@ -201,7 +201,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // AppBar 관련 수치 동적 적용
     final double orderAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double orderAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderAppBarTitleX = screenSize.height * (75 / referenceHeight);
+    final double orderAppBarTitleX = screenSize.height * (70 / referenceHeight);
     final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -211,10 +211,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     final double orderChevronIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double orderWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double orderWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double orderWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
 
 

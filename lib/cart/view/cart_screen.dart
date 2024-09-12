@@ -181,20 +181,20 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // AppBar 관련 수치 동적 적용
     final double cartlistAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
     final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double cartlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double cartlistAppBarTitleX = screenSize.width * (20 / referenceHeight);
     final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 홈 버튼 수치 (Case 3)
-    final double cartlistHomeBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double cartlistHomeBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double cartlistHomeBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double cartlistHomeBtnHeight = screenSize.height * (40 / referenceHeight);
     final double cartlistHomeBtnX = screenSize.width * (1 / referenceWidth);
-    final double cartlistHomeBtnY = screenSize.height * (8 / referenceHeight);
+    final double cartlistHomeBtnY = screenSize.height * (6 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 3)
-    final double cartlistWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double cartlistWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double cartlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double cartlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double cartlistWishlistBtnY = screenSize.height * (6 / referenceHeight);
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,

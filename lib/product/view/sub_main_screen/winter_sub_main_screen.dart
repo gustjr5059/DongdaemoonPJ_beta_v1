@@ -316,7 +316,7 @@ class _WinterSubMainScreenState extends ConsumerState<WinterSubMainScreen>
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double sectionPlusAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double sectionPlusAppBarTitleX = screenSize.height * (100 / referenceHeight);
+    final double sectionPlusAppBarTitleX = screenSize.height * (93 / referenceHeight);
     final double sectionPlusAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -326,10 +326,10 @@ class _WinterSubMainScreenState extends ConsumerState<WinterSubMainScreen>
     final double sectionPlusChevronIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double sectionPlusWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double sectionPlusWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
-    final double sectionPlusWishlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double sectionPlusWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double sectionPlusWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double sectionPlusWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double sectionPlusWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double sectionPlusWishlistBtnY = screenSize.height * (6 / referenceHeight);
 
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작

@@ -168,7 +168,7 @@ class _OrderListDetailScreenState
     // AppBar 관련 수치 동적 적용
     final double orderlistDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistDtAppBarTitleX = screenSize.width * (158 / referenceHeight);
+    final double orderlistDtAppBarTitleX = screenSize.width * (143 / referenceHeight);
     final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -178,10 +178,10 @@ class _OrderListDetailScreenState
     final double orderlistDtChevronIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderlistDtWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double orderlistDtWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double orderlistDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double orderlistDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderlistDtWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double orderlistDtWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
 
     final orderListDetailAsyncValue = ref.watch(orderListDetailProvider(widget.orderNumber));

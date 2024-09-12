@@ -109,48 +109,12 @@ AppBar buildCommonAppBar({
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
+  // 앱 바 내 title 글자 크기
+  final double titleFontSize = screenSize.height * (17 / referenceHeight); // 텍스트 크기
+
   // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
-  // final double appBarTitleWidth = screenSize.width * (160 / referenceWidth); // 텍스트 너비
-  // final double appBarTitleHeight = screenSize.height * (22 / referenceHeight); // 텍스트 높이
-  // final double appBarTitleY = screenSize.height * (11 / referenceHeight); // 텍스트 Y 좌표
-  // // 드로워화면 버튼 부분 수치
-  // final double drawerIconWidth = screenSize.width * (28 / referenceWidth); // 아이콘 너비
-  // final double drawerIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
-  // final double drawerIconX = screenSize.width * (18 / referenceWidth); // 아이콘 X 좌표
-  // final double drawerIconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
-  // // 이전화면으로 이동 버튼 부분 수치
-  // final double chevronIconWidth = screenSize.width * (24 / referenceWidth); // 아이콘 너비
-  // final double chevronIconHeight = screenSize.height * (24 / referenceHeight); // 아이콘 높이
-  // final double chevronIconX = screenSize.width * (12 / referenceWidth); // 아이콘 X 좌표
-  // final double chevronconY = screenSize.height * (10 / referenceHeight); // 아이콘 Y 좌표
-
-  // // case 2
-  // // 찜 목록 버튼 부분 수치
-  // final double wishlistBtnC2Width = screenSize.width * (44 / referenceWidth); // 찜 목록 버튼 너비
-  // final double wishlistBtnC2Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
-  // final double wishlistBtnC2X = screenSize.width * (10 / referenceWidth); // 찜 목록 버튼 X 좌표
-  // final double wishlistBtnC2Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
-  //
-  // // case 3
-  // // 찜 목록 버튼 부분 수치
-  // final double wishlistBtnC3Width = screenSize.width * (36 / referenceWidth); // 찜 목록 버튼 너비
-  // final double wishlistBtnC3Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
-  // final double wishlistBtnC3X = screenSize.width * (6 / referenceWidth); // 찜 목록 버튼 X 좌표
-  // final double wishlistBtnC3Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
-  // // 홈 버튼 부분 수치
-  // final double homeBtnC3Width = screenSize.width * (36 / referenceWidth); // 찜 목록 버튼 너비
-  // final double homeBtnC3Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
-  // final double homeBtnC3X = screenSize.width * (6 / referenceWidth); // 찜 목록 버튼 X 좌표
-  // final double homeBtnC3Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
-  // // 요청목록 버튼 부분 수치
-  // final double cartlistBtnC3Width = screenSize.width * (36 / referenceWidth); // 찜 목록 버튼 너비
-  // final double cartlistBtnC3Height = screenSize.height * (44 / referenceHeight); // 찜 목록 버튼 높이
-  // final double cartlistBtnC3X = screenSize.width * (6 / referenceWidth); // 찜 목록 버튼 X 좌표
-  // final double cartlistBtnC3Y = screenSize.height * (6 / referenceHeight); // 찜 목록 버튼 Y 좌표
-
-  // ----- 앱 바 부분 수치 끝 부분
 
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
@@ -167,7 +131,7 @@ AppBar buildCommonAppBar({
           margin: EdgeInsets.only(left: chevronIconX, top: chevronIconY),
           // 아이콘 위치 설정
           child: IconButton(
-            icon: Icon(Icons.chevron_left, size: chevronIconHeight),
+            icon: Icon(Icons.chevron_left),
             // 뒤로 가기 아이콘을 설정
             onPressed: () {
               if (Navigator.of(context).canPop()) {
@@ -396,7 +360,7 @@ AppBar buildCommonAppBar({
                 title, // 제목 설정
                 style: TextStyle(
                   color: Colors.black, // 제목 텍스트 색상
-                  fontSize: 17, // 제목 텍스트 크기
+                  fontSize: titleFontSize, // 제목 텍스트 크기
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -445,12 +409,13 @@ Widget buildCommonBottomNavigationBar(
           break;
       }
 
-      // BottomNavigationBar를 반환
       return Container(
-        height: 88, // 높이를 88로 지정
-        child: Stack( // Stack을 사용하여 바를 배치
-          children: [
-            BottomNavigationBar(
+        color: Color(0xFF6FAD96), // 전체 배경색을 지정
+        child: SafeArea(
+          bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.098, // 화면 높이에 비례하여 동적 높이 설정
+            child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               // BottomNavigationBar 타입을 고정형으로 설정
               backgroundColor: Color(0xFF6FAD96), // 배경색을 0xFF6FAD96으로 설정,
@@ -492,56 +457,6 @@ Widget buildCommonBottomNavigationBar(
                   }
                 }
               },
-              //   } else {
-              //     // 현재 화면이 이미 선택된 화면인 경우, 스크롤 위치를 초기화
-              //     switch (index) {
-              //       case 0:
-              //       // 홈 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-              //         final homeScrollController = ref.read(homeScrollControllerProvider);
-              //         if (homeScrollController.hasClients) {
-              //           homeScrollController.animateTo(
-              //             0,
-              //             duration: Duration(milliseconds: 500),
-              //             curve: Curves.easeInOut,
-              //           );
-              //         }
-              //         break;
-              //       case 1:
-              //       // 장바구니 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-              //         final cartScrollController = ref.read(cartScrollControllerProvider);
-              //         if (cartScrollController.hasClients) {
-              //           cartScrollController.animateTo(
-              //             0,
-              //             duration: Duration(milliseconds: 500),
-              //             curve: Curves.easeInOut,
-              //           );
-              //         }
-              //         break;
-              //       case 2:
-              //       // 발주 내역 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-              //         final orderScrollController = ref.read(orderListScrollControllerProvider);
-              //         if (orderScrollController.hasClients) {
-              //           orderScrollController.animateTo(
-              //             0,
-              //             duration: Duration(milliseconds: 500),
-              //             curve: Curves.easeInOut,
-              //           );
-              //         }
-              //         break;
-              //       case 3:
-              //       // 마이페이지 화면의 스크롤 컨트롤러를 가져와 위치를 초기화
-              //         final profileScrollController = ref.read(profileScrollControllerProvider);
-              //         if (profileScrollController.hasClients) {
-              //           profileScrollController.animateTo(
-              //             0,
-              //             duration: Duration(milliseconds: 500),
-              //             curve: Curves.easeInOut,
-              //           );
-              //         }
-              //         break;
-              //     }
-              //   }
-              // },
               // BottomNavigationBar의 아이템들을 정의
               items: [
                 BottomNavigationBarItem(
@@ -588,50 +503,50 @@ Widget buildCommonBottomNavigationBar(
                 fontSize: 10, // 텍스트 크기를 10으로 설정
               ),
             ),
-            if (selectedIndex == 0) // 선택된 항목에만 하단 바 표시
-              Positioned(
-                bottom: 35,
-                left: 34.5, // 홈 아이템의 위치에 맞게 바를 배치
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 12, // 바의 너비를 화면의 1/12로 설정
-                  height: 3, // 바의 높이
-                  color: selectedColor, // 선택된 색상
-                ),
-              ),
-            // 다른 선택된 항목들에 대해서도 같은 방식으로 적용
-            if (selectedIndex == 1)
-              Positioned(
-                bottom: 35,
-                left: 125, // 요청품목 위치
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 10,
-                  height: 3,
-                  color: selectedColor,
-                ),
-              ),
-            if (selectedIndex == 2)
-              Positioned(
-                bottom: 35,
-                left: 225, // 발주내역 위치
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 10,
-                  height: 3,
-                  color: selectedColor,
-                ),
-              ),
-            if (selectedIndex == 3)
-              Positioned(
-                bottom: 35,
-                left: 320, // 마이페이지 위치
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 8,
-                  height: 3,
-                  color: selectedColor,
-                ),
-              ),
-          ],
-        ),
-      );
+            // if (selectedIndex == 0) // 선택된 항목에만 하단 바 표시
+            //   Positioned(
+            //     bottom: 35,
+            //     left: 34.5, // 홈 아이템의 위치에 맞게 바를 배치
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width / 12, // 바의 너비를 화면의 1/12로 설정
+            //       height: 3, // 바의 높이
+            //       color: selectedColor, // 선택된 색상
+            //     ),
+            //   ),
+            // // 다른 선택된 항목들에 대해서도 같은 방식으로 적용
+            // if (selectedIndex == 1)
+            //   Positioned(
+            //     bottom: 35,
+            //     left: 125, // 요청품목 위치
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width / 10,
+            //       height: 3,
+            //       color: selectedColor,
+            //     ),
+            //   ),
+            // if (selectedIndex == 2)
+            //   Positioned(
+            //     bottom: 35,
+            //     left: 225, // 발주내역 위치
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width / 10,
+            //       height: 3,
+            //       color: selectedColor,
+            //     ),
+            //   ),
+            // if (selectedIndex == 3)
+            //   Positioned(
+            //     bottom: 35,
+            //     left: 320, // 마이페이지 위치
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width / 8,
+            //       height: 3,
+            //       color: selectedColor,
+            //     ),
+            //   ),
+         ),
+      ),
+    );
 
   // '요청품목', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:

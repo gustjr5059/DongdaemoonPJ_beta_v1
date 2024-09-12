@@ -181,7 +181,7 @@ class _CoatDetailProductScreenState
     // AppBar 관련 수치 동적 적용
     final double productDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productDtAppBarTitleX = screenSize.height * (90 / referenceHeight);
+    final double productDtAppBarTitleX = screenSize.height * (92 / referenceHeight);
     final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -191,20 +191,20 @@ class _CoatDetailProductScreenState
     final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
 
     //  업데이트 요청 목록 버튼 수치 (Case 4)
-    final double productDtCartlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double productDtCartlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double productDtCartlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productDtCartlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double productDtCartlistBtnX = screenSize.width * (1 / referenceWidth);
     final double productDtCartlistBtnY = screenSize.height * (8 / referenceHeight);
 
     // 홈 버튼 수치 (Case 4)
-    final double productDtHomeBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double productDtHomeBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double productDtHomeBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productDtHomeBtnHeight = screenSize.height * (40 / referenceHeight);
     final double productDtHomeBtnX = screenSize.width * (1 / referenceWidth);
     final double productDtHomeBtnY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 4)
-    final double productDtWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double productDtWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double productDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
     final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
 

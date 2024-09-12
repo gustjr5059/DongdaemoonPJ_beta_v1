@@ -1168,7 +1168,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
       crossAxisAlignment: CrossAxisAlignment.start,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
-        buildProductImageSliderSection(product, ref, pageController, product.docId), // 이미지 슬라이더 섹션
+        buildProductImageSliderSection(context, product, ref, pageController, product.docId), // 이미지 슬라이더 섹션
         SizedBox(height: 10),
         // 상단 여백을 10으로 설정.
         CommonCardView(
@@ -1203,17 +1203,27 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
 // ------ buildProdDetailScreenContents 위젯의 구현 끝
 
 // ------ buildProductImageSlider 위젯 시작: 제품 이미지 부분을 구현.
-Widget buildProductImageSliderSection(ProductContent product, WidgetRef ref,
+Widget buildProductImageSliderSection(BuildContext context, ProductContent product, WidgetRef ref,
     PageController pageController, String productId) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 세로 852
+  final double referenceHeight = 852.0;
+
+  // 이미지 부분 수치
+  final double ImageSliderSectionHeight = screenSize.height * (421 / referenceHeight);
+
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
 
-  return Column(
+  return Stack(
     children: [
       // CarouselSlider 위젯을 사용하여 이미지를 슬라이드 형태로 보여줌.
       CarouselSlider(
         options: CarouselOptions(
-          height: 400.0,
+          height: ImageSliderSectionHeight,
           viewportFraction: 1.0,
           // 페이지가 변경될 때 호출되는 함수.
           onPageChanged: (index, reason) {
@@ -1248,28 +1258,33 @@ Widget buildProductImageSliderSection(ProductContent product, WidgetRef ref,
         }).toList(), // 리스트로 변환
       ),
       // 페이지 인디케이터를 Row 위젯으로 생성.
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        // product.detailPageImages의 각 항목을 반복하여 인디케이터를 생성함.
-        children: product.detailPageImages?.asMap().entries.map((entry) {
-          return GestureDetector(
-            // 인디케이터를 클릭하면 해당 페이지로 이동함.
-            onTap: () => pageController.jumpToPage(entry.key),
-            child: Container(
-              width: 12.0,
-              height: 12.0,
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                // 현재 페이지를 기준으로 인디케이터 색상을 변경함.
-                color: ref.watch(pageProvider) == entry.key
-                    ? Color.fromRGBO(0, 0, 0, 0.9)
-                    : Color.fromRGBO(0, 0, 0, 0.4),
+      Positioned(
+        bottom: 10.0, // 이미지 하단에서 10픽셀 위에 인디케이터를 배치
+        left: 0,
+        right: 0, // 양쪽 모두 0으로 설정해 인디케이터를 중앙 정렬
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          // product.detailPageImages의 각 항목을 반복하여 인디케이터를 생성함.
+          children: product.detailPageImages?.asMap().entries.map((entry) {
+            return GestureDetector(
+              // 인디케이터를 클릭하면 해당 페이지로 이동함.
+              onTap: () => pageController.jumpToPage(entry.key),
+              child: Container(
+                width: 12.0,
+                height: 12.0,
+                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  // 현재 페이지를 기준으로 인디케이터 색상을 변경함.
+                  color: ref.watch(pageProvider) == entry.key
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
-            ),
-          );
-        }).toList() ??
-            [],
+            );
+          }).toList() ??
+              [],
+        ),
       ),
     ],
   );

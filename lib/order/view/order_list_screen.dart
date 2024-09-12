@@ -184,14 +184,14 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // AppBar 관련 수치 동적 적용
     final double orderlistAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
     final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.height * (25 / referenceHeight);
+    final double orderlistAppBarTitleX = screenSize.height * (15 / referenceHeight);
     final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderlistWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double orderlistWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
+    final double orderlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double orderlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
 
     // orderListProvider를 통해 발주 데이터를 구독.

@@ -178,7 +178,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     // AppBar 관련 수치 동적 적용
     final double announceDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double announceDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double announceDtAppBarTitleX = screenSize.width * (171 / referenceHeight);
+    final double announceDtAppBarTitleX = screenSize.width * (150 / referenceHeight);
     final double announceDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용

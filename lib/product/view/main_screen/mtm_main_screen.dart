@@ -418,7 +418,7 @@ class _MtmMainScreenState extends ConsumerState<MtmMainScreen>
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double productMainAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productMainAppBarTitleX = screenSize.height * (75 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.height * (83 / referenceHeight);
     final double productMainAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -428,10 +428,10 @@ class _MtmMainScreenState extends ConsumerState<MtmMainScreen>
     final double productMainChevronIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double productMainWishlistBtnWidth = screenSize.width * (44 / referenceWidth);
-    final double productMainWishlistBtnHeight = screenSize.height * (44 / referenceHeight);
-    final double productMainWishlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double productMainWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double productMainWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productMainWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productMainWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double productMainWishlistBtnY = screenSize.height * (6 / referenceHeight);
 
 
 
