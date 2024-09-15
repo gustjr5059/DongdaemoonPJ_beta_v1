@@ -666,7 +666,7 @@ Widget buildCommonBottomNavigationBar(
       // 장바구니 아이템 목록을 상태로 관리
       final cartItems = ref.watch(cartItemsProvider);
 
-// 발주 화면에서 사용할 선택된 아이템들을 필터링하고 ProductContent 객체로 변환하여 리스트로 저장
+    // 발주 화면에서 사용할 선택된 아이템들을 필터링하고 ProductContent 객체로 변환하여 리스트로 저장
       final orderProducts = cartItems
       // cartItems 리스트에서 'bool_checked'가 true인 아이템들만 필터링
           .where((item) => item['bool_checked'] == true)
@@ -773,13 +773,22 @@ Widget buildCommonBottomNavigationBar(
                     child: ElevatedButton(
                       // 버튼 클릭 시 호출되는 함수
                       onPressed: () {
-                        // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정한 내용
-                        ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
-                        // OrderMainScreen으로 화면 전환
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => OrderMainScreen(
-                          )),
-                        );
+                        // 선택된 아이템이 있는지 확인
+                        if (orderProducts.isEmpty) {
+                          // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('업데이트 요청할 상품을 선택해주세요.'),
+                            ),
+                          );
+                        } else {
+                          // 체크된 상품이 있는 경우 발주 화면으로 이동
+                          ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts); // 주문 아이템 상태 업데이트
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => OrderMainScreen(
+                            )),
+                          );
+                        }
                       },
                       // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
                       style: ElevatedButton.styleFrom(

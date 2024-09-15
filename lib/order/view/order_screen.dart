@@ -273,20 +273,18 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
+                padding: EdgeInsets.only(top: 0), // 상단에 5의 패딩을 추가
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
                         // 좌우로 4의 패딩을 추가
                         child: Column(
                           children: [
-                            SizedBox(height: 10), // 높이를 10으로 설정하여 간격 조정
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자가 로그인된 경우 사용자 정보를 표시
                             UpdateInfoWidget(), // 업데이트 정보를 표시하는 위젯
                             // for (var item in orderItems) OrderItemWidget(product: item), // 주문 상품 목록을 표시하는 위젯
-                            SizedBox(height: 40),
                             userInfoAsyncValue.when(
                               data: (userInfo) => UpdateOrderButton(
                                 ordererInfo: {

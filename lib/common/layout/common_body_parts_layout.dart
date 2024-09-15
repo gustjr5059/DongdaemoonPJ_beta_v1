@@ -338,26 +338,48 @@ Future<bool> showSubmitAlertDialog(BuildContext context, {
       // 플랫폼이 iOS인 경우 CupertinoAlertDialog 사용
       if (Platform.isIOS) {
         return CupertinoAlertDialog(
-          title: Text(title), // 제목 표시
-          content: contentWidget ?? Text(content ?? ''), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
+          title: Text(title,
+          style: TextStyle(
+            fontFamily: 'NanumGothic',
+            ),
+          ), // 제목 표시
+          content: contentWidget ?? Text(content ?? '',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
           actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
         );
         // 플랫폼이 Android인 경우 AlertDialog 사용
       } else if (Platform.isAndroid) {
         return AlertDialog(
-          title: Text(title), // 제목 표시
-          content: contentWidget ?? Text(content ?? ''), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
+          title: Text(title,
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // 제목 표시
+          content: contentWidget ?? Text(content ?? '',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
           actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
         );
       } else {
         // 지원되지 않는 플랫폼일 경우 기본적으로 false 반환함
         return AlertDialog(
-          title: Text('Unsupported Platform'), // '지원되지 않는 플랫폼'이라는 제목 표시
-          content: Text('이 플랫폼은 지원되지 않습니다.'), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
+          title: Text('Unsupported Platform',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // '지원되지 않는 플랫폼'이라는 제목 표시
+          content: Text('이 플랫폼은 지원되지 않습니다.',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
           actions: <Widget>[
             // '확인' 버튼 클릭 시 false 반환하고 알림창 닫음
             TextButton(
-              child: Text('확인'),
+              child: Text('확인',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                ),),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },

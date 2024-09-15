@@ -127,6 +127,33 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
+
+    // CompletePaymentScreen에 도착한 후 다이얼로그 표시 (이러기 위해서는 addPostFrameCallback 이게 필요함!!)
+    // 원래는 업데이트 요청 화면에서 '업데이트 요청하기' 버튼 클릭 -> '예' 버튼 클릭하면 해당 로직에서 해당 알림창을 띄우는 로직을 구현하려고
+    // 했지만, 이렇게 하면 navigator 특징 상 다른 화면으로 이동한 후에 랜더링 될 때, 이미 context를 활용을 못하므로 에러가 뜸
+    // 이를 방지하기 위해 업데이트 요청 완료 화면에 시작할 때 해당 알림창을 띄우도록 여기에 로직을 구현해서 해결함!!
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showSubmitAlertDialog(
+        context,
+        title: '[업데이트 요청 완료]',
+        content: '업데이트 요청이 완료되었습니다.',
+        actions: [
+          TextButton(
+            child: Text(
+              '확인',
+              style: TextStyle(
+                color: Color(0xFF6FAD96),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // 알림창 닫기
+            },
+          ),
+        ],
+      );
+    });
   }
 
   // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -228,15 +255,14 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                     // backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정
                   ),
                   SliverPadding(
-                    padding: EdgeInsets.only(top: 5), // 패딩 설정
+                    padding: EdgeInsets.only(top: 0), // 패딩 설정
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 0.0),
                             child: Column(
                               children: [
-                                SizedBox(height: 10),
                                 UpdateRequestCompleteInfoWidget(
                                   orderNumber: orderNumber,
                                   orderDate: orderDate,
@@ -257,7 +283,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
               ),
               // buildTopButton 함수는 주어진 context와 completePaymentScreenPointScrollController를 사용하여
               // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-              buildTopButton(context, completePaymentScreenPointScrollController),
+              // buildTopButton(context, completePaymentScreenPointScrollController),
             ],
           ),
           // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
