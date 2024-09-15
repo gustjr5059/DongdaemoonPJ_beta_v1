@@ -171,9 +171,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double inquiryAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
+    final double inquiryAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
     final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double inquiryAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double inquiryAppBarTitleX = screenSize.width * (50 / referenceHeight);
     final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     return Scaffold(

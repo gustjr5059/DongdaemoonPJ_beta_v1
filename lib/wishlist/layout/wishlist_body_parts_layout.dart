@@ -149,23 +149,64 @@ class WishlistItemsList extends ConsumerWidget {
     // 텍스트 데이터 부분 수치
     final double wishlistTextDataPartHeight =
         screenSize.height * (126 / referenceHeight); // 세로 비율
+    final double wishlistBriefIntroductionFontSize =
+        screenSize.height * (15 / referenceHeight);
+    final double wishlistOriginalPriceFontSize =
+        screenSize.height * (15 / referenceHeight);
+    final double wishlistDiscountPercentFontSize =
+        screenSize.height * (17 / referenceHeight);
+    final double wishlistDiscountPriceFontSize =
+        screenSize.height * (19 / referenceHeight);
     // 삭제 버튼 부분 수치
-    final double wishlistDeleteBtnWidth =
-        screenSize.width * (76 / referenceWidth); // 가로 비율
-    final double wishlistDeleteBtnHeight =
-        screenSize.height * (42 / referenceHeight); // 세로 비율
+    final double wishlistDeleteBtn1X =
+        screenSize.width * (20 / referenceWidth); // 가로 비율
+    final double wishlistDeleteBtn1Y =
+        screenSize.height * (6 / referenceHeight); // 세로 비율
+    final double wishlistDeleteBtnFontSize =
+        screenSize.height * (16 / referenceHeight);
+    // 텍스트 데이터 간 너비, 높이
+    final double wishlist1X =
+        screenSize.width * (12 / referenceWidth); // 가로 비율
+    final double wishlist2X =
+        screenSize.width * (19 / referenceWidth); // 가로 비율
+    final double wishlist1Y =
+        screenSize.width * (4 / referenceWidth); // 가로 비율
+
+    // 찜 목록 비어있는 경우의 알림 부분 수치
+    final double wishlistEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율
+    final double wishlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double wishlistEmptyTextX =
+        screenSize.width * (40 / referenceWidth); // 가로 비율
+    final double wishlistEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율
+    final double wishlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
 
     // wishlistItemsStreamProvider를 통해 찜 목록 항목의 스트림을 감시하여, wishlistItemsAsyncValue에 할당.
     final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider(userEmail));
 
-    // cartItemsAsyncValue의 상태에 따라 위젯을 빌드.
+    // wishItemsAsyncValue의 상태에 따라 위젯을 빌드.
     return wishlistItemsAsyncValue.when(
       // 데이터가 성공적으로 로드되었을 때 실행되는 콜백 함수.
       data: (wishlistItems) {
-        // 장바구니 항목이 비어있을 경우의 조건문.
+        // 찜 목록 항목이 비어있을 경우의 조건문.
         if (wishlistItems.isEmpty) {
-          // 장바구니가 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
-          return Center(child: Text('찜 목록이 비어 있습니다.'));
+          // 찜 목록이 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
+          return Container(
+              width: wishlistEmptyTextWidth,
+              height: wishlistEmptyTextHeight,
+              margin: EdgeInsets.only(left: wishlistEmptyTextX, top: wishlistEmptyTextY),
+              child: Text('찜 목록이 비어 있습니다.',
+                style: TextStyle(
+                  fontSize: wishlistEmptyTextFontSize,
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+          );
         }
 
         // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
@@ -225,7 +266,7 @@ class WishlistItemsList extends ConsumerWidget {
                         )
                             : Container(), // 썸네일이 없을 경우 빈 컨테이너를 표시함
                       ),
-                      SizedBox(width: 12),
+                      SizedBox(width: wishlist1X),
                       // 텍스트 데이터와 삭제 버튼을 포함하는 컬럼(세로 정렬)을 정의함
                       Expanded(
                         child: Container(
@@ -242,7 +283,7 @@ class WishlistItemsList extends ConsumerWidget {
                                     Text(
                                       '${wishlistItem['brief_introduction'] ?? ''}',
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: wishlistBriefIntroductionFontSize,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'NanumGothic',
                                         color: Colors.black,
@@ -250,7 +291,7 @@ class WishlistItemsList extends ConsumerWidget {
                                       maxLines: 1, // 한 줄로 표시되도록 설정함
                                       overflow: TextOverflow.ellipsis, // 넘칠 경우 말줄임표로 처리함
                                     ),
-                                    SizedBox(height: 4),
+                                    SizedBox(height: wishlist1Y),
                                     // 상품 원가 텍스트와 할인율을 함께 표시하는 행을 정의함
                                     Row(
                                       children: [
@@ -258,19 +299,19 @@ class WishlistItemsList extends ConsumerWidget {
                                         Text(
                                           '${numberFormat.format(originalPrice)}원',
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: wishlistOriginalPriceFontSize,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'NanumGothic',
                                             color: Color(0xFF6C6C6C),
                                             decoration: TextDecoration.lineThrough, // 가격에 줄을 긋는 스타일을 적용함
                                           ),
                                         ),
-                                        SizedBox(width: 19),
+                                        SizedBox(width: wishlist2X),
                                         // 상품 할인율 텍스트를 표시함
                                         Text(
                                           '${wishlistItem['discount_percent']?.round() ?? 0}%',
                                           style: TextStyle(
-                                            fontSize: 17,
+                                            fontSize: wishlistDiscountPercentFontSize,
                                             fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
                                             fontFamily: 'NanumGothic',
                                             color: Colors.red, // 빨간색으로 할인율을 강조함
@@ -282,7 +323,7 @@ class WishlistItemsList extends ConsumerWidget {
                                     Text(
                                       '${numberFormat.format(discountPrice)}원',
                                       style: TextStyle(
-                                        fontSize: 19,
+                                        fontSize: wishlistDiscountPriceFontSize,
                                         fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
                                         fontFamily: 'NanumGothic',
                                         color: Colors.black,
@@ -299,17 +340,19 @@ class WishlistItemsList extends ConsumerWidget {
                                   onPressed: () async {
                                     await showSubmitAlertDialog(
                                       context, // 현재 화면의 컨텍스트를 전달함
-                                      title: '찜 목록 삭제', // 대화상자의 제목을 설정함
-                                      content: '찜 목록에서 상품을 삭제하시겠습니까?', // 대화상자의 내용을 경고 메시지로 설정함
+                                      title: '[찜 목록 삭제]', // 대화상자의 제목을 설정함
+                                      content: '상품을 삭제하시겠습니까?', // 대화상자의 내용을 경고 메시지로 설정함
                                       actions: buildAlertActions(
                                         context, // 현재 화면의 컨텍스트를 전달함
                                         noText: '아니요', // '아니요' 버튼 텍스트를 설정함
                                         yesText: '예', // '예' 버튼 텍스트를 설정함
                                         noTextStyle: TextStyle(
+                                          fontFamily: 'NanumGothic',
                                           color: Colors.black, // '아니요' 텍스트 색상을 검정색으로 설정함
                                           fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
                                         yesTextStyle: TextStyle(
+                                          fontFamily: 'NanumGothic',
                                           color: Colors.red, // '예' 텍스트 색상을 빨간색으로 설정함
                                           fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
@@ -342,7 +385,7 @@ class WishlistItemsList extends ConsumerWidget {
                                   },
                                   // 삭제 버튼의 스타일을 정의함
                                   style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(wishlistDeleteBtnWidth, wishlistDeleteBtnHeight), // 삭제 버튼의 크기를 설정함
+                                    padding: EdgeInsets.symmetric(horizontal: wishlistDeleteBtn1X, vertical: wishlistDeleteBtn1Y), // 버튼의 크기를 패딩으로 설정
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(37), // 버튼을 둥글게 설정함
                                       side: BorderSide(color: Color(0xFF6F6F6F)), // 테두리 색상을 설정함
@@ -352,7 +395,7 @@ class WishlistItemsList extends ConsumerWidget {
                                   child: Text(
                                     '삭제',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: wishlistDeleteBtnFontSize,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'NanumGothic',
                                       color: Colors.black, // 버튼 텍스트 색상을 검정색으로 설정함

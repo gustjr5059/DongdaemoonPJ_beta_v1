@@ -179,9 +179,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double cartlistAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
+    final double cartlistAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
     final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double cartlistAppBarTitleX = screenSize.width * (20 / referenceHeight);
+    final double cartlistAppBarTitleX = screenSize.width * (50 / referenceHeight);
     final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 홈 버튼 수치 (Case 3)
@@ -195,6 +195,18 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     final double cartlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
     final double cartlistWishlistBtnY = screenSize.height * (6 / referenceHeight);
+
+    // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
+    final double cartlistEmptyTextWidth =
+        screenSize.width * (152 / referenceWidth); // 가로 비율
+    final double cartlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double cartlistEmptyTextX =
+        screenSize.width * (125 / referenceWidth); // 가로 비율
+    final double cartlistEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율
+    final double cartlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -256,7 +268,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               // 상단에 여백을 주는 SliverPadding 위젯
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
@@ -265,8 +277,20 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
-                            child: Center(child: Text('요청품목이 비어 있습니다.')),
-                          )
+                            child: Container(
+                                width: cartlistEmptyTextWidth,
+                                height: cartlistEmptyTextHeight,
+                                margin: EdgeInsets.only(left: cartlistEmptyTextX, top: cartlistEmptyTextY),
+                                child: Text('요청품목이 비어 있습니다.',
+                              style: TextStyle(
+                                fontSize: cartlistEmptyTextFontSize,
+                                fontFamily: 'NanumGothic',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                             ),
+                           ),
+                        )
                         // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
                             // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
@@ -275,7 +299,6 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                 return Column(
                                   // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
                                   children: [
-                                    SizedBox(height: 5),
                                     // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
                                     CartItemsList(),
                                   ],

@@ -700,72 +700,113 @@ Widget buildCommonBottomNavigationBar(
       // 변환된 ProductContent 객체들을 리스트로 저장
           .toList();
 
-      return Container(
-        // 컨테이너의 내부 여백 설정
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-        // 컨테이너 배경색을 흰색으로 설정
-        color: Colors.white,
-        child: Row(
-          // Row의 주 축 방향에서의 정렬 방식을 공간을 동일하게 나눔
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // 전체 선택 체크박스와 텍스트를 담을 Row
-            Row(
-              children: [
-                // 체크박스 크기를 1.5배로 확대
-                Transform.scale(
-                  scale: 1.5,
-                  child: Checkbox(
-                    // 체크박스의 선택 여부를 allChecked 상태로 설정
-                    value: allChecked,
-                    activeColor: BUTTON_COLOR,  // 체크박스 색상 변경
-                    // 체크박스 상태 변경 시 호출되는 함수
-                    onChanged: (bool? value) {
-                      // allCheckedProvider 상태 업데이트
-                      ref.read(allCheckedProvider.notifier).state = value!;
-                      // cartItemsProvider 상태에서 모든 아이템의 체크 상태를 변경
-                      ref.read(cartItemsProvider.notifier).toggleAll(value);
-                    },
-                  ),
-                ),
-                // 체크박스와 텍스트 사이의 간격 설정
-                SizedBox(width: 8),
-                // "전체" 텍스트를 표시
-                Text(
-                  '전체',
-                  // 텍스트 스타일 설정 (크기: 16, 굵게)
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            // 발주하기 버튼
-            ElevatedButton(
-              // 버튼 클릭 시 호출되는 함수
-              onPressed: () {
-                // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정한 내용
-                ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
-                // OrderMainScreen으로 화면 전환
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => OrderMainScreen(
-                  )),
-                );
-              },
-              // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
-              style: ElevatedButton.styleFrom(
-                backgroundColor: BUTTON_COLOR,
-                foregroundColor: INPUT_BG_COLOR,
-              ),
-              // 버튼에 표시될 텍스트
-              child: Text('업데이트 요청하기'),
-            ),
-          ],
-        ),
-      );
+      // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+      final Size screenSize = MediaQuery.of(context).size;
 
-    default:
-      return Container(); // 기본으로 빈 컨테이너 반환
+      // 기준 화면 크기: 가로 393, 세로 852
+      final double referenceWidth = 393.0;
+      final double referenceHeight = 852.0;
+
+      // 비율을 기반으로 동적으로 크기와 위치 설정
+
+      // 버튼 관련 수치 동적 적용
+      final double bottomBtnC2Width = screenSize.width * (150 / referenceWidth);
+      final double bottomBtnC2Height = screenSize.height * (50 / referenceHeight);
+      final double bottomBtnC1X = screenSize.width * (15 / referenceWidth);
+      final double bottomBtnC2X = screenSize.width * (24 / referenceWidth);
+      final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
+      final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
+      final double bottomTextFontSize = screenSize.height * (16 / referenceHeight);
+      final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
+
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
+        child: SafeArea(
+          bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.098, // 화면 높이에 비례하여 동적 높이 설정
+            padding: EdgeInsets.only(bottom: bottomBarC2Y),
+            child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: bottomBtnC2X, vertical: bottomBtnC2Y), // 좌우 bottomBtnC2X, 상하 bottomBtnC2Y의 여백 추가
+              child: Row(
+                // Row의 주 축 방향에서의 정렬 방식을 공간을 동일하게 나눔
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 전체 선택 체크박스와 텍스트를 담을 Row
+                  Row(
+                    children: [
+                      // 체크박스 크기를 1.3배로 확대
+                      Transform.scale(
+                        scale: 1.3,
+                        child: Checkbox(
+                          // 체크박스의 선택 여부를 allChecked 상태로 설정
+                          value: allChecked,
+                          activeColor: Color(0xFF6FAD96),  // 체크박스 색상 변경
+                          // 체크박스 상태 변경 시 호출되는 함수
+                          onChanged: (bool? value) {
+                            // allCheckedProvider 상태 업데이트
+                            ref.read(allCheckedProvider.notifier).state = value!;
+                            // cartItemsProvider 상태에서 모든 아이템의 체크 상태를 변경
+                            ref.read(cartItemsProvider.notifier).toggleAll(value);
+                          },
+                        ),
+                      ),
+                      // 체크박스와 텍스트 사이의 간격 설정
+                      SizedBox(width: bottomBtnC1X),
+                      // "전체" 텍스트를 표시
+                      Text(
+                        '전체',
+                        // 텍스트 스타일 설정
+                        style: TextStyle(
+                            fontSize: bottomTextFontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'NanumGothic',
+                            color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // 발주하기 버튼
+                  Container(
+                    width: bottomBtnC2Width,
+                    height: bottomBtnC2Height,
+                    child: ElevatedButton(
+                      // 버튼 클릭 시 호출되는 함수
+                      onPressed: () {
+                        // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정한 내용
+                        ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
+                        // OrderMainScreen으로 화면 전환
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => OrderMainScreen(
+                          )),
+                        );
+                      },
+                      // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor:  Colors.white, // 텍스트 색상
+                        backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                      ),
+                      // 버튼에 표시될 텍스트
+                      child: Text('업데이트 요청하기',
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: bottomBtnFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                 ],
+               ),
+              ),
+            ),
+          ),
+        );
+      default:
+        return Container(); // 기본으로 빈 컨테이너 반환
+    }
   }
-}
 // ------ buildCommonBottomNavigationBar 위젯 내용 구현 끝
 
 // 왼쪽 상단 버튼 유형을 정의하는 열거형 관련 함수

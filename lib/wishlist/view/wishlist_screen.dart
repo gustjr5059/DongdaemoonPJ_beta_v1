@@ -214,7 +214,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     final double wishlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
     final double wishlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
     final double wishlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
-
+    final double wishlistPaddingX = screenSize.width * (17 / referenceHeight);
+    final double wishlistPaddingY = screenSize.width * (8 / referenceHeight);
 
     // List<ProductContent> wishlistItems = ref.watch(wishlistProvider);
 
@@ -252,18 +253,18 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-              padding: EdgeInsets.only(top: 5),
+              padding: EdgeInsets.only(top: 0),
               // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return Padding(
                       // 각 항목의 좌우 간격을 17.0으로 설정함.
-                      padding: const EdgeInsets.symmetric(horizontal: 17.0),
+                      padding: EdgeInsets.symmetric(horizontal: wishlistPaddingX),
                       child: Column(
                         children: [
                           WishlistItemsList(), // WishlistItemsList 클래스 사용
-                          SizedBox(height: 8),
+                          SizedBox(height: wishlistPaddingY),
                         ],
                       ),
                     );
