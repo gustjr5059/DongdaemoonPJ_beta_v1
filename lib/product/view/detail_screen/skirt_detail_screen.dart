@@ -113,6 +113,11 @@ class _SkirtDetailProductScreenState
         skirtDetailProductScreenPointScrollController
             .jumpTo(savedScrollPosition);
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
+        ref.read(colorSelectionIndexProvider.notifier).state = 0;
+        ref.read(colorSelectionTextProvider.notifier).state = null;
+        ref.read(colorSelectionUrlProvider.notifier).state = null;
+        ref.read(sizeSelectionIndexProvider.notifier).state = null;
       }
     });
 

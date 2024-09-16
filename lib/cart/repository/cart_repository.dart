@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // http 패키지를 사용하기 위해 import
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore를 사용하기 위해 import
 import 'package:firebase_storage/firebase_storage.dart'; // Firebase Storage를 사용하기 위해 import
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
+
+import 'package:crypto/crypto.dart'; // 해시 계산을 위한 crypto 패키지 사용
+import 'dart:convert'; // utf8 변환을 위해 사용
+
 
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 시작
 // CartItemRepository 클래스는 Firestore와의 데이터 통신을 담당하는 역할
@@ -37,7 +42,7 @@ class CartItemRepository {
   }
 
   // 장바구니에 아이템 추가하는 함수 - 선택된 색상, 사이즈, 수량 정보를 포함하여 장바구니 아이템을 Firestore에 추가
-  Future<void> addToCartItem(ProductContent product, String? selectedColorText,
+  Future<bool> addToCartItem(BuildContext context, ProductContent product, String? selectedColorText,
       String? selectedColorUrl, String? selectedSize) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
@@ -50,6 +55,15 @@ class CartItemRepository {
       print('User email not available');
       throw Exception('User email not available');
     }
+
+    // 중복 체크를 위한 해시 생성
+    final String combinedData = "${product.docId}|${product.category}|${product.productNumber}|"
+        "${product.thumbnail}|${product.briefIntroduction}|${product.originalPrice}|"
+        "${product.discountPrice}|${product.discountPercent}|${selectedColorText}|${selectedColorUrl}|${selectedSize}";
+
+    // 해시 생성 (SHA-256 사용)
+    final String productHash = sha256.convert(utf8.encode(combinedData)).toString();
+
 
     // Firestore에 저장할 데이터 준비
     final data = {
@@ -64,9 +78,27 @@ class CartItemRepository {
       'selected_color_text': selectedColorText, // 선택한 색상의 텍스트 데이터 저장
       'selected_color_image': null, // 나중에 저장될 이미지 URL
       'selected_size': selectedSize, // 선택한 사이즈
+      'product_hash': productHash, // 생성된 해시값을 함께 저장
       'timestamp': FieldValue.serverTimestamp(), // 현재 서버 타임스탬프를 저장
       'bool_checked': false, // 기본값으로 체크되지 않은 상태로 저장
     };
+
+    // Firestore 내 동일한 해시값이 있는지 확인
+    final querySnapshot = await firestore
+        .collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .where('product_hash', isEqualTo: productHash) // 해시로 중복 여부 확인
+        .get();
+
+    // 동일한 문서가 있을 경우 처리
+    if (querySnapshot.docs.isNotEmpty) {
+      print('해당 상품은 이미 요청품목에 담겨 있습니다.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('해당 상품은 이미 요청품목에 담겨 있습니다.')),
+      );
+      return false; // 중복이 있으면 false 반환하여 성공 메시지 표시하지 않음
+    }
 
     print('Adding product to cart: ${product.docId}, selected color: $selectedColorText, size: $selectedSize');
 
@@ -92,6 +124,8 @@ class CartItemRepository {
     // Firestore에 데이터 저장 - 문서 ID를 타임스탬프 기반으로 설정하여 최신순으로 정렬되도록 함
     await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
     print('Product added to cart for user: $userEmail');
+
+    return true; // 성공적으로 저장되면 true 반환
   }
 
   // Firestore에서 장바구니 아이템 목록을 가져오는 함수 - Firestore에서 'cart_item' 컬렉션의 문서를 가져와 List로 반환

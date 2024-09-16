@@ -32,11 +32,13 @@ void onCartButtonPressed(
       sizeSelectionIndexProvider); // sizeSelectionIndexProvider를 사용하여 선택된 사이즈 인덱스를 읽음
 
   cartRepository
-      .addToCartItem(
+      .addToCartItem(context,
       product, selectedColorText, selectedColorUrl, selectedSize)
-      .then((_) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('해당 상품이 요청품목 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
+      .then((isAdded) { // addToCartItem에서 성공 여부를 받아 처리
+    if (isAdded) { // 만약 데이터가 실제로 추가되었다면 성공 메시지를 표시
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('해당 상품이 요청품목 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
+    }
   }).catchError((error) {
     // 에러가 발생할 경우
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

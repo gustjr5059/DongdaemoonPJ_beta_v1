@@ -659,7 +659,7 @@ Widget buildCommonBottomNavigationBar(
           ),
         );
 
-  // '전체 체크박스', '합계' '발주하기' 버튼을 UI로 구현한 케이스 - 장바구니 화면에 구현
+  // '전체 체크박스', '발주하기' 버튼을 UI로 구현한 케이스 - 장바구니 화면에 구현
     case 3:
     // 전체 체크박스 선택 여부를 상태로 관리
       final allChecked = ref.watch(allCheckedProvider);
