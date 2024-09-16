@@ -143,8 +143,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           buttonColor = Color(0xFF4934CE); // 피그마에서 지정한 색상으로 변경
         });
 
-        // 2초 후에 홈 화면으로 이동
-        Timer(Duration(seconds: 2), () {
+        // 1초 후에 홈 화면으로 이동
+        Timer(Duration(seconds: 1), () {
           // userMeProvider를 통해 사용자 정보 저장
           ref.read(userMeProvider.notifier).login(
                 email: username,

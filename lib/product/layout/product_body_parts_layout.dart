@@ -1825,11 +1825,178 @@ class ProductDetailScreenTabs extends ConsumerWidget {
 // ------ 상품 상세 화면에서 '상품 정보', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 끝
 
 // -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 시작
+// class ProductInfoContents extends StatefulWidget {
+//   // ProductContent 타입의 product를 인자로 받는 ProductInfoContents 위젯 클래스 정의
+//   final ProductContent product;
+//
+//   // 생성자: product를 필수 인자로 받고, key는 선택적으로 받음
+//   const ProductInfoContents({Key? key, required this.product}) : super(key: key);
+//
+//   @override
+//   _ProductInfoContentsState createState() => _ProductInfoContentsState();
+// }
+//
+// class _ProductInfoContentsState extends State<ProductInfoContents> {
+//   // 추가 이미지를 표시할지 여부를 저장하는 변수, 초기값은 false
+//   bool showMoreImages = false;
+//
+//   // 이미지 URL을 받아서 이미지를 좌우로 꽉 차도록 원본비율을 유지하며 표시하는 위젯을 생성하는 함수인 buildProdInfoImage
+//   Widget buildProdInfoImage(String? imageUrl) {
+//     if (imageUrl == null || imageUrl.isEmpty) {
+//       // 이미지 URL이 null이거나 비어있으면 빈 컨테이너 반환
+//       return Container();
+//     }
+//     return Image.network(
+//       imageUrl,
+//       fit: BoxFit.fitWidth, // 원본 비율 유지하며 좌우로 꽉 차도록 설정
+//       width: MediaQuery.of(context).size.width, // 화면 너비에 맞춤
+//     );
+//   }
+//
+//   // 밑줄과 텍스트를 포함하는 위젯 생성하는 함수인 buildSectionTitle
+//   Widget buildSectionTitle(String title) {
+//
+//     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+//     final Size screenSize = MediaQuery.of(context).size;
+//
+//     // 기준 화면 크기: 가로 393, 세로 852
+//     final double referenceWidth = 393.0;
+//     final double referenceHeight = 852.0;
+//
+//     // 상세정보 및 문의 버튼 아래 정보 선 내 텍스트 크기 부분 수치
+//     final double buildSectionTitleFontSize = screenSize.height * (16 / referenceHeight);
+//     // 상세정보 및 문의 버튼 아래 정보 선과 텍스트 사이 간격 부분 수치
+//     final double buildSectionWidthX = screenSize.width * (8 / referenceWidth);
+//     // 상세정보 및 문의 버튼 아래 정보 선 아래 간격 부분 수치
+//     final double buildSectionLineY = screenSize.height * (10 / referenceHeight);
+//
+//     return Column(
+//       children: [
+//         Row(
+//           children: [
+//             Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 좌측 선
+//             Padding(
+//               padding: EdgeInsets.only(left: buildSectionWidthX, right: buildSectionWidthX), // 좌우 여백 설정
+//               child: Text(
+//                 title,
+//                 style: TextStyle(
+//                   fontFamily: 'NanumGothic',
+//                   fontWeight: FontWeight.bold, // 글자 굵게 설정
+//                   fontSize: buildSectionTitleFontSize, // 글자 크기 설정
+//                   color: Color(0xFFDADADA), // 글자 색상 설정
+//                 ),
+//               ),
+//             ),
+//             Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 우측 선
+//           ],
+//         ),
+//         SizedBox(height: buildSectionLineY), // 아래쪽 여백 설정
+//       ],
+//     );
+//   }
+//
+//   // 내용 확장 관련 버튼을 빌드하는 위젯인 buildExpandButton
+//   Widget buildExpandButton(String text, IconData icon) {
+//
+//     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+//     final Size screenSize = MediaQuery.of(context).size;
+//
+//     // 기준 화면 크기: 가로 393, 세로 852
+//     final double referenceWidth = 393.0;
+//     final double referenceHeight = 852.0;
+//
+//     // 비율을 기반으로 동적으로 크기와 위치 설정
+//     final double ExpandBtnWidth = screenSize.width * (345 / referenceWidth);
+//     final double ExpandBtnHeight = screenSize.height * (54 / referenceHeight);
+//     final double ExpandBtnX = screenSize.width * (24 / referenceWidth);
+//     final double ExpandBtnFontSize = screenSize.height * (14 / referenceHeight);
+//     // ExpandButton과 정보 사이의 간격 수치
+//     final double ExpandBtnY = screenSize.height * (20 / referenceHeight);
+//
+//     return Container(
+//       height: ExpandBtnHeight,
+//       width: ExpandBtnWidth,
+//       margin: EdgeInsets.only(left: ExpandBtnX, top: ExpandBtnY),
+//       child: ElevatedButton.icon(
+//         onPressed: () {
+//           // 버튼 클릭 시 showMoreImages 값 토글
+//           setState(() {
+//             showMoreImages = !showMoreImages;
+//           });
+//         },
+//         style: ElevatedButton.styleFrom(
+//           foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
+//           backgroundColor: Colors.white, // 배경 색상
+//           side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
+//         ),
+//         icon: Icon(icon, size: ExpandBtnFontSize, color: Color(0xFF6FAD96)), // 아이콘 색상 설정
+//         label: Text(
+//           text,
+//           style: TextStyle(
+//               fontFamily: 'NanumGothic',
+//               fontSize: ExpandBtnFontSize,
+//               fontWeight: FontWeight.bold,
+//               color: Color(0xFF6FAD96)
+//           ), // 텍스트를 굵게 설정
+//         ),
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+//     final Size screenSize = MediaQuery.of(context).size;
+//
+//     // 기준 화면 크기: 세로 852
+//     final double referenceHeight = 852.0;
+//
+//     // 상품정보 내 내용 간의 간격 수치
+//     final double productInfoY = screenSize.height * (20 / referenceHeight);
+//
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start, // 이미지가 세로로 나열되도록 설정
+//       children: [
+//         buildSectionTitle('INTRO INFO'), // 섹션 제목 설정
+//         if (widget.product.detailIntroImages != null)
+//         // product의 detailIntroImages가 null이 아니면
+//           ...widget.product.detailIntroImages!.take(2).map(buildProdInfoImage).toList(), // 처음 두 개의 이미지를 표시
+//         if (!showMoreImages && widget.product.detailIntroImages != null && widget.product.detailIntroImages!.length > 2)
+//         // 추가 이미지를 표시하지 않는 상태에서 이미지가 2개 이상일 경우
+//           buildExpandButton('상품 정보 펼쳐보기', Icons.arrow_downward), // 확장 버튼 표시
+//         if (showMoreImages) ...[
+//           // 추가 이미지를 표시하는 상태일 경우
+//           if (widget.product.detailIntroImages != null)
+//           // product의 detailIntroImages가 null이 아니면
+//             ...widget.product.detailIntroImages!.skip(2).map(buildProdInfoImage).toList(), // 나머지 이미지를 표시
+//           SizedBox(height: productInfoY), // 여백 설정
+//           buildSectionTitle('COLOR INFO'), // 섹션 제목 설정
+//           ...?widget.product.detailColorImages?.map(buildProdInfoImage).toList(), // 색상 정보 이미지 표시
+//           SizedBox(height: productInfoY), // 여백 설정
+//           buildSectionTitle('SIZE INFO'), // 섹션 제목 설정
+//           buildProdInfoImage(widget.product.detailSizeImage), // 사이즈 정보 이미지 표시
+//           SizedBox(height: productInfoY), // 여백 설정
+//           buildSectionTitle('DETAILS INFO'), // 섹션 제목 설정
+//           buildProdInfoImage(widget.product.detailDetailsImage), // 상세 정보 이미지 표시
+//           SizedBox(height: productInfoY), // 여백 설정
+//           buildSectionTitle('FABRIC INFO'), // 섹션 제목 설정
+//           buildProdInfoImage(widget.product.detailFabricImage), // 원단 정보 이미지 표시
+//           SizedBox(height: productInfoY), // 여백 설정
+//           buildSectionTitle('WASHING INFO'), // 섹션 제목 설정
+//           buildProdInfoImage(widget.product.detailWashingImage), // 세탁 정보 이미지 표시
+//           buildExpandButton('접기', Icons.arrow_upward), // 접기 버튼 표시
+//         ],
+//       ],
+//     );
+//   }
+// }
+// -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 끝
+
+// -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 시작
 class ProductInfoContents extends StatefulWidget {
-  // ProductContent 타입의 product를 인자로 받는 ProductInfoContents 위젯 클래스 정의
   final ProductContent product;
 
-  // 생성자: product를 필수 인자로 받고, key는 선택적으로 받음
   const ProductInfoContents({Key? key, required this.product}) : super(key: key);
 
   @override
@@ -1837,107 +2004,115 @@ class ProductInfoContents extends StatefulWidget {
 }
 
 class _ProductInfoContentsState extends State<ProductInfoContents> {
-  // 추가 이미지를 표시할지 여부를 저장하는 변수, 초기값은 false
-  bool showMoreImages = false;
+  bool showFullImage = false; // 전체 이미지를 표시할지 여부를 저장하는 변수, 초기값은 false로 설정됨.
 
-  // 이미지 URL을 받아서 이미지를 좌우로 꽉 차도록 원본비율을 유지하며 표시하는 위젯을 생성하는 함수인 buildProdInfoImage
-  Widget buildProdInfoImage(String? imageUrl) {
+  // 이미지 URL을 받아서 이미지의 1/5만 표시하는 위젯을 생성하는 함수임.
+  Widget buildPartialImage(String? imageUrl) {
     if (imageUrl == null || imageUrl.isEmpty) {
-      // 이미지 URL이 null이거나 비어있으면 빈 컨테이너 반환
-      return Container();
+      return Container(); // 이미지가 없을 경우 빈 컨테이너 반환됨.
     }
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.fitWidth, // 원본 비율 유지하며 좌우로 꽉 차도록 설정
-      width: MediaQuery.of(context).size.width, // 화면 너비에 맞춤
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return ClipRect(
+          child: Align(
+            alignment: Alignment.topCenter, // 이미지 상단 정렬됨.
+            heightFactor: 0.2, // 이미지의 높이가 1/5로 설정됨.
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.fitWidth, // 이미지가 좌우로 꽉 차도록 원본 비율이 유지됨.
+              width: MediaQuery.of(context).size.width, // 화면 너비에 맞추어 이미지 크기가 조정됨.
+            ),
+          ),
+        );
+      },
     );
   }
 
-  // 밑줄과 텍스트를 포함하는 위젯 생성하는 함수인 buildSectionTitle
+  // 전체 이미지를 표시하는 함수임.
+  Widget buildFullImage(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return Container(); // 이미지가 없을 경우 빈 컨테이너 반환됨.
+    }
+
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.fitWidth, // 이미지가 좌우로 꽉 차도록 원본 비율이 유지됨.
+      width: MediaQuery.of(context).size.width, // 화면 너비에 맞추어 이미지 크기가 조정됨.
+    );
+  }
+
+  // 밑줄과 텍스트를 포함하는 UI 위젯을 생성하는 함수임.
   Widget buildSectionTitle(String title) {
+    final Size screenSize = MediaQuery.of(context).size; // 기기의 화면 크기를 동적으로 가져옴.
+    final double referenceWidth = 393.0; // 기준 화면 너비를 설정함.
+    final double referenceHeight = 852.0; // 기준 화면 높이를 설정함.
 
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 상세정보 및 문의 버튼 아래 정보 선 내 텍스트 크기 부분 수치
-    final double buildSectionTitleFontSize = screenSize.height * (16 / referenceHeight);
-    // 상세정보 및 문의 버튼 아래 정보 선과 텍스트 사이 간격 부분 수치
-    final double buildSectionWidthX = screenSize.width * (8 / referenceWidth);
-    // 상세정보 및 문의 버튼 아래 정보 선 아래 간격 부분 수치
-    final double buildSectionLineY = screenSize.height * (10 / referenceHeight);
+    final double buildSectionTitleFontSize = screenSize.height * (16 / referenceHeight); // 텍스트 크기가 화면 높이에 비례하여 설정됨.
+    final double buildSectionWidthX = screenSize.width * (8 / referenceWidth); // 텍스트 좌우 여백 크기가 화면 너비에 비례하여 설정됨.
+    final double buildSectionLineY = screenSize.height * (10 / referenceHeight); // 텍스트 아래 간격이 화면 높이에 비례하여 설정됨.
 
     return Column(
       children: [
         Row(
           children: [
-            Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 좌측 선
+            Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 좌측에 두께 3의 회색 선이 표시됨.
             Padding(
-              padding: EdgeInsets.only(left: buildSectionWidthX, right: buildSectionWidthX), // 좌우 여백 설정
+              padding: EdgeInsets.only(left: buildSectionWidthX, right: buildSectionWidthX), // 좌우에 여백이 설정됨.
               child: Text(
-                title,
+                title, // 매개변수로 전달받은 제목이 표시됨.
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
-                  fontWeight: FontWeight.bold, // 글자 굵게 설정
-                  fontSize: buildSectionTitleFontSize, // 글자 크기 설정
-                  color: Color(0xFFDADADA), // 글자 색상 설정
+                  fontFamily: 'NanumGothic', // 폰트가 NanumGothic으로 설정됨.
+                  fontWeight: FontWeight.bold, // 글자가 굵게 설정됨.
+                  fontSize: buildSectionTitleFontSize, // 글자 크기가 설정됨.
+                  color: Color(0xFFDADADA), // 글자 색상이 회색으로 설정됨.
                 ),
               ),
             ),
-            Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 우측 선
+            Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 우측에 두께 3의 회색 선이 표시됨.
           ],
         ),
-        SizedBox(height: buildSectionLineY), // 아래쪽 여백 설정
+        SizedBox(height: buildSectionLineY), // 텍스트 아래에 여백이 추가됨.
       ],
     );
   }
 
-  // 내용 확장 관련 버튼을 빌드하는 위젯인 buildExpandButton
+  // 이미지 전체를 볼 수 있는 버튼을 생성하는 함수임.
   Widget buildExpandButton(String text, IconData icon) {
+    final Size screenSize = MediaQuery.of(context).size; // 기기의 화면 크기를 동적으로 가져옴.
+    final double referenceWidth = 393.0; // 기준 화면 너비를 설정함.
+    final double referenceHeight = 852.0; // 기준 화면 높이를 설정함.
 
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double ExpandBtnWidth = screenSize.width * (345 / referenceWidth);
-    final double ExpandBtnHeight = screenSize.height * (54 / referenceHeight);
-    final double ExpandBtnX = screenSize.width * (24 / referenceWidth);
-    final double ExpandBtnFontSize = screenSize.height * (14 / referenceHeight);
-    // ExpandButton과 정보 사이의 간격 수치
-    final double ExpandBtnY = screenSize.height * (20 / referenceHeight);
+    final double ExpandBtnWidth = screenSize.width * (345 / referenceWidth); // 버튼 너비가 화면 너비에 비례하여 설정됨.
+    final double ExpandBtnHeight = screenSize.height * (54 / referenceHeight); // 버튼 높이가 화면 높이에 비례하여 설정됨.
+    final double ExpandBtnX = screenSize.width * (24 / referenceWidth); // 버튼의 좌측 여백이 화면 너비에 비례하여 설정됨.
+    final double ExpandBtnFontSize = screenSize.height * (14 / referenceHeight); // 버튼 텍스트 크기가 화면 높이에 비례하여 설정됨.
+    final double ExpandBtnY = screenSize.height * (10 / referenceHeight); // 버튼 상단 여백이 화면 높이에 비례하여 설정됨.
 
     return Container(
-      height: ExpandBtnHeight,
-      width: ExpandBtnWidth,
-      margin: EdgeInsets.only(left: ExpandBtnX, top: ExpandBtnY),
+      height: ExpandBtnHeight, // 버튼 높이가 설정됨.
+      width: ExpandBtnWidth, // 버튼 너비가 설정됨.
+      margin: EdgeInsets.only(left: ExpandBtnX, top: ExpandBtnY), // 좌측 및 상단 여백이 설정됨.
       child: ElevatedButton.icon(
         onPressed: () {
-          // 버튼 클릭 시 showMoreImages 값 토글
           setState(() {
-            showMoreImages = !showMoreImages;
+            showFullImage = !showFullImage; // 버튼 클릭 시 전체 이미지 표시 여부가 토글됨.
           });
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
-          backgroundColor: Colors.white, // 배경 색상
-          side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
+          foregroundColor: Color(0xFF6FAD96), // 텍스트 색상이 설정됨.
+          backgroundColor: Colors.white, // 버튼 배경색이 흰색으로 설정됨.
+          side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상이 설정됨.
         ),
-        icon: Icon(icon, size: ExpandBtnFontSize, color: Color(0xFF6FAD96)), // 아이콘 색상 설정
+        icon: Icon(icon, size: ExpandBtnFontSize, color: Color(0xFF6FAD96)), // 아이콘과 그 크기 및 색상이 설정됨.
         label: Text(
-          text,
+          text, // 버튼에 표시될 텍스트가 설정됨.
           style: TextStyle(
-              fontFamily: 'NanumGothic',
-              fontSize: ExpandBtnFontSize,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF6FAD96)
-          ), // 텍스트를 굵게 설정
+            fontFamily: 'NanumGothic', // 텍스트 폰트가 NanumGothic으로 설정됨.
+            fontSize: ExpandBtnFontSize, // 텍스트 크기가 설정됨.
+            fontWeight: FontWeight.bold, // 텍스트가 굵게 설정됨.
+            color: Color(0xFF6FAD96), // 텍스트 색상이 설정됨.
+          ),
         ),
       ),
     );
@@ -1945,48 +2120,23 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
 
   @override
   Widget build(BuildContext context) {
-
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 세로 852
-    final double referenceHeight = 852.0;
-
-    // 상품정보 내 내용 간의 간격 수치
-    final double productInfoY = screenSize.height * (20 / referenceHeight);
+    final Size screenSize = MediaQuery.of(context).size; // 화면 크기를 동적으로 가져옴.
+    final double referenceHeight = 852.0; // 기준 화면 높이를 설정함.
+    final double productInfoY = screenSize.height * (10 / referenceHeight); // 이미지 사이 여백이 설정됨.
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // 이미지가 세로로 나열되도록 설정
+      crossAxisAlignment: CrossAxisAlignment.start, // 위젯이 세로로 나열됨.
       children: [
-        buildSectionTitle('INTRO INFO'), // 섹션 제목 설정
-        if (widget.product.detailIntroImages != null)
-        // product의 detailIntroImages가 null이 아니면
-          ...widget.product.detailIntroImages!.take(2).map(buildProdInfoImage).toList(), // 처음 두 개의 이미지를 표시
-        if (!showMoreImages && widget.product.detailIntroImages != null && widget.product.detailIntroImages!.length > 2)
-        // 추가 이미지를 표시하지 않는 상태에서 이미지가 2개 이상일 경우
-          buildExpandButton('상품 정보 펼쳐보기', Icons.arrow_downward), // 확장 버튼 표시
-        if (showMoreImages) ...[
-          // 추가 이미지를 표시하는 상태일 경우
-          if (widget.product.detailIntroImages != null)
-          // product의 detailIntroImages가 null이 아니면
-            ...widget.product.detailIntroImages!.skip(2).map(buildProdInfoImage).toList(), // 나머지 이미지를 표시
-          SizedBox(height: productInfoY), // 여백 설정
-          buildSectionTitle('COLOR INFO'), // 섹션 제목 설정
-          ...?widget.product.detailColorImages?.map(buildProdInfoImage).toList(), // 색상 정보 이미지 표시
-          SizedBox(height: productInfoY), // 여백 설정
-          buildSectionTitle('SIZE INFO'), // 섹션 제목 설정
-          buildProdInfoImage(widget.product.detailSizeImage), // 사이즈 정보 이미지 표시
-          SizedBox(height: productInfoY), // 여백 설정
-          buildSectionTitle('DETAILS INFO'), // 섹션 제목 설정
-          buildProdInfoImage(widget.product.detailDetailsImage), // 상세 정보 이미지 표시
-          SizedBox(height: productInfoY), // 여백 설정
-          buildSectionTitle('FABRIC INFO'), // 섹션 제목 설정
-          buildProdInfoImage(widget.product.detailFabricImage), // 원단 정보 이미지 표시
-          SizedBox(height: productInfoY), // 여백 설정
-          buildSectionTitle('WASHING INFO'), // 섹션 제목 설정
-          buildProdInfoImage(widget.product.detailWashingImage), // 세탁 정보 이미지 표시
-          buildExpandButton('접기', Icons.arrow_upward), // 접기 버튼 표시
-        ],
+        buildSectionTitle('DETAILS INFO'), // 섹션 제목을 생성하여 화면에 표시됨.
+        if (!showFullImage)
+          buildPartialImage(widget.product.detailDetailsImage), // 전체 이미지가 아닌 부분 이미지가 표시됨.
+        if (showFullImage)
+          buildFullImage(widget.product.detailDetailsImage), // 전체 이미지가 표시됨.
+        SizedBox(height: productInfoY), // 이미지 사이에 여백이 추가됨.
+        if (!showFullImage)
+          buildExpandButton('상품 정보 펼쳐보기', Icons.arrow_downward), // 전체 이미지 보기 버튼이 표시됨.
+        if (showFullImage)
+          buildExpandButton('접기', Icons.arrow_upward), // 이미지 접기 버튼이 표시됨.
       ],
     );
   }
