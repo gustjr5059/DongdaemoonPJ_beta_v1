@@ -110,6 +110,8 @@ class _BestSubMainScreenState extends ConsumerState<BestSubMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController bestSubMainScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -215,6 +217,10 @@ class _BestSubMainScreenState extends ConsumerState<BestSubMainScreen>
       _largeBannerAutoScroll.startAutoScroll();
       _small1BannerAutoScroll.startAutoScroll();
     });
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -264,6 +270,9 @@ class _BestSubMainScreenState extends ConsumerState<BestSubMainScreen>
         .removeListener(_updateScrollPosition);
 
     bestSubMainScreenPointScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }

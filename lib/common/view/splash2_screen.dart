@@ -14,7 +14,8 @@ import '../../user/view/login_screen.dart'; // 로그인 화면으로 이동하�
 // 애플리케이션에서 사용될 색상을 정의한 파일을 임포트합니다.
 // 이 파일은 애플리케이션의 다양한 구성 요소에 사용될 색상의 값을 상수로 정의하여,
 // 디자인의 일관성을 유지하는 데 도움을 줍니다.
-import '../const/colors.dart'; // 색상 정의 파일 임포트
+import '../const/colors.dart';
+import '../layout/common_body_parts_layout.dart'; // 색상 정의 파일 임포트
 
 class SplashScreen2 extends StatefulWidget {
   @override
@@ -22,11 +23,27 @@ class SplashScreen2 extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen2> {
+
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   @override
   void initState() {
     super.initState();
     // 위젯이 생성될 때 _checkAutoLogin 메서드를 호출하여 자동 로그인 여부를 확인.
     _checkAutoLogin();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
+  }
+
+  @override
+  void dispose() {
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
+    super.dispose();
   }
 
   // 자동 로그인을 확인하는 비동기 메서드.

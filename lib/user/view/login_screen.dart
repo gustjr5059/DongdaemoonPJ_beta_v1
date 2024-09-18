@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../common/component/custom_text_form_field.dart';
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/view/home_screen.dart';
 import '../provider/user_me_provider.dart';
@@ -59,6 +60,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   // 로그인 성공 시 버튼 색상을 변경하기 위한 변수
   Color buttonColor = Color(0xFF303030); // 기본 색상
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   @override
   void initState() {
     super.initState();
@@ -82,6 +85,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         });
       }
     });
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   @override
@@ -89,6 +96,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // 포커스 노드 해제
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose();
   }
 

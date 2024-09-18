@@ -86,6 +86,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController cartScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -130,6 +132,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
 
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -158,6 +163,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     authStateChangesSubscription?.cancel();
 
     cartScreenPointScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }

@@ -4,10 +4,12 @@ import 'dart:async';
 // 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 디자인 패키지를 임포트합니다.
 import 'package:flutter/material.dart'; // Flutter의 기본 디자인 위젯
+import 'package:flutter/services.dart';
 // 외부 웹사이트나 애플리케이션 링크를 열기 위한 URL Launcher 패키지를 임포트합니다.
 import 'package:url_launcher/url_launcher.dart';
 
@@ -483,3 +485,73 @@ void showCustomSnackBar(BuildContext context, String message) {
   );
 }
 // ------ 공통 SnackBar 함수 내용 끝
+
+// ------ 네트워크 상태 체크 함수 내용 시작
+class NetworkChecker {
+  final BuildContext context;
+  StreamSubscription? _subscription; // StreamSubscription 추가
+
+  NetworkChecker(this.context);
+
+  // 네트워크 상태를 실시간으로 감지하는 메서드
+  void checkNetworkStatus() {
+    _subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      for (var result in results) {
+        if (result == ConnectivityResult.none) {
+          showNetworkErrorDialog();
+          break;
+        }
+      }
+    });
+  }
+
+  // 네트워크 오류 알림창을 띄우는 메서드
+  void showNetworkErrorDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            '[네트워크 에러]',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: 'NanumGothic',
+            ),
+          ),
+          content: const Text(
+            '인터넷 연결을 확인하고 앱을 재실행 해주세요.',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                '확인',
+                style: TextStyle(
+                  color: Color(0xFF6FAD96),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                ),
+              ),
+              onPressed: () {
+                if (Platform.isAndroid) {
+                  exit(0); // Android에서는 앱을 종료
+                } else if (Platform.isIOS) {
+                  Navigator.of(context).pop(); // iOS에서는 알림창만 닫기
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 리스너 해제 메서드
+  void dispose() {
+    _subscription?.cancel(); // 스트림 구독 해제
+  }
+}
+// ------ 네트워크 상태 체크 함수 내용 끝

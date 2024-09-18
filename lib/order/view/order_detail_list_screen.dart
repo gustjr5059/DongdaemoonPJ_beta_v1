@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
+import '../../common/layout/common_body_parts_layout.dart';
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart'; // 공통 UI 컴포넌트 파일
@@ -71,6 +72,8 @@ class _OrderListDetailScreenState
   late ScrollController
   orderListDetailScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -119,6 +122,10 @@ class _OrderListDetailScreenState
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -146,6 +153,10 @@ class _OrderListDetailScreenState
 
     orderListDetailScreenPointScrollController
         .dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 

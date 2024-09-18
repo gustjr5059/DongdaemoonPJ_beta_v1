@@ -133,6 +133,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     'https://www.netflix.com/kr', // 두 번째 배너 클릭 시 넷플릭스로 이동
   ];
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -383,6 +385,10 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       _small2BannerAutoScroll.startAutoScroll();
       _small3BannerAutoScroll.startAutoScroll();
     });
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -447,6 +453,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     homeScreenPointScrollController.dispose(); // ScrollController 해제
 
     homeTopBarPointAutoScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }

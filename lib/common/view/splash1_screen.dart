@@ -14,7 +14,8 @@ import 'package:flutter_svg/svg.dart';
 // 애플리케이션 전반에 걸쳐 사용될 색상의 상수를 정의한 파일을 가져옵니다.
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
-import '../const/colors.dart'; // 앱에서 사용할 색상 상수를 정의한 파일을 가져옴.
+import '../const/colors.dart';
+import '../layout/common_body_parts_layout.dart'; // 앱에서 사용할 색상 상수를 정의한 파일을 가져옴.
 
 // 스플래시 스크린의 StatefulWidget을 정의함.
 class SplashScreen1 extends StatefulWidget {
@@ -29,6 +30,8 @@ class _SplashScreenState extends State<SplashScreen1>
   late Animation<double> _animation; // 애니메이션 값을 저장할 변수를 선언함.
   late AnimationController _loadingController; // 로딩 인디케이터의 회전을 제어하기 위한 컨트롤러
   late Animation<double> _rotationAnimation; // 회전 속도를 조절하기 위한 애니메이션
+
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
   @override
   void initState() {
@@ -70,6 +73,22 @@ class _SplashScreenState extends State<SplashScreen1>
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
     });
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
+  }
+
+  @override
+  void dispose() {
+    // 위젯이 제거될 때 애니메이션 컨트롤러를 정리함.
+    _controller.dispose();
+    _loadingController.dispose(); // 새로 추가한 컨트롤러도 정리함.
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -107,13 +126,5 @@ class _SplashScreenState extends State<SplashScreen1>
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // 위젯이 제거될 때 애니메이션 컨트롤러를 정리함.
-    _controller.dispose();
-    _loadingController.dispose(); // 새로 추가한 컨트롤러도 정리함.
-    super.dispose();
   }
 }
