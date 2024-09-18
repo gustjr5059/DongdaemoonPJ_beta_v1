@@ -36,13 +36,11 @@ void onCartButtonPressed(
       product, selectedColorText, selectedColorUrl, selectedSize)
       .then((isAdded) { // addToCartItem에서 성공 여부를 받아 처리
     if (isAdded) { // 만약 데이터가 실제로 추가되었다면 성공 메시지를 표시
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('해당 상품이 요청품목 목록에 담겼습니다.'))); // 성공 메시지를 화면에 표시
+      showCustomSnackBar(context, '해당 상품이 요청품목 목록에 담겼습니다.'); // 성공 메시지를 화면에 표시
     }
   }).catchError((error) {
     // 에러가 발생할 경우
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('요청품목에 상품을 담는 중 오류가 발생했습니다.'))); // 오류 메시지를 화면에 표시
+    showCustomSnackBar(context, '요청품목에 상품을 담는 중 오류가 발생했습니다.'); // 오류 메시지를 화면에 표시
   });
 }
 
@@ -222,19 +220,13 @@ class CartItemsList extends ConsumerWidget {
                                       ref.read(cartItemsProvider.notifier)
                                           .removeItem(itemId);
                                       Navigator.of(context).pop(); // 삭제 후 대화상자를 닫음
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('상품이 업데이트 요청목록에서 삭제되었습니다.')),
-                                      );
+                                      showCustomSnackBar(context, '상품이 업데이트 요청목록에서 삭제되었습니다.');
                                     } else {
                                       // 유효하지 않은 상품 ID 메시지를 표시함
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('삭제하는 중 오류가 발생했습니다.')),
-                                      );
+                                      showCustomSnackBar(context, '삭제하는 중 오류가 발생했습니다.');
                                     }
                                   } catch (e) { // 예외가 발생할 경우 에러 메시지를 처리함
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('삭제 중 오류 발생: $e')), // 오류 메시지를 텍스트로 표시함
-                                    );
+                                    showCustomSnackBar(context, '삭제 중 오류 발생: $e'); // 오류 메시지를 텍스트로 표시함
                                   }
                                 },
                               ),

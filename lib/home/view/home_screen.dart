@@ -583,6 +583,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     // 앱 바 부분 수치
     final double expandedHeight =
         screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
+    final double preferredSizeHeight =
+        screenSize.height * (60 / referenceHeight); // 상단 탭 바 높이 비율
 
     // 대배너 부분 관련 수치
     final double homeScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
@@ -614,6 +616,10 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
     final double homeWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
+    // 홈 화면 컨텐츠 사이의 간격 수치
+    final double interval1Y = screenSize.height * (5 / referenceHeight);
+    final double interval2Y = screenSize.height * (10 / referenceHeight);
+    final double interval3Y = screenSize.height * (350 / referenceHeight);
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -666,7 +672,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 // backgroundColor: BUTTON_COLOR,
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(60.0),
+                  preferredSize: Size.fromHeight(preferredSizeHeight),
                   // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
                   child: Container(
                     // color: BUTTON_COLOR, // 상단 탭 바 색상 설정
@@ -737,7 +743,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                               // padding: const EdgeInsets.all(
                               //     2),
                             ),
-                            SizedBox(height: 5), // 높이 10으로 간격 설정
+                            SizedBox(height: interval1Y), // 높이 간격 설정
                             // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
                             // 중간 카테고리 버튼 리스트를 카드뷰로 구성
                             CommonCardView(
@@ -751,7 +757,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
                                   4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
-                            SizedBox(height: 10), // 높이 15로 간격 설정
+                            SizedBox(height: interval2Y), // 높이 간격 설정
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: Container(
@@ -796,22 +802,22 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                               padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
                                   0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
                             ),
-                            SizedBox(height: 10), // 높이 15로 간격 설정
+                            SizedBox(height: interval2Y), // 높이 간격 설정
                             // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
                             // 신상품 섹션
                             _buildSectionCard(context, ref, "신상",
                                 buildNewProductsSection, NewSubMainScreen()),
-                            SizedBox(height: 5), // 높이 10으로 간격 설정
+                            SizedBox(height: interval1Y), // 높이 간격 설정
                             // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
                             // 베스트 제품 섹션
                             _buildSectionCard(context, ref, "스테디 셀러",
                                 buildBestProductsSection, BestSubMainScreen()),
-                            SizedBox(height: 5), // 높이 10으로 간격 설정
+                            SizedBox(height: interval1Y), // 높이 간격 설정
                             // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
                             // 할인 제품 섹션
                             _buildSectionCard(context, ref, "특가 상품",
                                 buildSaleProductsSection, SaleSubMainScreen()),
-                            SizedBox(height: 5), // 높이 15로 간격 설정
+                            SizedBox(height: interval1Y), // 높이 간격 설정
                             // 두 번째 작은 배너 섹션
                             CommonCardView(
                               content: Container(
@@ -856,7 +862,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                               padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
                                   0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
                             ),
-                            SizedBox(height: 10), // 높이 15로 간격 설정
+                            SizedBox(height: interval2Y), // 높이 간격 설정
                             // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
                             // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
                             _buildSectionCard(
@@ -865,7 +871,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 "봄",
                                 buildSpringProductsSection,
                                 SpringSubMainScreen()),
-                            SizedBox(height: 5), // 높이 10으로 간격 설정
+                            SizedBox(height: interval1Y), // 높이 간격 설정
                             // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
                             _buildSectionCard(
                                 context,
@@ -873,7 +879,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 "여름",
                                 buildSummerProductsSection,
                                 SummerSubMainScreen()),
-                            SizedBox(height: 5), // 높이 15로 간격 설정
+                            SizedBox(height: interval1Y), // 높이 간격 설정
                             // 세 번째 작은 배너 섹션
                             CommonCardView(
                               content: Container(
@@ -918,7 +924,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                               padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
                                   0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
                             ),
-                            SizedBox(height: 10), // 높이 15로 간격 설정
+                            SizedBox(height: interval2Y), // 높이 간격 설정
                             // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
                             _buildSectionCard(
                                 context,
@@ -926,7 +932,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 "가을",
                                 buildAutumnProductsSection,
                                 AutumnSubMainScreen()),
-                            SizedBox(height: 10), // 높이 10으로 간격 설정
+                            SizedBox(height: interval2Y), // 높이 간격 설정
                             // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                             _buildSectionCard(
                                 context,
@@ -934,7 +940,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 "겨울",
                                 buildWinterProductsSection,
                                 WinterSubMainScreen()),
-                            SizedBox(height: 350), // 높이 15로 간격 설정
+                            SizedBox(height: interval3Y), // 높이 간격 설정
                           ],
                         ),
                       );
@@ -977,6 +983,20 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
             ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
             : Color(0xFFF1F1F1); // F1F1F1 색상
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    // AppBar 관련 수치 동적 적용
+    final double plusBtnWidth = screenSize.width * (24 / referenceWidth);
+    final double plusBtnHeight = screenSize.width * (24 / referenceWidth);
+    final double plusBtnX = screenSize.width * (8 / referenceWidth);
+    final double plusBtnY = screenSize.height * (1 / referenceHeight);
+
     // 공통 카드 뷰를 반환함. 이 카드는 Stack 위젯을 사용하여 contentBuilder로 생성된 콘텐츠와 오른쪽 상단에 위치한 '더보기' 버튼을 포함함.
     return CommonCardView(
       content: Stack(
@@ -985,13 +1005,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
           contentBuilder(ref, context),
           // '더보기' 버튼을 위치시키며, 이 버튼을 탭하면 destinationScreen으로 네비게이션함.
           Positioned(
-            right: 8,
-            top: 1,
+            right: plusBtnX,
+            top: plusBtnY,
             child: GestureDetector(
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => destinationScreen)),
               child: Image.asset('asset/img/misc/button_img/plus_button1.png',
-                  width: 24, height: 24, color: Color(0xFF6FAD96)),
+                  width: plusBtnWidth, height: plusBtnHeight, color: Color(0xFF6FAD96)),
             ),
           ),
         ],

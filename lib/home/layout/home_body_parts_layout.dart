@@ -276,12 +276,16 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,13 +296,13 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
           '신상', // 섹션 제목을 '신상'으로 설정
           style: TextStyle(
               color: Colors.black, // 텍스트 색상
-              fontSize: 20, // 텍스트 크기
+              fontSize: SectionTextFontSize, // 텍스트 크기
               fontFamily: 'NanumGothic',
               fontWeight: FontWeight.bold,
               ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
@@ -332,12 +336,16 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,10 +354,15 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
         padding: EdgeInsets.only(left: SectionX),
         child: Text(
           '스테디 셀러', // 섹션 제목을 '최고'로 설정
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
@@ -383,12 +396,16 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,11 +413,16 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: Text(
-          '특가 상품', // 섹션 제목을 '할인'으로 설정
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          '특가 상품', // 섹션 제목을 '특가 상품'으로 설정
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
@@ -434,12 +456,16 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -448,10 +474,15 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
         padding: EdgeInsets.only(left: SectionX),
         child: Text(
           '봄', // 섹션 제목을 '봄'으로 설정
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
@@ -485,12 +516,16 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,10 +534,15 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
         padding: EdgeInsets.only(left: SectionX),
         child: Text(
           '여름', // 섹션 제목을 '여름'으로 설정
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
@@ -536,12 +576,16 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -550,10 +594,15 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
         padding: EdgeInsets.only(left: SectionX),
         child: Text(
           '가을', // 섹션 제목을 '가을'로 설정
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
@@ -587,12 +636,16 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-
   // 신상 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY =
+      screenSize.height * (8 / referenceHeight);
+  final double SectionTextFontSize =
+      screenSize.height * (20 / referenceHeight);
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -601,10 +654,15 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
         padding: EdgeInsets.only(left: SectionX),
         child: Text(
           '겨울', // 섹션 제목을 '겨울'로 설정
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      SizedBox(height: 8), // 제목과 리스트 사이에 간격 추가
+      SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(

@@ -173,8 +173,10 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  final double largeBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
-  final double largeBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
+  final double commonBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
+  final double commonBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
+  final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X
+  final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y
 
   final asyncBannerImages = ref.watch(bannerImagesProvider);
 
@@ -204,14 +206,14 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
             borderRadius: borderRadius, // 모서리 반경 전달
           ),
           Positioned(
-            right: 20,
-            bottom: 7,
+            right: commonBannerViewPageIndicatorX,
+            bottom: commonBannerViewPageIndicatorY,
             child: Consumer(
               builder: (context, ref, child) {
                 final currentPage = ref.watch(currentPageProvider);
                 return Container(
-                  width: largeBannerViewPageIndicatorWidth, // 페이지 번호 너비 설정
-                  height: largeBannerViewPageIndicatorHeight, // 페이지 번호 높이 설정
+                  width: commonBannerViewPageIndicatorWidth, // 페이지 번호 너비 설정
+                  height: commonBannerViewPageIndicatorHeight, // 페이지 번호 높이 설정
                   alignment: Alignment.center, // 중앙 정렬
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.5),
@@ -285,9 +287,21 @@ class CommonCardView extends StatelessWidget {
 // ------ 공통적으로 사용될 'top' 버튼 위젯 내용 시작
 // 'Top' 버튼을 구현하는 위젯
 Widget buildTopButton(BuildContext context, ScrollController scrollController) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  final double topBarX = screenSize.width * (22 / referenceWidth); // X
+  final double topBarY = screenSize.height * (170 / referenceHeight); // Y
+
   return Positioned(
-    top: MediaQuery.of(context).size.height - 170, // 화면 하단에서 200px 위로 위치
-    right: 22, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
+    top: screenSize.height - topBarY, // 화면 하단에서 200px 위로 위치
+    right: topBarX, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
     child: FloatingActionButton(
       mini: true, // 버튼을 작게 설정
       backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
@@ -427,3 +441,45 @@ List<Widget> buildAlertActions(BuildContext context, {
   }
 }
 // ------ 공통적으로 사용될 알림창 관련 함수 내용 끝
+
+// ------ 공통 SnackBar 함수 내용 시작
+// 공통 SnackBar 함수
+void showCustomSnackBar(BuildContext context, String message) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 스낵바 부분 수치
+  final double commonSnackBarWidth = screenSize.width * (393 / referenceWidth);
+  final double commonSnackBarX = screenSize.width * (20 / referenceWidth);
+  final double commonSnackBarY = screenSize.height * (16 / referenceHeight);
+  final double commonSnackBarTextFontSize = screenSize.height * (14 / referenceHeight);
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message,
+      style: TextStyle(
+        fontFamily: 'NanumGothic',
+        fontWeight: FontWeight.bold,
+        fontSize: commonSnackBarTextFontSize,
+        color: Colors.white,
+        ),
+      ),
+      backgroundColor: Color(0xCC718B82),  // 색상을 80% 투명도로 설정
+      width: commonSnackBarWidth,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: commonSnackBarX,
+        vertical: commonSnackBarY,
+      ),
+    ),
+  );
+}
+// ------ 공통 SnackBar 함수 내용 끝

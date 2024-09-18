@@ -188,12 +188,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.width * (51 / referenceWidth); // 왼쪽 여백 비율
     final double screenTitleTop =
         screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
+    final double screenLoginText1FontSize =
+        screenSize.height * (24 / referenceHeight);
+    final double screenTitleTextFontSize =
+        screenSize.height * (26 / referenceHeight);
 
     // 화면 서브제목 부분 수치
     final double screenSubTitleLeft =
         screenSize.width * (49 / referenceWidth); // 왼쪽 여백 비율
     final double screenSubTitleTop =
         screenSize.height * (268 / referenceHeight); // 위쪽 여백 비율
+    final double screenSubTitleTextFontSize =
+        screenSize.height * (14 / referenceHeight);
 
     // 이메일 입력 필드 및 비밀번호 입력 필드 수치
     final double insertFieldWidth =
@@ -202,6 +208,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.height * (42 / referenceHeight); // 세로 비율
     final double insertFieldLeft =
         screenSize.width * (40 / referenceWidth); // 왼쪽 여백 비율
+    final double insertFieldTextFontSize1 =
+        screenSize.height * (12 / referenceHeight);
+    final double insertFieldTextFontSize2 =
+        screenSize.height * (14 / referenceHeight);
+    final double insertFieldX =
+        screenSize.width * (10 / referenceWidth);
+    final double insertFieldY =
+        screenSize.height * (5 / referenceHeight);
     final double emailFieldTop =
         screenSize.height * (330 / referenceHeight); // 위쪽 여백 비율
     final double passwordFieldTop =
@@ -220,6 +234,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.width * (80 / referenceWidth); // 왼쪽 여백 비율
     final double autoLoginTextTop =
         screenSize.height * (436 / referenceHeight); // 위쪽 여백 비율
+    final double autoLoginCheckboxTextFontSize =
+        screenSize.height * (12 / referenceHeight);
 
     // 로그인 버튼 부분 수치
     final double loginBtnLeft =
@@ -230,6 +246,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.width * (313 / referenceWidth); // 너비 비율
     final double loginBtnHeight =
         screenSize.height * (42 / referenceHeight); // 높이 비율
+    final double loginBtnTextFontSize =
+        screenSize.height * (16 / referenceHeight);
 
     // 로그인 에러 메세지 바 부분 수치
     final double loginErrorMessageBarLeft =
@@ -240,6 +258,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.width * (313 / referenceWidth); // 너비 비율
     final double loginErrorMessageBarHeight =
         screenSize.height * (24 / referenceHeight); // 높이 비율
+    final double loginErrorMessageBarTextFontSize =
+        screenSize.height * (12 / referenceHeight);
 
     // 회원가입 및 아이디/비밀번호 찾기 버튼 부분 수치
     final double joinAndFindBtnLeft =
@@ -250,6 +270,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.width * (218 / referenceWidth); // 너비 비율
     final double joinAndFindBtnHeight =
         screenSize.height * (24 / referenceHeight); // 높이 비율
+    final double joinAndFindBtnTextFontSize =
+        screenSize.height * (12 / referenceHeight);
 
     return Scaffold(
       body: Stack(
@@ -271,7 +293,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Text(
                 'Login',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: screenLoginText1FontSize,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
@@ -289,7 +311,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold,
-                  fontSize: 26,
+                  fontSize: screenTitleTextFontSize,
                   color: Colors.white,
                 ),
               ),
@@ -306,7 +328,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
-                  fontSize: 14,
+                  fontSize: screenSubTitleTextFontSize,
                   color: Colors.white,
                 ),
               ),
@@ -332,11 +354,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   hintText: '이메일을 입력해주세요.',
                   hintStyle: TextStyle(
                     fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-                    fontSize: 12, // Figma에서 설정된 폰트 크기
+                    fontSize: insertFieldTextFontSize1, // Figma에서 설정된 폰트 크기
                     fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
                     color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
                   ),
-                  hintTextPadding: EdgeInsets.only(left: 10.0, top: 5.0),
+                  hintTextPadding: EdgeInsets.only(left: insertFieldX, top: insertFieldY),
                   // Figma에서 제공된 위치 반영
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (String value) {
@@ -344,7 +366,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   textStyle: TextStyle(
                     fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                    fontSize: 14, // 피그마에서 지정된 폰트 크기
+                    fontSize: insertFieldTextFontSize2, // 피그마에서 지정된 폰트 크기
                     fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
                     color: Color(0xFF4933CE), // 텍스트 색상
                   ),
@@ -390,11 +412,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   hintText: '비밀번호를 입력해주세요.',
                   hintStyle: TextStyle(
                     fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-                    fontSize: 12, // Figma에서 설정된 폰트 크기
+                    fontSize: insertFieldTextFontSize1, // Figma에서 설정된 폰트 크기
                     fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
                     color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
                   ),
-                  hintTextPadding: EdgeInsets.only(left: 10.0, top: 5.0),
+                  hintTextPadding: EdgeInsets.only(left: insertFieldX, top: insertFieldY),
                   // Figma에서 제공된 위치 반영
                   obscureText: true,
                   onChanged: (String value) {
@@ -402,7 +424,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   textStyle: TextStyle(
                     fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                    fontSize: 14, // 피그마에서 지정된 폰트 크기
+                    fontSize: insertFieldTextFontSize2, // 피그마에서 지정된 폰트 크기
                     fontWeight: FontWeight.normal, // 피그마에서 설정된 굵기
                     color: Color(0xFF4933CE), // 텍스트 색상
                   ),
@@ -465,7 +487,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 '자동로그인',
                 style: TextStyle(
                   fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                  fontSize: 12, // 피그마에서 지정된 폰트 크기
+                  fontSize: autoLoginCheckboxTextFontSize, // 피그마에서 지정된 폰트 크기
                   fontWeight: FontWeight.bold, // 피그마에서 지정된 굵기
                   color: Colors.white.withOpacity(0.9), // 피그마에서 지정된 색상 및 투명도
                 ),
@@ -488,6 +510,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
+                    // 포커스를 해제하는 부분
+                    // (이를 통해서 이메일 또는 비밀번호 입력 필드에 포커스가 생길 시, 오류 메세지 초기화되는 로직이 정상적으로 구현됨)
+                    FocusScope.of(context).unfocus();
+
+                    // 로그인 시도 및 자동 로그인 정보 저장
                     _login();
                     _saveAutoLogin();
                   },
@@ -502,7 +529,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     '로그인',
                     style: TextStyle(
                       fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
-                      fontSize: 16, // Figma에서 지정한 폰트 크기
+                      fontSize: loginBtnTextFontSize, // Figma에서 지정한 폰트 크기
                       fontWeight: FontWeight.bold, // Figma에서 지정한 굵기
                       color: Colors.white
                           .withOpacity(0.9), // Figma에서 지정한 텍스트 색상 및 투명도
@@ -535,7 +562,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       errorMessage!,
                       style: TextStyle(
                         fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                        fontSize: 12, // 피그마에서 지정한 폰트 크기
+                        fontSize: loginErrorMessageBarTextFontSize, // 피그마에서 지정한 폰트 크기
                         fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
                         color: Colors.white, // 피그마에서 지정한 텍스트 색상
                       ),
@@ -573,7 +600,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               '회원가입',
                               style: TextStyle(
                                 fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                fontSize: 12, // 피그마에서 지정된 폰트 크기
+                                fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
                                 fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
                                 color: Colors.white, // 피그마에서 지정된 텍스트 색상
                               ),
@@ -595,7 +622,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               '아이디/비밀번호 찾기',
                               style: TextStyle(
                                 fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                fontSize: 12, // 피그마에서 지정된 폰트 크기
+                                fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
                                 fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
                                 color: Colors.white, // 피그마에서 지정된 텍스트 색상
                               ),

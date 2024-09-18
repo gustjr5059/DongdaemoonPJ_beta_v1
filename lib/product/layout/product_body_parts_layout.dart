@@ -141,11 +141,24 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    // sortBtn 관련 수치 동적 적용
+    final double sortBtnX = screenSize.width * (8 / referenceWidth);
+    final double sortBtneY = screenSize.height * (4 / referenceHeight);
+
     // 현재 선택된 정렬 타입을 감시
     final selectedSortType = ref.watch(sortButtonProvider);
     // print("현재 정렬 상태: $selectedSortType");
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: sortBtnX, vertical: sortBtneY),
       // 좌우 및 상하 패딩 설정
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,11 +180,25 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
   // 버튼 세부 내용인 _buildExpandedSortButton 위젯
   Widget _buildExpandedSortButton(BuildContext context, String title,
       WidgetRef ref, String selectedSortType) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    // sortBtn 관련 수치 동적 적용
+    final double sortBtn1X = screenSize.width * (4 / referenceWidth);
+    final double sortBtn2X = screenSize.width * (8 / referenceWidth);
+    final double sortBtnTextFontSize = screenSize.height * (12 / referenceHeight);
+
     // 현재 버튼이 선택된 상태인지 여부를 결정
     final bool isSelected = selectedSortType == title;
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우 패딩 설정
+        padding: EdgeInsets.symmetric(horizontal: sortBtn1X), // 좌우 패딩 설정
         child: ElevatedButton(
           onPressed: () {
             ref.read(sortButtonProvider.notifier).state =
@@ -185,7 +212,7 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
             // 선택된 버튼 배경 색상 설정
             minimumSize: Size(0, 40),
             // 최소 버튼 크기 설정
-            padding: EdgeInsets.symmetric(horizontal: 8.0), // 버튼 내 패딩 설정
+            padding: EdgeInsets.symmetric(horizontal: sortBtn2X), // 버튼 내 패딩 설정
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(67),
             ),
@@ -196,7 +223,7 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
               title,
               textAlign: TextAlign.center, // 텍스트 가운데 정렬
               style: TextStyle(
-                fontSize: 12,
+                fontSize: sortBtnTextFontSize,
                 color: Color(0xFFFFFFFF),
                 fontFamily: 'NanumGothic',
                 fontWeight: FontWeight.w800, // ExtraBold
@@ -1003,6 +1030,7 @@ class ProductInfoDetailScreenNavigation {
 
     // 기준 화면 크기: 가로 393, 세로 852
     final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
@@ -1011,6 +1039,35 @@ class ProductInfoDetailScreenNavigation {
         screenSize.width * (160 / referenceWidth); // 가로 비율
     final double DetailDocThumnailWidth =
         screenSize.width * (152 / DetailDocWidth); // 가로 비율
+    final double DetailDoc1X =
+        screenSize.width * (6 / referenceWidth);
+    final double DetailDoc2X =
+        screenSize.width * (2 / referenceWidth);
+    final double DetailDoc3X =
+        screenSize.width * (4 / referenceWidth);
+    final double DetailDoc4X =
+        screenSize.width * (-9 / referenceWidth);
+    final double DetailDoc1Y =
+        screenSize.height * (6 / referenceHeight);
+    final double DetailDoc2Y =
+        screenSize.height * (2 / referenceHeight);
+    final double DetailDoc3Y =
+        screenSize.height * (-11 / referenceHeight);
+    final double DetailDocTextFontSize1 =
+        screenSize.height * (12 / referenceHeight);
+    final double DetailDocTextFontSize2 =
+        screenSize.height * (13 / referenceHeight);
+    final double DetailDocTextFontSize3 =
+        screenSize.height * (14 / referenceHeight);
+    final double DetailDocTextFontSize4 =
+        screenSize.height * (16 / referenceHeight);
+    final double DetailDocColorImageWidth =
+        screenSize.height * (14 / referenceHeight);
+    final double DetailDocColorImageHeight =
+        screenSize.height * (14 / referenceHeight);
+
+    final double interval1Y = screenSize.height * (5 / referenceHeight);
+    final double interval1X = screenSize.width * (8 / referenceWidth);
 
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
@@ -1021,8 +1078,8 @@ class ProductInfoDetailScreenNavigation {
       child: Container(
         // 높이를 명시적으로 지정하여 충분한 공간 확보
         width: DetailDocWidth,
-        padding: EdgeInsets.all(4.0),
-        margin: EdgeInsets.all(4.0),
+        padding: EdgeInsets.all(DetailDoc3X),
+        margin: EdgeInsets.all(DetailDoc3X),
         decoration: BoxDecoration(
           // 컨테이너의 배경색을 흰색으로 설정하고 둥근 모서리 및 그림자 효과를 추가함
           color: Colors.white,
@@ -1055,8 +1112,8 @@ class ProductInfoDetailScreenNavigation {
                             width: DetailDocThumnailWidth, fit: BoxFit.cover),
                         // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
                         Positioned(
-                          top: -9,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
-                          right: -7, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
+                          top: DetailDoc3Y,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
+                          right: DetailDoc4X, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
                           // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
                           child: WishlistIconButton(
                               product: product, // 'product' 파라미터를 전달
@@ -1065,15 +1122,15 @@ class ProductInfoDetailScreenNavigation {
                       ],
                     ),
                   ),
-                SizedBox(height: 10),
+                SizedBox(height: interval1Y),
                 // 제품 간단한 소개를 표시함.
                 if (product.briefIntroduction != null)
                   Padding(
-                    padding: const EdgeInsets.only(left: 6.0, top: 8.0),
+                    padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc1Y),
                     child: Text(
                       product.briefIntroduction!,
                       style: TextStyle(
-                          fontSize: 11,
+                          fontSize: DetailDocTextFontSize1,
                           color: Colors.black, // 텍스트 색상
                           fontFamily: 'NanumGothic',
                           fontWeight: FontWeight.bold,),
@@ -1081,30 +1138,30 @@ class ProductInfoDetailScreenNavigation {
                       overflow: TextOverflow.visible, // 넘치는 텍스트는 '...'으로 표시함.
                     ),
                   ),
-                SizedBox(height: 5),
+                SizedBox(height: interval1Y),
                 // 원래 가격을 표시함. 소수점은 표시하지 않음.
                 if (product.originalPrice != null)
                   Padding(
-                    padding: const EdgeInsets.only(left: 6.0, top: 2.0),
+                    padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Row(
                       children: [
                         Text(
                           '${product.originalPrice!.toStringAsFixed(0)}원',
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: DetailDocTextFontSize2,
                               color: Color(0xFF6C6C6C), // 텍스트 색상
                               fontFamily: 'NanumGothic',
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.lineThrough
                           ),
                         ),
-                          SizedBox(width: 8),
+                          SizedBox(width: interval1X),
                           // 할인율을 빨간색으로 표시함.
                           if (product.discountPercent != null)
                             Text(
                               '${product.discountPercent!.toStringAsFixed(0)}%',
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: DetailDocTextFontSize3,
                                   color: Colors.red, // 텍스트 색상
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.w800, // ExtraBold로 설정
@@ -1116,18 +1173,18 @@ class ProductInfoDetailScreenNavigation {
                 // 할인된 가격을 표시함. 소수점은 표시하지 않음.
                 if (product.discountPrice != null)
                   Padding(
-                    padding: const EdgeInsets.only(left: 6.0, top: 2.0),
+                    padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Text(
                           '${product.discountPrice!.toStringAsFixed(0)}원',
                           style: TextStyle(
-                              fontSize: 16,
+                              fontSize: DetailDocTextFontSize4,
                               color: Colors.black, // 텍스트 색상
                               fontFamily: 'NanumGothic',
                               fontWeight: FontWeight.w800, // ExtraBold로 설정,
                           ),
                         ),
                       ),
-                SizedBox(height: 5),
+                SizedBox(height: interval1Y),
                 // 제품 색상 옵션을 표시함.
                 if (product.colors != null)
                   Row(
@@ -1137,10 +1194,10 @@ class ProductInfoDetailScreenNavigation {
                       index,
                       Padding(
                         padding: EdgeInsets.only(
-                          left: index == 0 ? 6.0 : 2.0, // 첫 번째 이미지만 left: 14.0, 나머지는 right: 2.0
-                          right: 2.0,
+                          left: index == 0 ? DetailDoc1X : DetailDoc2X, // 첫 번째 이미지만 left: 14.0, 나머지는 right: 2.0
+                          right: DetailDoc2X,
                         ),
-                        child: Image.network(color, width: 14, height: 14),
+                        child: Image.network(color, width: DetailDocColorImageWidth, height: DetailDocColorImageHeight),
                       ),
                     ))
                         .values
@@ -1159,6 +1216,7 @@ class ProductInfoDetailScreenNavigation {
 // ------ buildProdDetailScreenContents 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
 Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
     ProductContent product, PageController pageController) {
+
   // print('buildProductDetails 호출');
   // print('상품 소개: ${product.briefIntroduction}');
   return SingleChildScrollView(
@@ -1227,11 +1285,19 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
-  // 기준 화면 크기: 세로 852
+  // 기준 화면 크기: 가로 393 세로 852
+  final double referenceWidht = 393.0;
   final double referenceHeight = 852.0;
 
   // 이미지 부분 수치
   final double ImageSliderSectionHeight = screenSize.height * (421 / referenceHeight);
+
+  // 이미지 인디케이터 부분 수치
+  final double ImageSliderSectionIndicator1Y = screenSize.height * (10 / referenceHeight);
+  final double ImageSliderSectionIndicator2Y = screenSize.height * (8 / referenceHeight);
+  final double ImageSliderSectionIndicator1X = screenSize.width * (4 / referenceWidht);
+  final double ImageSliderSectionIndicatorWidth = screenSize.height * (12 / referenceHeight);
+  final double ImageSliderSectionIndicatorHeight = screenSize.height * (12 / referenceHeight);
 
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
@@ -1277,7 +1343,7 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
       ),
       // 페이지 인디케이터를 Row 위젯으로 생성.
       Positioned(
-        bottom: 10.0, // 이미지 하단에서 10픽셀 위에 인디케이터를 배치
+        bottom: ImageSliderSectionIndicator1Y, // 이미지 하단에서 10픽셀 위에 인디케이터를 배치
         left: 0,
         right: 0, // 양쪽 모두 0으로 설정해 인디케이터를 중앙 정렬
         child: Row(
@@ -1288,9 +1354,9 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
               // 인디케이터를 클릭하면 해당 페이지로 이동함.
               onTap: () => pageController.jumpToPage(entry.key),
               child: Container(
-                width: 12.0,
-                height: 12.0,
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                width: ImageSliderSectionIndicatorWidth,
+                height: ImageSliderSectionIndicatorHeight,
+                margin: EdgeInsets.symmetric(vertical: ImageSliderSectionIndicator2Y, horizontal: ImageSliderSectionIndicator1X),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   // 현재 페이지를 기준으로 인디케이터 색상을 변경함.

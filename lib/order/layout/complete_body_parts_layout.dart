@@ -89,112 +89,112 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
               _buildInfoRow(context, '발주 일자', orderDate),
               _buildInfoRow(context, '발주자 성함', customerName),
               SizedBox(height: updateRequireCompleteInfo1Y), // 간격
-              ...orderItems.map((product) {
-                final int originalPrice = product.originalPrice?.round() ?? 0;
-                final int discountPrice = product.discountPrice?.round() ?? 0;
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: CommonCardView(
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product.briefIntroduction ?? '',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            if (product.thumbnail != null)
-                              Image.network(
-                                product.thumbnail!,
-                                height: 130,
-                                width: 130,
-                                fit: BoxFit.cover,
-                              ),
-                            SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (product.productNumber != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 4.0),
-                                    child: Text(
-                                      '상품번호: ${product.productNumber}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                Text(
-                                  '${numberFormat.format(originalPrice)}원',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[500],
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${numberFormat.format(discountPrice)}원',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      '${product.discountPercent?.round() ?? 0}%',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    if (product.selectedColorImage != null)
-                                      Image.network(
-                                        product.selectedColorImage!,
-                                        height: 20,
-                                        width: 20,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      product.selectedColorText ?? '',
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 30.0),
-                                  child: Text(
-                                    product.selectedSize ?? '',
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    backgroundColor: BEIGE_COLOR,
-                    elevation: 2,
-                    padding: const EdgeInsets.all(8),
-                  ),
-                );
-              }).toList(),
+              // ...orderItems.map((product) {
+              //   final int originalPrice = product.originalPrice?.round() ?? 0;
+              //   final int discountPrice = product.discountPrice?.round() ?? 0;
+              //   return Padding(
+              //     padding: const EdgeInsets.only(bottom: 16.0),
+              //     child: CommonCardView(
+              //       content: Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             product.briefIntroduction ?? '',
+              //             style: TextStyle(
+              //               fontSize: 18,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //           SizedBox(height: 8),
+              //           Row(
+              //             children: [
+              //               if (product.thumbnail != null)
+              //                 Image.network(
+              //                   product.thumbnail!,
+              //                   height: 130,
+              //                   width: 130,
+              //                   fit: BoxFit.cover,
+              //                 ),
+              //               SizedBox(width: 8),
+              //               Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   if (product.productNumber != null)
+              //                     Padding(
+              //                       padding: const EdgeInsets.only(bottom: 4.0),
+              //                       child: Text(
+              //                         '상품번호: ${product.productNumber}',
+              //                         style: TextStyle(
+              //                           fontSize: 14,
+              //                           fontWeight: FontWeight.bold,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   Text(
+              //                     '${numberFormat.format(originalPrice)}원',
+              //                     style: TextStyle(
+              //                       fontSize: 14,
+              //                       color: Colors.grey[500],
+              //                       decoration: TextDecoration.lineThrough,
+              //                     ),
+              //                   ),
+              //                   Row(
+              //                     children: [
+              //                       Text(
+              //                         '${numberFormat.format(discountPrice)}원',
+              //                         style: TextStyle(
+              //                           fontSize: 18,
+              //                           fontWeight: FontWeight.bold,
+              //                         ),
+              //                       ),
+              //                       SizedBox(width: 8),
+              //                       Text(
+              //                         '${product.discountPercent?.round() ?? 0}%',
+              //                         style: TextStyle(
+              //                           fontSize: 18,
+              //                           color: Colors.red,
+              //                           fontWeight: FontWeight.bold,
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                   SizedBox(height: 8),
+              //                   Row(
+              //                     children: [
+              //                       if (product.selectedColorImage != null)
+              //                         Image.network(
+              //                           product.selectedColorImage!,
+              //                           height: 20,
+              //                           width: 20,
+              //                           fit: BoxFit.cover,
+              //                         ),
+              //                       SizedBox(width: 8),
+              //                       Text(
+              //                         product.selectedColorText ?? '',
+              //                         style: TextStyle(fontSize: 18),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                   SizedBox(height: 5),
+              //                   Padding(
+              //                     padding: const EdgeInsets.only(left: 30.0),
+              //                     child: Text(
+              //                       product.selectedSize ?? '',
+              //                       style: TextStyle(fontSize: 18),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ],
+              //           ),
+              //         ],
+              //       ),
+              //       backgroundColor: BEIGE_COLOR,
+              //       elevation: 2,
+              //       padding: const EdgeInsets.all(8),
+              //     ),
+              //   );
+              // }).toList(),
               SizedBox(height: combackHomeBtn2Y),
               // 홈으로 이동하는 버튼
               Center(

@@ -61,11 +61,11 @@ class UserInfoWidget extends ConsumerWidget {
         final email = userInfo?['email'] ?? '-';
         final phoneNumber = userInfo?['phone_number'] ?? '-';
 
-        // 휴대폰 번호 입력 필드에 사용할 컨트롤러 생성
-        // 파이어베이스 내 휴대폰 번호 데이터가 있을 시, 불러오고 없으면 직접 입력 부분이 바로 구현
-        // 휴대폰 번호를 불러온 경우에도 커서를 갖다대면 직접 입력 부분이 활성화
-        TextEditingController phoneNumberController = TextEditingController(
-            text: phoneNumber);
+        // // 휴대폰 번호 입력 필드에 사용할 컨트롤러 생성
+        // // 파이어베이스 내 휴대폰 번호 데이터가 있을 시, 불러오고 없으면 직접 입력 부분이 바로 구현
+        // // 휴대폰 번호를 불러온 경우에도 커서를 갖다대면 직접 입력 부분이 활성화
+        // TextEditingController phoneNumberController = TextEditingController(
+        //     text: phoneNumber);
 
         return Padding(
           padding: EdgeInsets.only(left: updateRequirePadding, right: updateRequirePadding, top: updateRequirePadding),
@@ -406,9 +406,7 @@ class UpdateOrderButton extends ConsumerWidget {
                         4, // 탭 인덱스 업데이트 (하단 탭 바 내 4개 버튼 모두 비활성화)
                       );
                     } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('업데이트 요청 중 오류가 발생했습니다: $e')), // 오류 메시지 표시
-                      );
+                      showCustomSnackBar(context, '업데이트 요청 중 오류가 발생했습니다: $e'); // 오류 메시지 표시
                     }
                   },
                 ),
@@ -430,89 +428,89 @@ class UpdateOrderButton extends ConsumerWidget {
 }
 // ------- 업데이트 요청 버튼을 구성하는 UI 관련 UpdateOrderButton 클래스 내용 끝 부분
 
-// ------- 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
-// OrderItemWidget 클래스는 상품의 상세 정보를 화면에 표시하는 역할을 담당.
-class OrderItemWidget extends StatelessWidget {
-  final ProductContent product; // 상품 정보를 저장하는 필드
-
-  OrderItemWidget({required this.product}); // 생성자에서 상품 정보를 받아옴
-
-  @override
-  Widget build(BuildContext context) {
-    final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0), // 카드 내부 여백 설정
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-          children: [
-            if (product.briefIntroduction != null) // briefIntroduction가 null이 아닌 경우에만 표시
-              Text(
-                product.briefIntroduction!,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 글자 크기 18, 굵게 설정
-              ),
-            if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
-              Text(
-                '상품번호: ${product.productNumber}', // productNumber 내용을 표시
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
-              ),
-            SizedBox(height: 8), // 텍스트와 이미지 사이에 8 픽셀 높이의 여백 추가
-            Row(
-              children: [
-                if (product.thumbnail != null) // thumbnail이 null이 아닌 경우에만 표시
-                  Image.network(
-                    product.thumbnail!,
-                    height: 100, // 이미지 높이 100 픽셀
-                    width: 100, // 이미지 너비 100 픽셀
-                    fit: BoxFit.cover, // 이미지를 잘라서 맞춤
-                  ),
-                SizedBox(width: 8), // 이미지와 텍스트 사이에 8 픽셀 너비의 여백 추가
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-                  children: [
-                    Text(
-                      '${numberFormat.format(product.originalPrice)}원',
-                      style: TextStyle(
-                        fontSize: 14, // 글자 크기 14
-                        color: Colors.grey[500], // 글자 색상 회색
-                        decoration: TextDecoration.lineThrough, // 취소선 스타일 적용
-                      ),
-                    ),
-                    Text(
-                      '${numberFormat.format(product.discountPrice)}원',
-                      style: TextStyle(
-                        fontSize: 18, // 글자 크기 18
-                        fontWeight: FontWeight.bold, // 글자 굵게 설정
-                      ),
-                    ),
-                    Text(
-                      '${product.discountPercent?.round()}%',
-                      style: TextStyle(
-                        fontSize: 18, // 글자 크기 18
-                        color: Colors.red, // 글자 색상 빨간색
-                        fontWeight: FontWeight.bold, // 글자 굵게 설정
-                      ),
-                    ),
-                    if (product.selectedColorImage != null) // selectedColorImage가 null이 아닌 경우에만 표시
-                      Image.network(
-                        product.selectedColorImage!,
-                        height: 20, // 이미지 높이 20 픽셀
-                        width: 20, // 이미지 너비 20 픽셀
-                        fit: BoxFit.cover, // 이미지를 잘라서 맞춤
-                      ),
-                    Text('색상: ${product.selectedColorText}'), // 색상 텍스트 표시
-                    Text('사이즈: ${product.selectedSize}'), // 사이즈 텍스트 표시
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-// ------ 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
+// // ------- 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
+// // OrderItemWidget 클래스는 상품의 상세 정보를 화면에 표시하는 역할을 담당.
+// class OrderItemWidget extends StatelessWidget {
+//   final ProductContent product; // 상품 정보를 저장하는 필드
+//
+//   OrderItemWidget({required this.product}); // 생성자에서 상품 정보를 받아옴
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
+//     return Card(
+//       child: Padding(
+//         padding: const EdgeInsets.all(8.0), // 카드 내부 여백 설정
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+//           children: [
+//             if (product.briefIntroduction != null) // briefIntroduction가 null이 아닌 경우에만 표시
+//               Text(
+//                 product.briefIntroduction!,
+//                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 글자 크기 18, 굵게 설정
+//               ),
+//             if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
+//               Text(
+//                 '상품번호: ${product.productNumber}', // productNumber 내용을 표시
+//                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
+//               ),
+//             SizedBox(height: 8), // 텍스트와 이미지 사이에 8 픽셀 높이의 여백 추가
+//             Row(
+//               children: [
+//                 if (product.thumbnail != null) // thumbnail이 null이 아닌 경우에만 표시
+//                   Image.network(
+//                     product.thumbnail!,
+//                     height: 100, // 이미지 높이 100 픽셀
+//                     width: 100, // 이미지 너비 100 픽셀
+//                     fit: BoxFit.cover, // 이미지를 잘라서 맞춤
+//                   ),
+//                 SizedBox(width: 8), // 이미지와 텍스트 사이에 8 픽셀 너비의 여백 추가
+//                 Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+//                   children: [
+//                     Text(
+//                       '${numberFormat.format(product.originalPrice)}원',
+//                       style: TextStyle(
+//                         fontSize: 14, // 글자 크기 14
+//                         color: Colors.grey[500], // 글자 색상 회색
+//                         decoration: TextDecoration.lineThrough, // 취소선 스타일 적용
+//                       ),
+//                     ),
+//                     Text(
+//                       '${numberFormat.format(product.discountPrice)}원',
+//                       style: TextStyle(
+//                         fontSize: 18, // 글자 크기 18
+//                         fontWeight: FontWeight.bold, // 글자 굵게 설정
+//                       ),
+//                     ),
+//                     Text(
+//                       '${product.discountPercent?.round()}%',
+//                       style: TextStyle(
+//                         fontSize: 18, // 글자 크기 18
+//                         color: Colors.red, // 글자 색상 빨간색
+//                         fontWeight: FontWeight.bold, // 글자 굵게 설정
+//                       ),
+//                     ),
+//                     if (product.selectedColorImage != null) // selectedColorImage가 null이 아닌 경우에만 표시
+//                       Image.network(
+//                         product.selectedColorImage!,
+//                         height: 20, // 이미지 높이 20 픽셀
+//                         width: 20, // 이미지 너비 20 픽셀
+//                         fit: BoxFit.cover, // 이미지를 잘라서 맞춤
+//                       ),
+//                     Text('색상: ${product.selectedColorText}'), // 색상 텍스트 표시
+//                     Text('사이즈: ${product.selectedSize}'), // 사이즈 텍스트 표시
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+// // ------ 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
 
 // ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
 class OrderListItemWidget extends ConsumerWidget {
@@ -613,14 +611,9 @@ class OrderListItemWidget extends ConsumerWidget {
                               'orderNumber': orderNumber, // 발주 번호를 전달함
                             }).future);
                             Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
-
-                            ScaffoldMessenger.of(context).showSnackBar( // 삭제 성공 메시지를 스낵바로 표시함
-                              SnackBar(content: Text('발주 내역이 삭제되었습니다.')), // 성공 메시지 텍스트를 설정함
-                            );
+                            showCustomSnackBar(context, '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
                           } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
-                            ScaffoldMessenger.of(context).showSnackBar( // 오류 메시지를 스낵바로 표시함
-                              SnackBar(content: Text('발주 내역 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 텍스트를 설정함
-                            );
+                            showCustomSnackBar(context, '발주 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
                           }
                         },
                       ),

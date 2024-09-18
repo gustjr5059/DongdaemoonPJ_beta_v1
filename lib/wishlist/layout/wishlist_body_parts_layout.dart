@@ -65,16 +65,12 @@ class WishlistIconButton extends ConsumerWidget {
                 // 로컬 상태 업데이트
                 wishlistNotifier.removeItem(product.docId);
                 // 사용자에게 알림 표시
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('상품이 찜 목록에서 비워졌습니다.')),
-                );
+                showCustomSnackBar(context, '상품이 찜 목록에서 비워졌습니다.');
               } catch (e) {
                 // 오류 발생 시 로컬 상태 복원
                 wishlistNotifier.toggleItem(product.docId);
                 // 사용자에게 오류 알림 표시
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('찜 목록에서 비우는 중 오류가 발생했습니다.')),
-                );
+                showCustomSnackBar(context, '찜 목록에서 비우는 중 오류가 발생했습니다.');
               }
             } else {
               // 상품이 찜 목록에 없는 경우
@@ -84,16 +80,12 @@ class WishlistIconButton extends ConsumerWidget {
                 // 로컬 상태 업데이트
                 wishlistNotifier.addItem(product.docId);
                 // 사용자에게 알림 표시
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('상품이 찜 목록에 담겼습니다.')),
-                );
+                showCustomSnackBar(context, '상품이 찜 목록에 담겼습니다.');
               } catch (e) {
                 // 오류 발생 시 로컬 상태 복원
                 wishlistNotifier.toggleItem(product.docId);
                 // 사용자에게 오류 알림 표시
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('찜 목록에 담는 중 오류가 발생했습니다.')),
-                );
+                showCustomSnackBar(context, '찜 목록에 담는 중 오류가 발생했습니다.');
               }
             }
           },
@@ -365,19 +357,13 @@ class WishlistItemsList extends ConsumerWidget {
                                               ref.read(wishlistItemProvider(userEmail).notifier).removeItem(itemId);
                                               Navigator.of(context).pop(); // 삭제 후 대화상자를 닫음
                                               // 스낵바로 삭제 성공 메시지를 표시함
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('상품이 찜 목록에서 삭제되었습니다.')),
-                                              );
+                                              showCustomSnackBar(context, '상품이 찜 목록에서 삭제되었습니다.');
                                             } else {
                                               // 유효하지 않은 상품 ID 메시지를 표시함
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('삭제하는 중 오류가 발생했습니다.')),
-                                              );
+                                              showCustomSnackBar(context, '삭제하는 중 오류가 발생했습니다.');
                                             }
                                           } catch (e) { // 예외가 발생할 경우 에러 메시지를 처리함
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(content: Text('삭제 중 오류 발생: $e')), // 오류 메시지를 텍스트로 표시함
-                                            );
+                                            showCustomSnackBar(context, '삭제 중 오류 발생: $e'); // 오류 메시지를 텍스트로 표시함
                                           }
                                         },
                                       ),

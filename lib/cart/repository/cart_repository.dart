@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // http 패키지를 사용하기 위해 import
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore를 사용하기 위해 import
 import 'package:firebase_storage/firebase_storage.dart'; // Firebase Storage를 사용하기 위해 import
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // 제품 모델을 사용하기 위해 import
 
 import 'package:crypto/crypto.dart'; // 해시 계산을 위한 crypto 패키지 사용
@@ -94,9 +95,7 @@ class CartItemRepository {
     // 동일한 문서가 있을 경우 처리
     if (querySnapshot.docs.isNotEmpty) {
       print('해당 상품은 이미 요청품목에 담겨 있습니다.');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('해당 상품은 이미 요청품목에 담겨 있습니다.')),
-      );
+      showCustomSnackBar(context, '해당 상품은 이미 요청품목에 담겨 있습니다.');
       return false; // 중복이 있으면 false 반환하여 성공 메시지 표시하지 않음
     }
 

@@ -46,6 +46,8 @@ import '../provider/common_state_provider.dart';
 
 import 'dart:io' show Platform;
 
+import 'common_body_parts_layout.dart';
+
 
 // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
 void updateStatusBar() {
@@ -137,10 +139,7 @@ AppBar buildCommonAppBar({
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        '이전 화면으로 이동할 수 없습니다.') // 이전 페이지로 돌아갈 수 없다는 메시지 표시
-                ));
+                showCustomSnackBar(context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 돌아갈 수 없다는 메시지 표시
               }
             },
           ),
@@ -776,11 +775,7 @@ Widget buildCommonBottomNavigationBar(
                         // 선택된 아이템이 있는지 확인
                         if (orderProducts.isEmpty) {
                           // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('업데이트 요청할 상품을 선택해주세요.'),
-                            ),
-                          );
+                          showCustomSnackBar(context, '업데이트 요청할 상품을 선택해주세요.');
                         } else {
                           // 체크된 상품이 있는 경우 발주 화면으로 이동
                           ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts); // 주문 아이템 상태 업데이트
@@ -994,13 +989,31 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   final double drawerLogoIconWidth =
       screenSize.width * (130 / referenceWidth); // 가로 비율
   final double drawerLogoIconHeight =
-      screenSize.height * (65 / referenceWidth); // 세로 비율
-  final double drawerHeaderHeight =
-      screenSize.height * (70 / referenceWidth); // 세로 비율
+      screenSize.height * (50 / referenceWidth); // 세로 비율
   final double drawerLogoIconX =
       screenSize.width * (33 / referenceWidth); // 왼쪽 여백 비율
   final double drawerLogoIconY =
-      screenSize.width * (50 / referenceHeight); // 위쪽 여백 비율
+      screenSize.height * (70 / referenceHeight); // 위쪽 여백 비율
+
+  // 이메일 부분 수치
+  final double emailTextFontSize =
+      screenSize.height * (17 / referenceHeight);
+
+  // 로그아웃 버튼 부분 수치
+  final double logoutTextFontSize =
+      screenSize.height * (20 / referenceHeight);
+  final double logoutBtnSize =
+      screenSize.height * (20 / referenceHeight);
+
+  // 아이콘 사이의 간격 수치
+  final double interval1Y =
+      screenSize.height * (20 / referenceHeight);
+  final double interval2Y =
+      screenSize.height * (130 / referenceHeight);
+  final double interval1X =
+      screenSize.width * (10 / referenceWidth);
+  final double interval2X =
+      screenSize.width * (15 / referenceWidth);
 
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
@@ -1033,7 +1046,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   child: Text(
                     userEmail,
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: emailTextFontSize,
                       color: Colors.black, // 텍스트 색상
                       fontFamily: 'NanumGothic',
                       fontWeight: FontWeight.bold,
@@ -1045,8 +1058,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
           ),
           // 콘텐츠 영역 관리
           Positioned(
-            top: drawerLogoIconY + 1.3 * drawerLogoIconHeight, // 로고 아래의 간격을 최소화
-            left: 32,
+            top: drawerLogoIconY + 1.5 * drawerLogoIconHeight, // 로고 아래의 간격을 최소화
+            left: interval1X,
             right: 0,
             child: Column(
               children: <Widget>[
@@ -1056,28 +1069,28 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   'https://cafe.naver.com/ottbayo',
                   'asset/img/misc/drawer_img/naver_logo_v1.png',
                 ),
-                SizedBox(height: 20), // 간격을 위한 SizedBox
-                _buildListTile(
-                  context,
-                  '유튜브',
-                  'https://www.youtube.com/@OTTBAYO',
-                  'asset/img/misc/drawer_img/youtube_logo_v1.png',
-                ),
-                SizedBox(height: 20), // 간격을 위한 SizedBox
-                _buildListTile(
-                  context,
-                  '인스타그램',
-                  'https://www.instagram.com/ottbayo',
-                  'asset/img/misc/drawer_img/instagram_logo_v1.png',
-                ),
-                SizedBox(height: 20), // 간격을 위한 SizedBox
+                SizedBox(height: interval1Y), // 간격을 위한 SizedBox
                 _buildListTile(
                   context,
                   '카카오톡',
                   'https://pf.kakao.com/_xjVrbG',
                   'asset/img/misc/drawer_img/kakao_logo_v1.png',
                 ),
-                SizedBox(height: 130), // 간격을 위한 SizedBox
+                SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+                _buildListTile(
+                  context,
+                  '유튜브',
+                  'https://www.youtube.com/@OTTBAYO',
+                  'asset/img/misc/drawer_img/youtube_logo_v1.png',
+                ),
+                SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+                _buildListTile(
+                  context,
+                  '인스타그램',
+                  'https://www.instagram.com/ottbayo',
+                  'asset/img/misc/drawer_img/instagram_logo_v1.png',
+                ),
+                SizedBox(height: interval2Y), // 간격을 위한 SizedBox
                 // 로그아웃 버튼 항목
                 GestureDetector(
                   onTap: () async {
@@ -1092,9 +1105,16 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     child: Row(
                       mainAxisSize: MainAxisSize.min, // Row 안의 요소들에 맞게 크기 조정
                       children: [
-                        Text('Logout', style: TextStyle(color: Color(0xFF777777), fontSize: 20)), // 로그아웃 텍스트
-                        SizedBox(width: 15), // 아이콘과 텍스트 사이의 간격
-                        Icon(Icons.logout, color: Color(0xFF777777), size: 20), // 로그아웃 아이콘
+                        Text('Logout',
+                            style: TextStyle(
+                                fontFamily: 'NanumGothic',
+                                color: Color(0xFF777777),
+                                fontSize: logoutTextFontSize,
+                                fontWeight: FontWeight.bold,
+                            ),
+                        ), // 로그아웃 텍스트
+                        SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
+                        Icon(Icons.logout, color: Color(0xFF777777), size: logoutBtnSize), // 로그아웃 아이콘
                       ],
                     ),
                   ),
@@ -1112,18 +1132,39 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
 Widget _buildListTile(
     BuildContext context, String title, String url, String leadingImage) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 260.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  // 드로워 화면 내 아이콘 요소 수치
+  final double iconImageWidth =
+      screenSize.width * (40 / referenceWidth); // 가로 비율
+
+  // 아이콘 텍스트 부분 수치
+  final double iconTextFontSize =
+      screenSize.height * (17 / referenceHeight);
+
+  // 아이콘 사이의 간격 수치
+  final double interval1X =
+      screenSize.width * (16 / referenceWidth);
+
   // ListTile 위젯 반환
   return ListTile(
-    leading: Image.asset(leadingImage, width: 40), // 이미지를 왼쪽에 배치
+    leading: Image.asset(leadingImage, width: iconImageWidth), // 이미지를 왼쪽에 배치
     title: Text(
         title,
         style: TextStyle(
-          fontSize: 17,
+          fontSize: iconTextFontSize,
           color: Colors.black, // 텍스트 색상
           fontFamily: 'NanumGothic',
           fontWeight: FontWeight.bold,
         )), // 제목을 설정
-    contentPadding: EdgeInsets.symmetric(horizontal: 16), // 좌우 간격 조정
+    contentPadding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우 간격 조정
     onTap: () async {
       // 탭 이벤트 핸들러
       try {
@@ -1131,13 +1172,11 @@ Widget _buildListTile(
         final bool launched = await launchUrl(Uri.parse(url));
         if (!launched) {
           // 웹 페이지를 열지 못할 경우 스낵바로 알림
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('웹 페이지를 열 수 없습니다.')));
+          showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
         }
       } catch (e) {
         // 예외 발생 시 스낵바로 에러 메시지 출력
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('앱 실행에 실패했습니다.')));
+        showCustomSnackBar(context, '앱 실행에 실패했습니다.');
       }
     },
   );
