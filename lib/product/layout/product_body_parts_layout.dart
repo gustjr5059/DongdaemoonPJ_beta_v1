@@ -496,6 +496,7 @@ Widget buildGeneralProductRow(
 }
 // ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 끝
 
+// ------- 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실해 시, 각종 데이터 처리 및 상태관리 로직 초기화 내용인 logoutAndLoginAfterProviderReset 시작
 // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
 // 홈 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화
 // / 홈,장바구니,발주내역,마이페이지,2차 메인 화면 등 모든 화면화면 자체의 스크롤 위치 초기화 관련 함수
@@ -855,6 +856,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(sizeSelectionIndexProvider.notifier).state = null;
   // // ------ 상품 상세 화면 관련 초기화 부분 끝
 }
+// ------- 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실해 시, 각종 데이터 처리 및 상태관리 로직 초기화 내용인 logoutAndLoginAfterProviderReset 끝
 
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직

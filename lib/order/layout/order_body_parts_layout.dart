@@ -522,10 +522,42 @@ class OrderListItemWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 발주내역이 비어있는 경우의 알림 부분 수치
+    final double orderlistEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율
+    final double orderlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextX =
+        screenSize.width * (140 / referenceWidth); // 가로 비율
+    final double orderlistEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
+
     // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
     if (order == null || order!.isEmpty) {
-      return Center(
-        child: Text('발주 내역이 없습니다.'),
+      return Container(
+        width: orderlistEmptyTextWidth,
+        height: orderlistEmptyTextHeight,
+        margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+        child: Text('발주 내역이 없습니다.',
+          style: TextStyle(
+            fontSize: orderlistEmptyTextFontSize,
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
       );
     }
 

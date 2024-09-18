@@ -92,41 +92,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-// SharedPreferences에서 자동 로그인 정보 불러오는 함수
-  void _loadAutoLogin() async {
-    // SharedPreferences 인스턴스 가져옴
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState로 상태 업데이트
-    setState(() {
-      // autoLogin 값을 SharedPreferences에서 불러오고, 값이 없으면 false 설정
-      autoLogin = prefs.getBool('autoLogin') ?? false;
-      if (autoLogin) {
-        // autoLogin이 true인 경우, username과 password를 SharedPreferences에서 불러옴
-        username = prefs.getString('username') ?? '';
-        password = prefs.getString('password') ?? '';
-        // 자동 로그인 정보가 있으면 _login 메서드를 호출하여 로그인 시도
-        _login();
-      }
-    });
-  }
-
-// SharedPreferences에 자동 로그인 정보 저장하는 함수
-  void _saveAutoLogin() async {
-    // SharedPreferences 인스턴스 가져옴
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // autoLogin 값을 SharedPreferences에 저장
-    prefs.setBool('autoLogin', autoLogin);
-    if (autoLogin) {
-      // autoLogin이 true인 경우, username과 password를 SharedPreferences에 저장
-      prefs.setString('username', username);
-      prefs.setString('password', password);
-    } else {
-      // autoLogin이 false인 경우, username과 password를 SharedPreferences에서 삭제
-      prefs.remove('username');
-      prefs.remove('password');
-    }
-  }
-
 // 로그인 함수
   void _login() async {
     try {
@@ -142,6 +107,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() {
           buttonColor = Color(0xFF4934CE); // 피그마에서 지정한 색상으로 변경
         });
+
+        // 자동로그인이 체크된 경우에만 이메일과 비밀번호 저장
+        // => 자동로그인만 체크되어 있으면 앱을 재실행 시, 로그인이 되어 홈 화면으로 진입하던 이슈 해결 포인트!!
+        if (autoLogin) {
+          _saveAutoLogin(); // 로그인 성공 시에만 자동로그인 정보 저장
+        }
 
         // 1초 후에 홈 화면으로 이동
         Timer(Duration(seconds: 1), () {
@@ -166,6 +137,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         errorMessage = "입력하신 아이디 또는 비밀번호가 일치하지 않습니다.";
       });
     }
+  }
+
+  // SharedPreferences에서 자동 로그인 정보 불러오는 함수
+  void _loadAutoLogin() async {
+    // SharedPreferences 인스턴스 가져옴
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState로 상태 업데이트
+    setState(() {
+      // autoLogin 값을 SharedPreferences에서 불러오고, 값이 없으면 false 설정
+      autoLogin = prefs.getBool('autoLogin') ?? false;
+      if (autoLogin) {
+        // autoLogin이 true인 경우, username과 password를 SharedPreferences에서 불러옴
+        username = prefs.getString('username') ?? '';
+        password = prefs.getString('password') ?? '';
+
+        // 이메일과 비밀번호가 있을 경우에만 로그인 시도
+        // => 자동로그인만 체크되어 있으면 앱을 재실행 시, 로그인이 되어 홈 화면으로 진입하던 이슈 해결 포인트!!
+        if (username.isNotEmpty && password.isNotEmpty) {
+          _login();
+        }
+      }
+    });
+  }
+
+  // SharedPreferences에 자동 로그인 정보 저장하는 함수
+  void _saveAutoLogin() async {
+    // SharedPreferences 인스턴스 가져옴
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (autoLogin) {
+      // autoLogin이 true인 경우, username과 password를 SharedPreferences에 저장
+      prefs.setString('username', username);
+      prefs.setString('password', password);
+    } else {
+      // autoLogin이 false인 경우, username과 password를 SharedPreferences에서 삭제
+      prefs.remove('username');
+      prefs.remove('password');
+    }
+    // autoLogin 값을 SharedPreferences에 저장
+    prefs.setBool('autoLogin', autoLogin);
   }
 
   @override

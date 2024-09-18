@@ -12,6 +12,28 @@ import '../view/announce_detail_screen.dart';
 class AnnounceBodyPartsLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 공지사항이 비어있는 경우의 알림 부분 수치
+    final double announcementlistEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율
+    final double announcementlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double announcementlistEmptyTextX =
+        screenSize.width * (40 / referenceWidth); // 가로 비율
+    final double announcementlistEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율
+    final double announcementlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
+
     print("AnnounceBodyPartsLayout build 시작"); // 빌드 함수 시작 시 로그 출력
 
     final asyncAnnouncements = ref.watch(announcementsProvider); // announcementsProvider를 감시하여 비동기 데이터를 가져옴
@@ -20,8 +42,21 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
       data: (announcements) { // 데이터가 성공적으로 로드되었을 때의 처리
         print("데이터 로드 성공: ${announcements.length}개의 공지사항이 있습니다"); // 로드 성공 시 로그 출력
 
+        // 공지사항 데이터가 없는 경우 '현재 공지사항이 없습니다.' 메세지 표시하는 로직
         if (announcements.isEmpty) {
-          return Center(child: Text('No announcements available')); // 공지사항이 없을 때의 UI 처리
+          return Container(
+              width: announcementlistEmptyTextWidth,
+              height: announcementlistEmptyTextHeight,
+              margin: EdgeInsets.only(left: announcementlistEmptyTextX, top: announcementlistEmptyTextY),
+              child: Text('현재 공지사항이 없습니다.',
+                style: TextStyle(
+                  fontSize: announcementlistEmptyTextFontSize,
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+          ); // 공지사항이 없을 때의 UI 처리
         }
 
         return SingleChildScrollView( // 스크롤 가능한 레이아웃 제공
