@@ -1056,20 +1056,20 @@ class ProductInfoDetailScreenNavigation {
     final double DetailDoc3Y =
         screenSize.height * (-11 / referenceHeight);
     final double DetailDocTextFontSize1 =
-        screenSize.height * (12 / referenceHeight);
+        screenSize.height * (11 / referenceHeight);
     final double DetailDocTextFontSize2 =
-        screenSize.height * (13 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double DetailDocTextFontSize3 =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double DetailDocTextFontSize4 =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (14 / referenceHeight);
     final double DetailDocColorImageWidth =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double DetailDocColorImageHeight =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
 
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
-    final double interval1X = screenSize.width * (8 / referenceWidth);
+    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1X = screenSize.width * (6 / referenceWidth);
 
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.

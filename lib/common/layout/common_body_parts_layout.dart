@@ -487,71 +487,73 @@ void showCustomSnackBar(BuildContext context, String message) {
 // ------ 공통 SnackBar 함수 내용 끝
 
 // ------ 네트워크 상태 체크 함수 내용 시작
+// 네트워크 상태를 체크하는 클래스 정의
 class NetworkChecker {
-  final BuildContext context;
-  StreamSubscription? _subscription; // StreamSubscription 추가
+  final BuildContext context; // 현재 앱의 화면 정보를 담고 있는 context 값
+  StreamSubscription? _subscription; // 스트림을 구독하는 역할을 하는 _subscription 변수 추가
 
+  // 생성자에서 context 값을 전달받아 사용
   NetworkChecker(this.context);
 
-  // 네트워크 상태를 실시간으로 감지하는 메서드
+  // 네트워크 상태 변화를 실시간으로 감지하는 메서드
   void checkNetworkStatus() {
-    _subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    _subscription = Connectivity().onConnectivityChanged.listen((
+        List<ConnectivityResult> results) {
+      // 결과 리스트를 순회하면서 네트워크 연결 상태를 확인
       for (var result in results) {
         if (result == ConnectivityResult.none) {
+          // 네트워크 연결이 없을 경우 네트워크 오류 알림창을 띄움
           showNetworkErrorDialog();
-          break;
+          break; // 오류가 발생하면 반복문 종료
         }
       }
     });
   }
 
-  // 네트워크 오류 알림창을 띄우는 메서드
+  // 네트워크 연결 상태를 동기적으로 확인하는 메서드
+  Future<bool> isConnected() async {
+    // 현재 네트워크 연결 상태를 가져옴
+    var connectivityResult = await Connectivity().checkConnectivity();
+    // 네트워크가 연결되어 있지 않다면 false 반환
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  // 네트워크 오류 시 알림창을 띄우는 메서드
   void showNetworkErrorDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            '[네트워크 에러]',
+    // 알림창을 보여주는 함수 호출
+    showSubmitAlertDialog(
+      context,
+      title: '[네트워크 에러]', // 알림창의 제목
+      content: '인터넷 연결을 확인하고 앱을 재실행 해주세요.', // 알림창의 내용
+      actions: [
+        TextButton(
+          // '확인' 버튼 정의
+          child: Text(
+            '확인',
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
+              color: Color(0xFF6FAD96), // 버튼 텍스트 색상 지정
+              fontWeight: FontWeight.bold, // 텍스트의 굵기를 두껍게 설정
+              fontFamily: 'NanumGothic', // 글꼴 설정
             ),
           ),
-          content: const Text(
-            '인터넷 연결을 확인하고 앱을 재실행 해주세요.',
-            style: TextStyle(
-              fontFamily: 'NanumGothic',
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                '확인',
-                style: TextStyle(
-                  color: Color(0xFF6FAD96),
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
-                ),
-              ),
-              onPressed: () {
-                if (Platform.isAndroid) {
-                  exit(0); // Android에서는 앱을 종료
-                } else if (Platform.isIOS) {
-                  Navigator.of(context).pop(); // iOS에서는 알림창만 닫기
-                }
-              },
-            ),
-          ],
-        );
-      },
+          onPressed: () {
+            // Android 기기에서는 앱을 종료
+            if (Platform.isAndroid) {
+              exit(0); // 앱 종료 명령
+              // iOS 기기에서는 알림창만 닫음
+            } else if (Platform.isIOS) {
+              Navigator.of(context).pop(); // 알림창 닫기
+            }
+          },
+        ),
+      ],
     );
   }
 
-  // 리스너 해제 메서드
+  // 네트워크 상태 감지 리스너 해제하는 메서드
   void dispose() {
-    _subscription?.cancel(); // 스트림 구독 해제
+    // 스트림 구독 해제
+    _subscription?.cancel();
   }
 }
 // ------ 네트워크 상태 체크 함수 내용 끝

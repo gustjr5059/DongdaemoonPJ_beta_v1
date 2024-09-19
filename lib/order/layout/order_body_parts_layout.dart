@@ -534,11 +534,11 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 발주내역이 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (180 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextX =
-        screenSize.width * (140 / referenceWidth); // 가로 비율
+        screenSize.width * (120 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextFontSize =

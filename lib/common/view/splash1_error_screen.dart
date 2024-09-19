@@ -17,69 +17,23 @@ import 'package:flutter_svg/svg.dart';
 import '../const/colors.dart';
 import '../layout/common_body_parts_layout.dart'; // 앱에서 사용할 색상 상수를 정의한 파일을 가져옴.
 
-// 스플래시 스크린의 StatefulWidget을 정의함.
-class SplashScreen1 extends StatefulWidget {
+// ------ 네트워크 통신이 끊긴 경우에 나오는 에러 화면 내용인 SplashErrorScreen1 시작
+class SplashErrorScreen1 extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashErrorScreenState createState() => _SplashErrorScreenState();
 }
 
 // _SplashScreenState 클래스에서 SingleTickerProviderStateMixin을 사용하여 애니메이션 컨트롤러를 생성함.
-class _SplashScreenState extends State<SplashScreen1>
+class _SplashErrorScreenState extends State<SplashErrorScreen1>
     with TickerProviderStateMixin {
-  late AnimationController _controller; // 애니메이션 컨트롤러를 선언함.
-  late Animation<double> _animation; // 애니메이션 값을 저장할 변수를 선언함.
-  late AnimationController _loadingController; // 로딩 인디케이터의 회전을 제어하기 위한 컨트롤러
-  late Animation<double> _rotationAnimation; // 회전 속도를 조절하기 위한 애니메이션
 
   @override
   void initState() {
     super.initState();
-    // initState에서 애니메이션 컨트롤러와 애니메이션 값을 초기화함.
-    _controller = AnimationController(
-      vsync: this, // 현재 클래스가 애니메이션의 vsync를 담당함.
-      duration: Duration(milliseconds: 2000), // 애니메이션 지속 시간을 2초로 설정함.
-    );
-
-    // Tween을 사용하여 애니메이션의 시작과 끝 값을 설정함.
-    _animation = Tween(begin: 1.0, end: 0.5).animate(_controller)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _controller.reverse(); // 애니메이션이 완료되면 반대 방향으로 실행함.
-        } else if (status == AnimationStatus.dismissed) {
-          _controller.forward(); // 애니메이션이 종료되면 다시 시작함.
-        }
-      });
-
-    _controller.forward(); // 애니메이션을 시작함.
-
-    // 로딩 인디케이터의 회전 속도를 제어하는 컨트롤러를 초기화.
-    _loadingController = AnimationController(
-      duration: const Duration(seconds: 100), // 회전 속도를 조절함.
-      vsync: this,
-    );
-
-    // CurvedAnimation을 사용하여 회전 속도의 곡선을 조절함
-    _rotationAnimation = CurvedAnimation(
-      parent: _loadingController,
-      curve: Curves.decelerate, // 시작은 빠르고 점점 느려지는 효과
-    );
-
-    _loadingController.repeat();
-
-    // 1초 후에 SplashScreen2로 화면을 전환함.
-    Timer(Duration(seconds: 1), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
-    });
-
   }
 
   @override
   void dispose() {
-    // 위젯이 제거될 때 애니메이션 컨트롤러를 정리함.
-    _controller.dispose();
-    _loadingController.dispose(); // 새로 추가한 컨트롤러도 정리함.
-
     super.dispose();
   }
 
@@ -95,6 +49,8 @@ class _SplashScreenState extends State<SplashScreen1>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 화면 부분 수치
+    final double errorTextFontSize =
+        screenSize.height * (18 / referenceHeight);
     final double screenX =
         screenSize.height * (180 / referenceHeight); // 위쪽 여백 비율
 
@@ -114,16 +70,13 @@ class _SplashScreenState extends State<SplashScreen1>
             alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
             child: Padding(
               padding: EdgeInsets.only(bottom: screenX), // 하단에서부터 100의 여백을 줌.
-              child: AnimatedBuilder(
-                animation: _rotationAnimation,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _rotationAnimation.value * 2 * 3.14,
-                    child: child,
-                  );
-                },
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              child: Text(
+                '네트워크가 연결되지 않았습니다.\n\n         앱을 재실행 해주세요.',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.bold,
+                  fontSize: errorTextFontSize,
+                  color: Colors.red,
                 ),
               ),
             ),
@@ -133,3 +86,4 @@ class _SplashScreenState extends State<SplashScreen1>
     );
   }
 }
+// ------ 네트워크 통신이 끊긴 경우에 나오는 에러 화면 내용인 SplashErrorScreen1 끝

@@ -28,7 +28,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
     final double announcementlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double announcementlistEmptyTextX =
-        screenSize.width * (40 / referenceWidth); // 가로 비율
+        screenSize.width * (110 / referenceWidth); // 가로 비율
     final double announcementlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double announcementlistEmptyTextFontSize =

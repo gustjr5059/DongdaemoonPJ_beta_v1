@@ -24,25 +24,15 @@ class SplashScreen2 extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen2> {
 
-  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
-
   @override
   void initState() {
     super.initState();
     // 위젯이 생성될 때 _checkAutoLogin 메서드를 호출하여 자동 로그인 여부를 확인.
     _checkAutoLogin();
-
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
   }
 
   @override
   void dispose() {
-
-    // 네트워크 체크 해제
-    _networkChecker?.dispose();
-
     super.dispose();
   }
 

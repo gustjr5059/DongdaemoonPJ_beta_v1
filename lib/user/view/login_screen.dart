@@ -65,8 +65,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // 자동 로그인 정보 불러옴
-    _loadAutoLogin();
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
+    _checkNetworkAndLoadAutoLogin();
 
     // 이메일 필드에 포커스가 생기면 오류 메시지를 초기화
     emailFocusNode.addListener(() {
@@ -85,10 +87,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         });
       }
     });
+  }
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+  // 네트워크 상태 체크 후 자동 로그인 로드
+  Future<void> _checkNetworkAndLoadAutoLogin() async {
+    bool isNetworkConnected = await _networkChecker?.isConnected() ?? false;
+    if (isNetworkConnected) {
+      _loadAutoLogin();
+    } else {
+      setState(() {
+        errorMessage = '네트워크가 연결이 끊겨서 로그인할 수 없습니다.';
+        // 네트워크가 끊긴 상태에서 자동 로그인 정보 초기화
+        _resetAutoLogin();
+      });
+    }
   }
 
   @override
@@ -105,6 +117,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
 // 로그인 함수
   void _login() async {
+
+    // 네트워크 상태 확인
+    bool isNetworkConnected = await _networkChecker?.isConnected() ?? false;
+
+    if (!isNetworkConnected) {
+      setState(() {
+        errorMessage = '네트워크가 연결이 끊겨서 로그인할 수 없습니다.';
+      });
+      return;
+    }
+
     try {
       // FirebaseAuth를 사용하여 이메일과 비밀번호로 로그인 시도
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -145,15 +168,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage = "입력하신 아이디 또는 비밀번호가 일치하지 않습니다.";
+        if (e.code == 'wrong-password' || e.code == 'user-not-found') {
+          // Firebase 인증 오류 메시지 처리
+          errorMessage = "입력하신 아이디 또는 비밀번호가 일치하지 않습니다.";
+        } else if (e.code == 'network-request-failed') {
+          // Firebase 통신이 끊긴 경우
+          errorMessage = '네트워크가 연결이 끊겨서 로그인할 수 없습니다.';
+        } else {
+          // 기타 Firebase 인증 오류 처리
+          errorMessage = "오류가 발생했습니다. 앱을 재실행 해주세요.";
+        }
+        _resetAutoLogin();
       });
     }
+  }
+
+  // 자동 로그인 정보 초기화 함수
+  void _resetAutoLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('username');
+    prefs.remove('password');
+    prefs.setBool('autoLogin', false);
   }
 
   // SharedPreferences에서 자동 로그인 정보 불러오는 함수
   void _loadAutoLogin() async {
     // SharedPreferences 인스턴스 가져옴
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // 네트워크 상태 확인
+    bool isNetworkConnected = await _networkChecker?.isConnected() ?? false;
+
+    if (!isNetworkConnected) {
+      // 네트워크가 연결되지 않았을 때, 자동 로그인을 시도하지 않고 종료
+      setState(() {
+        errorMessage = '네트워크가 연결되지 않았습니다. 다시 시도해주세요.';
+        _resetAutoLogin();
+      });
+      return;
+    }
+
     // setState로 상태 업데이트
     setState(() {
       // autoLogin 값을 SharedPreferences에서 불러오고, 값이 없으면 false 설정
@@ -289,7 +343,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final double joinAndFindBtnTop =
         screenSize.height * (543 / referenceHeight); // 위쪽 여백 비율
     final double joinAndFindBtnWidth =
-        screenSize.width * (218 / referenceWidth); // 너비 비율
+        screenSize.width * (240 / referenceWidth); // 너비 비율
     final double joinAndFindBtnHeight =
         screenSize.height * (24 / referenceHeight); // 높이 비율
     final double joinAndFindBtnTextFontSize =
@@ -677,3 +731,4 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 }
+// ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 끝

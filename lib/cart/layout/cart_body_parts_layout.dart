@@ -67,14 +67,14 @@ class CartItemsList extends ConsumerWidget {
     final double cartlistCardViewWidth =
         screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
     final double cartlistCardViewHeight =
-        screenSize.height * (300 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+        screenSize.height * (270 / referenceHeight); // 화면 세로 비율에 맞게 설정함
     final double cartlistCardViewPaddingX =
         screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
     // 썸네일 이미지 크기 설정
     final double cartlistThumnailPartWidth =
-        screenSize.width * (140 / referenceWidth); // 썸네일 가로 비율 설정함
+        screenSize.width * (120 / referenceWidth); // 썸네일 가로 비율 설정함
     final double cartlistThumnailPartHeight =
-        screenSize.width * (140 / referenceWidth); // 썸네일 세로 비율 설정함
+        screenSize.width * (120 / referenceWidth); // 썸네일 세로 비율 설정함
     // 상품 색상 이미지 크기 설정
     final double cartlistSelctedColorImageDataWidth =
         screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
@@ -86,28 +86,28 @@ class CartItemsList extends ConsumerWidget {
     final double cartlistDataPaddingY =
         screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
     final double cartlistProductNumberFontSize =
-        screenSize.height * (14 / referenceHeight); // 상품 번호 글꼴 크기 설정함
+        screenSize.height * (12 / referenceHeight); // 상품 번호 글꼴 크기 설정함
     final double cartlistTextDataPartHeight =
         screenSize.height * (140 / referenceHeight); // 텍스트 데이터 부분의 높이 설정함
     final double cartlistBriefIntroductionFontSize =
-        screenSize.height * (22 / referenceHeight); // 간략한 설명 글꼴 크기 설정함
+        screenSize.height * (16 / referenceHeight); // 간략한 설명 글꼴 크기 설정함
     final double cartlistOriginalPriceFontSize =
-        screenSize.height * (14 / referenceHeight); // 원래 가격 글꼴 크기 설정함
+        screenSize.height * (13 / referenceHeight); // 원래 가격 글꼴 크기 설정함
     final double cartlistDiscountPercentFontSize =
-        screenSize.height * (18 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
     final double cartlistDiscountPriceFontSize =
-        screenSize.height * (20 / referenceHeight); // 할인 가격 글꼴 크기 설정함
+        screenSize.height * (15 / referenceHeight); // 할인 가격 글꼴 크기 설정함
     final double cartlistSelectedColorTextFontSize =
-        screenSize.height * (18 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
     final double cartlistSelectedSizeTextFontSize =
-        screenSize.height * (18 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
     // 삭제 버튼 글꼴 및 위치 설정
     final double cartlistDeleteBtnFontSize =
-        screenSize.height * (16 / referenceHeight); // 삭제 버튼 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 삭제 버튼 글꼴 크기 설정함
     final double cartlistDeleteBtn1X =
-        screenSize.width * (13 / referenceWidth); // 삭제 버튼 가로 위치 설정함
+        screenSize.width * (10 / referenceWidth); // 삭제 버튼 가로 위치 설정함
     final double cartlistDeleteBtn1Y =
-        screenSize.width * (2 / referenceHeight); // 삭제 버튼 세로 위치 설정함
+        screenSize.width * (1 / referenceHeight); // 삭제 버튼 세로 위치 설정함
 
     // 텍스트 데이터 간 너비 및 높이 설정
     final double cartlist1X =

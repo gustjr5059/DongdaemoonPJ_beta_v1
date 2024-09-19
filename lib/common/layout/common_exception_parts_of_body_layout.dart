@@ -709,7 +709,7 @@ Widget buildCommonBottomNavigationBar(
       // 비율을 기반으로 동적으로 크기와 위치 설정
 
       // 버튼 관련 수치 동적 적용
-      final double bottomBtnC2Width = screenSize.width * (150 / referenceWidth);
+      final double bottomBtnC2Width = screenSize.width * (170 / referenceWidth);
       final double bottomBtnC2Height = screenSize.height * (50 / referenceHeight);
       final double bottomBtnC1X = screenSize.width * (15 / referenceWidth);
       final double bottomBtnC2X = screenSize.width * (24 / referenceWidth);

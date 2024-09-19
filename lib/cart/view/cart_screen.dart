@@ -195,7 +195,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 홈 버튼 수치 (Case 3)
     final double cartlistHomeBtnWidth = screenSize.width * (40 / referenceWidth);
     final double cartlistHomeBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double cartlistHomeBtnX = screenSize.width * (1 / referenceWidth);
+    final double cartlistHomeBtnX = screenSize.width * (8 / referenceWidth);
     final double cartlistHomeBtnY = screenSize.height * (6 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 3)
@@ -206,11 +206,11 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
 
     // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
     final double cartlistEmptyTextWidth =
-        screenSize.width * (152 / referenceWidth); // 가로 비율
+        screenSize.width * (170 / referenceWidth); // 가로 비율
     final double cartlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double cartlistEmptyTextX =
-        screenSize.width * (125 / referenceWidth); // 가로 비율
+        screenSize.width * (110 / referenceWidth); // 가로 비율
     final double cartlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double cartlistEmptyTextFontSize =

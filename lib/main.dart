@@ -2,6 +2,9 @@
 // 이 패키지는 Firebase 서비스를 Flutter 애플리케이션에 연동하고 초기화하는데 사용됩니다.
 // Firebase 서비스에는 인증, 데이터베이스, 분석 등 다양한 기능이 포함되어 있으며,
 // 이를 사용하기 위해서는 초기화 과정이 필수적입니다.
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart'; // Firebase 코어 관련 패키지
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 // 이 패키지는 iOS 사용자에게 친숙한 디자인 요소와 애니메이션을 제공하여 iOS 사용자 경험을 향상시킵니다.
@@ -14,6 +17,7 @@ import 'package:flutter/material.dart'; // Material 디자인 위젯 관련 패�
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이브러리 Riverpod 관련 패키지
 // 애플리케이션의 초기 스크린을 정의하는 스플래시 스크린 뷰 파일을 임포트합니다.
 // 이 스크린은 앱이 로딩되는 동안 사용자에게 보여지며, 첫 인상을 형성하는 중요한 역할을 합니다.
+import 'common/view/splash1_error_screen.dart';
 import 'common/view/splash1_screen.dart';
 
 // Firebase 초기 설정 파일을 임포트합니다.
@@ -40,12 +44,67 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+// ------ 앱 실행할 때 필요한 메인 실행 역할인 MyApp 클래스 내용 시작
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isFirebaseConnected = true; // Firebase 연결 상태 변수
+  StreamSubscription? _networkSubscription; // 네트워크 상태 구독자
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirebaseConnection(); // Firebase 연결 상태 확인
+    _monitorNetworkStatus(); // 네트워크 상태 실시간 감지
+  }
+
+  @override
+  void dispose() {
+    _networkSubscription?.cancel(); // 네트워크 상태 구독 해제
+    super.dispose();
+  }
+
+  // Firebase 연결 상태를 확인하는 함수
+  Future<void> _checkFirebaseConnection() async {
+    try {
+      // Firebase 연결 확인 (Firebase 기본 서비스 확인)
+      await Firebase.initializeApp(); // Firebase 초기화
+      setState(() {
+        _isFirebaseConnected = true; // 연결 성공 시 상태 업데이트
+      });
+    } catch (e) {
+      setState(() {
+        _isFirebaseConnected = false; // 연결 실패 시 상태 업데이트
+      });
+    }
+  }
+
+  // 네트워크 상태를 실시간으로 모니터링하는 함수
+  void _monitorNetworkStatus() {
+    _networkSubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      for (var result in results) {
+        if (result == ConnectivityResult.none) {
+          setState(() {
+            _isFirebaseConnected = false; // 네트워크 연결이 끊기면 상태 업데이트
+          });
+        } else {
+          _checkFirebaseConnection(); // 네트워크가 다시 연결되면 Firebase 연결 상태 확인
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // 화면에 debug 리본형식이 나오는 것 비활성화하는 설정
-      home: SplashScreen1(), // 첫 화면으로 SplashScreen을 설정
+      // Firebase가 연결되어 있으면 SplashScreen1()을 홈 화면으로 설정
+      // Firebase가 연결되지 않았거나 네트워크가 끊긴 경우 SplashErrorScreen1()을 홈 화면으로 설정
+      home: _isFirebaseConnected ? SplashScreen1() : SplashErrorScreen1(),
     );
   }
 }
+// ------ 앱 실행할 때 필요한 메인 실행 역할인 MyApp 클래스 내용 끝

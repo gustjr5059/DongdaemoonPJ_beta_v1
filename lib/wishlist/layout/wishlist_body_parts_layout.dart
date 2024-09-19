@@ -166,11 +166,11 @@ class WishlistItemsList extends ConsumerWidget {
 
     // 찜 목록 비어있는 경우의 알림 부분 수치
     final double wishlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (200 / referenceWidth); // 가로 비율
     final double wishlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double wishlistEmptyTextX =
-        screenSize.width * (40 / referenceWidth); // 가로 비율
+        screenSize.width * (30 / referenceWidth); // 가로 비율
     final double wishlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double wishlistEmptyTextFontSize =
