@@ -7,6 +7,7 @@ import 'dart:async';
 // Firebase의 사용자 인증 기능을 사용하기 위한 패키지를 임포트합니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 패키지를 임포트합니다.
 import 'package:flutter/material.dart';
@@ -340,6 +341,19 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                           children: [
                             SizedBox(height: 2), // 높이 임의로 10으로 간격 설정
                             if (user != null) UserProfileInfo(email: user.email!),
+                            SizedBox(height: 10),
+                            RichText(
+                              text: TextSpan(
+                                text: '* 개인정보 보호 및 처리에 대한 자세한 내용은 공지사항에서 확인할 수 있습니다.',
+                                style: TextStyle(
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 12,
+                                  color: Colors.black, // 검은색 텍스트
+                                  decoration: TextDecoration.underline, // 밑줄 추가
+                                ),
+                              ),
+                            ),
                             SizedBox(height: 10),
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(

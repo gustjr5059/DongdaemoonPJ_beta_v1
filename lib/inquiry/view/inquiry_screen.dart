@@ -250,7 +250,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 버튼 여백
                               ),
                               child: Text(
-                                '발주 내역 상세보기', // 버튼에 표시될 텍스트
+                                '문의하기로 이동', // 버튼에 표시될 텍스트
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트 스타일
                               ),
                             ),

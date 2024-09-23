@@ -557,3 +557,13 @@ class NetworkChecker {
   }
 }
 // ------ 네트워크 상태 체크 함수 내용 끝
+
+// URL을 여는 함수 정의
+void launchURL(String url) async {
+  Uri uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
+  }
+}

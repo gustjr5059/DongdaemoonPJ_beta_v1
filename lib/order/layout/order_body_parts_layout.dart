@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,9 +40,9 @@ class UserInfoWidget extends ConsumerWidget {
     final double ordererInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double updateRequireNoticeFontSize1 =
-        screenSize.height * (12 / referenceHeight);
-    final double updateRequireNoticeFontSize2 =
         screenSize.height * (10 / referenceHeight);
+    final double updateRequireNoticeFontSize2 =
+        screenSize.height * (9 / referenceHeight);
 
     final double ordererInfo1Y =
         screenSize.height * (16 / referenceHeight);
@@ -91,7 +92,7 @@ class UserInfoWidget extends ConsumerWidget {
               // _buildEditablePhoneNumberRow(context, '휴대폰 번호', phoneNumberController),
               SizedBox(height: ordererInfo2Y),
               Text(
-                '[연락처 미입력으로 인한 불이익시 당사가 책임지지 않습니다.]', // 안내문 텍스트
+                '[정보 불일치로 인한 불이익시 당사가 책임지지 않습니다.]', // 안내문 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize1,
@@ -262,22 +263,32 @@ class UpdateInfoWidget extends StatelessWidget {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 업데이트 요청 화면 내 요소들의 수치 설정
-    final double updateRequirePaddingX =
+    final double updateRequirePadding1X =
         screenSize.width * (24 / referenceWidth);
+    final double updateRequirePadding2X =
+        screenSize.width * (20 / referenceWidth);
+    final double updateRequirePadding3X =
+        screenSize.width * (110 / referenceWidth);
     final double updateRequirePaddingY =
         screenSize.height * (60 / referenceHeight);
     final double updateInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double updateRequireNoticeFontSize1 =
         screenSize.height * (14 / referenceHeight);
+    final double guidelineText1FontSize =
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기
+    final double guidelineText2FontSize =
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기
 
     final double updateInfo1Y =
         screenSize.height * (12 / referenceHeight);
     final double updateInfo2Y =
         screenSize.height * (10 / referenceHeight);
+    final double updateInfo3Y =
+        screenSize.height * (50 / referenceHeight);
 
     return Padding(
-      padding: EdgeInsets.only(left: updateRequirePaddingX, right: updateRequirePaddingX, top: updateRequirePaddingY),
+      padding: EdgeInsets.only(left: updateRequirePadding1X, right: updateRequirePadding1X, top: updateRequirePaddingY),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
         children: [
@@ -320,6 +331,41 @@ class UpdateInfoWidget extends StatelessWidget {
               color: Colors.black,
             ),
           ),
+          SizedBox(height: updateInfo3Y),
+          // 개인정보 처리방침 안내 텍스트
+          Padding(
+            padding: EdgeInsets.only(left: updateRequirePadding2X),
+            child: Text(
+              '발주 요청을 완료함으로써 개인정보 처리방침에 동의합니다.',
+              style: TextStyle(
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.normal,
+                fontSize: guidelineText1FontSize,
+                color: Colors.black, // 텍스트 색상을 검정으로 설정
+              ),
+            ),
+          ),
+          // 개인정보 처리방침 보기 링크
+          Padding(
+            padding: EdgeInsets.only(left: updateRequirePadding3X),
+            child: RichText(
+              text: TextSpan(
+                text: '개인정보 처리방침 보기',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText2FontSize,
+                  color: Colors.blue, // 텍스트 색상을 파란색으로 설정
+                  decoration: TextDecoration.underline, // 밑줄 추가하여 링크처럼 보이게
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    const url = 'https://pf.kakao.com/_xjVrbG';
+                    launchURL(url); // URL을 여는 함수 호출
+                  },
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -351,15 +397,16 @@ class UpdateOrderButton extends ConsumerWidget {
 
     // 버튼 관련 수치 동적 적용
     final double updateRequireBtn1X = screenSize.width * (15 / referenceWidth);
-    final double updateRequireBtn1Y = screenSize.height * (70 / referenceHeight);
+    final double updateRequireBtn1Y = screenSize.height * (30 / referenceHeight);
     final double updateRequireBtn2Y = screenSize.height * (50 / referenceHeight);
     final double updateRequireBtnFontSize = screenSize.height * (16 / referenceHeight);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center, // 자식 위젯들을 중앙 정렬
       children: [
-        SizedBox(height: updateRequireBtn1Y), // 알림 텍스트와 버튼 사이에 여백 추가
-        Center( // '결제하기' 버튼을 중앙에 위치시킴
+        SizedBox(height: updateRequireBtn1Y), // 개인정보 처리방침 텍스트와 버튼 사이에 여백 추가
+        // '업데이트 요청하기' 버튼을 중앙에 위치시킴
+        Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Color(0xFF6FAD96), // 버튼 텍스트 색상 설정

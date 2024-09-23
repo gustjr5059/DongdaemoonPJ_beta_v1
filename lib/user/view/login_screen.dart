@@ -1,6 +1,7 @@
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
@@ -176,7 +177,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           errorMessage = '네트워크가 연결이 끊겨서 로그인할 수 없습니다.';
         } else {
           // 기타 Firebase 인증 오류 처리
-          errorMessage = "오류가 발생했습니다. 앱을 재실행 해주세요.";
+          errorMessage = "입력하신 아이디 또는 비밀번호가 일치하지 않습니다.";
         }
         _resetAutoLogin();
       });
@@ -312,6 +313,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.height * (436 / referenceHeight); // 위쪽 여백 비율
     final double autoLoginCheckboxTextFontSize =
         screenSize.height * (12 / referenceHeight);
+
+    // 로그인 개인정보 처리방침 안내 텍스트1 부분 수치
+    final double guidelineText1Left =
+        screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
+    final double guidelineText1Top =
+        screenSize.height * (600 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText1FontSize =
+        screenSize.height * (13 / referenceHeight); // 텍스트 크기
+
+    // 로그인 개인정보 처리방침 안내 텍스트2 부분 수치
+    final double guidelineText2Left =
+        screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
+    final double guidelineText2Top =
+        screenSize.height * (630 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText2FontSize =
+        screenSize.height * (13 / referenceHeight); // 텍스트 크기
 
     // 로그인 버튼 부분 수치
     final double loginBtnLeft =
@@ -692,7 +709,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: TextButton(
                             onPressed: () {
                               const url = 'https://pf.kakao.com/_xjVrbG';
-                              _launchURL(url);
+                              launchURL(url);
                             },
                             child: Text(
                               '아이디/비밀번호 찾기',
@@ -716,19 +733,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ],
           ),
+          // 개인정보 처리방침 안내 텍스트1
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText1Left, top: guidelineText1Top),
+              child: Text(
+                '로그인함으로써 개인정보 처리방침에 동의합니다.',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText1FontSize,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          // 개인정보 처리방침 안내 텍스트2
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText2Left, top: guidelineText2Top),
+              child: RichText(
+                text: TextSpan(
+                  text: '개인정보 처리방침 보기',
+                  style: TextStyle(
+                    fontFamily: 'NanumGothic',
+                    fontWeight: FontWeight.normal,
+                    fontSize: guidelineText2FontSize,
+                    color: Colors.blue, // 파란색 텍스트
+                    decoration: TextDecoration.underline, // 밑줄 추가
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      const url = 'https://pf.kakao.com/_xjVrbG';
+                      launchURL(url);
+                  },
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
-  }
-
-  // URL을 여는 함수 정의
-  void _launchURL(String url) async {
-    Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
 // ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 끝

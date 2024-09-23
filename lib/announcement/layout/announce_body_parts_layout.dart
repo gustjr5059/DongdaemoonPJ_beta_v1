@@ -159,6 +159,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
         final contentsTextUrl = (announcement['contents_text'] as String?) ?? ''; // 텍스트 콘텐츠 URL을 가져옴
         final contentsWebLink = (announcement['contents_web_link'] as String?) ?? ''; // 웹 링크를 가져옴
         final contentsImageUrl = (announcement['contents_image'] as String?) ?? ''; // 이미지 URL을 가져옴
+        final contentsWebLinkText = (announcement['contents_web_link_text'] as String?) ?? ''; // 웹 링크 텍스트를 가져옴
 
         return SingleChildScrollView( // 스크롤 가능한 레이아웃 제공
           child: Padding(
@@ -199,7 +200,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                       _launchURL(contentsWebLink); // 웹 링크 열기 함수 호출
                     },
                     child: Text(
-                      contentsWebLink,
+                      contentsWebLinkText,
                       style: TextStyle(fontSize: 16, color: Colors.blue), // 웹 링크 텍스트 스타일 설정
                     ),
                   ),
