@@ -1,12 +1,12 @@
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '1.8.0'  // Kotlin 버전을 1.8.0으로 설정
     repositories {
-        google()
-        mavenCentral()
+        google()  // Google Maven 저장소 사용
+        mavenCentral()  // Maven Central 저장소 사용
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // Kotlin Gradle 플러그인 설정
         // Multidex는 API 21(Android 5.0 Lollipop) 이상에서 자동으로 활성화되므로, 그 이하 버전에서는 아래와 같은 설정이 필요함.
         //implementation 'com.android.support:multidex:1.0.3'
     }
@@ -14,19 +14,28 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        mavenCentral()
+        google()  // 모든 프로젝트에 Google Maven 저장소 사용
+        mavenCentral()  // 모든 프로젝트에 Maven Central 저장소 사용
+    }
+
+    // 모든 종속성 구성에서 Kotlin 버전을 강제로 1.8.0으로 고정
+    configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'org.jetbrains.kotlin') {
+                details.useVersion "1.8.0"  // Kotlin 의존성 버전을 1.8.0으로 고정
+            }
+        }
     }
 }
 
-rootProject.buildDir = '../build'
+rootProject.buildDir = '../build'  // 루트 프로젝트 빌드 폴더 경로 설정
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.buildDir = "${rootProject.buildDir}/${project.name}"  // 각 서브 프로젝트 빌드 폴더 경로 설정
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+    project.evaluationDependsOn(':app')  // 서브 프로젝트가 앱 모듈에 종속됨을 명시
 }
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.buildDir  // `clean` 작업을 실행하면 루트 프로젝트 빌드 디렉토리 삭제
 }
