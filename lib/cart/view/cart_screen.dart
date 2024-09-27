@@ -95,6 +95,16 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     super.initState();
     // ScrollController를 초기화
     cartScreenPointScrollController = ScrollController();
+
+    // 스크롤이 끝에 도달했을 때 추가 데이터를 로드하도록 구현
+    cartScreenPointScrollController.addListener(() {
+      if (cartScreenPointScrollController.position.pixels ==
+          cartScreenPointScrollController.position.maxScrollExtent) {
+        // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
+        ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -113,6 +123,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 장바구니 버튼 인덱스인 1과 매핑
       // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 1;
+      // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
+      ref.read(cartItemsProvider.notifier).resetCartItems();
+      ref.read(cartItemsProvider.notifier).loadMoreCartItems();
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.

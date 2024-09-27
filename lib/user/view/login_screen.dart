@@ -156,8 +156,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 email: username,
                 password: password,
               );
-          // cartItemsProvider를 통해 장바구니 데이터 로드
-          ref.read(cartItemsProvider.notifier).loadCartItems(); // 장바구니 데이터 로드
 
           // 탭 인덱스를 0으로 설정
           ref.read(tabIndexProvider.notifier).state = 0;

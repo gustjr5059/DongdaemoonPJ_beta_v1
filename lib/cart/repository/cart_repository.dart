@@ -127,79 +127,76 @@ class CartItemRepository {
     return true; // 성공적으로 저장되면 true 반환
   }
 
-  // Firestore에서 장바구니 아이템 목록을 가져오는 함수 - Firestore에서 'cart_item' 컬렉션의 문서를 가져와 List로 반환
-  Future<List<Map<String, dynamic>>> getCartItems() async {
-    // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
-    // - 장바구니 화면 내 timestamp인 필드 데이터를 가지고 내림차순으로 상품 데이터를 정렬하여 최신 데이터가 제일 상단에 위치하도록 함
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외 발생
+// Firestore에서 장바구니 아이템을 페이징 처리하여 불러오는 함수
+  Future<List<Map<String, dynamic>>> getPagedCartItems({DocumentSnapshot? lastDocument, required int limit}) async {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+
+    print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
+
+    Query query = firestore.collection('couture_request_item').doc(userEmail).collection('items').orderBy('timestamp', descending: true).limit(limit);
+    // Firestore에서 사용자의 장바구니 아이템을 'timestamp'로 내림차순 정렬하고 지정한 개수만큼 데이터를 가져오도록 쿼리를 작성함
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument); // 마지막 문서 이후부터 데이터를 불러옴
+      print("이전 데이터 이후로 데이터를 불러옵니다."); // 마지막 문서 이후 데이터를 불러온다는 메시지를 출력함
     }
-    // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
-    if (userEmail == null) {
-      print('User email not available');
-      throw Exception('User email not available');
-    }
-    print('Fetching cart items for user: $userEmail');
-    final querySnapshot = await firestore.collection('couture_request_item').doc(userEmail).collection('items').orderBy('timestamp', descending: true).get(); // 'cart_item' 컬렉션에서 모든 문서를 'timestamp' 필드 기준으로 내림차순 정렬하여 가져옴
-    print('Cart items fetched: ${querySnapshot.docs.length}');
-    return querySnapshot.docs.map((doc) { // 가져온 문서들을 순회하여 리스트로 반환
-      final data = doc.data(); // 문서 데이터를 가져옴
-      data['id'] = doc.id; // 문서 ID를 데이터에 추가함
-      print('Cart item processed: ${data['product_id']}');
-      return data; // 데이터 반환
-    }).toList();
+
+    final querySnapshot = await query.get(); // Firestore 쿼리를 실행하여 결과를 가져옴
+
+    print("가져온 문서 수: ${querySnapshot.docs.length}"); // 가져온 문서의 수를 출력함
+
+    // querySnapshot.docs.map()에서 반환되는 데이터를 정확히 Map<String, dynamic>으로 변환함
+    return querySnapshot.docs.map((doc) {
+      final Map<String, dynamic> data = doc.data() as Map<String, dynamic>; // 명시적으로 데이터를 Map<String, dynamic>으로 캐스팅함
+      data['id'] = doc.id;  // 문서의 ID를 명시적으로 추가함
+      data['snapshot'] = doc; // 마지막 문서를 기록함
+      print("불러온 데이터: ${data['product_id']}"); // 불러온 데이터의 product_id를 출력함
+      return data;
+    }).toList(); // 데이터를 리스트로 변환하여 반환함
   }
 
-  // 장바구니 화면 내에서 상품 아이템을 '삭제' 버튼 클릭 시, Firestore에서 삭제되도록 하는 함수
-  Future<void> removeCartItem(String docId) async {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외 발생
-    }
-    // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
-    if (userEmail == null) {
-      print('User email not available');
-      throw Exception('User email not available');
-    }
-    print('Removing cart item for docId: $docId for user: $userEmail');
-    await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제
-    print('Cart item removed for docId: $docId');
-  }
+// 장바구니의 특정 아이템에 대한 실시간 구독 스트림을 제공하는 함수
+  Stream<Map<String, dynamic>> cartItemStream(String itemId) {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
-  // Firestore에서 장바구니 아이템 스트림을 가져오는 함수
-  Stream<List<Map<String, dynamic>>> cartItemsStream() {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외 발생
-    }
-    // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
-    if (userEmail == null) {
-      print('User email not available');
-      throw Exception('User email not available');
-    }
-    print('Subscribing to cart items stream for user: $userEmail');
-    // Firestore의 'cart_item' 컬렉션을 timestamp 내림차순으로 정렬하여 가져옴.
-    return firestore.collection('couture_request_item').doc(userEmail).collection('items').orderBy('timestamp', descending: true).snapshots().map((querySnapshot) {
-      print('Cart items snapshot received with ${querySnapshot.docs.length} items');
-      // 쿼리 결과를 문서 목록으로 변환.
-      return querySnapshot.docs.map((doc) {
-        // 각 문서의 데이터를 가져옴.
-        final data = doc.data();
-        // 문서의 ID를 데이터에 추가.
-        data['id'] = doc.id;
-        print('Cart item snapshot processed: ${data['product_id']}');
-        // 데이터를 반환.
+    return firestore.collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .doc(itemId)
+        .snapshots() // 지정한 아이템에 대한 실시간 스트림을 구독함
+        .handleError((error) { // 구독 중 오류가 발생하면 처리함
+      print('Error in cartItemStream: $error'); // 오류 메시지를 출력함
+    }).map((docSnapshot) {
+      if (docSnapshot.exists) { // 문서가 존재하는 경우
+        final data = docSnapshot.data() as Map<String, dynamic>; // 문서 데이터를 Map<String, dynamic>으로 변환함
+        data['id'] = docSnapshot.id; // 문서의 ID를 명시적으로 추가함
         return data;
-        // 변환된 데이터를 리스트로 변환하여 반환.
-      }).toList();
-    });
+      } else {
+        // 문서가 존재하지 않는 경우 구독을 해제함
+        print('Document does not exist for itemId: $itemId'); // 문서가 존재하지 않음을 출력함
+        return null; // 예외를 던지지 않고 null을 반환함
+      }
+    }).where((data) => data != null).cast<Map<String, dynamic>>(); // null 값을 필터링하여 스트림에서 제외함
+  }
+
+// 장바구니 화면 내에서 상품 아이템을 '삭제' 버튼 클릭 시, Firestore에서 삭제되도록 하는 함수
+  Future<void> removeCartItem(String docId) async {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외를 발생시킴
+      print('User not logged in');
+      throw Exception('User not logged in'); // 예외를 발생시킴
+    }
+    final userEmail = user.email; // 현재 로그인한 사용자의 이메일 주소를 가져옴
+    if (userEmail == null) {
+      print('User email not available'); // 사용자의 이메일이 없는 경우 예외를 발생시킴
+      throw Exception('User email not available');
+    }
+    print('Removing cart item for docId: $docId for user: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
+    await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제함
+    print('Cart item removed for docId: $docId'); // 문서 삭제 완료 메시지를 출력함
   }
 
   // Firestore에서 특정 아이템의 체크 상태를 업데이트하는 함수인 updateCartItemChecked
