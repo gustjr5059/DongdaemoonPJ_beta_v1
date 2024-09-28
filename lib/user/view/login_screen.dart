@@ -680,12 +680,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      MembershipRegistrationInfoScreen(),
-                                ),
-                              );
+                              const url = 'https://cafe.naver.com/ottbayo';
+                              launchURL(url);
                             },
                             child: Text(
                               '회원가입',

@@ -26,7 +26,7 @@ final cartScrollControllerProvider = Provider<ScrollController>((ref) {
   return scrollController;
 });
 
-// CartItemsNotifier 클래스: Firestore와의 상호작용을 통해 장바구니 상태를 관리하는 StateNotifier 클래스
+// ------ CartItemsNotifier 클래스: Firestore와의 상호작용을 통해 장바구니 상태를 관리하는 StateNotifier 클래스 내용 시작
 class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // 아이템별 실시간 구독을 관리하는 Map (아이템 ID -> 구독 객체)
   final Map<String, StreamSubscription<Map<String, dynamic>>> _itemSubscriptions = {};
@@ -216,6 +216,7 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     super.dispose(); // 상위 클래스의 dispose 메서드를 호출함
   }
 }
+// ------ CartItemsNotifier 클래스: Firestore와의 상호작용을 통해 장바구니 상태를 관리하는 StateNotifier 클래스 내용 끝
 
 // CartItemsNotifier를 사용하는 StateNotifierProvider
 final cartItemsProvider =

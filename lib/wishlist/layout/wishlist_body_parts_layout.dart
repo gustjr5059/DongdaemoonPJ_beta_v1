@@ -42,6 +42,9 @@ class WishlistIconButton extends ConsumerWidget {
       data: (wishlist) {
         // 찜 목록에 현재 상품이 있는지 확인
         final isWished = wishlist.contains(product.docId);
+        // 찜 목록이 한도를 초과했는지 확인
+        final isWishlistFull = wishlist.length >= 10;
+
         // 아이콘 버튼 반환
         return IconButton(
           // 찜 목록에 있는 경우 꽉 찬 하트 아이콘, 그렇지 않은 경우 빈 하트 아이콘
@@ -53,15 +56,18 @@ class WishlistIconButton extends ConsumerWidget {
           // 버튼 클릭 시 동작 정의
           onPressed: () async {
             // wishlistItemProvider의 notifier를 가져옴
-            final wishlistNotifier = ref.read(wishlistItemProvider(userEmail).notifier);
+            final wishlistNotifier =
+            ref.read(wishlistItemProvider(userEmail).notifier);
             // wishlistItemRepositoryProvider를 가져옴
-            final wishlistRepository = ref.read(wishlistItemRepositoryProvider);
+            final wishlistRepository =
+            ref.read(wishlistItemRepositoryProvider);
 
             // 상품이 찜 목록에 있는 경우
             if (isWished) {
               try {
                 // 찜 목록에서 상품 제거
-                await wishlistRepository.removeFromWishlistItem(userEmail, product.docId);
+                await wishlistRepository.removeFromWishlistItem(
+                    userEmail, product.docId);
                 // 로컬 상태 업데이트
                 wishlistNotifier.removeItem(product.docId);
                 // 사용자에게 알림 표시
@@ -75,16 +81,24 @@ class WishlistIconButton extends ConsumerWidget {
             } else {
               // 상품이 찜 목록에 없는 경우
               try {
-                // 찜 목록에 상품 추가
-                await wishlistRepository.addToWishlistItem(userEmail, product);
-                // 로컬 상태 업데이트
-                wishlistNotifier.addItem(product.docId);
-                // 사용자에게 알림 표시
-                showCustomSnackBar(context, '상품이 찜 목록에 담겼습니다.');
+                // 찜 목록이 10개를 초과했는지 확인
+                if (isWishlistFull) {
+                  // 한도 초과 메시지 표시
+                  showCustomSnackBar(
+                    context,
+                    '현재 찜 목록에 상품 수량이 한도를 초과했습니다.\n찜 목록에서 상품을 삭제한 후 재시도해주시길 바랍니다.',
+                  );
+                } else {
+                  // 찜 목록에 상품 추가
+                  await wishlistRepository.addToWishlistItem(userEmail, product);
+                  // 로컬 상태 업데이트
+                  wishlistNotifier.addItem(product.docId);
+                  // 사용자에게 알림 표시
+                  showCustomSnackBar(context, '상품이 찜 목록에 담겼습니다.');
+                }
               } catch (e) {
-                // 오류 발생 시 로컬 상태 복원
                 wishlistNotifier.toggleItem(product.docId);
-                // 사용자에게 오류 알림 표시
+                // 오류 발생 시 메시지 표시
                 showCustomSnackBar(context, '찜 목록에 담는 중 오류가 발생했습니다.');
               }
             }
