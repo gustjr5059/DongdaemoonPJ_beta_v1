@@ -583,8 +583,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(announceDetailScrollPositionProvider.notifier).state =
   0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.invalidate(announcementsProvider); // 전체 공지사항 목록 프로바이더 초기화
-  ref.invalidate(announcementDetailProvider); // 공지사항 상세 프로바이더 초기화
+  // 공지사항 화면 내 데이터를 불러오는 announceItemsProvider 초기화
+  ref.invalidate(announceItemsProvider);
+  // 공지사항 상세 화면 내 데이터를 불러오는 announceDetailItemProvider 초기화
+  ref.invalidate(announceDetailItemProvider);
   // 공지사항 화면 관련 초기화 부분 끝
 
   // 문의하기 화면 관련 초기화 부분 시작

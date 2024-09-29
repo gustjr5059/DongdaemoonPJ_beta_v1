@@ -96,6 +96,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     super.initState();
     // ScrollController를 초기화
     announceDetailScreenPointScrollController = ScrollController();
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -114,7 +115,10 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 공지사항 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-      ref.invalidate(announcementDetailProvider); // 공지사항 상세 프로바이더 초기화
+      // 공지사항 상세 데이터를 초기화하는 함수 호출
+      ref.read(announceDetailItemProvider(widget.documentId).notifier).resetAnnounceDetailItem();
+      // 공지사항 상세 데이터를 다시 로드하는 함수 호출
+      ref.read(announceDetailItemProvider(widget.documentId).notifier).loadMoreAnnounceDetailItem(widget.documentId);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -123,7 +127,10 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(announceDetailScrollPositionProvider.notifier).state = 0;
-        ref.invalidate(announcementDetailProvider); // 공지사항 상세 프로바이더 초기화
+        // 공지사항 상세 데이터를 초기화하는 함수 호출
+        ref.read(announceDetailItemProvider(widget.documentId).notifier).resetAnnounceDetailItem();
+        // 공지사항 상세 데이터를 다시 로드하는 함수 호출
+        ref.read(announceDetailItemProvider(widget.documentId).notifier).loadMoreAnnounceDetailItem(widget.documentId);
       }
     });
 

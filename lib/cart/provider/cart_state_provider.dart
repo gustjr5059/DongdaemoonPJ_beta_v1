@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore와 상호작
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증을 사용하기 위해 firebase_auth 패키지를 import함
 import 'package:flutter/cupertino.dart'; // Flutter의 Cupertino 디자인 패키지를 사용하기 위해 import함
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위해 Riverpod 패키지를 import함
+import '../../common/provider/common_state_provider.dart';
 import '../repository/cart_repository.dart'; // 장바구니 데이터 처리를 위한 CartRepository를 import함
 import 'cart_all_proviers.dart'; // CartFutureProvider와 관련된 provider 파일을 import함
 
@@ -11,9 +12,6 @@ final cartScrollPositionProvider = StateProvider<double>((ref) => 0);
 
 // 장바구니 화면에서 하단의 전체 선택 체크박스 상태를 관리하는 StateProvider
 final allCheckedProvider = StateProvider<bool>((ref) => false);
-
-// 장바구니 데이터를 로딩할 때 사용되는 로딩 상태를 관리하는 StateProvider
-final isLoadingProvider = StateProvider<bool>((ref) => false);
 
 // ScrollController를 관리하는 Provider
 // ScrollController를 제공하는 cartScrollControllerProvider를 정의함
