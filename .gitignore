@@ -44,3 +44,14 @@ app.*.map.json
 
 # 프로젝트 루트 디렉토리에 있는 config.json 파일을 Git에 커밋하지 않도록 설정
 config.json
+
+# iOS 빌드 파일 제외
+/ios/build/
+/ios/Pods/
+
+# Android 빌드 파일 제외
+/android/build/
+/android/.gradle/
+
+# 자동 생성 캐시 파일 제외
+**/XCBuildData/
