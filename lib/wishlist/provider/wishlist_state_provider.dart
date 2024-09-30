@@ -110,6 +110,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
 }
 // ------ Firestore와의 상호작용을 위해 WishlistItemRepository를 사용하여 상태를 관리하는 WishlistItemNotifier 클래스 내용 끝
 
+// 찜 버튼 데이터를 불러오는 로직
 // WishlistItemNotifier 클래스를 사용할 수 있도록 하는 StateNotifierProvider
 final wishlistItemProvider = StateNotifierProvider.family<WishlistItemNotifier, AsyncValue<Set<String>>, String>((ref, String userEmail) {
   // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴.

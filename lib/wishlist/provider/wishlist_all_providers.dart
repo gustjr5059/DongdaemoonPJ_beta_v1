@@ -11,6 +11,7 @@ final wishlistItemRepositoryProvider = Provider((ref) => WishlistItemRepository(
   storage: FirebaseStorage.instance, // Firebase Storage 인스턴스를 전달
 ));
 
+// 찜 목록 화면 내 데이터 불러오는 로직
 // wishlistItemsStreamProvider를 정의 - Firestore에서 wishlist_item 컬렉션의 실시간 스트림을 제공
 final wishlistItemsStreamProvider = StreamProvider.family.autoDispose((ref, String userEmail) {
   // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴

@@ -184,7 +184,7 @@ class WishlistItemsList extends ConsumerWidget {
     final double wishlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double wishlistEmptyTextX =
-        screenSize.width * (30 / referenceWidth); // 가로 비율
+        screenSize.width * (45 / referenceWidth); // 가로 비율
     final double wishlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double wishlistEmptyTextFontSize =

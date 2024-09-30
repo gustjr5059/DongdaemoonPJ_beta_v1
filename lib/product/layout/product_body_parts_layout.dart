@@ -541,8 +541,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 발주 내역 화면에서 단순 화면 스크롤 초기화
   ref.read(orderListScrollPositionProvider.notifier).state =
   0.0;
-  // 발주 목록 내 데이터를 불러오는 orderListProvider 초기화
-  ref.invalidate(orderListProvider);
+  // 발주 목록 내 데이터를 불러오는 orderlistItemsProvider 초기화
+  ref.invalidate(orderlistItemsProvider);
   // 발주 내역 화면 관련 초기화 부분 끝
 
   // 발주 내역 상세 화면 관련 초기화 부분 시작

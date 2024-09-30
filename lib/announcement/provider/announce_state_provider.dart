@@ -43,7 +43,6 @@ final announceDetailScrollControllerProvider = Provider<ScrollController>((ref) 
 });
 // -------- announce_detail_screen.dart 관련 ScrollControllerProvider 끝
 
-
 // ------ AnnounceItemsNotifier 클래스: Firestore와의 상호작용을 통해 공지사항 상태를 관리하는 StateNotifier 클래스 내용 시작
 class AnnounceItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // AnnouncementRepository 인스턴스를 저장하는 변수임

@@ -204,6 +204,18 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     final double announceDtChevronIconX = screenSize.width * (12 / referenceWidth);
     final double announceDtChevronIconY = screenSize.height * (8 / referenceHeight);
 
+    // 공지사항이 비어있는 경우의 알림 부분 수치임
+    final double announcementDetailEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율임
+    final double announcementDetailEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율임
+    final double announcementDetailEmptyTextX =
+        screenSize.width * (115 / referenceWidth); // 가로 비율임
+    final double announcementDetailEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율임
+    final double announcementDetailEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+
     return Scaffold(
       body: Stack(
         children: [
@@ -241,26 +253,68 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // 상단에 5픽셀의 여백을 추가하는 SliverPadding 위젯.
               SliverPadding(
                 padding: EdgeInsets.only(top: 5),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 8),
-                            AnnounceDetailBodyPartsLayout(documentId: widget.documentId), // AnnounceDetailBodyPartsLayout 재사용하여 구현
-                            SizedBox(height: 8),
-                          ],
+                sliver: Consumer(
+                  // Consumer 위젯은 Riverpod 상태 관리 값을 구독하는 역할을 함.
+                  builder: (context, ref, child) {
+                    // announceDetailItemProvider를 사용해 공지사항 상세 아이템을 구독함.
+                    final announceDetailItem = ref.watch(announceDetailItemProvider(widget.documentId));
+
+                    // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
+                    return announceDetailItem.isEmpty
+                        ? SliverToBoxAdapter(
+                      // 공지사항이 없을 때, 텍스트가 포함된 컨테이너를 화면에 표시함.
+                      child: Container(
+                        // 공지사항 비어있을 때 텍스트의 너비를 설정함.
+                        width: announcementDetailEmptyTextWidth,
+                        // 공지사항 비어있을 때 텍스트의 높이를 설정함.
+                        height: announcementDetailEmptyTextHeight,
+                        // 텍스트의 위치를 화면 상단으로부터 조정함.
+                        margin: EdgeInsets.only(
+                            left: announcementDetailEmptyTextX,
+                            top: announcementDetailEmptyTextY),
+                        // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
+                        child: Text(
+                          '현재 공지사항이 없습니다.',
+                          style: TextStyle(
+                            // 텍스트의 폰트 크기를 설정함.
+                            fontSize: announcementDetailEmptyTextFontSize,
+                            // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                            fontFamily: 'NanumGothic',
+                            // 폰트 굵기를 'bold'로 설정함.
+                            fontWeight: FontWeight.bold,
+                            // 텍스트 색상을 검은색으로 설정함.
+                            color: Colors.black,
+                          ),
                         ),
-                      );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
+                      ),
+                    )
+                    // 공지사항 상세에 아이템이 있을 경우, SliverList로 아이템을 표시함.
+                        : SliverList(
+                      // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          // 각 항목을 패딩으로 감싸 좌우 간격을 4.0으로 설정함.
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 8),
+                                // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
+                                AnnounceDetailBodyPartsLayout(documentId: widget.documentId),
+                                SizedBox(height: 8),
+                              ],
+                            ),
+                          );
+                        },
+                        // 전체 아이템을 하나의 큰 Column으로 구성하기 때문에 childCount를 1로 설정함.
+                        childCount: 1,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

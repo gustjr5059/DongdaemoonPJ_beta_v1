@@ -11,6 +11,7 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart';
+import '../provider/order_state_provider.dart';
 import '../view/complete_payment_screen.dart';
 import '../view/order_detail_list_screen.dart';
 
@@ -193,57 +194,6 @@ class UserInfoWidget extends ConsumerWidget {
       ),
     );
   }
-
-// // 수정된 _buildEditablePhoneNumberRow 함수
-//   Widget _buildEditablePhoneNumberRow(BuildContext context, String label,
-//       TextEditingController controller) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 4.0), // 위아래 간격 추가
-//       child: IntrinsicHeight(
-//         child: Row(
-//           crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
-//           children: [
-//             Container(
-//               width: 100,
-//               // 라벨 셀의 너비 설정
-//               color: Colors.grey.shade200,
-//               // 배경 색상 설정
-//               padding: const EdgeInsets.all(8.0),
-//               // 패딩 설정
-//               alignment: Alignment.topLeft,
-//               // 텍스트 정렬
-//               child: Text(
-//                 label,
-//                 style: TextStyle(fontWeight: FontWeight.bold), // 텍스트 스타일 설정
-//               ),
-//             ),
-//             Expanded(
-//               child: Container(
-//                 color: Colors.white, // 배경 색상 설정
-//                 padding: const EdgeInsets.all(8.0), // 패딩 설정
-//                 child: TextField(
-//                   controller: controller, // 휴대폰 번호 입력 컨트롤러 설정
-//                   style: TextStyle(fontSize: 14), // 텍스트 스타일 설정
-//                   decoration: InputDecoration(
-//                     hintText: "'-'을 붙여서 기입해주세요.",
-//                     // 힌트 텍스트 설정
-//                     hintStyle: TextStyle(color: Colors.grey.shade400),
-//                     // 힌트 텍스트 색상 설정
-//                     border: InputBorder.none,
-//                     // 입력 경계선 제거
-//                     isDense: true,
-//                     // 간격 설정
-//                     contentPadding: EdgeInsets.zero, // 내용 여백 제거
-//                   ),
-//                   maxLines: 1, // 최대 줄 수 설정
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
 }
 // ------ 발주 화면 내 발주자 정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 끝
 
@@ -475,90 +425,6 @@ class UpdateOrderButton extends ConsumerWidget {
 }
 // ------- 업데이트 요청 버튼을 구성하는 UI 관련 UpdateOrderButton 클래스 내용 끝 부분
 
-// // ------- 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
-// // OrderItemWidget 클래스는 상품의 상세 정보를 화면에 표시하는 역할을 담당.
-// class OrderItemWidget extends StatelessWidget {
-//   final ProductContent product; // 상품 정보를 저장하는 필드
-//
-//   OrderItemWidget({required this.product}); // 생성자에서 상품 정보를 받아옴
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
-//     return Card(
-//       child: Padding(
-//         padding: const EdgeInsets.all(8.0), // 카드 내부 여백 설정
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-//           children: [
-//             if (product.briefIntroduction != null) // briefIntroduction가 null이 아닌 경우에만 표시
-//               Text(
-//                 product.briefIntroduction!,
-//                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 글자 크기 18, 굵게 설정
-//               ),
-//             if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
-//               Text(
-//                 '상품번호: ${product.productNumber}', // productNumber 내용을 표시
-//                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
-//               ),
-//             SizedBox(height: 8), // 텍스트와 이미지 사이에 8 픽셀 높이의 여백 추가
-//             Row(
-//               children: [
-//                 if (product.thumbnail != null) // thumbnail이 null이 아닌 경우에만 표시
-//                   Image.network(
-//                     product.thumbnail!,
-//                     height: 100, // 이미지 높이 100 픽셀
-//                     width: 100, // 이미지 너비 100 픽셀
-//                     fit: BoxFit.cover, // 이미지를 잘라서 맞춤
-//                   ),
-//                 SizedBox(width: 8), // 이미지와 텍스트 사이에 8 픽셀 너비의 여백 추가
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-//                   children: [
-//                     Text(
-//                       '${numberFormat.format(product.originalPrice)}원',
-//                       style: TextStyle(
-//                         fontSize: 14, // 글자 크기 14
-//                         color: Colors.grey[500], // 글자 색상 회색
-//                         decoration: TextDecoration.lineThrough, // 취소선 스타일 적용
-//                       ),
-//                     ),
-//                     Text(
-//                       '${numberFormat.format(product.discountPrice)}원',
-//                       style: TextStyle(
-//                         fontSize: 18, // 글자 크기 18
-//                         fontWeight: FontWeight.bold, // 글자 굵게 설정
-//                       ),
-//                     ),
-//                     Text(
-//                       '${product.discountPercent?.round()}%',
-//                       style: TextStyle(
-//                         fontSize: 18, // 글자 크기 18
-//                         color: Colors.red, // 글자 색상 빨간색
-//                         fontWeight: FontWeight.bold, // 글자 굵게 설정
-//                       ),
-//                     ),
-//                     if (product.selectedColorImage != null) // selectedColorImage가 null이 아닌 경우에만 표시
-//                       Image.network(
-//                         product.selectedColorImage!,
-//                         height: 20, // 이미지 높이 20 픽셀
-//                         width: 20, // 이미지 너비 20 픽셀
-//                         fit: BoxFit.cover, // 이미지를 잘라서 맞춤
-//                       ),
-//                     Text('색상: ${product.selectedColorText}'), // 색상 텍스트 표시
-//                     Text('사이즈: ${product.selectedSize}'), // 사이즈 텍스트 표시
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-// // ------ 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
-
 // ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
 class OrderListItemWidget extends ConsumerWidget {
   // 발주 데이터를 담고 있는 맵 객체를 멤버 변수로 선언.
@@ -686,9 +552,10 @@ class OrderListItemWidget extends ConsumerWidget {
                         ),
                         onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
                           try {
-                            await ref.read(deleteOrderProvider({ // deleteOrderProvider를 호출하여 발주 내역을 삭제함
-                              'orderNumber': orderNumber, // 발주 번호를 전달함
-                            }).future);
+                            // orderlistItemsProvider에서 OrderlistItemsNotifier를 읽어와 호출함.
+                            await ref.read(orderlistItemsProvider.notifier)
+                            // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
+                                .deleteOrderItem(orderNumber);
                             Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
                             showCustomSnackBar(context, '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
                           } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함

@@ -117,7 +117,8 @@ class OrderRepository {
       'numberInfo': {
         'order_number': orderNumber, // 주문 번호
         'order_date': now, // 주문 날짜
-      }
+      },
+      'private_orderList_closed_button': false,
     });
     print('Order data saved to Firestore.');
 
@@ -162,100 +163,117 @@ class OrderRepository {
 // 발주 관련 화면의 레퍼지토리 내용 끝
 
 
-// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 OrderlistRepository 클래스 내용 시작 부분
+// ------ 발주내역 화면 내 데이터 불러오는 OrderlistRepository 클래스 내용 시작 부분
 class OrderlistRepository {
+  // Firestore 인스턴스를 저장하는 필드 선언.
   final FirebaseFirestore firestore;
 
-  // OrderlistRepository 클래스의 생성자, FirebaseFirestore 인스턴스를 받아옴
+  // Firestore 인스턴스를 필수 매개변수로 받는 생성자.
   OrderlistRepository({required this.firestore});
 
-// 특정 사용자의 발주 데이터를 가져오는 함수
-  Future<List<Map<String, dynamic>>> fetchOrdersByEmail(String userEmail) async {
+  // 주어진 이메일 주소를 기반으로 발주 내역을 가져오는 함수.
+  // 마지막 문서 스냅샷과 불러올 데이터의 개수도 매개변수로 받음.
+  Future<List<Map<String, dynamic>>> fetchOrdersByEmail({
+    required String userEmail,  // 사용자 이메일을 필수 매개변수로 받음.
+    DocumentSnapshot? lastDocument,  // 마지막 문서 스냅샷을 받을 수 있는 선택적 매개변수.
+    required int limit,  // 불러올 데이터 개수를 필수로 받음.
+  }) async {
     try {
-      print('Fetching orders for email: $userEmail');
-      // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
+      print('Firestore에서 발주 데이터를 가져옵니다: 사용자 이메일 - $userEmail, 불러올 개수 - $limit');
+      if (lastDocument != null) {
+        print('마지막 문서 이후의 데이터를 가져옵니다.');
+      }
+
+      // 'couture_order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 참조.
       final userDocRef = firestore.collection('couture_order_list').doc(userEmail);
 
-      // 'orders' 서브 컬렉션의 모든 문서를 가져옴
-      final ordersQuerySnapshot = await userDocRef.collection('orders').get();
-      print('Fetched orders: ${ordersQuerySnapshot.docs.length} for email: $userEmail');
+      // 'orders' 컬렉션에서 'private_orderList_closed_button' 값이 false인 문서들만 조회하며, 제한된 개수로 불러옴.
+      Query query = userDocRef.collection('orders')
+          .where('private_orderList_closed_button', isEqualTo: false)
+          .limit(limit);
 
-      if (ordersQuerySnapshot.docs.isEmpty) {
-        print('No orders found for email $userEmail');
-        return []; // 빈 리스트 반환
+      // 마지막 문서가 존재하면, 그 문서 이후의 데이터만 불러옴.
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument);
       }
 
+      // 위에서 정의한 쿼리 실행 및 결과를 가져옴.
+      final ordersQuerySnapshot = await query.get();
+
+      // 결과가 없으면 빈 리스트를 반환.
+      if (ordersQuerySnapshot.docs.isEmpty) {
+        print('발주 내역이 없습니다.');
+        return [];
+      }
+
+      print('총 ${ordersQuerySnapshot.docs.length}개의 발주를 Firestore에서 가져왔습니다.');
+
+      // 모든 발주 데이터를 저장할 리스트 선언.
       final List<Map<String, dynamic>> allOrders = [];
 
+      // 가져온 각 발주 문서에 대해 추가 정보를 조회하여 처리.
       for (var orderDoc in ordersQuerySnapshot.docs) {
-        print('Processing order: ${orderDoc.id}');
+        // 'number_info' 컬렉션에서 'info' 문서를 가져옴.
+        final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
 
-        // 'button_info' 컬렉션의 'info' 문서를 가져와서 필드값을 체크
-        final buttonInfoDoc = await orderDoc.reference.collection('button_info').doc('info').get();
+        // 'orderer_info' 컬렉션에서 'info' 문서를 가져옴.
+        final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
 
-        // 'private_orderList_closed_button' 필드가 false인 경우에만 처리
-        if (buttonInfoDoc.exists && buttonInfoDoc['private_orderList_closed_button'] == false) {
-          // 각 발주 문서의 하위 컬렉션에서 필요한 정보를 가져옴
-          final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
-          print('Fetched numberInfo: ${numberInfoDoc.exists ? 'exists' : 'does not exist'}');
+        // 'product_info' 컬렉션에서 모든 문서를 가져옴.
+        final productInfoQuery = await orderDoc.reference.collection('product_info').get();
 
-          final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
-          print('Fetched ordererInfo: ${ordererInfoDoc.exists ? 'exists' : 'does not exist'}');
+        // 가져온 'product_info' 문서들을 리스트로 변환.
+        final productInfo = productInfoQuery.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 
-          final productInfoQuery = await orderDoc.reference.collection('product_info').get();
-          print('Fetched productInfo: ${productInfoQuery.docs.length} products found');
-
-          // 'product_info' 하위 컬렉션의 모든 문서를 리스트로 변환
-          final productInfo = productInfoQuery.docs.map((doc) {
-            print('Processing product: ${doc.id}');
-            return doc.data() as Map<String, dynamic>;
-          }).toList();
-
-          // 발주 데이터를 리스트에 추가
-          allOrders.add({
-            'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
-            'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
-            'productInfo': productInfo,
-          });
-        }
+        // 조회한 정보를 리스트에 추가, 마지막 문서 스냅샷도 저장.
+        allOrders.add({
+          'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},  // 'number_info' 데이터.
+          'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},  // 'orderer_info' 데이터.
+          'productInfo': productInfo,  // 'product_info' 리스트.
+          'snapshot': orderDoc,  // 마지막 문서 스냅샷.
+        });
       }
-
-      print('Finished fetching orders for email: $userEmail');
       return allOrders;
     } catch (e) {
-      print('Failed to fetch orders for email $userEmail: $e');
-      return []; // 에러 발생 시 빈 리스트 반환
+      print('Firestore에서 발주 데이터를 불러오는 도중 오류 발생: $e');
+      return [];
     }
   }
 
-  // 발주를 삭제하는 함수
+  // 특정 발주 번호에 해당하는 발주를 삭제하는 함수.
   Future<void> fetchDeleteOrders(String userEmail, String orderNumber) async {
     try {
-      // 사용자의 이메일을 기준으로 order_list 컬렉션의 문서 참조를 가져옴
+      print('Firestore에서 발주 삭제 요청: 사용자 이메일 - $userEmail, 발주 번호 - $orderNumber');
+
+      // 'couture_order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 참조.
       final userDocRef = firestore.collection('couture_order_list').doc(userEmail);
 
-      // orders 서브 컬렉션에서 발주 번호가 일치하는 문서를 조회
+      // 'orders' 컬렉션에서 특정 발주 번호와 일치하는 문서를 조회.
       final ordersQuerySnapshot = await userDocRef.collection('orders')
           .where('numberInfo.order_number', isEqualTo: orderNumber)
           .get();
 
-      // 조회된 문서가 있을 경우 첫 번째 문서를 참조하여 필드값을 업데이트
+      // 조회된 문서가 있으면, 해당 문서를 삭제 처리.
       if (ordersQuerySnapshot.docs.isNotEmpty) {
         final orderDocRef = ordersQuerySnapshot.docs.first.reference;
-        // 삭제 시간 기록을 위한 현재 시간 저장
+
+        // 삭제 시간을 현재 시간으로 설정.
         final DateTime orderListDeleteTime = DateTime.now();
 
-        // 'button_info' 컬렉션의 'info' 문서를 참조하여 업데이트
+        // 'button_info' 컬렉션의 'info' 문서를 업데이트하여 삭제 버튼을 비활성화 및 삭제 시간 기록.
         final buttonInfoDocRef = orderDocRef.collection('button_info').doc('info');
-
         await buttonInfoDocRef.update({
-          'private_orderList_closed_button': true, // 해당 필드값을 true로 변경
-          'orderList_delete_time': orderListDeleteTime, // 발주 내역 삭제 시간 생성
+          'private_orderList_closed_button': true,  // 삭제 버튼 비활성화.
+          'orderList_delete_time': orderListDeleteTime,  // 삭제 시간 기록.
+        });
+
+        // 해당 발주 문서에서 'private_orderList_closed_button' 필드를 업데이트.
+        await orderDocRef.update({
+          'private_orderList_closed_button': true,  // 삭제 처리.
         });
       }
     } catch (e) {
-      print('Failed to delete order $orderNumber for user $userEmail: $e');
-      throw e; // 오류 발생 시 예외를 다시 던짐
+      print('Firestore에서 발주 삭제 도중 오류 발생: $e');
     }
   }
 
@@ -331,4 +349,4 @@ class OrderlistRepository {
     }
   }
 }
-// ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 OrderlistRepository 클래스 내용 끝 부분
+// ------ 발주내역 화면 내 데이터 불러오는 OrderlistRepository 클래스 내용 끝 부분

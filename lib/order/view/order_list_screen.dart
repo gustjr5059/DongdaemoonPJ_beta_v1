@@ -95,6 +95,19 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     super.initState();
     // ScrollController를 초기화
     orderListScreenPointScrollController = ScrollController();
+    // 스크롤 끝에 도달하면 추가 데이터를 로드하기 위한 리스너 추가.
+    orderListScreenPointScrollController.addListener(() {
+      // 스크롤이 끝에 도달했는지 확인함.
+      if (orderListScreenPointScrollController.position.pixels ==
+          orderListScreenPointScrollController.position.maxScrollExtent) {
+        // 현재 로그인한 사용자의 이메일을 가져옴.
+        final userEmail = FirebaseAuth.instance.currentUser?.email;
+        // 사용자 이메일이 존재할 경우, 추가 데이터를 로드하는 함수를 호출함.
+        if (userEmail != null) {
+          ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
+        }
+      }
+    });
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -113,8 +126,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 발주내역 버튼 인덱스인 2와 매핑
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
-      // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      ref.invalidate(orderListProvider);
+      // // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
+      // ref.invalidate(orderlistItemsProvider);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -125,8 +138,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
-        // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
-        ref.invalidate(orderListProvider);
       }
     });
 
@@ -202,8 +213,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
 
-    // orderListProvider를 통해 발주 데이터를 구독.
-    final ordersAsyncValue = ref.watch(orderListProvider);
+    // orderlistItemsProvider를 통해 발주 데이터를 구독.
+    final orderlistItems = ref.watch(orderlistItemsProvider);
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -259,32 +270,28 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격을 조정함.
+              // 상단에 5픽셀 여백을 추가하는 SliverPadding 위젯.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5), // 위쪽에 5픽셀의 여백을 추가함.
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                padding: EdgeInsets.only(top: 5),
+                // SliverList를 사용하여 리스트 항목을 슬라이버 형태로 표시함.
                 sliver: SliverList(
+                  // SliverChildBuilderDelegate는 리스트 항목을 동적으로 생성함.
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) { // 각 아이템을 빌드하기 위한 빌더 함수를 정의함.
-                      return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: ordersAsyncValue.when( // 비동기 데이터의 상태에 따라 다른 위젯을 반환함.
-                          data: (orders) { // 데이터가 성공적으로 로드되었을 때의 동작을 정의함.
-                            // 리스트를 역순으로 정렬함.
-                            final reversedOrders = orders.reversed.toList();
-                            // 역순으로 정렬된 리스트에서 현재 인덱스에 해당하는 아이템을 OrderListItemWidget으로 반환함.
-                            return OrderListItemWidget(order: reversedOrders.isNotEmpty ? reversedOrders[index] : null);
-                          },
-                          loading: () => Center(child: CircularProgressIndicator()), // 데이터가 로딩 중일 때 로딩 인디케이터를 표시함.
-                          error: (error, stack) => Center(child: Text('에러가 발생했습니다: $error')), // 에러가 발생했을 때 에러 메시지를 표시함.
-                        ),
-                      );
+                    // 각 항목을 빌드하는 빌더 함수.
+                        (BuildContext context, int index) {
+                      // 발주 내역이 비어 있을 경우, '발주 내역이 없습니다.' 메시지를 표시함.
+                      if (orderlistItems.isEmpty) {
+                        return Center(child: Text('발주 내역이 없습니다.'));
+                      }
+
+                      // 발주 목록을 역순으로 정렬함.
+                      final reversedOrders = orderlistItems.reversed.toList();
+
+                      // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
+                      return OrderListItemWidget(order: reversedOrders[index]);
                     },
-                    childCount: ordersAsyncValue.when( // 목록의 아이템 개수를 설정함.
-                      data: (orders) => orders.isNotEmpty ? orders.length : 1, // 데이터가 있을 때 리스트의 길이를 반환하고, 없을 때 1을 반환함.
-                      loading: () => 1, // 로딩 중일 때 1을 반환함.
-                      error: (error, stack) => 1, // 에러가 발생했을 때 1을 반환함.
-                    ),
+                    // 리스트 항목의 개수를 설정함. 발주 항목의 개수만큼 childCount를 설정.
+                    childCount: orderlistItems.length,
                   ),
                 ),
               ),
