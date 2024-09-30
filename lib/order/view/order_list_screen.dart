@@ -126,8 +126,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 발주내역 버튼 인덱스인 2와 매핑
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
-      // // 발주내역 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      // ref.invalidate(orderlistItemsProvider);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -212,6 +210,18 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
     final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
+    // 발주 내역 목록 비어있는 경우의 알림 부분 수치
+    final double orderlistEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율
+    final double orderlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextX =
+        screenSize.width * (50 / referenceWidth); // 가로 비율
+    final double orderlistEmptyTextY =
+        screenSize.height * (100 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
+
 
     // orderlistItemsProvider를 통해 발주 데이터를 구독.
     final orderlistItems = ref.watch(orderlistItemsProvider);
@@ -223,6 +233,25 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     return Scaffold(
       body: Stack(
         children: [
+          // 발주 내역이 비어 있을 경우, '발주 내역이 없습니다.' 메시지를 표시함.
+          if (orderlistItems.isEmpty)
+            Center(
+              child: Container(
+                width: orderlistEmptyTextWidth,
+                height: orderlistEmptyTextHeight,
+                margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                child: Text(
+                  '발주 내역이 없습니다.',
+                  style: TextStyle(
+                    fontSize: orderlistEmptyTextFontSize,
+                    fontFamily: 'NanumGothic',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            )
+          else
           CustomScrollView(
             controller: orderListScreenPointScrollController, // 스크롤 컨트롤러 연결
             slivers: <Widget>[
@@ -279,11 +308,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                   delegate: SliverChildBuilderDelegate(
                     // 각 항목을 빌드하는 빌더 함수.
                         (BuildContext context, int index) {
-                      // 발주 내역이 비어 있을 경우, '발주 내역이 없습니다.' 메시지를 표시함.
-                      if (orderlistItems.isEmpty) {
-                        return Center(child: Text('발주 내역이 없습니다.'));
-                      }
-
                       // 발주 목록을 역순으로 정렬함.
                       final reversedOrders = orderlistItems.reversed.toList();
 

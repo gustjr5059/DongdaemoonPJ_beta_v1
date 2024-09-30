@@ -457,22 +457,25 @@ class OrderListItemWidget extends ConsumerWidget {
     final double orderlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
-    // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
-    if (order == null || order!.isEmpty) {
-      return Container(
-        width: orderlistEmptyTextWidth,
-        height: orderlistEmptyTextHeight,
-        margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
-        child: Text('발주 내역이 없습니다.',
-          style: TextStyle(
-            fontSize: orderlistEmptyTextFontSize,
-            fontFamily: 'NanumGothic',
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      );
-    }
+    // // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
+    // if (order == null || order!.isEmpty) {
+    //   return Center( // Center 위젯을 추가하여 컨테이너가 화면 중앙에 배치되도록 함
+    //     child: Container(
+    //       width: orderlistEmptyTextWidth,
+    //       height: orderlistEmptyTextHeight,
+    //       margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+    //       child: Text(
+    //         '발주 내역이 없습니다.',
+    //         style: TextStyle(
+    //           fontSize: orderlistEmptyTextFontSize,
+    //           fontFamily: 'NanumGothic',
+    //           fontWeight: FontWeight.bold,
+    //           color: Colors.black,
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     // 날짜 포맷을 지정.
     final dateFormat = DateFormat('yyyy-MM-dd');
@@ -605,12 +608,12 @@ class _OrderListDetailItemWidgetState
     extends ConsumerState<OrderListDetailItemWidget> {
   @override
   Widget build(BuildContext context) {
-    // order가 null이거나 비어있으면 발주 데이터를 불러올 수 없음을 알리는 메시지를 화면에 표시함
-    if (widget.order == null || widget.order!.isEmpty) {
-      return Center(
-        child: Text('발주 데이터를 불러올 수 없습니다.'),
-      );
-    }
+    // // order가 null이거나 비어있으면 발주 데이터를 불러올 수 없음을 알리는 메시지를 화면에 표시함
+    // if (widget.order == null || widget.order!.isEmpty) {
+    //   return Center(
+    //     child: Text('발주 데이터를 불러올 수 없습니다.'),
+    //   );
+    // }
 
     // 날짜 형식을 'yyyy-MM-dd'로 지정함
     final dateFormat = DateFormat('yyyy-MM-dd');

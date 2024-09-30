@@ -52,24 +52,5 @@ final orderDataProvider = FutureProvider.family<Map<String, dynamic>, String>((r
   return await repository.fetchOrderData(userEmail, orderId);
 });
 
-// 발주 목록 상세 화면 내 특정 발주번호의 발주 관련 데이터를 불러오는 OrderlistRepository 인스턴스를 제공하여
-// 해당 레퍼지토리의 fetchOrderByOrderNumber 메서드를 활용하는 FutureProvider
-final orderListDetailProvider = FutureProvider.family<Map<String, dynamic>?, String>((ref, orderNumber) async {
-  // FirebaseFirestore 인스턴스를 사용하여 OrderlistRepository 인스턴스를 생성
-  final repository = OrderlistRepository(firestore: FirebaseFirestore.instance);
-
-  // 현재 로그인한 사용자의 이메일을 가져옴
-  final userEmail = FirebaseAuth.instance.currentUser?.email;
-
-  // 사용자가 로그인하지 않은 경우 예외를 발생시킴
-  if (userEmail == null) {
-    throw Exception('User not logged in');
-  }
-
-  // 레포지토리의 fetchOrderByOrderNumber 메서드를 호출하여 발주 번호에 맞는 데이터를 가져옴
-  return repository.fetchOrderByOrderNumber(userEmail, orderNumber);
-});
-
-
 // OrderlistRepository를 제공하는 Provider
 final orderlistRepositoryProvider = Provider((ref) => OrderlistRepository(firestore: FirebaseFirestore.instance));

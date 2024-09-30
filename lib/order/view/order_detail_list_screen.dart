@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
@@ -49,6 +50,10 @@ class _OrderListDetailScreenState
     extends ConsumerState<OrderListDetailScreen>
     with WidgetsBindingObserver {
 
+  late String userEmail; // 사용자 이메일을 나중에 초기화할 수 있도록 late 키워드를 사용함
+// FirebaseAuth에서 로그인된 사용자의 이메일을 가져와서 해당 변수에 할당함
+// 가져온 이메일을 매개변수로 활용하여 Firestore 쿼리 등에 사용할 수 있음
+
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -82,6 +87,9 @@ class _OrderListDetailScreenState
     // ScrollController를 초기화
     orderListDetailScreenPointScrollController = ScrollController();
 
+    // FirebaseAuth에서 사용자 이메일 가져오기
+    userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -96,12 +104,9 @@ class _OrderListDetailScreenState
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         orderListDetailScreenPointScrollController.jumpTo(savedScrollPosition);
       }
-
       // tabIndexProvider의 상태를 하단 탭 바 내 발주내역 버튼 인덱스인 2와 매핑
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
-      // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      ref.invalidate(orderListDetailProvider);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -112,8 +117,6 @@ class _OrderListDetailScreenState
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderListDetailScrollPositionProvider.notifier).state =
         0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
-        // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-        ref.invalidate(orderListDetailProvider);
       }
     });
 
@@ -194,16 +197,48 @@ class _OrderListDetailScreenState
     final double orderlistDtWishlistBtnX = screenSize.width * (10 / referenceWidth);
     final double orderlistDtWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
+    // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
+    final double orderlistEmptyTextWidth =
+        screenSize.width * (270 / referenceWidth); // 가로 비율
+    final double orderlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextX =
+        screenSize.width * (60 / referenceWidth); // 가로 비율
+    final double orderlistEmptyTextY =
+        screenSize.height * (100 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
 
-    final orderListDetailAsyncValue = ref.watch(orderListDetailProvider(widget.orderNumber));
+    // Tuple2로 이메일과 orderNumber 전달
+    final orderlistDetailItem = ref.watch(orderlistDetailItemProvider(Tuple2(userEmail, widget.orderNumber)));
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
     return Scaffold(
-      body: orderListDetailAsyncValue.when(
-        data: (order) {
-          return CustomScrollView(
+      body: Stack(
+        children: [
+          // 발주 상세 내역이 비어 있을 경우, '발주 데이터를 불러올 수 없습니다.' 메시지를 표시함.
+          if (orderlistDetailItem.isEmpty)
+            Center(
+              child: Container(
+                width: orderlistEmptyTextWidth,
+                height: orderlistEmptyTextHeight,
+                margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                child: Text(
+                  '발주 데이터를 불러올 수 없습니다.',
+                  style: TextStyle(
+                    fontSize: orderlistEmptyTextFontSize,
+                    fontFamily: 'NanumGothic',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            )
+          else
+          CustomScrollView(
             controller: orderListDetailScreenPointScrollController,
             // 스크롤 컨트롤러 연결
             slivers: <Widget>[
@@ -219,10 +254,10 @@ class _OrderListDetailScreenState
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
             // 확장 높이 설정
             // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                background: buildCommonAppBar(
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
                   // 공통 AppBar 빌드
                   context: context,
                   // 현재 context 전달
@@ -267,7 +302,7 @@ class _OrderListDetailScreenState
                             child: Column(
                               children: [
                                 SizedBox(height: 5), // 높이 5로 간격 설정
-                                OrderListDetailItemWidget(order: order!),
+                                OrderListDetailItemWidget(order: orderlistDetailItem),
                                 SizedBox(height: 20),
                               ],
                             ),
@@ -278,16 +313,14 @@ class _OrderListDetailScreenState
                 ),
               ),
             ],
-          );
-        },
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('에러가 발생했습니다: $error')),
-      ),
+           ),
+         ],
+       ),
           // buildTopButton 함수는 주어진 context와 orderListDetailProductScreenPointScrollController를 사용하여
           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
           // buildTopButton(
           //     context, orderListDetailScreenPointScrollController),
-      bottomNavigationBar: buildCommonBottomNavigationBar(
+        bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider),
           ref,
           context,

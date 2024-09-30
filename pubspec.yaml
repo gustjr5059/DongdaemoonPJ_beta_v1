@@ -67,6 +67,7 @@ dependencies:
   uuid: ^4.4.0
   debounce_throttle: ^2.0.0
   firebase_storage: ^11.7.5
+  tuple: ^2.0.0
 
 dev_dependencies:
   flutter_test:

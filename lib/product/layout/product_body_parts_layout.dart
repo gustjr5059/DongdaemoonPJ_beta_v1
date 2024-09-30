@@ -550,7 +550,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(orderListDetailScrollPositionProvider.notifier).state =
   0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
   // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-  ref.invalidate(orderListDetailProvider);
+  ref.invalidate(orderlistDetailItemProvider);
   // 발주 내역 상세 화면 관련 초기화 부분 끝
 
   // 발주 화면 관련 초기화 부분 시작
