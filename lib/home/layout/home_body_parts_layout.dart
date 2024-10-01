@@ -128,8 +128,8 @@ class MidCategoryButtonList extends ConsumerWidget {
           iconSize: 30, // 아이콘 크기 설정
           icon: Image.asset(
             boolExpanded
-                ? 'asset/img/misc/button_img/compressed_button_1.png'
-                : 'asset/img/misc/button_img/expand_button_1.png',
+                ? 'asset/img/misc/button_img/expand_button_top.png'
+                : 'asset/img/misc/button_img/expand_button_bottom.png',
             // 확장일 때와 축소일 때의 이미지 경로
             width: 30, // 아이콘 너비 설정
             height: 30, // 아이콘 높이 설정
@@ -168,10 +168,10 @@ final Map<String, String> midCategoryImageMap = {
   "원피스": "onepiece_button_v1.png",
   "팬츠": "pants_button_v1.png",
   "청바지": "jean_button_v1.png",
-  "스커트": "skirt_button.png",
-  "패딩": "paeding_button.png",
-  "코트": "coat_button.png",
-  "가디건": "cardigan_button.png"
+  "스커트": "skirt_button_v1.png",
+  "패딩": "paeding_button_v1.png",
+  "코트": "coat_button_v1.png",
+  "가디건": "cardigan_button_v1.png"
 };
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수

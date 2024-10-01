@@ -141,12 +141,18 @@ flutter:
     - asset/img/misc/button_img/onepiece_button_v1.png
     - asset/img/misc/button_img/pants_button_v1.png
     - asset/img/misc/button_img/jean_button_v1.png
+    - asset/img/misc/button_img/cardigan_button_v1.png
+    - asset/img/misc/button_img/coat_button_v1.png
+    - asset/img/misc/button_img/paeding_button_v1.png
+    - asset/img/misc/button_img/skirt_button_v1.png
     - asset/img/misc/logo_img/couture_logo_v1.png
     - asset/img/misc/drawer_img/youtube_logo_v1.png
     - asset/img/misc/drawer_img/naver_logo_v1.png
     - asset/img/misc/drawer_img/instagram_logo_v1.png
     - asset/img/misc/drawer_img/kakao_logo_v1.png
     - asset/img/misc/button_img/plus_button1.png
+    - asset/img/misc/button_img/expand_button_bottom.png
+    - asset/img/misc/button_img/expand_button_top.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
