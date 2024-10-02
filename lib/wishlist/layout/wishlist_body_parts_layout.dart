@@ -43,7 +43,7 @@ class WishlistIconButton extends ConsumerWidget {
         // 찜 목록에 현재 상품이 있는지 확인
         final isWished = wishlist.contains(product.docId);
         // 찜 목록이 한도를 초과했는지 확인
-        final isWishlistFull = wishlist.length >= 10;
+        final isWishlistFull = wishlist.length >= 20;
 
         // 아이콘 버튼 반환
         return IconButton(
@@ -81,7 +81,7 @@ class WishlistIconButton extends ConsumerWidget {
             } else {
               // 상품이 찜 목록에 없는 경우
               try {
-                // 찜 목록이 10개를 초과했는지 확인
+                // 찜 목록이 20개를 초과했는지 확인
                 if (isWishlistFull) {
                   // 한도 초과 메시지 표시
                   showCustomSnackBar(

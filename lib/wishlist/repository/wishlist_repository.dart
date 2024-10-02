@@ -36,20 +36,20 @@ class WishlistItemRepository {
       final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일을 가져옴
       print('사용자 $userEmail 의 찜 목록에 상품을 추가합니다.'); // 디버깅 메시지 추가
 
-      // Firestore에서 사용자의 찜 목록 항목을 가져옴
-      final wishlistSnapshot = await firestore
-          .collection('couture_wishlist_item')
-          .doc(userEmail)
-          .collection('items')
-          .get();
+      // // Firestore에서 사용자의 찜 목록 항목을 가져옴
+      // final wishlistSnapshot = await firestore
+      //     .collection('couture_wishlist_item')
+      //     .doc(userEmail)
+      //     .collection('items')
+      //     .get();
 
-      // 찜 목록이 10개를 초과하는지 확인
-      if (wishlistSnapshot.docs.length >= 10) {
-        // 찜 목록이 한도를 초과한 경우 메시지를 표시
-        print('찜 목록 한도를 초과했습니다.');
-        throw(
-            '현재 찜 목록에 상품 수량이 한도를 초과했습니다.\n찜 목록에서 상품을 삭제한 후 재시도해주시길 바랍니다.');
-      }
+      // // 찜 목록이 20개를 초과하는지 확인
+      // if (wishlistSnapshot.docs.length >= 20) {
+      //   // 찜 목록이 한도를 초과한 경우 메시지를 표시
+      //   print('찜 목록 한도를 초과했습니다.');
+      //   throw(
+      //       '현재 찜 목록에 상품 수량이 한도를 초과했습니다.\n찜 목록에서 상품을 삭제한 후 재시도해주시길 바랍니다.');
+      // }
 
       // Firestore에 저장할 데이터 생성
       final data = {

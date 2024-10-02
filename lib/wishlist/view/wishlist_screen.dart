@@ -224,6 +224,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     final double wishlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
     final double wishlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
     final double wishlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // body 부분 데이터 내용의 전체 패딩 수치
     final double wishlistPaddingX = screenSize.width * (17 / referenceHeight);
     final double wishlistPaddingY = screenSize.width * (8 / referenceHeight);
 
@@ -269,7 +271,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return Padding(
-                      // 각 항목의 좌우 간격을 17.0으로 설정함.
+                      // 각 항목의 좌우 간격을 wishlistPaddingX으로 설정함.
                       padding: EdgeInsets.symmetric(horizontal: wishlistPaddingX),
                       child: Column(
                         children: [

@@ -259,7 +259,7 @@ class CommonCardView extends StatelessWidget {
 // 필요한 'content'는 반드시 제공되어야 하며, 나머지는 선택적으로 제공될 수 있음.
   CommonCardView({
     required this.content, // content는 필수로 제공되어야 함
-    this.backgroundColor = BACKGROUND_COLOR, // 배경색은 선택적이며 기본값은 BACKGROUND_COLOR로 설정
+    this.backgroundColor = Colors.white, // 배경색은 선택적이며 기본값은 BACKGROUND_COLOR로 설정
     this.elevation = 4.0, // elevation은 선택적이며 기본값은 4.0으로 설정
     this.margin = const EdgeInsets.all(
         2), // margin은 선택적이며 기본값은 EdgeInsets.all(2)로 설정

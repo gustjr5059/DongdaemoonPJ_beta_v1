@@ -700,7 +700,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
+                        // 각 항목의 좌우 간격을 1.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 1.0),
                         child: Column(
                           children: [

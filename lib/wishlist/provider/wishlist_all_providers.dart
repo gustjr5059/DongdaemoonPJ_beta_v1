@@ -13,9 +13,13 @@ final wishlistItemRepositoryProvider = Provider((ref) => WishlistItemRepository(
 
 // 찜 목록 화면 내 데이터 불러오는 로직
 // wishlistItemsStreamProvider를 정의 - Firestore에서 wishlist_item 컬렉션의 실시간 스트림을 제공
-final wishlistItemsStreamProvider = StreamProvider.family.autoDispose((ref, String userEmail) {
+final wishlistItemsStreamProvider = StreamProvider.family((ref, String userEmail) {
+  print('Firestore에서 찜 목록 데이터를 불러오기 시작함'); // 찜 목록 데이터를 불러오는 시작점
+
   // wishlistItemRepositoryProvider를 사용하여 WishlistItemRepository 인스턴스를 가져옴
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  print('WishlistItemRepository 인스턴스를 가져옴'); // WishlistItemRepository 인스턴스를 가져온 것을 확인
+
   // Firestore에서 wishlist_item 컬렉션을 구독하여 실시간 스트림을 반환
   return wishlistRepository.firestore
       .collection('couture_wishlist_item')
@@ -24,8 +28,10 @@ final wishlistItemsStreamProvider = StreamProvider.family.autoDispose((ref, Stri
       .orderBy('timestamp', descending: true) // timestamp 필드 기준으로 내림차순 정렬
       .snapshots()
       .map((snapshot) {
+    print('찜 목록 데이터를 변환하여 반환함'); // 데이터를 변환하는 시점에 출력
     // 문서를 변환하여 필요한 필드만 포함하는 맵으로 반환
     return snapshot.docs.map((doc) {
+      print('각 찜 항목의 데이터를 변환함: product_id = ${doc['product_id']}'); // 각 항목의 product_id 출력
       return {
         'product_id': doc['product_id'],
         'thumbnails': doc['thumbnails'],

@@ -281,6 +281,15 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     final double profileAppBarTitleX = screenSize.width * (40 / referenceHeight);
     final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double profilePaddingX = screenSize.width * (16 / referenceWidth);
+    final double profilePadding1Y = screenSize.height * (5 / referenceHeight);
+    final double profilePadding2Y = screenSize.height * (10 / referenceHeight);
+
+    // 개인정보 처리방침 관련 안내 텍스트 수치
+    final double guideTextFontSize =
+        screenSize.height * (12 / referenceHeight);
+
     // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
     final User? user = FirebaseAuth.instance.currentUser;
 
@@ -329,32 +338,19 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                        // 각 항목의 좌우 간격을 profilePaddingX으로 설정함.
+                        padding: EdgeInsets.symmetric(horizontal: profilePaddingX),
                         child: Column(
                           children: [
-                            SizedBox(height: 2), // 높이 임의로 10으로 간격 설정
+                            SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
                             if (user != null) UserProfileInfo(email: user.email!),
-                            SizedBox(height: 10),
-                            RichText(
-                              text: TextSpan(
-                                text: '* 개인정보 보호 및 처리에 대한 자세한 내용은 공지사항에서 확인할 수 있습니다.',
-                                style: TextStyle(
-                                  fontFamily: 'NanumGothic',
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 12,
-                                  color: Colors.black, // 검은색 텍스트
-                                  decoration: TextDecoration.underline, // 밑줄 추가
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
+                            SizedBox(height: profilePadding1Y),
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: Container(
@@ -386,14 +382,26 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                               ),
                               backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
                               elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
-                              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
+                              padding: EdgeInsets.zero, // 패딩을 없앰
                             ),
-                            SizedBox(height: 10), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: profilePadding1Y), // 높이 profilePadding2Y로 간격 설정
                             // user 객체가 null이 아닌 경우 실행됨
                             if (user != null)
                             // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
                               UserProfileOptions(email: user.email!),
-                            SizedBox(height: 20), // 높이 임의로 3000으로 간격 설정
+                            SizedBox(height: profilePadding2Y), // 높이 profilePadding2Y로 간격 설정
+                            RichText(
+                              text: TextSpan(
+                                text: '* 개인정보 처리방침 관련 세부 내용은 공지사항에서 확인 가능합니다.',
+                                style: TextStyle(
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: guideTextFontSize,
+                                  color: Colors.black, // 검은색 텍스트
+                                  decoration: TextDecoration.underline, // 밑줄 추가
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       );
