@@ -33,6 +33,7 @@ import '../../order/provider/order_all_providers.dart';
 import '../../order/provider/order_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
+import '../../wishlist/provider/wishlist_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
@@ -570,6 +571,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(wishlistScrollPositionProvider.notifier).state =
   0.0;
   ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+  ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록  데이터 로드 초기화
+  ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
   // 찜 목록 화면 관련 초기화 부분 끝
 
   // 마이페이지 화면 관련 초기화 부분 시작

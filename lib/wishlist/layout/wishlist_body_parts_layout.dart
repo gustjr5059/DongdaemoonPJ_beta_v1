@@ -190,13 +190,20 @@ class WishlistItemsList extends ConsumerWidget {
     final double wishlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
-    // wishlistItemsStreamProvider를 통해 찜 목록 항목의 스트림을 감시하여, wishlistItemsAsyncValue에 할당.
-    final wishlistItemsAsyncValue = ref.watch(wishlistItemsStreamProvider(userEmail));
+    // wishlistItemsStreamProvider로 처음 데이터를 한 번만 불러옴
+    final wishlistItemsFuture = ref.watch(wishlistItemsLoadFutureProvider(userEmail));
+    // StreamProvider로 실시간 데이터 변경을 구독
+    final wishlistItemStream = ref.watch(wishlistItemLoadStreamProvider(userEmail));
 
-    // wishItemsAsyncValue의 상태에 따라 위젯을 빌드.
-    return wishlistItemsAsyncValue.when(
-      // 데이터가 성공적으로 로드되었을 때 실행되는 콜백 함수.
-      data: (wishlistItems) {
+    // wishlistItemsFuture의 상태에 따라 위젯을 빌드.
+    return wishlistItemsFuture.when(
+        // 데이터를 처음 불러왔을 때의 처리
+        data: (initialData) {
+      return wishlistItemStream.when(
+        data: (realtimeData) {
+          // 실시간 데이터가 없으면 초기 데이터를 사용
+          final wishlistItems = realtimeData.isNotEmpty ? realtimeData : initialData;
+
         // 찜 목록 항목이 비어있을 경우의 조건문.
         if (wishlistItems.isEmpty) {
           // 찜 목록이 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
@@ -418,10 +425,16 @@ class WishlistItemsList extends ConsumerWidget {
               }).toList(),
             );
           },
-          // 로딩 중일 때 표시할 위젯
+          // 실시간 데이터 로드 중일 때 처리
           loading: () => Center(child: CircularProgressIndicator()),
-          // 에러 발생 시 표시할 위젯
-          error: (error, stack) => Center(child: Text('오류가 발생했습니다.')),
+          // 실시간 데이터 로드 중 오류가 발생했을 때 처리
+          error: (error, stack) => Center(child: Text('실시간 데이터 불러오기 중 오류가 발생했습니다.')),
+          );
+        },
+        // 로딩 중일 때 표시할 위젯
+        loading: () => Center(child: CircularProgressIndicator()),
+        // 에러 발생 시 표시할 위젯
+        error: (error, stack) => Center(child: Text('데이터를 불러오기 중 오류가 발생했습니다.')),
         );
       }
     }
