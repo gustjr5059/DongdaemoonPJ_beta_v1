@@ -185,6 +185,10 @@ class _OrderListDetailScreenState
     final double orderlistDtAppBarTitleX = screenSize.width * (143 / referenceHeight);
     final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double orderlistDtPaddingX = screenSize.width * (16 / referenceWidth);
+    final double orderlistDtPadding1Y = screenSize.height * (5 / referenceHeight);
+
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderlistDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double orderlistDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
@@ -297,13 +301,13 @@ class _OrderListDetailScreenState
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return Padding(
-                            // 각 항목의 좌우 간격을 4.0으로 설정함.
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            // 각 항목의 좌우 간격을 orderlistDtPaddingX로 설정함.
+                            padding: EdgeInsets.symmetric(horizontal: orderlistDtPaddingX),
                             child: Column(
                               children: [
-                                SizedBox(height: 5), // 높이 5로 간격 설정
+                                SizedBox(height: orderlistDtPadding1Y), // 높이 orderlistDtPadding1Y로 간격 설정
                                 OrderListDetailItemWidget(order: orderlistDetailItem),
-                                SizedBox(height: 20),
+                                SizedBox(height: orderlistDtPadding1Y),
                               ],
                             ),
                           );

@@ -295,6 +295,7 @@ class UpdateInfoWidget extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(height: updateInfo2Y),
           // 개인정보 처리방침 보기 링크
           Padding(
             padding: EdgeInsets.only(left: updateRequirePadding3X),
@@ -369,7 +370,7 @@ class UpdateOrderButton extends ConsumerWidget {
               await showSubmitAlertDialog(
                 context,
                 title: '[업데이트 요청]', // 다이얼로그 제목 설정
-                content: '업데이트를 요청하시면 1~2일 소요될 수 있습니다.\n품목별로 유통사 재고 확인 후 별도 안내하겠습니다.', // 다이얼로그 내용 설정
+                content: '업데이트를 요청하면 1~2일 소요될 수 있습니다.\n유통사 재고 확인 후 별도 안내하겠습니다.', // 다이얼로그 내용 설정
                 actions: buildAlertActions(
                   context,
                   noText: '아니요', // 아니요 버튼 텍스트 설정
@@ -435,7 +436,6 @@ class OrderListItemWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -599,7 +599,7 @@ class OrderListItemWidget extends ConsumerWidget {
                             await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
                               context, // 현재 화면의 컨텍스트를 전달함
                               title: '발주 내역 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
-                              content: '발주 내역을 삭제하시면 해당 발주 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
+                              content: '삭제 시, 해당 발주 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
                               actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
                                 context, // 현재 화면의 컨텍스트를 전달함
                                 noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
@@ -678,12 +678,63 @@ class _OrderListDetailItemWidgetState
     extends ConsumerState<OrderListDetailItemWidget> {
   @override
   Widget build(BuildContext context) {
-    // // order가 null이거나 비어있으면 발주 데이터를 불러올 수 없음을 알리는 메시지를 화면에 표시함
-    // if (widget.order == null || widget.order!.isEmpty) {
-    //   return Center(
-    //     child: Text('발주 데이터를 불러올 수 없습니다.'),
-    //   );
-    // }
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 발주내역 상세 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
+    final double orderlistDtInfo1CardViewWidth =
+        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    final double orderlistDtInfo1CardViewHeight =
+        screenSize.height * (95 / referenceHeight); // 세로 비율 계산
+    final double orderlistDtInfo2CardViewWidth =
+        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    final double orderlistDtInfo2CardViewHeight =
+        screenSize.height * (220 / referenceHeight); // 세로 비율 계산
+    final double orderlistDtInfo3CardViewWidth =
+        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    final double orderlistDtInfo3CardViewHeight =
+        screenSize.height * (200 / referenceHeight); // 세로 비율 계산
+
+    // body 부분 전체 패딩 수치 계산
+    final double orderlistDtInfoCardViewPaddingX = screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
+    final double orderlistDtInfoCardViewPadding1Y = screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
+
+    // 텍스트 크기 계산
+    final double orderlistDtInfoOrderDateDataFontSize =
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrderNumberDataFontSize =
+        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoBriefIntroDataFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoProdNumberDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOriginalPriceDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoDiscountPriceDataFontSize =
+        screenSize.height * (24 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoDiscountPercentDataFontSize =
+        screenSize.height * (22 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoColorImageDataWidth =
+        screenSize.width * (18 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    final double orderlistDtInfoColorImageDataHeight =
+        screenSize.width * (18 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    final double orderlistDtInfoColorTextDataFontSize =
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoSizeTextDataFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
+    final double interval2Y = screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
+    final double interval3Y = screenSize.height * (15 / referenceHeight); // 세로 간격 3 계산
+    final double interval1X = screenSize.width * (40 / referenceWidth); // 가로 간격 1 계산
+    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 날짜 형식을 'yyyy-MM-dd'로 지정함
     final dateFormat = DateFormat('yyyy-MM-dd');
@@ -716,194 +767,260 @@ class _OrderListDetailItemWidgetState
 
     // 발주 상세 정보를 화면에 렌더링하는 위젯을 구성함
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 발주 날짜와 발주 번호, 결제 완료일을 표시하는 섹션
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 발주 일자를 표시
-              Text(
-                '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              // 발주 번호를 표시
-              Text(
-                '발주번호: $orderNumber',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 10),
-        // 각 상품 정보를 표시하는 로직을 반복문으로 구성함
-        for (var productInfo in productInfoList)
-          CommonCardView(
-            backgroundColor: BEIGE_COLOR,
-            content: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 상품 번호와 간략 소개를 표시하는 _buildProductInfoRow 함수 호출
-                  _buildProductInfoRow(
-                      productInfo['product_number']?.toString().isNotEmpty ==
-                          true
-                          ? productInfo['product_number']
-                          : '에러 발생',
-                      '',
-                      bold: true,
-                      fontSize: 14),
-                  _buildProductInfoRow(
-                      productInfo['brief_introduction']
-                          ?.toString()
-                          .isNotEmpty ==
-                          true
-                          ? productInfo['brief_introduction']
-                          : '에러 발생',
-                      '',
-                      bold: true,
-                      fontSize: 18),
-                  SizedBox(height: 8),
-                  // 새로운 흰색 카드뷰 섹션을 추가함
-                  GestureDetector(
-                    onTap: () {
-                      // 상품 상세 화면으로 이동함
-                      final product = ProductContent(
-                        docId: productInfo['product_id'] ?? '',
-                        category: productInfo['category']?.toString() ??
-                            '에러 발생',
-                        productNumber: productInfo['product_number']
-                            ?.toString() ??
-                            '에러 발생',
-                        thumbnail:
-                        productInfo['thumbnails']?.toString() ?? '',
-                        briefIntroduction: productInfo['brief_introduction']
-                            ?.toString() ??
-                            '에러 발생',
-                        originalPrice: productInfo['original_price'] ?? 0,
-                        discountPrice: productInfo['discount_price'] ?? 0,
-                        discountPercent: productInfo['discount_percent'] ?? 0,
-                      );
-                      navigatorProductDetailScreen.navigateToDetailScreen(
-                          context, product);
-                    },
-                    child: CommonCardView(
-                      backgroundColor: Colors.white, // 배경색을 흰색으로 설정함
-                      content: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // 상품의 썸네일 이미지와 가격 정보를 표시하는 행
-                            Row(
-                              children: [
-                                // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
-                                Expanded(
-                                    flex: 3,
-                                    child: productInfo['thumbnails']
-                                        ?.toString()
-                                        .isNotEmpty ==
-                                        true
-                                        ? Image.network(productInfo['thumbnails'],
-                                        fit: BoxFit.cover)
-                                        : Icon(Icons.image_not_supported)),
-                                SizedBox(width: 8),
-                                // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
-                                Expanded(
-                                  flex: 7,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)} 원',
-                                        style: TextStyle(
-                                          color: Colors.grey[500],
-                                          fontSize: 14,
-                                          decoration:
-                                          TextDecoration.lineThrough,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)} 원',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(width: 8),
-                                          Text(
-                                            '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : 0.0).toInt()}%',
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
-                                          productInfo['selected_color_image']
-                                              ?.toString()
-                                              .isNotEmpty ==
-                                              true
-                                              ? Image.network(
-                                            productInfo[
-                                            'selected_color_image'],
-                                            height: 18,
-                                            width: 18,
-                                            fit: BoxFit.cover,
-                                          )
-                                              : Icon(
-                                              Icons.image_not_supported,
-                                              size: 20),
-                                          SizedBox(width: 8),
-                                          // 선택된 색상 텍스트를 표시
-                                          Text(
-                                            productInfo['selected_color_text']
-                                                ?.toString()
-                                                .isNotEmpty ==
-                                                true
-                                                ? productInfo[
-                                            'selected_color_text']
-                                                : '에러 발생',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      ),
-                                      // 선택된 사이즈와 수량을 표시
-                                      Text(
-                                          '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            child: Container(
+              width: orderlistDtInfo1CardViewWidth, // 카드뷰 가로 크기 설정
+              height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
+              color: Color(0xFFF3F3F3), // 배경색 설정
+              child: CommonCardView( // 공통 카드뷰 위젯 사용
+                backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                elevation: 0, // 그림자 깊이 설정
+                content: Padding( // 패딩 설정
+                  padding: EdgeInsets.symmetric(vertical: orderlistDtInfoCardViewPadding1Y, horizontal: orderlistDtInfoCardViewPaddingX), // 상하 좌우 패딩 설정
+                  child: Column( // 컬럼 위젯으로 구성함
+                    // 자식 위젯들을 왼쪽 정렬.
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    // 발주일자를 텍스트로 표시.
+                    Text(
+                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                    style: TextStyle(
+                      fontSize: orderlistDtInfoOrderDateDataFontSize, // 텍스트 크기 설정
+                      fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                      fontFamily: 'NanumGothic', // 글꼴 설정
+                      color: Colors.black, // 텍스트 색상 설정
                       ),
                     ),
+                    // 여백을 추가.
+                    SizedBox(height: interval2Y),
+                    // 발주번호를 텍스트로 표시.
+                    Text(
+                      '발주번호: $orderNumber',
+                      style: TextStyle(
+                        fontSize: orderlistDtInfoOrderNumberDataFontSize, // 텍스트 크기 설정
+                        fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                        fontFamily: 'NanumGothic', // 글꼴 설정
+                        color: Color(0xFF676767), // 텍스트 색상 설정
+                      ),
+                     ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
+          SizedBox(height: interval3Y),
+          // 각 상품 정보를 표시하는 로직을 반복문으로 구성함
+          for (var productInfo in productInfoList)...[
+            // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+              child: Container(
+                width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
+                height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
+                color: Color(0xFFF3F3F3), // 배경색 설정
+                child: CommonCardView(
+                  backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                  elevation: 0, // 그림자 깊이 설정
+                  content: Padding(
+                    padding: EdgeInsets.zero, // 패딩을 없앰
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 새로운 흰색 카드뷰 섹션을 추가함
+                        GestureDetector(
+                          onTap: () {
+                            // 상품 상세 화면으로 이동함
+                            final product = ProductContent(
+                              docId: productInfo['product_id'] ?? '',
+                              category: productInfo['category']?.toString() ??
+                                  '에러 발생',
+                              productNumber: productInfo['product_number']
+                                  ?.toString() ??
+                                  '에러 발생',
+                              thumbnail:
+                              productInfo['thumbnails']?.toString() ?? '',
+                              briefIntroduction: productInfo['brief_introduction']
+                                  ?.toString() ??
+                                  '에러 발생',
+                              originalPrice: productInfo['original_price'] ?? 0,
+                              discountPrice: productInfo['discount_price'] ?? 0,
+                              discountPercent: productInfo['discount_percent'] ?? 0,
+                            );
+                            navigatorProductDetailScreen.navigateToDetailScreen(
+                                context, product);
+                          },
+                          child: Container(
+                            width: orderlistDtInfo3CardViewWidth, // 카드뷰 가로 크기 설정
+                            height: orderlistDtInfo3CardViewHeight, // 카드뷰 세로 크기 설정
+                            color: Color(0xFFF3F3F3), // 배경색 설정
+                            child: CommonCardView(
+                              backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                              elevation: 0, // 그림자 깊이 설정
+                              content: Padding(
+                                padding: EdgeInsets.zero, // 패딩을 없앰
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // 상품 번호와 간략 소개를 표시하는 _buildProductInfoRow 함수 호출
+                                    _buildProductInfoRow(
+                                        context,
+                                        productInfo['brief_introduction']
+                                            ?.toString()
+                                            .isNotEmpty ==
+                                            true
+                                            ? productInfo['brief_introduction']
+                                            : '에러 발생',
+                                        '',
+                                        bold: true,
+                                        fontSize: orderlistDtInfoBriefIntroDataFontSize),
+                                    SizedBox(height: interval1Y),
+                                    _buildProductInfoRow(
+                                        context,
+                                        productInfo['product_number']?.toString().isNotEmpty ==
+                                            true
+                                            ? '상품 번호: ${productInfo['product_number']}'
+                                            : '에러 발생',
+                                        '',
+                                        bold: true,
+                                        fontSize: orderlistDtInfoProdNumberDataFontSize),
+                                    SizedBox(height: interval1Y),
+                                    // 상품의 썸네일 이미지와 가격 정보를 표시하는 행
+                                    Row(
+                                      children: [
+                                        // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                        Expanded(
+                                            flex: 4,
+                                            child: productInfo['thumbnails']
+                                                ?.toString()
+                                                .isNotEmpty ==
+                                                true
+                                                ? Image.network(productInfo['thumbnails'],
+                                                fit: BoxFit.cover)
+                                                : Icon(Icons.image_not_supported)),
+                                        SizedBox(width: interval1X),
+                                        // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
+                                        Expanded(
+                                          flex: 6,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)}원',
+                                                style: TextStyle(
+                                                  fontSize: orderlistDtInfoOriginalPriceDataFontSize,
+                                                  fontFamily: 'NanumGothic',
+                                                  color: Color(0xFF999999),
+                                                  decoration: TextDecoration.lineThrough,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)}원',
+                                                    style: TextStyle(
+                                                      fontSize: orderlistDtInfoDiscountPriceDataFontSize,
+                                                      fontFamily: 'NanumGothic',
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  // SizedBox(width: interval2X),
+                                                  // Text(
+                                                  //   '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : 0.0).toInt()}%',
+                                                  //   style: TextStyle(
+                                                  //     fontSize: orderlistDtInfoDiscountPercentDataFontSize,
+                                                  //     fontFamily: 'NanumGothic',
+                                                  //     color: Colors.red,
+                                                  //     fontWeight: FontWeight.bold,
+                                                  //   ),
+                                                  // ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                                  productInfo['selected_color_image']
+                                                      ?.toString()
+                                                      .isNotEmpty ==
+                                                      true
+                                                      ? Image.network(
+                                                    productInfo[
+                                                    'selected_color_image'],
+                                                    height: orderlistDtInfoColorImageDataHeight,
+                                                    width: orderlistDtInfoColorImageDataWidth,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                      : Icon(
+                                                      Icons.image_not_supported,
+                                                      size: orderlistDtInfoColorImageDataHeight),
+                                                  SizedBox(width: interval2X),
+                                                  // 선택된 색상 텍스트를 표시
+                                                  Text(
+                                                    productInfo['selected_color_text']
+                                                        ?.toString()
+                                                        .isNotEmpty ==
+                                                        true
+                                                        ? productInfo[
+                                                    'selected_color_text']
+                                                        : '에러 발생',
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: orderlistDtInfoColorTextDataFontSize,
+                                                      fontFamily: 'NanumGothic',
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: interval1Y),
+                                              // 선택된 사이즈와 수량을 표시
+                                              Text(
+                                                  '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}',
+                                                style: TextStyle(
+                                                  fontSize: orderlistDtInfoSizeTextDataFontSize,
+                                                  fontFamily: 'NanumGothic',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                            ),
+                          ),
+                        ),
+                      ),
+                     ],
+                   ),
+                 ),
+               ),
+             ),
+           ),
+           SizedBox(height: interval2Y), // 각 카드뷰 섹션 사이에 간격 interval2Y 추가
+        ],
        ],
-    );
-  }
-}
-// 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 끝
+     );
+   }
+ }
+ // 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 끝
 
 // 상품 정보를 표시하는 행을 구성하는 함수
-Widget _buildProductInfoRow(String label, String value,
+Widget _buildProductInfoRow(BuildContext context, String label, String value,
     {bool bold = false, double fontSize = 16}) {
+
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    padding: EdgeInsets.zero, // 패딩을 없앰
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

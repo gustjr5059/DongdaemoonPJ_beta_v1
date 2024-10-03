@@ -351,17 +351,30 @@ Future<bool> showSubmitAlertDialog(BuildContext context, {
     context: context, // 알림창이 표시될 BuildContext
     barrierDismissible: false, // 사용자가 알림창 외부를 클릭해도 닫히지 않도록 설정함
     builder: (BuildContext context) {
+
+      // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+      final Size screenSize = MediaQuery.of(context).size;
+
+      // 기준 화면 크기: 가로 393, 세로 852
+      final double referenceHeight = 852.0;
+
+      // 비율을 기반으로 동적으로 크기와 위치를 설정함
+      final double AlertDialogBtnFontSize1 = screenSize.height * (14 / referenceHeight);
+      final double AlertDialogBtnFontSize2 = screenSize.height * (12 / referenceHeight);
+
       // 플랫폼이 iOS인 경우 CupertinoAlertDialog 사용
       if (Platform.isIOS) {
         return CupertinoAlertDialog(
           title: Text(title,
           style: TextStyle(
             fontFamily: 'NanumGothic',
+            fontSize: AlertDialogBtnFontSize1, // 텍스트 크기 설정
             ),
           ), // 제목 표시
           content: contentWidget ?? Text(content ?? '',
             style: TextStyle(
               fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize2, // 텍스트 크기 설정
             ),), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
           actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
         );
@@ -371,10 +384,12 @@ Future<bool> showSubmitAlertDialog(BuildContext context, {
           title: Text(title,
             style: TextStyle(
               fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize1, // 텍스트 크기 설정
             ),), // 제목 표시
           content: contentWidget ?? Text(content ?? '',
             style: TextStyle(
               fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize2, // 텍스트 크기 설정
             ),), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
           actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
         );
@@ -524,7 +539,7 @@ class NetworkChecker {
     showSubmitAlertDialog(
       context,
       title: '[네트워크 에러]', // 알림창의 제목
-      content: '인터넷 연결을 확인하고 앱을 재실행 해주세요.', // 알림창의 내용
+      content: '인터넷 연결 확인 후, 앱을 재실행 해주세요.', // 알림창의 내용
       actions: [
         TextButton(
           // '확인' 버튼 정의
