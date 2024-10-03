@@ -205,6 +205,10 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     final double announceAppBarTitleX = screenSize.width * (50 / referenceHeight);
     final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double announcelistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double announcelistPaddingY = screenSize.height * (8 / referenceHeight);
+
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementlistEmptyTextWidth =
         screenSize.width * (170 / referenceWidth); // 가로 비율임
@@ -264,46 +268,45 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                     // 공지사항 목록이 비어 있으면, '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
                     return announceItems.isEmpty
                         ? SliverToBoxAdapter(
-                      // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
-                      child: Container(
-                        // 공지사항이 없을 때 텍스트의 너비를 설정함.
-                        width: announcementlistEmptyTextWidth,
-                        // 공지사항이 없을 때 텍스트의 높이를 설정함.
-                        height: announcementlistEmptyTextHeight,
-                        // 텍스트 위치를 화면의 상단에서부터 설정함.
-                        margin: EdgeInsets.only(
-                            left: announcementlistEmptyTextX,
-                            top: announcementlistEmptyTextY),
-                        // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
-                        child: Text('현재 공지사항이 없습니다.',
-                          style: TextStyle(
-                            // 텍스트의 폰트 크기를 설정함.
-                            fontSize: announcementlistEmptyTextFontSize,
-                            // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                            fontFamily: 'NanumGothic',
-                            // 폰트의 굵기를 'bold'로 설정함.
-                            fontWeight: FontWeight.bold,
-                            // 텍스트 색상을 검은색으로 설정함.
-                            color: Colors.black,
+                          // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
+                          child: Container(
+                            // 공지사항이 없을 때 텍스트의 너비를 설정함.
+                            width: announcementlistEmptyTextWidth,
+                            // 공지사항이 없을 때 텍스트의 높이를 설정함.
+                            height: announcementlistEmptyTextHeight,
+                            // 텍스트 위치를 화면의 상단에서부터 설정함.
+                            margin: EdgeInsets.only(
+                                left: announcementlistEmptyTextX,
+                                top: announcementlistEmptyTextY),
+                            // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
+                            child: Text('현재 공지사항이 없습니다.',
+                              style: TextStyle(
+                                // 텍스트의 폰트 크기를 설정함.
+                                fontSize: announcementlistEmptyTextFontSize,
+                                // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                                fontFamily: 'NanumGothic',
+                                // 폰트의 굵기를 'bold'로 설정함.
+                                fontWeight: FontWeight.bold,
+                                // 텍스트 색상을 검은색으로 설정함.
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                    // 공지사항에 아이템이 있을 경우, SliverList로 아이템 목록을 표시함.
+                        )
+                        // 공지사항에 아이템이 있을 경우, SliverList로 아이템 목록을 표시함.
                         : SliverList(
-                      // SliverChildBuilderDelegate를 사용하여 공지사항 아이템 목록을 빌드함.
-                      delegate: SliverChildBuilderDelegate(
+                          // SliverChildBuilderDelegate를 사용하여 공지사항 아이템 목록을 빌드함.
+                          delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
-                          // 각 항목을 패딩으로 감싸, 좌우 간격을 4.0픽셀로 설정함.
+                          // 각 항목을 패딩으로 감싸, 좌우 간격을 announcelistPaddingX로 설정함.
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 4.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: announcelistPaddingX),
                             child: Column(
                               children: [
-                                SizedBox(height: 8),
                                 // AnnounceBodyPartsLayout을 재사용하여 공지사항 내용을 구현함.
                                 AnnounceBodyPartsLayout(),
-                                SizedBox(height: 8),
+                                SizedBox(height: announcelistPaddingY),
                               ],
                             ),
                           );

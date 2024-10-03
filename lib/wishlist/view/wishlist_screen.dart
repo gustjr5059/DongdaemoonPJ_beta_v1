@@ -226,10 +226,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     final double wishlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double wishlistPaddingX = screenSize.width * (17 / referenceHeight);
-    final double wishlistPaddingY = screenSize.width * (8 / referenceHeight);
-
-    // List<ProductContent> wishlistItems = ref.watch(wishlistProvider);
+    final double wishlistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double wishlistPaddingY = screenSize.height * (8 / referenceHeight);
 
     return Scaffold(
       body: Stack(

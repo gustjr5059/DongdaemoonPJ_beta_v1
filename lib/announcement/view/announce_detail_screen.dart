@@ -198,6 +198,10 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     final double announceDtAppBarTitleX = screenSize.width * (150 / referenceHeight);
     final double announceDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double announceDtlistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double announceDtlistPaddingY = screenSize.height * (8 / referenceHeight);
+
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double announceDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double announceDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
@@ -266,46 +270,45 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                     // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
                     return announceDetailItem.isEmpty
                         ? SliverToBoxAdapter(
-                      // 공지사항이 없을 때, 텍스트가 포함된 컨테이너를 화면에 표시함.
-                      child: Container(
-                        // 공지사항 비어있을 때 텍스트의 너비를 설정함.
-                        width: announcementDetailEmptyTextWidth,
-                        // 공지사항 비어있을 때 텍스트의 높이를 설정함.
-                        height: announcementDetailEmptyTextHeight,
-                        // 텍스트의 위치를 화면 상단으로부터 조정함.
-                        margin: EdgeInsets.only(
-                            left: announcementDetailEmptyTextX,
-                            top: announcementDetailEmptyTextY),
-                        // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
-                        child: Text(
-                          '현재 공지사항이 없습니다.',
-                          style: TextStyle(
-                            // 텍스트의 폰트 크기를 설정함.
-                            fontSize: announcementDetailEmptyTextFontSize,
-                            // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                            fontFamily: 'NanumGothic',
-                            // 폰트 굵기를 'bold'로 설정함.
-                            fontWeight: FontWeight.bold,
-                            // 텍스트 색상을 검은색으로 설정함.
-                            color: Colors.black,
+                          // 공지사항이 없을 때, 텍스트가 포함된 컨테이너를 화면에 표시함.
+                          child: Container(
+                            // 공지사항 비어있을 때 텍스트의 너비를 설정함.
+                            width: announcementDetailEmptyTextWidth,
+                            // 공지사항 비어있을 때 텍스트의 높이를 설정함.
+                            height: announcementDetailEmptyTextHeight,
+                            // 텍스트의 위치를 화면 상단으로부터 조정함.
+                            margin: EdgeInsets.only(
+                                left: announcementDetailEmptyTextX,
+                                top: announcementDetailEmptyTextY),
+                            // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
+                            child: Text(
+                              '현재 공지사항이 없습니다.',
+                              style: TextStyle(
+                                // 텍스트의 폰트 크기를 설정함.
+                                fontSize: announcementDetailEmptyTextFontSize,
+                                // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                                fontFamily: 'NanumGothic',
+                                // 폰트 굵기를 'bold'로 설정함.
+                                fontWeight: FontWeight.bold,
+                                // 텍스트 색상을 검은색으로 설정함.
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                    // 공지사항 상세에 아이템이 있을 경우, SliverList로 아이템을 표시함.
+                        )
+                        // 공지사항 상세에 아이템이 있을 경우, SliverList로 아이템을 표시함.
                         : SliverList(
-                      // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
-                      delegate: SliverChildBuilderDelegate(
+                          // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
+                          delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
-                          // 각 항목을 패딩으로 감싸 좌우 간격을 4.0으로 설정함.
+                          // 각 항목을 패딩으로 감싸 좌우 간격을 announceDtlistPaddingX로 설정함.
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: EdgeInsets.symmetric(horizontal: announceDtlistPaddingX),
                             child: Column(
                               children: [
-                                SizedBox(height: 8),
                                 // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
                                 AnnounceDetailBodyPartsLayout(documentId: widget.documentId),
-                                SizedBox(height: 8),
+                                SizedBox(height: announceDtlistPaddingY),
                               ],
                             ),
                           );

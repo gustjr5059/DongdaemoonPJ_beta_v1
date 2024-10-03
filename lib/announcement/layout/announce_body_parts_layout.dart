@@ -18,22 +18,21 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
-    // 공지사항이 비어있는 경우의 알림 부분 수치임
-    final double announcementlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율임
-    final double announcementlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율임
-    final double announcementlistEmptyTextX =
-        screenSize.width * (110 / referenceWidth); // 가로 비율임
-    final double announcementlistEmptyTextY =
-        screenSize.height * (300 / referenceHeight); // 세로 비율임
-    final double announcementlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+    // body 부분 전체 패딩 수치 계산
+    final double announcelistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+
+    // 텍스트 크기 계산
+    final double announcelistTitleDataFontSize =
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double announcelistTimeDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
 
     // announceItemsProvider를 통해 공지사항 아이템 목록 상태를 가져옴
     final announceItems = ref.watch(announceItemsProvider);
@@ -72,7 +71,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
           },
           // 공지사항 항목을 패딩으로 감싸서 간격을 줌
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0), // 상하 방향으로 8.0의 패딩을 적용함
+            padding: EdgeInsets.symmetric(vertical: announcelistPadding1Y), // 상하 방향으로 announcelistPadding1Y의 패딩을 적용함
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내에서 왼쪽 정렬을 설정함
               children: [
@@ -80,15 +79,22 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                 Text(
                   title,
                   style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black), // 텍스트 스타일을 설정함
+                    fontSize: announcelistTitleDataFontSize, // 텍스트 크기 설정
+                    fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                    fontFamily: 'NanumGothic', // 글꼴 설정
+                    color: Colors.black, // 텍스트 색상 설정
+                  ), // 텍스트 스타일을 설정함
                 ),
-                SizedBox(height: 4), // 제목과 시간 사이에 간격을 줌
+                SizedBox(height: interval1Y), // 제목과 시간 사이에 간격을 줌
                 // 공지사항 시간을 보여주는 텍스트 위젯임
                 Text(
                   timeString,
-                  style: TextStyle(fontSize: 14, color: Colors.grey), // 시간 텍스트의 스타일을 설정함
+                  style: TextStyle(
+                    fontSize: announcelistTimeDataFontSize, // 텍스트 크기 설정
+                    fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+                    fontFamily: 'NanumGothic', // 글꼴 설정
+                    color: Color(0xFF999999), // 텍스트 색상 설정
+                  ),  // 시간 텍스트의 스타일을 설정함
                 ),
                 Divider(), // 항목 간에 구분선을 삽입함
               ],
@@ -121,6 +127,32 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+
+    // body 부분 전체 패딩 수치 계산
+    final double announceDtlistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+
+    // 텍스트 크기 계산
+    final double announceDtlistTitleDataFontSize =
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double announceDtlistTimeDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double announceDtlistTextDataFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double announceDtlistWeblinkDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
+    final double interval2Y = screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
+
     // 공지사항 상세 데이터를 가져옴
     final announceDetailItem = ref.watch(announceDetailItemProvider(documentId));
 
@@ -144,23 +176,32 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final contentsWebLinkText = (announceDetailItem['contents_web_link_text'] as String?) ?? ''; // 웹 링크에 대한 텍스트를 가져옴
 
     return Padding(
-      padding: const EdgeInsets.all(16.0), // 모든 방향으로 16.0의 패딩을 적용함
+      padding: EdgeInsets.symmetric(vertical: announceDtlistPadding1Y), // 상하로 announceDtlistPadding1Y의 패딩을 적용함
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내에서 왼쪽 정렬을 설정함
         children: [
           // 공지사항 제목을 표시하는 텍스트임
           Text(
             title,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black), // 제목의 텍스트 스타일을 설정함
+            style: TextStyle(
+              fontSize: announceDtlistTitleDataFontSize, // 텍스트 크기 설정
+              fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+              fontFamily: 'NanumGothic', // 글꼴 설정
+              color: Colors.black, // 텍스트 색상 설정
+            ),  // 제목의 텍스트 스타일을 설정함
           ),
-          SizedBox(height: 8), // 제목과 시간 사이의 간격을 설정함
+          SizedBox(height: interval1Y), // 제목과 시간 사이의 간격을 설정함
           // 공지사항 시간을 표시하는 텍스트임
           Text(
             timeString,
-            style: TextStyle(fontSize: 14, color: Colors.grey), // 시간 텍스트의 스타일을 설정함
+            style: TextStyle(
+              fontSize: announceDtlistTimeDataFontSize, // 텍스트 크기 설정
+              fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+              fontFamily: 'NanumGothic', // 글꼴 설정
+              color: Color(0xFF999999), // 텍스트 색상 설정
+            ),  // 시간 텍스트의 스타일을 설정함
           ),
-          Divider(color: Colors.grey), // 구분선을 삽입함
-
+          Divider(color: Color(0xFFB0B0B0)), // 구분선을 삽입함
           if (contentsTextUrl.isNotEmpty)
           // 텍스트 파일을 비동기로 로드하여 표시하는 FutureBuilder임
             FutureBuilder<String>(
@@ -173,13 +214,17 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                 } else { // 성공적으로 로드된 경우
                   return Text(
                     snapshot.data ?? '', // 로드된 텍스트를 표시함
-                    style: TextStyle(fontSize: 16, color: Colors.black), // 텍스트 스타일을 설정함
+                    style: TextStyle(
+                      fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
+                      fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+                      fontFamily: 'NanumGothic', // 글꼴 설정
+                      color: Colors.black, // 텍스트 색상 설정
+                    ),  // 텍스트 스타일을 설정함
                   );
                 }
               },
             ),
-          SizedBox(height: 16), // 텍스트와 웹 링크 사이의 간격을 설정함
-
+          SizedBox(height: interval2Y), // 텍스트와 웹 링크 사이의 간격을 설정함
           if (contentsWebLink.isNotEmpty)
             GestureDetector( // 터치 이벤트 처리를 위한 GestureDetector 사용
               onTap: () {
@@ -187,16 +232,20 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               },
               child: Text(
                 contentsWebLinkText,
-                style: TextStyle(fontSize: 16, color: Colors.blue), // 웹 링크 텍스트 스타일을 설정함
+                style: TextStyle(
+                  fontSize: announceDtlistWeblinkDataFontSize, // 텍스트 크기 설정
+                  fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+                  fontFamily: 'NanumGothic', // 글꼴 설정
+                  color: Colors.blue, // 텍스트 색상 설정
+                ),  // 웹 링크 텍스트 스타일을 설정함
               ),
             ),
-          SizedBox(height: 16), // 웹 링크와 이미지 사이의 간격을 설정함
-
+          SizedBox(height: interval2Y), // 웹 링크와 이미지 사이의 간격을 설정함
           if (contentsImageUrl.isNotEmpty)
             Image.network(
               contentsImageUrl, // 이미지를 네트워크에서 가져옴
               fit: BoxFit.contain, // 이미지 크기를 적절히 조절함
-              width: MediaQuery.of(context).size.width / 3, // 화면 너비의 1/3로 이미지 너비를 설정함
+              width: MediaQuery.of(context).size.width / 1, // 화면 너비의 1/1로 이미지 너비를 설정함
             ),
         ],
       ),
