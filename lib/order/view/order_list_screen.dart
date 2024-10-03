@@ -204,6 +204,10 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     final double orderlistAppBarTitleX = screenSize.height * (15 / referenceHeight);
     final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double orderlistPaddingX = screenSize.width * (16 / referenceWidth);
+    final double orderlistPadding1Y = screenSize.height * (5 / referenceHeight);
+
     // 찜 목록 버튼 수치 (Case 2)
     final double orderlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
@@ -301,7 +305,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
               // 슬리버 패딩을 추가하여 위젯 간 간격을 조정함.
               // 상단에 5픽셀 여백을 추가하는 SliverPadding 위젯.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 // SliverList를 사용하여 리스트 항목을 슬라이버 형태로 표시함.
                 sliver: SliverList(
                   // SliverChildBuilderDelegate는 리스트 항목을 동적으로 생성함.
@@ -311,8 +315,17 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                       // 발주 목록을 역순으로 정렬함.
                       final reversedOrders = orderlistItems.reversed.toList();
 
-                      // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
-                      return OrderListItemWidget(order: reversedOrders[index]);
+                      return Padding(
+                          // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
+                          padding: EdgeInsets.symmetric(horizontal: orderlistPaddingX),
+                          child: Column(
+                            children: [
+                             SizedBox(height: orderlistPadding1Y),
+                          // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
+                             OrderListItemWidget(order: reversedOrders[index]),
+                            ],
+                         ),
+                      );
                     },
                     // 리스트 항목의 개수를 설정함. 발주 항목의 개수만큼 childCount를 설정.
                     childCount: orderlistItems.length,

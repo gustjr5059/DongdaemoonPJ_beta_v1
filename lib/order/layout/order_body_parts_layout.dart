@@ -445,17 +445,46 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
-    // 발주내역이 비어있는 경우의 알림 부분 수치
-    final double orderlistEmptyTextWidth =
-        screenSize.width * (180 / referenceWidth); // 가로 비율
-    final double orderlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double orderlistEmptyTextX =
-        screenSize.width * (120 / referenceWidth); // 가로 비율
-    final double orderlistEmptyTextY =
-        screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double orderlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    // 발주내역 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
+    final double orderlistInfoCardViewWidth =
+        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    final double orderlistInfoCardViewHeight =
+        screenSize.height * (160 / referenceHeight); // 세로 비율 계산
+
+    // body 부분 전체 패딩 수치 계산
+    final double orderlistInfoCardViewPaddingX = screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    final double orderlistInfoCardViewPadding1Y = screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+
+    // 텍스트 크기 계산
+    final double orderlistInfoOrderDateDataFontSize =
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderNumberDataFontSize =
+        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
+    final double orderlistInfoDetailViewBtn1X =
+        screenSize.width * (150 / referenceWidth); // 발주내역 상세보기 버튼 가로 비율 계산
+    final double orderlistInfoDetailViewBtn1Y =
+        screenSize.height * (45 / referenceHeight); // 발주내역 상세보기 버튼 세로 비율 계산
+    final double orderlistInfoDetailViewBtnFontSize =
+        screenSize.height * (14 / referenceHeight); // 발주내역 상세보기 버튼 텍스트 크기 비율 계산
+    final double orderlistInfoDetailViewBtnPaddingX = screenSize.width * (12 / referenceWidth); // 발주내역 상세보기 버튼 좌우 패딩 계산
+    final double orderlistInfoDetailViewBtnPaddingY = screenSize.height * (5 / referenceHeight); // 발주내역 상세보기 버튼 상하 패딩 계산
+    final double deleteBtn1X =
+        screenSize.width * (80 / referenceWidth); // 삭제 버튼 가로 비율 계산
+    final double deleteBtn1Y =
+        screenSize.height * (45 / referenceHeight); // 삭제 버튼 세로 비율 계산
+    final double deleteBtnFontSize =
+        screenSize.height * (14 / referenceHeight); // 삭제 버튼 텍스트 크기 비율 계산
+    final double deleteBtnPaddingX = screenSize.width * (12 / referenceWidth); // 삭제 버튼 좌우 패딩 계산
+    final double deleteBtnPaddingY = screenSize.height * (5 / referenceHeight); // 삭제 버튼 상하 패딩 계산
+
+    // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
+    final double interval2Y = screenSize.height * (12 / referenceHeight); // 세로 간격 2 계산
+    final double interval1X = screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
+    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+
 
     // // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
     // if (order == null || order!.isEmpty) {
@@ -484,110 +513,151 @@ class OrderListItemWidget extends ConsumerWidget {
     // 발주번호를 가져옴.
     final orderNumber = order!['numberInfo']['order_number'];
 
-    // 공통 카드 뷰 위젯을 사용하여 발주 아이템을 표시.
-    return CommonCardView(
-      // 카드 배경색을 지정.
-      backgroundColor: BEIGE_COLOR,
-      // 카드 내용으로 컬럼을 배치.
-      content: Column(
-        // 자식 위젯들을 왼쪽 정렬.
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-              // 발주일자를 텍스트로 표시.
-          Text(
-            '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          // 여백을 추가.
-          SizedBox(height: 8),
-          // 발주번호를 텍스트로 표시.
-          Text(
-            '발주번호: $orderNumber',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          // 여백을 추가.
-          SizedBox(height: 8),
-          // 버튼을 가운데 배치.
-          Center(
-            child: Row( // Row 위젯을 자식으로 설정함
-              children: [ // Row 위젯의 자식 위젯 목록을 설정함
-                Expanded( // 버튼이 남은 공간을 차지하도록 Expanded 위젯을 사용함
-                  child: ElevatedButton( // ElevatedButton 위젯을 사용하여 버튼을 생성함
-                    onPressed: () { // 버튼이 눌렸을 때 실행될 함수를 정의함
-                      Navigator.push( // 새 화면으로 전환하기 위해 Navigator.push를 호출함
-                        context, // 현재 화면의 컨텍스트를 전달함
-                        MaterialPageRoute( // 새로운 화면으로 전환하기 위한 MaterialPageRoute를 생성함
-                          builder: (context) => // 새 화면을 빌드할 함수를 전달함
-                          OrderListDetailScreen(orderNumber: orderNumber), // OrderListDetailScreen을 생성하고, orderNumber를 전달함
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                      foregroundColor: BUTTON_COLOR, // 버튼의 글자 색상을 설정함
-                      backgroundColor: BACKGROUND_COLOR, // 버튼의 배경 색상을 설정함
-                      side: BorderSide(color: BUTTON_COLOR), // 버튼의 테두리 색상을 설정함
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 버튼의 내부 여백을 설정함
-                    ),
-                    child: Text( // 버튼에 표시될 텍스트를 정의함
-                      '발주 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트의 스타일을 설정함
-                    ),
+
+    // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+      child: Container(
+        width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
+        height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
+        color: Color(0xFFF3F3F3), // 배경색 설정
+        child: CommonCardView( // 공통 카드뷰 위젯 사용
+          backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+          elevation: 0, // 그림자 깊이 설정
+          content: Padding( // 패딩 설정
+            padding: EdgeInsets.symmetric(vertical: orderlistInfoCardViewPadding1Y, horizontal: orderlistInfoCardViewPaddingX), // 상하 좌우 패딩 설정
+            child: Column( // 컬럼 위젯으로 구성함
+              // 자식 위젯들을 왼쪽 정렬.
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 발주일자를 텍스트로 표시.
+                Text(
+                  '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                  style: TextStyle(
+                    fontSize: orderlistInfoOrderDateDataFontSize, // 텍스트 크기 설정
+                    fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                    fontFamily: 'NanumGothic', // 글꼴 설정
+                    color: Colors.black, // 텍스트 색상 설정
                   ),
                 ),
-                SizedBox(width: 8), // 버튼 사이에 8픽셀의 간격을 추가함
-                ElevatedButton( // 두 번째 ElevatedButton 위젯을 생성함
-                  onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
-                    await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
-                      context, // 현재 화면의 컨텍스트를 전달함
-                      title: '발주 내역 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
-                      content: '발주 내역을 삭제하시면 해당 발주 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
-                      actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
-                        context, // 현재 화면의 컨텍스트를 전달함
-                        noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
-                        yesText: '예', // '예' 버튼의 텍스트를 설정함
-                        noTextStyle: TextStyle( // '아니요' 버튼의 텍스트 스타일을 설정함
-                          color: Colors.black, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
-                          fontWeight: FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
+                // 여백을 추가.
+                SizedBox(height: interval1Y),
+                // 발주번호를 텍스트로 표시.
+                Text(
+                  '발주번호: $orderNumber',
+                  style: TextStyle(
+                    fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
+                    fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                    fontFamily: 'NanumGothic', // 글꼴 설정
+                    color: Color(0xFF676767), // 텍스트 색상 설정
+                  ),
+                ),
+                // 여백을 추가.
+                SizedBox(height: interval2Y),
+                // 회원정보 수정 및 로그아웃 버튼을 행(Row)으로 배치함
+                Row(
+                  children: [
+                    Container(
+                      width: orderlistInfoDetailViewBtn1X, // 발주내역 상세보기 버튼 가로 설정
+                      height: orderlistInfoDetailViewBtn1Y, // 발주내역 상세보기 버튼 세로 설정
+                      margin: EdgeInsets.only(left: interval1X), // 왼쪽 여백 설정
+                      child: ElevatedButton( // ElevatedButton 위젯을 사용하여 버튼을 생성함
+                          onPressed: () { // 버튼이 눌렸을 때 실행될 함수를 정의함
+                            Navigator.push( // 새 화면으로 전환하기 위해 Navigator.push를 호출함
+                              context, // 현재 화면의 컨텍스트를 전달함
+                              MaterialPageRoute( // 새로운 화면으로 전환하기 위한 MaterialPageRoute를 생성함
+                                builder: (context) => // 새 화면을 빌드할 함수를 전달함
+                                OrderListDetailScreen(orderNumber: orderNumber), // OrderListDetailScreen을 생성하고, orderNumber를 전달함
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
+                            foregroundColor: Color(0xFF6FAD96), // 버튼의 글자 색상을 설정함
+                            backgroundColor: Color(0xFF6FAD96), // 버튼의 배경 색상을 설정함
+                            padding: EdgeInsets.symmetric(vertical: orderlistInfoDetailViewBtnPaddingY, horizontal: orderlistInfoDetailViewBtnPaddingX), // 패딩 설정
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
+                            ),
+                          ),
+                          child: Text( // 버튼에 표시될 텍스트를 정의함
+                            '발주 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
+                            style: TextStyle(
+                              fontSize: orderlistInfoDetailViewBtnFontSize, // 텍스트 크기 설정
+                              fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                              fontFamily: 'NanumGothic', // 글꼴 설정
+                              color: Colors.white, // 텍스트 색상 설정
+                            ),
+                          ),
                         ),
-                        yesTextStyle: TextStyle( // '예' 버튼의 텍스트 스타일을 설정함
-                          color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
-                          fontWeight: FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
-                        ),
-                        onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
-                          try {
-                            // orderlistItemsProvider에서 OrderlistItemsNotifier를 읽어와 호출함.
-                            await ref.read(orderlistItemsProvider.notifier)
-                            // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
-                                .deleteOrderItem(orderNumber);
-                            Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
-                            showCustomSnackBar(context, '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
-                          } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
-                            showCustomSnackBar(context, '발주 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
-                          }
-                        },
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom( // 두 번째 버튼의 스타일을 설정함
-                    foregroundColor: BUTTON_COLOR, // 두 번째 버튼의 글자 색상을 설정함
-                    backgroundColor: BACKGROUND_COLOR, // 두 번째 버튼의 배경 색상을 설정함
-                    side: BorderSide(color: BUTTON_COLOR), // 두 번째 버튼의 테두리 색상을 설정함
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 두 번째 버튼의 내부 여백을 설정함
-                  ),
-                  child: Text( // 두 번째 버튼에 표시될 텍스트를 정의함
-                    '삭제', // 텍스트 내용으로 '삭제'를 설정함
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트의 스타일을 설정함
-                  ),
+                      Container(
+                        width: deleteBtn1X, // 삭제 버튼 가로 설정
+                        height: deleteBtn1Y, // 삭제 버튼 세로 설정
+                        margin: EdgeInsets.only(left: interval2X), // 왼쪽 여백 설정
+                        child: ElevatedButton( // 두 번째 ElevatedButton 위젯을 생성함
+                          onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
+                            await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
+                              context, // 현재 화면의 컨텍스트를 전달함
+                              title: '발주 내역 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
+                              content: '발주 내역을 삭제하시면 해당 발주 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
+                              actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
+                                context, // 현재 화면의 컨텍스트를 전달함
+                                noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
+                                yesText: '예', // '예' 버튼의 텍스트를 설정함
+                                noTextStyle: TextStyle( // '아니요' 버튼의 텍스트 스타일을 설정함
+                                  color: Colors.black, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
+                                  fontWeight: FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
+                                ),
+                                yesTextStyle: TextStyle( // '예' 버튼의 텍스트 스타일을 설정함
+                                  color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
+                                  fontWeight: FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
+                                ),
+                                onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
+                                  try {
+                                    // orderlistItemsProvider에서 OrderlistItemsNotifier를 읽어와 호출함.
+                                    await ref.read(orderlistItemsProvider.notifier)
+                                    // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
+                                        .deleteOrderItem(orderNumber);
+                                    Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
+                                    showCustomSnackBar(context, '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
+                                  } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
+                                    showCustomSnackBar(context, '발주 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom( // 두 번째 버튼의 스타일을 설정함
+                            foregroundColor: Color(0xFF6FAD96), // 두 번째 버튼의 글자 색상을 설정함
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
+                            side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                            padding: EdgeInsets.symmetric(vertical: deleteBtnPaddingY, horizontal: deleteBtnPaddingX), // 패딩 설정
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
+                            ),
+                          ),
+                        child: Text( // 두 번째 버튼에 표시될 텍스트를 정의함
+                          '삭제', // 텍스트 내용으로 '삭제'를 설정함
+                          style: TextStyle(
+                            fontSize: deleteBtnFontSize, // 텍스트 크기 설정
+                            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                            fontFamily: 'NanumGothic', // 글꼴 설정
+                            color: Color(0xFF6FAD96), // 텍스트 색상 설정
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
-    );
-  }
-}
-// ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 끝
+     );
+   }
+ }
+ // ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 끝
 
 // 발주 목록 상세 화면 내 발주 목록 상세 내용을 표시하는 위젯 클래스인 OrderListDetailItemWidget 시작
 class OrderListDetailItemWidget extends ConsumerStatefulWidget {

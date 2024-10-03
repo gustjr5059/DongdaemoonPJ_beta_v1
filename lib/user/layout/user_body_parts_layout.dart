@@ -49,7 +49,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double uesrInfoModifyBtn1Y =
         screenSize.height * (45 / referenceHeight); // 수정 버튼 세로 비율 계산
     final double uesrInfoModifyBtnFontSize =
-        screenSize.height * (13 / referenceHeight); // 수정 버튼 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 수정 버튼 텍스트 크기 비율 계산
     final double uesrInfoModifyBtnPaddingX = screenSize.width * (12 / referenceWidth); // 수정 버튼 좌우 패딩 계산
     final double uesrInfoModifyBtnPaddingY = screenSize.height * (5 / referenceHeight); // 수정 버튼 상하 패딩 계산
     final double logoutBtn1X =
@@ -57,7 +57,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double logoutBtn1Y =
         screenSize.height * (45 / referenceHeight); // 로그아웃 버튼 세로 비율 계산
     final double logoutBtnFontSize =
-        screenSize.height * (13 / referenceHeight); // 로그아웃 버튼 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 로그아웃 버튼 텍스트 크기 비율 계산
     final double logoutBtnPaddingX = screenSize.width * (12 / referenceWidth); // 로그아웃 버튼 좌우 패딩 계산
     final double logoutBtnPaddingY = screenSize.height * (5 / referenceHeight); // 로그아웃 버튼 상하 패딩 계산
 
