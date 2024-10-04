@@ -348,7 +348,7 @@ class UpdateOrderButton extends ConsumerWidget {
 
     // 버튼 관련 수치 동적 적용
     final double updateRequireBtn1X = screenSize.width * (15 / referenceWidth);
-    final double updateRequireBtn1Y = screenSize.height * (30 / referenceHeight);
+    final double updateRequireBtn1Y = screenSize.height * (15 / referenceHeight);
     final double updateRequireBtn2Y = screenSize.height * (50 / referenceHeight);
     final double updateRequireBtnFontSize = screenSize.height * (16 / referenceHeight);
 
@@ -370,7 +370,7 @@ class UpdateOrderButton extends ConsumerWidget {
               await showSubmitAlertDialog(
                 context,
                 title: '[업데이트 요청]', // 다이얼로그 제목 설정
-                content: '업데이트를 요청하면 1~2일 소요될 수 있습니다.\n유통사 재고 확인 후 별도 안내하겠습니다.', // 다이얼로그 내용 설정
+                content: '업데이트 요청 시, 1~2일 소요될 수 있습니다.\n유통사 재고 확인 후 별도 안내하겠습니다.', // 다이얼로그 내용 설정
                 actions: buildAlertActions(
                   context,
                   noText: '아니요', // 아니요 버튼 텍스트 설정
@@ -598,8 +598,8 @@ class OrderListItemWidget extends ConsumerWidget {
                           onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
                             await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
                               context, // 현재 화면의 컨텍스트를 전달함
-                              title: '발주 내역 삭제', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
-                              content: '삭제 시, 해당 발주 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
+                              title: '[발주 내역 삭제]', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
+                              content: '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
                               actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
                                 context, // 현재 화면의 컨텍스트를 전달함
                                 noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
