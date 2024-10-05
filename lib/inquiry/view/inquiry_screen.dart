@@ -187,14 +187,14 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double inquiryPaddingX = screenSize.width * (12 / referenceWidth);
+    final double inquiryPaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (200 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
     final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
     final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (6 / referenceWidth); // 가로 간격 2 계산
+    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
     final double inquiryGuidFontSize1 =
@@ -285,7 +285,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                             ),
                             Container(
                               padding: EdgeInsets.only(left: interval2X), // 패딩 설정
-                              child: Text('2. 이동한 웹 페이지에서 문의 내용 작성 후, 제출해주세요.',
+                              child: Text('2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정

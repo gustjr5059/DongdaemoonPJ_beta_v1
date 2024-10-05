@@ -61,9 +61,9 @@ class AllLargeBannerRepository {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllLargeBannerImage 객체로 변환함.
       return [
-        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon1']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon2']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon3']})
+        AllLargeBannerImage.fromJson({'imageUrl': data['bb_test_5']}),
+        AllLargeBannerImage.fromJson({'imageUrl': data['bb_test_2']}),
+        AllLargeBannerImage.fromJson({'imageUrl': data['bb_test_3']})
       ].whereType<AllLargeBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('Failed to fetch large banner images: Document does not exist.');
@@ -96,8 +96,8 @@ class HomeSmall1BannerRepository {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 Small1BannerImage 객체로 변환함.
       return [
-        HomeSmall1BannerImage.fromJson({'imageUrl': data['ad_image1']}),
-        HomeSmall1BannerImage.fromJson({'imageUrl': data['ad_image2']}),
+        HomeSmall1BannerImage.fromJson({'imageUrl': data['hsb_test_1']}),
+        HomeSmall1BannerImage.fromJson({'imageUrl': data['hsb_test_2']}),
         HomeSmall1BannerImage.fromJson({'imageUrl': data['ad_image3']})
       ].whereType<HomeSmall1BannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
@@ -203,7 +203,7 @@ class ShirtMainSmall1BannerRepository {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 ShirtMainSmall1BannerImage 객체로 변환함.
       return [
-        ShirtMainSmall1BannerImage.fromJson({'imageUrl': data['mb1']}),
+        ShirtMainSmall1BannerImage.fromJson({'imageUrl': data['sb_test_1']}),
         ShirtMainSmall1BannerImage.fromJson({'imageUrl': data['mb2']}),
         ShirtMainSmall1BannerImage.fromJson({'imageUrl': data['mb3']})
       ].whereType<ShirtMainSmall1BannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.

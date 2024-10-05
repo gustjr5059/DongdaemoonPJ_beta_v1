@@ -601,7 +601,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double homeScreenLargeBannerViewHeight =
         screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
 
-    // 소배너 부분 관련 수치
+    // 홈 소배너 부분 관련 수치
     final double homeScreenSmallBannerWidth = screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
     final double homeScreenSmallBannerHeight = screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
     final double homeScreenSmallBannerViewHeight =
@@ -767,7 +767,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             ),
                             SizedBox(height: interval2Y), // 높이 간격 설정
-                            // 첫 번째 작은 배너 섹션
+                            // 첫 번째 홈 소배너 섹션
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위해 BoxDecoration 추가
@@ -827,7 +827,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                             _buildSectionCard(context, ref, "특가 상품",
                                 buildSaleProductsSection, SaleSubMainScreen()),
                             SizedBox(height: interval1Y), // 높이 간격 설정
-                            // 두 번째 작은 배너 섹션
+                            // 두 번째 홈 소배너 섹션
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위해 BoxDecoration 추가
@@ -889,7 +889,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 buildSummerProductsSection,
                                 SummerSubMainScreen()),
                             SizedBox(height: interval1Y), // 높이 간격 설정
-                            // 세 번째 작은 배너 섹션
+                            // 세 번째 홈 소배너 섹션
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위해 BoxDecoration 추가

@@ -414,9 +414,9 @@ class _JeanMainScreenState extends ConsumerState<JeanMainScreen>
 
     // 대배너 부분 관련 수치
     final double jeanMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double jeanMainScreenLargeBannerHeight = screenSize.height * (268 / referenceHeight); // 대배너 이미지 높이
+    final double jeanMainScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
     final double jeanMainLargeBannerViewHeight =
-        screenSize.height * (268 / referenceHeight); // 대배너 화면 세로 비율
+        screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double jeanMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
