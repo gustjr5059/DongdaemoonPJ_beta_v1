@@ -33,3 +33,10 @@ Runner/GeneratedPluginRegistrant.*
 !default.pbxuser
 !default.perspectivev3
 !/Runner/GoogleService-Info.plist
+
+# Firebase iOS configuration file
+Runner/GoogleService-Info.plist
+
+# Firebase 프로젝트와 연동된 앱의 식별 정보를 포함하는 파일
+# Firebase iOS app ID file
+firebase_app_id_file.json

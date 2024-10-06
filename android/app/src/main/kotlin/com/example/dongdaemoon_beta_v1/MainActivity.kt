@@ -1,4 +1,4 @@
-package com.example.dongdaemoon_beta_v1
+package com.example.wearcano
 
 import io.flutter.embedding.android.FlutterActivity
 
