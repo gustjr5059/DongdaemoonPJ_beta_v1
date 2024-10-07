@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749619968982",
+    "project_id": "wearcanopj",
+    "storage_bucket": "wearcanopj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749619968982:android:fdcf1ef35523df5dca8277",
+        "android_client_info": {
+          "package_name": "com.gshe.wearcano"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU82dmhQYtksb8nH5252NURtumoc3gU1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
