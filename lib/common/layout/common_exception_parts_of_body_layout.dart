@@ -763,6 +763,13 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
           _buildListTile(context, '카카오톡', 'https://pf.kakao.com/_xjVrbG',
               'asset/img/misc/drawer_img/kakao.logo.png'),
           SizedBox(height: 20), // 간격을 위한 SizedBox
+          // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
+          // ElevatedButton(
+          //   onPressed: () async {
+          //     await createFirestoreDocuments();
+          //   },
+          //   child: Text('FireStore 문서 생성'),
+          // ),
 
           // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
           if (isAdmin) ...[
@@ -941,7 +948,7 @@ Future<void> createFirestoreDocuments() async {
 
   for (int i = 1; i <= 12; i++) {
     String docId = 'a$i';
-    DocumentReference docRef = firestore.collection('couturier').doc(docId);
+    DocumentReference docRef = firestore.collection('wearcano').doc(docId);
     String briefIntroduction = briefIntroductionMap[i] ?? '해당 상품은 설명이 없습니다.';
     String category = categoryMap[i] ?? '';
     String categoryText = categoryTextMap[i] ?? '해당 상품은 카테고리가 없습니다.';
@@ -952,14 +959,14 @@ Future<void> createFirestoreDocuments() async {
       CollectionReference subCollectionRef = docRef.collection(subCollectionId);
       String type = typeMap[j] ?? '';
 
-      for (int k = 0; k < 15; k++) {
-        int discountPercent = 10 + k; // k=0이면 10, k=1이면 11, ...
+      for (int k = 1; k < 16; k++) {
+        int discountPercent = 9 + k; // k=1이면 10, k=2이면 11, ...
         int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
-        String subDocId = 'a${i}b${j}_$k';
+        String subDocId = 'a${i}b${j}_${k}';
         String productNumber = 'A${i}B${j}_${k.toString().padLeft(3, '0')}';
         DocumentReference subDocRef = subCollectionRef.doc(subDocId);
 
-        String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
+        String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
 
         // // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
         // batch.update(subDocRef, {
@@ -973,11 +980,11 @@ Future<void> createFirestoreDocuments() async {
         // 해당 필드값으로 세팅하는 매서드 (SetOptions(merge: true)); // merge 옵션 사용을 해서 기존것이 날라가지않고 유지됨)
         batch.set(subDocRef, {
           'brief_introduction': briefIntroduction,
-          'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=8eb2b83e-16f3-4921-9248-aeac08ba548b',
-          'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=c6742c7e-dc7f-4133-921e-86fca1a80441',
-          'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2F%20lavender.png?alt=media&token=e8118999-064f-47b2-8f08-1055b5a886c3',
-          'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=7abd298b-dc20-4f8e-88c2-f9aa8c4fc135',
-          'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=8a8158dd-66de-40f3-b5de-690059511261',
+          'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=37afbb86-6b75-470d-b00c-98e03e23f3e4',
+          'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=5925c7d9-2966-4273-b1bb-3207475200cd',
+          'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Flavender.png?alt=media&token=45ee6a67-62bf-4aa7-a5f3-a12b13684bd1',
+          'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=db961f7e-17da-4cd4-aad1-0ebb0e8ab8b2',
+          'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=869e517b-c07d-4744-acc9-592604438485',
           'clothes_size1': 'S',
           'clothes_size2': 'M',
           'clothes_size3': 'L',
@@ -988,29 +995,29 @@ Future<void> createFirestoreDocuments() async {
           'color4_text': 'pink',
           'color5_text': 'yellow',
           // 상품 상세 화면 내 상단 이미지 페이지 뷰 관련 이미지 데이터
-          'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
-          'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
-          'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
-          'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
-          'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+          'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+          'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+          'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+          'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+          'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
           // 상품 상세 화면 내 상품 정보 관련 이미지 데이터
-          'detail_color_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image1.png?alt=media',
-          'detail_color_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image2.png?alt=media',
-          'detail_color_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image3.png?alt=media',
-          'detail_color_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image4.png?alt=media',
-          'detail_color_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image5.png?alt=media',
-          'detail_details_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fdetails_info%2Fdetail_details_image1.png?alt=media',
-          'detail_fabric_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Ffabric_info%2Fdetail_fabric_image1.png?alt=media',
-          'detail_intro_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image1.png?alt=media',
-          'detail_intro_image2': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image2.png?alt=media',
-          'detail_intro_image3': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image3.png?alt=media',
-          'detail_intro_image4': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image4.png?alt=media',
-          'detail_intro_image5': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image5.png?alt=media',
-          'detail_size_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media',
-          'detail_washing_image1': 'https://firebasestorage.googleapis.com/v0/b/dongdaemoonproject1.appspot.com/o/detail_image%2Fprod_info%2Fwashing_info%2Fdetail_washing_image1.png?alt=media',
-          // 'discount_percent': discountPercent,
-          // 'discount_price': discountPrice,
-          // 'original_price': originalPrice,
+          // 'detail_color_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image1.png?alt=media',
+          // 'detail_color_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image2.png?alt=media',
+          // 'detail_color_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image3.png?alt=media',
+          // 'detail_color_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image4.png?alt=media',
+          // 'detail_color_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image5.png?alt=media',
+          'detail_details_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fdetails_info%2Fdetail_details_image1.png?alt=media',
+          // 'detail_fabric_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Ffabric_info%2Fdetail_fabric_image1.png?alt=media',
+          // 'detail_intro_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image1.png?alt=media',
+          // 'detail_intro_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image2.png?alt=media',
+          // 'detail_intro_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image3.png?alt=media',
+          // 'detail_intro_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image4.png?alt=media',
+          // 'detail_intro_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image5.png?alt=media',
+          // 'detail_size_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media',
+          // 'detail_washing_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fwashing_info%2Fdetail_washing_image1.png?alt=media',
+          'discount_percent': discountPercent,
+          'discount_price': discountPrice,
+          'original_price': originalPrice,
           'thumbnails': thumbnailUrl, // thumbnails 필드값 추가
           'category': categoryText, // category 필드값 추가
           'product_number': productNumber, // product_number 필드 추가

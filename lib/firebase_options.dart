@@ -56,38 +56,36 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA2Lq8c-gIglvsKKVnfF1oC2GPwXxOpTTk',
-    appId: '1:858485210134:web:aa4a8ecb38da5da6cd8937',
-    messagingSenderId: '858485210134',
-    projectId: 'dongdaemoonproject1',
-    authDomain: 'dongdaemoonproject1.firebaseapp.com',
-    storageBucket: 'dongdaemoonproject1.appspot.com',
-    measurementId: 'G-L6MJYTQG6E',
+    apiKey: 'AIzaSyAw65cPowqU4lMrzb6Rl1cz_GYiuiDzTZw', // GoogleService-Info.plist의 API_KEY
+    appId: '1:749619968982:ios:4aedade48e4a0e75ca8277', // GoogleService-Info.plist의 GOOGLE_APP_ID
+    messagingSenderId: '749619968982', // GoogleService-Info.plist의 GCM_SENDER_ID
+    projectId: 'wearcanopj', // GoogleService-Info.plist의 PROJECT_ID
+    storageBucket: 'wearcanopj.appspot.com', // GoogleService-Info.plist의 STORAGE_BUCKET
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDEMD8CaT_VSpJxDhBoGPhSjnz5szomXEs',
-    appId: '1:858485210134:android:1a96b517e3788ad5cd8937',
-    messagingSenderId: '858485210134',
-    projectId: 'dongdaemoonproject1',
-    storageBucket: 'dongdaemoonproject1.appspot.com',
+    apiKey: 'AIzaSyDU82dmhQYtksb8nH5252NURtumoc3gU1g', // google-services.json의 current_key
+    appId: '1:749619968982:android:fdcf1ef35523df5dca8277', // google-services.json의 mobilesdk_app_id
+    messagingSenderId: '749619968982', // google-services.json의 project_number
+    projectId: 'wearcanopj', // google-services.json의 project_id
+    storageBucket: 'wearcanopj.appspot.com', // google-services.json의 storage_bucket
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCuAtzywwx7JdwslGGbC74SYboAw1CJy4s',
-    appId: '1:858485210134:ios:8f4af15237890620cd8937',
-    messagingSenderId: '858485210134',
-    projectId: 'dongdaemoonproject1',
-    storageBucket: 'dongdaemoonproject1.appspot.com',
-    iosBundleId: 'com.example.dongdaemoonBetaV1',
+    apiKey: 'AIzaSyAw65cPowqU4lMrzb6Rl1cz_GYiuiDzTZw', // GoogleService-Info.plist의 API_KEY
+    appId: '1:749619968982:ios:4aedade48e4a0e75ca8277', // GoogleService-Info.plist의 GOOGLE_APP_ID
+    messagingSenderId: '749619968982', // GoogleService-Info.plist의 GCM_SENDER_ID
+    projectId: 'wearcanopj', // GoogleService-Info.plist의 PROJECT_ID
+    storageBucket: 'wearcanopj.appspot.com', // GoogleService-Info.plist의 STORAGE_BUCKET
+    iosBundleId: 'com.gshe.wearcano', // GoogleService-Info.plist의 BUNDLE_ID
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCuAtzywwx7JdwslGGbC74SYboAw1CJy4s',
-    appId: '1:858485210134:ios:51397f0be9ad8fbbcd8937',
-    messagingSenderId: '858485210134',
-    projectId: 'dongdaemoonproject1',
-    storageBucket: 'dongdaemoonproject1.appspot.com',
-    iosBundleId: 'com.example.dongdaemoonBetaV1.RunnerTests',
+    apiKey: 'AIzaSyAw65cPowqU4lMrzb6Rl1cz_GYiuiDzTZw', // GoogleService-Info.plist의 API_KEY
+    appId: '1:749619968982:ios:4aedade48e4a0e75ca8277', // GoogleService-Info.plist의 GOOGLE_APP_ID
+    messagingSenderId: '749619968982', // GoogleService-Info.plist의 GCM_SENDER_ID
+    projectId: 'wearcanopj', // GoogleService-Info.plist의 PROJECT_ID
+    storageBucket: 'wearcanopj.appspot.com', // GoogleService-Info.plist의 STORAGE_BUCKET
+    iosBundleId: 'com.gshe.wearcano', // GoogleService-Info.plist의 BUNDLE_ID
   );
 }

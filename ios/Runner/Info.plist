@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dongdaemoon Beta V1</string>
+	<string>웨어카노</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,15 +24,20 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-    <!--ios에 카카오 API 연동하기 위한 설정 시작-->
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
 	</array>
-    <!--ios에 카카오 API 연동하기 위한 설정 끝-->
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>사진을 업로드하기 위해 갤러리 접근 권한이 필요합니다.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -52,16 +57,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <!--ios에 웹 뷰를 연동할 때 필요한 설정 시작-->
-    <key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSAllowsArbitraryLoads</key>
-      <true/>
-    </dict>
-    <!--ios에 웹 뷰를 연동할 때 필요한 설정 끝-->
-    <!-- iOS에서 갤러리 접근 권한 설정 시작 -->
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>사진을 업로드하기 위해 갤러리 접근 권한이 필요합니다.</string>
-    <!-- iOS에서 갤러리 접근 권한 설정 끝 -->
 </dict>
 </plist>

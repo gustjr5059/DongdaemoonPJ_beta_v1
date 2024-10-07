@@ -3,7 +3,7 @@
 <!--    tools 네임스페이스는 Android Lint 도구에서 특정 검사를 무시하거나 맞춤 설정을 할 수 있게 해주는 속성을 정의-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.wearcano">
+    package="com.gshe.wearcano">
     <!--안드로이드 기반 앱에 인터넷 연결 관련 로직-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!--
