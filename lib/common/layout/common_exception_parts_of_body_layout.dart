@@ -1176,7 +1176,7 @@ Widget _buildListTile(
         }
       } catch (e) {
         // 예외 발생 시 스낵바로 에러 메시지 출력
-        showCustomSnackBar(context, '앱 실행에 실패했습니다.');
+        showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
       }
     },
   );

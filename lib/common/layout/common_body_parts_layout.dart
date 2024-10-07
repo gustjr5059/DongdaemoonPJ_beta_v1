@@ -572,15 +572,3 @@ class NetworkChecker {
   }
 }
 // ------ 네트워크 상태 체크 함수 내용 끝
-
-// URL을 여는 함수 정의
-void launchURL(String url) async { // 웹 링크를 실행하는 함수 정의
-  Uri uri = Uri.parse(url);
-  if (await canLaunchUrl(uri)) { // 링크 실행 가능 여부 확인
-    print('웹 링크 실행: $url'); // 링크 실행 성공 로그 출력
-    await launchUrl(uri); // 링크 실행
-  } else {
-    print('웹 링크 실행 실패: $url'); // 링크 실행 실패 로그 출력
-    throw 'Could not launch $url'; // 예외 발생
-  }
-}

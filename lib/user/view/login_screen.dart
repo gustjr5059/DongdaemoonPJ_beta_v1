@@ -679,9 +679,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         // 회원가입 텍스트 버튼
                         Expanded(
                           child: TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               const url = 'https://cafe.naver.com/ottbayo';
-                              launchURL(url);
+                              try {
+                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                                if (!launched) {
+                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                                }
+                              } catch (e) {
+                                // 예외 발생 시 스낵바로 에러 메시지 출력
+                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                              }
                             },
                             child: Text(
                               '회원가입',
@@ -701,9 +710,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         // 아이디/비밀번호 찾기 텍스트 버튼
                         Expanded(
                           child: TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               const url = 'https://pf.kakao.com/_xjVrbG';
-                              launchURL(url);
+                              try {
+                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                                if (!launched) {
+                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                                }
+                              } catch (e) {
+                                // 예외 발생 시 스낵바로 에러 메시지 출력
+                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                              }
                             },
                             child: Text(
                               '아이디/비밀번호 찾기',
@@ -750,9 +768,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: guidelineText2Left, top: guidelineText2Top),
-              child: RichText(
-                text: TextSpan(
-                  text: '개인정보 처리방침 보기',
+              child: GestureDetector( // GestureDetector 사용하여 탭 이벤트 처리
+                onTap: () async {
+                  const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
+                  try {
+                    final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                    if (!launched) {
+                      // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                      showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                    }
+                  } catch (e) {
+                    // 예외 발생 시 스낵바로 에러 메시지 출력
+                    showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                  }
+                },
+                child: Text(
+                  '개인정보 처리방침 보기',
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontWeight: FontWeight.normal,
@@ -760,11 +791,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: Colors.blue, // 파란색 텍스트
                     decoration: TextDecoration.underline, // 밑줄 추가
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      const url = 'https://pf.kakao.com/_xjVrbG';
-                      launchURL(url);
-                  },
                 ),
               ),
             ),

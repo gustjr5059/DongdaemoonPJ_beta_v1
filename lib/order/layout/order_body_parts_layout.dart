@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
@@ -299,9 +300,22 @@ class UpdateInfoWidget extends StatelessWidget {
           // 개인정보 처리방침 보기 링크
           Padding(
             padding: EdgeInsets.only(left: updateRequirePadding3X),
-            child: RichText(
-              text: TextSpan(
-                text: '개인정보 처리방침 보기',
+            child: GestureDetector( // GestureDetector 사용하여 탭 이벤트 처리
+              onTap: () async {
+                const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
+                try {
+                  final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                  if (!launched) {
+                    // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                    showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                  }
+                } catch (e) {
+                  // 예외 발생 시 스낵바로 에러 메시지 출력
+                  showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                }
+              },
+              child: Text(
+                '개인정보 처리방침 보기',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
@@ -309,11 +323,6 @@ class UpdateInfoWidget extends StatelessWidget {
                   color: Colors.blue, // 텍스트 색상을 파란색으로 설정
                   decoration: TextDecoration.underline, // 밑줄 추가하여 링크처럼 보이게
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    const url = 'https://pf.kakao.com/_xjVrbG';
-                    launchURL(url); // URL을 여는 함수 호출
-                  },
               ),
             ),
           ),

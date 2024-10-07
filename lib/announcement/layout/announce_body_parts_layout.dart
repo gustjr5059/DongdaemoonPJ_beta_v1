@@ -227,8 +227,18 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
           SizedBox(height: interval2Y), // 텍스트와 웹 링크 사이의 간격을 설정함
           if (contentsWebLink.isNotEmpty)
             GestureDetector( // 터치 이벤트 처리를 위한 GestureDetector 사용
-              onTap: () {
-                launchURL(contentsWebLink); // 웹 링크를 열기 위한 함수를 호출함
+              onTap: () async {
+                // 웹 링크를 열기 위한 launchURL 함수를 호출함
+                try {
+                  final bool launched = await launchUrl(Uri.parse(contentsWebLink), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                  if (!launched) {
+                    // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                    showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                  }
+                } catch (e) {
+                  // 예외 발생 시 스낵바로 에러 메시지 출력
+                  showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                }
               },
               child: Text(
                 contentsWebLinkText,

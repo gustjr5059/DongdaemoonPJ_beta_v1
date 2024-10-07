@@ -33,11 +33,11 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double uesrInfoCardViewWidth =
         screenSize.width * (360 / referenceWidth); // 가로 비율 계산
     final double uesrInfoCardViewHeight =
-        screenSize.height * (210 / referenceHeight); // 세로 비율 계산
+        screenSize.height * (220 / referenceHeight); // 세로 비율 계산
 
     // body 부분 전체 패딩 수치 계산
     final double uesrInfoCardViewPaddingX = screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double uesrInfoCardViewPadding1Y = screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    final double uesrInfoCardViewPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
 
     // 텍스트 크기 계산
     final double userInfoCardViewTitleFontSize =
