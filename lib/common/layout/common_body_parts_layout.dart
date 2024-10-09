@@ -4,6 +4,7 @@ import 'dart:async';
 // 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 디자인 패키지를 임포트합니다.
@@ -119,6 +120,9 @@ Widget buildBannerPageView({
   required IndexedWidgetBuilder itemBuilder, // 각 배너 아이템을 구성하는 위젯 빌더
   required StateProvider<int> currentPageProvider, // 현재 페이지 인덱스를 관리하는 상태 프로바이더
   required BuildContext context, // 현재 컨텍스트
+  required double width,  // 이미지의 너비
+  required double height, // 이미지의 높이
+  required double borderRadius, // 모서리 반경
 }) {
   // PageView.builder를 반환하여 동적으로 아이템을 생성하는 페이지 뷰를 구현
   return PageView.builder(
@@ -128,7 +132,17 @@ Widget buildBannerPageView({
       // 페이지가 변경될 때 호출될 함수. 새 페이지 인덱스를 상태 관리 도구를 통해 업데이트
       ref.read(currentPageProvider.notifier).state = index;
     },
-    itemBuilder: itemBuilder, // 각 페이지를 구성할 위젯을 빌드하는 함수
+    itemBuilder: (context, index) {
+      return Container(
+        width: width, // 외부에서 받은 너비 적용
+        height: height, // 외부에서 받은 높이 적용
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius), // 모서리 반경 적용
+        ),
+        clipBehavior: Clip.antiAlias, // borderRadius 적용을 위해 클리핑
+        child: itemBuilder(context, index), // 배너 이미지 로드
+      );
+    },
   );
 }
 // ------ buildBannerPageView 위젯 내용 구현 끝
@@ -143,7 +157,24 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   required List<String> bannerLinks,
   required FutureProvider<List<T>> bannerImagesProvider,
   required void Function(BuildContext, int) onPageTap, // 콜백 함수의 반환 타입을 void로 변경
+  required double width,  // 배너의 너비
+  required double height, // 배너의 높이
+  required double borderRadius, // 모서리 반경
 }) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  final double commonBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
+  final double commonBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
+  final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X
+  final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y
+
   final asyncBannerImages = ref.watch(bannerImagesProvider);
 
   return asyncBannerImages.when(
@@ -166,15 +197,20 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
             ),
             currentPageProvider: currentPageProvider,
             context: context,
+            width: width, // 배너의 너비 전달
+            height: height, // 배너의 높이 전달
+            borderRadius: borderRadius, // 모서리 반경 전달
           ),
           Positioned(
-            right: 40,
-            bottom: 10,
+            right: commonBannerViewPageIndicatorX,
+            bottom: commonBannerViewPageIndicatorY,
             child: Consumer(
               builder: (context, ref, child) {
                 final currentPage = ref.watch(currentPageProvider);
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  width: commonBannerViewPageIndicatorWidth, // 페이지 번호 너비 설정
+                  height: commonBannerViewPageIndicatorHeight, // 페이지 번호 높이 설정
+                  alignment: Alignment.center, // 중앙 정렬
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(12),
@@ -217,7 +253,7 @@ class CommonCardView extends StatelessWidget {
 // 필요한 'content'는 반드시 제공되어야 하며, 나머지는 선택적으로 제공될 수 있음.
   CommonCardView({
     required this.content, // content는 필수로 제공되어야 함
-    this.backgroundColor = BACKGROUND_COLOR, // 배경색은 선택적이며 기본값은 BACKGROUND_COLOR로 설정
+    this.backgroundColor = Colors.white, // 배경색은 선택적이며 기본값은 하얀색으로 설정
     this.elevation = 4.0, // elevation은 선택적이며 기본값은 4.0으로 설정
     this.margin = const EdgeInsets.all(
         2), // margin은 선택적이며 기본값은 EdgeInsets.all(2)로 설정
@@ -247,9 +283,21 @@ class CommonCardView extends StatelessWidget {
 // ------ 공통적으로 사용될 'top' 버튼 위젯 내용 시작
 // 'Top' 버튼을 구현하는 위젯
 Widget buildTopButton(BuildContext context, ScrollController scrollController) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  final double topBarX = screenSize.width * (22 / referenceWidth); // X
+  final double topBarY = screenSize.height * (170 / referenceHeight); // Y
+
   return Positioned(
-    top: MediaQuery.of(context).size.height - 200, // 화면 하단에서 200px 위로 위치
-    right: 20, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
+    top: screenSize.height - topBarY, // 화면 하단에서 topBarY 위로 위치
+    right: topBarX, // 화면 오른쪽 끝에서 topBarX 왼쪽으로 위치
     child: FloatingActionButton(
       mini: true, // 버튼을 작게 설정
       backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
@@ -273,9 +321,9 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
           });
         }
       },
-      child: Text(
-        'Top', // 버튼에 표시할 텍스트
-        style: TextStyle(color: Colors.black), // 텍스트 색상을 검은색으로 설정
+      child: Icon(
+        Icons.arrow_upward, // 위로 가리키는 화살표 아이콘
+        color: Colors.black, // 아이콘 색상은 검은색으로 설정
       ),
     ),
   );
@@ -297,29 +345,66 @@ Future<bool> showSubmitAlertDialog(BuildContext context, {
     context: context, // 알림창이 표시될 BuildContext
     barrierDismissible: false, // 사용자가 알림창 외부를 클릭해도 닫히지 않도록 설정함
     builder: (BuildContext context) {
+
+      // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+      final Size screenSize = MediaQuery.of(context).size;
+
+      // 기준 화면 크기: 가로 393, 세로 852
+      final double referenceHeight = 852.0;
+
+      // 비율을 기반으로 동적으로 크기와 위치를 설정함
+      final double AlertDialogBtnFontSize1 = screenSize.height * (14 / referenceHeight);
+      final double AlertDialogBtnFontSize2 = screenSize.height * (11 / referenceHeight);
+
       // 플랫폼이 iOS인 경우 CupertinoAlertDialog 사용
       if (Platform.isIOS) {
         return CupertinoAlertDialog(
-          title: Text(title), // 제목 표시
-          content: contentWidget ?? Text(content ?? ''), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
+          title: Text(title,
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize1, // 텍스트 크기 설정
+            ),
+          ), // 제목 표시
+          content: contentWidget ?? Text(content ?? '',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize2, // 텍스트 크기 설정
+            ),), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
           actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
         );
         // 플랫폼이 Android인 경우 AlertDialog 사용
       } else if (Platform.isAndroid) {
         return AlertDialog(
-          title: Text(title), // 제목 표시
-          content: contentWidget ?? Text(content ?? ''), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
+          title: Text(title,
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize1, // 텍스트 크기 설정
+            ),), // 제목 표시
+          content: contentWidget ?? Text(content ?? '',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: AlertDialogBtnFontSize2, // 텍스트 크기 설정
+            ),), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
           actions: actions, // 알림창에서 사용될 버튼 리스트(actions)
         );
       } else {
         // 지원되지 않는 플랫폼일 경우 기본적으로 false 반환함
         return AlertDialog(
-          title: Text('Unsupported Platform'), // '지원되지 않는 플랫폼'이라는 제목 표시
-          content: Text('이 플랫폼은 지원되지 않습니다.'), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
+          title: Text('Unsupported Platform',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // '지원되지 않는 플랫폼'이라는 제목 표시
+          content: Text('이 플랫폼은 지원되지 않습니다.',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+            ),), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
           actions: <Widget>[
             // '확인' 버튼 클릭 시 false 반환하고 알림창 닫음
             TextButton(
-              child: Text('확인'),
+              child: Text('확인',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                ),),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
@@ -367,3 +452,117 @@ List<Widget> buildAlertActions(BuildContext context, {
   }
 }
 // ------ 공통적으로 사용될 알림창 관련 함수 내용 끝
+
+// ------ 공통 SnackBar 함수 내용 시작
+// 공통 SnackBar 함수
+void showCustomSnackBar(BuildContext context, String message) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 스낵바 부분 수치
+  final double commonSnackBarWidth = screenSize.width * (393 / referenceWidth);
+  final double commonSnackBarX = screenSize.width * (20 / referenceWidth);
+  final double commonSnackBarY = screenSize.height * (16 / referenceHeight);
+  final double commonSnackBarTextFontSize = screenSize.height * (14 / referenceHeight);
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message,
+        style: TextStyle(
+          fontFamily: 'NanumGothic',
+          fontWeight: FontWeight.bold,
+          fontSize: commonSnackBarTextFontSize,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Color(0xCC718B82),  // 색상을 80% 투명도로 설정
+      width: commonSnackBarWidth,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: commonSnackBarX,
+        vertical: commonSnackBarY,
+      ),
+    ),
+  );
+}
+// ------ 공통 SnackBar 함수 내용 끝
+
+// ------ 네트워크 상태 체크 함수 내용 시작
+// 네트워크 상태를 체크하는 클래스 정의
+class NetworkChecker {
+  final BuildContext context; // 현재 앱의 화면 정보를 담고 있는 context 값
+  StreamSubscription? _subscription; // 스트림을 구독하는 역할을 하는 _subscription 변수 추가
+
+  // 생성자에서 context 값을 전달받아 사용
+  NetworkChecker(this.context);
+
+  // 네트워크 상태 변화를 실시간으로 감지하는 메서드
+  void checkNetworkStatus() {
+    _subscription = Connectivity().onConnectivityChanged.listen((
+        List<ConnectivityResult> results) {
+      // 결과 리스트를 순회하면서 네트워크 연결 상태를 확인
+      for (var result in results) {
+        if (result == ConnectivityResult.none) {
+          // 네트워크 연결이 없을 경우 네트워크 오류 알림창을 띄움
+          showNetworkErrorDialog();
+          break; // 오류가 발생하면 반복문 종료
+        }
+      }
+    });
+  }
+
+  // 네트워크 연결 상태를 동기적으로 확인하는 메서드
+  Future<bool> isConnected() async {
+    // 현재 네트워크 연결 상태를 가져옴
+    var connectivityResult = await Connectivity().checkConnectivity();
+    // 네트워크가 연결되어 있지 않다면 false 반환
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  // 네트워크 오류 시 알림창을 띄우는 메서드
+  void showNetworkErrorDialog() {
+    // 알림창을 보여주는 함수 호출
+    showSubmitAlertDialog(
+      context,
+      title: '[네트워크 에러]', // 알림창의 제목
+      content: '인터넷 연결 확인 후, 앱을 재실행 해주세요.', // 알림창의 내용
+      actions: [
+        TextButton(
+          // '확인' 버튼 정의
+          child: Text(
+            '확인',
+            style: TextStyle(
+              color: Color(0xFF6FAD96), // 버튼 텍스트 색상 지정
+              fontWeight: FontWeight.bold, // 텍스트의 굵기를 두껍게 설정
+              fontFamily: 'NanumGothic', // 글꼴 설정
+            ),
+          ),
+          onPressed: () {
+            // Android 기기에서는 앱을 종료
+            if (Platform.isAndroid) {
+              exit(0); // 앱 종료 명령
+              // iOS 기기에서는 알림창만 닫음
+            } else if (Platform.isIOS) {
+              Navigator.of(context).pop(); // 알림창 닫기
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  // 네트워크 상태 감지 리스너 해제하는 메서드
+  void dispose() {
+    // 스트림 구독 해제
+    _subscription?.cancel();
+  }
+}
+// ------ 네트워크 상태 체크 함수 내용 끝

@@ -54,6 +54,7 @@ import '../../../common/provider/common_all_providers.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
 import '../../provider/product_state_provider.dart';
@@ -139,6 +140,8 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
   // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
   // => blouseMainTopBarPointAutoScrollController는 전체 화면의 UI를 담당하는게 아니므로 scaffold의 body 내 컨트롤러에 연결이 안되어도 addListener()에 _onScroll()로 연결해놓은거라 해당 기능 사용이 가능!!
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
   // 사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을 때 마지막으로 본 위치로 자동으로 스크롤되도록 함.
@@ -198,6 +201,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+      ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
 
       // // 가격 순 버튼과 할인율 순 버튼에 의한 상품 데이터 정렬 상태 초기화 - 다른 화면 이동 후 복귀 시, 해당 초기화가 필요하면 사용하기!!
       // ref.read(blouseMainSortButtonProvider.notifier).state = ''; // 버튼 클릭 상태 초기화
@@ -252,6 +256,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
         ref.read(blouseMainSortButtonProvider.notifier).state =
             ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 
@@ -259,13 +264,17 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
 
     // 배너 데이터 로드가 완료된 후 자동 스크롤 시작
     Future.delayed(Duration.zero, () {
       _largeBannerAutoScroll.startAutoScroll();
       _small1BannerAutoScroll.startAutoScroll();
     });
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -276,7 +285,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
     // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
     if (state == AppLifecycleState.resumed) {
@@ -332,29 +341,14 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
 
     blouseMainTopBarPointAutoScrollController.dispose(); // ScrollController 해제
 
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
-
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
 
   // blouseMainProductListProvider 관련 카테고리 인덱스를 받아 해당 카테고리 이름을 반환하는 함수
   String _getCategory(int index) {
@@ -362,9 +356,9 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
       case 1:
         return '신상';
       case 2:
-        return '최고';
+        return '스테디 셀러';
       case 3:
-        return '할인';
+        return '특가 상품';
       case 4:
         return '봄';
       case 5:
@@ -421,6 +415,54 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
       }
     }
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // 앱 바 부분 수치
+    final double expandedHeight =
+        screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
+
+    // 대배너 부분 관련 수치
+    final double blouseMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    final double blouseMainScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
+    final double blouseMainLargeBannerViewHeight =
+        screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+
+    // 소배너 부분 관련 수치
+    final double blouseMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    final double blouseMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    final double blouseMainScreenSmallBannerViewHeight =
+        screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
+
+    // AppBar 관련 수치 동적 적용
+    final double productMainAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productMainAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    final double productMainAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double productMainChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double productMainChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double productMainChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double productMainChevronIconY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double productMainWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productMainWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productMainWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double productMainWishlistBtnY = screenSize.height * (6 / referenceHeight);
+
+    // 컨텐츠 사이의 높이 수치
+    final double interval1Y = screenSize.height * (3 / referenceHeight);
+    final double interval2Y = screenSize.height * (10 / referenceHeight);
+    final double interval3Y = screenSize.height * (5 / referenceHeight);
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -439,135 +481,175 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
                 // 스크롤 시 SliverAppBar가 빠르게 나타남.
                 pinned: true,
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 120.0,
+                expandedHeight: expandedHeight,
+                // 확장된 높이를 0으로 설정하여 확장 기능 제거
                 // 확장 높이 설정
                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
+                    // 공통 AppBar 빌드
                     context: context,
+                    // 현재 context 전달
                     ref: ref,
+                    // 참조(ref) 전달
                     title: '블라우스 메인',
+                    // AppBar의 제목을 '블라우스 메인'로 설정
                     leadingType: LeadingType.back,
-                    // 이전화면으로 이동 버튼.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
+                    buttonCase: 2, // 버튼 케이스를 2로 설정
+                    appBarTitleWidth: productMainAppBarTitleWidth,
+                    appBarTitleHeight: productMainAppBarTitleHeight,
+                    appBarTitleX: productMainAppBarTitleX,
+                    appBarTitleY: productMainAppBarTitleY,
+                    chevronIconWidth: productMainChevronIconWidth,
+                    chevronIconHeight: productMainChevronIconHeight,
+                    chevronIconX: productMainChevronIconX,
+                    chevronIconY: productMainChevronIconY,
+                    wishlistBtnWidth: productMainWishlistBtnWidth,
+                    wishlistBtnHeight: productMainWishlistBtnHeight,
+                    wishlistBtnX: productMainWishlistBtnX,
+                    wishlistBtnY: productMainWishlistBtnY,
                   ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(60.0),
                   // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
                   child: Container(
-                    color: BUTTON_COLOR, // 상단 탭 바 색상 설정
+                    // color: BUTTON_COLOR, // 상단 탭 바 색상 설정
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
                   ),
                 ),
               ),
+              // // 실제 컨텐츠를 나타내는 슬리버 리스트
+              // // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // SliverPadding(
+              //   padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
+              //   sliver: SliverList(
               // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              SliverPadding(
-                padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        // 좌우로 4의 패딩을 추가
-                        child: Column(
-                          children: [
-                            SizedBox(height: 5), // 5의 높이를 가진 간격 추가
-                            CommonCardView(
-                              content: SizedBox(
-                                height: 150, // 높이 150의 콘텐츠 박스
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                      // 좌우로 4의 패딩을 추가
+                      child: Column(
+                        children: [
+                          // SizedBox(height: 5), // 5의 높이를 가진 간격 추가
+                          // 큰 배너 섹션을 카드뷰로 구성
+                          CommonCardView(
+                            content: Container(
+                              // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정함
+                              ),
+                              child: SizedBox(
+                                // 배너 섹션의 높이를 설정함
+                                height: blouseMainLargeBannerViewHeight,
+                                // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
                                     AllLargeBannerImage>(
-                                  context: context,
-                                  ref: ref,
+                                  context: context, // 위젯 트리를 위한 빌드 컨텍스트를 전달함
+                                  ref: ref, // 상태 관리를 위한 참조를 전달함
                                   currentPageProvider:
-                                      blouseMainLargeBannerPageProvider,
-                                  pageController: _largeBannerPageController,
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  bannerLinks: largeBannerLinks,
+                                  blouseMainLargeBannerPageProvider, // 큰 배너 페이지의 상태 제공자를 전달함
+                                  pageController: _largeBannerPageController, // 큰 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                  bannerAutoScroll: _largeBannerAutoScroll, // 큰 배너의 자동 스크롤 설정을 전달함
+                                  bannerLinks: largeBannerLinks, // 큰 배너 이미지의 링크 목록을 전달함
                                   bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
-                                  onPageTap: _onLargeBannerTap,
+                                  allLargeBannerImagesProvider, // 큰 배너 이미지의 상태 제공자를 전달함
+                                  onPageTap: _onLargeBannerTap, // 큰 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                  width: blouseMainScreenLargeBannerWidth, // 큰 배너 섹션의 너비를 설정함
+                                  height: blouseMainScreenLargeBannerHeight, // 큰 배너 섹션의 높이를 설정함
+                                  borderRadius: 0, // 큰 배너의 모서리 반경을 0으로 설정함
                                 ),
                               ),
-                              backgroundColor: LIGHT_PURPLE_COLOR, // 배경색 설정
-                              elevation: 4, // 그림자 높이 설정
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
-                            SizedBox(height: 10), // 10의 높이를 가진 간격 추가
-                            CommonCardView(
-                              content: SizedBox(
-                                height: 30, // 높이 30의 콘텐츠 박스
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                            elevation: 4, // 카드뷰의 그림자 깊이를 설정함
+                            padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
+                          ),
+                          SizedBox(height: interval2Y), // interval2Y의 높이를 가진 간격을 추가함
+                          CommonCardView(
+                            content: Container(
+                              // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                              ),
+                              child: SizedBox(
+                                // 작은 배너 섹션의 높이를 설정함
+                                height: blouseMainScreenSmallBannerViewHeight,
+                                // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
                                     BlouseMainSmall1BannerImage>(
-                                  context: context,
-                                  ref: ref,
+                                  context: context, // 위젯 트리를 위한 빌드 컨텍스트를 전달함
+                                  ref: ref, // 상태 관리를 위한 참조를 전달함
                                   currentPageProvider:
-                                      blouseMainSmall1BannerPageProvider,
-                                  pageController: _small1BannerPageController,
-                                  bannerAutoScroll: _small1BannerAutoScroll,
-                                  bannerLinks: small1BannerLinks,
+                                  blouseMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
+                                  pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                  bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                                  bannerLinks: small1BannerLinks, // 작은 배너 이미지의 링크 목록을 전달함
                                   bannerImagesProvider:
-                                      blouseMainSmall1BannerImagesProvider,
-                                  onPageTap: _onSmall1BannerTap,
+                                  blouseMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                                  onPageTap: _onSmall1BannerTap, // 작은 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                  width: blouseMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
+                                  height: blouseMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
+                                  borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
                                 ),
                               ),
-                              backgroundColor: LIGHT_SKY_BLUE_COLOR, // 배경색 설정
-                              elevation: 4, // 그림자 높이 설정
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 8.0, 8.0), // 내부 패딩 설정
                             ),
-                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            PriceAndDiscountPercentSortButtons<
-                                ProductMainListNotifier>(
-                              productListProvider:
-                                  blouseMainProductListProvider,
-                              // 블라우스 제품 리스트 프로바이더 전달
-                              sortButtonProvider:
-                                  blouseMainSortButtonProvider, // 블라우스 정렬 버튼 프로바이더 전달
-                            ), // 가격 및 할인 정렬 버튼 추가
-                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
-                            Consumer(
-                              // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.
-                              builder: (context, ref, child) {
-                                // builder 함수: Consumer 위젯이 빌드될 때 호출되는 함수로, context, ref, child를 인자로 받음.
-                                final currentTab =
-                                    ref.watch(blouseCurrentTabProvider);
-                                // 현재 탭: blouseCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
-                                final productListProvider =
-                                    blouseMainProductListProvider;
-                                return GeneralProductList<
-                                    ProductMainListNotifier>(
-                                  // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
-                                  scrollController:
-                                      blouseMainScreenPointScrollController,
-                                  // 스크롤 컨트롤러: blouseMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.
-                                  productListProvider: productListProvider,
-                                  // 제품 리스트 제공자: productListProvider를 GeneralProductList의 productListProvider로 전달.
-                                  category:
-                                      _getCategory(currentTab), // 카테고리 인자 추가
-                                  // 카테고리: _getCategory 함수를 호출하여 현재 인덱스에 해당하는 카테고리를 GeneralProductList의 category로 전달.
-                                );
-                              },
-                            ),
-                            SizedBox(height: 5), // 5의 높이를 가진 간격 추가
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: 1, // 자식 위젯 수 설정
-                  ),
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                            elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
+                            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
+                          ),
+                          SizedBox(height: interval1Y), // interval1Y의 높이를 가진 간격 추가
+                          PriceAndDiscountPercentSortButtons<
+                              ProductMainListNotifier>(
+                            productListProvider:
+                            blouseMainProductListProvider,
+                            // 블라우스 제품 리스트 프로바이더 전달
+                            sortButtonProvider:
+                            blouseMainSortButtonProvider, // 블라우스 정렬 버튼 프로바이더 전달
+                          ), // 가격 및 할인 정렬 버튼 추가
+                          SizedBox(height: interval1Y), // interval1Y의 높이를 가진 간격 추가
+                          Consumer(
+                            // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.
+                            builder: (context, ref, child) {
+                              // builder 함수: Consumer 위젯이 빌드될 때 호출되는 함수로, context, ref, child를 인자로 받음.
+                              final currentTab =
+                              ref.watch(blouseCurrentTabProvider);
+                              // 현재 탭: blouseCurrentTabProvider를 구독하고 현재 선택된 탭 정보를 가져옴.
+                              final productListProvider =
+                                  blouseMainProductListProvider;
+                              return GeneralProductList<
+                                  ProductMainListNotifier>(
+                                // GeneralProductList 반환: GeneralProductList 위젯을 반환하여 화면에 제품 목록을 표시.
+                                scrollController:
+                                blouseMainScreenPointScrollController,
+                                // 스크롤 컨트롤러: blouseMainScreenPointScrollController를 GeneralProductList의 scrollController로 전달.
+                                productListProvider: productListProvider,
+                                // 제품 리스트 제공자: productListProvider를 GeneralProductList의 productListProvider로 전달.
+                                category:
+                                _getCategory(currentTab), // 카테고리 인자 추가
+                                // 카테고리: _getCategory 함수를 호출하여 현재 인덱스에 해당하는 카테고리를 GeneralProductList의 category로 전달.
+                              );
+                            },
+                          ),
+                          SizedBox(height: interval3Y), // interval3Y의 높이를 가진 간격 추가
+                        ],
+                      ),
+                    );
+                  },
+                  childCount: 1, // 자식 위젯 수 설정
                 ),
               ),
+              // ),
             ],
           ),
           // buildTopButton 함수는 주어진 context와 blouseMainScreenPointScrollController를 사용하여
@@ -577,7 +659,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1),
+          ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: blouseMainScreenPointScrollController),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );

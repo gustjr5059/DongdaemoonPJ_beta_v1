@@ -50,6 +50,8 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
   late WebViewController _webViewController; // WebView 컨트롤러를 저장할 변수 선언
   late ScrollController orderPostcodeSearchScreenPointScrollController; // 스크롤 컨트롤러 변수 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   StreamSubscription<User?>? authStateChangesSubscription; // 인증 상태 변화를 감지하는 스트림 구독 변수 선언
 
   @override
@@ -59,6 +61,12 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
     WidgetsBinding.instance.addObserver(this); // 위젯 바인딩 옵저버 추가
 
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView(); // 안드로이드 플랫폼일 경우 WebView 플랫폼 설정
+
+    updateStatusBar(); // 앱이 다시 활성화되었을 때 상태바 업데이트
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   @override
@@ -66,6 +74,10 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
     WidgetsBinding.instance.removeObserver(this); // 위젯 바인딩 옵저버 제거
     authStateChangesSubscription?.cancel(); // 인증 상태 변화 구독 취소
     orderPostcodeSearchScreenPointScrollController.dispose(); // 스크롤 컨트롤러 리소스 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose();
   }
 
@@ -73,23 +85,7 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar(); // 앱이 다시 활성화되었을 때 상태바 업데이트
-    }
-  }
-
-  // 상태바를 업데이트하는 함수
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 상태바 색상을 버튼 색상으로 설정
-
-    if (Platform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor, // 안드로이드에서 상태바 색상 설정
-        statusBarIconBrightness: Brightness.light, // 안드로이드에서 상태바 아이콘 밝기 설정
-      ));
-    } else if (Platform.isIOS) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // iOS에서 상태바 밝기 설정
-      ));
+      updateStatusBar(); // 앱이 다시 활성화되었을 때 상태바 업데이트
     }
   }
 
@@ -101,6 +97,22 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
 
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double postcodeSearchAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double postcodeSearchAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double postcodeSearchAppBarTitleX = screenSize.height * (15 / referenceHeight);
+    final double postcodeSearchAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus(); // 화면 탭 시 포커스를 해제하여 키보드 숨김
@@ -124,6 +136,10 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
                       title: '우편번호 찾기', // AppBar의 제목 설정
                       leadingType: LeadingType.back, // 뒤로가기 버튼 설정
                       buttonCase: 1, // 버튼 유형 설정
+                      appBarTitleWidth: postcodeSearchAppBarTitleWidth,
+                      appBarTitleHeight: postcodeSearchAppBarTitleHeight,
+                      appBarTitleX: postcodeSearchAppBarTitleX,
+                      appBarTitleY: postcodeSearchAppBarTitleY,
                     ),
                   ),
                   leading: null, // 기본 뒤로가기 버튼 비활성화

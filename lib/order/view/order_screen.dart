@@ -94,6 +94,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController orderMainScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
 // ----- 수령자 정보 관련 컨트롤러 및 설정값 시작 부분
 // 이름을 입력받는 컨트롤러 생성
@@ -168,7 +169,11 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
 
 // ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 시작 부분
 // 이름을 입력받는 컨트롤러를 생성
@@ -199,7 +204,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
     // 앱이 다시 활성화되면(포어그라운드로 올 때), 배너의 자동 스크롤을 재시작
     if (state == AppLifecycleState.resumed) {
@@ -223,29 +228,14 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
 
     orderMainScreenPointScrollController.dispose(); // ScrollController 해제
 
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
-
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
 
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
@@ -264,60 +254,97 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
     final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double orderAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double orderAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double orderChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double orderChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double orderChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double orderChevronIconY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 2)
+    final double orderWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double orderWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     return GestureDetector(
-        onTap: () {
-      // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
-      FocusScope.of(context).unfocus();
-    },
-    child: Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: orderMainScreenPointScrollController, // 스크롤 컨트롤러 연결
-            slivers: <Widget>[
-              // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
-              SliverAppBar(
-                // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
-                automaticallyImplyLeading: false,
-                floating: true,
-                // 스크롤 시 SliverAppBar가 빠르게 나타남.
-                pinned: true,
-                // 스크롤 다운시 AppBar가 상단에 고정됨.
-                expandedHeight: 0.0,
-                // 확장 높이 설정
-                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '발주',
-                    leadingType: LeadingType.back,
-                    // 이전화면으로 이동 버튼.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+      onTap: () {
+        // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            CustomScrollView(
+              controller: orderMainScreenPointScrollController, // 스크롤 컨트롤러 연결
+              slivers: <Widget>[
+                // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
+                SliverAppBar(
+                  // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
+                  automaticallyImplyLeading: false,
+                  floating: true,
+                  // 스크롤 시 SliverAppBar가 빠르게 나타남.
+                  pinned: true,
+                  // 스크롤 다운시 AppBar가 상단에 고정됨.
+                  expandedHeight: 0.0,
+                  // 확장 높이 설정
+                  // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                    background: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '업데이트 요청',
+                      leadingType: LeadingType.back,
+                      // 이전화면으로 이동 버튼.
+                      buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                      appBarTitleWidth: orderAppBarTitleWidth,
+                      appBarTitleHeight: orderAppBarTitleHeight,
+                      appBarTitleX: orderAppBarTitleX,
+                      appBarTitleY: orderAppBarTitleY,
+                      chevronIconWidth: orderChevronIconWidth,
+                      chevronIconHeight: orderChevronIconHeight,
+                      chevronIconX: orderChevronIconX,
+                      chevronIconY: orderChevronIconY,
+                      wishlistBtnWidth: orderWishlistBtnWidth,
+                      wishlistBtnHeight: orderWishlistBtnHeight,
+                      wishlistBtnX: orderWishlistBtnX,
+                      wishlistBtnY: orderWishlistBtnY,
+                    ),
                   ),
+                  leading: null,
+                  // 좌측 상단의 메뉴 버튼 등을 제거함.
+                  // iOS에서는 AppBar의 배경색을 사용
+                  // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
+                  // backgroundColor: BUTTON_COLOR,
                 ),
-                leading: null,
-                // 좌측 상단의 메뉴 버튼 등을 제거함.
-                // iOS에서는 AppBar의 배경색을 사용
-                // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                backgroundColor: BUTTON_COLOR,
-              ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5), // 상단에 5의 패딩을 추가
+                padding: EdgeInsets.only(top: 0), // 상단에 0의 패딩을 추가
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        // 좌우로 4의 패딩을 추가
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                        // 좌우로 0의 패딩을 추가
                         child: Column(
                           children: [
-                            SizedBox(height: 10), // 높이를 10으로 설정하여 간격 조정
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자가 로그인된 경우 사용자 정보를 표시
                             if (user != null)
                               RecipientInfoWidget(
@@ -388,12 +415,12 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
           buildTopButton(context, orderMainScreenPointScrollController),
         ],
       ),
-      // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1),
-      // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-    ),
-   );
+        // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
+        bottomNavigationBar: buildCommonBottomNavigationBar(
+            ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: orderMainScreenPointScrollController),
+        // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+      ),
+    );
     // ------ 화면구성 끝
  }
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝

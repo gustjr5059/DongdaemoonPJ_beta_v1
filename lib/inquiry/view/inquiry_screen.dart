@@ -84,6 +84,8 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController inquiryScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -124,7 +126,11 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -134,7 +140,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -151,33 +157,61 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     authStateChangesSubscription?.cancel();
 
     inquiryScreenPointScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double inquiryAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double inquiryAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double inquiryPaddingX = screenSize.width * (8 / referenceWidth);
+
+    // 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (200 / referenceHeight); // 세로 간격 1 계산
+    final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
+    final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
+    final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
+    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+
+    // 텍스트 폰트 크기 수치
+    final double inquiryGuidFontSize1 =
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double inquiryGuidFontSize2 =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // 문의하기로 이동 버튼 수치
+    final double inquiryBtnWidth =
+        screenSize.width * (250 / referenceWidth); // 문의하기로 이동 버튼 가로 비율 계산
+    final double inquiryBtnHeight =
+        screenSize.height * (45 / referenceHeight); // 문의하기로 이동 버튼 세로 비율 계산
+    final double inquiryBtnPaddingX = screenSize.width * (12 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
+    final double inquiryBtnPaddingY = screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
+    final double inquiryBtnFontSize =
+        screenSize.height * (14 / referenceHeight); // 문의하기로 이동 버튼 텍스트 크기 비율 계산
+    final double inquiryBtnX = screenSize.width * (120 / referenceWidth);
 
     return Scaffold(
       body: Stack(
@@ -190,15 +224,25 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                 floating: false,
                 pinned: true,
                 expandedHeight: 0.0,
-                title: buildCommonAppBar(
-                  context: context,
-                  ref: ref,
-                  title: '문의하기',
-                  leadingType: LeadingType.none,
-                  buttonCase: 1,
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    context: context,
+                    ref: ref,
+                    title: '문의하기',
+                    leadingType: LeadingType.none,
+                    buttonCase: 1,
+                    appBarTitleWidth: inquiryAppBarTitleWidth,
+                    appBarTitleHeight: inquiryAppBarTitleHeight,
+                    appBarTitleX: inquiryAppBarTitleX,
+                    appBarTitleY: inquiryAppBarTitleY,
+                  ),
                 ),
                 leading: null,
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
@@ -209,32 +253,79 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        // 각 항목의 좌우 간격을 inquiryPaddingX로 설정함.
+                        padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
                         child: Column(
+                          // 자식 위젯들을 왼쪽 정렬.
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 250),
-                            Text('문의 내용은 하단의 버튼을 클릭하여 관련 웹 페이지에서 진행 부탁드립니다.'),
-                            SizedBox(height: 50),
-                            ElevatedButton(
-                              onPressed: () async {
-                                // 버튼이 눌렸을 때 해당 링크로 이동함
-                                final Uri url = Uri.parse('https://pf.kakao.com/_xjVrbG');
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url); // url_launcher 패키지를 사용하여 링크를 엶
-                                } else {
-                                  throw 'Could not launch $url'; // 링크를 열 수 없는 경우 예외를 발생시킴
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: BUTTON_COLOR, // 버튼 글자 색상
-                                backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-                                side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30), // 버튼 여백
+                            SizedBox(height: interval1Y),
+                            Container(
+                              padding: EdgeInsets.only(left: interval1X), // 패딩 설정
+                              child: Text('* 문의는 아래 절차에 따라 진행해주세요.',
+                                style: TextStyle(
+                                  fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
+                                  fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                                  fontFamily: 'NanumGothic', // 글꼴 설정
+                                  color: Colors.black, // 텍스트 색상 설정
+                                ),
                               ),
-                              child: Text(
-                                '발주 내역 상세보기', // 버튼에 표시될 텍스트
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트 스타일
+                            ),
+                            SizedBox(height: interval2Y),
+                            Container(
+                              padding: EdgeInsets.only(left: interval2X), // 패딩 설정
+                              child: Text('1. [문의하기로 이동] 버튼을 클릭해주세요.',
+                                style: TextStyle(
+                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
+                                  fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+                                  fontFamily: 'NanumGothic', // 글꼴 설정
+                                  color: Colors.black, // 텍스트 색상 설정
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: interval2X), // 패딩 설정
+                              child: Text('2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
+                                style: TextStyle(
+                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
+                                  fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+                                  fontFamily: 'NanumGothic', // 글꼴 설정
+                                  color: Colors.black, // 텍스트 색상 설정
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: interval3Y),
+                            Container(
+                              width: inquiryBtnWidth,
+                              height: inquiryBtnHeight,
+                              padding: EdgeInsets.only(left: inquiryBtnX), // 패딩 설정
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // 버튼이 눌렸을 때 해당 링크로 이동함
+                                  final Uri url = Uri.parse('https://pf.kakao.com/_xjVrbG');
+                                  if (await canLaunchUrl(url)) {
+                                    await launchUrl(url); // url_launcher 패키지를 사용하여 링크를 엶
+                                  } else {
+                                    throw 'Could not launch $url'; // 링크를 열 수 없는 경우 예외를 발생시킴
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
+                                  foregroundColor: Color(0xFF6FAD96), // 버튼의 글자 색상을 설정함
+                                  backgroundColor: Color(0xFF6FAD96), // 버튼의 배경 색상을 설정함
+                                  padding: EdgeInsets.symmetric(vertical: inquiryBtnPaddingY, horizontal: inquiryBtnPaddingX), // 패딩 설정
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
+                                  ),
+                                ),
+                                child: Text(
+                                  '문의하기로 이동', // 버튼에 표시될 텍스트
+                                  style: TextStyle(
+                                    fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
+                                    fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                                    fontFamily: 'NanumGothic', // 글꼴 설정
+                                    color: Colors.white, // 텍스트 색상 설정
+                                  ), // 텍스트 스타일
+                                ),
                               ),
                             ),
                           ],
@@ -254,7 +345,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: inquiryScreenPointScrollController),
     );
   }
 }

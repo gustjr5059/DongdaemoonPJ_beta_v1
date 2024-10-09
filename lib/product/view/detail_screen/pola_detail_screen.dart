@@ -9,6 +9,7 @@ import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
 import '../../../review/provider/review_all_provider.dart';
+import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
 import '../../provider/product_state_provider.dart';
@@ -73,6 +74,8 @@ class _PolaDetailProductScreenState
 
   late PageController pageController;
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -111,6 +114,13 @@ class _PolaDetailProductScreenState
         polaDetailProductScreenPointScrollController
             .jumpTo(savedScrollPosition);
 
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
+        ref.read(colorSelectionIndexProvider.notifier).state = 0;
+        ref.read(colorSelectionTextProvider.notifier).state = null;
+        ref.read(colorSelectionUrlProvider.notifier).state = null;
+        ref.read(sizeSelectionIndexProvider.notifier).state = null;
+
         ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
       }
     });
@@ -124,6 +134,8 @@ class _PolaDetailProductScreenState
         ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0; // getImagePageProvider의 상태를 0으로 설정
         pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
         ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+
+        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       }
     });
 
@@ -131,7 +143,11 @@ class _PolaDetailProductScreenState
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -141,7 +157,7 @@ class _PolaDetailProductScreenState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -160,37 +176,66 @@ class _PolaDetailProductScreenState
     polaDetailProductScreenPointScrollController
         .dispose(); // ScrollController 해제
     pageController.dispose(); // PageController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double productDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double productDtAppBarTitleX = screenSize.height * (85 / referenceHeight);
+    final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double productDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double productDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double productDtChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
+
+    //  업데이트 요청 목록 버튼 수치 (Case 4)
+    final double productDtCartlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productDtCartlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productDtCartlistBtnX = screenSize.width * (1 / referenceWidth);
+    final double productDtCartlistBtnY = screenSize.height * (8 / referenceHeight);
+
+    // 홈 버튼 수치 (Case 4)
+    final double productDtHomeBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productDtHomeBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productDtHomeBtnX = screenSize.width * (1 / referenceWidth);
+    final double productDtHomeBtnY = screenSize.height * (8 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 4)
+    final double productDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    final double productDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
+    final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(polaDetailProdFirestoreDataProvider(widget.fullPath));
     final productReviews = ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
+
+    print("PolaDetailProductScreen: Loading screen for product path: ${widget.fullPath}"); // 디버깅 메시지 추가
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -212,23 +257,49 @@ class _PolaDetailProductScreenState
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: 0.0,
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar(
-                  // 공통 AppBar 빌드
-                  context: context,
-                  // 현재 context 전달
-                  ref: ref,
-                  // 참조(ref) 전달
-                  title: widget.title,
-                  // AppBar의 제목을 '폴라티 상세'로 설정
-                  leadingType: LeadingType.back,
-                  // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
-                  buttonCase: 4, // 버튼 케이스를 4로 설정
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    // 공통 AppBar 빌드
+                    context: context,
+                    // 현재 context 전달
+                    ref: ref,
+                    // 참조(ref) 전달
+                    title: widget.title,
+                    // AppBar의 제목을 '폴라티 상세'로 설정
+                    leadingType: LeadingType.back,
+                    // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
+                    buttonCase: 4, // 버튼 케이스를 4로 설정
+                    appBarTitleWidth: productDtAppBarTitleWidth,
+                    appBarTitleHeight: productDtAppBarTitleHeight,
+                    appBarTitleX: productDtAppBarTitleX,
+                    appBarTitleY: productDtAppBarTitleY,
+                    chevronIconWidth: productDtChevronIconWidth,
+                    chevronIconHeight: productDtChevronIconHeight,
+                    chevronIconX: productDtChevronIconX,
+                    chevronIconY: productDtChevronIconY,
+                    cartlistBtnWidth: productDtCartlistBtnWidth,
+                    cartlistBtnHeight: productDtCartlistBtnHeight,
+                    cartlistBtnX: productDtCartlistBtnX,
+                    cartlistBtnY: productDtCartlistBtnY,
+                    homeBtnWidth: productDtHomeBtnWidth,
+                    homeBtnHeight: productDtHomeBtnHeight,
+                    homeBtnX: productDtHomeBtnX,
+                    homeBtnY: productDtHomeBtnY,
+                    wishlistBtnWidth: productDtWishlistBtnWidth,
+                    wishlistBtnHeight: productDtWishlistBtnHeight,
+                    wishlistBtnX: productDtWishlistBtnX,
+                    wishlistBtnY: productDtWishlistBtnY,
+                  ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
@@ -244,7 +315,6 @@ class _PolaDetailProductScreenState
                               return Column(
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
-                                  SizedBox(height: 40),
                                   // ProductDetailScreenTabs를 사용하여 탭을 생성하고 리뷰 데이터를 전달
                                   productReviews.when(
                                     data: (reviewsContent) {
@@ -281,7 +351,7 @@ class _PolaDetailProductScreenState
       bottomNavigationBar: productContent.when(
         data: (product) {
           return buildCommonBottomNavigationBar(
-              ref.watch(tabIndexProvider), ref, context, 5, 2, product: product);
+              ref.watch(tabIndexProvider), ref, context, 5, 2, product: product, scrollController: polaDetailProductScreenPointScrollController);
         },
         loading: () => SizedBox.shrink(),  // 로딩 중일 때는 빈 공간으로 처리
         error: (error, _) => SizedBox.shrink(),  // 에러가 발생했을 때는 빈 공간으로 처리

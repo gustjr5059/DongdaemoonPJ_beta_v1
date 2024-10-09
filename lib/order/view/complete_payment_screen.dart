@@ -44,6 +44,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../product/model/product_model.dart';
 import '../layout/complete_body_parts_layout.dart';
 import '../provider/complete_payment_provider.dart';
 import '../provider/order_all_providers.dart';
@@ -80,6 +81,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController completePaymentScreenPointScrollController; // 스크롤 컨트롤러 선언
+
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -125,7 +128,38 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
+
+    // CompletePaymentScreen에 도착한 후 다이얼로그 표시 (이러기 위해서는 addPostFrameCallback 이게 필요함!!)
+    // 원래는 업데이트 요청 화면에서 '업데이트 요청하기' 버튼 클릭 -> '예' 버튼 클릭하면 해당 로직에서 해당 알림창을 띄우는 로직을 구현하려고
+    // 했지만, 이렇게 하면 navigator 특징 상 다른 화면으로 이동한 후에 랜더링 될 때, 이미 context를 활용을 못하므로 에러가 뜸
+    // 이를 방지하기 위해 업데이트 요청 완료 화면에 시작할 때 해당 알림창을 띄우도록 여기에 로직을 구현해서 해결함!!
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showSubmitAlertDialog(
+        context,
+        title: '[업데이트 요청 완료]',
+        content: '업데이트 요청이 완료되었습니다.',
+        actions: [
+          TextButton(
+            child: Text(
+              '확인',
+              style: TextStyle(
+                color: Color(0xFF6FAD96),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // 알림창 닫기
+            },
+          ),
+        ],
+      );
+    });
   }
 
   // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -136,7 +170,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -155,33 +189,34 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
 
     completePaymentScreenPointScrollController.dispose(); // ScrollController 해제
 
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double completePaymentAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (80 / referenceHeight);
+    final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
     final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
 
@@ -196,6 +231,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
         final orderNumber = numberInfo['order_number'];
         // 주문 날짜를 원하는 형식으로 포맷
         final orderDate = DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(numberInfo['order_date'].toDate());
+        final orderItems = data['orderItems'] ?? []; // null일 경우 빈 리스트로 대체
 
         return Scaffold(
           body: Stack(
@@ -214,28 +250,33 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                       title: '발주 완료', // 앱바 제목 설정
                       leadingType: LeadingType.none, // 리딩 아이콘 없음
                       buttonCase: 1, // 버튼 타입 설정
+                      appBarTitleWidth: completePaymentAppBarTitleWidth,
+                      appBarTitleHeight: completePaymentAppBarTitleHeight,
+                      appBarTitleX: completePaymentAppBarTitleX,
+                      appBarTitleY: completePaymentAppBarTitleY,
                     ),
                     leading: null,
-                    backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정
+                    // backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정
                   ),
                   SliverPadding(
-                    padding: EdgeInsets.only(top: 5), // 패딩 설정
+                    padding: EdgeInsets.only(top: 0), // 패딩 설정
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 0.0),
                             child: Column(
                               children: [
-                                SizedBox(height: 10),
                                 CompletePaymentInfoWidget(
                                   orderNumber: orderNumber,
                                   orderDate: orderDate,
                                   totalPayment: amountInfo['total_payment_price'],
                                   customerName: ordererInfo['name'],
                                   recipientInfo: recipientInfo,
+                                  orderItems: orderItems.map<ProductContent>((item) {
+                                    return ProductContent.fromMap(item);
+                                  }).toList(), // 데이터가 null일 경우에도 안전하게 처리
                                 ),
-                                SizedBox(height: 3000), // 추가 패딩
                               ],
                             ),
                           );
@@ -253,7 +294,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           ),
           // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
           bottomNavigationBar: buildCommonBottomNavigationBar(
-              ref.watch(tabIndexProvider), ref, context, 5, 1
+              ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: completePaymentScreenPointScrollController
           ),
         );
       },

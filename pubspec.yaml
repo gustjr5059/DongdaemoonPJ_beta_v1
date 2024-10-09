@@ -1,5 +1,5 @@
 name: dongdaemoon_beta_v1
-description: "동대문 프로젝트 앱 개발_베타 버전_v1"
+description: "웨어카노 앱 개발 프로젝트_v1"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -132,6 +132,34 @@ flutter:
     - asset/img/misc/poster_img/refund_policy_image.png
     - asset/img/misc/logo_img/couture_logo_image.png
     - config.json
+    - asset/img/misc/splash_image/couture_splash1_bg_img.png
+    - asset/img/misc/splash_image/couture_splash2_bg_img.png
+    - asset/img/misc/login_image/couture_login_bg_img.png
+    - asset/img/misc/button_img/shirt_button_v1.png
+    - asset/img/misc/button_img/blouse_button_v1.png
+    - asset/img/misc/button_img/mtm_button_v1.png
+    - asset/img/misc/button_img/neat_button_v1.png
+    - asset/img/misc/button_img/pola_button_v1.png
+    - asset/img/misc/button_img/onepiece_button_v1.png
+    - asset/img/misc/button_img/pants_button_v1.png
+    - asset/img/misc/button_img/jean_button_v1.png
+    - asset/img/misc/button_img/cardigan_button_v1.png
+    - asset/img/misc/button_img/coat_button_v1.png
+    - asset/img/misc/button_img/paeding_button_v1.png
+    - asset/img/misc/button_img/skirt_button_v1.png
+    - asset/img/misc/logo_img/couture_logo_v1.png
+    - asset/img/misc/drawer_img/youtube_logo_v1.png
+    - asset/img/misc/drawer_img/naver_logo_v1.png
+    - asset/img/misc/drawer_img/instagram_logo_v1.png
+    - asset/img/misc/drawer_img/kakao_logo_v1.png
+    - asset/img/misc/button_img/plus_button1.png
+    - asset/img/misc/button_img/expand_button_bottom.png
+    - asset/img/misc/button_img/expand_button_top.png
+    - asset/img/misc/icon_img/announcelist_icon.png
+    - asset/img/misc/icon_img/inquiry_icon.png
+    - asset/img/misc/icon_img/orderlist_icon.png
+    - asset/img/misc/icon_img/wishlist_icon.png
+    - asset/img/misc/icon_img/chevron_right.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

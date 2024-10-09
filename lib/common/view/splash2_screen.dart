@@ -14,7 +14,8 @@ import '../../user/view/login_screen.dart'; // 로그인 화면으로 이동하�
 // 애플리케이션에서 사용될 색상을 정의한 파일을 임포트합니다.
 // 이 파일은 애플리케이션의 다양한 구성 요소에 사용될 색상의 값을 상수로 정의하여,
 // 디자인의 일관성을 유지하는 데 도움을 줍니다.
-import '../const/colors.dart'; // 색상 정의 파일 임포트
+import '../const/colors.dart';
+import '../layout/common_body_parts_layout.dart'; // 색상 정의 파일 임포트
 
 class SplashScreen2 extends StatefulWidget {
   @override
@@ -22,11 +23,17 @@ class SplashScreen2 extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen2> {
+
   @override
   void initState() {
     super.initState();
     // 위젯이 생성될 때 _checkAutoLogin 메서드를 호출하여 자동 로그인 여부를 확인.
     _checkAutoLogin();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   // 자동 로그인을 확인하는 비동기 메서드.
@@ -54,17 +61,18 @@ class _SplashScreenState extends State<SplashScreen2> {
   Widget build(BuildContext context) {
     // 스플래시 화면 UI 구성
     return Scaffold(
-      backgroundColor: LOGO_COLOR, // 배경색상으로 LOGO_COLOR 사용
-      body: Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 60.0), // 상하 여백만 추가
-          child: Image.asset(
-            // 'asset/img/misc/splash_img/splash2_image.png',
-            // 'asset/img/misc/splash_img/ssamjang.png',
-            'asset/img/misc/splash_img/douna.png', // 이미지 파일 경로를 설정하세요.
-            fit: BoxFit.contain, // 이미지 비율을 유지하면서 화면에 맞게 조절
+      body: Stack(
+        // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
+        children: <Widget>[
+          Positioned.fill(
+            child: Image.asset(
+              // 'asset/img/misc/splash_img/splash2_image.png',
+              // 'asset/img/misc/splash_img/ssamjang.png',
+              'asset/img/misc/splash_image/couture_splash2_bg_img.png', // 이미지 파일 경로를 설정.
+              fit: BoxFit.cover, // 이미지 비율을 유지하면서 화면에 맞게 조절
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

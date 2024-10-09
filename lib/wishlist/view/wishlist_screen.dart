@@ -56,6 +56,7 @@ import '../../../common/provider/common_all_providers.dart';
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../product/model/product_model.dart';
 import '../layout/wishlist_body_parts_layout.dart';
+import '../provider/wishlist_all_providers.dart';
 import '../provider/wishlist_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
@@ -113,6 +114,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
   //
   // // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -138,7 +141,6 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 찜 목록 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-      ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
     });
     // // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 wishlistScreenPointScrollController에 저장하는 코드
     // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -151,7 +153,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(wishlistScrollPositionProvider.notifier).state = 0;
-        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록 데이터 로드 초기화
+        ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
       }
     });
 
@@ -159,7 +162,11 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -169,7 +176,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -190,35 +197,38 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     // wishlistScreenPointScrollController.removeListener(_updateScrollPosition);
 
     wishlistScreenPointScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
 
-    // List<ProductContent> wishlistItems = ref.watch(wishlistProvider);
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double wishlistAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
+    final double wishlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double wishlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double wishlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double wishlistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double wishlistPaddingY = screenSize.height * (8 / referenceHeight);
 
     return Scaffold(
       body: Stack(
@@ -231,39 +241,48 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                 floating: false,
                 pinned: true,
                 expandedHeight: 0.0,
-                title: buildCommonAppBar(
-                  context: context,
-                  ref: ref,
-                  title: '찜 목록',
-                  leadingType: LeadingType.none,
-                  buttonCase: 1,
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    context: context,
+                    ref: ref,
+                    title: '찜 목록',
+                    leadingType: LeadingType.none,
+                    buttonCase: 1,
+                    appBarTitleWidth: wishlistAppBarTitleWidth,
+                    appBarTitleHeight: wishlistAppBarTitleHeight,
+                    appBarTitleX: wishlistAppBarTitleX,
+                    appBarTitleY: wishlistAppBarTitleY,
+                  ),
                 ),
                 leading: null,
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-              padding: EdgeInsets.only(top: 5),
-              // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return Padding(
-                      // 각 항목의 좌우 간격을 4.0으로 설정함.
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 8),
-                          WishlistItemsList(), // WishlistItemsList 클래스 사용
-                          SizedBox(height: 8),
-                        ],
-                      ),
-                    );
-                  },
-                  childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                padding: EdgeInsets.only(top: 0),
+                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return Padding(
+                        // 각 항목의 좌우 간격을 wishlistPaddingX으로 설정함.
+                        padding: EdgeInsets.symmetric(horizontal: wishlistPaddingX),
+                        child: Column(
+                          children: [
+                            WishlistItemsList(), // WishlistItemsList 클래스 사용
+                            SizedBox(height: wishlistPaddingY),
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                  ),
                 ),
-              ),
               ),
             ],
           ),
@@ -274,90 +293,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: wishlistScreenPointScrollController),
     );
   }
 }
-//     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
-//     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
-//     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
-//     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
-//     return Scaffold(
-//       body: Stack(
-//         children: [
-//           CustomScrollView(
-//             controller: wishlistScreenPointScrollController, // 스크롤 컨트롤러 연결
-//             slivers: <Widget>[
-//               // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
-//               SliverAppBar(
-//                 // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
-//                 automaticallyImplyLeading: false,
-//                 floating: false,
-//                 // 스크롤 시 SliverAppBar가 빠르게 나타남.
-//                 pinned: true,
-//                 // 스크롤 다운시 AppBar가 상단에 고정됨.
-//                 expandedHeight: 0.0,
-//                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-//                 // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-//                 title: buildCommonAppBar(
-//                   // 공통 AppBar 빌드
-//                   context: context,
-//                   // 현재 context 전달
-//                   ref: ref,
-//                   // 참조(ref) 전달
-//                   title: '찜 목록',
-//                   // AppBar의 제목을 '찜 목록'로 설정
-//                   leadingType: LeadingType.none,
-//                   // 버튼 없음.
-//                   buttonCase: 1, // 1번 케이스 (버튼 없음)
-//                 ),
-//                 leading: null,
-//                 // 좌측 상단의 메뉴 버튼 등을 제거함.
-//                 // iOS에서는 AppBar의 배경색을 사용
-//                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-//                 backgroundColor: BUTTON_COLOR,
-//               ),
-//               // 실제 컨텐츠를 나타내는 슬리버 리스트
-//               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-//               SliverPadding(
-//                 padding: EdgeInsets.only(top: 5),
-//                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-//                 sliver: SliverList(
-//                   delegate: SliverChildBuilderDelegate(
-//                     (BuildContext context, int index) {
-//                       return Padding(
-//                         // 각 항목의 좌우 간격을 4.0으로 설정함.
-//                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
-//                         child: Column(
-//                           children: [
-//                             SizedBox(height: 5), // 높이 20으로 간격 설정
-//                             Text('찜 목록 내용'),
-//                             SizedBox(height: 3000), // 높이 임의로 3000으로 간격 설정
-//                           ],
-//                         ),
-//                       );
-//                     },
-//                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           // buildTopButton 함수는 주어진 context와 wishlistScreenPointScrollController를 사용하여
-//           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-//           buildTopButton(context, wishlistScreenPointScrollController),
-//         ],
-//       ),
-//       bottomNavigationBar: buildCommonBottomNavigationBar(
-//           ref.watch(tabIndexProvider),
-//           ref,
-//           context,
-//           5), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-//     );
-//     // ------ 화면구성 끝
-//   }
-// // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
-// // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
-// }
-// }
-// // _WishlistScreenState 클래스 끝
+// _WishlistScreenState 클래스 끝

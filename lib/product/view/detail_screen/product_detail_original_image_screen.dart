@@ -4,6 +4,7 @@ import 'package:flutter/material.dart'; // Material 디자인 패키지 임포�
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 패키지 임포트
 
 import '../../../common/const/colors.dart'; // 색상 상수 파일 임포트
+import '../../../common/layout/common_body_parts_layout.dart';
 import '../../provider/product_state_provider.dart'; // 상태 프로바이더 파일 임포트
 
 class ProductDetailOriginalImageScreen extends ConsumerStatefulWidget { // ConsumerStatefulWidget을 상속받는 클래스 선언
@@ -22,6 +23,8 @@ class ProductDetailOriginalImageScreen extends ConsumerStatefulWidget { // Consu
 
 class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetailOriginalImageScreen> {
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   @override
   void initState() {
     super.initState(); // 부모 클래스의 initState 메서드를 호출하여 초기화
@@ -30,7 +33,21 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
       ref.read(detailImagePageProvider.notifier).state = widget.initialPage;
       // detailImagePageProvider의 상태를 widget의 초기 페이지로 설정
     });
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
+
+  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
+  @override
+  void dispose() {
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
+    super.dispose(); // 위젯의 기본 정리 작업 수행
+  }
+  // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   @override
   Widget build(BuildContext context) { // build 메소드 오버라이드

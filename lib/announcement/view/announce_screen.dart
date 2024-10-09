@@ -85,6 +85,8 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController announceScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -92,6 +94,16 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     super.initState();
     // ScrollController를 초기화
     announceScreenPointScrollController = ScrollController();
+
+    // 스크롤이 끝에 도달했을 때 추가 데이터를 로드하도록 구현
+    announceScreenPointScrollController.addListener(() {
+      if (announceScreenPointScrollController.position.pixels ==
+          announceScreenPointScrollController.position.maxScrollExtent) {
+        // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
+        ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -110,7 +122,10 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 공지사항 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-      ref.invalidate(announcementsProvider); // 전체 공지사항 목록 프로바이더 초기화
+      // 공지사항 데이터를 초기화하는 함수 호출
+      ref.read(announceItemsProvider.notifier).resetAnnounceItems();
+      // 공지사항 데이터를 다시 로드하는 함수 호출
+      ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -119,7 +134,10 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(announceScrollPositionProvider.notifier).state = 0;
-        ref.invalidate(announcementsProvider); // 전체 공지사항 목록 프로바이더 초기화
+        // 공지사항 데이터를 초기화하는 함수 호출
+        ref.read(announceItemsProvider.notifier).resetAnnounceItems();
+        // 공지사항 데이터를 다시 로드하는 함수 호출
+        ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
       }
     });
 
@@ -127,7 +145,11 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -137,7 +159,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -154,33 +176,51 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     authStateChangesSubscription?.cancel();
 
     announceScreenPointScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double announceAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double announceAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double announceAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double announcelistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double announcelistPaddingY = screenSize.height * (8 / referenceHeight);
+
+    // 공지사항이 비어있는 경우의 알림 부분 수치임
+    final double announcementlistEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율임
+    final double announcementlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율임
+    final double announcementlistEmptyTextX =
+        screenSize.width * (115 / referenceWidth); // 가로 비율임
+    final double announcementlistEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율임
+    final double announcementlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+
 
     return Scaffold(
       body: Stack(
@@ -193,38 +233,89 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                 floating: false,
                 pinned: true,
                 expandedHeight: 0.0,
-                title: buildCommonAppBar(
-                  context: context,
-                  ref: ref,
-                  title: '공지사항',
-                  leadingType: LeadingType.none,
-                  buttonCase: 1,
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    context: context,
+                    ref: ref,
+                    title: '공지사항',
+                    leadingType: LeadingType.none,
+                    buttonCase: 1,
+                    appBarTitleWidth: announceAppBarTitleWidth,
+                    appBarTitleHeight: announceAppBarTitleHeight,
+                    appBarTitleX: announceAppBarTitleX,
+                    appBarTitleY: announceAppBarTitleY,
+                  ),
                 ),
                 leading: null,
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // 상단에 5픽셀의 여백을 추가하는 SliverPadding 위젯.
               SliverPadding(
                 padding: EdgeInsets.only(top: 5),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 8),
-                            AnnounceBodyPartsLayout(), // AnnounceBodyPartsLayout 재사용하여 내용 구현
-                            SizedBox(height: 8),
-                          ],
+                sliver: Consumer(
+                  // Consumer 위젯은 Riverpod 상태 관리 값을 구독하는 역할을 함.
+                  builder: (context, ref, child) {
+                    // announceItemsProvider를 사용하여 공지사항 아이템 목록 상태를 구독함.
+                    final announceItems = ref.watch(announceItemsProvider);
+
+                    // 공지사항 목록이 비어 있으면, '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
+                    return announceItems.isEmpty
+                        ? SliverToBoxAdapter(
+                      // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
+                      child: Container(
+                        // 공지사항이 없을 때 텍스트의 너비를 설정함.
+                        width: announcementlistEmptyTextWidth,
+                        // 공지사항이 없을 때 텍스트의 높이를 설정함.
+                        height: announcementlistEmptyTextHeight,
+                        // 텍스트 위치를 화면의 상단에서부터 설정함.
+                        margin: EdgeInsets.only(
+                            left: announcementlistEmptyTextX,
+                            top: announcementlistEmptyTextY),
+                        // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
+                        child: Text('현재 공지사항이 없습니다.',
+                          style: TextStyle(
+                            // 텍스트의 폰트 크기를 설정함.
+                            fontSize: announcementlistEmptyTextFontSize,
+                            // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                            fontFamily: 'NanumGothic',
+                            // 폰트의 굵기를 'bold'로 설정함.
+                            fontWeight: FontWeight.bold,
+                            // 텍스트 색상을 검은색으로 설정함.
+                            color: Colors.black,
+                          ),
                         ),
-                      );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
+                      ),
+                    )
+                    // 공지사항에 아이템이 있을 경우, SliverList로 아이템 목록을 표시함.
+                        : SliverList(
+                      // SliverChildBuilderDelegate를 사용하여 공지사항 아이템 목록을 빌드함.
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          // 각 항목을 패딩으로 감싸, 좌우 간격을 announcelistPaddingX로 설정함.
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: announcelistPaddingX),
+                            child: Column(
+                              children: [
+                                // AnnounceBodyPartsLayout을 재사용하여 공지사항 내용을 구현함.
+                                AnnounceBodyPartsLayout(),
+                                SizedBox(height: announcelistPaddingY),
+                              ],
+                            ),
+                          );
+                        },
+                        // 하나의 큰 Column이 모든 공지사항 아이템을 포함하므로 childCount를 1로 설정함.
+                        childCount: 1,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -236,7 +327,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: announceScreenPointScrollController),
     );
   }
 }

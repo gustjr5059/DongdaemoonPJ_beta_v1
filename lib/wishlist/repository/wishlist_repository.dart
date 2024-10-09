@@ -16,16 +16,16 @@ class WishlistItemRepository {
   Future<String> uploadImage(String imageUrl, String storagePath) async {
     try {
       final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 Email 가져옴
-      print('Uploading image for user: $userEmail to path: $storagePath'); // 디버깅 메시지 추가
+      print('사용자 $userEmail 의 이미지를 경로 $storagePath 에 업로드합니다.'); // 디버깅 메시지 추가
       final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
       final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
       final ref = storage.ref().child('$userEmail/$storagePath'); // Firebase Storage에 저장할 경로 생성
       await ref.putData(bytes, SettableMetadata(contentType: 'image/png')); // 이미지를 Firebase Storage에 저장
       final downloadUrl = await ref.getDownloadURL(); // 저장된 이미지의 다운로드 URL을 가져옴
-      print('Image uploaded successfully. Download URL: $downloadUrl'); // 업로드 완료 메시지 출력
+      print('이미지 업로드 성공. 다운로드 URL: $downloadUrl'); // 업로드 완료 메시지 출력
       return downloadUrl; // 다운로드 URL을 반환
     } catch (e) {
-      print('Error uploading image: $e'); // 오류 메시지 출력
+      print('이미지 업로드 중 오류 발생: $e'); // 오류 메시지 출력
       rethrow; // 오류 발생 시 다시 던짐
     }
   }
@@ -34,7 +34,23 @@ class WishlistItemRepository {
   Future<void> addToWishlistItem(String userId, ProductContent product) async {
     try {
       final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일을 가져옴
-      print('Adding product to wishlist for user: $userEmail'); // 디버깅 메시지 추가
+      print('사용자 $userEmail 의 찜 목록에 상품을 추가합니다.'); // 디버깅 메시지 추가
+
+      // // Firestore에서 사용자의 찜 목록 항목을 가져옴
+      // final wishlistSnapshot = await firestore
+      //     .collection('couture_wishlist_item')
+      //     .doc(userEmail)
+      //     .collection('items')
+      //     .get();
+
+      // // 찜 목록이 20개를 초과하는지 확인
+      // if (wishlistSnapshot.docs.length >= 20) {
+      //   // 찜 목록이 한도를 초과한 경우 메시지를 표시
+      //   print('찜 목록 한도를 초과했습니다.');
+      //   throw(
+      //       '현재 찜 목록에 상품 수량이 한도를 초과했습니다.\n찜 목록에서 상품을 삭제한 후 재시도해주시길 바랍니다.');
+      // }
+
       // Firestore에 저장할 데이터 생성
       final data = {
         'product_id': product.docId, // 상품 ID
@@ -52,7 +68,7 @@ class WishlistItemRepository {
 
       // 썸네일 이미지 저장
       if (product.thumbnail != null) { // 썸네일 이미지가 있을 경우
-        print('Uploading thumbnail image for product: ${product.docId}'); // 디버깅 메시지 추가
+        print('상품 ${product.docId} 의 썸네일 이미지를 업로드합니다.'); // 디버깅 메시지 추가
         final thumbnailUrl = await uploadImage(product.thumbnail!,
             '$storagePath/thumbnails'); // 썸네일 이미지를 업로드하고 URL을 가져옴
         data['thumbnails'] = thumbnailUrl; // 데이터를 업데이트
@@ -60,11 +76,11 @@ class WishlistItemRepository {
 
       // Firestore에 데이터 저장
       final docId = '${DateTime.now().millisecondsSinceEpoch}';
-      print('Saving wishlist item with ID: $docId to Firestore'); // 디버깅 메시지 추가
+      print('FireStore에 찜 목록 항목을 저장합니다. 문서 ID: $docId'); // 디버깅 메시지 추가
       await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(docId).set(data);
-      print('Wishlist item added successfully for product: ${product.docId}'); // 성공 메시지 출력
+      print('찜 목록에 상품이 성공적으로 추가되었습니다: ${product.docId}'); // 성공 메시지 출력
     } catch (e) {
-      print('Error adding to wishlist: $e'); // 오류 메시지 출력
+      print('찜 목록에 추가하는 중 오류 발생: $e'); // 오류 메시지 출력
       rethrow; // 오류 발생 시 다시 던짐
     }
   }
@@ -73,29 +89,29 @@ class WishlistItemRepository {
   Future<void> removeFromWishlistItem(String userId, String productId) async {
     try {
       final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일 가져옴
-      print('Removing product from wishlist for user: $userEmail'); // 디버깅 메시지 추가
+      print('사용자 $userEmail 의 찜 목록에서 상품 $productId 를 제거합니다.'); // 디버깅 메시지 추가
       // Firestore에서 해당 상품 ID를 가진 문서를 검색
       final snapshot = await firestore.collection('wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
       for (var doc in snapshot.docs) {
-        print('Deleting wishlist item with ID: ${doc.id}'); // 삭제할 항목의 ID 출력
+        print('삭제할 찜 목록 항목 ID: ${doc.id}'); // 삭제할 항목의 ID 출력
         // 해당 문서를 Firestore에서 삭제
         await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(doc.id).delete();
         try {
           // Firebase Storage에서 해당 이미지를 삭제
           await storage.ref('wishlist_item_image/$userEmail/${doc.id}').delete();
-          print('Deleted image from storage with path: wishlist_item_image/$userEmail/${doc.id}'); // 삭제 완료 메시지 출력
+          print('Firebase Storage에서 이미지가 삭제되었습니다: wishlist_item_image/$userEmail/${doc.id}'); // 삭제 완료 메시지 출력
         } catch (e) {
           if (e is FirebaseException && e.code == 'object-not-found') {
-            print('Image not found in storage for path: wishlist_item_image/$userEmail/${doc.id}'); // 이미지가 없는 경우 메시지 출력
+            print('이미지를 찾을 수 없습니다: wishlist_item_image/$userEmail/${doc.id}'); // 이미지가 없는 경우 메시지 출력
           } else {
-            print('Error deleting image from storage: $e'); // 다른 오류 발생 시 메시지 출력
+            print('이미지 삭제 중 오류 발생: $e'); // 다른 오류 발생 시 메시지 출력
             rethrow; // 오류 발생 시 다시 던짐
           }
         }
       }
-      print('Product removed from wishlist successfully for product ID: $productId'); // 성공 메시지 출력
+      print('상품이 찜 목록에서 성공적으로 제거되었습니다: $productId'); // 성공 메시지 출력
     } catch (e) {
-      print('Error removing from wishlist: $e'); // 오류 메시지 출력
+      print('찜 목록에서 상품을 제거하는 중 오류 발생: $e'); // 오류 메시지 출력
       rethrow; // 오류 발생 시 다시 던짐
     }
   }

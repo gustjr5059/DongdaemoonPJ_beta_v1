@@ -241,4 +241,22 @@ class ProductContent {
       'productNumber': productNumber,
     };
   }
+
+  // fromMap 메서드 추가
+  factory ProductContent.fromMap(Map<String, dynamic> map) {
+    return ProductContent(
+      docId: map['docId'] as String,
+      category: map['category'] as String,
+      productNumber: map['productNumber'] as String,
+      thumbnail: map['thumbnail'] as String?,
+      briefIntroduction: map['briefIntroduction'] as String?,
+      originalPrice: map['originalPrice'] as double?,
+      discountPrice: map['discountPrice'] as double?,
+      discountPercent: map['discountPercent'] as double?,
+      selectedCount: map['selectedCount'] as int?,
+      selectedColorImage: map['selectedColorImage'] as String?,
+      selectedColorText: map['selectedColorText'] as String?,
+      selectedSize: map['selectedSize'] as String?,
+    );
+  }
 }

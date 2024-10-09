@@ -63,7 +63,6 @@ class CartMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _CartMainScreenState extends ConsumerState<CartMainScreen>
     with WidgetsBindingObserver {
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -86,6 +85,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController cartScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -93,6 +94,16 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     super.initState();
     // ScrollController를 초기화
     cartScreenPointScrollController = ScrollController();
+
+    // 스크롤이 끝에 도달했을 때 추가 데이터를 로드하도록 구현
+    cartScreenPointScrollController.addListener(() {
+      if (cartScreenPointScrollController.position.pixels ==
+          cartScreenPointScrollController.position.maxScrollExtent) {
+        // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
+        ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -111,6 +122,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 장바구니 버튼 인덱스인 1과 매핑
       // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 1;
+      // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
+      ref.read(cartItemsProvider.notifier).resetCartItems();
+      ref.read(cartItemsProvider.notifier).loadMoreCartItems();
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -128,8 +142,11 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
 
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -140,7 +157,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -159,33 +176,65 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
 
     cartScreenPointScrollController.dispose(); // ScrollController 해제
 
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double cartlistAppBarTitleWidth =
+        screenSize.width * (77 / referenceWidth);
+    final double cartlistAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double cartlistAppBarTitleX =
+        screenSize.width * (50 / referenceHeight);
+    final double cartlistAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
+
+    // 홈 버튼 수치 (Case 3)
+    final double cartlistHomeBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double cartlistHomeBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double cartlistHomeBtnX = screenSize.width * (8 / referenceWidth);
+    final double cartlistHomeBtnY = screenSize.height * (6 / referenceHeight);
+
+    // 찜 목록 버튼 수치 (Case 3)
+    final double cartlistWishlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double cartlistWishlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
+    final double cartlistWishlistBtnY =
+        screenSize.height * (6 / referenceHeight);
+
+    // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
+    final double cartlistEmptyTextWidth =
+        screenSize.width * (170 / referenceWidth); // 가로 비율
+    final double cartlistEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double cartlistEmptyTextX =
+        screenSize.width * (115 / referenceWidth); // 가로 비율
+    final double cartlistEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율
+    final double cartlistEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -207,29 +256,48 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: 0.0,
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                title: buildCommonAppBar(
-                  // 공통 AppBar 빌드
-                  context: context,
-                  // 현재 context 전달
-                  ref: ref,
-                  // 참조(ref) 전달
-                  title: '장바구니',
-                  // AppBar의 제목을 '장바구니'로 설정
-                  leadingType: LeadingType.none,
-                  // 버튼 없음.
-                  buttonCase: 3, // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    // 공통 AppBar 빌드
+                    context: context,
+                    // 현재 context 전달
+                    ref: ref,
+                    // 참조(ref) 전달
+                    title: '요청품목',
+                    // AppBar의 제목을 '장바구니'로 설정
+                    leadingType: LeadingType.none,
+                    // 버튼 없음.
+                    buttonCase: 3,
+                    // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
+                    appBarTitleWidth: cartlistAppBarTitleWidth,
+                    appBarTitleHeight: cartlistAppBarTitleHeight,
+                    appBarTitleX: cartlistAppBarTitleX,
+                    appBarTitleY: cartlistAppBarTitleY,
+                    homeBtnWidth: cartlistHomeBtnWidth,
+                    homeBtnHeight: cartlistHomeBtnHeight,
+                    homeBtnX: cartlistHomeBtnX,
+                    homeBtnY: cartlistHomeBtnY,
+                    wishlistBtnWidth: cartlistWishlistBtnWidth,
+                    wishlistBtnHeight: cartlistWishlistBtnHeight,
+                    wishlistBtnX: cartlistWishlistBtnX,
+                    wishlistBtnY: cartlistWishlistBtnY,
+                  ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                backgroundColor: BUTTON_COLOR,
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               // 상단에 여백을 주는 SliverPadding 위젯
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
@@ -238,26 +306,37 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
-                            child: Center(child: Text('장바구니가 비어 있습니다.')),
-                          )
-                        // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
-                        : SliverList(
-                            // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return Column(
-                                  // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                                  children: [
-                                    SizedBox(height: 5),
-                                    // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
-                                    CartItemsList(),
-                                  ],
-                                );
-                              },
-                              // 아이템 개수를 1로 설정
-                              childCount: 1,
+                            child: Container(
+                              width: cartlistEmptyTextWidth,
+                              height: cartlistEmptyTextHeight,
+                              margin: EdgeInsets.only(left: cartlistEmptyTextX, top: cartlistEmptyTextY),
+                              child: Text('장바구니가 비어 있습니다.',
+                                style: TextStyle(
+                                  fontSize: cartlistEmptyTextFontSize,
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
-                          );
+                          )
+                          // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                          : SliverList(
+                              // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                                  return Column(
+                                    // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                                    children: [
+                                      // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
+                                      CartItemsList(),
+                                    ],
+                                  );
+                                },
+                                // 아이템 개수를 1로 설정
+                                childCount: 1,
+                              ),
+                            );
                   },
                 ),
               ),
@@ -269,7 +348,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
       bottomNavigationBar:
-          buildCommonBottomNavigationBar(0, ref, context, 0, 3),
+      buildCommonBottomNavigationBar(0, ref, context, 0, 3, scrollController: cartScreenPointScrollController),
     );
   }
 }

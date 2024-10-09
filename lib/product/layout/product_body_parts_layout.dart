@@ -43,6 +43,7 @@ import '../../review/provider/review_all_provider.dart';
 import '../../review/provider/review_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
+import '../../wishlist/provider/wishlist_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
@@ -151,11 +152,24 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    // sortBtn 관련 수치 동적 적용
+    final double sortBtnX = screenSize.width * (8 / referenceWidth);
+    final double sortBtneY = screenSize.height * (4 / referenceHeight);
+
     // 현재 선택된 정렬 타입을 감시
     final selectedSortType = ref.watch(sortButtonProvider);
     // print("현재 정렬 상태: $selectedSortType");
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: sortBtnX, vertical: sortBtneY),
       // 좌우 및 상하 패딩 설정
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,11 +191,25 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
   // 버튼 세부 내용인 _buildExpandedSortButton 위젯
   Widget _buildExpandedSortButton(BuildContext context, String title,
       WidgetRef ref, String selectedSortType) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    // sortBtn 관련 수치 동적 적용
+    final double sortBtn1X = screenSize.width * (4 / referenceWidth);
+    final double sortBtn2X = screenSize.width * (8 / referenceWidth);
+    final double sortBtnTextFontSize = screenSize.height * (12 / referenceHeight);
+
     // 현재 버튼이 선택된 상태인지 여부를 결정
     final bool isSelected = selectedSortType == title;
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우 패딩 설정
+        padding: EdgeInsets.symmetric(horizontal: sortBtn1X), // 좌우 패딩 설정
         child: ElevatedButton(
           onPressed: () {
             ref.read(sortButtonProvider.notifier).state =
@@ -191,20 +219,26 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
             // print("정렬 버튼 클릭: $title");
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: BUTTON_COLOR,
-            // 버튼 배경 색상 설정
-            foregroundColor: isSelected ? GOLD_COLOR : INPUT_BORDER_COLOR,
-            // 선택된 버튼의 텍스트 색상 설정
+            backgroundColor: isSelected ? Color(0xFF6FAD96) : Color(0xFFCACACA),
+            // 선택된 버튼 배경 색상 설정
             minimumSize: Size(0, 40),
             // 최소 버튼 크기 설정
-            padding: EdgeInsets.symmetric(horizontal: 8.0), // 버튼 내 패딩 설정
+            padding: EdgeInsets.symmetric(horizontal: sortBtn2X), // 버튼 내 패딩 설정
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(67),
+            ),
           ),
           child: FittedBox(
             fit: BoxFit.scaleDown, // 텍스트 크기를 버튼 크기에 맞게 조절
             child: Text(
               title,
               textAlign: TextAlign.center, // 텍스트 가운데 정렬
-              style: TextStyle(fontSize: 14), // 텍스트 크기를 14로 설정
+              style: TextStyle(
+                fontSize: sortBtnTextFontSize,
+                color: Color(0xFFFFFFFF),
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.w800, // ExtraBold
+              ),
             ),
           ),
         ),
@@ -517,8 +551,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 발주 내역 화면에서 단순 화면 스크롤 초기화
   ref.read(orderListScrollPositionProvider.notifier).state =
   0.0;
-  // 발주 목록 내 데이터를 불러오는 orderListProvider 초기화
-  ref.invalidate(orderListProvider);
+  // 발주 목록 내 데이터를 불러오는 orderlistItemsProvider 초기화
+  ref.invalidate(orderlistItemsProvider);
   // 발주 내역 화면 관련 초기화 부분 끝
 
   // 발주 내역 상세 화면 관련 초기화 부분 시작
@@ -526,7 +560,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(orderListDetailScrollPositionProvider.notifier).state =
   0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
   // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-  ref.invalidate(orderListDetailProvider);
+  ref.invalidate(orderlistDetailItemProvider);
   // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
   ref.invalidate(buttonInfoProvider);
   // 발주 내역 상세 화면 관련 초기화 부분 끝
@@ -548,6 +582,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(wishlistScrollPositionProvider.notifier).state =
   0.0;
   ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+  ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록  데이터 로드 초기화
+  ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
   // 찜 목록 화면 관련 초기화 부분 끝
 
   // 마이페이지 화면 관련 초기화 부분 시작
@@ -561,8 +597,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(announceDetailScrollPositionProvider.notifier).state =
   0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.invalidate(announcementsProvider); // 전체 공지사항 목록 프로바이더 초기화
-  ref.invalidate(announcementDetailProvider); // 공지사항 상세 프로바이더 초기화
+  // 공지사항 화면 내 데이터를 불러오는 announceItemsProvider 초기화
+  ref.invalidate(announceItemsProvider);
+  // 공지사항 상세 화면 내 데이터를 불러오는 announceDetailItemProvider 초기화
+  ref.invalidate(announceDetailItemProvider);
   // 공지사항 화면 관련 초기화 부분 끝
 
   // 문의하기 화면 관련 초기화 부분 시작

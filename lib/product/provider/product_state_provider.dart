@@ -647,9 +647,9 @@ class ProductMainListNotifier extends BaseProductListNotifier {
     switch (category) {
       case '신상':
         return ['${baseCollection}1'];
-      case '최고':
+      case '스테디 셀러':
         return ['${baseCollection}2'];
-      case '할인':
+      case '특가 상품':
         return ['${baseCollection}3'];
       case '봄':
         return ['${baseCollection}4'];
@@ -765,9 +765,9 @@ class SectionMoreProductListNotifier extends BaseProductListNotifier {
     switch (category) {
       case '신상':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
-      case '최고':
+      case '스테디 셀러':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b2');
-      case '할인':
+      case '특가 상품':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b3');
       case '봄':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b4');

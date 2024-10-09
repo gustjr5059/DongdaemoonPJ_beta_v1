@@ -17,3 +17,6 @@ final midCategoryViewBoolExpandedProvider =
     StateProvider<bool>((ref) => false); // 기본값은 축소된 상태
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final currentTabProvider = StateProvider<int>((ref) => 0);
+
+// 데이터를 로딩할 때 사용되는 로딩 상태를 관리하는 공통 StateProvider
+final isLoadingProvider = StateProvider<bool>((ref) => false);

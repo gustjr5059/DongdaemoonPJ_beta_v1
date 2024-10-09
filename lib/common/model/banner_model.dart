@@ -275,3 +275,110 @@ class ProfileMainSmall1BannerImage extends CommonBannerImage {
 
 // ----- 마이페이지 메인 화면 작은 배너 관련 클래스 내용 끝
 
+// ----- 각 섹션 더보기 화면 작은 배너 관련 클래스 내용 시작
+
+// 'NewSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'NewSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class NewSubMainSmall1BannerImage extends CommonBannerImage {
+  NewSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'NewSubMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory NewSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'NewSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return NewSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// 'BestSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'BestSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class BestSubMainSmall1BannerImage extends CommonBannerImage {
+  BestSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'BestMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory BestSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'BestSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return BestSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// 'SaleSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'SaleSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class SaleSubMainSmall1BannerImage extends CommonBannerImage {
+  SaleSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'SaleMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory SaleSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'SaleSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return SaleSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// 'SpringSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'SpringSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class SpringSubMainSmall1BannerImage extends CommonBannerImage {
+  SpringSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'SpringMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory SpringSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'SpringSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return SpringSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// 'SummerSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'SummerSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class SummerSubMainSmall1BannerImage extends CommonBannerImage {
+  SummerSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'SummerMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory SummerSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'SummerSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return SummerSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// 'AutumnSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'AutumnSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class AutumnSubMainSmall1BannerImage extends CommonBannerImage {
+  AutumnSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'AutumnMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory AutumnSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'AutumnSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return AutumnSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+
+// 'WinterSubMainSmall1BannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+// 'WinterSubMainSmall1BannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
+class WinterSubMainSmall1BannerImage extends CommonBannerImage {
+  WinterSubMainSmall1BannerImage({required String imageUrl})
+      : super(imageUrl: imageUrl);
+
+  // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'WinterMainSmall1BannerImage' 인스턴스를 생성함.
+  // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
+  factory WinterSubMainSmall1BannerImage.fromJson(Map<String, dynamic> json) {
+    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'WinterSubMainSmall1BannerImage' 객체를 생성함.
+    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
+    return WinterSubMainSmall1BannerImage(imageUrl: json['imageUrl']);
+  }
+}
+// ----- 각 섹션 더보기 화면 작은 배너 관련 클래스 내용 끝

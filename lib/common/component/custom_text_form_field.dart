@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import '../const/colors.dart';
@@ -11,6 +12,10 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final FocusNode? focusNode;
+  final TextStyle? hintStyle;
+  final EdgeInsetsGeometry? hintTextPadding; // hintText의 위치 조정을 위한 padding 추가
+  final InputDecoration? decoration; // decoration 변수 추가
+  final TextStyle? textStyle; // 텍스트 스타일 추가
 
   const CustomTextFormField({
     this.controller,
@@ -21,6 +26,10 @@ class CustomTextFormField extends StatelessWidget {
     this.errorText,
     this.keyboardType,
     this.focusNode, // FocusNode 초기화
+    this.hintStyle,
+    this.hintTextPadding, // hintText 위치 조정을 위한 padding 초기화
+    this.decoration, // decoration 초기화
+    this.textStyle, // 텍스트 스타일 초기화
     Key? key,
   }) : super(key: key);
 
@@ -48,32 +57,25 @@ class CustomTextFormField extends StatelessWidget {
       // 키보드 타입 설정.
       onChanged: onChanged,
       // 값이 변경될 때 호출되는 콜백 함수.
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(20),
-        // 내부 패딩 설정.
+      style: textStyle, // 텍스트 스타일을 여기서 설정
+      decoration: (decoration ?? InputDecoration()).copyWith(
+        contentPadding: hintTextPadding ?? EdgeInsets.all(20),
         hintText: hintText,
-        // 힌트 텍스트 설정.
         errorText: errorText,
-        // 에러 텍스트 설정.
-        hintStyle: TextStyle(
-          color: BODY_TEXT_COLOR, // 힌트 텍스트 스타일 설정.
+        hintStyle: hintStyle ?? TextStyle(
+          color: BODY_TEXT_COLOR,
           fontSize: 14.0,
         ),
-        fillColor: INPUT_BG_COLOR,
-        // 입력 필드의 배경 색상
-        // false - 배경색 없음
-        // true - 배경색 있음
-        filled: true,
-        // 배경 색상 사용 여부 설정.
-        // 모든 Input 상태의 기본 스타일 세팅
+        fillColor: decoration?.fillColor ?? INPUT_BG_COLOR,
+        filled: decoration?.filled ?? true,
         border: baseBorder,
-        // 기본 테두리 스타일 설정.
         enabledBorder: baseBorder,
-        // 활성 상태일 때의 테두리 스타일 설정.
-        focusedBorder: baseBorder.copyWith(
-          borderSide: baseBorder.borderSide.copyWith(
-            color: BUTTON_COLOR, // 포커스 상태일 때의 테두리 색상을 BUTTON_COLOR로 설정
+        focusedBorder: decoration?.focusedBorder ?? OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color(0xFF4933CE), // 외부에서 제공된 색상으로 포커스된 테두리 색상 설정
+            width: 2.0,
           ),
+          borderRadius: BorderRadius.circular(5.0),
         ),
       ),
     );

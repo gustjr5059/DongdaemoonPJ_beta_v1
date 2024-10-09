@@ -94,6 +94,8 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController reviewCreateDetailScreenPointScrollController; // 스크롤 컨트롤러 선언
 
+  NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -138,7 +140,11 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
 
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-    _updateStatusBar();
+    updateStatusBar();
+
+    // 네트워크 상태 체크 시작
+    _networkChecker = NetworkChecker(context);
+    _networkChecker?.checkNetworkStatus();
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -148,7 +154,7 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      _updateStatusBar();
+      updateStatusBar();
     }
   }
 
@@ -165,33 +171,34 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
     authStateChangesSubscription?.cancel();
 
     reviewCreateDetailScreenPointScrollController.dispose(); // ScrollController 해제
+
+    // 네트워크 체크 해제
+    _networkChecker?.dispose();
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  void _updateStatusBar() {
-    Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-
-    if (Platform.isAndroid) {
-      // 안드로이드에서는 상태표시줄 색상을 직접 지정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: statusBarColor,
-        statusBarIconBrightness: Brightness.light,
-      ));
-    } else if (Platform.isIOS) {
-      // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-      ));
-    }
-  }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+
+    // AppBar 관련 수치 동적 적용
+    final double reviewDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double reviewDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double reviewDtAppBarTitleX = screenSize.height * (93 / referenceHeight);
+    final double reviewDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     return Scaffold(
       body: Stack(
@@ -210,9 +217,16 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
                   title: '리뷰 작성 상세',
                   leadingType: LeadingType.back,
                   buttonCase: 2,
+                  appBarTitleWidth: reviewDtAppBarTitleWidth,
+                  appBarTitleHeight: reviewDtAppBarTitleHeight,
+                  appBarTitleX: reviewDtAppBarTitleX,
+                  appBarTitleY: reviewDtAppBarTitleY,
                 ),
                 leading: null,
-                backgroundColor: BUTTON_COLOR,
+                // 좌측 상단의 메뉴 버튼 등을 제거함.
+                // iOS에서는 AppBar의 배경색을 사용
+                // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
+                // backgroundColor: BUTTON_COLOR,
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
@@ -250,13 +264,14 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
           buildTopButton(context, reviewCreateDetailScreenPointScrollController),
         ],
       ),
-      // 하단 네비게이션 바 설정
+      // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider),
           ref,
           context,
-          5, 1),
+          5, 1, scrollController: reviewCreateDetailScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
+    // ------ 화면구성 끝
   }
 }
 // _ReviewCreateDetailScreenState 클래스 끝
