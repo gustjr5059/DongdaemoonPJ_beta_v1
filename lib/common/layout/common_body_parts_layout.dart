@@ -104,7 +104,8 @@ class BannerImageClass extends StatelessWidget {
     // CachedNetworkImage 위젯을 사용하여 네트워크 이미지를 로딩하고 캐싱함.
     return CachedNetworkImage(
       imageUrl: imageUrl, // imageUrl 프로퍼티를 통해 이미지 URL을 지정함.
-      fit: BoxFit.contain, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
+      fit: BoxFit.cover, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
+      // (기존의 fit: BoxFit.contain을 사용하면 이미지 크기에 맞게하는거라 안 맞음 => 그래서, fit: BoxFit.cover로 변경)
       // 이미지 로딩 중 에러가 발생한 경우 errorWidget을 통해 에러 아이콘을 표시함.
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
