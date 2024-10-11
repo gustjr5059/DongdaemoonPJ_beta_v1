@@ -600,6 +600,9 @@ Widget buildCommonBottomNavigationBar(
       final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
       final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
 
+      // 컨텐츠 사이의 수치 적용
+      final double interval1X = screenSize.width * (10 / referenceWidth);
+
   return Container(
     color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
     child: SafeArea(
@@ -622,7 +625,7 @@ Widget buildCommonBottomNavigationBar(
                       foregroundColor:  Colors.white, // 텍스트 색상
                       backgroundColor: Color(0xFF6FAD96), // 배경 색상
                     ),
-                    child: Text('요청품목 담기',
+                    child: Text('장바구니 담기',
                       style: TextStyle(
                         fontFamily: 'NanumGothic',
                         fontSize: bottomBtnFontSize,
@@ -632,7 +635,7 @@ Widget buildCommonBottomNavigationBar(
                     ), // 버튼 텍스트 설정
                   ),
                 ),
-                SizedBox(width: 10), // 버튼들 사이에 10픽셀 너비의 여백 추가
+                SizedBox(width: interval1X), // 버튼들 사이에 10픽셀 너비의 여백 추가
                 Container(
                   width: bottomBtnC2Width,
                   height: bottomBtnC2Height,
@@ -740,13 +743,13 @@ Widget buildCommonBottomNavigationBar(
       // 비율을 기반으로 동적으로 크기와 위치 설정
 
       // 버튼 관련 수치 동적 적용
-      final double bottomBtnC2Width = screenSize.width * (170 / referenceWidth);
-      final double bottomBtnC2Height = screenSize.height * (50 / referenceHeight);
-      final double bottomBtnC1X = screenSize.width * (8 / referenceWidth);
+      final double bottomBtnC2Width = screenSize.width * (100 / referenceWidth);
+      final double bottomBtnC2Height = screenSize.height * (40 / referenceHeight);
+      final double bottomBtnC1X = screenSize.width * (2 / referenceWidth);
       final double bottomBtnC2X = screenSize.width * (24 / referenceWidth);
       final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
       final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
-      final double bottomTextFontSize = screenSize.height * (16 / referenceHeight);
+      final double bottomTextFontSize = screenSize.height * (14 / referenceHeight);
       final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
 
   return Container(
@@ -767,7 +770,7 @@ Widget buildCommonBottomNavigationBar(
                 children: [
                   // 체크박스 크기를 1.3배로 확대
                   Transform.scale(
-                    scale: 1.3,
+                    scale: 1.2,
                     child: Checkbox(
                       // 체크박스의 선택 여부를 allChecked 상태로 설정
                       value: allChecked,
@@ -796,48 +799,47 @@ Widget buildCommonBottomNavigationBar(
                     ),
                  ],
               ),
-              // 합계 금액을 표시하는 텍스트
-              Text(
-                '합계: ${numberFormat.format(totalSelectedPrice)}원',
-                // 텍스트 스타일 설정
-                style: TextStyle(
-                  fontSize: bottomTextFontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
-                  color: Colors.black,
+              // 합계 텍스트를 중앙에 위치하도록 Expanded로 감쌈
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '합계: ${numberFormat.format(totalSelectedPrice)}원',
+                    style: TextStyle(
+                      fontSize: bottomTextFontSize,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NanumGothic',
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              // 발주하기 버튼
+
+              // 오른쪽에 "발주하기" 버튼을 배치
               Container(
                 width: bottomBtnC2Width,
                 height: bottomBtnC2Height,
                 child: ElevatedButton(
-                  // 버튼 클릭 시 호출되는 함수
                   onPressed: () {
-                    // 선택된 아이템이 있는지 확인
                     if (orderProducts.isEmpty) {
-                      // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
                       showCustomSnackBar(context, '업데이트 요청할 상품을 선택해주세요.');
                     } else {
-                      // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정한 내용
                       ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
-                      // OrderMainScreen으로 화면 전환
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => OrderMainScreen(
-                          totalProductPrice: totalProductPrice.toDouble(), // 총 상품금액을 실수형으로 변환하여 OrderMainScreen에 전달
-                          productDiscountPrice: totalDiscountPrice.toDouble(), // 총 할인금액을 실수형으로 변환하여 OrderMainScreen에 전달
-                          totalPaymentPrice: totalPaymentPrice.toDouble(), // 총 결제금액을 실수형으로 변환하여 OrderMainScreen에 전달
+                          totalProductPrice: totalProductPrice.toDouble(),
+                          productDiscountPrice: totalDiscountPrice.toDouble(),
+                          totalPaymentPrice: totalPaymentPrice.toDouble(),
                         )),
                       );
                     }
                   },
-                  // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
                   style: ElevatedButton.styleFrom(
-                    foregroundColor:  Colors.white, // 텍스트 색상
-                    backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color(0xFF6FAD96),
                   ),
-                  // 버튼에 표시될 텍스트
-                  child: Text('발주하기',
+                  child: Text(
+                    '발주하기',
                     style: TextStyle(
                       fontFamily: 'NanumGothic',
                       fontSize: bottomBtnFontSize,
@@ -853,7 +855,6 @@ Widget buildCommonBottomNavigationBar(
       ),
     ),
   );
-
     default:
       return Container(); // 기본으로 빈 컨테이너 반환
   }
@@ -1062,6 +1063,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
       screenSize.height * (10 / referenceHeight);
   final double interval2Y =
       screenSize.height * (130 / referenceHeight);
+  final double interval3Y =
+      screenSize.height * (20 / referenceHeight);
   final double interval1X =
       screenSize.width * (10 / referenceWidth);
   final double interval2X =
@@ -1152,6 +1155,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 
                 // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
                 if (isAdmin) ...[
+                  SizedBox(height: interval1Y),
                   _buildAdminListTile(
                     context,
                     Icons.star,
@@ -1173,7 +1177,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                         () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
                   ),
                 ],
-                SizedBox(height: interval2Y), // 간격을 위한 SizedBox
+                SizedBox(height: isAdmin ? interval3Y : interval2Y), // 관리자 여부에 따라 간격 조정
                 // 로그아웃 버튼 항목
                 GestureDetector(
                   onTap: () async {
@@ -1245,11 +1249,11 @@ Widget _buildAdminListTile(BuildContext context, IconData icon, String title, vo
 
   // 아이콘 텍스트 부분 수치
   final double iconTextFontSize =
-      screenSize.height * (17 / referenceHeight);
+      screenSize.height * (16 / referenceHeight);
 
   // 아이콘 사이의 간격 수치
   final double interval1X =
-      screenSize.width * (16 / referenceWidth);
+      screenSize.width * (14 / referenceWidth);
 
   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
   return ListTile(
@@ -1299,11 +1303,11 @@ Widget _buildListTile(
 
   // 아이콘 텍스트 부분 수치
   final double iconTextFontSize =
-      screenSize.height * (17 / referenceHeight);
+      screenSize.height * (16 / referenceHeight);
 
   // 아이콘 사이의 간격 수치
   final double interval1X =
-      screenSize.width * (16 / referenceWidth);
+      screenSize.width * (14 / referenceWidth);
 
   // ListTile 위젯 반환
   return ListTile(

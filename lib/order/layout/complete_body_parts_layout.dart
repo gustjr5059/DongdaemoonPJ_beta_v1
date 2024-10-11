@@ -38,26 +38,35 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    // 업데이트 요청 완료 부분 수치
-    final double updateRequireCompletePaddingX =
-        screenSize.width * (32 / referenceWidth);
-    final double updateRequireCompletePaddingY =
-        screenSize.width * (24 / referenceWidth);
-    final double updateRequireCompleteTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double updateRequireCompleteSubTitleFontSize =
-        screenSize.height * (16 / referenceHeight);
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
-    final double updateRequireCompleteInfo1Y =
-        screenSize.height * (20 / referenceHeight);
-    final double updateRequireCompleteInfo2Y =
-        screenSize.height * (40 / referenceHeight);
+    // 발주완료 화면 내 요소들의 수치 설정
+    final double orderlistCompletePadding =
+        screenSize.width * (32 / referenceWidth);
+    final double orderGuideInfoTitleFontSize =
+        screenSize.height * (18 / referenceHeight);
+    final double orderGuideInfoFontSize1 =
+        screenSize.height * (16 / referenceHeight);
+    final double orderGuideInfoFontSize2 =
+        screenSize.height * (14 / referenceHeight);
+    final double interval1Y =
+        screenSize.height * (16 / referenceHeight);
+    final double interval2Y =
+        screenSize.height * (5 / referenceHeight);
+    final double interval3Y =
+        screenSize.height * (30 / referenceHeight);
 
     // 버튼 관련 수치 동적 적용
-    final double combackHomeBtn1X = screenSize.width * (15 / referenceWidth);
-    final double combackHomeBtn1Y = screenSize.height * (50 / referenceHeight);
-    final double combackHomeBtn2Y = screenSize.height * (200 / referenceHeight);
-    final double combackHomeBtnFontSize = screenSize.height * (16 / referenceHeight);
+    final double combackHomeBtnHeight =
+        screenSize.height * (50 / referenceHeight);
+    final double combackHomeBtnWidth =
+        screenSize.width * (130 / referenceWidth);
+    final double combackHomeBtnPaddingY =
+        screenSize.height * (10 / referenceHeight);
+    final double combackHomeBtnPaddingX =
+        screenSize.width * (12 / referenceWidth);
+    final double combackHomeBtnFontSize =
+        screenSize.height * (16 / referenceHeight);
 
     // 숫자 포맷을 설정 (천 단위 콤마 추가)
     final numberFormat = NumberFormat('###,###');
@@ -68,47 +77,50 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
     return accountNumberFuture.when(
       data: (accountNumber) {
         return Padding(
-          padding: const EdgeInsets.all(16.0), // 전체 패딩 설정
+          padding: EdgeInsets.only(left: orderlistCompletePadding, right: orderlistCompletePadding, top: orderlistCompletePadding), // 전체 패딩 설정
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+            mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
             children: [
               Text(
-                '발주완료', // 발주 완료 제목
+                '정상적으로 발주가 완료되었습니다.', // 발주 완료 제목
                 style: TextStyle(
-                  fontSize: 24, // 폰트 크기 설정
-                  fontWeight: FontWeight.bold, // 폰트 굵기 설정
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoTitleFontSize,
+                  fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: Colors.black,
                 ),
               ),
-              SizedBox(height: 16), // 간격
-              Text(
-                '[발주가 완료되었습니다.]', // 설명 텍스트
-                style: TextStyle(
-                  fontSize: 16, // 폰트 크기 설정
-                ),
-              ),
-              SizedBox(height: 5), // 간격
+              SizedBox(height: interval1Y), // 간격
               Text(
                 '[안내 사항]', // 설명 텍스트
                 style: TextStyle(
-                  fontSize: 16, // 폰트 크기 설정
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoFontSize1,
+                  fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: Colors.black,
                 ),
               ),
-              SizedBox(height: 3), // 간격
+              SizedBox(height: interval2Y), // 간격
               Text(
                 '아래 계좌 정보로 입금해주시면 결제완료 처리 됩니다.',
                 style: TextStyle(
-                  fontSize: 14, // 폰트 크기 설정
-                  color: Colors.grey, // 텍스트 색상 설정
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoFontSize2,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
                 ),
               ),
               Text(
                 '발주자와 입금자 성함은 같아야 합니다.',
                 style: TextStyle(
-                  fontSize: 14, // 폰트 크기 설정
-                  color: Colors.grey, // 텍스트 색상 설정
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoFontSize2,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
                 ),
               ),
-              SizedBox(height: 16), // 간격
+              SizedBox(height: interval1Y), // 간격
               // 각 정보 행을 표시하기 위한 함수 호출
               _buildInfoRow(context, '입금계좌안내', accountNumber),
               _buildInfoRow(context, '발주 번호', orderNumber),
@@ -118,23 +130,34 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               _buildInfoRow(context, '우편번호', recipientInfo['postal_code']),
               _buildInfoRow(context, '주소', recipientInfo['address']),
               _buildInfoRow(context, '상세주소', recipientInfo['detail_address']),
-              SizedBox(height: 16), // 간격
+              SizedBox(height: interval3Y), // 간격
               // 홈으로 이동하는 버튼
               Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeMainScreen()), // 홈 화면으로 이동
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-                    backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상
-                    side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50), // 버튼 패딩
+                child: Container(
+                  width: combackHomeBtnWidth,
+                  height: combackHomeBtnHeight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeMainScreen()), // 홈 화면으로 이동
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
+                      side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                      padding: EdgeInsets.symmetric(vertical: combackHomeBtnPaddingY, horizontal: combackHomeBtnPaddingX), // 버튼 패딩
+                    ),
+                    child: Text('홈으로 이동',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NanumGothic',
+                        fontSize: combackHomeBtnFontSize,
+                        color: Colors.black,
+                      ),
+                    ), // 버튼 텍스트
                   ),
-                  child: Text('홈으로 이동', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼 텍스트
                 ),
               ),
             ],
@@ -158,18 +181,18 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
 
     // 발주자 정보 표 부분 수치
     final double updateRequireCompleteInfoTextFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (14 / referenceHeight);
     final double updateRequireCompleteInfoDataFontSize =
         screenSize.height * (14 / referenceHeight);
     final double updateRequireCompleteInfoTextPartWidth =
-        screenSize.width * (110 / referenceWidth);
+        screenSize.width * (97 / referenceWidth);
     final double updateRequireCompleteInfoTextPartHeight =
         screenSize.height * (40 / referenceHeight);
     // 행 간 간격 수치
     final double updateRequireCompleteInfo4Y =
-        screenSize.height * (3 / referenceHeight);
+        screenSize.height * (2 / referenceHeight);
     final double updateRequireCompleteInfo5Y =
-        screenSize.height * (6 / referenceHeight);
+        screenSize.height * (4 / referenceHeight);
     // 데이터 부분 패딩 수치
     final double updateRequireCompleteInfoDataPartX =
         screenSize.width * (8 / referenceWidth);

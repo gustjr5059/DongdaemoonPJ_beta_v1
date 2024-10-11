@@ -40,14 +40,14 @@ class UserInfoWidget extends ConsumerWidget {
 
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
-    // 업데이트 요청 화면 내 요소들의 수치 설정
-    final double updateRequirePadding =
+    // 발주하기 요청 화면 내 요소들의 수치 설정
+    final double orderRequirePadding =
         screenSize.width * (32 / referenceWidth);
     final double ordererInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
-    final double updateRequireNoticeFontSize1 =
+    final double orderRequireNoticeFontSize1 =
         screenSize.height * (10 / referenceHeight);
-    final double updateRequireNoticeFontSize2 =
+    final double orderRequireNoticeFontSize2 =
         screenSize.height * (9 / referenceHeight);
 
     final double ordererInfo1Y =
@@ -72,7 +72,7 @@ class UserInfoWidget extends ConsumerWidget {
         // TextEditingController phoneNumberController = TextEditingController(text: phoneNumber);
 
         return Padding(
-          padding: EdgeInsets.only(left: updateRequirePadding, right: updateRequirePadding, top: updateRequirePadding),
+          padding: EdgeInsets.only(left: orderRequirePadding, right: orderRequirePadding, top: orderRequirePadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
             mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
@@ -98,7 +98,7 @@ class UserInfoWidget extends ConsumerWidget {
                 '[정보 불일치로 인한 불이익시 당사가 책임지지 않습니다.]', // 안내문 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
-                  fontSize: updateRequireNoticeFontSize1,
+                  fontSize: orderRequireNoticeFontSize1,
                   color: Color(0xFF585858),
                   fontWeight: FontWeight.bold, // 텍스트 색상을 회색으로 설정
                 ),
@@ -109,7 +109,7 @@ class UserInfoWidget extends ConsumerWidget {
                 // 안내문 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
-                  fontSize: updateRequireNoticeFontSize2, // 텍스트 크기 12
+                  fontSize: orderRequireNoticeFontSize2, // 텍스트 크기 12
                   color: Color(0xFF585858),
                 ),
               ),
@@ -295,38 +295,60 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     print('Build Custom Memo Controller Text: ${_customMemoController.text}'); // 빌드 시 값 확인
     print('Is Custom Memo: $_isCustomMemo'); // isCustomMemo 값 확인
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+
+    // 발주하기 요청 화면 내 요소들의 수치 설정
+    final double orderRequirePadding =
+        screenSize.width * (32 / referenceWidth);
+    final double RecipientInfoTitleFontSize =
+        screenSize.height * (18 / referenceHeight);
+    final double ordererInfo1Y =
+        screenSize.height * (16 / referenceHeight);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus(); // 화면을 탭할 때 키보드 숨기기
       },
       child: Padding(
-        padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
+        padding: EdgeInsets.only(left: orderRequirePadding, right: orderRequirePadding, top: orderRequirePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
           mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
           children: [
             Text(
               '수령자 정보', // 수령자 정보 제목 텍스트
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontFamily: 'NanumGothic',
+                fontSize: RecipientInfoTitleFontSize,
+                fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                color: Colors.black,
+              ),
             ),
-            SizedBox(height: 16), // 제목과 폼 사이에 16 픽셀 높이의 여백 추가
+            SizedBox(height: ordererInfo1Y), // 제목과 폼 사이에 16 픽셀 높이의 여백 추가
             Column(
               children: [
-                _buildDropdownRow('배송지', '배송지를 선택해주세요'), // 드롭다운 행 생성
-                _buildEditableRow('이름', _nameController, _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."), // 수정 가능한 이름 행 생성
-                _buildEditableRow('연락처', _phoneNumberController, _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."), // 수정 가능한 연락처 행 생성
-                _buildFixedValueRowWithButton('우편번호', _postalCodeController, '우편번호 찾기'), // 우편번호 찾기 버튼이 포함된 행 생성
-                _buildFixedValueRow('주소', _addressController), // 고정된 값이 있는 주소 행 생성
-                _buildEditableRow(
+                _buildDropdownRow(context, '배송지', '배송지를 선택해주세요'), // 드롭다운 행 생성
+                _buildEditableRow(context, '이름', _nameController, _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."), // 수정 가능한 이름 행 생성
+                _buildEditableRow(context, '연락처', _phoneNumberController, _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."), // 수정 가능한 연락처 행 생성
+                _buildFixedValueRowWithButton(context, '우편번호', _postalCodeController, '우편번호 찾기'), // 우편번호 찾기 버튼이 포함된 행 생성
+                _buildFixedValueRow(context, '주소', _addressController), // 고정된 값이 있는 주소 행 생성
+                _buildEditableRow(context,
                   '상세주소',
                   _detailAddressController,
                   _detailAddressFocusNode,
                   "우편번호 및 주소를 선택 후 기입해주세요.",
                   isEnabled: _addressController.text != '없음' && _postalCodeController.text != '없음', // 우편번호와 주소가 없을 때는 비활성화
                 ),
-                _buildDropdownMemoRow(), // 드롭다운 메모 행 생성
+                _buildDropdownMemoRow(context), // 드롭다운 메모 행 생성
                 if (_isCustomMemo)
-                  _buildEditableRow(
+                  _buildEditableRow(context,
                     '배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.', isEnabled: _isCustomMemo,), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
               ],
             ),
@@ -337,27 +359,60 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   }
 
   // 드롭다운 행을 생성하는 함수
-  Widget _buildDropdownRow(String label, String hint) {
+  Widget _buildDropdownRow(BuildContext context, String label, String hint) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 수령자 정보 표 부분 수치
+    final double recipientInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoDataFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double recipientInfoTextPartHeight =
+        screenSize.height * (30 / referenceHeight);
+    // 행 간 간격 수치
+    final double recipientInfo4Y =
+        screenSize.height * (2 / referenceHeight);
+    final double recipientInfo5Y =
+        screenSize.height * (4 / referenceHeight);
+    // 데이터 부분 패딩 수치
+    final double recipientInfoDataPartX =
+        screenSize.width * (8 / referenceWidth);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80, // 셀의 너비 설정
-              color: Colors.grey.shade200, // 셀 배경색 설정
-              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+              width: recipientInfoTextPartWidth, // 셀의 너비 설정
+              height: recipientInfoTextPartHeight, // 셀의 높이 설정
+              color: Color(0xFFF2F2F2), // 셀 배경색 설정
+              alignment: Alignment.center, // 텍스트를 중앙 정렬
               child: Text(
                 label, // 셀에 표시될 텍스트
-                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                    fontSize: recipientInfoTextFontSize,
+                    color: Colors.black,
+                  ),
               ),
             ),
+            SizedBox(width: recipientInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: Colors.white, // 셀 배경색 설정
-                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                alignment: Alignment.center, // 텍스트 정렬
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: hint, // 드롭다운의 기본값 설정
@@ -365,7 +420,14 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     items: <String>[hint].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value), // 드롭다운에 표시될 텍스트
+                        child: Text(value,
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontWeight: FontWeight.normal,
+                            fontSize: recipientInfoDataFontSize,
+                            color: Colors.black,
+                          ),
+                        ), // 드롭다운에 표시될 텍스트
                       );
                     }).toList(),
                   ),
@@ -379,27 +441,59 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   }
 
   // 수정 가능한 행을 생성하는 함수
-  Widget _buildEditableRow(String label, TextEditingController controller, FocusNode focusNode, String hintText, {bool isEnabled = true}) {
+  Widget _buildEditableRow(BuildContext context, String label, TextEditingController controller, FocusNode focusNode, String hintText, {bool isEnabled = true}) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 수령자 정보 표 부분 수치
+    final double recipientInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoDataFontSize =
+        screenSize.height * (12 / referenceHeight);
+    final double recipientInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double recipientInfoTextPartHeight =
+        screenSize.height * (30 / referenceHeight);
+    // 행 간 간격 수치
+    final double recipientInfo4Y =
+        screenSize.height * (2 / referenceHeight);
+    final double recipientInfo5Y =
+        screenSize.height * (4 / referenceHeight);
+    // 데이터 부분 패딩 수치
+    final double recipientInfoDataPartX =
+        screenSize.width * (8 / referenceWidth);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80, // 셀의 너비 설정
-              color: Colors.grey.shade200, // 셀 배경색 설정
-              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+              width: recipientInfoTextPartWidth, // 셀의 너비 설정
+              height: recipientInfoTextPartHeight, // 셀의 높이 설정
+              color: Color(0xFFF2F2F2), // 셀 배경색 설정
+              alignment: Alignment.center, // 텍스트를 중앙 정렬
               child: Text(
                 label, // 셀에 표시될 텍스트
-                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  fontSize: recipientInfoTextFontSize,
+                  color: Colors.black,
+                ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white, // 셀 배경색 설정
-                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: GestureDetector(
                   onTap: isEnabled
                       ? () {
@@ -411,7 +505,11 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     child: TextField(
                       controller: controller, // 텍스트 필드 컨트롤러 설정
                       focusNode: focusNode, // 텍스트 필드 포커스 노드 설정
-                      style: TextStyle(fontSize: 14), // 텍스트 필드 스타일 설정
+                      style: TextStyle(
+                        fontFamily: 'NanumGothic',
+                        fontSize: recipientInfoDataFontSize,
+                        color: Colors.black,
+                      ), // 텍스트 필드 스타일 설정
                       decoration: InputDecoration(
                         hintText: hintText, // 힌트 텍스트 설정
                         hintStyle: TextStyle(color: Colors.grey.shade400), // 힌트 텍스트 색상 설정
@@ -439,28 +537,67 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   }
 
   // 고정된 값을 가진 행을 생성하는 함수
-  Widget _buildFixedValueRow(String label, TextEditingController controller) {
+  Widget _buildFixedValueRow(BuildContext context, String label, TextEditingController controller) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 수령자 정보 표 부분 수치
+    final double recipientInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoDataFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double recipientInfoTextPartHeight =
+        screenSize.height * (30 / referenceHeight);
+    // 행 간 간격 수치
+    final double recipientInfo4Y =
+        screenSize.height * (2 / referenceHeight);
+    final double recipientInfo5Y =
+        screenSize.height * (4 / referenceHeight);
+    // 데이터 부분 패딩 수치
+    final double recipientInfoDataPartX =
+        screenSize.width * (8 / referenceWidth);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80, // 셀의 너비 설정
-              color: Colors.grey.shade200, // 셀 배경색 설정
-              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+              width: recipientInfoTextPartWidth, // 셀의 너비 설정
+              height: recipientInfoTextPartHeight, // 셀의 높이 설정
+              color: Color(0xFFF2F2F2), // 셀 배경색 설정
+              alignment: Alignment.center, // 텍스트를 중앙 정렬
               child: Text(
                 label, // 셀에 표시될 텍스트
-                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  fontSize: recipientInfoTextFontSize,
+                  color: Colors.black,
+                ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white, // 셀 배경색 설정
-                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-                child: Text(controller.text), // 고정된 값을 텍스트로 표시
+                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                alignment: Alignment.centerLeft, // 텍스트 정렬
+                child: Text(controller.text,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                    fontSize: recipientInfoDataFontSize,
+                    color: Colors.black,
+                  ),
+                ), // 고정된 값을 텍스트로 표시
               ),
             ),
           ],
@@ -470,39 +607,104 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   }
 
   // 버튼이 포함된 고정된 값을 가진 행을 생성하는 함수
-  Widget _buildFixedValueRowWithButton(String label, TextEditingController controller, String buttonText) {
+  Widget _buildFixedValueRowWithButton(BuildContext context, String label, TextEditingController controller, String buttonText) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 수령자 정보 표 부분 수치
+    final double recipientInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoDataFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double recipientInfoTextPartHeight =
+        screenSize.height * (60 / referenceHeight);
+    // 행 간 간격 수치
+    final double recipientInfo4Y =
+        screenSize.height * (2 / referenceHeight);
+    final double recipientInfo5Y =
+        screenSize.height * (4 / referenceHeight);
+    // 데이터 부분 패딩 수치
+    final double recipientInfoDataPartX =
+        screenSize.width * (8 / referenceWidth);
+    // 우편번호 찾기 버튼 수치
+    final double postcodeSearchBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double postcodeSearchBtnWidth =
+        screenSize.width * (90 / referenceWidth);
+    final double intervalX =
+        screenSize.width * (8 / referenceWidth);
+    final double postcodeSearchBtnPaddingY =
+        screenSize.height * (4 / referenceHeight);
+    final double postcodeSearchBtnPaddingX =
+        screenSize.width * (4 / referenceWidth);
+    final double postcodeSearchBtnFontSize =
+        screenSize.height * (12 / referenceHeight);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80, // 셀의 너비 설정
-              color: Colors.grey.shade200, // 셀 배경색 설정
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0), // 셀 내부 여백 설정
-              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+              width: recipientInfoTextPartWidth, // 셀의 너비 설정
+              height: recipientInfoTextPartHeight, // 셀의 높이 설정
+              color: Color(0xFFF2F2F2), // 셀 배경색 설정
+              alignment: Alignment.center, // 텍스트를 중앙 정렬
               child: Text(
                 label, // 셀에 표시될 텍스트
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  fontSize: recipientInfoTextFontSize,
+                  color: Colors.black,
+                ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white, // 셀 배경색 설정
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0), // 셀 내부 여백 설정
+                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Row(
                   children: [
-                    Expanded(child: Text(controller.text)), // 고정된 값을 텍스트로 표시
-                    ElevatedButton(
-                      onPressed: _openPostcodeSearch, // 우편번호 찾기 버튼을 눌렀을 때 실행되는 함수
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상
-                        backgroundColor: BACKGROUND_COLOR, // 버튼 배경색
-                        side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16), // 버튼 패딩 (상하 12, 좌우 16)
+                    Expanded(child: Text(controller.text,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NanumGothic',
+                        fontSize: recipientInfoDataFontSize,
+                        color: Colors.black,
+                        ),
                       ),
-                      child: Text(buttonText, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)), // 버튼 텍스트
+                    ), // 고정된 값을 텍스트로 표시
+                    Container(
+                      width: postcodeSearchBtnWidth,
+                      height: postcodeSearchBtnHeight,
+                      margin: EdgeInsets.only(right: intervalX), // 오른쪽 여백 설정
+                      child: ElevatedButton(
+                        onPressed: _openPostcodeSearch, // 우편번호 찾기 버튼을 눌렀을 때 실행되는 함수
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
+                          side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                          padding: EdgeInsets.symmetric(vertical: postcodeSearchBtnPaddingY, horizontal: postcodeSearchBtnPaddingX), // 버튼 패딩
+                        ),
+                        child: Text(buttonText,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'NanumGothic',
+                            fontSize: postcodeSearchBtnFontSize,
+                            color: Colors.black,
+                          ),
+                        ), // 버튼 텍스트
+                      ),
                     ),
                   ],
                 ),
@@ -515,27 +717,59 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
   }
 
   // 드롭다운 메모 행을 생성하는 함수
-  Widget _buildDropdownMemoRow() {
+  Widget _buildDropdownMemoRow(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 수령자 정보 표 부분 수치
+    final double recipientInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoDataFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double recipientInfoTextPartHeight =
+        screenSize.height * (30 / referenceHeight);
+    // 행 간 간격 수치
+    final double recipientInfo4Y =
+        screenSize.height * (2 / referenceHeight);
+    final double recipientInfo5Y =
+        screenSize.height * (4 / referenceHeight);
+    // 데이터 부분 패딩 수치
+    final double recipientInfoDataPartX =
+        screenSize.width * (8 / referenceWidth);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0), // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y), // 행의 상하단에 2.0 픽셀의 여백 추가
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
           children: [
             Container(
-              width: 80, // 셀의 너비 설정
-              color: Colors.grey.shade200, // 셀 배경색 설정
-              padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-              alignment: Alignment.centerLeft, // 텍스트를 왼쪽 정렬
+              width: recipientInfoTextPartWidth, // 셀의 너비 설정
+              height: recipientInfoTextPartHeight, // 셀의 높이 설정
+              color: Color(0xFFF2F2F2), // 셀 배경색 설정
+              alignment: Alignment.center, // 텍스트를 중앙 정렬
               child: Text(
                 '배송메모', // 셀에 표시될 텍스트
-                style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  fontSize: recipientInfoTextFontSize,
+                  color: Colors.black,
+                ), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.white, // 셀 배경색 설정
-                padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
+                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                alignment: Alignment.center, // 텍스트 정렬
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: _selectedMemo, // 드롭다운의 기본값 설정
@@ -559,7 +793,14 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value), // 드롭다운에 표시될 텍스트
+                        child: Text(value,
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'NanumGothic',
+                            fontSize: recipientInfoDataFontSize,
+                            color: Colors.black,
+                          ),
+                        ), // 드롭다운에 표시될 텍스트
                       );
                     }).toList(),
                   ),
@@ -589,65 +830,123 @@ class TotalPaymentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+
+    // 발주하기 요청 화면 내 요소들의 수치 설정
+    final double orderRequirePadding =
+        screenSize.width * (32 / referenceWidth);
+    final double priceInfoTitleFontSize =
+        screenSize.height * (18 / referenceHeight);
+    final double priceInfo1Y =
+        screenSize.height * (16 / referenceHeight);
+
     final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
 
     return Padding(
-      padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
+      padding: EdgeInsets.only(left: orderRequirePadding, right: orderRequirePadding, top: orderRequirePadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+        mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
         children: [
           Text(
             '금액 정보', // 결제금액 제목 텍스트
             style: TextStyle(
-              fontSize: 18, // 텍스트 크기 18
+              fontFamily: 'NanumGothic',
+              fontSize: priceInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+              color: Colors.black,
             ),
           ),
-          SizedBox(height: 16), // 텍스트와 테이블 사이에 16 픽셀 높이의 여백 추가
-          Table(
-            border: TableBorder.symmetric(
-              inside: BorderSide(color: Colors.grey.shade300), // 테이블 내부 경계선 색상 설정
-            ),
-            columnWidths: {
-              0: FlexColumnWidth(1), // 첫 번째 열의 너비 비율 설정
-              1: FlexColumnWidth(2), // 두 번째 열의 너비 비율 설정
-            },
-            children: [
-              _buildTableRow('총 상품금액', '${numberFormat.format(totalProductPrice)}원'), // 총 상품금액 행 생성
-              _buildTableRow('상품 할인금액', '-${numberFormat.format(productDiscountPrice)}원'), // 상품 할인금액 행 생성
-              _buildTableRow('총 결제금액', '${numberFormat.format(totalPaymentPrice)}원', isTotal: true), // 총 결제금액 행 생성
-            ],
-          ),
+          SizedBox(height: priceInfo1Y), // 텍스트와 테이블 사이에 16 픽셀 높이의 여백 추가
+          _buildInfoRow(context, '총 상품금액', '${numberFormat.format(totalProductPrice)}원'),
+          _buildInfoRow(context, '상품 할인금액', '-${numberFormat.format(productDiscountPrice)}원'),
+          _buildInfoRow(context, '총 결제금액', '${numberFormat.format(totalPaymentPrice)}원', isTotal: true),
         ],
       ),
     );
   }
 
-  // 테이블의 행을 생성하는 함수
-  TableRow _buildTableRow(String label, String value, {bool isTotal = false}) {
-    return TableRow(
-      children: [
-        Container(
-          color: Colors.grey.shade200, // 셀 배경색 설정
-          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-          child: Text(
-            label, // 셀에 표시될 텍스트
-            style: TextStyle(fontWeight: FontWeight.bold), // 텍스트를 굵게 설정
-          ),
-        ),
-        Container(
-          color: Colors.white, // 셀 배경색 설정
-          padding: const EdgeInsets.all(8.0), // 셀 내부 여백 설정
-          alignment: Alignment.centerRight, // 텍스트를 오른쪽 정렬
-          child: Text(
-            value, // 셀에 표시될 값
-            style: TextStyle(
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, // 총 결제금액인 경우 텍스트 굵게 설정
-              color: isTotal ? Colors.red : Colors.black, // 총 결제금액인 경우 텍스트 색상을 빨간색으로 설정
+  // 각 정보 행을 구성하는 함수
+  Widget _buildInfoRow(BuildContext context, String label, String value, {bool isTotal = false}) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 발주자 정보 표 부분 수치
+    final double ordererInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double ordererInfoDataFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double ordererInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double ordererInfoTextPartHeight =
+        screenSize.height * (40 / referenceHeight);
+    // 행 간 간격 수치
+    final double ordererInfo4Y =
+        screenSize.height * (2 / referenceHeight);
+    final double ordererInfo5Y =
+        screenSize.height * (4 / referenceHeight);
+    // 데이터 부분 패딩 수치
+    final double ordererInfoDataPartX =
+        screenSize.width * (8 / referenceWidth);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: ordererInfo4Y),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+          children: [
+            Container(
+              height: ordererInfoTextPartHeight,
+              width: ordererInfoTextPartWidth,
+              // 라벨 셀의 너비 설정
+              color: Color(0xFFF2F2F2),
+              // color: Colors.green,
+              // 배경 색상 설정
+              alignment: Alignment.center,
+              // 텍스트 정렬
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  fontSize: ordererInfoTextFontSize,
+                  color: Colors.black,
+                ), // 텍스트 스타일 설정
+              ),
             ),
-          ),
+            SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
+            Expanded(
+              child: Container(
+                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                // color: Colors.red, // 배경 색상 설정
+                padding: EdgeInsets.only(left: ordererInfoDataPartX),
+                alignment: Alignment.centerRight, // 텍스트 정렬
+                child: Text(value,
+                  style: TextStyle(
+                    fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, // 총 결제금액인 경우 텍스트 굵게 설정
+                    color: isTotal ? Colors.red : Colors.black, // 총 결제금액인 경우 텍스트 색상을 빨간색으로 설정
+                    fontFamily: 'NanumGothic',
+                    fontSize: ordererInfoDataFontSize,
+                  ),
+                ), // 값 표시
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -658,24 +957,49 @@ class TotalPaymentWidget extends StatelessWidget {
 class PaymentMethodInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+
+    // 발주하기 요청 화면 내 요소들의 수치 설정
+    final double orderRequirePadding =
+        screenSize.width * (32 / referenceWidth);
+    final double paymentMethodInfoTitleFontSize =
+        screenSize.height * (18 / referenceHeight);
+    final double orderRequireNoticeFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double paymentMethodInfo1Y =
+        screenSize.height * (16 / referenceHeight);
+
     return Padding(
-      padding: const EdgeInsets.all(16.0), // 위젯의 모든 면에 16.0 픽셀의 여백 추가
+      padding: EdgeInsets.only(left: orderRequirePadding, right: orderRequirePadding, top: orderRequirePadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+        mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
         children: [
           Text(
             '결제 방법', // 결제 방법 제목 텍스트
             style: TextStyle(
-              fontSize: 18, // 텍스트 크기 18
+              fontFamily: 'NanumGothic',
+              fontSize: paymentMethodInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+              color: Colors.black,
             ),
           ),
-          SizedBox(height: 16), // 텍스트와 설명 텍스트 사이에 16 픽셀 높이의 여백 추가
+          SizedBox(height: paymentMethodInfo1Y), // 텍스트와 설명 텍스트 사이에 16 픽셀 높이의 여백 추가
           Text(
-            "결제 방법은 무조건 계좌이체이며, '결제하기' 버튼 클릭 후 안내하는 계좌로 이체 진행해주세요.", // 설명 텍스트
+            "결제 방법은 무조건 계좌이체입니다.\n'결제하기' 버튼 클릭 후 안내 계좌로 이체 진행해주세요.", // 설명 텍스트
             style: TextStyle(
-              fontSize: 14, // 텍스트 크기 14
-              color: Colors.grey, // 텍스트 색상을 회색으로 설정
+              fontFamily: 'NanumGothic',
+              fontSize: orderRequireNoticeFontSize,
+              fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+              color: Colors.grey,
             ),
           ),
         ],
@@ -719,6 +1043,34 @@ class CompleteOrderButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+
+    // 발주하기 요청 화면 내 요소들의 수치 설정
+    final double orderRequireNoticeFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double paymentInfo1Y =
+        screenSize.height * (16 / referenceHeight);
+
+    // 결제하기 버튼 수치
+    final double paymentBtnHeight =
+        screenSize.height * (50 / referenceHeight);
+    final double paymentBtnWidth =
+        screenSize.width * (130 / referenceWidth);
+    final double paymentBtnPaddingY =
+        screenSize.height * (10 / referenceHeight);
+    final double paymentBtnPaddingX =
+        screenSize.width * (12 / referenceWidth);
+    final double paymentBtnFontSize =
+        screenSize.height * (16 / referenceHeight);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center, // 자식 위젯들을 중앙 정렬
       children: [
@@ -726,70 +1078,86 @@ class CompleteOrderButton extends ConsumerWidget {
           child: Text(
             '결제하기 버튼은 15,000원 이상일 시 진행 가능합니다.', // 알림 텍스트
             style: TextStyle(
-              fontSize: 14, // 텍스트 크기
-              color: Colors.black, // 텍스트 색상 검정
+              fontFamily: 'NanumGothic',
+              fontSize: orderRequireNoticeFontSize,
+              color: Color(0xFF585858),
+              fontWeight: FontWeight.bold, // 텍스트 색상을 회색으로 설정
             ),
           ),
         ),
-        SizedBox(height: 8), // 알림 텍스트와 버튼 사이에 여백 추가
+        SizedBox(height: paymentInfo1Y), // 알림 텍스트와 버튼 사이에 여백 추가
         Center( // '결제하기' 버튼을 중앙에 위치시킴
-          child: ElevatedButton(
-            onPressed: totalPaymentPrice >= 15000 ? () async {
-              // extra_memo 설정 로직 수정
-              final extraMemo = isCustomMemo ? customMemoController.text : '';
+          child: Container(
+            width: paymentBtnWidth,
+            height: paymentBtnHeight,
+            child: ElevatedButton(
+              onPressed: totalPaymentPrice >= 15000 ? () async {
+                // extra_memo 설정 로직 수정
+                final extraMemo = isCustomMemo ? customMemoController.text : '';
 
-              print('Custom Memo Controller Text: ${customMemoController.text}'); // 디버깅 메시지 추가
-              print('Is Custom Memo: $isCustomMemo'); // 디버깅 메시지 추가
-              print('Extra Memo: $extraMemo'); // 디버깅 메시지 추가
+                print('Custom Memo Controller Text: ${customMemoController.text}'); // 디버깅 메시지 추가
+                print('Is Custom Memo: $isCustomMemo'); // 디버깅 메시지 추가
+                print('Extra Memo: $extraMemo'); // 디버깅 메시지 추가
 
-              final recipientInfo = {
-                'name': nameController.text, // 수령자 이름
-                'phone_number': phoneNumberController.text, // 수령자 휴대폰 번호
-                'postal_code': postalCodeController.text, // 우편번호
-                'address': addressController.text, // 주소
-                'detail_address': detailAddressController.text, // 상세 주소
-                'memo': selectedMemo, // 선택된 메모
-                'extra_memo': extraMemo, // 사용자 지정 메모
-              };
+                final recipientInfo = {
+                  'name': nameController.text, // 수령자 이름
+                  'phone_number': phoneNumberController.text, // 수령자 휴대폰 번호
+                  'postal_code': postalCodeController.text, // 우편번호
+                  'address': addressController.text, // 주소
+                  'detail_address': detailAddressController.text, // 상세 주소
+                  'memo': selectedMemo, // 선택된 메모
+                  'extra_memo': extraMemo, // 사용자 지정 메모
+                };
 
-              print('Recipient Info: $recipientInfo'); // 디버깅 메세지 추가
+                print('Recipient Info: $recipientInfo'); // 디버깅 메세지 추가
 
-              // 결제 금액 정보 맵 생성
-              final amountInfo = {
-                'total_product_price': totalProductPrice, // 총 상품금액
-                'product_discount_price': productDiscountPrice, // 상품 할인금액
-                'total_payment_price': totalPaymentPrice, // 총 결제금액
-              };
+                // 결제 금액 정보 맵 생성
+                final amountInfo = {
+                  'total_product_price': totalProductPrice, // 총 상품금액
+                  'product_discount_price': productDiscountPrice, // 상품 할인금액
+                  'total_payment_price': totalPaymentPrice, // 총 결제금액
+                };
 
-              // 발주 요청을 보내고 결과로 발주 ID를 받아옴
-              final orderId = await ref.read(placeOrderProvider(PlaceOrderParams(
-                ordererInfo: ordererInfo, // 발주자 정보
-                recipientInfo: recipientInfo, // 수령자 정보
-                amountInfo: amountInfo, // 결제 정보
-                productInfo: orderItems, // 상품 정보 리스트
-              )).future);
+                // 발주 요청을 보내고 결과로 발주 ID를 받아옴
+                final orderId = await ref.read(placeOrderProvider(PlaceOrderParams(
+                  ordererInfo: ordererInfo, // 발주자 정보
+                  recipientInfo: recipientInfo, // 수령자 정보
+                  amountInfo: amountInfo, // 결제 정보
+                  productInfo: orderItems, // 상품 정보 리스트
+                )).future);
 
-              // 발주 완료 메시지를 스낵바로 표시
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다. 이메일이 전송되었습니다.')));
+                // 발주 완료 메시지를 스낵바로 표시
+                // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다. 이메일이 전송되었습니다.')));
+                showCustomSnackBar(context, '발주가 완료되었습니다. 이메일이 전송되었습니다.');
 
-              // navigateToScreenAndRemoveUntil 함수를 사용하여 발주완료 화면으로 이동
-              navigateToScreenAndRemoveUntil(
-                context,
-                ref,
-                CompletePaymentScreen(orderId: orderId), // 발주 ID를 전달
-                4, // 탭 인덱스 업데이트 (하단 탭 바 내 4개 버튼 모두 비활성화)
-              );
-            } : () {
-              // 결제금액이 15,000원 미만일 경우 경고 메시지 표시
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('15,000원 이상 금액부터 결제가 가능합니다.')));
-            }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
-            style: ElevatedButton.styleFrom(
-              foregroundColor: BUTTON_COLOR, // 버튼 텍스트 색상 설정
-              backgroundColor: BACKGROUND_COLOR, // 버튼 배경 색상 설정
-              side: BorderSide(color: BUTTON_COLOR), // 버튼 테두리 색상 설정
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50), // 패딩을 늘려 버튼 크기를 조정
+                // navigateToScreenAndRemoveUntil 함수를 사용하여 발주완료 화면으로 이동
+                navigateToScreenAndRemoveUntil(
+                  context,
+                  ref,
+                  CompletePaymentScreen(orderId: orderId), // 발주 ID를 전달
+                  4, // 탭 인덱스 업데이트 (하단 탭 바 내 4개 버튼 모두 비활성화)
+                );
+              } : () {
+                // 결제금액이 15,000원 미만일 경우 경고 메시지 표시
+                // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('15,000원 이상 금액부터 결제가 가능합니다.')));
+                showCustomSnackBar(context, '15,000원 이상 금액부터 결제가 가능합니다.');
+
+               }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
+                  side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                  padding: EdgeInsets.symmetric(vertical: paymentBtnPaddingY, horizontal: paymentBtnPaddingX), // 버튼 패딩
+                ),
+              child: Text('결제하기',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                    fontSize: paymentBtnFontSize,
+                    color: Colors.black,
+                  ),
+               ), // 버튼 텍스트 설정
             ),
-            child: Text('결제하기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), // 버튼 텍스트 설정
           ),
         ),
       ],

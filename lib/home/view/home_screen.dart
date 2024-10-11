@@ -641,7 +641,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double homeWishlistBtnY = screenSize.height * (5 / referenceHeight);
 
     // 홈 화면 컨텐츠 사이의 간격 수치
     final double interval1Y = screenSize.height * (5 / referenceHeight);
@@ -1018,11 +1018,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    // AppBar 관련 수치 동적 적용
+    // 카드뷰 섹션 관련 수치 동적 적용
     final double plusBtnWidth = screenSize.width * (24 / referenceWidth);
     final double plusBtnHeight = screenSize.width * (24 / referenceWidth);
     final double plusBtnX = screenSize.width * (8 / referenceWidth);
     final double plusBtnY = screenSize.height * (1 / referenceHeight);
+    final double paddingX = screenSize.width * (8 / referenceWidth);
+    final double paddingY = screenSize.height * (8 / referenceHeight);
 
     // 공통 카드 뷰를 반환함. 이 카드는 Stack 위젯을 사용하여 contentBuilder로 생성된 콘텐츠와 오른쪽 상단에 위치한 '더보기' 버튼을 포함함.
     return CommonCardView(
@@ -1045,7 +1047,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       ),
       backgroundColor: backgroundColor,
       elevation: 0, // 카드의 높이(그림자 깊이)를 설정함.
-      padding: const EdgeInsets.all(8.0), // 카드 내부의 패딩을 설정함.
+      padding: EdgeInsets.symmetric(horizontal: paddingX, vertical: paddingY), // 카드 내부의 패딩을 설정함.
     );
   }
 // ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -

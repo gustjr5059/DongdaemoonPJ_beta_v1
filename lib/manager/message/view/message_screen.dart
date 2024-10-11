@@ -218,7 +218,7 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double messageAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double messageAppBarTitleWidth = screenSize.width * (140 / referenceWidth);
     final double messageAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
     final double messageAppBarTitleX = screenSize.width * (50 / referenceHeight);
     final double messageAppBarTitleY = screenSize.height * (11 / referenceHeight);

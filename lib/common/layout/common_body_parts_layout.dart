@@ -354,8 +354,8 @@ Future<bool> showSubmitAlertDialog(BuildContext context, {
       final double referenceHeight = 852.0;
 
       // 비율을 기반으로 동적으로 크기와 위치를 설정함
-      final double AlertDialogBtnFontSize1 = screenSize.height * (14 / referenceHeight);
-      final double AlertDialogBtnFontSize2 = screenSize.height * (11 / referenceHeight);
+      final double AlertDialogBtnFontSize1 = screenSize.height * (16 / referenceHeight);
+      final double AlertDialogBtnFontSize2 = screenSize.height * (14 / referenceHeight);
 
       // 플랫폼이 iOS인 경우 CupertinoAlertDialog 사용
       if (Platform.isIOS) {

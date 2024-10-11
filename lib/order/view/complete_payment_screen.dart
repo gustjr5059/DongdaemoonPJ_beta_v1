@@ -212,9 +212,9 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double completePaymentAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double completePaymentAppBarTitleWidth = screenSize.width * (120 / referenceWidth);
     final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double completePaymentAppBarTitleX = screenSize.width * (80 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (130 / referenceHeight);
     final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
@@ -289,7 +289,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
               ),
               // buildTopButton 함수는 주어진 context와 completePaymentScreenPointScrollController를 사용하여
               // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-              buildTopButton(context, completePaymentScreenPointScrollController),
+              // buildTopButton(context, completePaymentScreenPointScrollController),
             ],
           ),
           // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
