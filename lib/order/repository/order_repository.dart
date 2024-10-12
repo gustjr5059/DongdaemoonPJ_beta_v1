@@ -369,6 +369,7 @@ class OrderlistRepository {
             'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {}, // 'amount_info' 데이터.
             'productInfo': productInfo, // 'product_info' 리스트.
             'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음', // 'order_status_info' 데이터.
+            'snapshot': orderDoc,  // 마지막 문서 스냅샷.
           });
       }
       return allOrders;

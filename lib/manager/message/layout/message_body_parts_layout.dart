@@ -809,6 +809,8 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
     final double sendingBtnY = screenSize.height * (10 / referenceHeight);
     final double sendingBtnFontSize = screenSize.height * (16 / referenceHeight);
     final double paddingX = screenSize.width * (2 / referenceWidth);
+    final double messageRecipientDropdownBtnWidth = screenSize.width * (210 / referenceWidth);
+    final double messageRecipientDropdownBtnHeight = screenSize.height * (50 / referenceHeight);
 
     final double messageRecipientSelectDataTextSize = screenSize.height * (16 / referenceHeight);
     final double messageDataTextSize1 = screenSize.height * (14 / referenceHeight);
@@ -839,11 +841,11 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
 
     // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
     final double messageEmptyTextWidth =
-        screenSize.width * (200 / referenceWidth); // 가로 비율
+        screenSize.width * (250 / referenceWidth); // 가로 비율
     final double messageEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double messageEmptyTextX =
-        screenSize.width * (90 / referenceWidth); // 가로 비율
+        screenSize.width * (70 / referenceWidth); // 가로 비율
     final double messageEmptyTextY =
         screenSize.height * (200 / referenceHeight); // 세로 비율
     final double messageEmptyTextFontSize =
@@ -851,38 +853,45 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
 
     return Column(
       children: [
-        // 수신자 필터링을 위한 드롭다운 메뉴 버튼
-        receivers.when(
-          data: (receiversList) {
-            return DropdownButton<String>(
-              hint: Text('쪽지 수신자 선택',
-                style: TextStyle(
-                  fontFamily: 'NanumGothic',
-                  fontSize: messageRecipientSelectDataTextSize,
-                ),
-              ), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
-              value: selectedReceiver, // 현재 선택된 수신자 이메일 값 설정
-              onChanged: (value) {
-                // 선택한 수신자 이메일을 상태로 업데이트
-                ref.read(selectedReceiverProvider.notifier).state = value;
-              },
-              items: receiversList.map((receiver) {
-                return DropdownMenuItem<String>(
-                  value: receiver.email, // 수신자 이메일 값 설정
-                  child: Text(receiver.email,
+        // 드롭다운 버튼을 중앙에 위치시키기 위해 Center 위젯을 추가
+        Center(
+          child: Container(
+            width: messageRecipientDropdownBtnWidth,
+            height: messageRecipientDropdownBtnHeight,
+            // 수신자 필터링을 위한 드롭다운 메뉴 버튼
+            child: receivers.when(
+              data: (receiversList) {
+                return DropdownButton<String>(
+                  hint: Text('쪽지 수신자 선택',
                     style: TextStyle(
-                      fontWeight: FontWeight.normal,
                       fontFamily: 'NanumGothic',
                       fontSize: messageRecipientSelectDataTextSize,
-                      color: Colors.black,
                     ),
-                  ), // 드롭다운 메뉴에 표시될 이메일 텍스트 설정
+                  ), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
+                  value: selectedReceiver, // 현재 선택된 수신자 이메일 값 설정
+                  onChanged: (value) {
+                    // 선택한 수신자 이메일을 상태로 업데이트
+                    ref.read(selectedReceiverProvider.notifier).state = value;
+                  },
+                  items: receiversList.map((receiver) {
+                    return DropdownMenuItem<String>(
+                      value: receiver.email, // 수신자 이메일 값 설정
+                      child: Text(receiver.email,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'NanumGothic',
+                          fontSize: messageRecipientSelectDataTextSize,
+                          color: Colors.black,
+                        ),
+                      ), // 드롭다운 메뉴에 표시될 이메일 텍스트 설정
+                    );
+                  }).toList(),
                 );
-              }).toList(),
-            );
-          },
-          loading: () => CircularProgressIndicator(), // 수신자 목록을 불러오는 중일 때 로딩 인디케이터 표시
-          error: (error, stack) => Text('오류가 발생했습니다: $error'), // 수신자 목록을 불러오는 중 오류 발생 시 오류 메시지 표시
+              },
+              loading: () => CircularProgressIndicator(), // 수신자 목록을 불러오는 중일 때 로딩 인디케이터 표시
+              error: (error, stack) => Text('오류가 발생했습니다: $error'), // 수신자 목록을 불러오는 중 오류 발생 시 오류 메시지 표시
+            ),
+          ),
         ),
         SizedBox(height: interval1Y), // 드롭다운 메뉴와 메시지 목록 사이에 간격을 둠
         // 선택된 수신자의 쪽지 목록을 표시하는 부분
@@ -1134,7 +1143,7 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                                                 // 쪽지 삭제 버튼 클릭 시 확인 다이얼로그를 표시함
                                                 await showSubmitAlertDialog(
                                                   context,
-                                                  title: '쪽지 삭제', // 다이얼로그 제목 설정
+                                                  title: '[쪽지 삭제]', // 다이얼로그 제목 설정
                                                   content: '쪽지를 삭제하면 데이터베이스에서 영구적으로 삭제됩니다.\n해당 쪽지를 삭제하시겠습니까?', // 다이얼로그 내용 설정
                                                   actions: buildAlertActions(
                                                     context,
@@ -1155,13 +1164,9 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                                                           'recipient': message['recipient'],
                                                           }).future); // '삭제' 버튼 클릭 시 쪽지를 삭제하는 함수 호출함
                                                           Navigator.of(context).pop(); // 다이얼로그 닫기
-                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                            SnackBar(content: Text('쪽지가 삭제되었습니다.')), // 리뷰 삭제 완료 메시지 표시
-                                                          );
+                                                          showCustomSnackBar(context, '쪽지가 삭제되었습니다.');
                                                        } catch (e) {
-                                                         ScaffoldMessenger.of(context).showSnackBar(
-                                                          SnackBar(content: Text('쪽지 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 표시
-                                                         );
+                                                         showCustomSnackBar(context, '쪽지 삭제 중 오류가 발생했습니다: $e');
                                                        }
                                                      },
                                                   ),

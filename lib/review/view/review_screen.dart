@@ -225,6 +225,13 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
     final double reviewAppBarTitleX = screenSize.height * (93 / referenceHeight);
     final double reviewAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
+
+    // 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+
+
     return Scaffold(
       body: Stack(
         children: [
@@ -237,30 +244,40 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
                 pinned: true,
                 expandedHeight: 0.0,
                 // 공통 앱 바를 빌드하는 함수 호출
-                title: buildCommonAppBar(
-                  context: context,
-                  ref: ref,
-                  title: '리뷰 관리', // 앱 바의 제목 설정
-                  leadingType: LeadingType.none, // 앱 바의 leading 버튼 설정
-                  buttonCase: 1, // 앱 바 버튼의 경우 설정
-                  appBarTitleWidth: reviewAppBarTitleWidth,
-                  appBarTitleHeight: reviewAppBarTitleHeight,
-                  appBarTitleX: reviewAppBarTitleX,
-                  appBarTitleY: reviewAppBarTitleY,
+                // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    context: context,
+                    ref: ref,
+                    title: '리뷰 관리', // 앱 바의 제목 설정
+                    leadingType: LeadingType.none, // 앱 바의 leading 버튼 설정
+                    buttonCase: 1, // 앱 바 버튼의 경우 설정
+                    appBarTitleWidth: reviewAppBarTitleWidth,
+                    appBarTitleHeight: reviewAppBarTitleHeight,
+                    appBarTitleX: reviewAppBarTitleX,
+                    appBarTitleY: reviewAppBarTitleY,
+                  ),
                 ),
                 leading: null,
-                backgroundColor: BUTTON_COLOR, // 앱 바 배경색 설정
+                // backgroundColor: BUTTON_COLOR, // 앱 바 배경색 설정
               ),
+              // 실제 컨텐츠를 나타내는 슬리버 리스트
+              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
                 padding: EdgeInsets.only(top: 5),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
+                        padding: EdgeInsets.symmetric(horizontal: reviewPaddingX),
                         child: Column(
                           children: [
-                            SizedBox(height: 5),
+                            SizedBox(height: interval1Y),
                             // reviewUserOrdersProvider를 통해 주문 데이터를 가져옴
                             ref.watch(reviewUserOrdersProvider(widget.email)).when(
                               data: (orders) {
@@ -275,7 +292,7 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
                               loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 UI
                               error: (error, stack) => Center(child: Text('에러가 발생했습니다: $error')), // 오류 발생 시 표시할 UI
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: interval1Y),
                           ],
                         ),
                       );

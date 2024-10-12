@@ -241,19 +241,26 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                 slivers: <Widget>[
                   SliverAppBar(
                     automaticallyImplyLeading: false, // 기본 뒤로 가기 버튼 비활성화
-                    floating: false, // 스크롤 시 앱바 고정
+                    floating: true, // 스크롤 시 앱바 고정
                     pinned: true, // 앱바를 상단에 고정
                     expandedHeight: 0.0, // 확장되지 않도록 설정
-                    title: buildCommonAppBar(
-                      context: context,
-                      ref: ref,
-                      title: '발주 완료', // 앱바 제목 설정
-                      leadingType: LeadingType.none, // 리딩 아이콘 없음
-                      buttonCase: 1, // 버튼 타입 설정
-                      appBarTitleWidth: completePaymentAppBarTitleWidth,
-                      appBarTitleHeight: completePaymentAppBarTitleHeight,
-                      appBarTitleX: completePaymentAppBarTitleX,
-                      appBarTitleY: completePaymentAppBarTitleY,
+                    // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                    // 확장 높이 설정
+                    // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                      background: buildCommonAppBar(
+                        context: context,
+                        ref: ref,
+                        title: '발주 완료', // 앱바 제목 설정
+                        leadingType: LeadingType.none, // 리딩 아이콘 없음
+                        buttonCase: 1, // 버튼 타입 설정
+                        appBarTitleWidth: completePaymentAppBarTitleWidth,
+                        appBarTitleHeight: completePaymentAppBarTitleHeight,
+                        appBarTitleX: completePaymentAppBarTitleX,
+                        appBarTitleY: completePaymentAppBarTitleY,
+                      ),
                     ),
                     leading: null,
                     // backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정

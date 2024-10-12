@@ -200,6 +200,12 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
     final double reviewDtAppBarTitleX = screenSize.height * (93 / referenceHeight);
     final double reviewDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // body 부분 데이터 내용의 전체 패딩 수치
+    final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
+
+    // 컨텐츠 사이의 간격 계산
+    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+
     return Scaffold(
       body: Stack(
         children: [
@@ -208,19 +214,26 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
             slivers: <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                floating: false,
+                floating: true,
                 pinned: true,
                 expandedHeight: 0.0,
-                title: buildCommonAppBar(
-                  context: context,
-                  ref: ref,
-                  title: '리뷰 작성 상세',
-                  leadingType: LeadingType.back,
-                  buttonCase: 2,
-                  appBarTitleWidth: reviewDtAppBarTitleWidth,
-                  appBarTitleHeight: reviewDtAppBarTitleHeight,
-                  appBarTitleX: reviewDtAppBarTitleX,
-                  appBarTitleY: reviewDtAppBarTitleY,
+                // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                  background: buildCommonAppBar(
+                    context: context,
+                    ref: ref,
+                    title: '리뷰 작성 상세',
+                    leadingType: LeadingType.back,
+                    buttonCase: 2,
+                    appBarTitleWidth: reviewDtAppBarTitleWidth,
+                    appBarTitleHeight: reviewDtAppBarTitleHeight,
+                    appBarTitleX: reviewDtAppBarTitleX,
+                    appBarTitleY: reviewDtAppBarTitleY,
+                  ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
@@ -237,12 +250,12 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
+                        padding: EdgeInsets.symmetric(horizontal: reviewPaddingX),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 10),
+                            SizedBox(height: interval1Y),
                             // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
                             // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
                             // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
