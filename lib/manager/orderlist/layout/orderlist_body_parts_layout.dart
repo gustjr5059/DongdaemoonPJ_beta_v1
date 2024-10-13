@@ -390,7 +390,7 @@ class AdminOrderListContents extends ConsumerWidget {
                                               fontSize: orderlistDataFontSize1, // 텍스트 크기 설정
                                               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                               fontFamily: 'NanumGothic',
-                                              color: Colors.black,
+                                              color: Color(0xFF6FAD96),
                                             ),
                                           ),
                                           // 버튼에 '변경'이라는 텍스트를 굵은 글씨로 표시

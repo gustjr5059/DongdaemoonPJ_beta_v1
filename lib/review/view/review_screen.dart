@@ -231,6 +231,18 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
     // 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
+    // 리뷰관리 화면 내 발주내역 부분이 비어있는 경우의 알림 부분 수치
+    final double reviewEmptyTextWidth =
+        screenSize.width * (250 / referenceWidth); // 가로 비율
+    final double reviewEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double reviewEmptyTextX =
+        screenSize.width * (40 / referenceWidth); // 가로 비율
+    final double reviewEmptyTextY =
+        screenSize.height * (300 / referenceHeight); // 세로 비율
+    final double reviewEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
+
 
     return Scaffold(
       body: Stack(
@@ -282,9 +294,23 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
                             ref.watch(reviewUserOrdersProvider(widget.email)).when(
                               data: (orders) {
                                 if (orders.isEmpty) {
-                                  return Center(
-                                    child: Text('해당 주문 정보를 찾을 수 없습니다.'),
+                                  // 리뷰관리 화면에 발주정보가 비어있을 경우 "리뷰 작성할 발주내역이 없습니다." 메시지 표시
+                                  return Container(
+                                    width: reviewEmptyTextWidth,
+                                    height: reviewEmptyTextHeight,
+                                    margin: EdgeInsets.only(left: reviewEmptyTextX, top: reviewEmptyTextY),
+                                    child: Text('리뷰 작성할 발주내역이 없습니다.',
+                                      style: TextStyle(
+                                        fontSize: reviewEmptyTextFontSize,
+                                        fontFamily: 'NanumGothic',
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   );
+                                  // return Center(
+                                  //   child: Text('해당 주문 정보를 찾을 수 없습니다.'),
+                                  // );
                                 }
                                 // PrivateReviewScreenTabs 위젯을 반환
                                 return PrivateReviewScreenTabs(orders: orders);

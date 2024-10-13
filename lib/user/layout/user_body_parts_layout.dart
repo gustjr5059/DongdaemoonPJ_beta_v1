@@ -234,7 +234,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     final double uesrProfileOptionsCardViewWidth =
         screenSize.width * (360 / referenceWidth); // 가로 비율 계산
     final double uesrProfileOptionsCardViewHeight =
-        screenSize.height * (275 / referenceHeight); // 세로 비율 계산
+        screenSize.height * (400 / referenceHeight); // 세로 비율 계산
 
     return Container(
       width: uesrProfileOptionsCardViewWidth, // 카드뷰의 가로 크기 설정
@@ -248,15 +248,15 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
             children: [
               _buildOptionTile( // 옵션 타일 생성
                 context,
-                assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 발주내역 아이콘 설정
-                title: '리뷰 관리', // 제목 설정
+                assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 리뷰관리 아이콘 설정
+                title: '리뷰관리', // 제목 설정
                 onTap: () { // 클릭 시 실행될 함수
                   onReviewListClick(context, ref, email); // 리뷰 목록 클릭 함수 실행
                 },
               ),
               _buildOptionTile( // 옵션 타일 생성
                   context,
-                  assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 발주내역 아이콘 설정
+                  assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 쪽지함 아이콘 설정
                   title: '쪽지함', // 제목 설정
                   onTap: () { // 클릭 시 실행될 함수
                     onMessageListClick(context, ref); // 메시지 목록 클릭 함수 실행

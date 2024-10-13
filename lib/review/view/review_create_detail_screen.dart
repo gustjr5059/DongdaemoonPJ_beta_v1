@@ -197,8 +197,15 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
     // AppBar 관련 수치 동적 적용
     final double reviewDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double reviewDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double reviewDtAppBarTitleX = screenSize.height * (93 / referenceHeight);
+    final double reviewDtAppBarTitleX = screenSize.height * (65 / referenceHeight);
     final double reviewDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double reviewChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double reviewChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double reviewChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double reviewChevronIconY = screenSize.height * (8 / referenceHeight);
+
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
@@ -233,6 +240,10 @@ class _ReviewCreateDetailScreenState extends ConsumerState<ReviewCreateDetailScr
                     appBarTitleHeight: reviewDtAppBarTitleHeight,
                     appBarTitleX: reviewDtAppBarTitleX,
                     appBarTitleY: reviewDtAppBarTitleY,
+                    chevronIconWidth: reviewChevronIconWidth,
+                    chevronIconHeight: reviewChevronIconHeight,
+                    chevronIconX: reviewChevronIconX,
+                    chevronIconY: reviewChevronIconY,
                   ),
                 ),
                 leading: null,

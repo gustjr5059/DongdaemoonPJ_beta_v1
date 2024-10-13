@@ -284,6 +284,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     final double profilePaddingX = screenSize.width * (16 / referenceWidth);
     final double profilePadding1Y = screenSize.height * (5 / referenceHeight);
     final double profilePadding2Y = screenSize.height * (10 / referenceHeight);
+    final double profilePadding3Y = screenSize.height * (20 / referenceHeight);
 
     // 개인정보 처리방침 관련 안내 텍스트 수치
     final double guideTextFontSize =
@@ -383,12 +384,12 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                               elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
                               padding: EdgeInsets.zero, // 패딩을 없앰
                             ),
-                            SizedBox(height: profilePadding1Y), // 높이 profilePadding2Y로 간격 설정
+                            SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
                             // user 객체가 null이 아닌 경우 실행됨
                             if (user != null)
                             // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
                               UserProfileOptions(email: user.email!),
-                            SizedBox(height: profilePadding2Y), // 높이 profilePadding2Y로 간격 설정
+                            SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
                             RichText(
                               text: TextSpan(
                                 text: '* 개인정보 처리방침 관련 세부 내용은 공지사항에서 확인 가능합니다.',
@@ -401,6 +402,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                 ),
                               ),
                             ),
+                            SizedBox(height: profilePadding3Y), // 높이 profilePadding3Y로 간격 설정
                           ],
                         ),
                       );

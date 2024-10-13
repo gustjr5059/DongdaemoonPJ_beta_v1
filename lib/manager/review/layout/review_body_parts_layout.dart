@@ -196,7 +196,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
         reviews.when(
           data: (reviewList) {
             if (reviewList.isEmpty) {
-              // 쪽지 목록이 비어있을 경우 "쪽지가 없습니다" 메시지 표시
+              // 리뷰 목록이 비어있을 경우 "리뷰 목록 내 리뷰가 없습니다." 메시지 표시
               return Container(
                 width: reviewEmptyTextWidth,
                 height: reviewEmptyTextHeight,
@@ -504,7 +504,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'NanumGothic',
                                           fontSize: deleteBtnFontSize,
-                                          color: Colors.black,
+                                          color: Color(0xFF6FAD96),
                                         ),
                                       ),
                                     ),

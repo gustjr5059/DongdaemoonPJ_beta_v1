@@ -193,6 +193,8 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
         screenSize.height * (2 / referenceHeight);
     final double updateRequireCompleteInfo5Y =
         screenSize.height * (4 / referenceHeight);
+    final double updateRequireCompleteInfo1X =
+        screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double updateRequireCompleteInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
@@ -218,18 +220,20 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                 ),  // 텍스트 스타일 설정
               ),
             ),
-            SizedBox(width: updateRequireCompleteInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
+            SizedBox(width: updateRequireCompleteInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
                 color: Color(0xFFFBFBFB), // 배경 색상 설정
                 padding: EdgeInsets.only(left: updateRequireCompleteInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
-                child: Text(value,
+                child: Text(
+                  value,
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: updateRequireCompleteInfoDataFontSize,
                     color: Colors.black,
-                  ),), // 값 표시
+                  ),
+                ), // 값 표시
               ),
             ),
           ],
