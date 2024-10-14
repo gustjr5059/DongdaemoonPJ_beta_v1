@@ -639,21 +639,38 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
                 height: sendingBtnHeight,
                 child: ElevatedButton(
                   onPressed: () async {
-                    final customMessage = ref.read(adminCustomMessageProvider);
-                    await ref.read(sendMessageProvider({
-                      'sender': currentUser.email!,
-                      'recipient': selectedReceiver!,
-                      'order_number': selectedOrderNumber!,
-                      'contents': customMessage!,
-                      'selected_separator_key': selectedSeparatorKey,
-                    }).future);
+                    if (selectedReceiver != null && selectedOrderNumber != null) {
+                      final customMessage = ref.read(adminCustomMessageProvider);
+                      try {
+                        // 메시지 발송 로직
+                        await ref.read(sendMessageProvider({
+                          'sender': currentUser.email!,
+                          'recipient': selectedReceiver!,
+                          'order_number': selectedOrderNumber!,
+                          'contents': customMessage!,
+                          'selected_separator_key': selectedSeparatorKey,
+                        }).future);
 
-                    showCustomSnackBar(context, '쪽지 발송에 성공했습니다.');
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(
-                    //     content: Text('쪽지 발송에 성공했습니다.'),
-                    //   ),
-                    // );
+                        // 발송 완료 후 상태 초기화
+                        setState(() {
+                          // selectedReceiver = null;
+                          selectedOrderNumber = null;
+                          selectedProduct = null;
+                          messageContentText = '';
+                          ref.read(adminMessageContentProvider.notifier).state = null;
+                          ref.read(adminCustomMessageProvider.notifier).state = null;
+                        });
+
+                        // 발송 성공 메시지 표시
+                        showCustomSnackBar(context, '쪽지 발송에 성공했습니다.');
+                      } catch (e) {
+                        // 발송 실패 시 에러 메시지 표시
+                        showCustomSnackBar(context, '쪽지 발송에 실패했습니다: $e');
+                      }
+                    } else {
+                      // 필수 항목이 선택되지 않은 경우 경고 메시지 표시
+                      showCustomSnackBar(context, '수신자와 발주번호를 선택해주세요.');
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정

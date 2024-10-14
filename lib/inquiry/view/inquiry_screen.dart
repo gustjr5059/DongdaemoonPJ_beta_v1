@@ -197,9 +197,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
-    final double inquiryGuidFontSize1 =
+    final double inquiryGuideFontSize1 =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double inquiryGuidFontSize2 =
+    final double inquiryGuideFontSize2 =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 문의하기로 이동 버튼 수치
@@ -264,7 +264,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               padding: EdgeInsets.only(left: interval1X), // 패딩 설정
                               child: Text('* 문의는 아래 절차에 따라 진행해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
+                                  fontSize: inquiryGuideFontSize1, // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
                                   color: Colors.black, // 텍스트 색상 설정
@@ -276,7 +276,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               padding: EdgeInsets.only(left: interval2X), // 패딩 설정
                               child: Text('1. [문의하기로 이동] 버튼을 클릭해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
+                                  fontSize: inquiryGuideFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
                                   color: Colors.black, // 텍스트 색상 설정
@@ -287,7 +287,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               padding: EdgeInsets.only(left: interval2X), // 패딩 설정
                               child: Text('2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
+                                  fontSize: inquiryGuideFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
                                   color: Colors.black, // 텍스트 색상 설정
@@ -323,7 +323,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                     fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                     fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: Colors.white, // 텍스트 색상 설정
+                                    color: Theme.of(context).scaffoldBackgroundColor, // 텍스트 색상 설정
                                   ), // 텍스트 스타일
                                 ),
                               ),
