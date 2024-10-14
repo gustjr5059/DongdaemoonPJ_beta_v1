@@ -108,10 +108,22 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double postcodeSearchAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double postcodeSearchAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double postcodeSearchAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double postcodeSearchAppBarTitleX = screenSize.height * (15 / referenceHeight);
+    final double postcodeSearchAppBarTitleX = screenSize.width * (150 / referenceHeight);
     final double postcodeSearchAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double postcodeSearchChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
+    final double postcodeSearchChevronIconHeight =
+        screenSize.height * (24 / referenceHeight);
+    final double postcodeSearchChevronIconX =
+        screenSize.width * (12 / referenceWidth);
+    final double postcodeSearchChevronIconY =
+        screenSize.height * (8 / referenceHeight);
+
+    final double interval1X = screenSize.width * (4 / referenceWidth);
 
     return GestureDetector(
       onTap: () {
@@ -140,15 +152,19 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
                       appBarTitleHeight: postcodeSearchAppBarTitleHeight,
                       appBarTitleX: postcodeSearchAppBarTitleX,
                       appBarTitleY: postcodeSearchAppBarTitleY,
+                      chevronIconWidth: postcodeSearchChevronIconWidth,
+                      chevronIconHeight: postcodeSearchChevronIconHeight,
+                      chevronIconX: postcodeSearchChevronIconX,
+                      chevronIconY: postcodeSearchChevronIconY,
                     ),
                   ),
                   leading: null, // 기본 뒤로가기 버튼 비활성화
-                  backgroundColor: BUTTON_COLOR, // AppBar 배경색 설정
+                  // backgroundColor: BUTTON_COLOR, // AppBar 배경색 설정
                 ),
                 SliverFillRemaining(
                   hasScrollBody: false, // 스크롤 가능 여부 설정
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0), // 좌우 여백 설정
+                    padding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우 여백 설정
                     child: Column(
                       children: [
                         Expanded(

@@ -247,7 +247,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
             slivers: <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                floating: false,
+                floating: true,
                 pinned: true,
                 expandedHeight: 0.0,
                 // 확장 높이 설정

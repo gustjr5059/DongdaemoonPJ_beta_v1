@@ -111,8 +111,8 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                                    foregroundColor: Color(0xFF6FAD96), // 버튼의 글자 색상을 설정함
-                                    backgroundColor: Color(0xFF6FAD96), // 버튼의 배경 색상을 설정함
+                                    foregroundColor: Color(0xFFE17735), // 버튼의 글자 색상을 설정함
+                                    backgroundColor: Color(0xFFE17735), // 버튼의 배경 색상을 설정함
                                     padding: EdgeInsets.symmetric(vertical: refundBtnPaddingY, horizontal: refundBtnPaddingX), // 패딩 설정
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정

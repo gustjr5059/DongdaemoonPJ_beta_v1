@@ -691,9 +691,10 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                       child: ElevatedButton(
                         onPressed: _openPostcodeSearch, // 우편번호 찾기 버튼을 눌렀을 때 실행되는 함수
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                          foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
                           backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                          side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                          side: BorderSide(color: Color(0xFFE17735),
+                          ), // 버튼 테두리 색상 설정
                           padding: EdgeInsets.symmetric(vertical: postcodeSearchBtnPaddingY, horizontal: postcodeSearchBtnPaddingX), // 버튼 패딩
                         ),
                         child: Text(buttonText,
@@ -701,7 +702,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                             fontWeight: FontWeight.bold,
                             fontFamily: 'NanumGothic',
                             fontSize: postcodeSearchBtnFontSize,
-                            color: Colors.black,
+                            color: Color(0xFFE17735),
                           ),
                         ), // 버튼 텍스트
                       ),
@@ -1144,9 +1145,10 @@ class CompleteOrderButton extends ConsumerWidget {
 
                }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                  foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                  side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                  side: BorderSide(color: Color(0xFFE17735),
+                  ), // 버튼 테두리 색상 설정
                   padding: EdgeInsets.symmetric(vertical: paymentBtnPaddingY, horizontal: paymentBtnPaddingX), // 버튼 패딩
                 ),
               child: Text('결제하기',
@@ -1154,7 +1156,7 @@ class CompleteOrderButton extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'NanumGothic',
                     fontSize: paymentBtnFontSize,
-                    color: Colors.black,
+                    color: Color(0xFFE17735),
                   ),
                ), // 버튼 텍스트 설정
             ),
@@ -1404,8 +1406,8 @@ class OrderListItemWidget extends ConsumerWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                            foregroundColor: Color(0xFF6FAD96), // 버튼의 글자 색상을 설정함
-                            backgroundColor: Color(0xFF6FAD96), // 버튼의 배경 색상을 설정함
+                            foregroundColor: Color(0xFFE17735), // 버튼의 글자 색상을 설정함
+                            backgroundColor: Color(0xFFE17735), // 버튼의 배경 색상을 설정함
                             padding: EdgeInsets.symmetric(vertical: orderlistInfoDetailViewBtnPaddingY, horizontal: orderlistInfoDetailViewBtnPaddingX), // 패딩 설정
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -1460,9 +1462,10 @@ class OrderListItemWidget extends ConsumerWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom( // 두 번째 버튼의 스타일을 설정함
-                            foregroundColor: Color(0xFF6FAD96), // 두 번째 버튼의 글자 색상을 설정함
+                            foregroundColor: Color(0xFFE17735), // 두 번째 버튼의 글자 색상을 설정함
                             backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                            side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                            side: BorderSide(color: Color(0xFFE17735),
+                            ), // 버튼 테두리 색상 설정
                             padding: EdgeInsets.symmetric(vertical: deleteBtnPaddingY, horizontal: deleteBtnPaddingX), // 패딩 설정
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -1474,7 +1477,7 @@ class OrderListItemWidget extends ConsumerWidget {
                               fontSize: deleteBtnFontSize, // 텍스트 크기 설정
                               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                               fontFamily: 'NanumGothic', // 글꼴 설정
-                              color: Color(0xFF6FAD96), // 텍스트 색상 설정
+                              color: Color(0xFFE17735), // 텍스트 색상 설정
                             ),
                           ),
                         ),
@@ -2091,12 +2094,12 @@ class _OrderListDetailItemWidgetState
                                         : null, // 환불 버튼 활성화 여부에 따라 동작함
                                     style: ElevatedButton.styleFrom(
                                       foregroundColor: boolRefundBtn
-                                          ? Color(0xFF6FAD96)
+                                          ? Color(0xFFE17735)
                                           : Colors.grey,
                                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                                       side: BorderSide(
                                           color: boolRefundBtn
-                                              ? Color(0xFF6FAD96)
+                                              ? Color(0xFFE17735)
                                               : Colors.grey),
                                       padding: EdgeInsets.symmetric(
                                           vertical: interval4Y, horizontal: interval3X),
@@ -2106,7 +2109,7 @@ class _OrderListDetailItemWidgetState
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'NanumGothic',
                                           fontSize: orderlistDtInfoBottomBtnDataFontSize,
-                                        color: Color(0xFF6FAD96),
+                                        color: Color(0xFFE17735),
                                       ),
                                     ),
                                   ),
@@ -2133,12 +2136,12 @@ class _OrderListDetailItemWidgetState
                                         : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작함
                                     style: ElevatedButton.styleFrom(
                                       foregroundColor: boolRefundBtn
-                                        ? Color(0xFF6FAD96)
+                                        ? Color(0xFFE17735)
                                             : Colors.grey,
                                         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                                         side: BorderSide(
                                         color: boolRefundBtn
-                                        ? Color(0xFF6FAD96)
+                                        ? Color(0xFFE17735)
                                             : Colors.grey),
                                       padding: EdgeInsets.symmetric(
                                         vertical: interval4Y, horizontal: interval3X),
@@ -2148,7 +2151,7 @@ class _OrderListDetailItemWidgetState
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'NanumGothic',
                                         fontSize: orderlistDtInfoBottomBtnDataFontSize,
-                                        color: Color(0xFF6FAD96),
+                                        color: Color(0xFFE17735),
                                       ),
                                     ),
                                   ),
@@ -2159,12 +2162,12 @@ class _OrderListDetailItemWidgetState
                                     },
                                     style: ElevatedButton.styleFrom(
                                       foregroundColor: boolRefundBtn
-                                        ? Color(0xFF6FAD96)
+                                        ? Color(0xFFE17735)
                                             : Colors.grey,
                                         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                                         side: BorderSide(
                                         color: boolRefundBtn
-                                        ? Color(0xFF6FAD96)
+                                        ? Color(0xFFE17735)
                                             : Colors.grey),
                                       padding: EdgeInsets.symmetric(
                                         vertical: interval4Y, horizontal: interval3X),
@@ -2174,7 +2177,7 @@ class _OrderListDetailItemWidgetState
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'NanumGothic',
                                         fontSize: orderlistDtInfoBottomBtnDataFontSize,
-                                        color: Color(0xFF6FAD96),
+                                        color: Color(0xFFE17735),
                                       ),
                                     ),
                                   ),

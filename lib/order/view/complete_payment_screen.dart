@@ -148,7 +148,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
             child: Text(
               '확인',
               style: TextStyle(
-                color: Color(0xFF6FAD96),
+                color: Color(0xFFE17735),
                 fontWeight: FontWeight.bold,
                 fontFamily: 'NanumGothic',
               ),

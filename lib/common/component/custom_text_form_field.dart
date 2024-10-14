@@ -37,7 +37,7 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseBorder = OutlineInputBorder(
       borderSide: BorderSide(
-        color: INPUT_BORDER_COLOR, // 입력 필드의 기본 테두리 색상
+        color: Color(0xFF5C5C5C), // 입력 필드의 기본 테두리 색상
         width: 1.0,
       ),
     );
@@ -72,7 +72,7 @@ class CustomTextFormField extends StatelessWidget {
         enabledBorder: baseBorder,
         focusedBorder: decoration?.focusedBorder ?? OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFF4933CE), // 외부에서 제공된 색상으로 포커스된 테두리 색상 설정
+            color: Color(0xFFE17735), // 외부에서 제공된 색상으로 포커스된 테두리 색상 설정
             width: 2.0,
           ),
           borderRadius: BorderRadius.circular(5.0),

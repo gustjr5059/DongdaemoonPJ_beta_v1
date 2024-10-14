@@ -412,7 +412,7 @@ Widget buildCommonBottomNavigationBar(
       }
 
       return Container(
-        color: Color(0xFF6FAD96), // 전체 배경색을 지정
+        color: Color(0xFFE17735), // 전체 배경색을 지정
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
@@ -420,7 +420,7 @@ Widget buildCommonBottomNavigationBar(
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               // BottomNavigationBar 타입을 고정형으로 설정
-              backgroundColor: Color(0xFF6FAD96), // 배경색을 0xFF6FAD96으로 설정,
+              backgroundColor: Color(0xFFE17735), // 배경색을 0xFF6FAD96으로 설정,
               currentIndex: selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0,
               // 현재 선택된 인덱스를 설정, 범위가 벗어나면 0으로 설정
               onTap: (index) {
@@ -623,7 +623,7 @@ Widget buildCommonBottomNavigationBar(
                     onPressed: () => onCartButtonPressed(context, ref, product), // 요청품목 버튼 클릭 시 실행될 함수 지정
                     style: ElevatedButton.styleFrom(
                       foregroundColor:  Colors.white, // 텍스트 색상
-                      backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                      backgroundColor: Color(0xFFE17735), // 배경 색상
                     ),
                     child: Text('장바구니 담기',
                       style: TextStyle(
@@ -654,7 +654,7 @@ Widget buildCommonBottomNavigationBar(
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor:  Colors.white, // 텍스트 색상
-                      backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                      backgroundColor: Color(0xFFE17735), // 배경 색상
                     ),
                     child: Text('바로 발주',
                       style: TextStyle(
@@ -774,7 +774,7 @@ Widget buildCommonBottomNavigationBar(
                     child: Checkbox(
                       // 체크박스의 선택 여부를 allChecked 상태로 설정
                       value: allChecked,
-                      activeColor: Color(0xFF6FAD96),  // 체크박스 색상 변경
+                      activeColor: Color(0xFFE17735),  // 체크박스 색상 변경
                       // 체크박스 상태 변경 시 호출되는 함수
                       onChanged: (bool? value) {
                         // allCheckedProvider 상태 업데이트
@@ -836,7 +836,7 @@ Widget buildCommonBottomNavigationBar(
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Color(0xFF6FAD96),
+                    backgroundColor: Color(0xFFE17735),
                   ),
                   child: Text(
                     '발주하기',
@@ -940,8 +940,8 @@ TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
     fontFamily: 'NanumGothic',
     fontSize: 16, // Figma에서 확인한 텍스트 크기
     fontWeight: FontWeight.bold, // 폰트 굵기 설정
-    color: currentIndex == buttonIndex ? Color(0xFF6FAD96) : Color(0xFF737373),
-    // 현재 탭이 활성화된 경우 연한 초록색, 비활성화된 경우 회색 적용
+    color: currentIndex == buttonIndex ? Color(0xFFE17735) : Color(0xFF737373),
+    // 현재 탭이 활성화된 경우 주황색, 비활성화된 경우 회색 적용
   );
 }
 // ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 끝
@@ -1047,6 +1047,10 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
       screenSize.width * (33 / referenceWidth); // 왼쪽 여백 비율
   final double drawerLogoIconY =
       screenSize.height * (70 / referenceHeight); // 위쪽 여백 비율
+  final double flowImageLeft = screenSize.width * (0 / referenceWidth);
+  final double flowImageTop = screenSize.height * (260 / referenceHeight);
+  final double flowImageWidth = screenSize.width * (180 / referenceWidth);
+  final double flowImageHeight = screenSize.height * (20 / referenceHeight);
 
   // 이메일 부분 수치
   final double emailTextFontSize =
@@ -1092,7 +1096,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   //   color: Colors.grey, // 회색 배경 설정 (테스트용)
                   // ),
                   child: Image.asset(
-                    'asset/img/misc/logo_img/couture_logo_v1.png',
+                    'asset/img/misc/logo_img/wearcano_logo_v1.png',
                     // fit: BoxFit.contain, // 이미지의 fit 속성 설정
                   ),
                 ),
@@ -1109,6 +1113,21 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   ),
                 ),
               ],
+            ),
+          ),
+          // 물결 이미지 (Positioned 위젯 사용)
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: flowImageLeft, top: flowImageTop,
+              ),
+              child: Image.asset(
+                'asset/img/misc/drawer_img/flow_image.png',
+                width: flowImageWidth,
+                height: flowImageHeight,
+                fit: BoxFit.cover, // 이미지 크기 조정
+              ),
             ),
           ),
           // 콘텐츠 영역 관리

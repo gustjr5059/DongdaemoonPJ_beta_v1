@@ -194,7 +194,7 @@ class CartItemsList extends ConsumerWidget {
                         child: Checkbox(
                           // 체크박스의 체크 여부를 cartItem의 bool_checked 값으로 설정함
                           value: cartItem['bool_checked'] ?? false,
-                          activeColor: Color(0xFF6FAD96),
+                          activeColor: Color(0xFFE17735),
                           // 체크박스 상태 변경 시 cartItemsProvider의 상태를 업데이트함
                           onChanged: (bool? value) {
                             ref.read(cartItemsProvider.notifier)

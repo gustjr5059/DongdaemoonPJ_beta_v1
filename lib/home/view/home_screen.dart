@@ -626,7 +626,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double homeAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double homeAppBarTitleWidth = screenSize.width * (105 / referenceWidth);
     final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
     final double homeAppBarTitleX = screenSize.width * (25 / referenceHeight);
     final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
@@ -641,7 +641,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (5 / referenceHeight);
+    final double homeWishlistBtnY = screenSize.height * (6 / referenceHeight);
 
     // 홈 화면 컨텐츠 사이의 간격 수치
     final double interval1Y = screenSize.height * (5 / referenceHeight);
@@ -675,7 +675,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                   background: buildCommonAppBar(
                     context: context,
                     ref: ref,
-                    title: '웨어카노',
+                    title: 'WEARCANO',
                     leadingType: LeadingType.drawer,
                     // 아무 버튼도 없음.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
@@ -1040,7 +1040,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => destinationScreen)),
               child: Image.asset('asset/img/misc/button_img/plus_button1.png',
-                  width: plusBtnWidth, height: plusBtnHeight, color: Color(0xFF6FAD96)),
+                  width: plusBtnWidth, height: plusBtnHeight, color: Color(0xFFE17735),
+              ),
             ),
           ),
         ],

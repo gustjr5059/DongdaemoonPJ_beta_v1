@@ -481,7 +481,7 @@ void showCustomSnackBar(BuildContext context, String message) {
           color: Colors.white,
         ),
       ),
-      backgroundColor: Color(0xCC718B82),  // 색상을 80% 투명도로 설정
+      backgroundColor: Color(0xCCE17735),  // 색상을 80% 투명도로 설정
       width: commonSnackBarWidth,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
@@ -541,7 +541,7 @@ class NetworkChecker {
           child: Text(
             '확인',
             style: TextStyle(
-              color: Color(0xFF6FAD96), // 버튼 텍스트 색상 지정
+              color: Color(0xFFE17735), // 버튼 텍스트 색상 지정
               fontWeight: FontWeight.bold, // 텍스트의 굵기를 두껍게 설정
               fontFamily: 'NanumGothic', // 글꼴 설정
             ),

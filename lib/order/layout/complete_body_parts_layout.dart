@@ -144,9 +144,10 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                      foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                      side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                      side: BorderSide(color: Color(0xFFE17735),
+                      ), // 버튼 테두리 색상 설정
                       padding: EdgeInsets.symmetric(vertical: combackHomeBtnPaddingY, horizontal: combackHomeBtnPaddingX), // 버튼 패딩
                     ),
                     child: Text('홈으로 이동',
@@ -154,7 +155,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'NanumGothic',
                         fontSize: combackHomeBtnFontSize,
-                        color: Colors.black,
+                        color: Color(0xFFE17735),
                       ),
                     ), // 버튼 텍스트
                   ),

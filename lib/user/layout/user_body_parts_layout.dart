@@ -126,8 +126,8 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                               }
                             },
                             style: ElevatedButton.styleFrom( // 버튼 스타일 설정
-                              foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
-                              backgroundColor: Color(0xFF6FAD96), // 버튼 배경색 설정
+                              foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
+                              backgroundColor: Color(0xFFE17735), // 버튼 배경색 설정
                               padding: EdgeInsets.symmetric(vertical: uesrInfoModifyBtnPaddingY, horizontal: uesrInfoModifyBtnPaddingX), // 패딩 설정
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -155,9 +155,10 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                               );
                             },
                             style: ElevatedButton.styleFrom( // 버튼 스타일 설정
-                              foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                              foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
                               backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                              side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                              side: BorderSide(color: Color(0xFFE17735),
+                              ), // 버튼 테두리 색상 설정
                               padding: EdgeInsets.symmetric(vertical: logoutBtnPaddingY, horizontal: logoutBtnPaddingX), // 패딩 설정
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -168,7 +169,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                                 fontSize: logoutBtnFontSize, // 텍스트 크기 설정
                                 fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                 fontFamily: 'NanumGothic', // 글꼴 설정
-                                color: Color(0xFF6FAD96), // 텍스트 색상 설정
+                                color: Color(0xFFE17735), // 텍스트 색상 설정
                               ),
                             ),
                           ),
