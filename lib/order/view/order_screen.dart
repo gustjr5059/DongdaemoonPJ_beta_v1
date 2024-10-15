@@ -104,10 +104,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
   TextEditingController phoneNumberController = TextEditingController();
 
 // 주소를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
-  TextEditingController addressController = TextEditingController(text: '없음');
+  TextEditingController addressController = TextEditingController(text: '');
 
 // 우편번호를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
-  TextEditingController postalCodeController = TextEditingController(text: '없음');
+  TextEditingController postalCodeController = TextEditingController(text: '');
 
 // 상세 주소를 입력받는 컨트롤러 생성
   TextEditingController detailAddressController = TextEditingController();
@@ -183,10 +183,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     phoneNumberController = TextEditingController();
 
 // 주소를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
-    addressController = TextEditingController(text: '없음');
+    addressController = TextEditingController(text: '');
 
 // 우편번호를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
-    postalCodeController = TextEditingController(text: '없음');
+    postalCodeController = TextEditingController(text: '');
 
 // 상세 주소를 입력받는 컨트롤러를 생성
     detailAddressController = TextEditingController();

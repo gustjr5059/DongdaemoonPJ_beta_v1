@@ -25,6 +25,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
+	<!-- 추후, 카카오 간편 로그인 연결 시 필요할 수 있는 설정 -->
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
@@ -57,5 +58,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	    <!-- 플러터 네이티브 뷰(예: WebView) 통합을 위한 필수 설정 -->
+        <key>io.flutter.embedded_views_preview</key>
+        <true/>
 </dict>
 </plist>

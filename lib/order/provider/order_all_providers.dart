@@ -12,12 +12,12 @@ final userInfoProvider = FutureProvider.family<Map<String, dynamic>?, String>((r
   return repository.getUserInfoByEmail(email); // 사용자 정보를 반환
 });
 
-// 주소 검색 기능을 제공하는 FutureProvider
-final addressSearchProvider = FutureProvider.family<List<dynamic>, String>((ref, query) async {
-  // OrderRepository 인스턴스를 생성하여 주소를 검색함
-  final repository = OrderRepository(firestore: FirebaseFirestore.instance);
-  return repository.searchAddress(query); // 검색된 주소 목록을 반환
-});
+// // 주소 검색 기능을 제공하는 FutureProvider
+// final addressSearchProvider = FutureProvider.family<List<dynamic>, String>((ref, query) async {
+//   // OrderRepository 인스턴스를 생성하여 주소를 검색함
+//   final repository = OrderRepository(firestore: FirebaseFirestore.instance);
+//   return repository.searchAddress(query); // 검색된 주소 목록을 반환
+// });
 
 // 발주 레포지토리를 제공하는 프로바이더
 final orderRepositoryProvider = Provider((ref) => OrderRepository(firestore: FirebaseFirestore.instance));

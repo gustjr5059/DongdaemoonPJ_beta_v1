@@ -1,10 +1,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:remedi_kopo/remedi_kopo.dart';
 import '../../cart/provider/cart_all_proviers.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
@@ -260,8 +262,6 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
 
     _selectedMemo = widget.selectedMemo;
     _isCustomMemo = widget.isCustomMemo;
-
-    print('Initial Custom Memo Controller Text: ${_customMemoController.text}'); // 초기 값 확인
   }
 
   @override
@@ -275,25 +275,43 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     super.dispose();
   }
 
+  // // 우편번호 검색 화면을 열고 결과를 받아오는 함수
+  // Future<void> _openPostcodeSearch() async {
+  //   final result = await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => OrderPostcodeSearchScreen()),
+  //   );
+  //
+  //   if (result != null && result is List<String>) {
+  //     setState(() {
+  //       _addressController.text = result[0];
+  //       _postalCodeController.text = result[1];
+  //     });
+  //   }
+  // }
+
   // 우편번호 검색 화면을 열고 결과를 받아오는 함수
   Future<void> _openPostcodeSearch() async {
-    final result = await Navigator.push(
+    KopoModel? model = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => OrderPostcodeSearchScreen()),
+      CupertinoPageRoute(
+        builder: (context) => RemediKopo(), // Remedi Kopo 우편번호 검색 화면
+      ),
     );
 
-    if (result != null && result is List<String>) {
+    if (model != null) {
       setState(() {
-        _addressController.text = result[0];
-        _postalCodeController.text = result[1];
+        _addressController.text = model.address ?? '';
+        _postalCodeController.text = model.zonecode ?? '';
+        _detailAddressController.text = model.buildingName ?? '';
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Build Custom Memo Controller Text: ${_customMemoController.text}'); // 빌드 시 값 확인
-    print('Is Custom Memo: $_isCustomMemo'); // isCustomMemo 값 확인
+    // print('Build Custom Memo Controller Text: ${_customMemoController.text}'); // 빌드 시 값 확인
+    // print('Is Custom Memo: $_isCustomMemo'); // isCustomMemo 값 확인
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -675,13 +693,14 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Row(
                   children: [
-                    Expanded(child: Text(controller.text,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'NanumGothic',
-                        fontSize: recipientInfoDataFontSize,
-                        color: Colors.black,
-                        ),
+                    Expanded(
+                      child: Text(controller.text,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumGothic',
+                          fontSize: recipientInfoDataFontSize,
+                          color: Colors.black,
+                          ),
                       ),
                     ), // 고정된 값을 텍스트로 표시
                     Container(
@@ -775,15 +794,21 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                   child: DropdownButton<String>(
                     value: _selectedMemo, // 드롭다운의 기본값 설정
                     onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedMemo = newValue!; // 선택된 메모 값 업데이트
-                        _isCustomMemo = _selectedMemo == '직접입력'; // 직접 입력 여부 설정
-                        if (!_isCustomMemo) {
-                          widget.customMemoController.clear(); // 직접 입력이 아닌 경우 내용 지우기
-                        }
-                        print('Selected Memo: $_selectedMemo'); // 디버깅 메시지 추가
-                        widget.onMemoChanged(_isCustomMemo, widget.customMemoController.text, _selectedMemo); // 메모 변경 시 콜백 호출
-                      });
+                      if (newValue != null && newValue != _selectedMemo) {
+                        setState(() {
+                          _selectedMemo = newValue!; // 선택된 메모 값 업데이트
+                          _isCustomMemo =
+                              _selectedMemo == '직접입력'; // 직접 입력 여부 설정
+                          if (!_isCustomMemo) {
+                            widget.customMemoController
+                                .clear(); // 직접 입력이 아닌 경우 내용 지우기
+                          }
+                          print('Selected Memo: $_selectedMemo'); // 디버깅 메시지 추가
+                          widget.onMemoChanged(
+                              _isCustomMemo, widget.customMemoController.text,
+                              _selectedMemo); // 메모 변경 시 콜백 호출
+                        });
+                      }
                     },
                     items: <String>[
                       '기사님께 보여지는 메모입니다.',
@@ -2344,72 +2369,72 @@ void onOrderAddToCartButtonPressed(BuildContext context, WidgetRef ref,
   });
 }
 
-// ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
-// AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.
-class AddressSearchWidget extends ConsumerStatefulWidget {
-  @override
-  _AddressSearchWidgetState createState() => _AddressSearchWidgetState();
-}
-
-class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
-  final TextEditingController _controller = TextEditingController(); // 주소 입력 컨트롤러
-  String _query = ''; // 검색 쿼리
-  bool _isFirstLoad = true; // 첫 로드 여부
-
-  // 주소 검색 함수
-  void _search() {
-    setState(() {
-      _query = _controller.text; // 검색 쿼리 설정
-      _isFirstLoad = false; // 첫 로드 여부 설정
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final addressSearchResult = ref.watch(addressSearchProvider(_query)); // Riverpod을 사용하여 주소 검색 프로바이더를 구독
-
-    return Column(
-      mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0), // 텍스트 필드 주변 여백 설정
-          child: TextField(
-            controller: _controller, // 텍스트 필드 컨트롤러 설정
-            decoration: InputDecoration(
-              labelText: '주소 검색', // 텍스트 필드 라벨 텍스트
-              suffixIcon: IconButton(
-                icon: Icon(Icons.search), // 검색 아이콘
-                onPressed: _search, // 검색 버튼을 눌렀을 때 실행되는 함수
-              ),
-            ),
-          ),
-        ),
-        if (_query.isNotEmpty && !_isFirstLoad) // 빈 쿼리와 첫 로드를 처리
-          Flexible( // Expanded 대신 Flexible 사용
-            child: addressSearchResult.when(
-              data: (addresses) => ListView.builder(
-                shrinkWrap: true, // 내부 컨텐츠에 맞춰 크기 조정
-                itemCount: addresses.length, // 검색 결과 개수
-                itemBuilder: (context, index) {
-                  final address = addresses[index]; // 주소 정보
-                  final roadAddress = address['road_address']; // 도로명 주소
-                  final zoneNo = roadAddress != null ? roadAddress['zone_no'] : ''; // 우편번호
-                  final fullAddress = roadAddress != null ? roadAddress['address_name'] : address['address_name']; // 전체 주소
-                  final displayAddress = zoneNo.isNotEmpty ? '$fullAddress [$zoneNo]' : fullAddress; // 표시할 주소
-                  return ListTile(
-                    title: Text(displayAddress), // 리스트 아이템의 제목 설정
-                    onTap: () {
-                      Navigator.pop(context, displayAddress); // 주소를 선택했을 때 이전 화면으로 반환
-                    },
-                  );
-                },
-              ),
-              loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태 처리
-              error: (error, stack) => Center(child: Text('Error: $error')), // 에러 상태 처리
-            ),
-          ),
-      ],
-    );
-  }
-}
-// ------- 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 끝
+// // ------ 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 시작
+// // AddressSearchWidget 클래스는 주소 검색 기능을 제공하는 내용.
+// class AddressSearchWidget extends ConsumerStatefulWidget {
+//   @override
+//   _AddressSearchWidgetState createState() => _AddressSearchWidgetState();
+// }
+//
+// class _AddressSearchWidgetState extends ConsumerState<AddressSearchWidget> {
+//   final TextEditingController _controller = TextEditingController(); // 주소 입력 컨트롤러
+//   String _query = ''; // 검색 쿼리
+//   bool _isFirstLoad = true; // 첫 로드 여부
+//
+//   // 주소 검색 함수
+//   void _search() {
+//     setState(() {
+//       _query = _controller.text; // 검색 쿼리 설정
+//       _isFirstLoad = false; // 첫 로드 여부 설정
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final addressSearchResult = ref.watch(addressSearchProvider(_query)); // Riverpod을 사용하여 주소 검색 프로바이더를 구독
+//
+//     return Column(
+//       mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
+//       children: [
+//         Padding(
+//           padding: const EdgeInsets.all(16.0), // 텍스트 필드 주변 여백 설정
+//           child: TextField(
+//             controller: _controller, // 텍스트 필드 컨트롤러 설정
+//             decoration: InputDecoration(
+//               labelText: '주소 검색', // 텍스트 필드 라벨 텍스트
+//               suffixIcon: IconButton(
+//                 icon: Icon(Icons.search), // 검색 아이콘
+//                 onPressed: _search, // 검색 버튼을 눌렀을 때 실행되는 함수
+//               ),
+//             ),
+//           ),
+//         ),
+//         if (_query.isNotEmpty && !_isFirstLoad) // 빈 쿼리와 첫 로드를 처리
+//           Flexible( // Expanded 대신 Flexible 사용
+//             child: addressSearchResult.when(
+//               data: (addresses) => ListView.builder(
+//                 shrinkWrap: true, // 내부 컨텐츠에 맞춰 크기 조정
+//                 itemCount: addresses.length, // 검색 결과 개수
+//                 itemBuilder: (context, index) {
+//                   final address = addresses[index]; // 주소 정보
+//                   final roadAddress = address['road_address']; // 도로명 주소
+//                   final zoneNo = roadAddress != null ? roadAddress['zone_no'] : ''; // 우편번호
+//                   final fullAddress = roadAddress != null ? roadAddress['address_name'] : address['address_name']; // 전체 주소
+//                   final displayAddress = zoneNo.isNotEmpty ? '$fullAddress [$zoneNo]' : fullAddress; // 표시할 주소
+//                   return ListTile(
+//                     title: Text(displayAddress), // 리스트 아이템의 제목 설정
+//                     onTap: () {
+//                       Navigator.pop(context, displayAddress); // 주소를 선택했을 때 이전 화면으로 반환
+//                     },
+//                   );
+//                 },
+//               ),
+//               loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태 처리
+//               error: (error, stack) => Center(child: Text('Error: $error')), // 에러 상태 처리
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }
+// // ------- 카카오 API를 가져와서 주소검색 서비스 UI 내용을 구현하는 AddressSearchWidget 클래스 내용 끝
