@@ -40,50 +40,33 @@ import '../../common/model/banner_model.dart';
 // 이 파일에는 Future Provider와 관련된 기능이 정의되어 있을 것입니다.
 import '../../common/provider/common_all_providers.dart';
 
-// 장바구니 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
-import '../layout/cart_body_parts_layout.dart';
-import '../provider/cart_all_proviers.dart';
-import '../provider/cart_state_provider.dart';
+// 수령자 정보 즐겨찾기 선택 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../layout/order_body_parts_layout.dart';
+import '../provider/order_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// CartMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class CartMainScreen extends ConsumerStatefulWidget {
-  const CartMainScreen({Key? key}) : super(key: key);
+// RecipientInfoFavoritesSelectScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class RecipientInfoFavoritesSelectScreen extends ConsumerStatefulWidget {
+  const RecipientInfoFavoritesSelectScreen({Key? key}) : super(key: key);
 
   @override
-  _CartMainScreenState createState() => _CartMainScreenState();
+  _RecipientInfoFavoritesSelectScreenState createState() => _RecipientInfoFavoritesSelectScreenState();
 }
 
-// _CartMainScreenState 클래스 시작
-// _CartMainScreenState 클래스는 CartMainScreen 위젯의 상태를 관리함.
+// _RecipientInfoFavoritesSelectScreenState 클래스 시작
+// _RecipientInfoFavoritesSelectScreenState 클래스는 RecipientInfoFavoritesSelectScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _CartMainScreenState extends ConsumerState<CartMainScreen>
+class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientInfoFavoritesSelectScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // cartScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
-  // ref.read(cartScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
-  // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
-  // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
-  // 2.하단 탭바의 장바구니 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
-  // 3.사용자가 앱을 종료하거나 다른 화면으로 이동한 후 돌아왔을때 마지막으로 본 위치로 자동으로 스크롤되도록 하는 기능,
-  // 4.단순 스크롤을 내리거나 올릴 시, 상단 탭 바 버튼 텍스트 색상이 변경되도록 하는 기능,
-  // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
-  // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
-
-  // cartScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
-  // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
-  // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
-  // ScrollController를 late 변수로 선언
-  // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
-  // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController cartScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController recipientInfoFavoritesSelectScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -93,14 +76,14 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
   void initState() {
     super.initState();
     // ScrollController를 초기화
-    cartScreenPointScrollController = ScrollController();
+    recipientInfoFavoritesSelectScreenPointScrollController = ScrollController();
 
     // 스크롤이 끝에 도달했을 때 추가 데이터를 로드하도록 구현
-    cartScreenPointScrollController.addListener(() {
-      if (cartScreenPointScrollController.position.pixels ==
-          cartScreenPointScrollController.position.maxScrollExtent) {
+    recipientInfoFavoritesSelectScreenPointScrollController.addListener(() {
+      if (recipientInfoFavoritesSelectScreenPointScrollController.position.pixels ==
+          recipientInfoFavoritesSelectScreenPointScrollController.position.maxScrollExtent) {
         // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
-        ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+        ref.read(recipientInfoItemsProvider.notifier).loadMoreRecipientInfoItems();
       }
     });
 
@@ -109,22 +92,22 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
-      if (cartScreenPointScrollController.hasClients) {
+      if (recipientInfoFavoritesSelectScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(cartScrollPositionProvider);
-        // cartScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
+        double savedScrollPosition = ref.read(recipientInfoFavoritesSelectScrollPositionProvider);
+        // recipientInfoFavoritesSelectScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        cartScreenPointScrollController.jumpTo(savedScrollPosition);
+        recipientInfoFavoritesSelectScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
-      // tabIndexProvider의 상태를 하단 탭 바 내 장바구니 버튼 인덱스인 1과 매핑
-      // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
-      ref.read(tabIndexProvider.notifier).state = 1;
-      // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
-      ref.read(cartItemsProvider.notifier).resetCartItems();
-      ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+      // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
+      // -> 수령자 정보 즐겨찾기 선택 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
+      ref.read(tabIndexProvider.notifier).state = -1;
+      // 수령자 정보 즐겨찾기 선택 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
+      ref.read(recipientInfoItemsProvider.notifier).resetRecipientInfoItems();
+      ref.read(recipientInfoItemsProvider.notifier).loadMoreRecipientInfoItems();
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -132,9 +115,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
-        ref.read(cartScrollPositionProvider.notifier).state =
-            0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
+        // 수령자 정보 즐겨찾기 선택 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 수령자 정보 즐겨찾기 선택 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
+        ref.read(recipientInfoFavoritesSelectScrollPositionProvider.notifier).state =
+        0.0; // 수령자 정보 즐겨찾기 선택 화면 자체의 스크롤 위치 인덱스를 초기화
       }
     });
 
@@ -174,7 +157,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    cartScreenPointScrollController.dispose(); // ScrollController 해제
+    recipientInfoFavoritesSelectScreenPointScrollController.dispose(); // ScrollController 해제
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
@@ -198,42 +181,27 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double cartlistAppBarTitleWidth =
-        screenSize.width * (77 / referenceWidth);
-    final double cartlistAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double cartlistAppBarTitleX =
-        screenSize.width * (50 / referenceHeight);
-    final double cartlistAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double recipientInfoAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double recipientInfoAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double recipientInfoAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    final double recipientInfoAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
-    // 홈 버튼 수치 (Case 3)
-    final double cartlistHomeBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double cartlistHomeBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double cartlistHomeBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistHomeBtnY = screenSize.height * (6 / referenceHeight);
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double recipientInfoChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double recipientInfoChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double recipientInfoChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double recipientInfoChevronIconY = screenSize.height * (8 / referenceHeight);
 
-    // 찜 목록 버튼 수치 (Case 3)
-    final double cartlistWishlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double cartlistWishlistBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistWishlistBtnY =
-        screenSize.height * (6 / referenceHeight);
-
-    // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
-    final double cartlistEmptyTextWidth =
+    // 수령자 정보 즐겨찾기 목록 비어있는 경우의 알림 부분 수치
+    final double recipientInfoEmptyTextWidth =
         screenSize.width * (170 / referenceWidth); // 가로 비율
-    final double cartlistEmptyTextHeight =
+    final double recipientInfoEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double cartlistEmptyTextX =
-        screenSize.width * (115 / referenceWidth); // 가로 비율
-    final double cartlistEmptyTextY =
+    final double recipientInfoEmptyTextX =
+        screenSize.width * (100 / referenceWidth); // 가로 비율
+    final double recipientInfoEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double cartlistEmptyTextFontSize =
+    final double recipientInfoEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
@@ -244,7 +212,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       body: Stack(
         children: [
           CustomScrollView(
-            controller: cartScreenPointScrollController, // 스크롤 컨트롤러 연결
+            controller: recipientInfoFavoritesSelectScreenPointScrollController, // 스크롤 컨트롤러 연결
             slivers: <Widget>[
               // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
               SliverAppBar(
@@ -267,24 +235,20 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 현재 context 전달
                     ref: ref,
                     // 참조(ref) 전달
-                    title: '장바구니',
-                    // AppBar의 제목을 '장바구니'로 설정
-                    leadingType: LeadingType.none,
+                    title: '즐겨찾기 목록',
+                    // AppBar의 제목을 '즐겨찾기 목록'으로 설정
+                    leadingType: LeadingType.back,
                     // 버튼 없음.
-                    buttonCase: 3,
-                    // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
-                    appBarTitleWidth: cartlistAppBarTitleWidth,
-                    appBarTitleHeight: cartlistAppBarTitleHeight,
-                    appBarTitleX: cartlistAppBarTitleX,
-                    appBarTitleY: cartlistAppBarTitleY,
-                    homeBtnWidth: cartlistHomeBtnWidth,
-                    homeBtnHeight: cartlistHomeBtnHeight,
-                    homeBtnX: cartlistHomeBtnX,
-                    homeBtnY: cartlistHomeBtnY,
-                    wishlistBtnWidth: cartlistWishlistBtnWidth,
-                    wishlistBtnHeight: cartlistWishlistBtnHeight,
-                    wishlistBtnX: cartlistWishlistBtnX,
-                    wishlistBtnY: cartlistWishlistBtnY,
+                    buttonCase: 1,
+                    // 1번 케이스 (버튼 없음)
+                    appBarTitleWidth: recipientInfoAppBarTitleWidth,
+                    appBarTitleHeight: recipientInfoAppBarTitleHeight,
+                    appBarTitleX: recipientInfoAppBarTitleX,
+                    appBarTitleY: recipientInfoAppBarTitleY,
+                    chevronIconWidth: recipientInfoChevronIconWidth,
+                    chevronIconHeight: recipientInfoChevronIconHeight,
+                    chevronIconX: recipientInfoChevronIconX,
+                    chevronIconY: recipientInfoChevronIconY,
                   ),
                 ),
                 leading: null,
@@ -298,58 +262,58 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
               // 상단에 여백을 주는 SliverPadding 위젯
               SliverPadding(
                 padding: EdgeInsets.only(top: 0),
-                // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
+                // Consumer 위젯을 사용하여 recipientInfoProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
-                    // cartItemsProvider의 상태를 가져옴
-                    final cartItems = ref.watch(cartItemsProvider);
-                    // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
-                    return cartItems.isEmpty
+                    // recipientInfoProvider의 상태를 가져옴
+                    final recipientInfo = ref.watch(recipientInfoItemsProvider);
+                    // 저장된 수령자 정보가 없을 경우 '저장된 수령자 정보가 없습니다.' 텍스트를 중앙에 표시
+                    return recipientInfo.isEmpty
                         ? SliverToBoxAdapter(
-                            child: Container(
-                              width: cartlistEmptyTextWidth,
-                              height: cartlistEmptyTextHeight,
-                              margin: EdgeInsets.only(left: cartlistEmptyTextX, top: cartlistEmptyTextY),
-                              child: Text('장바구니가 비어 있습니다.',
-                                style: TextStyle(
-                                  fontSize: cartlistEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          )
-                          // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
-                          : SliverList(
-                              // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                                  return Column(
-                                    // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                                    children: [
-                                      // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
-                                      CartItemsList(),
-                                    ],
-                                  );
-                                },
-                                // 아이템 개수를 1로 설정
-                                childCount: 1,
-                              ),
-                            );
+                      child: Container(
+                        width: recipientInfoEmptyTextWidth,
+                        height: recipientInfoEmptyTextHeight,
+                        margin: EdgeInsets.only(left: recipientInfoEmptyTextX, top: recipientInfoEmptyTextY),
+                        child: Text('저장된 수령자 정보가 없습니다.',
+                          style: TextStyle(
+                            fontSize: recipientInfoEmptyTextFontSize,
+                            fontFamily: 'NanumGothic',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    )
+                    // 저장된 수령자 정보가 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                        : SliverList(
+                      // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Column(
+                            // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                            children: [
+                              // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
+                              RecipientInfoItemsList(),
+                            ],
+                          );
+                        },
+                        // 아이템 개수를 1로 설정
+                        childCount: 1,
+                      ),
+                    );
                   },
                 ),
               ),
             ],
           ),
           // 상단 버튼을 빌드하는 함수 호출
-          buildTopButton(context, cartScreenPointScrollController),
+          buildTopButton(context, recipientInfoFavoritesSelectScreenPointScrollController),
         ],
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
       bottomNavigationBar:
-      buildCommonBottomNavigationBar(0, ref, context, 0, 3, scrollController: cartScreenPointScrollController),
+      buildCommonBottomNavigationBar(0, ref, context, 5, 1, scrollController: recipientInfoFavoritesSelectScreenPointScrollController),
     );
   }
 }
-// _CartMainScreenState 클래스 끝
+// _RecipientInfoFavoritesSelectScreenState 클래스 끝

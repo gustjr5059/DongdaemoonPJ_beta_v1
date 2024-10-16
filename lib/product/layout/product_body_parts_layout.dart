@@ -571,6 +571,14 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0;
   // 발주 화면 관련 초기화 부분 끝
 
+  // 발주 화면 내 수령자 정보 관련 초기화 부분 시작
+  ref.invalidate(recipientInfoItemsProvider); // 수령자 정보 목록 초기화
+  ref.invalidate(saveRecipientInfoProvider); // 수령자 정보 저장 관련 상태 초기화
+  ref.invalidate(recipientInfoItemRepositoryProvider); // 수령자 정보 Repository 초기화
+  // 수령자 정보 즐겨찾기 선택 화면 스크롤 위치 초기화
+  ref.read(recipientInfoFavoritesSelectScrollPositionProvider.notifier).state = 0.0; // 스크롤 위치 초기화
+  // 발주 화면 내 수령자 정보 관련 초기화 부분 끝
+
   // 발주 완료 화면 관련 초기화 부분 시작
   // 발주 완료 화면에서 단순 화면 스크롤 초기화
   ref.read(completePaymentScrollPositionProvider.notifier).state =

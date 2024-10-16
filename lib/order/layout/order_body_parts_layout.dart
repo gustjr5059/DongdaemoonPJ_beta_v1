@@ -20,6 +20,7 @@ import '../provider/order_state_provider.dart';
 import '../view/complete_payment_screen.dart';
 import '../view/order_detail_list_screen.dart';
 import '../view/order_postcode_search_screen.dart';
+import '../view/recipient_info_favorites_select_screen.dart';
 import '../view/refund_policy_guide_screen.dart';
 
 
@@ -203,7 +204,7 @@ class UserInfoWidget extends ConsumerWidget {
 
 // ------ 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
 // RecipientInfoWidget 클래스는 수령자의 정보를 입력받고 화면에 표시하는 역할을 담당.
-class RecipientInfoWidget extends StatefulWidget {
+class RecipientInfoWidget extends ConsumerStatefulWidget {
   final String email; // 이메일 정보를 저장하는 필드
   final TextEditingController nameController; // 이름 입력 컨트롤러
   final TextEditingController phoneNumberController; // 휴대폰 번호 입력 컨트롤러
@@ -232,7 +233,7 @@ class RecipientInfoWidget extends StatefulWidget {
   _RecipientInfoWidgetState createState() => _RecipientInfoWidgetState();
 }
 
-class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
+class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
   late TextEditingController _nameController;
   late TextEditingController _phoneNumberController;
   late TextEditingController _addressController;
@@ -275,20 +276,54 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
     super.dispose();
   }
 
-  // // 우편번호 검색 화면을 열고 결과를 받아오는 함수
-  // Future<void> _openPostcodeSearch() async {
-  //   final result = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => OrderPostcodeSearchScreen()),
-  //   );
-  //
-  //   if (result != null && result is List<String>) {
-  //     setState(() {
-  //       _addressController.text = result[0];
-  //       _postalCodeController.text = result[1];
-  //     });
-  //   }
-  // }
+  // 수령자 정보를 저장하는 함수
+  void _saveRecipientInfo() async {
+
+    // 필수 항목 검증
+    // 수령자 정보 필수 입력 항목이 모두 기입되었는지 확인함
+    if (_nameController.text.isEmpty ||
+        _phoneNumberController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _postalCodeController.text.isEmpty ||
+        _detailAddressController.text.isEmpty ||
+        (_isCustomMemo && _customMemoController.text.isEmpty)) {
+      // 스낵바를 통해 모든 항목 입력 요청 메시지를 표시함
+      showCustomSnackBar(context, '수령자 정보 내 모든 항목에 정보를 기입한 후 등록해주세요.');
+      return;
+    }
+
+    // 배송메모가 기본값일 경우 경고 메시지 표시
+    // 기본 배송메모가 선택된 경우 사용자에게 알림을 줌
+    if (!_isCustomMemo && _selectedMemo == '기사님께 보여지는 메모입니다.') {
+      // 배송메모를 선택하도록 안내하는 스낵바를 표시함
+      showCustomSnackBar(context, '배송메모를 선택해주세요.');
+      return;
+    }
+
+    // 모든 항목에 데이터가 있으면 Firestore에 저장
+    // 모든 입력 항목이 유효할 경우 수령자 정보를 Firestore에 저장할 준비를 함
+    final recipientInfo = {
+      // 이름, 전화번호, 주소, 우편번호, 상세 주소, 배송 메모 정보를 포함하는 Map을 생성함
+      'name': _nameController.text,
+      'phone_number': _phoneNumberController.text,
+      'address': _addressController.text,
+      'postal_code': _postalCodeController.text,
+      'detail_address': _detailAddressController.text,
+      'memo': _isCustomMemo ? _customMemoController.text : _selectedMemo,
+    };
+
+    // ref를 사용하여 Provider를 통해 Firestore에 저장
+    // Firestore에 수령자 정보를 저장하는 Provider를 호출함
+    final result = await ref.read(saveRecipientInfoProvider({
+      'context': context, // BuildContext를 전달함
+      'recipientInfo': recipientInfo // 수령자 정보를 전달함
+    }).future);
+
+    // 저장이 성공했을 경우 즐겨찾기 등록 성공 메시지를 표시함
+    if (result) {
+      showCustomSnackBar(context, '즐겨찾기에 등록되었습니다.');
+    }
+  }
 
   // 우편번호 검색 화면을 열고 결과를 받아오는 함수
   Future<void> _openPostcodeSearch() async {
@@ -352,7 +387,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
             SizedBox(height: ordererInfo1Y), // 제목과 폼 사이에 16 픽셀 높이의 여백 추가
             Column(
               children: [
-                _buildDropdownRow(context, '배송지', '배송지를 선택해주세요'), // 드롭다운 행 생성
+                // _buildDropdownRow(context, '배송지', '배송지를 선택해주세요'), // 드롭다운 행 생성
                 _buildEditableRow(context, '이름', _nameController, _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."), // 수정 가능한 이름 행 생성
                 _buildEditableRow(context, '연락처', _phoneNumberController, _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."), // 수정 가능한 연락처 행 생성
                 _buildFixedValueRowWithButton(context, '우편번호', _postalCodeController, '우편번호 찾기'), // 우편번호 찾기 버튼이 포함된 행 생성
@@ -368,6 +403,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                 if (_isCustomMemo)
                   _buildEditableRow(context,
                     '배송메모', _customMemoController, _customMemoFocusNode, '메모를 직접 기입해주세요.', isEnabled: _isCustomMemo,), // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
+                _buildFavoritesMemoAndBtnRow(context, '즐겨찾기 등록', '즐겨찾기 선택'),
               ],
             ),
           ],
@@ -527,6 +563,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                         fontFamily: 'NanumGothic',
                         fontSize: recipientInfoDataFontSize,
                         color: Colors.black,
+                        fontWeight: FontWeight.normal,
                       ), // 텍스트 필드 스타일 설정
                       decoration: InputDecoration(
                         hintText: hintText, // 힌트 텍스트 설정
@@ -610,7 +647,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(controller.text,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                     fontFamily: 'NanumGothic',
                     fontSize: recipientInfoDataFontSize,
                     color: Colors.black,
@@ -696,7 +733,7 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     Expanded(
                       child: Text(controller.text,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
                           fontFamily: 'NanumGothic',
                           fontSize: recipientInfoDataFontSize,
                           color: Colors.black,
@@ -812,9 +849,10 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
                     },
                     items: <String>[
                       '기사님께 보여지는 메모입니다.',
-                      '경비실에 맡겨주세요',
+                      '경비실에 맡겨주세요.',
                       '문 앞에 놓아 주세요.',
-                      '벨은 누르지 말아주세요',
+                      '벨은 누르지 말아주세요.',
+                      '없습니다.',
                       '직접입력',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -838,8 +876,423 @@ class _RecipientInfoWidgetState extends State<RecipientInfoWidget> {
       ),
     );
   }
+
+  // 즐겨찾기 버튼 관련 설명 및 즐겨찾기 선택과 즐겨찾기 등록 버튼을 생성하는 함수
+  Widget _buildFavoritesMemoAndBtnRow(BuildContext context, String buttonText1, String buttonText2) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    // MediaQuery를 사용하여 현재 기기의 화면 크기를 가져오는 과정임
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    // 기준이 되는 가로 393px, 세로 852px의 화면 크기를 설정함
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    // 화면 크기에 맞춰 비율로 UI 요소들의 크기와 위치를 계산함
+
+    // 발주하기 요청 화면 내 요소들의 수치 설정
+    // 발주하기 화면 내 요소들의 패딩, 폰트 크기, 간격 등을 설정함
+    final double orderRequirePadding =
+        screenSize.width * (32 / referenceWidth);
+    final double orderRequireNoticeFontSize =
+        screenSize.height * (11 / referenceHeight);
+    final double interval1Y =
+        screenSize.height * (8 / referenceHeight);
+
+    // 즐겨찾기 선택 버튼 수치
+    // 즐겨찾기 선택 버튼의 높이, 너비, 패딩 및 폰트 크기를 설정함
+    final double favoritesSelectBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double favoritesSelectBtnWidth =
+        screenSize.width * (90 / referenceWidth);
+    final double intervalX =
+        screenSize.width * (8 / referenceWidth);
+    final double favoritesSelectBtnPaddingY =
+        screenSize.height * (4 / referenceHeight);
+    final double favoritesSelectBtnPaddingX =
+        screenSize.width * (4 / referenceWidth);
+    final double favoritesSelectBtnFontSize =
+        screenSize.height * (12 / referenceHeight);
+
+    return Padding(
+      // 패딩을 설정하여 UI 요소의 여백을 조정함
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬함
+        mainAxisSize: MainAxisSize.min, // 부모 위젯의 제약을 따르도록 최소 크기로 설정함
+        children: [
+          SizedBox(height: interval1Y), // 텍스트와 설명 텍스트 사이에 8px의 여백을 추가함
+          Text(
+            "자주 사용할 수령자 정보는 즐겨찾기 목록에 등록해보세요.\n'즐겨찾기 등록' 버튼 클릭 후 등록 가능합니다.",
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: orderRequireNoticeFontSize,
+              fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(height: interval1Y), // 텍스트와 설명 텍스트 사이에 8px의 여백을 추가함
+          Text(
+            "등록된 수령자 정보를 불러올 수 있습니다.\n'즐겨찾기 선택' 버튼을 클릭하면 등록된 내용을 불러올 수 있습니다.",
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: orderRequireNoticeFontSize,
+              fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(height: interval1Y), // 텍스트와 설명 텍스트 사이에 8px의 여백을 추가함
+          Row(
+            children: [
+              Container(
+                // 첫 번째 버튼: 즐겨찾기 등록 버튼의 크기와 스타일을 설정함
+                width: favoritesSelectBtnWidth,
+                height: favoritesSelectBtnHeight,
+                child: ElevatedButton(
+                  onPressed: _saveRecipientInfo, // 즐겨찾기 등록 버튼 클릭 시 수령자 정보를 저장하는 함수 호출
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Color(0xFFE17735), // 버튼 텍스트 색상을 설정함
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 설정함
+                    side: BorderSide(color: Color(0xFFE17735)), // 버튼 테두리 색상을 설정함
+                    padding: EdgeInsets.symmetric(vertical: favoritesSelectBtnPaddingY, horizontal: favoritesSelectBtnPaddingX), // 버튼 패딩을 설정함
+                  ),
+                  child: Text(buttonText1,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, // 버튼 텍스트를 굵게 설정함
+                      fontFamily: 'NanumGothic', // 버튼 텍스트의 폰트를 설정함
+                      fontSize: favoritesSelectBtnFontSize, // 버튼 텍스트의 크기를 설정함
+                      color: Color(0xFFE17735), // 텍스트 색상을 설정함
+                    ),
+                  ), // 버튼 텍스트를 설정함
+                ),
+              ),
+              SizedBox(width: intervalX), // 두 버튼 사이에 8px의 여백을 추가함
+              Container(
+                // 두 번째 버튼: 즐겨찾기 선택 버튼의 크기와 스타일을 설정함
+                width: favoritesSelectBtnWidth,
+                height: favoritesSelectBtnHeight,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    // '즐겨찾기 선택' 화면으로 이동하여 수령자 정보를 불러오는 작업을 실행함
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RecipientInfoFavoritesSelectScreen(), // '즐겨찾기 선택' 화면으로 이동함
+                      ),
+                    );
+
+                    if (result != null && result is Map<String, dynamic>) {
+                      // 불러온 수령자 정보를 텍스트 필드에 반영함
+                      setState(() {
+                        _nameController.text = result['name'] ?? '';
+                        _phoneNumberController.text = result['phone_number'] ?? '';
+                        _addressController.text = result['address'] ?? '';
+                        _postalCodeController.text = result['postal_code'] ?? '';
+                        _detailAddressController.text = result['detail_address'] ?? '';
+
+                        String memo = result['memo'] ?? '';
+                        if ([
+                          '경비실에 맡겨주세요.',
+                          '문 앞에 놓아 주세요.',
+                          '벨은 누르지 말아주세요.',
+                          '없습니다.'
+                        ].contains(memo)) {
+                          // 미리 정의된 메모인 경우 해당 메모를 설정함
+                          _selectedMemo = memo;
+                          _isCustomMemo = false;
+                          _customMemoController.text = '';
+                        } else {
+                          // 직접 입력된 메모인 경우 사용자 메모로 설정함
+                          _selectedMemo = '직접입력';
+                          _isCustomMemo = true;
+                          _customMemoController.text = memo;
+                        }
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Color(0xFFE17735), // 텍스트 색상을 설정함
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 설정함
+                    side: BorderSide(color: Color(0xFFE17735)), // 버튼 테두리 색상을 설정함
+                    padding: EdgeInsets.symmetric(vertical: favoritesSelectBtnPaddingY, horizontal: favoritesSelectBtnPaddingX), // 버튼 패딩을 설정함
+                  ),
+                  child: Text(buttonText2,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, // 버튼 텍스트를 굵게 설정함
+                      fontFamily: 'NanumGothic', // 버튼 텍스트의 폰트를 설정함
+                      fontSize: favoritesSelectBtnFontSize, // 버튼 텍스트의 크기를 설정함
+                      color: Color(0xFFE17735), // 텍스트 색상을 설정함
+                    ),
+                  ), // 버튼 텍스트를 설정함
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 // ------- 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 끝
+
+// ------ 수령자 정보 즐겨찾기 선택 화면 내 파이어스토어에 있는 수령자 정보 즐겨찾기에 담긴 아이템 데이터를 UI로 구현하는 RecipientInfoItemsList 클래스 시작
+// 데이터 처리 로직과 UI 구현 로직을 분리
+// 데이터 처리 로직은 RecipientInfoItemRepository를 통해서 파이어베이스와의 통신을 하여 데이터를 저장하고 불러오는 역할 수행
+// recipientInfoItemRepositoryProvider를 통해서 RecipientInfoItemRepository 인스턴스를 생성하여 해당 기능을 가져와 사용할 수 있도록 하는 역할 수행
+// RecipientInfoItemsList 클래스는 단순 UI 구현 로직
+class RecipientInfoItemsList extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    // MediaQuery를 사용하여 현재 기기의 화면 크기를 가져오는 과정임
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    // 기준이 되는 가로 393px, 세로 852px의 화면 크기를 설정함
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    // 화면 크기에 맞춰 비율로 UI 요소들의 크기와 위치를 계산함
+
+    // 수령자 정보 즐겨찾기 선택 화면 내 카드뷰 섹션 크기 설정
+    // 카드뷰의 너비와 높이를 화면 비율에 맞춰 설정함
+    final double recipientInfolistCardViewWidth =
+        screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
+    final double recipientInfolistCardViewHeight =
+        screenSize.height * (200 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+    final double recipientInfolistCardViewPaddingX =
+        screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
+    // 텍스트 데이터 패딩 및 글꼴 크기 설정
+    // 텍스트 데이터의 가로와 세로 패딩, 글꼴 크기를 비율에 맞춰 설정함
+    final double recipientInfolistDataPaddingX =
+        screenSize.width * (13 / referenceWidth); // 텍스트 데이터의 가로 패딩 설정함
+    final double recipientInfolistDataPaddingY =
+        screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
+    final double recipientInfolistTextDataFontSize1 =
+        screenSize.height * (14 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+    final double recipientInfolistTextDataFontSize2 =
+        screenSize.height * (16 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+    // 선택 버튼 수치
+    // 선택 버튼의 크기와 패딩, 글꼴 크기를 설정함
+    final double SelectBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double SelectBtnWidth =
+        screenSize.width * (80 / referenceWidth);
+    final double SelectBtnPaddingY =
+        screenSize.height * (4 / referenceHeight);
+    final double SelectBtnPaddingX =
+        screenSize.width * (4 / referenceWidth);
+    final double SelectBtnFontSize =
+        screenSize.height * (14 / referenceHeight);
+    // 삭제 버튼 글꼴 및 위치 설정
+    // 삭제 버튼의 크기, 패딩, 글꼴 크기를 설정함
+    final double DeleteBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double DeleteBtnWidth =
+        screenSize.width * (80 / referenceWidth);
+    final double DeleteBtnPaddingY =
+        screenSize.height * (4 / referenceHeight);
+    final double DeleteBtnPaddingX =
+        screenSize.width * (4 / referenceWidth);
+    final double DeleteBtnFontSize =
+        screenSize.height * (14 / referenceHeight);
+    // 텍스트 데이터 간 너비 및 높이 설정
+    // 텍스트 간 가로, 세로 간격을 설정함
+    final double intervalX =
+        screenSize.width * (8 / referenceWidth);
+    final double interval1Y =
+        screenSize.height * (8 / referenceHeight); // 텍스트 간 세로 여백 설정함
+    final double interval2Y =
+        screenSize.height * (15 / referenceHeight); // 텍스트 간 세로 여백 설정함
+
+    // recipientInfoItemsProvider를 통해 수령자 정보 즐겨찾기 목록 내 아이템 상태를 가져옴
+    // Provider를 사용하여 파이어베이스로부터 수령자 정보 목록 데이터를 불러옴
+    final recipientInfoItems = ref.watch(recipientInfoItemsProvider);
+
+    // 저장된 수령자 정보가 없을 경우 '저장된 수령자 정보가 없습니다.' 텍스트를 중앙에 표시
+    // 데이터가 비어 있을 경우 안내 문구를 화면 중앙에 표시함
+    return recipientInfoItems.isEmpty
+        ? Center(child: Text('저장된 수령자 정보가 없습니다.'))
+        : Column(
+      // 수령자 정보 아이템을 반복하여 UI를 생성
+      // 수령자 정보 리스트 데이터를 반복하여 카드뷰 형태로 화면에 표시함
+      children: recipientInfoItems.map((recipientInfo) {
+
+        return GestureDetector(
+          child: Container(
+            width: recipientInfolistCardViewWidth,  // 카드뷰의 너비를 설정함
+            height: recipientInfolistCardViewHeight, // 카드뷰의 높이를 설정함
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color(0xFFDADADA), width: 5.0), // 하단 테두리 색상을 설정함
+              ),
+            ),
+            child: CommonCardView(
+              content: Container(
+                padding: EdgeInsets.only(left: recipientInfolistDataPaddingX, bottom: recipientInfolistDataPaddingY), // 카드뷰 내 텍스트 패딩 설정
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬로 설정함
+                  children: [
+                    // 수령자 정보 내 이름
+                    // 수령자의 이름을 Bold 스타일로 화면에 표시함
+                    Text(
+                      '${recipientInfo['name'] ?? ''}',
+                      style: TextStyle(
+                        fontSize: recipientInfolistTextDataFontSize2,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NanumGothic',
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: interval1Y), // 텍스트 사이에 여백 추가
+                    // 수령자 정보 내 휴대폰 번호
+                    // 수령자의 전화번호를 Bold 스타일로 화면에 표시함
+                    Text(
+                      '${recipientInfo['phone_number'] ?? ''}',
+                      style: TextStyle(
+                        fontSize: recipientInfolistTextDataFontSize1,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NanumGothic',
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: interval1Y), // 텍스트 사이에 여백 추가
+                    // 수령자 정보 내 주소, 상세주소, 우편번호
+                    // 수령자의 주소, 상세주소, 우편번호를 화면에 표시함
+                    Text(
+                      '${recipientInfo['address'] ?? ''} (${recipientInfo['detail_address'] ?? ''}) (${recipientInfo['postal_code'] ?? ''})',
+                      style: TextStyle(
+                        fontSize: recipientInfolistTextDataFontSize1,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'NanumGothic',
+                        color: Colors.black,
+                        overflow: TextOverflow.visible, // 넘칠 경우 다음 줄로 넘어감
+                      ),
+                    ),
+                    SizedBox(height: interval1Y), // 텍스트 사이에 여백 추가
+                    // 수령자 정보 내 배송메모
+                    // 수령자의 배송 메모를 화면에 표시함
+                    Text(
+                      '${recipientInfo['memo'] ?? ''}',
+                      style: TextStyle(
+                        fontSize: recipientInfolistTextDataFontSize1,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NanumGothic',
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: interval2Y), // 텍스트 사이에 여백 추가
+                    Row(
+                      children: [
+                        // 선택 버튼 UI
+                        // 선택 버튼을 화면에 생성하고 스타일을 설정함
+                        Container(
+                          width: SelectBtnWidth,
+                          height: SelectBtnHeight,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              Navigator.pop(context, recipientInfo); // 버튼 클릭 시 선택된 정보를 반환하고 화면을 닫음
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Color(0xFFE17735), // 텍스트 색상을 설정함
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정함
+                              side: BorderSide(color: Color(0xFFE17735)), // 버튼 테두리 색상을 설정함
+                              padding: EdgeInsets.symmetric(vertical: SelectBtnPaddingY, horizontal: SelectBtnPaddingX), // 버튼 패딩
+                            ),
+                            child: Text('선택',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'NanumGothic',
+                                fontSize: SelectBtnFontSize,
+                                color: Color(0xFFE17735),
+                              ),
+                            ), // 버튼 텍스트
+                          ),
+                        ),
+                        SizedBox(width: intervalX), // 선택 버튼과 삭제 버튼 사이에 여백을 추가함
+                        // 삭제 버튼을 오른쪽 끝에 배치함
+                        Container(
+                          width: DeleteBtnWidth,
+                          height: DeleteBtnHeight,
+                          child: ElevatedButton(
+                            // 삭제 버튼을 누를 때 실행되는 비동기 함수를 정의함
+                            onPressed: () async {
+                              await showSubmitAlertDialog(
+                                context, // 현재 화면의 컨텍스트를 전달함
+                                title: '[수령자 정보 삭제]', // 대화상자의 제목을 설정함
+                                content: '해당 수령자 정보를 삭제하시겠습니까?', // 대화상자의 내용을 경고 메시지로 설정함
+                                actions: buildAlertActions(
+                                  context, // 현재 화면의 컨텍스트를 전달함
+                                  noText: '아니요', // '아니요' 버튼 텍스트를 설정함
+                                  yesText: '예', // '예' 버튼 텍스트를 설정함
+                                  noTextStyle: TextStyle(
+                                    fontFamily: 'NanumGothic',
+                                    color: Colors.black, // '아니요' 텍스트 색상을 검정색으로 설정함
+                                    fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+                                  ),
+                                  yesTextStyle: TextStyle(
+                                    fontFamily: 'NanumGothic',
+                                    color: Colors.red, // '예' 텍스트 색상을 빨간색으로 설정함
+                                    fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+                                  ),
+                                  // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
+                                  onYesPressed: () async {
+                                    try {
+                                      final String? itemId = recipientInfo['id'];
+                                      if (itemId != null) {
+                                        ref.read(recipientInfoItemsProvider.notifier)
+                                            .removeItem(itemId); // 아이템 ID로 수령자 정보를 삭제함
+                                        Navigator.of(context).pop(); // 삭제 후 대화상자를 닫음
+                                        showCustomSnackBar(context, '수령자 정보가 즐겨찾기 목록에서 삭제되었습니다.');
+                                      } else {
+                                        // 유효하지 않은 상품 ID 메시지를 표시함
+                                        showCustomSnackBar(context, '삭제하는 중 오류가 발생했습니다.');
+                                      }
+                                    } catch (e) { // 예외가 발생할 경우 에러 메시지를 처리함
+                                      showCustomSnackBar(context, '삭제 중 오류 발생: $e'); // 오류 메시지를 텍스트로 표시함
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정함
+                              side: BorderSide(color: Color(0xFFE17735)), // 버튼 테두리 색상 설정
+                              padding: EdgeInsets.symmetric(vertical: DeleteBtnPaddingY, horizontal: DeleteBtnPaddingX), // 버튼 패딩
+                            ),
+                            child: Text('삭제',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'NanumGothic',
+                                fontSize: DeleteBtnFontSize,
+                                color: Color(0xFFE17735),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // 카드의 배경색과 그림자, 패딩을 설정함
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 카드의 배경색을 앱의 기본 배경색으로 설정함
+              elevation: 0, // 그림자를 제거함
+              margin: EdgeInsets.only(left: recipientInfolistCardViewPaddingX, right: recipientInfolistCardViewPaddingX), // 좌우 여백을 설정함
+            ),
+          ),
+        );
+      }).toList(), // 리스트 데이터를 반복하여 UI 요소를 생성함
+    );
+  }
+}
+// ------ 수령자 정보 즐겨찾기 선택 화면 내 파이어스토어에 있는 수령자 정보 즐겨찾기에 담긴 아이템 데이터를 UI로 구현하는 RecipientInfoItemsList 클래스 끝
 
 // ------- 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 시작
 // TotalPaymentWidget 클래스는 결제 금액 정보를 화면에 표시하는 역할을 담당.
@@ -1118,6 +1571,23 @@ class CompleteOrderButton extends ConsumerWidget {
             height: paymentBtnHeight,
             child: ElevatedButton(
               onPressed: totalPaymentPrice >= 15000 ? () async {
+                // 필수 항목 검증
+                if (nameController.text.isEmpty ||
+                    phoneNumberController.text.isEmpty ||
+                    addressController.text.isEmpty ||
+                    postalCodeController.text.isEmpty ||
+                    detailAddressController.text.isEmpty ||
+                    (isCustomMemo && customMemoController.text.isEmpty)) {
+                  showCustomSnackBar(context, '수령자 정보 내 모든 항목에 정보를 기입한 후 등록해주세요.');
+                  return;
+                }
+
+                // 배송메모가 기본값일 경우 경고 메시지 표시
+                if (!isCustomMemo && selectedMemo == '기사님께 보여지는 메모입니다.') {
+                  showCustomSnackBar(context, '배송메모를 선택해주세요.');
+                  return;
+                }
+
                 // extra_memo 설정 로직 수정
                 final extraMemo = isCustomMemo ? customMemoController.text : '';
 

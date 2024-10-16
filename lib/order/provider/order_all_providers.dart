@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart'; // 클라우드 파이어스토어 라이브러리 임포트
 import 'package:firebase_auth/firebase_auth.dart'; // 파이어베이스 인증 라이브러리 임포트
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 Riverpod 라이브러리 임포트
 import '../../message/provider/message_all_provider.dart';
 import '../../product/model/product_model.dart'; // 제품 모델 파일 임포트
@@ -154,3 +155,21 @@ final buttonInfoProvider = FutureProvider.family<Map<String, dynamic>, String>((
     return {};
   }
 });
+
+// ------- 수령자 정보 즐겨찾기 선택 화면 로직 내용 시작
+
+// 수령자 정보를 Firestore에 저장하는 FutureProvider
+final saveRecipientInfoProvider = FutureProvider.family<bool, Map<String, dynamic>>((ref, args) async {
+  final repository = ref.read(recipientInfoItemRepositoryProvider);
+  final BuildContext context = args['context']; // 전달된 context 사용
+  final recipientInfo = args['recipientInfo']; // 전달된 recipientInfo 사용
+  return await repository.saveRecipientInfo(context, recipientInfo); // Firestore에 수령자 정보를 저장
+});
+
+// recipientInfoItemRepositoryProvider를 정의 - RecipientInfoItemRepository 인스턴스를 제공하는 Provider를 생성
+// 다른 클래스나 위젯에서 RecipientInfoItemRepository의 메서드를 쉽게 사용할 수 있게하는 역할
+final recipientInfoItemRepositoryProvider = Provider((ref) => RecipientInfoItemRepository(
+  firestore: FirebaseFirestore.instance, // Firebase Firestore 인스턴스를 전달
+));
+
+// ------- 수령자 정보 즐겨찾기 선택 화면 로직 내용 끝

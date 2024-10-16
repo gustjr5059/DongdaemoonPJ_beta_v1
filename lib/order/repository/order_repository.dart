@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_info_plus/device_info_plus.dart';
@@ -11,7 +12,10 @@ import 'dart:io' show Platform;
 import 'dart:ui' as ui;
 
 import '../../common/api_key.dart';
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../product/model/product_model.dart'; // API 키 로드 함수가 포함된 파일을 임포트
+import 'package:crypto/crypto.dart'; // 해시 계산을 위한 crypto 패키지 사용
+import 'dart:convert'; // utf8 변환을 위해 사용
 
 // // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 시작
 // // KA 헤더를 생성하는 비동기 함수
@@ -515,3 +519,170 @@ class OrderlistRepository {
   }
 }
 // ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 OrderlistRepository 클래스 내용 끝 부분
+
+// ------- 수령자 정보 즐겨찾기 선택 화면과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오는 관리 관련 데이터 처리 로직인 RecipientInfoItemRepository 클래스 시작
+// RecipientInfoItemRepository 클래스는 Firestore와의 데이터 통신을 담당하는 역할
+class RecipientInfoItemRepository {
+  final FirebaseFirestore firestore; // Firebase Firestore 인스턴스 변수 선언
+
+  RecipientInfoItemRepository(
+      {required this.firestore}); // 생성자에서 firestore를 초기화함
+
+  // 수령자 정보를 Firestore에 저장하는 함수
+  Future<bool> saveRecipientInfo(BuildContext context, Map<String, dynamic> recipientInfo) async {
+    try {
+      final userEmail = FirebaseAuth.instance.currentUser?.email;
+      if (userEmail == null) throw Exception('User not logged in'); // 로그인되지 않은 경우 예외를 발생시킴
+
+      // 필수 항목 검증
+      // 수령자 정보의 필수 항목들이 모두 기입되었는지 확인함
+      if (recipientInfo['name'].isEmpty ||
+          recipientInfo['phone_number'].isEmpty ||
+          recipientInfo['address'].isEmpty ||
+          recipientInfo['postal_code'].isEmpty ||
+          recipientInfo['detail_address'].isEmpty ||
+          recipientInfo['memo'].isEmpty ||
+          recipientInfo['memo'] == '기사님께 보여지는 메모입니다.') {
+        // 입력이 누락된 경우 스낵바를 통해 경고 메시지를 표시함
+        showCustomSnackBar(context, '수령자 정보 내 모든 항목에 정보를 기입한 후 등록해주세요.');
+        return false; // 필수 항목이 비어있으면 false 반환
+      }
+
+      // 중복 체크를 위한 해시 생성
+      // 수령자 정보 데이터를 결합하여 중복 확인용 해시를 생성함
+      final combinedData = "${recipientInfo['name']}|${recipientInfo['phone_number']}|"
+          "${recipientInfo['postal_code']}|${recipientInfo['address']}|"
+          "${recipientInfo['detail_address']}|${recipientInfo['memo']}";
+      final String hashKey = sha256.convert(utf8.encode(combinedData)).toString(); // 해시 생성 (SHA-256 사용)
+
+      // Firestore 내 동일한 해시값이 있는지 확인
+      // 중복된 수령자 정보가 있는지 Firestore에서 확인함
+      final querySnapshot = await firestore
+          .collection('recipient_info_list')
+          .doc(userEmail)
+          .collection('recipient_info')
+          .where('hashKey', isEqualTo: hashKey) // 해시로 중복 여부 확인
+          .get();
+
+      // 동일한 문서가 있을 경우 처리
+      // 중복된 정보가 있는 경우 처리함
+      if (querySnapshot.docs.isNotEmpty) {
+        print('해당 수령자 정보는 이미 즐겨찾기 목록에 담겨 있습니다.');
+        showCustomSnackBar(context, '해당 수령자 정보는 이미 즐겨찾기 목록에 담겨 있습니다.');
+        return false; // 중복이 있으면 false 반환
+      }
+
+      // 저장된 시간 데이터 생성
+      // 현재 서버 타임스탬프를 저장함
+      final timestamp = FieldValue.serverTimestamp();
+
+      // Firestore에 수령자 정보 저장
+      // Firestore에 수령자 정보를 저장하는 과정임
+      await firestore
+          .collection('recipient_info_list')
+          .doc(userEmail)
+          .collection('recipient_info')
+          .doc('${DateTime.now().millisecondsSinceEpoch}')
+          .set({
+        ...recipientInfo,
+        'hashKey': hashKey, // 해시키 추가
+        'timestamp': timestamp, // 저장된 시간 데이터 추가
+      });
+
+      print('Recipient info saved to Firestore with hashKey: $hashKey.');
+      return true; // 성공적으로 저장된 경우 true 반환
+    } catch (e) {
+      // 에러 발생 시 처리
+      // 저장 중 오류 발생 시 에러 메시지 출력함
+      print('Error saving recipient info: $e');
+      showCustomSnackBar(context, '저장 중 오류가 발생했습니다.');
+      return false; // 에러 발생 시 false 반환
+    }
+  }
+
+  // Firestore에서 수령자 정보 즐겨찾기 목록 내 아이템을 페이징 처리하여 불러오는 함수
+  // Firestore로부터 수령자 정보를 페이징하여 불러오는 함수
+  Future<List<Map<String, dynamic>>> getPagedRecipientInfoItems({DocumentSnapshot? lastDocument, required int limit}) async {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+
+    print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // 지정된 갯수만큼 데이터를 불러온다는 메시지를 출력함
+
+    // Firestore에서 지정한 개수만큼 데이터를 가져오도록 쿼리를 작성함
+    Query query = firestore.collection('recipient_info_list')
+        .doc(userEmail)
+        .collection('recipient_info')
+        .orderBy('timestamp', descending: true)
+        .limit(limit);
+
+    // 마지막 문서 이후 데이터를 불러옴
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument); // 마지막 문서 이후 데이터를 불러오는 설정
+      print("이전 데이터 이후로 데이터를 불러옵니다."); // 마지막 문서 이후 데이터를 불러옴을 알림
+    }
+
+    // 쿼리를 실행하여 결과를 가져옴
+    final querySnapshot = await query.get();
+
+    print("가져온 문서 수: ${querySnapshot.docs.length}"); // 가져온 문서의 수를 출력함
+
+    // 가져온 데이터를 Map 형태로 변환하여 반환함
+    return querySnapshot.docs.map((doc) {
+      final Map<String, dynamic> data = doc.data() as Map<String, dynamic>; // 명시적으로 Map<String, dynamic>으로 변환함
+      data['id'] = doc.id;  // 문서의 ID를 추가함
+      data['snapshot'] = doc; // 마지막 문서를 기록함
+      print("불러온 데이터: ${data['product_id']}"); // 불러온 데이터의 product_id를 출력함
+      return data;
+    }).toList(); // 데이터를 리스트로 변환하여 반환함
+  }
+
+  // 수령자 정보 즐겨찾기 목록의 특정 아이템에 대한 실시간 구독 스트림을 제공하는 함수
+  // 특정 수령자 정보를 실시간으로 구독하는 스트림을 제공함
+  Stream<Map<String, dynamic>> recipientInfoItemStream(String itemId) {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    if (userEmail == null) throw Exception('User not logged in'); // 로그인하지 않은 경우 예외 발생
+
+    // 지정한 아이템에 대한 실시간 스트림을 구독함
+    return firestore.collection('recipient_info_list')
+        .doc(userEmail)
+        .collection('recipient_info')
+        .doc(itemId)
+        .snapshots() // 실시간 스트림을 구독함
+        .handleError((error) {
+      print('Error in recipientInfoItemStream: $error'); // 구독 중 오류가 발생하면 처리함
+    }).map((docSnapshot) {
+      if (docSnapshot.exists) { // 문서가 존재하는 경우
+        final data = docSnapshot.data() as Map<String, dynamic>; // 데이터를 Map으로 변환함
+        data['id'] = docSnapshot.id; // 문서 ID를 추가함
+        return data;
+      } else {
+        print('Document does not exist for itemId: $itemId'); // 문서가 존재하지 않음을 알림
+        return null;
+      }
+    }).where((data) => data != null).cast<Map<String, dynamic>>(); // null 값을 필터링하여 스트림에서 제외함
+  }
+
+  // 수령자 정보 즐겨찾기 선택 화면 내에서 아이템을 '삭제' 버튼 클릭 시, Firestore에서 삭제되도록 하는 함수
+  // Firestore에서 수령자 정보를 삭제하는 함수
+  Future<void> removeRecipientInfoItem(String docId) async {
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    if (user == null) {
+      print('User not logged in'); // 사용자가 로그인되지 않은 경우 예외 발생
+      throw Exception('User not logged in');
+    }
+    final userEmail = user.email; // 사용자의 이메일 주소를 가져옴
+    if (userEmail == null) {
+      print('User email not available'); // 이메일이 없는 경우 예외 발생
+      throw Exception('User email not available');
+    }
+    print('Removing RecipientInfo item for docId: $docId for user: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
+    await firestore.collection('recipient_info_list').doc(userEmail)
+        .collection('recipient_info')
+        .doc(docId)
+        .delete(); // Firestore에서 문서를 삭제함
+    print('RecipientInfo item removed for docId: $docId'); // 문서 삭제 완료 메시지 출력
+  }
+}
+// ------- 수령자 정보 즐겨찾기 선택 화면과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오는 관리 관련 데이터 처리 로직인 RecipientInfoItemRepository 클래스 끝

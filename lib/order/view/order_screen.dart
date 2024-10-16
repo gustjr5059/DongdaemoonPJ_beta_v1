@@ -148,7 +148,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
-      // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
+      // -> 발주요청 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
     });
 
@@ -309,7 +309,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                     background: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '업데이트 요청',
+                      title: '발주하기 요청',
                       leadingType: LeadingType.back,
                       // 이전화면으로 이동 버튼.
                       buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
