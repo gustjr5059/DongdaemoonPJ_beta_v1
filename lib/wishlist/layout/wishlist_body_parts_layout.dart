@@ -144,39 +144,45 @@ class WishlistItemsList extends ConsumerWidget {
 
     // 찜 목록 아이템별 카드뷰 섹션 부분 수치
     final double wishlistCardViewWidth =
-        screenSize.width * (353 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double wishlistCardViewHeight =
-        screenSize.height * (143 / referenceHeight); // 세로 비율
+        screenSize.height * (155 / referenceHeight); // 세로 비율
     // 썸네일 이미지 부분 수치
     final double wishlistThumnailPartWidth =
-        screenSize.width * (126 / referenceWidth); // 가로 비율
+        screenSize.width * (130 / referenceWidth); // 가로 비율
     final double wishlistThumnailPartHeight =
-        screenSize.height * (126 / referenceHeight); // 세로 비율
+        screenSize.height * (130 / referenceHeight); // 세로 비율
     // 텍스트 데이터 부분 수치
     final double wishlistTextDataPartHeight =
         screenSize.height * (126 / referenceHeight); // 세로 비율
     final double wishlistBriefIntroductionFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (14 / referenceHeight);
     final double wishlistOriginalPriceFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double wishlistDiscountPercentFontSize =
-        screenSize.height * (17 / referenceHeight);
+        screenSize.height * (15 / referenceHeight);
     final double wishlistDiscountPriceFontSize =
-        screenSize.height * (19 / referenceHeight);
+        screenSize.height * (16 / referenceHeight);
     // 삭제 버튼 부분 수치
     final double wishlistDeleteBtn1X =
-        screenSize.width * (20 / referenceWidth); // 가로 비율
+        screenSize.width * (22 / referenceWidth); // 가로 비율
     final double wishlistDeleteBtn1Y =
-        screenSize.height * (6 / referenceHeight); // 세로 비율
+        screenSize.height * (3 / referenceHeight); // 세로 비율
     final double wishlistDeleteBtnFontSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     // 텍스트 데이터 간 너비, 높이
     final double wishlist1X =
         screenSize.width * (12 / referenceWidth); // 가로 비율
     final double wishlist2X =
         screenSize.width * (19 / referenceWidth); // 가로 비율
+    final double wishlist3X =
+        screenSize.width * (10 / referenceWidth); // 가로 비율
+    final double wishlist4X =
+        screenSize.width * (20 / referenceWidth); // 가로 비율
     final double wishlist1Y =
-        screenSize.width * (4 / referenceWidth); // 가로 비율
+        screenSize.height * (2 / referenceHeight); // 세로 비율
+    final double wishlist2Y =
+        screenSize.height * (8 / referenceHeight); // 세로 비율
 
     // 찜 목록 비어있는 경우의 알림 부분 수치
     final double wishlistEmptyTextWidth =
@@ -255,9 +261,10 @@ class WishlistItemsList extends ConsumerWidget {
                   child: Container(
                     width: wishlistCardViewWidth,  // CommonCardView의 너비를 지정함
                     height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
+                    padding: EdgeInsets.only(top: wishlist2Y, bottom: wishlist2Y, left: wishlist3X, right: wishlist4X),
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(color: Color(0xFFCECECE), width: 1.0), // 하단 테두리 색상을 지정함
+                         bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
                       ),
                     ),
                     child: CommonCardView(

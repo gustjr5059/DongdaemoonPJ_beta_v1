@@ -333,6 +333,7 @@ AppBar buildCommonAppBar({
       width: appBarTitleWidth, // 텍스트 너비 설정
       height: appBarTitleHeight, // 텍스트 높이 설정
       margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY), // 텍스트 위치 설정
+
       // children: <Widget>[
       //   Expanded(
       //     child: Center(

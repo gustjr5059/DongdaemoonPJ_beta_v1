@@ -256,7 +256,7 @@ class _BlouseDetailProductScreenState
               SliverAppBar(
                 // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
                 automaticallyImplyLeading: false,
-                floating: false,
+                floating: true,
                 // 스크롤 시 SliverAppBar가 빠르게 나타남.
                 pinned: true,
                 // 스크롤 다운시 AppBar가 상단에 고정됨.

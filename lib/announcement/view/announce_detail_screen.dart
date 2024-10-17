@@ -207,7 +207,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     final double announceDtAppBarTitleHeight =
         screenSize.height * (22 / referenceHeight);
     final double announceDtAppBarTitleX =
-        screenSize.width * (150 / referenceHeight);
+        screenSize.width * (120 / referenceHeight);
     final double announceDtAppBarTitleY =
         screenSize.height * (11 / referenceHeight);
 
@@ -225,7 +225,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     final double announceDtChevronIconX =
         screenSize.width * (12 / referenceWidth);
     final double announceDtChevronIconY =
-        screenSize.height * (8 / referenceHeight);
+        screenSize.height * (9 / referenceHeight);
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementDetailEmptyTextWidth =
@@ -322,17 +322,28 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 // 각 항목을 패딩으로 감싸 좌우 간격을 announceDtlistPaddingX로 설정함.
+                                // return Padding(
+                                //   padding: EdgeInsets.symmetric(
+                                //       horizontal: announceDtlistPaddingX),
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: announceDtlistPaddingX),
-                                  child: Column(
-                                    children: [
-                                      // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
-                                      AnnounceDetailBodyPartsLayout(
-                                          documentId: widget.documentId),
-                                      SizedBox(height: announceDtlistPaddingY),
-                                    ],
-                                  ),
+                                      horizontal: 0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: announceDtlistPaddingY),
+                                        // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
+                                        AnnounceDetailBodyPartsLayout(
+                                            documentId: widget.documentId),
+                                        SizedBox(height: announceDtlistPaddingY),
+                                      ],
+                                    ),
                                 );
                               },
                               // 전체 아이템을 하나의 큰 Column으로 구성하기 때문에 childCount를 1로 설정함.

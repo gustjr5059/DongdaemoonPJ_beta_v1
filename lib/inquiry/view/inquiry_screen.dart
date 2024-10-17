@@ -181,7 +181,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double inquiryAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double inquiryAppBarTitleWidth = screenSize.width * (90 / referenceWidth);
     final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
     final double inquiryAppBarTitleX = screenSize.width * (50 / referenceHeight);
     final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
@@ -194,7 +194,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
     final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
     final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval2X = screenSize.width * (20 / referenceWidth); // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
     final double inquiryGuideFontSize1 =
@@ -254,11 +254,19 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                         (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 inquiryPaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
+                        // padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
+                        padding: EdgeInsets.symmetric(horizontal: 0),
                         child: Column(
                           // 자식 위젯들을 왼쪽 정렬.
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
                             SizedBox(height: interval1Y),
                             Container(
                               padding: EdgeInsets.only(left: interval1X), // 패딩 설정

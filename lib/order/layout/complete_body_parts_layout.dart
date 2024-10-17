@@ -103,7 +103,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               ),
               SizedBox(height: interval2Y), // 간격
               Text(
-                '아래 계좌 정보로 입금해주시면 결제완료 처리 됩니다.',
+                '아래 계좌번호로 입금 시, 결제완료 처리 됩니다.',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: orderGuideInfoFontSize2,
@@ -161,6 +161,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                   ),
                 ),
               ),
+              SizedBox(height: interval1Y), // 간격
             ],
           ),
         );
@@ -182,9 +183,9 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
 
     // 발주자 정보 표 부분 수치
     final double updateRequireCompleteInfoTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double updateRequireCompleteInfoDataFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double updateRequireCompleteInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
     final double updateRequireCompleteInfoTextPartHeight =

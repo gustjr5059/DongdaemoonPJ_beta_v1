@@ -141,8 +141,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showSubmitAlertDialog(
         context,
-        title: '[업데이트 요청 완료]',
-        content: '업데이트 요청이 완료되었습니다.',
+        title: '[발주 요청 완료]',
+        content: '발주 요청이 완료되었습니다.',
         actions: [
           TextButton(
             child: Text(
@@ -214,7 +214,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // AppBar 관련 수치 동적 적용
     final double completePaymentAppBarTitleWidth = screenSize.width * (120 / referenceWidth);
     final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double completePaymentAppBarTitleX = screenSize.width * (130 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (100 / referenceHeight);
     final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
@@ -274,6 +274,13 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                             padding: const EdgeInsets.symmetric(horizontal: 0.0),
                             child: Column(
                               children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                    ),
+                                  ),
+                                ),
                                 CompletePaymentInfoWidget(
                                   orderNumber: orderNumber,
                                   orderDate: orderDate,

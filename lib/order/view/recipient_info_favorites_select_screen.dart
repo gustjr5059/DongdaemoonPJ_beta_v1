@@ -183,7 +183,7 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
     // AppBar 관련 수치 동적 적용
     final double recipientInfoAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double recipientInfoAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double recipientInfoAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    final double recipientInfoAppBarTitleX = screenSize.height * (60 / referenceHeight);
     final double recipientInfoAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -270,21 +270,21 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                     // 저장된 수령자 정보가 없을 경우 '저장된 수령자 정보가 없습니다.' 텍스트를 중앙에 표시
                     return recipientInfo.isEmpty
                         ? SliverToBoxAdapter(
-                      child: Container(
-                        width: recipientInfoEmptyTextWidth,
-                        height: recipientInfoEmptyTextHeight,
-                        margin: EdgeInsets.only(left: recipientInfoEmptyTextX, top: recipientInfoEmptyTextY),
-                        child: Text('저장된 수령자 정보가 없습니다.',
-                          style: TextStyle(
-                            fontSize: recipientInfoEmptyTextFontSize,
-                            fontFamily: 'NanumGothic',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    )
-                    // 저장된 수령자 정보가 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                            child: Container(
+                              width: recipientInfoEmptyTextWidth,
+                              height: recipientInfoEmptyTextHeight,
+                              margin: EdgeInsets.only(left: recipientInfoEmptyTextX, top: recipientInfoEmptyTextY),
+                              child: Text('저장된 수령자 정보가 없습니다.',
+                                style: TextStyle(
+                                  fontSize: recipientInfoEmptyTextFontSize,
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                        )
+                        // 저장된 수령자 정보가 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
                       // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
                       delegate: SliverChildBuilderDelegate(
@@ -292,6 +292,13 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                           return Column(
                             // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
                             children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
+                                ),
+                              ),
                               // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
                               RecipientInfoItemsList(),
                             ],
@@ -312,7 +319,7 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
       bottomNavigationBar:
-      buildCommonBottomNavigationBar(0, ref, context, 5, 1, scrollController: recipientInfoFavoritesSelectScreenPointScrollController),
+      buildCommonBottomNavigationBar(ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: recipientInfoFavoritesSelectScreenPointScrollController),
     );
   }
 }

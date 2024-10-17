@@ -33,7 +33,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 
     // 마이페이지 회원정보 카드뷰 섹션의 가로와 세로 비율 계산
     final double uesrInfoCardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
     final double uesrInfoCardViewHeight =
         screenSize.height * (220 / referenceHeight); // 세로 비율 계산
 
@@ -69,6 +69,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double interval3Y = screenSize.height * (12 / referenceHeight); // 세로 간격 3 계산
     final double interval1X = screenSize.width * (80 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval3X = screenSize.width * (120 / referenceWidth); // 가로 간격 3 계산
 
     final userInfoAsyncValue = ref.watch(userInfoProvider(email)); // userInfoProvider를 통해 유저 정보를 가져옴
 
@@ -78,15 +79,21 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
         final email = userInfo?['email'] ?? '-'; // 이메일 정보를 가져오고, 없으면 '-'로 설정함
         final phoneNumber = userInfo?['phone_number'] ?? '-'; // 전화번호 정보를 가져오고, 없으면 '-'로 설정함
 
-        // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-          child: Container(
+        // // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+        // return ClipRRect(
+        //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+        //   child: Container(
+          return Container(
             width: uesrInfoCardViewWidth, // 카드뷰 가로 크기 설정
             height: uesrInfoCardViewHeight, // 카드뷰 세로 크기 설정
-            color: Color(0xFFF3F3F3), // 배경색 설정
+            // color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+              ),
+            ),
             child: CommonCardView( // 공통 카드뷰 위젯 사용
-              backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
               elevation: 0, // 그림자 깊이 설정
               content: Padding( // 패딩 설정
                 padding: EdgeInsets.symmetric(vertical: uesrInfoCardViewPadding1Y, horizontal: uesrInfoCardViewPaddingX), // 상하 좌우 패딩 설정
@@ -115,7 +122,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                         Container(
                           width: uesrInfoModifyBtn1X, // 회원정보 수정 버튼 가로 설정
                           height: uesrInfoModifyBtn1Y, // 회원정보 수정 버튼 세로 설정
-                          margin: EdgeInsets.only(left: interval1X), // 왼쪽 여백 설정
+                          margin: EdgeInsets.only(left: interval3X), // 왼쪽 여백 설정
                           child: ElevatedButton( // ElevatedButton 위젯을 사용하여 수정 버튼을 만듦
                             onPressed: () async { // 클릭 시 실행되는 비동기 함수 설정
                               const url = 'https://pf.kakao.com/_xjVrbG'; // 수정 링크 설정
@@ -180,7 +187,6 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                 ),
               ),
             ),
-          ),
         );
       },
       loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 로딩 위젯을 표시함
@@ -233,7 +239,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
 
     // 마이페이지 회원정보 카드뷰 섹션의 가로와 세로 비율 계산
     final double uesrProfileOptionsCardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
     final double uesrProfileOptionsCardViewHeight =
         screenSize.height * (400 / referenceHeight); // 세로 비율 계산
 
@@ -317,10 +323,13 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     final double userProfileOptionsHeight = screenSize.height * (60 / referenceHeight); // 버튼 높이 계산
     final double interval1X = screenSize.width * (12 / referenceWidth); // 아이콘과 텍스트 사이의 간격 계산
     final double interval2X = screenSize.width * (8 / referenceWidth); // 텍스트와 화살표 사이의 간격 계산
+    final double interval3X = screenSize.width * (20 / referenceWidth); // 아이콘과 좌측 사이의 간격 계산
+    final double interval4X = screenSize.width * (30 / referenceWidth); // 아이콘과 좌측 사이의 간격 계산
+
 
     // 마이페이지 옵션 버튼 내 구분선 부분 수치 계산
     final double uesrProfileOptionsDividerWidth =
-        screenSize.width * (360 / referenceWidth); // 구분선 가로 길이 계산
+        screenSize.width * (393 / referenceWidth); // 구분선 가로 길이 계산
     final double uesrProfileOptionsDividerHeight =
         screenSize.height * (1 / referenceHeight); // 구분선 세로 길이 계산
 
@@ -339,14 +348,19 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
           onTap: onTap, // 클릭 시 실행될 함수 설정
           child: Container( // 옵션 타일을 감싸는 컨테이너 생성
             height: userProfileOptionsHeight, // 옵션 타일의 높이 설정
-            color: Colors.transparent, // 배경색을 투명하게 설정하여 클릭 가능하게 만듦
-            padding: EdgeInsets.symmetric(vertical: optionTitleY), // 상하 패딩 설정
+            // color: Colors.transparent, // 배경색을 투명하게 설정하여 클릭 가능하게 만듦
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: optionTitleY), // 상하 패딩 설정
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+              ),
+            ),
             child: Row( // 아이콘, 타이틀, 화살표 이미지를 한 줄로 배치함
               mainAxisAlignment: MainAxisAlignment.spaceBetween, // 요소들을 양 끝으로 배치함
               children: [
                 Row( // 아이콘과 타이틀을 한 줄로 배치함
                   children: [
-                    SizedBox(width: interval1X), // 아이콘 왼쪽 여백 설정
+                    SizedBox(width: interval4X), // 아이콘 왼쪽 여백 설정
                     Image.asset( // 아이콘 이미지를 불러옴
                       assetPath, // 아이콘 경로 설정
                       width: iconImageWidth, // 아이콘 가로 크기 설정
@@ -364,7 +378,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                   ],
                 ),
                 Padding( // 텍스트 오른쪽에 화살표 이미지를 배치함
-                  padding: EdgeInsets.only(right: interval2X), // 오른쪽 여백 설정
+                  padding: EdgeInsets.only(right: interval3X), // 오른쪽 여백 설정
                   child: Image.asset( // 화살표 이미지 설정
                     'asset/img/misc/icon_img/chevron_right.png', // 화살표 이미지 경로 설정
                     width: chevronBtnImageWidth, // 화살표 가로 크기 설정
@@ -375,11 +389,11 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
             ),
           ),
         ),
-        Container( // 옵션 타일 아래에 구분선 컨테이너를 생성함
-          width: uesrProfileOptionsDividerWidth, // 구분선 가로 길이 설정
-          height: uesrProfileOptionsDividerHeight, // 구분선 세로 높이 설정
-          color: Color(0xFFCECECE), // 구분선 색상 설정
-        ),
+        // Container( // 옵션 타일 아래에 구분선 컨테이너를 생성함
+        //   width: uesrProfileOptionsDividerWidth, // 구분선 가로 길이 설정
+        //   height: uesrProfileOptionsDividerHeight, // 구분선 세로 높이 설정
+        //   color: Colors.black, // 구분선 색상 설정
+        // ),
       ],
     );
   }

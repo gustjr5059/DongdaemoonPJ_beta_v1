@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 // 상태 관리를 위해 사용되는 Riverpod 패키지를 임포트합니다.
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -1181,6 +1182,9 @@ class ProductInfoDetailScreenNavigation {
     final double interval1Y = screenSize.height * (4 / referenceHeight);
     final double interval1X = screenSize.width * (6 / referenceWidth);
 
+    // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
+    final numberFormat = NumberFormat('###,###');
+
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
       onTap: () {
@@ -1196,14 +1200,20 @@ class ProductInfoDetailScreenNavigation {
           // 컨테이너의 배경색을 흰색으로 설정하고 둥근 모서리 및 그림자 효과를 추가함
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 0, // 그림자의 퍼짐 정도
-              blurRadius: 1, // 그림자 흐림 정도 (숫자가 작을수록 선명함)
-              offset: Offset(0, 4), // 그림자의 위치를 설정함 (x: 0으로 수평 위치를 고정, y: 4로 하단에만 그림자 발생)
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey.withOpacity(0.5),
+          //     spreadRadius: 0, // 그림자의 퍼짐 정도
+          //     blurRadius: 1, // 그림자 흐림 정도 (숫자가 작을수록 선명함)
+          //     offset: Offset(0, 4), // 그림자의 위치를 설정함 (x: 0으로 수평 위치를 고정, y: 4로 하단에만 그림자 발생)
+          //   ),
+          // ],
+          border: Border(
+            top: BorderSide(color: Color(0xFFC5C5C5), width: 1.0), // 상단 테두리 색상을 설정함
+            bottom: BorderSide(color: Color(0xFFC5C5C5), width: 1.0), // 하단 테두리 색상을 설정함
+            left: BorderSide(color: Color(0xFFC5C5C5), width: 1.0), // 좌측 테두리 색상을 설정함
+            right: BorderSide(color: Color(0xFFC5C5C5), width: 1.0), // 우측 테두리 색상을 설정함
+          ),
         ),
         child: Stack(
           children: [
@@ -1258,7 +1268,7 @@ class ProductInfoDetailScreenNavigation {
                     child: Row(
                       children: [
                         Text(
-                          '${product.originalPrice!.toStringAsFixed(0)}원',
+                          '${numberFormat.format(product.originalPrice)}원',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize2,
                               color: Color(0xFF6C6C6C), // 텍스트 색상
@@ -1287,7 +1297,7 @@ class ProductInfoDetailScreenNavigation {
                   Padding(
                     padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Text(
-                      '${product.discountPrice!.toStringAsFixed(0)}원',
+                      '${numberFormat.format(product.discountPrice)}원',
                       style: TextStyle(
                         fontSize: DetailDocTextFontSize4,
                         color: Colors.black, // 텍스트 색상
@@ -1338,12 +1348,25 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
       crossAxisAlignment: CrossAxisAlignment.start,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
-        buildProductImageSliderSection(context, product, ref, pageController, product.docId), // 이미지 슬라이더 섹션
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Colors.black, width: 1.0), // 상단 테두리 색상을 지정함
+            ),
+          ),
+          child: CommonCardView(
+            content: buildProductImageSliderSection(context, product, ref, pageController, product.docId),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0, // 그림자 효과 0
+            margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+            padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 0.0으로 설정.
+          ),
+        ), // 이미지 슬라이더 섹션
         // 제품 소개 부분과 가격 부분을 표시하는 위젯을 호출.
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+              bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
@@ -1358,7 +1381,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+              bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
@@ -1373,7 +1396,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+              bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
@@ -1506,15 +1529,15 @@ Widget buildProductBriefIntroAndPriceInfoSection(
   final double width1X = screenSize.width * (15 / referenceWidth);
 
   // 상품번호 텍스트 부분 수치
-  final double productNumberFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 크기
+  final double productNumberFontSize = screenSize.height * (13 / referenceHeight); // 텍스트 크기
   // 상품 설명 텍스트 부분 수치
-  final double productIntroductionFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+  final double productIntroductionFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기
   // 상품 원가 텍스트 부분 수치
-  final double productOriginalPriceFontSize = screenSize.height * (18 / referenceHeight); // 텍스트 크기
+  final double productOriginalPriceFontSize = screenSize.height * (16 / referenceHeight); // 텍스트 크기
   // 상품 할인가 텍스트 부분 수치
-  final double productDiscountPriceFontSize = screenSize.height * (24 / referenceHeight); // 텍스트 크기
+  final double productDiscountPriceFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기
   // 상품 할인율 텍스트 부분 수치
-  final double productDiscountPercentFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+  final double productDiscountPercentFontSize = screenSize.height * (18 / referenceHeight); // 텍스트 크기
 
 
   final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'); // 정규식을 사용하여 천 단위로 쉼표를 추가.
@@ -1664,18 +1687,18 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
     final double width3X = screenSize.width * (45 / referenceWidth);
 
     // 색상 텍스트 부분 수치
-    final double colorFontSize = screenSize.height * (16 / referenceHeight);
+    final double colorFontSize = screenSize.height * (14 / referenceHeight);
     // 색상 이미지 데이터 부분 수치
-    final double colorImageLength = screenSize.width * (24 / referenceWidth);
+    final double colorImageLength = screenSize.height * (16 / referenceHeight);
     // 색상 텍스트 데이터 부분 수치
-    final double colorTextSize = screenSize.width * (16 / referenceWidth);
+    final double colorTextSize = screenSize.height * (14 / referenceHeight);
     // 사이즈 텍스트 부분 수치
-    final double sizeFontSize = screenSize.height * (16 / referenceHeight);
+    final double sizeFontSize = screenSize.height * (14 / referenceHeight);
     // 사이즈 텍스트 데이터 부분 수치
-    final double sizeTextSize = screenSize.width * (16 / referenceWidth);
+    final double sizeTextSize = screenSize.height * (14 / referenceHeight);
 
     return Padding(
-      padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y), // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
+      padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y,  bottom: section1Y), // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
       child: Column(
         children: [
           Row(
@@ -1821,22 +1844,35 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
 
   // 섹션 내 x, y 부분 수치
   final double sectionX = screenSize.width * (20 / referenceWidth);
-  final double section1Y = screenSize.width * (8 / referenceHeight);
-  final double section2Y = screenSize.width * (30 / referenceHeight);
+  final double section1Y = screenSize.height * (15 / referenceHeight);
+  final double section2Y = screenSize.height * (10 / referenceHeight);
   final double width1X = screenSize.width * (57 / referenceWidth);
   final double width2X = screenSize.width * (12 / referenceWidth);
   final double width3X = screenSize.width * (41 / referenceWidth);
+  final double width4X = screenSize.width * (30 / referenceWidth);
+  final double width5X = screenSize.width * (60 / referenceWidth);
+  final double width6X = screenSize.width * (15 / referenceWidth);
+  final double width7X = screenSize.width * (70 / referenceWidth);
 
   // 선택한 색상 텍스트 부분 수치
-  final double selectedColorFontSize = screenSize.height * (16 / referenceHeight);
+  final double selectedColorFontSize = screenSize.height * (14 / referenceHeight);
   // 선택한 색상 이미지 데이터 부분 수치
-  final double selectedColorImageLength = screenSize.width * (24 / referenceWidth);
+  final double selectedColorImageLength = screenSize.height * (16 / referenceHeight);
   // 산텍힌 색상 텍스트 데이터 부분 수치
-  final double selectedColorTextSize = screenSize.width * (16 / referenceWidth);
+  final double selectedColorTextSize = screenSize.height * (14 / referenceHeight);
   // 선택한 사이즈 텍스트 부분 수치
-  final double selectedSizeFontSize = screenSize.height * (16 / referenceHeight);
+  final double selectedSizeFontSize = screenSize.height * (14 / referenceHeight);
   // 선택한 사이즈 텍스트 데이터 부분 수치
-  final double selectedSizeTextSize = screenSize.width * (16 / referenceWidth);
+  final double selectedSizeTextSize = screenSize.height * (14 / referenceHeight);
+  // 선택한 수량 텍스트 데이터 부분 수치
+  final double selectedCountTextSize = screenSize.height * (14 / referenceHeight);
+  // 총 가격 텍스트 데이터 부분 수치
+  final double selectedAllPriceTextSize = screenSize.height * (18 / referenceHeight);
+
+  // 직접입력 버튼 수치
+  final double directInsertBtnWidth = screenSize.width * (90 / referenceWidth);
+  final double directInsertBtnHeight = screenSize.height * (30 / referenceHeight);
+  final double directInsertBtnFontSize = screenSize.height * (10 / referenceHeight);
 
 
   return Column(
@@ -1900,107 +1936,199 @@ Widget buildProductAllCountAndPriceSelection(BuildContext context, WidgetRef ref
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         fontFamily: 'NanumGothic',
-                      )
+                      ),
                   ),
                 ],
               ),
-              SizedBox(height: section1Y),
             ],
           ),
         ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-        // 좌우 여백 20, 수직 여백 8로 설정.
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // 자식 위젯들을 좌우로 배치.
-          children: [
-            // '수량' 텍스트를 표시함.
-            Text('수량', style: TextStyle(fontSize: 16)),
-            Row(
-              children: [
-                // 수량 감소 버튼. 수량이 1보다 클 때만 작동함.
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: quantity > 1 ? () {
-                    ref.read(detailQuantityIndexProvider.notifier).state--;
-                  } : null,
+        SizedBox(height: section2Y), // 색상과 사이즈 사이의 수직 간격을 section2Y로 설정.
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: sectionX),
+          // 좌우 여백 20, 수직 여백 8로 설정.
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // 자식 위젯들을 좌우로 배치.
+            children: [
+              // '수량' 텍스트를 표시함.
+              Text('수량',
+                style: TextStyle(
+                  fontSize: selectedCountTextSize,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'NanumGothic',
                 ),
-                // 현재 수량을 표시하는 컨테이너.
-                Container(
-                  width: 50,
-                  alignment: Alignment.center,
-                  child: Text('$quantity', style: TextStyle(fontSize: 16)),
-                ),
-                // 수량 증가 버튼.
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    ref.read(detailQuantityIndexProvider.notifier).state++;
-                  },
-                ),
-                // 수량을 직접 입력할 수 있는 버튼.
-                TextButton(
-                  onPressed: () {
-                    // 수량 입력을 위한 다이얼로그를 표시.
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
+              ),
+              SizedBox(width: width4X),
+              Row(
+                children: [
+                  // 수량 감소 버튼. 수량이 1보다 클 때만 작동함.
+                  IconButton(
+                    icon: Icon(Icons.remove, size: section1Y),
+                    onPressed: quantity > 1 ? () {
+                      ref.read(detailQuantityIndexProvider.notifier).state--;
+                    } : null,
+                  ),
+                  // 현재 수량을 표시하는 컨테이너.
+                  Container(
+                    width: width7X,
+                    alignment: Alignment.center,
+                    child: Text('${quantity.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}',
+                      style: TextStyle(
+                        fontSize: selectedCountTextSize,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'NanumGothic',
+                      ),
+                    ),
+                  ),
+                  // 수량 증가 버튼.
+                  IconButton(
+                    icon: Icon(Icons.add, size: section1Y),
+                    onPressed: () {
+                      ref.read(detailQuantityIndexProvider.notifier).state++;
+                    },
+                  ),
+                  SizedBox(width: width6X),
+                  // 수량을 직접 입력할 수 있는 버튼.
+                  Container(
+                    width: directInsertBtnWidth,
+                    height: directInsertBtnHeight,
+                    child: ElevatedButton(
+                      onPressed: () async {
                         final TextEditingController controller = TextEditingController();
-                        // 텍스트 입력 컨트롤러를 생성.
-                        String input = ''; // 입력 값을 저장할 변수.
-                        return AlertDialog(
-                          // 다이얼로그 제목.
-                          title: Text('수량 입력', style: TextStyle(color: Colors.black)), // 색상 수정
-                          content: TextField(
-                            controller: controller, // 컨트롤러 연결.
-                            keyboardType: TextInputType.number,
-                            // 숫자만 입력 가능하게 설정.
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            autofocus: true, // 자동으로 포커스.
-                            onChanged: (value) {
-                              input = value;
-                            },
-                            decoration: InputDecoration(
-                              // 포커스된 상태의 밑줄 색상을 검정으로 변경.
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black), // 밑줄 색상 변경
+                        String input = '';
+
+                        // showSubmitAlertDialog 함수를 사용해 수량 입력 알림창 생성
+                        await showSubmitAlertDialog(
+                          context,
+                          title: '[수량 입력]', // 알림창 제목
+                          contentWidget: Material( // Material 위젯을 추가해 TextField를 감쌈
+                            color: Colors.transparent, // 배경색을 투명으로 설정하여 알림창 배경과 동일하게 만듦
+                            child: TextField(
+                              controller: controller,
+                              keyboardType: TextInputType.number, // 숫자 입력 전용 키보드 표시
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly // 숫자만 입력되도록 필터링
+                              ],
+                              autofocus: true, // 자동 포커스 설정
+                              onChanged: (value) {
+                                input = value; // 입력된 값 저장
+                              },
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black), // 포커스 시 검은색 테두리 표시
+                                ),
                               ),
                             ),
                           ),
-                          actions: <TextButton>[
-                            // 확인 버튼을 누르면 수량을 설정하고 다이얼로그를 닫음.
-                            TextButton(
-                              child: Text('확인', style: TextStyle(color: Colors.black)), // 색상 수정
-                              onPressed: () {
-                                if (input.isNotEmpty) {
-                                  ref.read(detailQuantityIndexProvider.notifier).state = int.parse(input);
-                                  // 입력된 값을 정수로 변환하여 상태를 업데이트.
-                                }
-                                Navigator.of(context).pop();
-                                // 다이얼로그 닫기.
-                              },
+                          actions: buildAlertActions(
+                            context,
+                            noText: '취소', // '취소' 버튼 텍스트
+                            yesText: '확인', // '확인' 버튼 텍스트
+                            noTextStyle: TextStyle(
+                              fontFamily: 'NanumGothic',
+                              color: Colors.black, // '취소' 텍스트 색상
                             ),
-                          ],
+                            yesTextStyle: TextStyle(
+                              fontFamily: 'NanumGothic',
+                              color: Colors.red, // '확인' 텍스트 색상
+                              fontWeight: FontWeight.bold, // 텍스트 굵게
+                            ),
+                            onYesPressed: () {
+                              // 입력값이 비어 있지 않을 경우 수량 업데이트
+                              if (input.isNotEmpty) {
+                                ref.read(detailQuantityIndexProvider.notifier).state = int.parse(input);
+                                // 입력된 값을 정수로 변환하여 상태를 업데이트.
+                              }
+                              Navigator.of(context).pop();
+                              // 다이얼로그 닫기.
+                            },
+                          ),
                         );
                       },
-                    );
-                  },
-                  child: Text('직접 입력', style: TextStyle(fontSize: 16, color: Colors.black)), // 색상 수정
-                ),
-              ],
-            ),
-          ],
+                      // onPressed: () {
+                      //   // 수량 입력을 위한 다이얼로그를 표시.
+                      //   showDialog(
+                      //     context: context,
+                      //     builder: (BuildContext context) {
+                      //       final TextEditingController controller = TextEditingController();
+                      //       // 텍스트 입력 컨트롤러를 생성.
+                      //       String input = ''; // 입력 값을 저장할 변수.
+                      //       return AlertDialog(
+                      //         // 다이얼로그 제목.
+                      //         title: Text('수량 입력', style: TextStyle(color: Colors.black)), // 색상 수정
+                      //         content: TextField(
+                      //           controller: controller, // 컨트롤러 연결.
+                      //           keyboardType: TextInputType.number,
+                      //           // 숫자만 입력 가능하게 설정.
+                      //           inputFormatters: <TextInputFormatter>[
+                      //             FilteringTextInputFormatter.digitsOnly
+                      //           ],
+                      //           autofocus: true, // 자동으로 포커스.
+                      //           onChanged: (value) {
+                      //             input = value;
+                      //           },
+                      //           decoration: InputDecoration(
+                      //             // 포커스된 상태의 밑줄 색상을 검정으로 변경.
+                      //             focusedBorder: UnderlineInputBorder(
+                      //               borderSide: BorderSide(color: Colors.black), // 밑줄 색상 변경
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         actions: <TextButton>[
+                      //           // 확인 버튼을 누르면 수량을 설정하고 다이얼로그를 닫음.
+                      //           TextButton(
+                      //             child: Text('확인', style: TextStyle(color: Colors.black)), // 색상 수정
+                      //             onPressed: () {
+                      //               if (input.isNotEmpty) {
+                      //                 ref.read(detailQuantityIndexProvider.notifier).state = int.parse(input);
+                      //                 // 입력된 값을 정수로 변환하여 상태를 업데이트.
+                      //               }
+                      //               Navigator.of(context).pop();
+                      //               // 다이얼로그 닫기.
+                      //             },
+                      //           ),
+                      //         ],
+                      //       );
+                      //     },
+                      //   );
+                      // },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Color(0xFFEEEEEE),
+                        backgroundColor: Color(0xFFEEEEEE),
+                        side: BorderSide(color: Color(0xFFA5A5A5),
+                        ), // 버튼 테두리 색상 설정
+                      ),
+                      child: Text('직접입력',
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: directInsertBtnFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF666666),
+                        ),
+                      ), // 색상 수정
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-      // 총 가격을 표시.
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-        child: Text('총 가격: ${totalPrice.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      ),
-    ],
+        // 총 가격을 표시.
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: sectionX, vertical: section2Y),
+          child: Text('총 가격 : ${totalPrice.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: selectedAllPriceTextSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
   );
 }
 // ------ buildProductAllCountAndPriceSelection 위젯 끝: 선택한 색상, 선택한 사이즈, 수량 및 총 가격 부분을 구현.
@@ -2139,14 +2267,24 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return ClipRect(
-          child: Align(
-            alignment: Alignment.topCenter, // 이미지 상단 정렬됨.
-            heightFactor: 0.2, // 이미지의 높이가 1/5로 설정됨.
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.fitWidth, // 이미지가 좌우로 꽉 차도록 원본 비율이 유지됨.
-              width: MediaQuery.of(context).size.width, // 화면 너비에 맞추어 이미지 크기가 조정됨.
+        return Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black, // 테두리 색상을 검은색으로 설정.
+                width: 1, // 테두리 두께를 1로 설정.
+              ),
+            ),
+          ),
+          child: ClipRect(
+            child: Align(
+              alignment: Alignment.topCenter, // 이미지 상단 정렬됨.
+              heightFactor: 0.2, // 이미지의 높이가 1/5로 설정됨.
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.fitWidth, // 이미지가 좌우로 꽉 차도록 원본 비율이 유지됨.
+                width: MediaQuery.of(context).size.width, // 화면 너비에 맞추어 이미지 크기가 조정됨.
+              ),
             ),
           ),
         );
@@ -2160,10 +2298,20 @@ class _ProductInfoContentsState extends State<ProductInfoContents> {
       return Container(); // 이미지가 없을 경우 빈 컨테이너 반환됨.
     }
 
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.fitWidth, // 이미지가 좌우로 꽉 차도록 원본 비율이 유지됨.
-      width: MediaQuery.of(context).size.width, // 화면 너비에 맞추어 이미지 크기가 조정됨.
+    return Container(
+       decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black, // 테두리 색상을 검은색으로 설정.
+              width: 1, // 테두리 두께를 1로 설정.
+            ),
+          ),
+        ),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.fitWidth, // 이미지가 좌우로 꽉 차도록 원본 비율이 유지됨.
+          width: MediaQuery.of(context).size.width, // 화면 너비에 맞추어 이미지 크기가 조정됨.
+        ),
     );
   }
 
@@ -2317,41 +2465,49 @@ class ProductReviewContents extends StatelessWidget {
     final double interval1Y = screenSize.height * (4 / referenceHeight);
     final double reviewDataTextFontSize1 = screenSize.height * (14 / referenceHeight);
 
-    return CommonCardView(
-      // 배경색을 설정함
-      backgroundColor: Color(0xFFF3F3F3),
-      content: Padding(
-        padding: EdgeInsets.symmetric(vertical: buildSectionLineY, horizontal: buildSectionWidthX),
-        // 리뷰 내용 전체를 세로로 정렬된 컬럼 위젯으로 구성함
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 작성자 이름을 마스킹 처리된 값으로 출력함
-            _buildReviewInfoRow(context, '작성자: ', maskedReviewerName, bold: true),
-            SizedBox(height: interval1Y),
-            // 리뷰 작성일자를 출력함
-            _buildReviewInfoRow(context, '리뷰 등록 일자: ', reviewDate, bold: true),
-            SizedBox(height: interval1Y),
-            // 선택된 색상 및 사이즈가 존재할 경우 이를 출력함
-            if (reviewSelectedColor.isNotEmpty || reviewSelectedSize.isNotEmpty)
-              _buildReviewInfoRow(context, '색상 / 사이즈: ', '$reviewSelectedColor / $reviewSelectedSize', bold: true),
-            SizedBox(height: interval1Y),
-            // 리뷰 제목이 존재할 경우 이를 출력함
-            if (reviewTitle.isNotEmpty)
-              _buildReviewInfoColumn(context, '제목: ', reviewTitle, bold: true, fontSize: reviewDataTextFontSize1),
-            SizedBox(height: interval1Y),
-            // 리뷰 내용이 존재할 경우 이를 출력함
-            if (reviewContent.isNotEmpty)
-              _buildReviewInfoColumn(context, '내용: ', reviewContent, bold: true, fontSize: reviewDataTextFontSize1),
-            SizedBox(height: interval1Y),
-            // 리뷰 이미지가 존재할 경우 이를 출력함
-            if (reviewImages.isNotEmpty)
-              _buildReviewImagesRow(reviewImages, context),
-          ],
+
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+          ),
         ),
-      ),
-    );
-  }
+        child: CommonCardView(
+          // 배경색을 설정함
+          backgroundColor: Color(0xFFF3F3F3),
+          content: Padding(
+            padding: EdgeInsets.symmetric(vertical: buildSectionLineY, horizontal: buildSectionWidthX),
+            // 리뷰 내용 전체를 세로로 정렬된 컬럼 위젯으로 구성함
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 작성자 이름을 마스킹 처리된 값으로 출력함
+                _buildReviewInfoRow(context, '작성자: ', maskedReviewerName, bold: true),
+                SizedBox(height: interval1Y),
+                // 리뷰 작성일자를 출력함
+                _buildReviewInfoRow(context, '리뷰 등록 일자: ', reviewDate, bold: true),
+                SizedBox(height: interval1Y),
+                // 선택된 색상 및 사이즈가 존재할 경우 이를 출력함
+                if (reviewSelectedColor.isNotEmpty || reviewSelectedSize.isNotEmpty)
+                  _buildReviewInfoRow(context, '색상 / 사이즈: ', '$reviewSelectedColor / $reviewSelectedSize', bold: true),
+                SizedBox(height: interval1Y),
+                // 리뷰 제목이 존재할 경우 이를 출력함
+                if (reviewTitle.isNotEmpty)
+                  _buildReviewInfoColumn(context, '제목: ', reviewTitle, bold: true, fontSize: reviewDataTextFontSize1),
+                SizedBox(height: interval1Y),
+                // 리뷰 내용이 존재할 경우 이를 출력함
+                if (reviewContent.isNotEmpty)
+                  _buildReviewInfoColumn(context, '내용: ', reviewContent, bold: true, fontSize: reviewDataTextFontSize1),
+                SizedBox(height: interval1Y),
+                // 리뷰 이미지가 존재할 경우 이를 출력함
+                if (reviewImages.isNotEmpty)
+                  _buildReviewImagesRow(reviewImages, context),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
   // 리뷰 정보를 세로로 구성하여 표시하는 함수
   Widget _buildReviewInfoColumn(BuildContext context, String label, String value, {bool bold = false, double fontSize = 14}) {

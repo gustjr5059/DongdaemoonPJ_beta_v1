@@ -270,10 +270,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     // 이미지 위치 조정을 위한 비율 기반 수치
     final double circleImageLeft = screenSize.width * (20 / referenceWidth);
-    final double circleImageTop = screenSize.height * (220 / referenceHeight);
+    final double circleImageTop = screenSize.height * (223 / referenceHeight);
     final double circleImageWidth = screenSize.width * (120 / referenceWidth);
     final double circleImageHeight = screenSize.height * (48 / referenceHeight);
-    final double exclamationImageLeft = screenSize.width * (323 / referenceWidth);
+    final double exclamationImageLeft = screenSize.width * (345 / referenceWidth);
     final double exclamationImageTop = screenSize.height * (210 / referenceHeight);
     final double exclamationImageWidth = screenSize.width * (37 / referenceWidth);
     final double exclamationImageHeight = screenSize.height * (55 / referenceHeight);

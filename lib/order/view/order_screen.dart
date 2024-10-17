@@ -264,9 +264,9 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderAppBarTitleWidth = screenSize.width * (150 / referenceWidth);
     final double orderAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    final double orderAppBarTitleX = screenSize.height * (85 / referenceHeight);
     final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -279,7 +279,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     final double orderWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
     return GestureDetector(
       onTap: () {
@@ -309,7 +309,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                     background: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '발주하기 요청',
+                      title: '발주 요청',
                       leadingType: LeadingType.back,
                       // 이전화면으로 이동 버튼.
                       buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
@@ -345,6 +345,13 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                         // 좌우로 0의 패딩을 추가
                         child: Column(
                           children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
                             if (user != null) UserInfoWidget(email: user.email!), // 사용자가 로그인된 경우 사용자 정보를 표시
                             if (user != null)
                               RecipientInfoWidget(

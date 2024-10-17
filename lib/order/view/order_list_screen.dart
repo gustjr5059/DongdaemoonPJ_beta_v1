@@ -211,8 +211,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 찜 목록 버튼 수치 (Case 2)
     final double orderlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderlistWishlistBtnX = screenSize.width * (12 / referenceWidth);
+    final double orderlistWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
     // 발주 내역 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
@@ -316,10 +316,18 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
 
                         return Padding(
                           // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
-                          padding: EdgeInsets.symmetric(horizontal: orderlistPaddingX),
+                          // padding: EdgeInsets.symmetric(horizontal: orderlistPaddingX),
+                          padding: EdgeInsets.symmetric(horizontal: 0),
                           child: Column(
                             children: [
-                              SizedBox(height: orderlistPadding1Y),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
+                                ),
+                              ),
+                              // SizedBox(height: orderlistPadding1Y),
                               // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
                               OrderListItemWidget(order: reversedOrders[index]),
                             ],

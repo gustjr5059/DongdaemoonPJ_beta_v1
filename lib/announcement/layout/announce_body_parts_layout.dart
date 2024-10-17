@@ -18,12 +18,15 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // body 부분 전체 패딩 수치 계산
     final double announcelistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    final double announcelistPadding1X = screenSize.width * (17 / referenceWidth); // 상하 패딩 계산
+
 
     // 텍스트 크기 계산
     final double announcelistTitleDataFontSize =
@@ -71,7 +74,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
           },
           // 공지사항 항목을 패딩으로 감싸서 간격을 줌
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: announcelistPadding1Y), // 상하 방향으로 announcelistPadding1Y의 패딩을 적용함
+            padding: EdgeInsets.symmetric(horizontal: announcelistPadding1X, vertical: announcelistPadding1Y), // 상하 방향으로 announcelistPadding1Y의 패딩을 적용함
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내에서 왼쪽 정렬을 설정함
               children: [
@@ -132,12 +135,14 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // body 부분 전체 패딩 수치 계산
     final double announceDtlistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    final double announceDtlistPadding1X = screenSize.width * (17 / referenceWidth); // 상하 패딩 계산
 
     // 텍스트 크기 계산
     final double announceDtlistTitleDataFontSize =
@@ -176,7 +181,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final contentsWebLinkText = (announceDetailItem['contents_web_link_text'] as String?) ?? ''; // 웹 링크에 대한 텍스트를 가져옴
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: announceDtlistPadding1Y), // 상하로 announceDtlistPadding1Y의 패딩을 적용함
+      padding: EdgeInsets.symmetric(horizontal: announceDtlistPadding1X, vertical: announceDtlistPadding1Y), // 상하로 announceDtlistPadding1Y의 패딩을 적용함
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내에서 왼쪽 정렬을 설정함
         children: [

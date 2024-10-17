@@ -299,34 +299,34 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
   return Positioned(
     top: screenSize.height - topBarY, // 화면 하단에서 topBarY 위로 위치
     right: topBarX, // 화면 오른쪽 끝에서 topBarX 왼쪽으로 위치
-    child: FloatingActionButton(
-      mini: true, // 버튼을 작게 설정
-      backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
-      onPressed: () {
-        if (scrollController.hasClients) {
-          scrollController.animateTo(
-            0.0,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        } else {
-          // ScrollController가 클라이언트에 연결되지 않은 경우 처리
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (scrollController.hasClients) {
-              scrollController.animateTo(
-                0.0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-            }
-          });
-        }
-      },
-      child: Icon(
-        Icons.arrow_upward, // 위로 가리키는 화살표 아이콘
-        color: Colors.black, // 아이콘 색상은 검은색으로 설정
+      child: FloatingActionButton(
+        mini: true, // 버튼을 작게 설정
+        backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
+        onPressed: () {
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              0.0,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+            );
+          } else {
+            // ScrollController가 클라이언트에 연결되지 않은 경우 처리
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (scrollController.hasClients) {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+              }
+            });
+          }
+        },
+        child: Icon(
+          Icons.arrow_upward, // 위로 가리키는 화살표 아이콘
+          color: Color(0xFFE17735), // 아이콘 색상은 주황색으로 설정
+        ),
       ),
-    ),
   );
 }
 // ------ 공통적으로 사용될 'top' 버튼 위젯 내용 끝

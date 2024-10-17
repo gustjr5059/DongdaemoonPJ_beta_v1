@@ -275,9 +275,9 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double profileAppBarTitleWidth = screenSize.width * (90 / referenceWidth);
+    final double profileAppBarTitleWidth = screenSize.width * (100 / referenceWidth);
     final double profileAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double profileAppBarTitleX = screenSize.width * (40 / referenceHeight);
+    final double profileAppBarTitleX = screenSize.width * (50 / referenceHeight);
     final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -345,12 +345,20 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                         (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 profilePaddingX으로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: profilePaddingX),
+                        // padding: EdgeInsets.symmetric(horizontal: profilePaddingX),
+                        padding: EdgeInsets.symmetric(horizontal: 0),
                         child: Column(
                           children: [
-                            SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
+                            // SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
                             if (user != null) UserProfileInfo(email: user.email!),
-                            SizedBox(height: profilePadding1Y),
+                            SizedBox(height: profilePadding2Y),
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: Container(
@@ -382,13 +390,22 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                               ),
                               backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
                               elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
-                              padding: EdgeInsets.zero, // 패딩을 없앰
+                              // padding: EdgeInsets.zero, // 패딩을 없앰
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
+                                  0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
                             ),
-                            SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
+                            SizedBox(height: profilePadding2Y),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),// 높이 profilePadding1Y로 간격 설정
                             // user 객체가 null이 아닌 경우 실행됨
                             if (user != null)
                             // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
-                              UserProfileOptions(email: user.email!),
+                            UserProfileOptions(email: user.email!),
                             SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
                             RichText(
                               text: TextSpan(

@@ -72,7 +72,10 @@ class _SpringSubMainScreenState extends ConsumerState<SpringSubMainScreen>
   late BannerAutoScrollClass _small1BannerAutoScroll;
 
   // 배너 이미지의 총 개수를 저장하는 변수
-  int bannerImageCount = 3;
+  // 대배너
+  int bannerImageCount1 = 5;
+  // 소배너
+  int bannerImageCount2 = 3;
 
   // 배너 클릭 시 이동할 URL 리스트를 정의함.
   // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
@@ -171,7 +174,7 @@ class _SpringSubMainScreenState extends ConsumerState<SpringSubMainScreen>
     _largeBannerAutoScroll = BannerAutoScrollClass(
       pageController: _largeBannerPageController,
       currentPageProvider: springSubMainLargeBannerPageProvider,
-      itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
+      itemCount: bannerImageCount1, // 총 배너 이미지 개수 전달
     );
 
     // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
@@ -183,7 +186,7 @@ class _SpringSubMainScreenState extends ConsumerState<SpringSubMainScreen>
     _small1BannerAutoScroll = BannerAutoScrollClass(
       pageController: _small1BannerPageController,
       currentPageProvider: springSubMainSmall1BannerPageProvider,
-      itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
+      itemCount: bannerImageCount2, // 총 배너 이미지 개수 전달
     );
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -332,13 +335,13 @@ class _SpringSubMainScreenState extends ConsumerState<SpringSubMainScreen>
     final double sectionPlusChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double sectionPlusChevronIconHeight = screenSize.height * (24 / referenceHeight);
     final double sectionPlusChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double sectionPlusChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double sectionPlusChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double sectionPlusWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double sectionPlusWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double sectionPlusWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double sectionPlusWishlistBtnY = screenSize.height * (6 / referenceHeight);
+    final double sectionPlusWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
     // 컨텐츠 사이의 높이 수치
     final double interval1Y = screenSize.height * (3 / referenceHeight);
@@ -410,9 +413,16 @@ class _SpringSubMainScreenState extends ConsumerState<SpringSubMainScreen>
                         (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
                         child: Column(
                           children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
                             // SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                             // 큰 배너 섹션을 카드뷰로 구성
                             CommonCardView(

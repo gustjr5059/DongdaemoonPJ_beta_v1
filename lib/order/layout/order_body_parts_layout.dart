@@ -935,7 +935,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
           ),
           SizedBox(height: interval1Y), // 텍스트와 설명 텍스트 사이에 8px의 여백을 추가함
           Text(
-            "등록된 수령자 정보를 불러올 수 있습니다.\n'즐겨찾기 선택' 버튼을 클릭하면 등록된 내용을 불러올 수 있습니다.",
+            "'즐겨찾기 선택' 버튼을 클릭해서 등록된 내용을 불러오세요.",
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
@@ -1010,6 +1010,11 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           _isCustomMemo = true;
                           _customMemoController.text = memo;
                         }
+
+                        // 드롭다운 메뉴 상태 갱신
+                        // (배송메모 드롭다운 메뉴 버튼에 자동완성으로 데이터 불러올 시,
+                        // 선택된 상태로 인식이 안되던 이슈를 해당 로직을 추가해서 해결!!)
+                        widget.onMemoChanged(_isCustomMemo, _customMemoController.text, _selectedMemo);
                       });
                     }
                   },
@@ -1074,33 +1079,33 @@ class RecipientInfoItemsList extends ConsumerWidget {
     final double recipientInfolistDataPaddingY =
         screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
     final double recipientInfolistTextDataFontSize1 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+        screenSize.height * (12 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
     final double recipientInfolistTextDataFontSize2 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
     // 선택 버튼 수치
     // 선택 버튼의 크기와 패딩, 글꼴 크기를 설정함
     final double SelectBtnHeight =
-        screenSize.height * (40 / referenceHeight);
+        screenSize.height * (30 / referenceHeight);
     final double SelectBtnWidth =
         screenSize.width * (80 / referenceWidth);
     final double SelectBtnPaddingY =
-        screenSize.height * (4 / referenceHeight);
+        screenSize.height * (2 / referenceHeight);
     final double SelectBtnPaddingX =
-        screenSize.width * (4 / referenceWidth);
+        screenSize.width * (2 / referenceWidth);
     final double SelectBtnFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     // 삭제 버튼 글꼴 및 위치 설정
     // 삭제 버튼의 크기, 패딩, 글꼴 크기를 설정함
     final double DeleteBtnHeight =
-        screenSize.height * (40 / referenceHeight);
+        screenSize.height * (30 / referenceHeight);
     final double DeleteBtnWidth =
         screenSize.width * (80 / referenceWidth);
     final double DeleteBtnPaddingY =
-        screenSize.height * (4 / referenceHeight);
+        screenSize.height * (2 / referenceHeight);
     final double DeleteBtnPaddingX =
-        screenSize.width * (4 / referenceWidth);
+        screenSize.width * (2 / referenceWidth);
     final double DeleteBtnFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     // 텍스트 데이터 간 너비 및 높이 설정
     // 텍스트 간 가로, 세로 간격을 설정함
     final double intervalX =
@@ -1129,7 +1134,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
             height: recipientInfolistCardViewHeight, // 카드뷰의 높이를 설정함
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFFDADADA), width: 5.0), // 하단 테두리 색상을 설정함
+                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
               ),
             ),
             child: CommonCardView(
@@ -1138,6 +1143,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬로 설정함
                   children: [
+                    SizedBox(height: interval1Y), // 텍스트 사이에 여백 추가
                     // 수령자 정보 내 이름
                     // 수령자의 이름을 Bold 스타일로 화면에 표시함
                     Text(
@@ -1770,7 +1776,7 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 발주내역 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
     final double orderlistInfoCardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
     final double orderlistInfoCardViewHeight =
         screenSize.height * (160 / referenceHeight); // 세로 비율 계산
 
@@ -1780,11 +1786,11 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 텍스트 크기 계산
     final double orderlistInfoOrderDateDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistInfoOrderStatusDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistInfoOrderNumberDataFontSize =
-        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
     final double orderlistInfoDetailViewBtn1X =
@@ -1832,9 +1838,9 @@ class OrderListItemWidget extends ConsumerWidget {
         child: Container(
           width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
           height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
-          color: Color(0xFFF3F3F3), // 배경색 설정
+          color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
           child: CommonCardView( // 공통 카드뷰 위젯 사용
-            backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
             elevation: 0, // 그림자 깊이 설정
             content: Padding( // 패딩 설정
               padding: EdgeInsets.symmetric(vertical: orderlistInfoCardViewPadding1Y, horizontal: orderlistInfoCardViewPaddingX), // 상하 좌우 패딩 설정
@@ -2038,51 +2044,53 @@ class _OrderListDetailItemWidgetState
 
     // 텍스트 크기 계산
     final double orderlistDtInfoOrderDateDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoOrderNumberDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoPaymentCompletionDateDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoPaymentInfoDataFontSize1 =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoPaymentInfoDataFontSize2 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoRecipientInfoDataFontSize1 =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoRecipientInfoDataFontSize2 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoRefundCompletionDateDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoBriefIntroDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoProdNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoOriginalPriceDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPriceDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPercentDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoColorImageDataWidth =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
+        screenSize.width * (14 / referenceWidth); // 색상 이미지 가로 크기 설정함
     final double orderlistDtInfoColorImageDataHeight =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+        screenSize.width * (14 / referenceWidth); // 색상 이미지 세로 크기 설정함
     final double orderlistDtInfoColorTextDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoSizeTextDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoCountTextDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 환불, 리뷰 작성, 장바구니 담기 버튼 수치
     final double orderlistDtInfoBottomBtnDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
     final double interval3Y = screenSize.height * (16 / referenceHeight); // 세로 간격 3 계산
     final double interval4Y = screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
+    final double interval5Y = screenSize.height * (3 / referenceHeight); // 세로 간격 5 계산
+    final double interval6Y = screenSize.height * (5 / referenceHeight); // 세로 간격 6 계산
     final double interval1X = screenSize.width * (40 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
     final double interval3X = screenSize.width * (20 / referenceWidth); // 가로 간격 2 계산
@@ -2185,81 +2193,93 @@ class _OrderListDetailItemWidgetState
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-            child: Container(
+          // // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+          //   child: Container(
+              Container(
               // width: orderlistDtInfo1CardViewWidth, // 카드뷰 가로 크기 설정
               // height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
-              color: Color(0xFFF3F3F3), // 배경색 설정
-              // 발주 날짜와 발주 번호, 결제 완료일을 표시하는 섹션
-              child: CommonCardView( // 공통 카드뷰 위젯 사용
-                backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
-                elevation: 0, // 그림자 깊이 설정
-                content: Padding( // 패딩 설정
-                  padding: EdgeInsets.symmetric(vertical: orderlistDtInfoCardViewPadding1Y, horizontal: orderlistDtInfoCardViewPaddingX), // 상하 좌우 패딩 설정
-                  child: Column( // 컬럼 위젯으로 구성함
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    // 발주 일자를 표시
-                    Text(
-                      '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
-                      style: TextStyle(
-                        fontSize: orderlistDtInfoOrderDateDataFontSize, // 텍스트 크기 설정
-                        fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic', // 글꼴 설정
-                        color: Colors.black, // 텍스트 색상 설정
+              // color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                  ),
+                ),
+                // 발주 날짜와 발주 번호, 결제 완료일을 표시하는 섹션
+                child: CommonCardView( // 공통 카드뷰 위젯 사용
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                  elevation: 0, // 그림자 깊이 설정
+                  content: Padding( // 패딩 설정
+                    padding: EdgeInsets.symmetric(vertical: orderlistDtInfoCardViewPadding1Y, horizontal: orderlistDtInfoCardViewPaddingX), // 상하 좌우 패딩 설정
+                    child: Column( // 컬럼 위젯으로 구성함
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      // 발주 일자를 표시
+                      Text(
+                        '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                        style: TextStyle(
+                          fontSize: orderlistDtInfoOrderDateDataFontSize, // 텍스트 크기 설정
+                          fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                          fontFamily: 'NanumGothic', // 글꼴 설정
+                          color: Colors.black, // 텍스트 색상 설정
+                        ),
                       ),
+                      SizedBox(height: interval2Y),
+                      // 발주 번호를 표시
+                      Text(
+                        '발주번호: $orderNumber',
+                        style: TextStyle(
+                          fontSize: orderlistDtInfoOrderNumberDataFontSize, // 텍스트 크기 설정
+                          fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                          fontFamily: 'NanumGothic', // 글꼴 설정
+                          color: Color(0xFF676767), // 텍스트 색상 설정
+                        ),
+                      ),
+                      SizedBox(height: interval2Y),
+                      // 결제완료일 데이터를 표시, 비동기 데이터 처리 로직을 추가
+                      paymentCompleteDateAsyncValue.when(
+                        data: (date) {
+                          if (date != null) {
+                            return Text(
+                              '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
+                              style: TextStyle(
+                                fontSize: orderlistDtInfoPaymentCompletionDateDataFontSize, // 텍스트 크기 설정
+                                fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                                fontFamily: 'NanumGothic', // 글꼴 설정
+                                color: Color(0xFF676767), // 텍스트 색상 설정
+                              ),
+                            );
+                          } else {
+                            return SizedBox.shrink(); // UI에 아무것도 표시하지 않음
+                          }
+                        },
+                        loading: () => CircularProgressIndicator(), // 로딩 상태 처리
+                        error: (error, stack) => Text('오류 발생'), // 오류 상태 처리
+                        ),
+                      ],
                     ),
-                    SizedBox(height: interval2Y),
-                    // 발주 번호를 표시
-                    Text(
-                      '발주번호: $orderNumber',
-                      style: TextStyle(
-                        fontSize: orderlistDtInfoOrderNumberDataFontSize, // 텍스트 크기 설정
-                        fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic', // 글꼴 설정
-                        color: Color(0xFF676767), // 텍스트 색상 설정
-                      ),
-                    ),
-                    SizedBox(height: interval2Y),
-                    // 결제완료일 데이터를 표시, 비동기 데이터 처리 로직을 추가
-                    paymentCompleteDateAsyncValue.when(
-                      data: (date) {
-                        if (date != null) {
-                          return Text(
-                            '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
-                            style: TextStyle(
-                              fontSize: orderlistDtInfoPaymentCompletionDateDataFontSize, // 텍스트 크기 설정
-                              fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                              fontFamily: 'NanumGothic', // 글꼴 설정
-                              color: Color(0xFF676767), // 텍스트 색상 설정
-                            ),
-                          );
-                        } else {
-                          return SizedBox.shrink(); // UI에 아무것도 표시하지 않음
-                        }
-                      },
-                      loading: () => CircularProgressIndicator(), // 로딩 상태 처리
-                      error: (error, stack) => Text('오류 발생'), // 오류 상태 처리
-                      ),
-                    ],
                   ),
                 ),
               ),
-            ),
-          ),
-          SizedBox(height: interval1Y),
+          // ),
+          // SizedBox(height: interval1Y),
           // 결제 정보를 표시하는 카드뷰
           // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-            child: Container(
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+          //   child: Container(
+              Container(
                 // width: orderlistDtInfo1CardViewWidth, // 카드뷰 가로 크기 설정
                 // height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
-                color: Color(0xFFF3F3F3), // 배경색 설정
+                // color: Color(0xFFF3F3F3), // 배경색 설정
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                  ),
+                ),
                 child: CommonCardView( // 공통 카드뷰 위젯 사용
-                  backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
                   elevation: 0, // 그림자 깊이 설정
                   content: Padding( // 패딩 설정
                     padding: EdgeInsets.symmetric(vertical: orderlistDtInfoCardViewPadding1Y, horizontal: orderlistDtInfoCardViewPaddingX), // 상하 좌우 패딩 설정
@@ -2296,18 +2316,24 @@ class _OrderListDetailItemWidgetState
                 ),
               ),
             ),
-          ),
-          SizedBox(height: interval1Y),
+          // ),
+          // SizedBox(height: interval1Y),
           // 수령자 정보를 표시하는 카드뷰
           // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-            child: Container(
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+          //   child: Container(
+            Container(
                 // width: orderlistDtInfo1CardViewWidth, // 카드뷰 가로 크기 설정
                 // height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
-                color: Color(0xFFF3F3F3), // 배경색 설정
+                // color: Color(0xFFF3F3F3), // 배경색 설정
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                  ),
+                ),
                 child: CommonCardView( // 공통 카드뷰 위젯 사용
-                  backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
                   elevation: 0, // 그림자 깊이 설정
                   content: Padding( // 패딩 설정
                     padding: EdgeInsets.symmetric(vertical: orderlistDtInfoCardViewPadding1Y, horizontal: orderlistDtInfoCardViewPaddingX), // 상하 좌우 패딩 설정
@@ -2341,26 +2367,28 @@ class _OrderListDetailItemWidgetState
                 ),
               ),
             ),
-          ),
-          SizedBox(height: interval4Y),
+          // ),
+          // SizedBox(height: interval4Y),
           // 각 상품 정보를 표시하는 로직을 반복문으로 구성함
           for (var productInfo in productInfoList)...[
             // 클립 위젯을 사용하여 모서리를 둥글게 설정함
             ClipRRect(
-              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+              borderRadius: BorderRadius.circular(20), // 모서리 반경 설정
               child: Container(
                 // width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
                 // height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
                 // color: Color(0xFFF3F3F3), // 배경색 설정
                 // color: Theme.of(context).scaffoldBackgroundColor,
-                decoration: BoxDecoration(
-                border: Border(
-                bottom: BorderSide(color: Color(0xFFCECECE), width: 2.0), // 하단 테두리 색상을 지정함
-                  ),
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border(
+                //   bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
+                //   ),
+                // ),
+                padding: EdgeInsets.only(left: interval2X, right: interval2X, top: interval6Y, bottom: interval5Y),
                 child: CommonCardView(
                   // backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  backgroundColor: Color(0xFFF3F3F3),
                   elevation: 0, // 그림자 깊이 설정
                   content: Padding(
                     padding: EdgeInsets.zero, // 패딩을 없앰
@@ -2408,9 +2436,11 @@ class _OrderListDetailItemWidgetState
                             child: Container(
                               width: orderlistDtInfo3CardViewWidth, // 카드뷰 가로 크기 설정
                               height: orderlistDtInfo3CardViewHeight, // 카드뷰 세로 크기 설정
-                              color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                              // color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                              color: Color(0xFFF3F3F3),
                               child: CommonCardView(
-                                backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                                // backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                                backgroundColor: Color(0xFFF3F3F3),
                                 elevation: 0, // 그림자 깊이 설정
                                 content: Padding(
                                   padding: EdgeInsets.zero, // 패딩을 없앰

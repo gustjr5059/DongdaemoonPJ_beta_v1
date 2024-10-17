@@ -69,7 +69,7 @@ class CartItemsList extends ConsumerWidget {
     final double cartlistCardViewWidth =
         screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
     final double cartlistCardViewHeight =
-        screenSize.height * (300 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+        screenSize.height * (320 / referenceHeight); // 화면 세로 비율에 맞게 설정함
     final double cartlistCardViewPaddingX =
         screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
     // 썸네일 이미지 크기 설정
@@ -96,7 +96,7 @@ class CartItemsList extends ConsumerWidget {
     final double cartlistOriginalPriceFontSize =
         screenSize.height * (13 / referenceHeight); // 원래 가격 글꼴 크기 설정함
     final double cartlistDiscountPercentFontSize =
-        screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
+        screenSize.height * (15 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
     final double cartlistDiscountPriceFontSize =
         screenSize.height * (15 / referenceHeight); // 할인 가격 글꼴 크기 설정함
     final double cartlistSelectedColorTextFontSize =
@@ -116,9 +116,7 @@ class CartItemsList extends ConsumerWidget {
     final double cartlistUpdateItemQuantityBtnFontSize =
         screenSize.height * (16 / referenceHeight); // 수량 업데이트 버튼 글꼴 크기 설정함
     final double cartlistUpdateItemQuantityWidth =
-        screenSize.width * (50 / referenceWidth); // 수량 업데이트 버튼 너비 설정함
-    final double cartlistDirectInsertBtnFontSize =
-        screenSize.height * (16 / referenceHeight); // 직접 입력 버튼 글꼴 크기 설정함
+        screenSize.width * (80 / referenceWidth); // 수량 업데이트 버튼 너비 설정함
 
     // 텍스트 데이터 간 너비 및 높이 설정
     final double cartlist1X =
@@ -127,10 +125,16 @@ class CartItemsList extends ConsumerWidget {
         screenSize.width * (19 / referenceWidth); // 텍스트 간 가로 여백 설정함
     final double cartlist3X =
         screenSize.width * (30 / referenceWidth); // 텍스트 간 가로 여백 설정함
+    final double cartlist4X = screenSize.width * (40 / referenceWidth);
     final double cartlist1Y =
         screenSize.width * (6 / referenceWidth); // 텍스트 간 세로 여백 설정함
     final double cartlist2Y =
         screenSize.width * (8 / referenceWidth); // 텍스트 간 세로 여백 설정함
+
+    // 직접입력 버튼 수치
+    final double directInsertBtnWidth = screenSize.width * (100 / referenceWidth);
+    final double directInsertBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double directInsertBtnFontSize = screenSize.height * (14 / referenceHeight);
 
 
     // cartItemsProvider를 통해 장바구니 아이템 목록 상태를 가져옴
@@ -180,7 +184,7 @@ class CartItemsList extends ConsumerWidget {
             height: cartlistCardViewHeight, // CommonCardView의 높이를 설정함
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFFDADADA), width: 5.0), // 하단 테두리 색상을 설정함
+                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
               ),
             ),
             child: CommonCardView(
@@ -426,7 +430,7 @@ class CartItemsList extends ConsumerWidget {
                           width: cartlistUpdateItemQuantityWidth,
                           alignment: Alignment.center,
                           child: Text(
-                            '${cartItem['selected_count'] ?? 0}',
+                            '${numberFormat.format(cartItem['selected_count'] ?? 0)}',
                             style: TextStyle(
                               fontSize: cartlistUpdateItemQuantityBtnFontSize,
                               fontFamily: 'NanumGothic',
@@ -436,87 +440,88 @@ class CartItemsList extends ConsumerWidget {
                           ),
                         ),
                         // 수량 증가 버튼
-                        // '+' 버튼을 눌렀을 때 수량이 1000을 넘지 않도록 구현
+                        // '+' 버튼을 눌렀을 때 수량이 증가하도록 구현
                         IconButton(
                           icon: Icon(Icons.add, size: cartlistUpdateItemQuantityBtnSize),
                           onPressed: () {
-                            if (cartItem['selected_count'] < 1000) {
-                              // 수량이 1000보다 작을 경우에만 증가
+                              // 수량이 증가
                               ref.read(cartItemsProvider.notifier)
                                   .updateItemQuantity(cartItem['id'], cartItem['selected_count'] + 1);
-                            } else {
-                              // 수량이 1000 이상이면 경고 메시지를 표시
-                              showCustomSnackBar(context, '상품 당 최대 1,000개까지 담을 수 있습니다.');
-                            }
                           },
                         ),
-                        // 수량 직접 입력 버튼
-                        TextButton(
-                          onPressed: () async {
-                            final TextEditingController controller = TextEditingController();
-                            String input = '';
+                        SizedBox(width: cartlist3X),
+                        // 수량을 직접 입력할 수 있는 버튼.
+                        Container(
+                          width: directInsertBtnWidth,
+                          height: directInsertBtnHeight,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final TextEditingController controller = TextEditingController();
+                              String input = '';
 
-                            // showSubmitAlertDialog 함수를 사용해 수량 입력 알림창 생성
-                            await showSubmitAlertDialog(
-                              context,
-                              title: '[수량 입력]', // 알림창 제목
-                              contentWidget: Material( // Material 위젯을 추가해 TextField를 감쌈
-                                color: Colors.transparent, // 배경색을 투명으로 설정하여 알림창 배경과 동일하게 만듦
-                                child: TextField(
-                                controller: controller,
-                                keyboardType: TextInputType.number, // 숫자 입력 전용 키보드 표시
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly // 숫자만 입력되도록 필터링
-                                ],
-                                autofocus: true, // 자동 포커스 설정
-                                onChanged: (value) {
-                                  input = value; // 입력된 값 저장
-                                },
-                                decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black), // 포커스 시 검은색 테두리 표시
+                              // showSubmitAlertDialog 함수를 사용해 수량 입력 알림창 생성
+                              await showSubmitAlertDialog(
+                                context,
+                                title: '[수량 입력]', // 알림창 제목
+                                contentWidget: Material( // Material 위젯을 추가해 TextField를 감쌈
+                                  color: Colors.transparent, // 배경색을 투명으로 설정하여 알림창 배경과 동일하게 만듦
+                                  child: TextField(
+                                  controller: controller,
+                                  keyboardType: TextInputType.number, // 숫자 입력 전용 키보드 표시
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly // 숫자만 입력되도록 필터링
+                                  ],
+                                  autofocus: true, // 자동 포커스 설정
+                                  onChanged: (value) {
+                                    input = value; // 입력된 값 저장
+                                  },
+                                  decoration: InputDecoration(
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black), // 포커스 시 검은색 테두리 표시
+                                    ),
                                   ),
                                 ),
-                              ),
-                              ),
-                              actions: buildAlertActions(
-                                context,
-                                noText: '취소', // '취소' 버튼 텍스트
-                                yesText: '확인', // '확인' 버튼 텍스트
-                                noTextStyle: TextStyle(
-                                  fontFamily: 'NanumGothic',
-                                  color: Colors.black, // '취소' 텍스트 색상
                                 ),
-                                yesTextStyle: TextStyle(
-                                  fontFamily: 'NanumGothic',
-                                  color: Colors.red, // '확인' 텍스트 색상
-                                  fontWeight: FontWeight.bold, // 텍스트 굵게
-                                ),
-                                onYesPressed: () {
-                                  // 입력값이 비어 있지 않고, 1000 이하일 경우 수량 업데이트
-                                  if (input.isNotEmpty) {
-                                    int enteredQuantity = int.parse(input);
-                                    if (enteredQuantity <= 1000) {
-                                      ref.read(cartItemsProvider.notifier)
-                                          .updateItemQuantity(cartItem['id'], enteredQuantity); // 수량 업데이트
-                                    } else {
-                                      // 1000을 초과하면 경고 메시지를 표시
-                                      showCustomSnackBar(context, '상품 당 최대 1,000개까지 담을 수 있습니다.');
+                                actions: buildAlertActions(
+                                  context,
+                                  noText: '취소', // '취소' 버튼 텍스트
+                                  yesText: '확인', // '확인' 버튼 텍스트
+                                  noTextStyle: TextStyle(
+                                    fontFamily: 'NanumGothic',
+                                    color: Colors.black, // '취소' 텍스트 색상
+                                  ),
+                                  yesTextStyle: TextStyle(
+                                    fontFamily: 'NanumGothic',
+                                    color: Colors.red, // '확인' 텍스트 색상
+                                    fontWeight: FontWeight.bold, // 텍스트 굵게
+                                  ),
+                                  onYesPressed: () {
+                                    // 입력값이 비어 있지 않을 경우 수량 업데이트
+                                    if (input.isNotEmpty) {
+                                      int enteredQuantity = int.parse(input);
+                                        ref.read(cartItemsProvider.notifier)
+                                            .updateItemQuantity(cartItem['id'], enteredQuantity); // 수량 업데이트
                                     }
-                                  }
-                                  Navigator.of(context).pop(); // 대화상자 닫기
-                                },
-                              ),
-                            );
-                          },
-                          child: Text('직접 입력',
+                                    Navigator.of(context).pop(); // 대화상자 닫기
+                                  },
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              side: BorderSide(color: Color(0xFFA5A5A5),
+                              ), // 버튼 테두리 색상 설정
+                            ),
+                          child: Text('직접입력',
                             style: TextStyle(
-                              fontSize: cartlistDirectInsertBtnFontSize,
+                              fontSize: directInsertBtnFontSize,
                               fontFamily: 'NanumGothic',
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black, // 텍스트 색상
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF666666), // 텍스트 색상
                             ),
                           ),
+                        ),
                         ),
                       ],
                     ),

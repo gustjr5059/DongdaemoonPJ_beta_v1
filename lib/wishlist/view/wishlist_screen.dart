@@ -271,9 +271,16 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                         (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 wishlistPaddingX으로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: wishlistPaddingX),
+                        padding: EdgeInsets.symmetric(horizontal: 0),
                         child: Column(
                           children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
                             WishlistItemsList(), // WishlistItemsList 클래스 사용
                             SizedBox(height: wishlistPaddingY),
                           ],

@@ -195,26 +195,26 @@ class _OrderListDetailScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderlistDtAppBarTitleWidth = screenSize.width * (150 / referenceWidth);
     final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistDtAppBarTitleX = screenSize.width * (143 / referenceHeight);
+    final double orderlistDtAppBarTitleX = screenSize.width * (100 / referenceHeight);
     final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double orderlistDtPaddingX = screenSize.width * (16 / referenceWidth);
-    final double orderlistDtPadding1Y = screenSize.height * (5 / referenceHeight);
+    final double orderlistDtPadding1Y = screenSize.height * (10 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderlistDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double orderlistDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
     final double orderlistDtChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double orderlistDtChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double orderlistDtChevronIconY = screenSize.height * (10 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double orderlistDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderlistDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderlistDtWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistDtWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderlistDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
     // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
@@ -317,10 +317,18 @@ class _OrderListDetailScreenState
                             (BuildContext context, int index) {
                           return Padding(
                             // 각 항목의 좌우 간격을 orderlistDtPaddingX로 설정함.
-                            padding: EdgeInsets.symmetric(horizontal: orderlistDtPaddingX),
+                            // padding: EdgeInsets.symmetric(horizontal: orderlistDtPaddingX),
+                            padding: EdgeInsets.symmetric(horizontal: 0),
                             child: Column(
                               children: [
-                                SizedBox(height: orderlistDtPadding1Y), // 높이 orderlistDtPadding1Y로 간격 설정
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                    ),
+                                  ),
+                                ),
+                                // SizedBox(height: orderlistDtPadding1Y), // 높이 orderlistDtPadding1Y로 간격 설정
                                 OrderListDetailItemWidget(order: orderlistDetailItem),
                                 SizedBox(height: orderlistDtPadding1Y),
                               ],
