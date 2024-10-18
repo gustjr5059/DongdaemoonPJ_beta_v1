@@ -826,7 +826,7 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
     final double sendingBtnY = screenSize.height * (10 / referenceHeight);
     final double sendingBtnFontSize = screenSize.height * (16 / referenceHeight);
     final double paddingX = screenSize.width * (2 / referenceWidth);
-    final double messageRecipientDropdownBtnWidth = screenSize.width * (210 / referenceWidth);
+    final double messageRecipientDropdownBtnWidth = screenSize.width * (230 / referenceWidth);
     final double messageRecipientDropdownBtnHeight = screenSize.height * (50 / referenceHeight);
 
     final double messageRecipientSelectDataTextSize = screenSize.height * (16 / referenceHeight);

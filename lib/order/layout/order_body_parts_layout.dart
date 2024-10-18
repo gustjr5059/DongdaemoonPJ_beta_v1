@@ -1479,7 +1479,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
           ),
           SizedBox(height: paymentMethodInfo1Y), // 텍스트와 설명 텍스트 사이에 16 픽셀 높이의 여백 추가
           Text(
-            "결제 방법은 무조건 계좌이체입니다.\n'결제하기' 버튼 클릭 후 안내 계좌로 이체 진행해주세요.", // 설명 텍스트
+            "결제 방법은 무조건 계좌이체입니다.\n'결제하기' 버튼 클릭 후 안내 계좌로 이체해주세요.", // 설명 텍스트
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,

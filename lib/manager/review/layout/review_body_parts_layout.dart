@@ -82,7 +82,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
     final double reviewBtnY = screenSize.height * (10 / referenceHeight);
     final double reviewBtnFontSize = screenSize.height * (16 / referenceHeight);
     final double paddingX = screenSize.width * (2 / referenceWidth);
-    final double reviewRecipientDropdownBtnWidth = screenSize.width * (210 / referenceWidth);
+    final double reviewRecipientDropdownBtnWidth = screenSize.width * (230 / referenceWidth);
     final double reviewRecipientDropdownBtnHeight = screenSize.height * (50 / referenceHeight);
 
     final double reviewWriterSelectDataTextSize = screenSize.height * (16 / referenceHeight);
