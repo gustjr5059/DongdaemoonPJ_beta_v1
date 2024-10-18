@@ -46,7 +46,7 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       // FocusNode 할당
-      cursorColor: PRIMARY_COLOR,
+      cursorColor: Color(0xFFE17735),
       // 커서 색상을 PRIMARY_COLOR로 설정
       // 비밀번호 입력할때
       obscureText: obscureText,

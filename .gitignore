@@ -55,3 +55,6 @@ config.json
 
 # 자동 생성 캐시 파일 제외
 **/XCBuildData/
+
+# Firebase Admin SDK JSON key 파일 제외
+wearcanopj-firebase-adminsdk-file.json
