@@ -17,8 +17,20 @@
 const functions = require('firebase-functions'); // Firebase Functions 모듈을 불러옴.
 const admin = require('firebase-admin'); // Firebase Admin SDK 모듈을 불러옴.
 const nodemailer = require('nodemailer'); // Nodemailer 모듈을 불러옴.
+const serviceAccount = require('./wearcanopj-firebase-adminsdk-file.json'); // Firebase Admin 인증 파일 불러옴.
 
-admin.initializeApp(); // Firebase Admin SDK를 초기화함.
+// Firebase Admin SDK 초기화
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount), // 서비스 계정 인증을 사용하여 Firebase 초기화
+//  databaseURL: "https://your-firebase-database-url.firebaseio.com" // Firebase 실시간 데이터베이스 URL
+// 해당 설정은 Firebase Realtime Database를 사용하는 경우에 추가해야하는 코드!!
+});
+
+const firestore = admin.firestore();
+const fcm = admin.messaging(); // FCM(Firebase Cloud Messaging)을 사용하기 위한 설정
+
+
+//admin.initializeApp(); // Firebase Admin SDK를 초기화함.
 
 // Gmail 설정 가져오기
 const gmailEmail = functions.config().gmail.email; // Firebase Functions 설정에서 Gmail 이메일 주소를 가져옴.
@@ -130,6 +142,48 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
   return body;
 }
 // ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
+
+// ------ FCM 알림 전송 기능 구현 내용 시작 ------
+// 새로운 Firestore 문서가 생성되면 알림을 수신자에게 전송하는 함수
+exports.sendMessageWithNotification = functions.firestore
+  .document('message_list/{recipientId}/message/{messageId}') // message_list/{recipientId}/message/{messageId} 경로에서 문서 생성 시 트리거
+  .onCreate(async (snap, context) => {
+    const messageData = snap.data();
+    const recipientId = context.params.recipientId;
+    const orderNumber = messageData.order_number;
+
+    try {
+      // 수신자의 FCM 토큰 배열 가져오기
+      const recipientSnapshot = await firestore.collection('users').doc(recipientId).get();
+      const recipientData = recipientSnapshot.data();
+      const recipientFcmTokens = recipientData.fcmTokens; // 수신자의 모든 FCM 토큰 배열
+
+      // FCM 메시지 작성
+      const payload = {
+        notification: {
+          title: '새로운 쪽지가 도착했습니다',
+          body: `${messageData.contents}`,
+          clickAction: 'FLUTTER_NOTIFICATION_CLICK', // 푸시 알림 클릭 시 앱으로 이동하도록 설정
+        },
+        data: {
+          screen: 'PrivateMessageMainScreen', // 알림 클릭 시 이동할 화면 지정
+          messageId: context.params.messageId,
+          recipientId: context.params.recipientId
+        }
+      };
+
+      // 수신자의 모든 FCM 토큰으로 메시지 전송
+      if (recipientFcmTokens && recipientFcmTokens.length > 0) {
+        await fcm.sendToDevice(recipientFcmTokens, payload);
+        console.log(`알림이 ${recipientFcmTokens.length}개의 기기에 성공적으로 전송되었습니다.`);
+      } else {
+        console.log(`수신자 ${recipientId}의 FCM 토큰을 찾을 수 없습니다.`);
+      }
+    } catch (error) {
+      console.error('알림 전송 중 오류 발생:', error);
+    }
+  });
+// ------ FCM 알림 전송 기능 구현 내용 끝 ------
 
 // ------ "배송 중 메세지" 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
 // Firestore에 새로운 문서가 생성될 때, 특정 "배송 중 메세지"를 감지하고 발주 상태를 자동으로 업데이트

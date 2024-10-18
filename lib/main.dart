@@ -4,8 +4,11 @@
 // 이를 사용하기 위해서는 초기화 과정이 필수적입니다.
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart'; // Firebase 코어 관련 패키지
+import 'package:firebase_messaging/firebase_messaging.dart';
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 // 이 패키지는 iOS 사용자에게 친숙한 디자인 요소와 애니메이션을 제공하여 iOS 사용자 경험을 향상시킵니다.
 import 'package:flutter/cupertino.dart'; // iOS 스타일 위젯 관련 패키지
@@ -23,7 +26,8 @@ import 'common/view/splash1_screen.dart';
 // Firebase 초기 설정 파일을 임포트합니다.
 // 이 파일은 FlutterFire CLI 도구를 사용하여 생성되며, Firebase 프로젝트의 구성 정보를 포함하고 있습니다.
 // Firebase 서비스를 사용하기 위한 필수적인 API 키, 프로젝트 ID 등의 정보가 이 파일에 정의되어 있습니다.
-import 'firebase_options.dart'; // Firebase 초기 설정 관련 패키지 (firebase_cli를 통해 생성된 파일)
+import 'firebase_options.dart';
+import 'message/view/message_screen.dart'; // Firebase 초기 설정 관련 패키지 (firebase_cli를 통해 생성된 파일)
 
 // Firebase 초기화 코드
 // (Firebase와 Flutter 프로젝트를 연동하여 Firebase 서비스를 사용할 수 있게 함)
@@ -53,12 +57,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isFirebaseConnected = true; // Firebase 연결 상태 변수
   StreamSubscription? _networkSubscription; // 네트워크 상태 구독자
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Firebase Messaging 인스턴스 생성
+
 
   @override
   void initState() {
     super.initState();
     _checkFirebaseConnection(); // Firebase 연결 상태 확인
     _monitorNetworkStatus(); // 네트워크 상태 실시간 감지
+    _initializeFCM(); // Firebase Messaging(Firebase Cloud Messaging) 초기화
   }
 
   @override
@@ -97,14 +104,86 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  // Firebase Messaging 초기화 및 푸시 알림 설정
+  void _initializeFCM() {
+    _firebaseMessaging.requestPermission(); // 푸시 알림 권한 요청
+    _firebaseMessaging.getToken().then((token) {
+      print('FCM Token: $token'); // Firebase Cloud Messaging 토큰 출력
+      saveFcmToken(token); // FCM 토큰을 Firestore 등에 저장하는 로직
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('FCM 메시지 수신: ${message.notification?.title}'); // 알림 메시지 수신 시 처리
+      showAlertDialog(context, message.notification?.title, message.notification?.body); // 알림 수신 시 다이얼로그 표시
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('알림 클릭 후 앱 실행: ${message.data}');
+      Navigator.pushNamed(context, '/PrivateMessageMainScreen'); // 알림 클릭 시 쪽지 화면으로 이동
+    });
+  }
+
+  // Firestore에 FCM 토큰 저장하는 함수 (구현 필요)
+  void saveFcmToken(String? token) async {
+    if (token == null) return;
+
+    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user?.uid);
+
+    // 기존에 저장된 FCM 토큰 배열을 가져옴
+    final docSnapshot = await userDoc.get();
+    List<String> tokens = (docSnapshot.data()?['fcmTokens'] as List<dynamic>?)?.cast<String>() ?? [];
+
+    // 중복된 토큰이 아닌 경우에만 배열에 추가
+    if (!tokens.contains(token)) {
+      tokens.add(token);
+      await userDoc.update({
+        'fcmTokens': tokens, // FCM 토큰 배열을 업데이트
+      });
+    }
+  }
+
+  // 알림 메시지 수신 시 다이얼로그를 표시하는 함수
+  void showAlertDialog(BuildContext context, String? title, String? body) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title ?? '알림'),
+        content: Text(body ?? '새로운 메시지가 도착했습니다.'),
+        actions: [
+          TextButton(
+            child: Text('확인'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false, // 화면에 debug 리본형식이 나오는 것 비활성화하는 설정
+//       // Firebase가 연결되어 있으면 SplashScreen1()을 홈 화면으로 설정
+//       // Firebase가 연결되지 않았거나 네트워크가 끊긴 경우 SplashErrorScreen1()을 홈 화면으로 설정
+//       home: _isFirebaseConnected ? SplashScreen1() : SplashErrorScreen1(),
+//     );
+//   }
+// }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // 화면에 debug 리본형식이 나오는 것 비활성화하는 설정
-      // Firebase가 연결되어 있으면 SplashScreen1()을 홈 화면으로 설정
-      // Firebase가 연결되지 않았거나 네트워크가 끊긴 경우 SplashErrorScreen1()을 홈 화면으로 설정
-      home: _isFirebaseConnected ? SplashScreen1() : SplashErrorScreen1(),
+      debugShowCheckedModeBanner: false, // 디버그 배너 숨김
+      initialRoute: '/', // 앱의 초기 경로 설정
+      routes: {
+        '/': (context) => _isFirebaseConnected ? SplashScreen1() : SplashErrorScreen1(), // Firebase 연결 상태에 따라 화면 전환
+        '/PrivateMessageMainScreen': (context) => PrivateMessageMainScreen(), // 푸시 알림 클릭 시 쪽지 화면으로 이동
+      },
     );
   }
 }
+
 // ------ 앱 실행할 때 필요한 메인 실행 역할인 MyApp 클래스 내용 끝
