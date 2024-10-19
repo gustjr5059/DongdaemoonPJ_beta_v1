@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart'; // iOS 스타일 위젯 관련 패키�
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 // 이 패키지는 다양한 머티리얼 디자인 위젯을 포함하여 사용자 인터페이스를 효과적으로 구성할 수 있도록 도와줍니다.
 import 'package:flutter/material.dart'; // Material 디자인 위젯 관련 패키지
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 // Riverpod는 애플리케이션의 상태를 효과적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이브러리 Riverpod 관련 패키지
@@ -104,23 +105,122 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  // // Firebase Messaging 초기화 및 푸시 알림 설정
+  // void _initializeFCM() {
+  //   _firebaseMessaging.requestPermission(); // 푸시 알림 권한 요청
+  //   _firebaseMessaging.getToken().then((token) {
+  //     print('FCM Token: $token'); // Firebase Cloud Messaging 토큰 출력
+  //     saveFcmToken(token); // FCM 토큰을 Firestore 등에 저장하는 로직
+  //   });
+  //
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     print('FCM 메시지 수신: ${message.notification?.title}'); // 알림 메시지 수신 시 처리
+  //     showAlertDialog(context, message.notification?.title, message.notification?.body); // 알림 수신 시 다이얼로그 표시
+  //   });
+  //
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     print('알림 클릭 후 앱 실행: ${message.data}');
+  //     Navigator.pushNamed(context, '/PrivateMessageMainScreen'); // 알림 클릭 시 쪽지 화면으로 이동
+  //   });
+  // }
+
+  // Android 배지 숫자 설정 함수
+  Future<void> _setAndroidBadgeCount(int badgeCount) async {
+    if (await FlutterAppBadger.isAppBadgeSupported()) {
+      FlutterAppBadger.updateBadgeCount(badgeCount);
+    }
+  }
+
+  // Android 배지 숫자 초기화 함수
+  Future<void> _resetAndroidBadgeCount() async {
+    if (await FlutterAppBadger.isAppBadgeSupported()) {
+      FlutterAppBadger.removeBadge();
+    }
+  }
+
+
   // Firebase Messaging 초기화 및 푸시 알림 설정
-  void _initializeFCM() {
-    _firebaseMessaging.requestPermission(); // 푸시 알림 권한 요청
-    _firebaseMessaging.getToken().then((token) {
-      print('FCM Token: $token'); // Firebase Cloud Messaging 토큰 출력
-      saveFcmToken(token); // FCM 토큰을 Firestore 등에 저장하는 로직
+  void _initializeFCM() async {
+    // 푸시 알림 권한 요청
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true, // 경고(alert)를 허용
+      announcement: false, // 공지(announcement)는 허용하지 않음
+      badge: true, // 배지를 허용
+      carPlay: false, // CarPlay에서는 푸시 알림을 받지 않음
+      criticalAlert: false, // 중요 알림(critical alert)은 허용하지 않음
+      provisional: false, // 비공식 권한(provisional)을 허용하지 않음
+      sound: true, // 소리(sound)를 허용
+    );
+
+    // FCM 자동 초기화 활성화
+    FirebaseMessaging.instance.setAutoInitEnabled(true);
+
+    // 사용자가 권한을 승인했을 때만 푸시 알림 설정 진행
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+
+      // APNS 토큰 요청
+      String? apnsToken = await _firebaseMessaging.getAPNSToken();
+      if (apnsToken != null) {
+        print('APNS Token: $apnsToken'); // APNS 토큰 출력
+      } else {
+        print('APNS Token is null. Please check APNS configuration.');
+      }
+
+      // FCM 토큰 요청
+      String? token = await _firebaseMessaging.getToken();
+      if (token != null) {
+        print('FCM Token: $token'); // FCM 토큰 출력
+        saveFcmToken(token); // FCM 토큰을 Firestore에 저장하는 함수 호출
+      } else {
+        print('Failed to get FCM Token');
+      }
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      print('User declined or has not accepted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    }
+
+    // 안드로이드 관련 배지 업데이트 처리
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      print("FCM 메시지 수신: ${message.notification?.title}");
+      // 읽지 않은 메시지 갯수 동기화 (Android)
+      int unreadCount = await _getUnreadMessagesCount();
+      _setAndroidBadgeCount(unreadCount); // Android 배지 업데이트
     });
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('FCM 메시지 수신: ${message.notification?.title}'); // 알림 메시지 수신 시 처리
-      showAlertDialog(context, message.notification?.title, message.notification?.body); // 알림 수신 시 다이얼로그 표시
-    });
-
+    // 알림 클릭 시 처리
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('알림 클릭 후 앱 실행: ${message.data}');
-      Navigator.pushNamed(context, '/PrivateMessageMainScreen'); // 알림 클릭 시 쪽지 화면으로 이동
+      final messageId = message.data['messageId'];
+      final recipientId = message.data['recipientId'];
+
+      // 메시지를 읽음 상태로 업데이트
+      markMessageAsRead(messageId, recipientId);
+
+      // 배지 숫자 초기화 (Android)
+      _resetAndroidBadgeCount();
+
+      // 쪽지 화면으로 이동
+      Navigator.pushNamed(context, '/PrivateMessageMainScreen', arguments: {
+        'messageId': messageId,
+        'recipientId': recipientId,
+      });
     });
+  }
+
+  // 안드로이드 읽지 않은 메세지 처리 로직
+  Future<int> _getUnreadMessagesCount() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return 0;
+
+    final unreadMessages = await FirebaseFirestore.instance
+        .collection('message_list')
+        .doc(user.email)
+        .collection('message')
+        .where('read', isEqualTo: false)
+        .get();
+
+    return unreadMessages.size;
   }
 
   // Firestore에 FCM 토큰 저장하는 함수 (구현 필요)
@@ -128,19 +228,34 @@ class _MyAppState extends State<MyApp> {
     if (token == null) return;
 
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(user?.uid);
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user?.email);
 
     // 기존에 저장된 FCM 토큰 배열을 가져옴
     final docSnapshot = await userDoc.get();
     List<String> tokens = (docSnapshot.data()?['fcmTokens'] as List<dynamic>?)?.cast<String>() ?? [];
 
-    // 중복된 토큰이 아닌 경우에만 배열에 추가
+    // 중복된 토큰이 아니면 배열에 추가
     if (!tokens.contains(token)) {
       tokens.add(token);
       await userDoc.update({
-        'fcmTokens': tokens, // FCM 토큰 배열을 업데이트
+        'fcmTokens': tokens, // 토큰 업데이트
+      }).catchError((error) {
+        print('Firestore 업데이트 중 오류 발생: $error');
       });
     }
+  }
+
+  // Firebase Firestore에서 메시지를 읽음 상태로 업데이트하는 함수
+  Future<void> markMessageAsRead(String messageId, String recipientId) async {
+    final messageRef = FirebaseFirestore.instance
+        .collection('message_list')
+        .doc(recipientId)
+        .collection('message')
+        .doc(messageId);
+
+    await messageRef.update({
+      'read': true,
+    });
   }
 
   // 알림 메시지 수신 시 다이얼로그를 표시하는 함수

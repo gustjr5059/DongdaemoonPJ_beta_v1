@@ -7,6 +7,19 @@ class AdminMessageRepository {
   // AdminMessageRepository 클래스의 생성자.
   AdminMessageRepository({required this.firestore});
 
+  // Firestore에 메시지를 읽음 상태로 업데이트하는 함수
+  Future<void> markMessageAsRead(String messageId, String recipientId) async {
+    final messageRef = firestore
+        .collection('message_list')
+        .doc(recipientId)
+        .collection('message')
+        .doc(messageId);
+
+    await messageRef.update({
+      'read': true,  // 메시지를 읽음 상태로 업데이트
+    });
+  }
+
   // Firestore에서 수신자 이메일 목록을 가져오는 함수.
   Future<List<String>> fetchReceivers() async {
     try {

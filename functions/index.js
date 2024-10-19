@@ -144,6 +144,19 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
 // ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
 
 // ------ FCM 알림 전송 기능 구현 내용 시작 ------
+
+// Firestore에서 읽지 않은 메시지의 개수 계산
+async function getUnreadMessagesCount(recipientId) {
+  const unreadMessagesSnapshot = await firestore
+    .collection('message_list')
+    .doc(recipientId)
+    .collection('message')
+    .where('read', '==', false)  // 읽지 않은 메시지만 필터링
+    .get();
+
+  return unreadMessagesSnapshot.size;  // 읽지 않은 메시지의 개수를 반환
+}
+
 // 새로운 Firestore 문서가 생성되면 알림을 수신자에게 전송하는 함수
 exports.sendMessageWithNotification = functions.firestore
   .document('message_list/{recipientId}/message/{messageId}') // message_list/{recipientId}/message/{messageId} 경로에서 문서 생성 시 트리거
@@ -158,17 +171,42 @@ exports.sendMessageWithNotification = functions.firestore
       const recipientData = recipientSnapshot.data();
       const recipientFcmTokens = recipientData.fcmTokens; // 수신자의 모든 FCM 토큰 배열
 
+      // 읽지 않은 메시지 개수 계산
+      const unreadCount = await getUnreadMessagesCount(recipientId);
+
       // FCM 메시지 작성
       const payload = {
         notification: {
           title: '새로운 쪽지가 도착했습니다',
           body: `${messageData.contents}`,
+          sound: 'default', // 알림 소리 (기본 소리 사용)
+          badge: unreadCount, // 앱 아이콘에 표시될 배지 숫자
           clickAction: 'FLUTTER_NOTIFICATION_CLICK', // 푸시 알림 클릭 시 앱으로 이동하도록 설정
         },
         data: {
           screen: 'PrivateMessageMainScreen', // 알림 클릭 시 이동할 화면 지정
-          messageId: context.params.messageId,
-          recipientId: context.params.recipientId
+          messageId: context.params.messageId, // 메시지 ID
+          recipientId: context.params.recipientId, // 수신자 ID
+          orderNumber: orderNumber, // 주문 번호 추가 (추가된 데이터)
+        },
+        apns: {  // iOS 기기용 APNS 설정
+          headers: {
+            'apns-priority': '10',               // APNS 우선순위 (즉시 전달)
+          },
+          payload: {
+            aps: {  // Apple Push Notification Service(APNS) 필수 설정
+              alert: {
+                title: '새로운 쪽지가 도착했습니다', // 알림 제목
+                body: `${messageData.contents}`    // 알림 본문
+              },
+              sound: 'default',                  // 소리 설정 (기본 소리)
+              badge: unreadCount,                          // 배지 숫자 설정
+              'content-available': 1,             // 백그라운드 알림 허용
+            }
+          }
+        },
+        android: {  // Android 기기용 설정
+          priority: 'high',                      // Android 기기의 경우 즉시 전송
         }
       };
 
