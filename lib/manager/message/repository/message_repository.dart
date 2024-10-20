@@ -152,6 +152,7 @@ class AdminMessageRepository {
       'contents': contents, // 메시지 내용을 저장
       'message_sendingTime': FieldValue.serverTimestamp(), // 서버 시간을 기준으로 메시지 전송 시간을 저장
       'private_email_closed_button': false, // 'private_email_closed_button' 필드에 기본값으로 false를 저장
+      'read': false,
     };
 
         // 만약 쪽지 내용이 '환불 처리'인 경우 selected_separator_key 추가
