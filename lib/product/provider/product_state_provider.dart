@@ -8,6 +8,7 @@ import 'package:dongdaemoon_beta_v1/product/provider/product_all_providers.dart'
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/product_model.dart';
+import '../repository/product_repository.dart';
 
 // 티셔츠 카테고리 메인화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final shirtMainLargeBannerPageProvider = StateProvider<int>((ref) => 0);
@@ -558,3 +559,78 @@ final winterSubMainProductListProvider =
 });
 // ------- SectionMoreProductListNotifier 클래스 내용 구현 끝
 // ------- 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
+
+
+// 상품 상세화면 내 상품정보 안에서 이미지의 전체 이미지로 보이도록하는 확장 유무 상태관리인 showFullImageProvider
+final showFullImageProvider = StateProvider<bool>((ref) => false);
+
+// ------ 이미지 리스트의 상태를 관리하며, 이미지를 페이징 처리하여 불러오는 로직인 ImageNotifier 클래스 시작 부분
+class ImageNotifier extends StateNotifier<List<String>> {
+  final ProductDtTabRepository repository; // 상품 데이터를 불러오는 레포지토리
+  final Ref ref; // Provider에서 사용할 참조 객체
+  final String fullPath; // Firestore 경로를 저장
+  int currentIndex = 0;  // 현재까지 불러온 마지막 이미지 인덱스를 저장
+  bool isLoadingMore = false; // 이미지 로드 중 여부를 저장
+  bool hasMore = true; // 추가 이미지를 로드할 수 있는지 여부를 저장
+
+  // 생성자에서 초기 값을 설정함.
+  ImageNotifier({
+    required this.repository,
+    required this.ref,
+    required this.fullPath,
+  }) : super([]) {
+    // 첫 번째 이미지를 로드함.
+    print("ImageNotifier: 첫 번째 이미지 로드 시작.");
+    loadMoreImages(); // 생성 시 처음에 1개의 이미지를 로드함.
+  }
+
+  // 추가 이미지를 로드하는 함수
+  Future<void> loadMoreImages() async {
+    // 이미 로드 중이거나 더 이상 로드할 이미지가 없을 경우, 로드를 중단함.
+    if (isLoadingMore || !hasMore) {
+      print("ImageNotifier: 이미 로드 중이거나 더 이상 로드할 이미지가 없습니다.");
+      return;
+    }
+
+    print("ImageNotifier: 이미지 로드 시작 (currentIndex: $currentIndex)");
+    isLoadingMore = true; // 로드 중 상태로 설정함.
+
+    try {
+      // 현재 인덱스를 기반으로 Firestore에서 이미지를 불러옴.
+      final images = await repository.fetchProductDetailImages(
+        fullPath: fullPath,  // Firestore 경로를 전달함.
+        startIndex: currentIndex,  // 현재 인덱스를 전달함.
+      );
+
+      if (images.isNotEmpty) {
+        currentIndex++;  // 이미지가 로드되면 인덱스를 증가시킴.
+        state = [...state, ...images]; // 새로 불러온 이미지를 기존 상태에 추가함.
+        print("ImageNotifier: 이미지 로드 성공, 현재 이미지 수: ${state.length}, 현재 인덱스: $currentIndex");
+      } else {
+        hasMore = false; // 불러올 이미지가 없으면 더 이상 로드하지 않도록 설정함.
+        print("ImageNotifier: 더 이상 불러올 이미지가 없습니다.");
+      }
+    } catch (e) {
+      print("ImageNotifier: 이미지 로드 중 에러 발생 - $e"); // 에러 발생 시 출력함.
+    } finally {
+      isLoadingMore = false;  // 이미지 로드가 완료되면 로드 중 상태를 해제함.
+      print("ImageNotifier: 이미지 로드 완료.");
+    }
+  }
+
+  // 이미지 리스트를 초기화하고 첫 번째 이미지를 다시 로드하는 함수
+  void reset() {
+    print("ImageNotifier: 이미지 리스트 초기화 및 첫 번째 이미지 로드 시작.");
+    state = []; // 이미지 리스트를 초기화함.
+    currentIndex = 0; // 인덱스를 초기화함.
+    hasMore = true; // 추가 로드를 가능하게 설정함.
+    loadMoreImages(); // 첫 번째 이미지를 다시 로드함.
+  }
+}
+
+// imagesProvider는 ImageNotifier를 제공하며, fullPath를 매개변수로 받음.
+// Provider를 통해 ImageNotifier를 상태로 관리함.
+final imagesProvider = StateNotifierProvider.family<ImageNotifier, List<String>, String>((ref, fullPath) {
+  final repository = ref.read(productDtTabRepositoryProvider); // 레포지토리를 읽어옴.
+  return ImageNotifier(repository: repository, ref: ref, fullPath: fullPath); // ImageNotifier를 생성하여 반환함.
+});

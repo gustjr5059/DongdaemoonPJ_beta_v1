@@ -144,6 +144,9 @@ class _ShirtDetailProductScreenState
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+    // 스크롤 리스너 추가
+    shirtDetailProductScreenPointScrollController.addListener(_onScroll);
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -154,6 +157,27 @@ class _ShirtDetailProductScreenState
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       updateStatusBar();
+    }
+  }
+
+  // 화면 스크롤 움직임에 따른 이미지 데이터 불러오도록 연결하는 로직 함수
+  void _onScroll() {
+    bool showFullImage = ref.read(showFullImageProvider);
+    if (!showFullImage) return;
+
+  //   if (shirtDetailProductScreenPointScrollController.position.pixels >=
+  //       shirtDetailProductScreenPointScrollController.position.maxScrollExtent - 200) {
+  //     // 스크롤이 끝에 도달하면 다음 이미지 로드
+  //     ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
+  //   }
+  // }
+
+    // 현재 스크롤 위치가 스크롤 가능한 최대 위치에 도달했는지 확인함
+    if (shirtDetailProductScreenPointScrollController.position.pixels ==
+        shirtDetailProductScreenPointScrollController.position
+            .maxScrollExtent) {
+      // 스크롤이 끝에 도달했을 때 실행되는 추가 이미지 로드 함수 호출
+      ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
     }
   }
 
@@ -173,6 +197,9 @@ class _ShirtDetailProductScreenState
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
+
+    // 스크롤 리스너 제거
+    shirtDetailProductScreenPointScrollController.removeListener(_onScroll);
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
@@ -227,6 +254,20 @@ class _ShirtDetailProductScreenState
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(shirtDetailProdFirestoreDataProvider(widget.fullPath));
+
+    print("ShirtDetailProductScreen: Loading screen for product path: ${widget.fullPath}"); // 디버깅 메시지 추가
+
+    // showFullImageProvider의 상태 변화를 감지하여 이미지를 로드하거나 초기화.
+    ref.listen<bool>(showFullImageProvider, (previous, next) {
+      if (next == true) {
+        // 전체 이미지 보기 상태로 전환되면 이미지를 로드합니다.
+        ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
+      } else {
+        // 접기 상태로 전환되면 이미지를 초기화합니다.
+        ref.read(imagesProvider(widget.fullPath).notifier).reset();
+      }
+    });
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -307,9 +348,18 @@ class _ShirtDetailProductScreenState
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
                                   ProductDetailScreenTabs(
-                                        productInfoContent: ProductInfoContents(product: product),
+                                    productInfoContent: ProductInfoContents(
+                                      fullPath: widget.fullPath,
+                                    ),
                                         inquiryContent: ProductInquiryContents(),
                                       ),
+                                  // 로딩 인디케이터를 표시
+                                  if (ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    ),
                                 ],
                               );
                             },

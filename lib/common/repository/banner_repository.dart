@@ -28,6 +28,8 @@ class CommonBannerRepository {
       return [
         CommonBannerImage.fromJson({'imageUrl': data['commsmallbanner1']}),
         CommonBannerImage.fromJson({'imageUrl': data['commsmallbanner2']}),
+        CommonBannerImage.fromJson({'imageUrl': data['commsmallbanner3']}),
+        CommonBannerImage.fromJson({'imageUrl': data['commsmallbanner3']}),
         CommonBannerImage.fromJson({'imageUrl': data['commsmallbanner3']})
       ].whereType<CommonBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
@@ -63,7 +65,9 @@ class AllLargeBannerRepository {
       return [
         AllLargeBannerImage.fromJson({'imageUrl': data['style22']}),
         AllLargeBannerImage.fromJson({'imageUrl': data['style28']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['style29']})
+        AllLargeBannerImage.fromJson({'imageUrl': data['style29']}),
+        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon3']}),
+        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon3']})
       ].whereType<AllLargeBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('Failed to fetch large banner images: Document does not exist.');

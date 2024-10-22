@@ -121,6 +121,8 @@ class _BlouseDetailProductScreenState
         ref.read(colorSelectionTextProvider.notifier).state = null;
         ref.read(colorSelectionUrlProvider.notifier).state = null;
         ref.read(sizeSelectionIndexProvider.notifier).state = null;
+        // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
+        ref.read(showFullImageProvider.notifier).state = false;
       }
     });
 
@@ -145,6 +147,9 @@ class _BlouseDetailProductScreenState
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+    // 스크롤 리스너 추가
+    blouseDetailProductScreenPointScrollController.addListener(_onScroll);
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -153,12 +158,36 @@ class _BlouseDetailProductScreenState
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+
     if (state == AppLifecycleState.resumed) {
       updateStatusBar();
     }
   }
 
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // 화면 스크롤 움직임에 따른 이미지 데이터 불러오도록 연결하는 로직 함수
+  void _onScroll() {
+    bool showFullImage = ref.read(showFullImageProvider);
+    if (!showFullImage) return;
+
+    // 해당 코드로 하면 계속 한번에 남은 모든 페이지 데이터를 다 불러오는 이슈 생김
+    //   if (blouseDetailProductScreenPointScrollController.position.pixels >=
+    //       blouseDetailProductScreenPointScrollController.position.maxScrollExtent - 100) {
+    //     // 스크롤이 끝에 도달하면 다음 이미지 로드
+    //     ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
+    //   }
+    // }
+
+    // 현재 스크롤 위치가 스크롤 가능한 최대 위치에 도달했는지 확인함
+    if (blouseDetailProductScreenPointScrollController.position.pixels ==
+        blouseDetailProductScreenPointScrollController.position
+            .maxScrollExtent) {
+      // 스크롤이 끝에 도달했을 때 실행되는 추가 이미지 로드 함수 호출
+      ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
+    }
+  }
+
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -176,6 +205,9 @@ class _BlouseDetailProductScreenState
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
+
+    // 스크롤 리스너 제거
+    blouseDetailProductScreenPointScrollController.removeListener(_onScroll);
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
@@ -315,9 +347,18 @@ class _BlouseDetailProductScreenState
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
                                   ProductDetailScreenTabs(
-                                        productInfoContent: ProductInfoContents(product: product),
+                                    productInfoContent: ProductInfoContents(
+                                      fullPath: widget.fullPath,
+                                    ),
                                         inquiryContent: ProductInquiryContents(),
                                       ),
+                                  // 로딩 인디케이터를 표시
+                                  if (ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    ),
                                 ],
                               );
                             },

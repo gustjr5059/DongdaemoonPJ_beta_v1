@@ -94,7 +94,10 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen>
   late BannerAutoScrollClass _small1BannerAutoScroll;
 
   // 배너 이미지의 총 개수를 저장하는 변수
-  int bannerImageCount = 3;
+  // 대배너
+  int bannerImageCount1 = 5;
+  // 소배너
+  int bannerImageCount2 = 3;
 
   // 배너 클릭 시 이동할 URL 리스트를 정의함.
   // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
@@ -216,7 +219,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen>
     _largeBannerAutoScroll = BannerAutoScrollClass(
       pageController: _largeBannerPageController,
       currentPageProvider: onepieceMainLargeBannerPageProvider,
-      itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
+      itemCount: bannerImageCount1, // 총 배너 이미지 개수 전달
     );
 
     // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
@@ -228,7 +231,7 @@ class _OnepieceMainScreenState extends ConsumerState<OnepieceMainScreen>
     _small1BannerAutoScroll = BannerAutoScrollClass(
       pageController: _small1BannerPageController,
       currentPageProvider: onepieceMainSmall1BannerPageProvider,
-      itemCount: bannerImageCount, // 총 배너 이미지 개수 전달
+      itemCount: bannerImageCount2, // 총 배너 이미지 개수 전달
     );
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.

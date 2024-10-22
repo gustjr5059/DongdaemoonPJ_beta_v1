@@ -495,3 +495,59 @@ class GeneralProductRepository<T> {
 }
 // -------- 파이어스토어 내 데이터를 불러오는 범용성 리포지토리 (데이터 범위는 provider에서 정함) 끝
 // -------- 1차 카테고리(블라우스, 가디건 ~~), 상품 상세 화면 관련 데이터 등의 범용성 있게 파이어스토어 데이터를 일정 단위로 불러오도록 하는 클래스 끝 부분
+
+// ------- 상품 상세 화면 내 상품정보 탭 화면에서 이미지 데이터를 불러오는 데이터 처리 로직인 ProductDtTabRepository 클래스 시작 부분
+class ProductDtTabRepository {
+  final FirebaseFirestore firestore;
+
+  // firestore 인스턴스를 생성자에서 전달받아 사용함.
+  ProductDtTabRepository(this.firestore);
+
+  // 상품 상세 이미지 리스트를 페이징 처리하여 가져오는 함수
+  // fullPath와 startIndex를 인자로 받아 이미지 데이터를 불러옴.
+  Future<List<String>> fetchProductDetailImages({
+    required String fullPath,  // Firestore 경로를 전달받음.
+    required int startIndex,   // 이미지 필드의 시작 인덱스를 전달받음.
+  }) async {
+    print("ProductRepository: 상품 상세 이미지 로드 시작 (fullPath: $fullPath, startIndex: $startIndex)");
+
+    // Firestore에서 해당 경로의 문서를 가져옴.
+    final docRef = firestore.doc(fullPath);
+    final snapshot = await docRef.get();  // 문서의 스냅샷을 가져옴.
+
+    // 문서가 존재하는지 확인함.
+    if (snapshot.exists) {
+      print("ProductRepository: 상품 데이터를 성공적으로 가져옴.");
+      final data = snapshot.data() as Map<String, dynamic>;  // 문서 데이터를 맵으로 변환함.
+
+      // 이미지 필드 이름을 배열로 관리하여 순차적으로 접근할 수 있게 처리함.
+      List<String> fieldNames = [
+        'detail_intro_image1',  // 첫 번째 이미지 필드
+        'detail_intro_image2',  // 두 번째 이미지 필드
+        'detail_intro_image3',  // 세 번째 이미지 필드
+        'detail_intro_image4'   // 네 번째 이미지 필드
+      ];
+
+      // 인덱스가 유효한 범위인지 확인함.
+      if (startIndex < 0 || startIndex >= fieldNames.length) {
+        print("ProductRepository: 더 이상 불러올 이미지가 없습니다.");
+        return [];  // 불러올 이미지가 없는 경우 빈 리스트를 반환함.
+      }
+
+      // 해당 인덱스의 이미지를 가져옴.
+      List<String> images = [];
+      String? imageUrl = data[fieldNames[startIndex]] as String?;  // 필드에서 이미지 URL을 가져옴.
+      if (imageUrl != null) {
+        images.add(imageUrl);  // 유효한 URL이면 리스트에 추가함.
+      }
+
+      print("ProductRepository: ${images.length}개의 이미지 로드 완료 (로드된 이미지: $images)");
+
+      return images;  // 불러온 이미지를 반환함.
+    } else {
+      print("ProductRepository: 상품 데이터를 찾을 수 없습니다.");
+      throw Exception('상품 데이터를 찾을 수 없습니다.');  // 문서가 없을 경우 예외를 던짐.
+    }
+  }
+}
+// ------- 상품 상세 화면 내 상품정보 탭 화면에서 이미지 데이터를 불러오는 데이터 처리 로직인 ProductRepository 클래스 끝 부분
