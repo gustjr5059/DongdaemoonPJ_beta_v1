@@ -189,47 +189,116 @@ exports.sendMessageWithNotification = functions.firestore
       // 읽지 않은 메시지 개수 계산
       const unreadCount = await getUnreadMessagesCount(recipientId);
 
-      // FCM 메시지 작성
-      const payload = {
-//        notification: {
-//          title: '새로운 쪽지가 도착했습니다',  // 알림 제목
-//          body: `${messageData.contents}`,        // 알림 내용
-//          sound: 'default',                      // 알림 소리 (기본 소리 사용)
-//          badge: unreadCount.toString(),         // 앱 아이콘에 표시될 배지 숫자
-//        },
-          data: {
-            title: '새로운 쪽지가 도착했습니다',  // 알림 제목
-            body: `${messageData.contents}`,        // 알림 내용
-            sound: 'default',                      // 알림 소리 (기본 소리 사용)
-            badge: unreadCount.toString(),         // 앱 아이콘에 표시될 배지 숫자
-            screen: 'PrivateMessageMainScreen',      // 알림 클릭 시 이동할 화면 지정
-            messageId: context.params.messageId,     // 메시지 ID
-            recipientId: context.params.recipientId, // 수신자 ID
-            orderNumber: orderNumber,                // 주문 번호 추가 (추가된 데이터)
+      // FCM 메시지를 각각의 토큰에 맞게 생성
+      const messages = recipientFcmTokens.map(token => ({
+        notification: {
+          title: '새로운 쪽지가 도착했습니다',  // 알림 제목
+          body: `${messageData.contents}`,        // 알림 내용
+        },
+        data: {
+          screen: 'PrivateMessageMainScreen',      // 알림 클릭 시 이동할 화면
+          messageId: context.params.messageId,     // 메시지 ID
+          recipientId: context.params.recipientId, // 수신자 ID
+        },
+        token: token, // 각 토큰에 맞는 메시지를 설정
+
+        // Android 알림 설정
+        android: {
+          notification: {
+            sound: 'default',                      // Android 기기에서 사용할 소리
           }
-//        android: {  // Android 기기용 설정
-//          priority: 'high',                      // Android 기기의 경우 즉시 전송
+        },
+
+        // iOS 알림 설정
+        apns: {
+          payload: {
+            aps: {
+              sound: 'default',                     // iOS 기기에서 사용할 소리
+              badge: unreadCount,                   // iOS에서 배지 숫자 설정
+            }
+          }
+        }
+      }));
+
+//      // 각 메시지의 크기를 확인
+//      messages.forEach((message, idx) => {
+//        const jsonString = JSON.stringify(message);
+//        const byteSize = Buffer.byteLength(jsonString, 'utf8');
+//        console.log(`FCM 메시지 크기 (토큰 ${idx + 1}): ${byteSize} 바이트`);
+//        if (byteSize > 4096) {
+//          console.warn(`경고: FCM 메시지 크기가 4096 바이트를 초과합니다 (크기: ${byteSize} 바이트).`);
 //        }
-      };
+//      });
 
-//      // 수신자의 모든 FCM 토큰으로 메시지 전송
-//      if (recipientFcmTokens && recipientFcmTokens.length > 0) {
-//        await fcm.sendToDevice(recipientFcmTokens, payload);
-//        console.log(`알림이 ${recipientFcmTokens.length}개의 기기에 성공적으로 전송되었습니다.`);
-//      } else {
-//        console.log(`수신자 ${recipientId}의 FCM 토큰을 찾을 수 없습니다.`);
-//      }
-//    } catch (error) {
-//      console.error('알림 전송 중 오류 발생:', error);
-//    }
+      // 모든 FCM 메시지를 한 번에 전송
+      const response = await fcm.sendAll(messages);
 
-      const response = await fcm.sendToDevice(recipientFcmTokens, payload);
-      console.log(`알림 전송 성공: ${JSON.stringify(response.results)}`);
+      // 실패한 메시지 처리
+      response.responses.forEach((res, idx) => {
+        if (!res.success) {
+          console.error(`토큰 ${recipientFcmTokens[idx]}로 메시지 전송 실패: ${res.error.message}`);
+
+          // 토큰이 유효하지 않으면 Firestore에서 해당 토큰 삭제
+          if (res.error.code === 'messaging/registration-token-not-registered') {
+            console.log(`유효하지 않은 FCM 토큰 삭제: ${recipientFcmTokens[idx]}`);
+            // Firestore에서 해당 토큰 삭제하는 로직 추가
+            const tokenToRemove = recipientFcmTokens[idx];
+            firestore.collection('users').doc(recipientId).update({
+              fcmTokens: admin.firestore.FieldValue.arrayRemove(tokenToRemove)
+            });
+          }
+        }
+      });
+
+      console.log(`알림 전송 성공: ${response.successCount}개의 메시지가 성공적으로 전송됨`);
+      console.log(`알림 전송 실패: ${response.failureCount}개의 메시지 전송 실패`);
 
     } catch (error) {
       console.error('알림 전송 중 오류 발생:', error);
     }
   });
+
+//      // FCM 메시지 작성
+//      const payload = {
+////        notification: {
+////          title: '새로운 쪽지가 도착했습니다',  // 알림 제목
+////          body: `${messageData.contents}`,        // 알림 내용
+////          sound: 'default',                      // 알림 소리 (기본 소리 사용)
+////          badge: unreadCount.toString(),         // 앱 아이콘에 표시될 배지 숫자
+////        },
+//          data: {
+//            title: '새로운 쪽지가 도착했습니다',  // 알림 제목
+//            body: `${messageData.contents}`,        // 알림 내용
+//            sound: 'default',                      // 알림 소리 (기본 소리 사용)
+//            badge: unreadCount.toString(),         // 앱 아이콘에 표시될 배지 숫자
+//            screen: 'PrivateMessageMainScreen',      // 알림 클릭 시 이동할 화면 지정
+//            messageId: context.params.messageId,     // 메시지 ID
+//            recipientId: context.params.recipientId, // 수신자 ID
+//            orderNumber: orderNumber,                // 주문 번호 추가 (추가된 데이터)
+//          }
+////        android: {  // Android 기기용 설정
+////          priority: 'high',                      // Android 기기의 경우 즉시 전송
+////        }
+//      };
+//
+////      // 수신자의 모든 FCM 토큰으로 메시지 전송
+////      if (recipientFcmTokens && recipientFcmTokens.length > 0) {
+////        await fcm.sendToDevice(recipientFcmTokens, payload);
+////        console.log(`알림이 ${recipientFcmTokens.length}개의 기기에 성공적으로 전송되었습니다.`);
+////      } else {
+////        console.log(`수신자 ${recipientId}의 FCM 토큰을 찾을 수 없습니다.`);
+////      }
+////    } catch (error) {
+////      console.error('알림 전송 중 오류 발생:', error);
+////    }
+//
+//      const response = await fcm.sendToDevice(recipientFcmTokens, payload);
+//      console.log(`알림 전송 성공: ${JSON.stringify(response.results)}`);
+//
+//    } catch (error) {
+//      console.error('알림 전송 중 오류 발생:', error);
+//    }
+//  });
 // ------ FCM 알림 전송 기능 구현 내용 끝 ------
 
 // ------ "배송 중 메세지" 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
