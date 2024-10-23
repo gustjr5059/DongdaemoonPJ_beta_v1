@@ -572,6 +572,7 @@ class ImageNotifier extends StateNotifier<List<String>> {
   int currentIndex = 0;  // 현재까지 불러온 마지막 이미지 인덱스를 저장
   bool isLoadingMore = false; // 이미지 로드 중 여부를 저장
   bool hasMore = true; // 추가 이미지를 로드할 수 있는지 여부를 저장
+  bool showCollapseButton = false; // '접기' 버튼을 표시할지 여부
 
   // 생성자에서 초기 값을 설정함.
   ImageNotifier({
@@ -582,6 +583,11 @@ class ImageNotifier extends StateNotifier<List<String>> {
     // 첫 번째 이미지를 로드함.
     print("ImageNotifier: 첫 번째 이미지 로드 시작.");
     loadMoreImages(); // 생성 시 처음에 1개의 이미지를 로드함.
+  }
+
+  // 이미지 리스트를 유지하면서 상태만 초기화하는 함수
+  void resetButtonState() {
+    showCollapseButton = false;  // '접기' 버튼을 초기화
   }
 
   // 추가 이미지를 로드하는 함수
@@ -604,6 +610,12 @@ class ImageNotifier extends StateNotifier<List<String>> {
 
       if (images.isNotEmpty) {
         currentIndex++;  // 이미지가 로드되면 인덱스를 증가시킴.
+
+        // 두 번째 페이지일 때 바로 '접기' 버튼을 표시하도록 설정
+        if (currentIndex == 2) {
+          showCollapseButton = true;
+        }
+
         state = [...state, ...images]; // 새로 불러온 이미지를 기존 상태에 추가함.
         print("ImageNotifier: 이미지 로드 성공, 현재 이미지 수: ${state.length}, 현재 인덱스: $currentIndex");
       } else {
@@ -614,6 +626,8 @@ class ImageNotifier extends StateNotifier<List<String>> {
       print("ImageNotifier: 이미지 로드 중 에러 발생 - $e"); // 에러 발생 시 출력함.
     } finally {
       isLoadingMore = false;  // 이미지 로드가 완료되면 로드 중 상태를 해제함.
+      // 상태가 변경되었음을 알리기 위해 상태 변화를 알림.
+      ref.notifyListeners();
       print("ImageNotifier: 이미지 로드 완료.");
     }
   }
@@ -624,6 +638,7 @@ class ImageNotifier extends StateNotifier<List<String>> {
     state = []; // 이미지 리스트를 초기화함.
     currentIndex = 0; // 인덱스를 초기화함.
     hasMore = true; // 추가 로드를 가능하게 설정함.
+    // showCollapseButton = false;  // '접기' 버튼 상태를 초기화
     loadMoreImages(); // 첫 번째 이미지를 다시 로드함.
   }
 }

@@ -120,6 +120,9 @@ class _SkirtDetailProductScreenState
         ref.read(colorSelectionTextProvider.notifier).state = null;
         ref.read(colorSelectionUrlProvider.notifier).state = null;
         ref.read(sizeSelectionIndexProvider.notifier).state = null;
+        // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
+        ref.read(showFullImageProvider.notifier).state = false;
+        ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();  // '접기' 버튼 상태 초기화
       }
     });
 

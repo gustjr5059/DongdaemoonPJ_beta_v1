@@ -2157,7 +2157,7 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
 
   // 이미지 전체를 볼 수 있는 버튼을 생성하는 함수
   // 버튼을 눌러 이미지를 펼치거나 접는 기능을 제공함.
-  Widget buildExpandButton(BuildContext context, WidgetRef ref, String text, IconData icon) {
+  Widget buildExpandButton(BuildContext context, WidgetRef ref, String text, IconData icon, bool isCollapseButton) {
     final Size screenSize = MediaQuery.of(context).size;
     final double referenceWidth = 393.0; // 기준 화면 너비
     final double referenceHeight = 852.0; // 기준 화면 높이
@@ -2171,7 +2171,16 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     final double expandBtnFontSize =
         screenSize.height * (14 / referenceHeight); // 버튼 내 텍스트 크기 설정
     final double expandBtnY =
-        screenSize.height * (10 / referenceHeight); // 상단 여백 설정
+        screenSize.height * (2 / referenceHeight); // 상단 여백 설정
+
+    // '접기' 버튼은 마지막 이미지를 로드한 후에만 표시됨.
+    bool showFullImage = ref.read(showFullImageProvider);
+    bool hasMoreImages = ref.read(imagesProvider(widget.fullPath).notifier).hasMore;
+
+    // 버튼을 보여줄지 여부를 결정
+    if (isCollapseButton && hasMoreImages) {
+      return SizedBox.shrink(); // 마지막 이미지가 로드되지 않은 상태에서는 '접기' 버튼을 표시하지 않음
+    }
 
     return Container(
       height: expandBtnHeight, // 버튼 높이 설정
@@ -2181,7 +2190,7 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
         onPressed: () {
           // showFullImage 상태를 토글함.
           ref.read(showFullImageProvider.notifier).state =
-          !ref.read(showFullImageProvider); // 버튼 클릭 시 이미지 상태 변경
+          !showFullImage; // 버튼 클릭 시 이미지 상태 변경
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: Color(0xFF6FAD96), // 아이콘 및 텍스트 색상 설정
@@ -2207,11 +2216,13 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
   Widget build(BuildContext context) {
     final images = ref.watch(imagesProvider(widget.fullPath)); // Firestore에서 이미지 목록을 받아옴.
     bool showFullImage = ref.watch(showFullImageProvider); // 이미지 전체 보기 여부 상태 확인
+    bool showCollapseButton = ref.watch(imagesProvider(widget.fullPath).notifier).showCollapseButton; // '접기' 버튼 표시 여부
+    // bool hasMoreImages = ref.watch(imagesProvider(widget.fullPath).notifier).hasMore;
 
     final Size screenSize = MediaQuery.of(context).size;
     final double referenceHeight = 852.0; // 기준 화면 높이
     final double productInfoY =
-        screenSize.height * (10 / referenceHeight); // 제품 정보 상단 여백 설정
+        screenSize.height * (4 / referenceHeight); // 제품 정보 상단 여백 설정
 
     // 표시할 이미지 리스트 결정
     List<String> imagesToShow = images;
@@ -2236,11 +2247,12 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
             }
           }).toList(),
         ),
-        SizedBox(height: productInfoY), // 이미지 리스트 아래 여백 설정
+        // SizedBox(height: productInfoY), // 이미지 리스트 아래 여백 설정
         if (!showFullImage)
-          buildExpandButton(context, ref, '상품 정보 펼쳐보기', Icons.arrow_downward), // 펼치기 버튼 표시
-        if (showFullImage)
-          buildExpandButton(context, ref, '접기', Icons.arrow_upward), // 접기 버튼 표시
+          buildExpandButton(context, ref, '상품 정보 펼쳐보기', Icons.arrow_downward, false), // 펼치기 버튼 표시
+        // showFullImage 경우와 showCollapseButton 경우 둘 중 하나라도 참인 경우
+        if (showFullImage || showCollapseButton)
+          buildExpandButton(context, ref, '접기', Icons.arrow_upward, true), // 접기 버튼은 마지막 이미지가 로드된 후에만 표시
       ],
     );
   }

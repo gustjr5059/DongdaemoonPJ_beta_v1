@@ -534,11 +534,39 @@ class ProductDtTabRepository {
         return [];  // 불러올 이미지가 없는 경우 빈 리스트를 반환함.
       }
 
-      // 해당 인덱스의 이미지를 가져옴.
+      // // 해당 인덱스의 이미지를 가져옴.
+      // List<String> images = [];
+      // String? imageUrl = data[fieldNames[startIndex]] as String?;  // 필드에서 이미지 URL을 가져옴.
+      // if (imageUrl != null) {
+      //   images.add(imageUrl);  // 유효한 URL이면 리스트에 추가함.
+      // }
+
+      // // 인덱스에 따른 이미지 로드 처리
+      // List<String> images = [];
+      // if (startIndex == 0) {
+      //   // 첫 번째 페이지: detail_intro_image1만 불러옴
+      //   images.add(data[fieldNames[0]] as String);
+      // } else if (startIndex == 1) {
+      //   // 두 번째 페이지: detail_intro_image2만 불러옴
+      //   images.add(data[fieldNames[1]] as String);
+      // } else if (startIndex == 2) {
+      //   // 세 번째 페이지: detail_intro_image3 불러옴
+      //   images.add(data[fieldNames[2]] as String);
+      // } else if (startIndex == 3) {
+      //   // 네 번째 페이지: detail_intro_image4 불러옴
+      //   images.add(data[fieldNames[3]] as String);
+      // }
+
+      // 인덱스에 따른 이미지 로드 처리
       List<String> images = [];
-      String? imageUrl = data[fieldNames[startIndex]] as String?;  // 필드에서 이미지 URL을 가져옴.
-      if (imageUrl != null) {
-        images.add(imageUrl);  // 유효한 URL이면 리스트에 추가함.
+      if (startIndex == 0) {
+        // 첫 번째 페이지: detail_intro_image1, detail_intro_image2 불러옴
+        images.add(data[fieldNames[0]] as String);
+        images.add(data[fieldNames[1]] as String);
+      } else if (startIndex == 1) {
+        // 두 번째 페이지: detail_intro_image3, detail_intro_image4 불러옴
+        images.add(data[fieldNames[2]] as String);
+        images.add(data[fieldNames[3]] as String);
       }
 
       print("ProductRepository: ${images.length}개의 이미지 로드 완료 (로드된 이미지: $images)");
