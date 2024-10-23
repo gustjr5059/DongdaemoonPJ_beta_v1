@@ -120,7 +120,9 @@ class _NeatDetailProductScreenState
         ref.read(colorSelectionTextProvider.notifier).state = null;
         ref.read(colorSelectionUrlProvider.notifier).state = null;
         ref.read(sizeSelectionIndexProvider.notifier).state = null;
-
+        // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
+        ref.read(showFullImageProvider.notifier).state = false;
+        ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();  // '접기' 버튼 상태 초기화
         ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
       }
     });
@@ -148,6 +150,9 @@ class _NeatDetailProductScreenState
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+    // 스크롤 리스너 추가
+    neatDetailProductScreenPointScrollController.addListener(_onScroll);
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -162,6 +167,20 @@ class _NeatDetailProductScreenState
   }
 
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // 화면 스크롤 움직임에 따른 이미지 데이터 불러오도록 연결하는 로직 함수
+  void _onScroll() {
+    bool showFullImage = ref.read(showFullImageProvider);
+    if (!showFullImage) return;
+
+    // 현재 스크롤 위치가 스크롤 가능한 최대 위치에 도달했는지 확인함
+    if (neatDetailProductScreenPointScrollController.position.pixels ==
+        neatDetailProductScreenPointScrollController.position
+            .maxScrollExtent) {
+      // 스크롤이 끝에 도달했을 때 실행되는 추가 이미지 로드 함수 호출
+      ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
+    }
+  }
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -179,6 +198,9 @@ class _NeatDetailProductScreenState
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
+
+    // 스크롤 리스너 제거
+    neatDetailProductScreenPointScrollController.removeListener(_onScroll);
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
@@ -319,19 +341,27 @@ class _NeatDetailProductScreenState
                                   productReviews.when(
                                     data: (reviewsContent) {
                                       return ProductDetailScreenTabs(
-                                        productInfoContent: ProductInfoContents(product: product),
+                                        productInfoContent: ProductInfoContents(
+                                          fullPath: widget.fullPath,
+                                        ),
                                         reviewsContent: reviewsContent, // Firestore에서 가져온 리뷰 데이터를 전달
                                         inquiryContent: ProductInquiryContents(),
                                       );
                                     },
                                     loading: () => CircularProgressIndicator(),
-                                    error: (error, _) => Text('오류 발생: $error'),
+                                    error: (error, _) {
+                                      print("NeatDetailProductScreen: Error loading reviews: $error"); // 오류 메시지 추가
+                                      return Text('오류 발생: $error');
+                                    },
                                   ),
                                 ],
                               );
                             },
                             loading: () => Center(child: CircularProgressIndicator()),
-                            error: (error, _) => Center(child: Text('오류 발생: $error')),
+                            error: (error, _) {
+                              print("NeatDetailProductScreen: Error loading product data: $error"); // 오류 메시지 추가
+                              return Center(child: Text('오류 발생: $error'));
+                            },
                           ),
                         ],
                       );

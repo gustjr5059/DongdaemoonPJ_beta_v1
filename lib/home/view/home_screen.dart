@@ -219,12 +219,12 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final sectionOffsets = [
       0.0,
       screenHeight * 0.95,
-      screenHeight * 1.36,
-      screenHeight * 1.76,
-      screenHeight * 2.34,
-      screenHeight * 2.74,
-      screenHeight * 3.32,
-      screenHeight * 3.72,
+      screenHeight * 1.35,
+      screenHeight * 1.73,
+      screenHeight * 2.31,
+      screenHeight * 2.69,
+      screenHeight * 3.27,
+      screenHeight * 3.65,
     ];
 
     // 섹션 오프셋 배열의 마지막 요소부터 처음 요소까지 역순으로 검사함.
@@ -496,17 +496,17 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         case '신상': //260  360
           return screenHeight * 0.95; // '신상품 섹션'의 스크롤 위치
         case '스테디 셀러':
-          return screenHeight * 1.36; // '스테디 셀러 제품 섹션'의 스크롤 위치
+          return screenHeight * 1.35; // '스테디 셀러 제품 섹션'의 스크롤 위치
         case '특가 상품':
-          return screenHeight * 1.76; // '특가 상품 섹션'의 스크롤 위치
+          return screenHeight * 1.73; // '특가 상품 섹션'의 스크롤 위치
         case '봄':
-          return screenHeight * 2.34; // '봄 제품 섹션'의 스크롤 위치
+          return screenHeight * 2.31; // '봄 제품 섹션'의 스크롤 위치
         case '여름':
-          return screenHeight * 2.74; // '여름 제품 섹션'의 스크롤 위치
+          return screenHeight * 2.69; // '여름 제품 섹션'의 스크롤 위치
         case '가을':
-          return screenHeight * 3.32; // '가을 제품 섹션'의 스크롤 위치
+          return screenHeight * 3.27; // '가을 제품 섹션'의 스크롤 위치
         case '겨울':
-          return screenHeight * 3.72; // '겨울 제품 섹션'의 스크롤 위치
+          return screenHeight * 3.65; // '겨울 제품 섹션'의 스크롤 위치
         default:
           return 0.0; // 해당하지 않는 섹션의 경우 0.0으로 반환
       }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../common/layout/common_body_parts_layout.dart';
-import '../provider/announce_all_provider.dart';
 import 'package:http/http.dart' as http;
 import '../provider/announce_state_provider.dart';
 import '../view/announce_detail_screen.dart';

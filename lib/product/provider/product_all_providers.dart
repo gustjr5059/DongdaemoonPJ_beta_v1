@@ -796,3 +796,8 @@ FutureProvider<List<WinterSubMainSmall1BannerImage>>((ref) async {
 // ------- 겨울 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
 // ------- 각 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
+
+// 상품 상세 화면 내 상품 정보등의 탭 화면 내 데이터 처리 로직인 ProductDtTabRepository 인스턴스 생성 프로바이더
+final productDtTabRepositoryProvider = Provider<ProductDtTabRepository>((ref) {
+  return ProductDtTabRepository(FirebaseFirestore.instance);
+});
