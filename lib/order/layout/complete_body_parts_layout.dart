@@ -43,16 +43,22 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
         screenSize.height * (18 / referenceHeight);
     final double updateRequireCompleteSubTitleFontSize =
         screenSize.height * (16 / referenceHeight);
+    final double updateRequireNoticeFontSize1 =
+        screenSize.height * (14 / referenceHeight);
+    final double updateRequireNoticeFontSize2 =
+        screenSize.height * (12 / referenceHeight);
 
     final double updateRequireCompleteInfo1Y =
         screenSize.height * (20 / referenceHeight);
     final double updateRequireCompleteInfo2Y =
         screenSize.height * (40 / referenceHeight);
+    final double updateRequireCompleteInfo3Y =
+        screenSize.height * (10 / referenceHeight);
 
     // 버튼 관련 수치 동적 적용
     final double combackHomeBtn1X = screenSize.width * (15 / referenceWidth);
     final double combackHomeBtn1Y = screenSize.height * (50 / referenceHeight);
-    final double combackHomeBtn2Y = screenSize.height * (200 / referenceHeight);
+    final double combackHomeBtn2Y = screenSize.height * (100 / referenceHeight);
     final double combackHomeBtnFontSize = screenSize.height * (16 / referenceHeight);
 
 
@@ -85,10 +91,10 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
               ),
               SizedBox(height: updateRequireCompleteInfo2Y), // 간격
               // 각 정보 행을 표시하기 위한 함수 호출
-              _buildInfoRow(context, '발주 번호', orderNumber),
-              _buildInfoRow(context, '발주 일자', orderDate),
-              _buildInfoRow(context, '발주자 성함', customerName),
-              SizedBox(height: updateRequireCompleteInfo1Y), // 간격
+              _buildInfoRow(context, '요청 접수번호', orderNumber),
+              _buildInfoRow(context, '요청 일자', orderDate),
+              _buildInfoRow(context, '요청자 성함', customerName),
+              SizedBox(height: updateRequireCompleteInfo2Y), // 간격
               // ...orderItems.map((product) {
               //   final int originalPrice = product.originalPrice?.round() ?? 0;
               //   final int discountPrice = product.discountPrice?.round() ?? 0;
@@ -195,6 +201,44 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
               //     ),
               //   );
               // }).toList(),
+              Text(
+                "품목별로 유통사 재고 확인 후 별도 안내 예정입니다.", // 설명 텍스트
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: updateRequireNoticeFontSize1,
+                  // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: updateRequireCompleteInfo3Y),
+              Text(
+                "해당 요청 품목 업데이트는 1~2일 소요될 수 있습니다.", // 설명 텍스트
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: updateRequireNoticeFontSize1,
+                  // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: updateRequireCompleteInfo1Y),
+              Text(
+                "요청 실수 등의 문의사항이 있을 시,", // 설명 텍스트
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: updateRequireNoticeFontSize2,
+                  // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                "[마이페이지] => [문의하기] 절차로 진행해주세요.", // 설명 텍스트
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: updateRequireNoticeFontSize2,
+                  // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: Colors.black,
+                ),
+              ),
               SizedBox(height: combackHomeBtn2Y),
               // 홈으로 이동하는 버튼
               Center(

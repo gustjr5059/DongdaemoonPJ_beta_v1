@@ -238,7 +238,7 @@ class CartItemsList extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(35), // 버튼을 둥글게 설정함
                               side: BorderSide(color: Color(0xFFA5A5A5)),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색 // 버튼 배경색을 앱 배경색과 동일하게 설정함
                           ),
                           child: Text(
                               '삭제',

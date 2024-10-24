@@ -434,7 +434,7 @@ class _PaedingMainScreenState extends ConsumerState<PaedingMainScreen>
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double productMainAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productMainAppBarTitleX = screenSize.height * (92 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.height * (87 / referenceHeight);
     final double productMainAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -481,7 +481,7 @@ class _PaedingMainScreenState extends ConsumerState<PaedingMainScreen>
                     // 현재 context 전달
                     ref: ref,
                     // 참조(ref) 전달
-                    title: '패딩 메인',
+                    title: '아우터 메인',
                     // AppBar의 제목을 '패딩 메인'로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

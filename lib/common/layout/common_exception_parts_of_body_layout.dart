@@ -477,7 +477,7 @@ Widget buildCommonBottomNavigationBar(
                     padding: const EdgeInsets.symmetric(horizontal: 25.5),
                     child: Icon(Icons.receipt_long_outlined, size: 24), // 발주 내역 아이콘
                   ),
-                  label: '발주내역', // 발주 내역 라벨
+                  label: '요청내역', // 발주 내역 라벨
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
@@ -589,6 +589,7 @@ Widget buildCommonBottomNavigationBar(
       final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
       final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
       final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
+      final double intervalX = screenSize.width * (10 / referenceWidth);
 
 
     return Container(
@@ -623,7 +624,7 @@ Widget buildCommonBottomNavigationBar(
                         ), // 버튼 텍스트 설정
                       ),
                     ),
-                    SizedBox(width: 10), // 버튼들 사이에 10픽셀 너비의 여백 추가
+                    SizedBox(width: intervalX), // 버튼들 사이에 10픽셀 너비의 여백 추가
                     Container(
                       width: bottomBtnC2Width,
                       height: bottomBtnC2Height,
@@ -641,7 +642,7 @@ Widget buildCommonBottomNavigationBar(
                           foregroundColor:  Colors.white, // 텍스트 색상
                           backgroundColor: Color(0xFF6FAD96), // 배경 색상
                         ),
-                        child: Text('바로 발주',
+                        child: Text('바로 업데이트 요청',
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             fontSize: bottomBtnFontSize,

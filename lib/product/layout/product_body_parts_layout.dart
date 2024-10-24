@@ -975,7 +975,7 @@ class ProductInfoDetailScreenNavigation {
         );
         break;
       case "패딩":
-        appBarTitle = '패딩 상세';
+        appBarTitle = '아우터 상세';
         detailScreen = PaedingDetailProductScreen(
           fullPath: product.docId,
           title: appBarTitle,
@@ -2176,6 +2176,8 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     // '접기' 버튼은 마지막 이미지를 로드한 후에만 표시됨.
     bool showFullImage = ref.read(showFullImageProvider);
     bool hasMoreImages = ref.read(imagesProvider(widget.fullPath).notifier).hasMore;
+    bool showCollapseButton = ref.watch(imagesProvider(widget.fullPath).notifier).showCollapseButton;
+
 
     // 버튼을 보여줄지 여부를 결정
     if (isCollapseButton && hasMoreImages) {
@@ -2191,10 +2193,18 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
           // showFullImage 상태를 토글함.
           ref.read(showFullImageProvider.notifier).state =
           !showFullImage; // 버튼 클릭 시 이미지 상태 변경
+          // '접기' 버튼 숨김 상태 초기화
+          if (showFullImage) {
+            ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();
+          }
+          // 이미 모든 데이터를 불러왔으면 바로 접기 버튼 표시
+          if (!showFullImage && !hasMoreImages) {
+            ref.read(imagesProvider(widget.fullPath).notifier).showCollapseButton = true;
+          }
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: Color(0xFF6FAD96), // 아이콘 및 텍스트 색상 설정
-          backgroundColor: Colors.white, // 버튼 배경색 설정
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
           side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
         ),
         icon: Icon(icon,
@@ -2289,7 +2299,7 @@ class ProductInquiryContents extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
-              backgroundColor: Colors.white, // 배경 색상
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
               side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
             ),
             // 버튼이 눌렸을 때의 동작 정의

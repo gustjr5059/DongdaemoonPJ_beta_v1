@@ -1,5 +1,11 @@
 {
   "projects": {
-    "default": "dongdaemoonproject1"
-  }
+    "default": "couture",
+    "temp_2": "wearcano",
+    "couture_v1": "couture",
+    "couture": "dongdaemoonproject1"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

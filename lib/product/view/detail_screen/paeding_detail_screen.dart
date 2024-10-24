@@ -228,7 +228,7 @@ class _PaedingDetailProductScreenState
     // AppBar 관련 수치 동적 적용
     final double productDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
     final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productDtAppBarTitleX = screenSize.height * (92 / referenceHeight);
+    final double productDtAppBarTitleX = screenSize.height * (87 / referenceHeight);
     final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -261,7 +261,6 @@ class _PaedingDetailProductScreenState
         ref.watch(paedingDetailProdFirestoreDataProvider(widget.fullPath));
 
     print("PaedingDetailProductScreen: Loading screen for product path: ${widget.fullPath}"); // 디버깅 메시지 추가
-
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -348,12 +347,13 @@ class _PaedingDetailProductScreenState
                                     ),
                                         inquiryContent: ProductInquiryContents(),
                                       ),
-                                  // 로딩 인디케이터를 표시
-                                  if (ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                  // 로딩 인디케이터를 표시 (로그아웃 후 재로그인 시, 로딩 표시가 안나오도록 추가 설정)
+                                  if (ref.watch(imagesProvider(widget.fullPath)).isEmpty && ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Center(
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(),
+                                      ),
                                     ),
                                 ],
                               );

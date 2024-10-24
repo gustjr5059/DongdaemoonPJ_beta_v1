@@ -610,13 +610,12 @@ class ImageNotifier extends StateNotifier<List<String>> {
 
       if (images.isNotEmpty) {
         currentIndex++;  // 이미지가 로드되면 인덱스를 증가시킴.
+        state = [...state, ...images]; // 새로 불러온 이미지를 기존 상태에 추가함.
 
         // 두 번째 페이지일 때 바로 '접기' 버튼을 표시하도록 설정
         if (currentIndex == 2) {
           showCollapseButton = true;
         }
-
-        state = [...state, ...images]; // 새로 불러온 이미지를 기존 상태에 추가함.
         print("ImageNotifier: 이미지 로드 성공, 현재 이미지 수: ${state.length}, 현재 인덱스: $currentIndex");
       } else {
         hasMore = false; // 불러올 이미지가 없으면 더 이상 로드하지 않도록 설정함.
@@ -638,7 +637,6 @@ class ImageNotifier extends StateNotifier<List<String>> {
     state = []; // 이미지 리스트를 초기화함.
     currentIndex = 0; // 인덱스를 초기화함.
     hasMore = true; // 추가 로드를 가능하게 설정함.
-    // showCollapseButton = false;  // '접기' 버튼 상태를 초기화
     loadMoreImages(); // 첫 번째 이미지를 다시 로드함.
   }
 }

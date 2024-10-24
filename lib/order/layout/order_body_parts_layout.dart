@@ -77,7 +77,7 @@ class UserInfoWidget extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
             children: [
               Text(
-                '발주자 정보', // 발주자 정보 제목 텍스트
+                '요청자 정보', // 발주자 정보 제목 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: ordererInfoTitleFontSize,
@@ -264,7 +264,7 @@ class UpdateInfoWidget extends StatelessWidget {
           ),
           SizedBox(height: updateInfo2Y),
           Text(
-            "* 해당 요청 품목은 1~2일 소요될 수 있습니다.", // 설명 텍스트
+            "* 해당 요청 품목 업데이트는 1~2일 소요될 수 있습니다.", // 설명 텍스트
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: updateRequireNoticeFontSize1,
@@ -287,7 +287,7 @@ class UpdateInfoWidget extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: updateRequirePadding2X),
             child: Text(
-              '발주 요청을 완료함으로써 개인정보 처리방침에 동의합니다.',
+              '업데이트 요청을 완료함으로써 개인정보 처리방침에 동의합니다.',
               style: TextStyle(
                 fontFamily: 'NanumGothic',
                 fontWeight: FontWeight.normal,
@@ -322,6 +322,8 @@ class UpdateInfoWidget extends StatelessWidget {
                   fontSize: guidelineText2FontSize,
                   color: Colors.blue, // 텍스트 색상을 파란색으로 설정
                   decoration: TextDecoration.underline, // 밑줄 추가하여 링크처럼 보이게
+                  decorationColor: Colors.blue, // 밑줄 색상도 파란색으로 설정
+                  decorationStyle: TextDecorationStyle.solid, // 밑줄 스타일 설정
                 ),
               ),
             ),

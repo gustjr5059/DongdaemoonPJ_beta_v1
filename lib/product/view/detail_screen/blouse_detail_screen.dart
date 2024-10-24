@@ -353,8 +353,8 @@ class _BlouseDetailProductScreenState
                                     ),
                                         inquiryContent: ProductInquiryContents(),
                                       ),
-                                  // 로딩 인디케이터를 표시
-                                  if (ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                  // 로딩 인디케이터를 표시 (로그아웃 후 재로그인 시, 로딩 표시가 안나오도록 추가 설정)
+                                  if (ref.watch(imagesProvider(widget.fullPath)).isEmpty && ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Center(

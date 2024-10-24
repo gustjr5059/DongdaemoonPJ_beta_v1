@@ -153,7 +153,7 @@ final List<String> midCategories = [
   "팬츠",
   "청바지",
   "스커트",
-  "패딩",
+  "아우터",
   "코트",
   "가디건"
 ];
@@ -169,7 +169,7 @@ final Map<String, String> midCategoryImageMap = {
   "팬츠": "pants_button_v1.png",
   "청바지": "jean_button_v1.png",
   "스커트": "skirt_button_v1.png",
-  "패딩": "paeding_button_v1.png",
+  "아우터": "paeding_button_v1.png",
   "코트": "coat_button_v1.png",
   "가디건": "cardigan_button_v1.png"
 };

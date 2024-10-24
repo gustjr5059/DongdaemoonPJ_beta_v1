@@ -260,17 +260,6 @@ class _ShirtDetailProductScreenState
 
     print("ShirtDetailProductScreen: Loading screen for product path: ${widget.fullPath}"); // 디버깅 메시지 추가
 
-    // showFullImageProvider의 상태 변화를 감지하여 이미지를 로드하거나 초기화.
-    ref.listen<bool>(showFullImageProvider, (previous, next) {
-      if (next == true) {
-        // 전체 이미지 보기 상태로 전환되면 이미지를 로드합니다.
-        ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
-      } else {
-        // 접기 상태로 전환되면 이미지를 초기화합니다.
-        ref.read(imagesProvider(widget.fullPath).notifier).reset();
-      }
-    });
-
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -356,8 +345,8 @@ class _ShirtDetailProductScreenState
                                     ),
                                         inquiryContent: ProductInquiryContents(),
                                       ),
-                                  // 로딩 인디케이터를 표시
-                                  if (ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                  // 로딩 인디케이터를 표시 (로그아웃 후 재로그인 시, 로딩 표시가 안나오도록 추가 설정)
+                                  if (ref.watch(imagesProvider(widget.fullPath)).isEmpty && ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Center(
