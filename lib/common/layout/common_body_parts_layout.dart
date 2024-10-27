@@ -233,7 +233,7 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
       );
     },
     loading: () => Center(child: CircularProgressIndicator()),
-    error: (error, stack) => Center(child: Text('이미지를 불러오는 중 오류가 발생했습니다.')),
+    error: (error, stack) => Center(child: Text('이미지를 불러오는 중 에러가 발생했습니다.')),
   );
 }
 // ------ 공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 - 모든 배너를 해당 위젯을 재사용하여 데이터만 다르게 교체하여 사용(모델, 레퍼지토리, 프로바이더만 다르게 변경하여..)

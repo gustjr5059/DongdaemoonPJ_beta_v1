@@ -427,6 +427,11 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
     final double productMainWishlistBtnX = screenSize.width * (10 / referenceWidth);
     final double productMainWishlistBtnY = screenSize.height * (6 / referenceHeight);
 
+    // 기타 간격 수치
+    final double interval1Y = screenSize.height * (3 / referenceHeight);
+    final double interval2Y = screenSize.height * (5 / referenceHeight);
+    final double interval3Y = screenSize.height * (10 / referenceHeight);
+
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -541,7 +546,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
                               elevation: 4, // 카드뷰의 그림자 깊이를 설정함
                               padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
                             ),
-                            SizedBox(height: 10), // 10의 높이를 가진 간격을 추가함
+                            SizedBox(height: interval3Y), // 10의 높이를 가진 간격을 추가함
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위한 BoxDecoration 추가함
@@ -574,7 +579,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
                               elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
                               padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
                             ),
-                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            SizedBox(height: interval1Y), // 3의 높이를 가진 간격 추가
                             PriceAndDiscountPercentSortButtons<
                                 ProductMainListNotifier>(
                               productListProvider:
@@ -583,7 +588,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
                               sortButtonProvider:
                                   cardiganMainSortButtonProvider, // 가디건 정렬 버튼 프로바이더 전달
                             ), // 가격 및 할인 정렬 버튼 추가
-                            SizedBox(height: 3), // 3의 높이를 가진 간격 추가
+                            SizedBox(height: interval1Y), // 3의 높이를 가진 간격 추가
                             Consumer(
                               // Consumer 위젯: Consumer 위젯은 Provider 패키지에서 제공하는 위젯으로, Provider를 구독하고 상태 변화에 따라 빌드됨.
                               builder: (context, ref, child) {
@@ -608,7 +613,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
                                 );
                               },
                             ),
-                            SizedBox(height: 5), // 5의 높이를 가진 간격 추가
+                            SizedBox(height: interval2Y), // 5의 높이를 가진 간격 추가
                           ],
                         ),
                       );
