@@ -276,7 +276,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double profileAppBarTitleWidth = screenSize.width * (90 / referenceWidth);
+    final double profileAppBarTitleWidth = screenSize.width * (110 / referenceWidth);
     final double profileAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
     final double profileAppBarTitleX = screenSize.width * (40 / referenceHeight);
     final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);

@@ -680,7 +680,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Expanded(
                           child: TextButton(
                             onPressed: () async {
-                              const url = 'https://cafe.naver.com/ottbayo';
+                              const url = 'https://forms.gle/iiKCqxSyis3E6obP9';
                               try {
                                 final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
                                 if (!launched) {
@@ -711,7 +711,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Expanded(
                           child: TextButton(
                             onPressed: () async {
-                              const url = 'https://pf.kakao.com/_xjVrbG';
+                              const url = 'http://pf.kakao.com/_ceKEn';
                               try {
                                 final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
                                 if (!launched) {
@@ -770,7 +770,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   left: guidelineText2Left, top: guidelineText2Top),
               child: GestureDetector( // GestureDetector 사용하여 탭 이벤트 처리
                 onTap: () async {
-                  const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
+                  const url = 'https://gshe.oopy.io/couture/privacy'; // 열려는 URL
                   try {
                     final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
                     if (!launched) {

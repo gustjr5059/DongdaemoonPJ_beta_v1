@@ -2305,7 +2305,7 @@ class ProductInquiryContents extends StatelessWidget {
             // 버튼이 눌렸을 때의 동작 정의
             onPressed: () async {
               // URL을 상수로 선언
-              const url = 'https://pf.kakao.com/_xjVrbG';
+              const url = 'http://pf.kakao.com/_ceKEn';
               // URI를 파싱하여 생성
               final uri = Uri.parse(url);
               // URL을 열 수 있는지 확인하고 열 수 있으면 URL을 엶

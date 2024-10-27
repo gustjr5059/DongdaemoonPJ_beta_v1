@@ -180,9 +180,9 @@ class _OrderListDetailScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderlistDtAppBarTitleWidth = screenSize.width * (170 / referenceWidth);
     final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistDtAppBarTitleX = screenSize.width * (143 / referenceHeight);
+    final double orderlistDtAppBarTitleX = screenSize.width * (135 / referenceHeight);
     final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치

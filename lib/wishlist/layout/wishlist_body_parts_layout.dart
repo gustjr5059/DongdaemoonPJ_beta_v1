@@ -156,27 +156,27 @@ class WishlistItemsList extends ConsumerWidget {
     final double wishlistTextDataPartHeight =
         screenSize.height * (126 / referenceHeight); // 세로 비율
     final double wishlistBriefIntroductionFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double wishlistOriginalPriceFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double wishlistDiscountPercentFontSize =
-        screenSize.height * (17 / referenceHeight);
+        screenSize.height * (15 / referenceHeight);
     final double wishlistDiscountPriceFontSize =
-        screenSize.height * (19 / referenceHeight);
+        screenSize.height * (15 / referenceHeight);
     // 삭제 버튼 부분 수치
     final double wishlistDeleteBtn1X =
         screenSize.width * (20 / referenceWidth); // 가로 비율
     final double wishlistDeleteBtn1Y =
-        screenSize.height * (6 / referenceHeight); // 세로 비율
+        screenSize.height * (4 / referenceHeight); // 세로 비율
     final double wishlistDeleteBtnFontSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (15 / referenceHeight);
     // 텍스트 데이터 간 너비, 높이
     final double wishlist1X =
         screenSize.width * (12 / referenceWidth); // 가로 비율
     final double wishlist2X =
-        screenSize.width * (19 / referenceWidth); // 가로 비율
+        screenSize.width * (30 / referenceWidth); // 가로 비율
     final double wishlist1Y =
-        screenSize.width * (4 / referenceWidth); // 가로 비율
+        screenSize.width * (2 / referenceWidth); // 가로 비율
 
     // 찜 목록 비어있는 경우의 알림 부분 수치
     final double wishlistEmptyTextWidth =
@@ -253,8 +253,8 @@ class WishlistItemsList extends ConsumerWidget {
                 navigatorProductDetailScreen.navigateToDetailScreen(context, product);
               },
               child: Container(
-                width: wishlistCardViewWidth,  // CommonCardView의 너비를 지정함
-                height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
+                // width: wishlistCardViewWidth,  // CommonCardView의 너비를 지정함
+                // height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(color: Color(0xFFCECECE), width: 1.0), // 하단 테두리 색상을 지정함

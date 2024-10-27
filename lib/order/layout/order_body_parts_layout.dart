@@ -225,18 +225,18 @@ class UpdateInfoWidget extends StatelessWidget {
     final double updateInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double updateRequireNoticeFontSize1 =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double guidelineText1FontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기
+        screenSize.height * (11 / referenceHeight); // 텍스트 크기
     final double guidelineText2FontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기
+        screenSize.height * (11 / referenceHeight); // 텍스트 크기
 
     final double updateInfo1Y =
         screenSize.height * (12 / referenceHeight);
     final double updateInfo2Y =
         screenSize.height * (10 / referenceHeight);
     final double updateInfo3Y =
-        screenSize.height * (50 / referenceHeight);
+        screenSize.height * (30 / referenceHeight);
 
     return Padding(
       padding: EdgeInsets.only(left: updateRequirePadding1X, right: updateRequirePadding1X, top: updateRequirePaddingY),
@@ -302,7 +302,7 @@ class UpdateInfoWidget extends StatelessWidget {
             padding: EdgeInsets.only(left: updateRequirePadding3X),
             child: GestureDetector( // GestureDetector 사용하여 탭 이벤트 처리
               onTap: () async {
-                const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
+                const url = 'https://gshe.oopy.io/couture/privacy'; // 열려는 URL
                 try {
                   final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
                   if (!launched) {
@@ -728,17 +728,17 @@ class _OrderListDetailItemWidgetState
     final double orderlistDtInfoOriginalPriceDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPriceDataFontSize =
-        screenSize.height * (24 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPercentDataFontSize =
         screenSize.height * (22 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoColorImageDataWidth =
-        screenSize.width * (18 / referenceWidth); // 색상 이미지 가로 크기 설정함
+        screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
     final double orderlistDtInfoColorImageDataHeight =
-        screenSize.width * (18 / referenceWidth); // 색상 이미지 세로 크기 설정함
+        screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
     final double orderlistDtInfoColorTextDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoSizeTextDataFontSize =
         screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoSizeTextDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
@@ -831,8 +831,8 @@ class _OrderListDetailItemWidgetState
             ClipRRect(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
               child: Container(
-                width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
-                height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
+                // width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
+                // height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
                 color: Color(0xFFF3F3F3), // 배경색 설정
                 child: CommonCardView(
                   backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
@@ -866,8 +866,8 @@ class _OrderListDetailItemWidgetState
                                 context, product);
                           },
                           child: Container(
-                            width: orderlistDtInfo3CardViewWidth, // 카드뷰 가로 크기 설정
-                            height: orderlistDtInfo3CardViewHeight, // 카드뷰 세로 크기 설정
+                            // width: orderlistDtInfo3CardViewWidth, // 카드뷰 가로 크기 설정
+                            // height: orderlistDtInfo3CardViewHeight, // 카드뷰 세로 크기 설정
                             color: Color(0xFFF3F3F3), // 배경색 설정
                             child: CommonCardView(
                               backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
@@ -993,7 +993,7 @@ class _OrderListDetailItemWidgetState
                                               SizedBox(height: interval1Y),
                                               // 선택된 사이즈와 수량을 표시
                                               Text(
-                                                  '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}',
+                                                  '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}',
                                                 style: TextStyle(
                                                   fontSize: orderlistDtInfoSizeTextDataFontSize,
                                                   fontFamily: 'NanumGothic',

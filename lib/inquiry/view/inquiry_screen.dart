@@ -302,7 +302,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               child: ElevatedButton(
                                 onPressed: () async {
                                   // 버튼이 눌렸을 때 해당 링크로 이동함
-                                  final Uri url = Uri.parse('https://pf.kakao.com/_xjVrbG');
+                                  final Uri url = Uri.parse('http://pf.kakao.com/_ceKEn');
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url); // url_launcher 패키지를 사용하여 링크를 엶
                                   } else {

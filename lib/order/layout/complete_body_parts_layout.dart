@@ -40,13 +40,13 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
     final double updateRequireCompletePaddingY =
         screenSize.width * (24 / referenceWidth);
     final double updateRequireCompleteTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double updateRequireCompleteSubTitleFontSize =
         screenSize.height * (16 / referenceHeight);
-    final double updateRequireNoticeFontSize1 =
+    final double updateRequireCompleteSubTitleFontSize =
         screenSize.height * (14 / referenceHeight);
-    final double updateRequireNoticeFontSize2 =
+    final double updateRequireNoticeFontSize1 =
         screenSize.height * (12 / referenceHeight);
+    final double updateRequireNoticeFontSize2 =
+        screenSize.height * (11 / referenceHeight);
 
     final double updateRequireCompleteInfo1Y =
         screenSize.height * (20 / referenceHeight);
@@ -282,9 +282,9 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
 
     // 발주자 정보 표 부분 수치
     final double updateRequireCompleteInfoTextFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double updateRequireCompleteInfoDataFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     final double updateRequireCompleteInfoTextPartWidth =
         screenSize.width * (110 / referenceWidth);
     final double updateRequireCompleteInfoTextPartHeight =
