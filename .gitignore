@@ -61,3 +61,4 @@ node_modules/
 
 # Firebase Admin SDK JSON key 파일 제외
 functions/wearcanopj-firebase-adminsdk-file.json
+functions/wearcano-firebase-adminsdk-file.json

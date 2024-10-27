@@ -2,9 +2,11 @@ import UIKit
 import Flutter
 import KakaoSDKCommon
 import KakaoSDKAuth
+import Firebase
+import FirebaseMessaging
 
 @main
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -24,6 +26,28 @@ import KakaoSDKAuth
         print("config.json file not found")
     }
 
+//         // Firebase 초기화
+//         if FirebaseApp.app() == nil {
+//             FirebaseApp.configure()
+//         }
+
+        // 메시지 대리자 설정
+        Messaging.messaging().delegate = self
+
+        // APNs 등록
+        if #available(iOS 10.0, *) {
+          UNUserNotificationCenter.current().delegate = self
+          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+          UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        } else {
+          let settings: UIUserNotificationSettings =
+          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+          application.registerUserNotificationSettings(settings)
+        }
+        application.registerForRemoteNotifications()
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
@@ -34,4 +58,11 @@ import KakaoSDKAuth
     }
     return super.application(app, open: url, options: options)
   }
+
+    // FCM 토큰 갱신 시 호출되는 메서드
+    override func application(_ application: UIApplication,
+                              didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
 }
