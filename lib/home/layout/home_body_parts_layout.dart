@@ -75,7 +75,7 @@ class MidCategoryButtonList extends ConsumerWidget {
         midCategoryPerRow;
 
     // 지퍼 버튼의 높이 설정 (기기마다의 다른 길이에 맞춰서 모두 구현되도록 재설정)
-    final zipperButtonHeight = buttonWidth * 0.9;
+    final zipperButtonHeight = buttonWidth * 1.1;
     // 전체 카테고리의 행 수를 계산함.
     final rowCount = (midCategories.length / midCategoryPerRow).ceil();
     // 확장 시 카테고리의 전체 줄 높이를 계산함.
@@ -155,23 +155,35 @@ final List<String> midCategories = [
   "스커트",
   "아우터",
   "코트",
-  "가디건"
+  "가디건",
 ];
 
 // 카테고리명과 해당하는 이미지 파일명을 매핑하는 변수
 final Map<String, String> midCategoryImageMap = {
-  "티셔츠": "shirt_button_v1.png",
-  "블라우스": "blouse_button_v1.png",
-  "맨투맨": "mtm_button_v1.png",
-  "니트": "neat_button_v1.png",
-  "폴라티": "pola_button_v1.png",
-  "원피스": "onepiece_button_v1.png",
-  "팬츠": "pants_button_v1.png",
-  "청바지": "jean_button_v1.png",
-  "스커트": "skirt_button_v1.png",
-  "아우터": "paeding_button_v1.png",
-  "코트": "coat_button_v1.png",
-  "가디건": "cardigan_button_v1.png"
+  // "티셔츠": "shirt_button_v1.png",
+  // "블라우스": "blouse_button_v1.png",
+  // "맨투맨": "mtm_button_v1.png",
+  // "니트": "neat_button_v1.png",
+  // "폴라티": "pola_button_v1.png",
+  // "원피스": "onepiece_button_v1.png",
+  // "팬츠": "pants_button_v1.png",
+  // "청바지": "jean_button_v1.png",
+  // "스커트": "skirt_button_v1.png",
+  // "아우터": "paeding_button_v1.png",
+  // "코트": "coat_button_v1.png",
+  // "가디건": "cardigan_button_v1.png"
+"티셔츠": "shirt_button_v1.png",
+"블라우스": "blouse_button_v1.png",
+"맨투맨": "mtm_button_v1.png",
+"니트": "neat_button_v1.png",
+"폴라티": "pola_button_v1.png",
+"원피스": "onepiece_button_v1.png",
+"팬츠": "pants_button_v1.png",
+"청바지": "jean_button_v1.png",
+"스커트": "skirt_button_v1.png",
+"아우터": "paeding_button_v1.png",
+"코트": "coat_button_v1.png",
+"가디건": "cardigan_button_v1.png",
 };
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
@@ -245,7 +257,7 @@ Widget buildDetailMidCategoryButton({
         children: <Widget>[
           AspectRatio(
             // 이미지의 원본 비율을 유지하는 AspectRatio 위젯 사용
-            aspectRatio: 1.8, // 너비와 높이의 비율을 1.8:1로 설정
+            aspectRatio: 1.3, // 너비와 높이의 비율을 1.8:1로 설정
             child: Image.asset(imageAsset, fit: BoxFit.contain), // 이미지 파일을 보여줌
           ),
           SizedBox(height: 8), // 이미지와 텍스트 사이의 공간을 8로 설정함.
@@ -299,7 +311,7 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
               fontSize: SectionTextFontSize, // 텍스트 크기
               fontFamily: 'NanumGothic',
               fontWeight: FontWeight.bold,
-              ),
+          ),
         ),
       ),
       SizedBox(height: SectionY), // 제목과 리스트 사이에 간격 추가

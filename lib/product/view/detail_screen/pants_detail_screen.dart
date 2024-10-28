@@ -297,6 +297,7 @@ class _PantsDetailProductScreenState
                     ref: ref,
                     // 참조(ref) 전달
                     title: widget.title,
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '팬츠 상세'로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

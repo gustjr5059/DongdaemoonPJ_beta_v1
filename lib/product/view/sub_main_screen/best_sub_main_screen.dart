@@ -381,6 +381,7 @@ class _BestSubMainScreenState extends ConsumerState<BestSubMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '스테디셀러 섹션',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '스테디셀러 섹션'으로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

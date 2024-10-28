@@ -268,6 +268,7 @@ class _OrderListDetailScreenState
                   ref: ref,
                   // 참조(ref) 전달
                   title: '발주 내역 상세',
+                  fontFamily: 'NanumGothic',
                   // AppBar의 제목을 '발주 목록 상세'로 설정
                   leadingType: LeadingType.back,
                   // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

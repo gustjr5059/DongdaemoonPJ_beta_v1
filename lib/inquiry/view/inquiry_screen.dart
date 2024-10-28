@@ -233,6 +233,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                     context: context,
                     ref: ref,
                     title: '문의하기',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: inquiryAppBarTitleWidth,

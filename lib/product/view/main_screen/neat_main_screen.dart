@@ -482,6 +482,7 @@ class _NeatMainScreenState extends ConsumerState<NeatMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '니트 메인',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '니트 메인'로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

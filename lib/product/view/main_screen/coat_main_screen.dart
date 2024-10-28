@@ -489,6 +489,7 @@ class _CoatMainScreenState extends ConsumerState<CoatMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '코트 메인',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '코트 메인'로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

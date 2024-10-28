@@ -382,6 +382,7 @@ class _SummerSubMainScreenState extends ConsumerState<SummerSubMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '여름 섹션',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '여름 섹션'으로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

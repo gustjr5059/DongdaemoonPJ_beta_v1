@@ -381,6 +381,7 @@ class _SaleSubMainScreenState extends ConsumerState<SaleSubMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '특가상품 섹션',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '특가상품 섹션'으로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

@@ -378,6 +378,7 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '신상 섹션',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '신상 섹션'으로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정

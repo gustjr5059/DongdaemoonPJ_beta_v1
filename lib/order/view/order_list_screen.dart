@@ -281,6 +281,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '발주 내역',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '발주 목록'로 설정
                     leadingType: LeadingType.none,
                     // 아무 버튼도 없음.

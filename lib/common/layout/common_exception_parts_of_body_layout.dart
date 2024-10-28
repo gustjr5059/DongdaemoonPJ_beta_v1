@@ -101,6 +101,8 @@ AppBar buildCommonAppBar({
   LeadingType leadingType =
       LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
+  String? fontFamily, // fontFamily 추가: 앱 바 제목의 글꼴을 지정하기 위한 선택적 매개변수
+  String? titleImagePath, // 이미지 경로를 받는 선택적 매개변수 추가
 }) {
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -355,15 +357,21 @@ AppBar buildCommonAppBar({
         //     ),
         //   ),
         // ],
-              child: Text(
-                title, // 제목 설정
-                style: TextStyle(
-                  color: Colors.black, // 제목 텍스트 색상
-                  fontSize: titleFontSize, // 제목 텍스트 크기
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+      child: titleImagePath != null
+          ? Image.asset(
+        titleImagePath,
+        fit: BoxFit.contain,
+      )
+          : Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: titleFontSize,
+          fontWeight: FontWeight.bold,
+          fontFamily: fontFamily,
+        ),
+      ),
+    ),
     centerTitle: true,
     // 제목을 중앙에 위치시킴.
     leading: leadingWidget,

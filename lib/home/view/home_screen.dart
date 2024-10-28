@@ -611,9 +611,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double homeAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double homeAppBarTitleWidth = screenSize.width * (85 / referenceWidth);
     final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double homeAppBarTitleX = screenSize.width * (25 / referenceHeight);
+    final double homeAppBarTitleX = screenSize.width * (10 / referenceHeight);
     final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 드로어 아이콘 관련 수치 동적 적용
@@ -626,10 +626,10 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 홈 화면 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
+    final double interval1Y = screenSize.height * (20 / referenceHeight);
     final double interval2Y = screenSize.height * (10 / referenceHeight);
     final double interval3Y = screenSize.height * (350 / referenceHeight);
 
@@ -661,6 +661,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                     context: context,
                     ref: ref,
                     title: 'Couture',
+                    fontFamily: 'Charter',
+                    titleImagePath: 'asset/img/misc/appbar_img/home_appbar_title_img.png', // 앱 바 타이틀 이미지 경로 추가
                     leadingType: LeadingType.drawer,
                     // 아무 버튼도 없음.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)

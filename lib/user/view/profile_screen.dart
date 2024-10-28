@@ -321,6 +321,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                     context: context,
                     ref: ref,
                     title: '마이페이지',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: profileAppBarTitleWidth,

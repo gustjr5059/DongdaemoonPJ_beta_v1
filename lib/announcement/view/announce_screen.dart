@@ -242,6 +242,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                     context: context,
                     ref: ref,
                     title: '공지사항',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: announceAppBarTitleWidth,

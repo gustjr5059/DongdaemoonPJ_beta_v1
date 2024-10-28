@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.1+14
+version: 1.0.1+17
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -168,6 +168,27 @@ flutter:
     - asset/img/misc/icon_img/orderlist_icon.png
     - asset/img/misc/icon_img/wishlist_icon.png
     - asset/img/misc/icon_img/chevron_right.png
+    - asset/img/misc/button_img/shirt_btn.png
+    - asset/img/misc/button_img/blouse_btn.png
+    - asset/img/misc/button_img/mtm_btn.png
+    - asset/img/misc/button_img/neat_btn.png
+    - asset/img/misc/button_img/pola_btn.png
+    - asset/img/misc/button_img/onepiece_btn.png
+    - asset/img/misc/button_img/pants_btn.png
+    - asset/img/misc/button_img/jean_btn.png
+    - asset/img/misc/button_img/skirt_btn.png
+    - asset/img/misc/button_img/paeding_btn.png
+    - asset/img/misc/button_img/coat_btn.png
+    - asset/img/misc/button_img/cardigan_btn.png
+    - asset/img/misc/button_img/shirt_btn_1.png
+    - asset/img/misc/button_img/blouse_btn_1.png
+    - asset/img/misc/button_img/mtm_btn_1.png
+    - asset/img/misc/button_img/neat_btn_1.png
+    - asset/img/misc/button_img/pola_btn_1.png
+    - asset/img/misc/button_img/onepiece_btn_1.png
+    - asset/img/misc/button_img/pants_btn_1.png
+    - asset/img/misc/button_img/jean_btn_1.png
+    - asset/img/misc/appbar_img/home_appbar_title_img.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -199,6 +220,26 @@ flutter:
           weight: 300
         - asset: asset/fonts/NotoSansKR-Thin.otf
           weight: 100
+    - family: AppleSDGothicNeo
+      fonts:
+        - asset: asset/fonts/AppleSDGothicNeoUL.ttf
+          weight: 100 # 가장 얇은 폰트
+        - asset: asset/fonts/AppleSDGothicNeoT.ttf
+          weight: 200
+        - asset: asset/fonts/AppleSDGothicNeoL.ttf
+          weight: 300
+        - asset: asset/fonts/AppleSDGothicNeoR.ttf
+          weight: 400 # 레귤러 폰트
+        - asset: asset/fonts/AppleSDGothicNeoM.ttf
+          weight: 500
+        - asset: asset/fonts/AppleSDGothicNeoSB.ttf
+          weight: 600
+        - asset: asset/fonts/AppleSDGothicNeoB.ttf
+          weight: 700
+        - asset: asset/fonts/AppleSDGothicNeoH.ttf
+          weight: 800
+        - asset: asset/fonts/AppleSDGothicNeoEB.ttf
+          weight: 900 # 가장 굵은 폰트
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

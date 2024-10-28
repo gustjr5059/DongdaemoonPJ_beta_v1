@@ -240,6 +240,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                     context: context,
                     ref: ref,
                     title: '공지사항 상세',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.back,
                     buttonCase: 1,
                     appBarTitleWidth: announceDtAppBarTitleWidth,

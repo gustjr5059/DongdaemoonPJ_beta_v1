@@ -261,6 +261,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '요청품목',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '장바구니'로 설정
                     leadingType: LeadingType.none,
                     // 버튼 없음.

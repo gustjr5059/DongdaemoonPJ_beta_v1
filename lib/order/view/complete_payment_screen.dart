@@ -252,6 +252,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                         context: context,
                         ref: ref,
                         title: '업데이트 요청 완료', // 앱바 제목 설정
+                        fontFamily: 'NanumGothic',
                         leadingType: LeadingType.none, // 리딩 아이콘 없음
                         buttonCase: 1, // 버튼 타입 설정
                         appBarTitleWidth: completePaymentAppBarTitleWidth,

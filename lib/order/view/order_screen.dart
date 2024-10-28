@@ -256,6 +256,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                     context: context,
                     ref: ref,
                     title: '업데이트 요청',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.back,
                     // 이전화면으로 이동 버튼.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
