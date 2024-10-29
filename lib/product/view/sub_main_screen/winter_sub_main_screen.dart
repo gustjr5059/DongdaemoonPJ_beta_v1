@@ -326,22 +326,22 @@ class _WinterSubMainScreenState extends ConsumerState<WinterSubMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double sectionPlusAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double sectionPlusAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double sectionPlusAppBarTitleX = screenSize.height * (93 / referenceHeight);
+    final double sectionPlusAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double sectionPlusAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double sectionPlusChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double sectionPlusChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double sectionPlusChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double sectionPlusChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double sectionPlusChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double sectionPlusChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double sectionPlusWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double sectionPlusWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double sectionPlusWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double sectionPlusWishlistBtnY = screenSize.height * (6 / referenceHeight);
+    final double sectionPlusWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 기타 간격 수치
     final double interval1Y = screenSize.height * (3 / referenceHeight);

@@ -42,6 +42,7 @@ import '../../wishlist/view/wishlist_screen.dart';
 import '../const/colors.dart';
 
 // 애플리케이션의 공통적인 상태 관리 로직을 포함하는 파일을 임포트합니다.
+import '../provider/common_all_providers.dart';
 import '../provider/common_state_provider.dart';
 
 import 'dart:io' show Platform;
@@ -103,6 +104,8 @@ AppBar buildCommonAppBar({
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
   String? fontFamily, // fontFamily 추가: 앱 바 제목의 글꼴을 지정하기 위한 선택적 매개변수
   String? titleImagePath, // 이미지 경로를 받는 선택적 매개변수 추가
+  bool boolEventImg = false, // 이벤트 이미지 표시 여부 설정
+  bool boolTitleImg = false, // Firestore title_img 사용 여부를 설정
 }) {
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -119,6 +122,16 @@ AppBar buildCommonAppBar({
   // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
+
+  // `boolEventImg` 값에 따라 이벤트 이미지를 가져옴
+  final eventImage = ref.watch(eventImageProvider).whenOrNull(
+    data: (data) => boolEventImg && data != null && data.isNotEmpty ? data : null,
+  );
+
+  // Firestore에서 제목 이미지를 가져옴
+  final titleImage = ref.watch(titleImageProvider).whenOrNull(
+    data: (data) => boolTitleImg && data != null && data.isNotEmpty ? data : null,
+  );
 
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
@@ -321,62 +334,56 @@ AppBar buildCommonAppBar({
       break;
   }
 
-  // AppBar를 반환
+// AppBar를 반환하는 함수
   return AppBar(
-    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-    // 앱 바 배경 색상 : 앱 기본 배경색
-    // AppBar 색상 설정
-    toolbarHeight: appBarHeight, // 앱 바의 높이를 설정
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // AppBar의 배경 색상 설정, 앱의 기본 배경 색상을 사용함
+    toolbarHeight: appBarHeight, // AppBar의 높이를 설정함
     title: Container(
-      // alignment: Alignment.center,
-      width: appBarTitleWidth, // 텍스트 너비 설정
-      height: appBarTitleHeight, // 텍스트 높이 설정
-      margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY), // 텍스트 위치 설정
-        // children: <Widget>[
-        //   Expanded(
-        //     child: Center(
-        //       child: AspectRatio(
-        //         aspectRatio: 1, // 가로 세로 비율을 1:1로 설정
-        //         child: Image.asset(
-        //           'asset/img/misc/logo_img/couture_logo_image.png',
-        //           // 로고 이미지 경로 설정
-        //           fit: BoxFit.contain, // 이미지를 포함하여 맞춤
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        //   Expanded(
-        //     child: Center(
-        //       child: Text(
-        //         title, // 제목 설정
-        //         style: TextStyle(
-        //           color: Colors.black, // 제목 텍스트 색상
-        //           fontSize: 20, // 제목 텍스트 크기
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ],
-      child: titleImagePath != null
-          ? Image.asset(
-        titleImagePath,
-        fit: BoxFit.contain,
-      )
-          : Text(
-        title,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: titleFontSize,
-          fontWeight: FontWeight.bold,
-          fontFamily: fontFamily,
-        ),
+      width: appBarTitleWidth, // AppBar 제목 영역의 너비를 설정함
+      height: appBarTitleHeight, // AppBar 제목 영역의 높이를 설정함
+      margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY), // 제목의 위치를 설정함
+      child: Stack(
+        alignment: Alignment.center, // 자식 위젯들이 중앙에 정렬되도록 설정함
+        children: [
+          if (eventImage != null)
+            Align(
+              alignment: Alignment.centerLeft, // 이미지 위치를 왼쪽 중앙에 설정함
+              child: Image.network(
+                eventImage, // 네트워크에서 이미지를 불러옴
+                width: appBarTitleWidth * 0.20, // 이미지 너비를 설정함 (제목 영역의 20% 사용)
+                height: appBarTitleHeight, // 이미지 높이를 제목 영역과 동일하게 설정함
+                fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
+              ),
+            ),
+          Center(
+            child: titleImage != null
+                ? Image.network(
+              titleImage, // 네트워크에서 제목 이미지를 불러옴
+              fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
+            )
+                : (titleImagePath != null
+                ? Image.asset(
+              titleImagePath, // 로컬 자산에서 제목 이미지를 불러옴
+              fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
+            )
+                : Text(
+              title, // 설정된 제목을 텍스트로 표시함
+              style: TextStyle(
+                color: Colors.black, // 텍스트 색상을 검정색으로 설정함
+                fontSize: titleFontSize, // 텍스트 크기를 설정함
+                fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+                fontFamily: fontFamily, // 텍스트 폰트를 설정함
+              ),
+              maxLines: 1, // 텍스트가 한 줄로 표시되도록 설정함
+              overflow: TextOverflow.ellipsis, // 텍스트가 길 경우 생략 부호(...)를 표시함
+            )),
+          ),
+        ],
       ),
     ),
-    centerTitle: true,
-    // 제목을 중앙에 위치시킴.
-    leading: leadingWidget,
-    // 설정된 leading 위젯을 사용함.
-    actions: actions, // 설정된 동작 버튼들을 추가함.
+    centerTitle: true, // 제목을 중앙에 배치함
+    leading: leadingWidget, // 설정된 leading 위젯을 추가함
+    actions: actions, // 설정된 동작 버튼들을 추가함
   );
 }
 // ------ AppBar 생성 함수 내용 구현 끝

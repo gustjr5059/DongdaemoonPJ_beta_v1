@@ -193,9 +193,9 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double announceDtAppBarTitleWidth = screenSize.width * (180 / referenceWidth);
+    final double announceDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double announceDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double announceDtAppBarTitleX = screenSize.width * (140 / referenceHeight);
+    final double announceDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double announceDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -205,8 +205,8 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double announceDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double announceDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double announceDtChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double announceDtChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double announceDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double announceDtChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementDetailEmptyTextWidth =

@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // 'banner_model.dart' 파일에는 대형 배너 이미지에 관련된 데이터 모델 클래스들이 정의되어 있습니다.
 // 이 클래스들을 사용하여 배너 이미지 데이터를 관리하고 조작할 수 있습니다.
 import '../model/banner_model.dart';
+import '../repository/event_data_repository.dart';
 
 // ------- Firestore로부터 공통 배너 데이터 가져오는 로직 관련 provider 시작
 
@@ -58,3 +59,15 @@ final allLargeBannerImagesProvider =
 });
 
 // ------- Firestore로부터 큰 배너 데이터 가져오는 로직 관련 provider 끝
+
+// 앱 바에 나올 이벤트 이미지 관련 데이터를 불러오는 EventRepository 인스턴스 provider
+final eventImageProvider = FutureProvider<String?>((ref) async {
+  final repository = EventRepository(firestore: FirebaseFirestore.instance);
+  return repository.fetchEventImage();
+});
+
+// 앱 바에 나올 타이틀 이미지 관련 데이터를 불러오는 EventRepository 인스턴스 provider
+final titleImageProvider = FutureProvider<String?>((ref) async {
+  final repository = EventRepository(firestore: FirebaseFirestore.instance);
+  return repository.fetchTitleImage();
+});

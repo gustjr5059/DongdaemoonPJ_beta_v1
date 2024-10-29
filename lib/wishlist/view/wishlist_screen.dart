@@ -221,9 +221,9 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double wishlistAppBarTitleWidth = screenSize.width * (63 / referenceWidth);
+    final double wishlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double wishlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double wishlistAppBarTitleX = screenSize.width * (30 / referenceHeight);
+    final double wishlistAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double wishlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -250,6 +250,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                     context: context,
                     ref: ref,
                     title: '찜 목록',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: wishlistAppBarTitleWidth,

@@ -212,9 +212,9 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double completePaymentAppBarTitleWidth = screenSize.width * (180 / referenceWidth);
+    final double completePaymentAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double completePaymentAppBarTitleX = screenSize.width * (70 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
 

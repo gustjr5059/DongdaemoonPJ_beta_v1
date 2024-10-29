@@ -200,22 +200,22 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double cartlistAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double cartlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double cartlistAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double cartlistAppBarTitleX = screenSize.width * (220 / referenceHeight);
     final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 홈 버튼 수치 (Case 3)
     final double cartlistHomeBtnWidth = screenSize.width * (40 / referenceWidth);
     final double cartlistHomeBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double cartlistHomeBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistHomeBtnY = screenSize.height * (6 / referenceHeight);
+    final double cartlistHomeBtnX = screenSize.width * (10 / referenceWidth);
+    final double cartlistHomeBtnY = screenSize.height * (7 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 3)
     final double cartlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double cartlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistWishlistBtnY = screenSize.height * (6 / referenceHeight);
+    final double cartlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
     final double cartlistEmptyTextWidth =

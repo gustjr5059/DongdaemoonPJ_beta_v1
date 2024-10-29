@@ -199,9 +199,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistAppBarTitleWidth = screenSize.width * (90 / referenceWidth);
+    final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.height * (15 / referenceHeight);
+    final double orderlistAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치

@@ -208,16 +208,16 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double orderAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    final double orderAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double orderChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double orderChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double orderChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double orderChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double orderChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double orderWishlistBtnWidth = screenSize.width * (40 / referenceWidth);

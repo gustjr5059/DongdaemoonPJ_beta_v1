@@ -611,15 +611,15 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double homeAppBarTitleWidth = screenSize.width * (85 / referenceWidth);
+    final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double homeAppBarTitleX = screenSize.width * (10 / referenceHeight);
+    final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 드로어 아이콘 관련 수치 동적 적용
     final double homeDrawerIconWidth = screenSize.width * (28 / referenceWidth);
     final double homeDrawerIconHeight = screenSize.height * (24 / referenceHeight);
-    final double homeDrawerIconX = screenSize.width * (18 / referenceWidth);
+    final double homeDrawerIconX = screenSize.width * (10 / referenceWidth);
     final double homeDrawerIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
@@ -662,6 +662,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                     ref: ref,
                     title: 'Couture',
                     fontFamily: 'Charter',
+                    boolEventImg: true,
+                    boolTitleImg: true,
                     titleImagePath: 'asset/img/misc/appbar_img/home_appbar_title_img.png', // 앱 바 타이틀 이미지 경로 추가
                     leadingType: LeadingType.drawer,
                     // 아무 버튼도 없음.

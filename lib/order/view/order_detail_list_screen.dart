@@ -180,9 +180,9 @@ class _OrderListDetailScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistDtAppBarTitleWidth = screenSize.width * (170 / referenceWidth);
+    final double orderlistDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistDtAppBarTitleX = screenSize.width * (135 / referenceHeight);
+    final double orderlistDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -192,8 +192,8 @@ class _OrderListDetailScreenState
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderlistDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double orderlistDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double orderlistDtChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double orderlistDtChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double orderlistDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double orderlistDtChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double orderlistDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);

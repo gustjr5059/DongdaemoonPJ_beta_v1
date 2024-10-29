@@ -200,9 +200,9 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double announceAppBarTitleWidth = screenSize.width * (90 / referenceWidth);
+    final double announceAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double announceAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double announceAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double announceAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치

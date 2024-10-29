@@ -429,22 +429,22 @@ class _PantsMainScreenState extends ConsumerState<PantsMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double productMainAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double productMainAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productMainAppBarTitleX = screenSize.height * (92 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double productMainAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double productMainChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double productMainChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double productMainChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double productMainChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double productMainChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double productMainChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double productMainWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double productMainWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double productMainWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double productMainWishlistBtnY = screenSize.height * (6 / referenceHeight);
+    final double productMainWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 기타 간격 수치
     final double interval1Y = screenSize.height * (3 / referenceHeight);
