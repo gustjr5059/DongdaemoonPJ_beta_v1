@@ -71,3 +71,8 @@ final titleImageProvider = FutureProvider<String?>((ref) async {
   final repository = EventRepository(firestore: FirebaseFirestore.instance);
   return repository.fetchTitleImage();
 });
+
+// eventPosterImgItemRepositoryProvider 클래스를 제공하기 위한 Provider 정의
+final eventPosterImgItemRepositoryProvider = Provider((ref) => EventRepository(
+  firestore: FirebaseFirestore.instance, // Firebase Firestore 인스턴스를 전달
+));

@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 여러 의류 카테고리 화면을 정의한 파일들을 임포트합니다.
+import '../../product/provider/product_state_provider.dart';
+import '../../product/view/detail_screen/product_detail_original_image_screen.dart';
 import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
 import '../../product/view/main_screen/cardigan_main_screen.dart'; // 가디건 화면
 import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
@@ -27,6 +29,8 @@ import '../provider/common_all_providers.dart'; // 비동기 데이터 로드를
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 
 import 'dart:io';
+
+import '../provider/common_state_provider.dart';
 
 // ------ 배너 페이지 뷰 자동 스크롤 기능 구현 위한 클래스 시작
 class BannerAutoScrollClass {
@@ -572,3 +576,113 @@ class NetworkChecker {
   }
 }
 // ------ 네트워크 상태 체크 함수 내용 끝
+
+
+// ------- EventPosterImgSectionList 클래스 내용 구현 시작
+// 홈 화면 내 이벤트 포스터 이미지 섹션에서 데이터를 4개 단위로 표시하며 스크롤 가능한 UI 구현 관련 클래스
+class EventPosterImgSectionList extends ConsumerStatefulWidget {
+  // 생성자 선언
+  EventPosterImgSectionList();
+
+  @override
+  _EventPosterImgSectionListState createState() =>
+      _EventPosterImgSectionListState(); // 상태 객체 생성 함수 호출
+}
+
+class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectionList> {
+  final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
+
+  @override
+  void initState() {
+    super.initState(); // 부모 클래스의 초기화 함수 호출
+    _scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener); // 스크롤 리스너 제거
+    _scrollController.dispose(); // 스크롤 컨트롤러 메모리 해제
+    super.dispose(); // 부모 클래스의 dispose 함수 호출
+  }
+
+  // 스크롤 리스너 함수 선언
+  void _scrollListener() {
+    // 스크롤 위치가 스크롤 끝에 가까워지고, 추가 데이터를 로드 중이 아니며 더 로드할 데이터가 남아 있을 때
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200 &&
+        !ref.read(eventPosterImgItemsProvider.notifier).isLoadingMore &&
+        ref.read(eventPosterImgItemsProvider.notifier).hasMoreData) {
+      ref.read(eventPosterImgItemsProvider.notifier).loadMoreEventPosterImgItems(); // 추가 데이터 로드 함수 호출
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 이벤트 포스터 이미지 항목 데이터 가져오기
+    final eventPosterImgItems = ref.watch(eventPosterImgItemsProvider);
+
+    // 화면 크기를 동적으로 가져오기 위한 MediaQuery
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852 (비율 계산에 사용)
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 화면 비율에 따른 가로 크기 설정
+    final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
+    // 화면 비율에 따른 세로 크기 설정
+    final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    // 아이템 간 여백 비율 설정
+    final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
+
+    return SingleChildScrollView(
+      controller: _scrollController, // 수평 스크롤 컨트롤러 설정
+      scrollDirection: Axis.horizontal, // 수평 스크롤 방향 설정
+      child: Row(
+        children: eventPosterImgItems.map((eventPosterImgItem) {
+          // 각 항목의 이미지 URL 가져오기, 이미지가 없을 경우 'No Image' 텍스트 사용
+          final posterImg = eventPosterImgItem['poster_img'] as String? ?? 'No Image';
+
+          return Container(
+            width: DetailDocWidth, // 설정된 가로 크기 사용
+            padding: EdgeInsets.all(DetailDoc1X), // 아이템 간 여백 설정
+            margin: EdgeInsets.all(DetailDoc1X), // 아이템 외부 여백 설정
+            decoration: BoxDecoration(
+              color: Colors.white, // 배경색 설정
+              borderRadius: BorderRadius.circular(10.0), // 둥근 모서리 설정
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5), // 그림자 색상 및 불투명도 설정
+                  spreadRadius: 0, // 그림자 퍼짐 정도 설정
+                  blurRadius: 1, // 그림자 흐림 정도 설정
+                  offset: Offset(0, 4), // 그림자 위치 설정
+                ),
+              ],
+            ),
+            child: GestureDetector(
+              onTap: () {
+                // 이미지 클릭 시 상세 이미지 화면으로 이동
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // 클릭된 이미지의 상세 화면으로 이동 라우트 정의
+                    builder: (_) => ProductDetailOriginalImageScreen(
+                      images: [posterImg], // 클릭한 이미지 전달
+                      initialPage: 0, // 첫 번째 페이지로 시작
+                    ),
+                  ),
+                );
+              },
+              child: Image.network(
+                posterImg, // 네트워크 이미지 URL 설정
+                width: DetailDocWidth, // 이미지 가로 크기 설정
+                height: DetailDocHeight, // 이미지 세로 크기 설정
+                fit: BoxFit.cover, // 이미지 맞춤 방식 설정
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+// ------- EventPosterImgSectionList 클래스 내용 구현 끝

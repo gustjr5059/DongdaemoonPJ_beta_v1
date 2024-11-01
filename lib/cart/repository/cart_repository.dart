@@ -57,10 +57,18 @@ class CartItemRepository {
       throw Exception('User email not available');
     }
 
+    // // 중복 체크를 위한 해시 생성
+    // final String combinedData = "${product.docId}|${product.category}|${product.productNumber}|"
+    //     "${product.thumbnail}|${product.briefIntroduction}|${product.originalPrice}|"
+    //     "${product.discountPrice}|${product.discountPercent}|${selectedColorText}|${selectedColorUrl}|${selectedSize}";
+
     // 중복 체크를 위한 해시 생성
-    final String combinedData = "${product.docId}|${product.category}|${product.productNumber}|"
+    // 동일한 상품이 신상 및 겨울 등으로 여러 카테고리에 중복해서 있을 경우에도 동일한 상품으로 인식하도록 변경
+    // 기존의 해시 생성 로직에서 ${product.docId}를 제외해서 문서는 달라도 다른 데이터가 동일하면 동일한 해시가 생성 -> 동일한 데이터로 인식해서 장바구니에 안 담기도록 함
+    final String combinedData = "${product.category}|${product.productNumber}|"
         "${product.thumbnail}|${product.briefIntroduction}|${product.originalPrice}|"
         "${product.discountPrice}|${product.discountPercent}|${selectedColorText}|${selectedColorUrl}|${selectedSize}";
+
 
     // 해시 생성 (SHA-256 사용)
     final String productHash = sha256.convert(utf8.encode(combinedData)).toString();

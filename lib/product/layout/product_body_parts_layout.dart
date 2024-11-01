@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 // 상태 관리를 위해 사용되는 Riverpod 패키지를 임포트합니다.
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,7 +26,9 @@ import '../../common/const/colors.dart';
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
 import '../../common/layout/common_body_parts_layout.dart';
+import '../../common/provider/common_all_providers.dart';
 import '../../common/provider/common_state_provider.dart';
+import '../../home/provider/home_all_providers.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../inquiry/provider/inquiry_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
@@ -38,6 +41,7 @@ import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
 // 제품 상태 관리를 위한 StateProvider 파일을 임포트합니다.
+import '../provider/product_all_providers.dart';
 import '../provider/product_state_provider.dart';
 
 // 각 의류 카테고리에 대한 상세 화면 구현 파일들을 임포트합니다.
@@ -1079,6 +1083,9 @@ class ProductInfoDetailScreenNavigation {
     final double interval1Y = screenSize.height * (4 / referenceHeight);
     final double interval1X = screenSize.width * (6 / referenceWidth);
 
+    // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
+    final numberFormat = NumberFormat('###,###');
+
     return GestureDetector(
       // 문서 클릭 시 navigateToDetailScreen 함수를 호출함.
       onTap: () {
@@ -1156,7 +1163,7 @@ class ProductInfoDetailScreenNavigation {
                     child: Row(
                       children: [
                         Text(
-                          '${product.originalPrice!.toStringAsFixed(0)}원',
+                          '${numberFormat.format(product.originalPrice!)}원',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize2,
                               color: Color(0xFF6C6C6C), // 텍스트 색상
@@ -1169,7 +1176,7 @@ class ProductInfoDetailScreenNavigation {
                           // 할인율을 빨간색으로 표시함.
                           if (product.discountPercent != null)
                             Text(
-                              '${product.discountPercent!.toStringAsFixed(0)}%',
+                              '${numberFormat.format(product.discountPercent!)}%',
                               style: TextStyle(
                                   fontSize: DetailDocTextFontSize3,
                                   color: Colors.red, // 텍스트 색상
@@ -1185,7 +1192,7 @@ class ProductInfoDetailScreenNavigation {
                   Padding(
                     padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Text(
-                          '${product.discountPrice!.toStringAsFixed(0)}원',
+                          '${numberFormat.format(product.discountPrice!)}원',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize4,
                               color: Colors.black, // 텍스트 색상

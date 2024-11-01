@@ -79,6 +79,9 @@ AppBar buildCommonAppBar({
   required double appBarTitleHeight,
   required double appBarTitleX,
   required double appBarTitleY,
+  // 이벤트 이미지 버튼 클릭 시, 이벤트 섹션으로 이동시키기 위한 변수
+  ScrollController? scrollController, // 스크롤 컨트롤 변수
+  GlobalKey? sectionKey, // 위치 동적 변수
   double? drawerIconWidth,
   double? drawerIconHeight,
   double? drawerIconX,
@@ -132,6 +135,33 @@ AppBar buildCommonAppBar({
   final titleImage = ref.watch(titleImageProvider).whenOrNull(
     data: (data) => boolTitleImg && data != null && data.isNotEmpty ? data : null,
   );
+
+// 이벤트 이미지를 클릭 가능하게 만드는 위젯 선언
+  Widget? eventImageWidget;
+  if (eventImage != null) { // 이벤트 이미지가 있을 경우 조건문 실행
+    eventImageWidget = GestureDetector(
+      onTap: () { // 이미지 클릭 시 실행할 함수 정의
+        // '겨울' 섹션으로 스크롤 이동 기능 구현
+        final sectionContext = sectionKey?.currentContext; // 해당 섹션의 컨텍스트 가져옴
+        if (sectionContext != null) { // 섹션 컨텍스트가 null이 아닐 경우 실행
+          Scrollable.ensureVisible(
+            sectionContext, // 스크롤하려는 대상 섹션 컨텍스트 전달
+            duration: Duration(milliseconds: 500), // 스크롤 애니메이션 시간 설정
+            curve: Curves.easeInOut, // 스크롤 애니메이션 곡선 설정
+          );
+        }
+      },
+      child: Align(
+        alignment: Alignment.centerLeft, // 이미지의 정렬 위치 설정 (왼쪽 정렬)
+        child: Image.network(
+          eventImage, // 네트워크 이미지 URL 설정
+          width: appBarTitleWidth * 0.20, // 이미지 가로 크기를 앱바 제목 크기의 20%로 설정
+          height: appBarTitleHeight, // 이미지 세로 크기 설정
+          fit: BoxFit.contain, // 이미지 맞춤 방식 설정
+        ),
+      ),
+    );
+  }
 
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
@@ -345,16 +375,7 @@ AppBar buildCommonAppBar({
       child: Stack(
         alignment: Alignment.center, // 자식 위젯들이 중앙에 정렬되도록 설정함
         children: [
-          if (eventImage != null)
-            Align(
-              alignment: Alignment.centerLeft, // 이미지 위치를 왼쪽 중앙에 설정함
-              child: Image.network(
-                eventImage, // 네트워크에서 이미지를 불러옴
-                width: appBarTitleWidth * 0.20, // 이미지 너비를 설정함 (제목 영역의 20% 사용)
-                height: appBarTitleHeight, // 이미지 높이를 제목 영역과 동일하게 설정함
-                fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
-              ),
-            ),
+          if (eventImageWidget != null) eventImageWidget,
           Center(
             child: titleImage != null
                 ? Image.network(

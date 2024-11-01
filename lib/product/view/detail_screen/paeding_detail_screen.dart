@@ -226,15 +226,15 @@ class _PaedingDetailProductScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double productDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productDtAppBarTitleX = screenSize.height * (87 / referenceHeight);
+    final double productDtAppBarTitleX = screenSize.height * (70 / referenceHeight);
     final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double productDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double productDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double productDtChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double productDtChevronIconX = screenSize.width * (10 / referenceWidth);
     final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
 
     //  업데이트 요청 목록 버튼 수치 (Case 4)

@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/colors.dart';
 
 // 공통적으로 사용될 상태 관리 로직을 포함하는 Provider 파일을 임포트합니다.
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 
 // 제품 카테고리별 메인 화면의 레이아웃을 정의하는 파일을 임포트합니다.
@@ -34,6 +35,66 @@ import '../../product/view/main_screen/pola_main_screen.dart'; // 폴라(터틀�
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 카테고리 메인 화면
 import '../../product/view/main_screen/skirt_main_screen.dart'; // 스커트 카테고리 메인 화면
 
+
+// ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -
+// (카드뷰 색상, 카드뷰 섹션 내용-CommonCardView, "+" 버튼 이미지로 버튼 구현-버튼 클릭 시, 서브 메인 페이지로 이동) 위젯 구현 내용 시작
+// Flutter의 context와 ref 객체, 섹션의 제목, 내용을 빌드하는 함수, 그리고 네비게이션할 목적지 스크린을 인자로 받는 위젯 빌드 함수임.
+Widget buildSectionCard(
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    Widget Function(WidgetRef, BuildContext) contentBuilder,
+    // 필수가 아니라 선택적으로 사용가능하도록 매개변수를 선택할 때는
+    // {}와 ?를 사용하면 됨
+    {Widget? destinationScreen,
+    bool showPlusButton = true}) {
+  // 제목에 따라 다른 배경색을 설정함. '신상', '특가 상품', '여름', '겨울' 일 경우 앱 기본 색상을, 그 외의 경우는 F1F1F1 색상를 배경색으로 사용함.
+  Color backgroundColor =
+  (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
+      ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
+      : Color(0xFFF1F1F1); // F1F1F1 색상
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  // AppBar 관련 수치 동적 적용
+  final double plusBtnWidth = screenSize.width * (24 / referenceWidth);
+  final double plusBtnHeight = screenSize.width * (24 / referenceWidth);
+  final double plusBtnX = screenSize.width * (8 / referenceWidth);
+  final double plusBtnY = screenSize.height * (1 / referenceHeight);
+
+  // 공통 카드 뷰를 반환함. 이 카드는 Stack 위젯을 사용하여 contentBuilder로 생성된 콘텐츠와 오른쪽 상단에 위치한 '더보기' 버튼을 포함함.
+  return CommonCardView(
+    content: Stack(
+      children: [
+        // 사용자 정의 콘텐츠를 빌드하는 함수를 호출함.
+        contentBuilder(ref, context),
+        if (showPlusButton && destinationScreen != null) // showPlusButton이 true이고, destinationScreen이 null이 아닌 경우
+        // '더보기' 버튼을 위치시키며, 이 버튼을 탭하면 destinationScreen으로 네비게이션함.
+        Positioned(
+          right: plusBtnX,
+          top: plusBtnY,
+          child: GestureDetector(
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => destinationScreen)),
+            child: Image.asset('asset/img/misc/button_img/plus_button1.png',
+                width: plusBtnWidth, height: plusBtnHeight, color: Color(0xFF6FAD96)),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: backgroundColor,
+    elevation: 0, // 카드의 높이(그림자 깊이)를 설정함.
+    padding: const EdgeInsets.all(8.0), // 카드 내부의 패딩을 설정함.
+  );
+}
+// ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -
+// (카드뷰 색상, 카드뷰 섹션 내용-CommonCardView, "+" 버튼 이미지로 버튼 구현-버튼 클릭 시, 서브 메인 페이지로 이동) 위젯 구현 내용 끝
 
 // ------ midCategories 부분의 버튼을 화면 크기에 동적으로 한 열당 버튼 갯수를 정해서 열로 정렬하기 위한 클래스 시작
 // MidCategoryButtonList 위젯 정의
@@ -279,7 +340,7 @@ Widget buildDetailMidCategoryButton({
 // ------ buildDetailMidCategoryButton 위젯 내용 끝
 // ------ 카테고리 12개를 버튼 형식의 두줄로 표시한 부분 관련 위젯 구현 내용 끝
 
-// 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 시작
+// ------ 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 시작
 // 신상 섹션을 위젯으로 구현한 부분
 // 신상 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
 Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
@@ -291,7 +352,7 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -351,7 +412,7 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -411,7 +472,7 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -471,7 +532,7 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -531,7 +592,7 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -591,7 +652,7 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -651,7 +712,7 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  // 신상 섹션 내 요소들의 수치
+  // 섹션 내 요소들의 수치
   final double SectionX =
       screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY =
@@ -699,4 +760,53 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
     ],
   );
 }
-// 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 끝
+// ------ 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 끝
+
+// ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 시작
+// 이벤트 섹션에서 ProductsSectionList 위젯을 사용하여 데이터 UI를 구현하는 함수
+Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852 (비율 계산의 기준이 됨)
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 크기와 위치를 동적으로 설정함
+  // 섹션 내 요소들의 수치
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionY = screenSize.height * (8 / referenceHeight); // 위쪽 여백 비율
+  final double SectionTextFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기 비율
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: SectionX), // 왼쪽 여백 적용
+        child: Text(
+          '이벤트', // 섹션 제목을 '이벤트'로 설정함
+          style: TextStyle(
+            color: Colors.black, // 텍스트 색상 설정
+            fontSize: SectionTextFontSize, // 텍스트 크기 설정
+            fontFamily: 'NanumGothic', // 폰트 스타일 설정
+            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+          ),
+        ),
+      ),
+      SizedBox(height: SectionY), // 제목과 리스트 사이의 간격 추가
+      Padding(
+        padding: EdgeInsets.only(left: SectionX), // 왼쪽 여백 적용
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정함
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            ),
+            child: EventPosterImgSectionList(), // EventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
+          ),
+        ),
+      ),
+    ],
+  );
+}
+// ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 끝
