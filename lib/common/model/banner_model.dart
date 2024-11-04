@@ -20,14 +20,24 @@ class CommonBannerImage {
 // 'AllLargeBannerImage' 클래스는 'CommonBannerImage'를 상속받아 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 // 'AllLargeBannerImage' 클래스는 배너 이미지의 URL을 저장하기 위한 모델 클래스.
 class AllLargeBannerImage extends CommonBannerImage {
-  AllLargeBannerImage({required String imageUrl}) : super(imageUrl: imageUrl);
+
+  // URL을 저장할 url 필드를 nullable로 선언.
+  final String? url;
+  // product_id를 저장할 productId 필드를 nullable(AllLargeBannerImage 클래스를 재사용하는 곳에서 해당 변수값이 선택적으로 있어도 되도록 하는 방법)로 선언.
+  final String? productId;
+  // category를 저장할 category 필드를 nullable로 선언.
+  final String? category;
+  // subCategory를 저장할 subCategory 필드를 nullable로 선언.
+  final String? subCategory;
+
+  AllLargeBannerImage({required String imageUrl, this.url, this.productId, this.category, this.subCategory,}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'AllLargeBannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
   factory AllLargeBannerImage.fromJson(Map<String, dynamic> json) {
-    // JSON 맵에서 'imageUrl' 키에 해당하는 값을 읽어서 새 'AllLargeBannerImage' 객체를 생성함.
-    // 객체 생성 시, 'imageUrl' 파라미터에 JSON의 'imageUrl' 값을 할당함.
-    return AllLargeBannerImage(imageUrl: json['imageUrl']);
+    // JSON 맵에서 'imageUrl', 'url', 'productId', 'category' 키의 값을 읽어서 새로운 'AllLargeBannerImage' 객체를 생성.
+    // url, productId, category 필드는 nullable로 설정하여, 값이 없을 경우 null로 처리.
+    return AllLargeBannerImage(imageUrl: json['imageUrl'], url: json['url'] as String?, productId: json['productId'] as String?, category: json['category'] as String?, subCategory: json['subCategory'] as String?,);
   }
 }
 

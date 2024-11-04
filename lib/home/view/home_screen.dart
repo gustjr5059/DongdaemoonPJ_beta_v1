@@ -569,16 +569,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         homeCurrentTabProvider, homeTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
-    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onLargeBannerTap(BuildContext context, int index) async {
-      final url = largeBannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
     // 작은 배너1 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
     void _onSmall1BannerTap(BuildContext context, int index) async {
       final url = small1BannerLinks[index];
@@ -785,7 +775,15 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   bannerImagesProvider:
                                       allLargeBannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onLargeBannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
+                                  onLargeBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(allLargeBannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenLargeBannerWidth,
                                   // 원하는 너비
                                   height: homeScreenLargeBannerHeight,

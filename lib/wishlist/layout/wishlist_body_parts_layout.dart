@@ -240,6 +240,7 @@ class WishlistItemsList extends ConsumerWidget {
             // ProductContent 객체 생성
             final product = ProductContent(
               docId: wishlistItem['product_id'],
+              category: wishlistItem['category'],
               thumbnail: wishlistItem['thumbnails'],
               briefIntroduction: wishlistItem['brief_introduction'],
               originalPrice: wishlistItem['original_price'],

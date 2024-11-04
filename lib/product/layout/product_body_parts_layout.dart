@@ -978,7 +978,7 @@ class ProductInfoDetailScreenNavigation {
           title: appBarTitle,
         );
         break;
-      case "패딩":
+      case "아우터":
         appBarTitle = '아우터 상세';
         detailScreen = PaedingDetailProductScreen(
           fullPath: product.docId,

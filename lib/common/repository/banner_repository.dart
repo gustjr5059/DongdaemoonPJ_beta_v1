@@ -50,11 +50,11 @@ class AllLargeBannerRepository {
 
   // 'fetchBannerImages' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllLargeBannerImage> 타입의 Future를 반환함.
-  Future<List<AllLargeBannerImage>> fetchBannerImages() async {
+  Future<List<AllLargeBannerImage>> fetchBannerImagesAndLink() async {
     print('Fetching large banner images from Firestore...');
-    // 'item' 컬렉션 내의 'banners' 문서에 접근하여 데이터를 가져옴.
+    // 'banners' 컬렉션 내의 'large_banner' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
-    await firestore.collection('item').doc('banners').get();
+    await firestore.collection('banners').doc('large_banner').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
@@ -63,11 +63,32 @@ class AllLargeBannerRepository {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllLargeBannerImage 객체로 변환함.
       return [
-        AllLargeBannerImage.fromJson({'imageUrl': data['style22']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['style28']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['style29']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon3']}),
-        AllLargeBannerImage.fromJson({'imageUrl': data['dongdaemoon3']})
+        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+        AllLargeBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'],  // 제품 ID 정보 포함
+          'category': data['category']  // 카테고리 정보 포함
+        }),
+        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+        AllLargeBannerImage.fromJson({
+          'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
+          'url': data['ad_url_1']  // 연결 URL 정보 포함
+        }),
+        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+        AllLargeBannerImage.fromJson({
+          'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
+          'url': data['ad_url_2']  // 연결 URL 정보 포함
+        }),
+        // 광고 배너 이미지 4를 생성하기 위한 데이터 모델링
+        AllLargeBannerImage.fromJson({
+          'imageUrl': data['ad_img_4'],  // 이미지 URL로 사용할 데이터 'ad_img_4'
+          'url': data['ad_url_3']  // 연결 URL 정보 포함
+        }),
+        // 광고 배너 이미지 5를 생성하기 위한 데이터 모델링
+        AllLargeBannerImage.fromJson({
+          'imageUrl': data['ad_img_5'],  // 이미지 URL로 사용할 데이터 'ad_img_5'
+          'subCategory': data['sub_category']  // 하위 카테고리 정보 포함
+        })
       ].whereType<AllLargeBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('Failed to fetch large banner images: Document does not exist.');

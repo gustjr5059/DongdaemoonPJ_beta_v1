@@ -54,6 +54,7 @@ class WishlistItemRepository {
       // Firestore에 저장할 데이터 생성
       final data = {
         'product_id': product.docId, // 상품 ID
+        'category': product.category, // 상품의 카테고리 저장
         'thumbnails': product.thumbnail, // 상품 썸네일
         'brief_introduction': product.briefIntroduction, // 간단한 소개
         'original_price': product.originalPrice, // 원래 가격

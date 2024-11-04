@@ -507,8 +507,8 @@ class _SaleSubMainScreenState extends ConsumerState<SaleSubMainScreen>
                               // 상품 리스트 프로바이더를 설정 (할인 섹션의 상품 리스트 프로바이더)
                               productListProvider:
                                   saleSubMainProductListProvider,
-                              // 카테고리를 '할인'으로 설정
-                              category: '할인',
+                              // 카테고리를 '특가 상품'으로 설정
+                              category: '특가 상품',
                             ),
                             SizedBox(height: interval2Y),
                             // 3의 높이를 가진 간격 추가

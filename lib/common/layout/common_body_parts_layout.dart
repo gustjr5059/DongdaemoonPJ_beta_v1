@@ -4,6 +4,7 @@ import 'dart:async';
 // 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,6 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 여러 의류 카테고리 화면을 정의한 파일들을 임포트합니다.
+import '../../product/layout/product_body_parts_layout.dart';
+import '../../product/model/product_model.dart';
 import '../../product/provider/product_state_provider.dart';
 import '../../product/view/detail_screen/product_detail_original_image_screen.dart';
 import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
@@ -22,6 +25,13 @@ import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
 // 비동기 데이터 로딩을 위해 상태 관리에 사용되는 FutureProvider 파일을 임포트합니다.
 // 이 파일은 네트워크 요청과 같은 비동기 작업 결과를 처리하고 상태 관리에 사용됩니다.
+import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/best_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/new_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
 import '../const/colors.dart';
 import '../model/banner_model.dart';
 import '../provider/common_all_providers.dart'; // 비동기 데이터 로드를 위한 FutureProvider
@@ -241,6 +251,72 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   );
 }
 // ------ 공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 - 모든 배너를 해당 위젯을 재사용하여 데이터만 다르게 교체하여 사용(모델, 레퍼지토리, 프로바이더만 다르게 변경하여..)
+
+// ------ 대배너 클릭 시 URL 이동 로직 관련 함수 내용 시작
+void onLargeBannerTap(BuildContext context, int index, List<AllLargeBannerImage> images, WidgetRef ref) async {
+  // 선택된 인덱스의 배너 이미지 정보를 가져옴
+  final bannerImage = images[index];
+
+  // 인덱스가 4이고, subCategory가 있을 경우
+  if (index == 4 && bannerImage.subCategory != null) {
+    // subCategory에 따른 화면 전환을 위한 변수 선언
+    Widget destinationScreen;
+    // subCategory 값에 따라 각기 다른 화면으로 이동함
+    switch (bannerImage.subCategory) {
+      case '신상':
+        destinationScreen = NewSubMainScreen();
+        break;
+      case '스테디 셀러':
+        destinationScreen = BestSubMainScreen();
+        break;
+      case '특가 상품':
+        destinationScreen = SaleSubMainScreen();
+        break;
+      case '봄':
+        destinationScreen = SpringSubMainScreen();
+        break;
+      case '여름':
+        destinationScreen = SummerSubMainScreen();
+        break;
+      case '가을':
+        destinationScreen = AutumnSubMainScreen();
+        break;
+      case '겨울':
+        destinationScreen = WinterSubMainScreen();
+        break;
+      default:
+      // 유효하지 않은 카테고리일 경우 경고 메시지 출력 후 함수 종료
+        print('유효하지 않은 카테고리입니다.');
+        return;
+    }
+    // 선택한 화면으로 이동함
+    Navigator.push(context, MaterialPageRoute(builder: (context) => destinationScreen));
+  }
+  // productId가 있을 경우 해당 제품 상세 화면으로 이동함
+  else if (bannerImage.productId != null) {
+    final product = ProductContent(
+      docId: bannerImage.productId!,  // 제품 문서 ID 설정
+      category: bannerImage.category,  // 제품 카테고리 설정
+    );
+    // 제품 상세 화면으로 이동하는 함수 호출
+    ProductInfoDetailScreenNavigation(ref).navigateToDetailScreen(context, product);
+  }
+  // url이 있을 경우 외부 URL로 이동함
+  else if (bannerImage.url != null) {
+    Uri uri = Uri.parse(bannerImage.url!);  // URL 파싱
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);  // URL 실행
+    } else {
+      // URL이 없을 경우 경고 메시지 출력
+      print('링크가 없는 배너입니다.');
+    }
+  }
+  // 위 조건에 모두 해당되지 않을 경우 경고 메시지 출력
+  else {
+    print('링크가 없는 배너입니다.');
+  }
+}
+// ------ 대배너 클릭 시 URL 이동 로직 관련 함수 내용 끝
 
 // ------ 범용성으로 재사용가능한 카드뷰인 CommonCardView 클래스 시작
 class CommonCardView extends StatelessWidget {

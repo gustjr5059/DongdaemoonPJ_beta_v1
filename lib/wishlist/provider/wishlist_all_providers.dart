@@ -42,6 +42,7 @@ final wishlistItemsLoadFutureProvider = FutureProvider.autoDispose.family<List<M
     // 찜 목록의 각 항목의 데이터를 Map 형식으로 반환함.
     return {
       'product_id': doc['product_id'],
+      'category': doc['category'],
       'thumbnails': doc['thumbnails'],
       'brief_introduction': doc['brief_introduction'],
       'original_price': doc['original_price'],
@@ -76,6 +77,7 @@ final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Ma
       // Firestore에서 가져온 데이터를 Map 형식으로 반환함.
       return {
         'product_id': doc['product_id'],
+        'category': doc['category'],
         'thumbnails': doc['thumbnails'],
         'brief_introduction': doc['brief_introduction'],
         'original_price': doc['original_price'],

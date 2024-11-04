@@ -502,12 +502,12 @@ class _BestSubMainScreenState extends ConsumerState<BestSubMainScreen>
                             GeneralProductList<SectionMoreProductListNotifier>(
                               // 스크롤 컨트롤러를 설정 (최고 섹션의 스크롤 컨트롤러)
                               scrollController:
-                                  bestSubMainScreenPointScrollController,
+                              bestSubMainScreenPointScrollController,
                               // 상품 리스트 프로바이더를 설정 (최고 섹션의 상품 리스트 프로바이더)
                               productListProvider:
-                                  bestSubMainProductListProvider,
-                              // 카테고리를 '최고'로 설정
-                              category: '최고',
+                              bestSubMainProductListProvider,
+                              // 카테고리를 '스테디 셀러'로 설정
+                              category: '스테디 셀러',
                             ),
                             SizedBox(height: interval2Y),
                             // 3의 높이를 가진 간격 추가

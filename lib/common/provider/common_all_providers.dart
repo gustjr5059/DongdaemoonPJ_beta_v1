@@ -55,7 +55,7 @@ final allLargeBannerImagesProvider =
   final repository = ref.watch(allLargeBannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
   // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<AllLargeBannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  return await repository.fetchBannerImagesAndLink();
 });
 
 // ------- Firestore로부터 큰 배너 데이터 가져오는 로직 관련 provider 끝
