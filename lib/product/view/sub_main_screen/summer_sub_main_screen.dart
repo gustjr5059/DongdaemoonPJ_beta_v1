@@ -329,7 +329,7 @@ class _SummerSubMainScreenState extends ConsumerState<SummerSubMainScreen>
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double sectionPlusAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double sectionPlusAppBarTitleX = screenSize.height * (5 / referenceHeight);
+    final double sectionPlusAppBarTitleX = screenSize.height * (4 / referenceHeight);
     final double sectionPlusAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용

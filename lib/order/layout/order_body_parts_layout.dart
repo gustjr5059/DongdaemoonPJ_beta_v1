@@ -274,7 +274,7 @@ class UpdateInfoWidget extends StatelessWidget {
           ),
           SizedBox(height: updateInfo2Y),
           Text(
-            "* 어플에 업로드 할 가격은 꾸띠르 카카오톡 채널을 통해 소통할 예정입니다.", // 설명 텍스트
+            "* 중간 도매 가격은 별도 소통 진행합니다.", // 설명 텍스트
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: updateRequireNoticeFontSize1,
@@ -543,7 +543,7 @@ class OrderListItemWidget extends ConsumerWidget {
               children: [
                 // 발주일자를 텍스트로 표시.
                 Text(
-                  '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                  '요청 일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
                   style: TextStyle(
                     fontSize: orderlistInfoOrderDateDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -555,7 +555,7 @@ class OrderListItemWidget extends ConsumerWidget {
                 SizedBox(height: interval1Y),
                 // 발주번호를 텍스트로 표시.
                 Text(
-                  '발주번호: $orderNumber',
+                  '요청 접수번호: $orderNumber',
                   style: TextStyle(
                     fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -591,7 +591,7 @@ class OrderListItemWidget extends ConsumerWidget {
                             ),
                           ),
                           child: Text( // 버튼에 표시될 텍스트를 정의함
-                            '발주 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
+                            '요청 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
                             style: TextStyle(
                               fontSize: orderlistInfoDetailViewBtnFontSize, // 텍스트 크기 설정
                               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -609,8 +609,8 @@ class OrderListItemWidget extends ConsumerWidget {
                           onPressed: () async { // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
                             await showSubmitAlertDialog( // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
                               context, // 현재 화면의 컨텍스트를 전달함
-                              title: '[발주 내역 삭제]', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
-                              content: '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
+                              title: '[요청 내역 삭제]', // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
+                              content: '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n작성하신 요청 내역을 삭제하시겠습니까?', // 대화상자의 내용으로 경고 메시지를 설정함
                               actions: buildAlertActions( // 대화상자에 표시될 액션 버튼들을 설정함
                                 context, // 현재 화면의 컨텍스트를 전달함
                                 noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
@@ -630,9 +630,9 @@ class OrderListItemWidget extends ConsumerWidget {
                                     // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
                                         .deleteOrderItem(orderNumber);
                                     Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
-                                    showCustomSnackBar(context, '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
+                                    showCustomSnackBar(context, '요청 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
                                   } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
-                                    showCustomSnackBar(context, '발주 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
+                                    showCustomSnackBar(context, '요청 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
                                   }
                                 },
                               ),
@@ -798,7 +798,7 @@ class _OrderListDetailItemWidgetState
                       children: [
                     // 발주일자를 텍스트로 표시.
                     Text(
-                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                    '요청 일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderDateDataFontSize, // 텍스트 크기 설정
                       fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -810,7 +810,7 @@ class _OrderListDetailItemWidgetState
                     SizedBox(height: interval2Y),
                     // 발주번호를 텍스트로 표시.
                     Text(
-                      '발주번호: $orderNumber',
+                      '요청 접수번호: $orderNumber',
                       style: TextStyle(
                         fontSize: orderlistDtInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                         fontWeight: FontWeight.bold, // 텍스트 굵기 설정

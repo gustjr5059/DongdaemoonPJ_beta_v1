@@ -202,7 +202,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     // AppBar 관련 수치 동적 적용
     final double cartlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double cartlistAppBarTitleX = screenSize.width * (220 / referenceHeight);
+    final double cartlistAppBarTitleX = screenSize.width * (215 / referenceHeight);
     final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 홈 버튼 수치 (Case 3)

@@ -201,7 +201,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // AppBar 관련 수치 동적 적용
     final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.height * (5 / referenceHeight);
+    final double orderlistAppBarTitleX = screenSize.height * (4 / referenceHeight);
     final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -245,7 +245,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                 height: orderlistEmptyTextHeight,
                 margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
                 child: Text(
-                  '발주 내역이 없습니다.',
+                  '요청 내역이 없습니다.',
                   style: TextStyle(
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
@@ -280,7 +280,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                     // 현재 context 전달
                     ref: ref,
                     // 참조(ref) 전달
-                    title: '발주 내역',
+                    title: '요청 내역',
                     fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '발주 목록'로 설정
                     leadingType: LeadingType.none,

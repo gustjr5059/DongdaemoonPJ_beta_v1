@@ -328,7 +328,7 @@ class _SaleSubMainScreenState extends ConsumerState<SaleSubMainScreen>
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double sectionPlusAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double sectionPlusAppBarTitleX = screenSize.height * (5 / referenceHeight);
+    final double sectionPlusAppBarTitleX = screenSize.height * (4 / referenceHeight);
     final double sectionPlusAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -380,7 +380,7 @@ class _SaleSubMainScreenState extends ConsumerState<SaleSubMainScreen>
                     // 현재 context 전달
                     ref: ref,
                     // 참조(ref) 전달
-                    title: '특가상품 섹션',
+                    title: '특가 상품 섹션',
                     fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '특가상품 섹션'으로 설정
                     leadingType: LeadingType.back,

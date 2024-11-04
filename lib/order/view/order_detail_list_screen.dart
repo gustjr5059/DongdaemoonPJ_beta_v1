@@ -231,7 +231,7 @@ class _OrderListDetailScreenState
                 height: orderlistEmptyTextHeight,
                 margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
                 child: Text(
-                  '발주 데이터를 불러올 수 없습니다.',
+                  '요청 내역을 불러올 수 없습니다. ',
                   style: TextStyle(
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
@@ -267,7 +267,7 @@ class _OrderListDetailScreenState
                   // 현재 context 전달
                   ref: ref,
                   // 참조(ref) 전달
-                  title: '발주 내역 상세',
+                  title: '요청 내역 상세',
                   fontFamily: 'NanumGothic',
                   // AppBar의 제목을 '발주 목록 상세'로 설정
                   leadingType: LeadingType.back,
