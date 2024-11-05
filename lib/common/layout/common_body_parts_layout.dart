@@ -174,7 +174,7 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   required StateProvider<int> currentPageProvider,
   required PageController pageController,
   required BannerAutoScrollClass bannerAutoScroll,
-  required List<String> bannerLinks,
+  // required List<String> bannerLinks,
   required FutureProvider<List<T>> bannerImagesProvider,
   required void Function(BuildContext, int) onPageTap, // 콜백 함수의 반환 타입을 void로 변경
   required double width,  // 배너의 너비
@@ -317,6 +317,37 @@ void onLargeBannerTap(BuildContext context, int index, List<AllLargeBannerImage>
   }
 }
 // ------ 대배너 클릭 시 URL 이동 로직 관련 함수 내용 끝
+
+// ------ 소배너 클릭 시 URL 이동 로직 관련 함수 내용 시작
+void onSmallBannerTap(BuildContext context, int index, List<AllSmallBannerImage> images, WidgetRef ref) async {
+  // 선택된 인덱스의 배너 이미지 정보를 가져옴
+  final bannerImage = images[index];
+
+  // productId가 있을 경우 해당 제품 상세 화면으로 이동함
+  if (bannerImage.productId != null) {
+    final product = ProductContent(
+      docId: bannerImage.productId!,  // 제품 문서 ID 설정
+      category: bannerImage.category,  // 제품 카테고리 설정
+    );
+    // 제품 상세 화면으로 이동하는 함수 호출
+    ProductInfoDetailScreenNavigation(ref).navigateToDetailScreen(context, product);
+  }
+  // url이 있을 경우 외부 URL로 이동함
+  else if (bannerImage.url != null) {
+    Uri uri = Uri.parse(bannerImage.url!);  // URL 파싱
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);  // URL 실행
+    } else {
+      // URL이 없을 경우 경고 메시지 출력
+      print('링크가 없는 배너입니다.');
+    }
+  }
+  // 위 조건에 모두 해당되지 않을 경우 경고 메시지 출력
+  else {
+    print('링크가 없는 배너입니다.');
+  }
+}
+// ------ 소배너 클릭 시 URL 이동 로직 관련 함수 내용 끝
 
 // ------ 범용성으로 재사용가능한 카드뷰인 CommonCardView 클래스 시작
 class CommonCardView extends StatelessWidget {

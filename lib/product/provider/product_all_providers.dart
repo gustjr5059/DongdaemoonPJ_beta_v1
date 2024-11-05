@@ -383,12 +383,12 @@ final shirtMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final shirtMainSmall1BannerImagesProvider =
-    FutureProvider<List<ShirtMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 shirtMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(shirtMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<ShirtMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<ShirtMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 티셔츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -404,12 +404,12 @@ final blouseMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final blouseMainSmall1BannerImagesProvider =
-    FutureProvider<List<BlouseMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 blouseMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(blouseMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<BlouseMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<BlouseMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 블라우스 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -425,12 +425,12 @@ final mtmMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final mtmMainSmall1BannerImagesProvider =
-    FutureProvider<List<MtmMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 mtmMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(mtmMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<MtmMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<MtmMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 맨투맨 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -446,12 +446,12 @@ final neatMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final neatMainSmall1BannerImagesProvider =
-    FutureProvider<List<NeatMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 neatMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(neatMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<NeatMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<NeatMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 니트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -467,12 +467,12 @@ final polaMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final polaMainSmall1BannerImagesProvider =
-    FutureProvider<List<PolaMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 polaMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(polaMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<PolaMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<PolaMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 폴라티 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -488,12 +488,12 @@ final onepieceMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final onepieceMainSmall1BannerImagesProvider =
-    FutureProvider<List<OnepieceMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 onepieceMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(onepieceMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<OnepieceMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<OnepieceMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 원피스 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -509,12 +509,12 @@ final pantsMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final pantsMainSmall1BannerImagesProvider =
-    FutureProvider<List<PantsMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 pantsMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(pantsMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<PantsMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<PantsMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 팬츠 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -530,12 +530,12 @@ final jeanMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final jeanMainSmall1BannerImagesProvider =
-    FutureProvider<List<JeanMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 jeanMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(jeanMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<JeanMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<JeanMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 청바지 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -551,12 +551,12 @@ final skirtMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final skirtMainSmall1BannerImagesProvider =
-    FutureProvider<List<SkirtMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 skirtMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(skirtMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<SkirtMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<SkirtMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 스커트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -572,12 +572,12 @@ final paedingMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final paedingMainSmall1BannerImagesProvider =
-    FutureProvider<List<PaedingMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 paedingMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(paedingMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<BlouseMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<BlouseMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 패딩 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -593,12 +593,12 @@ final coatMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final coatMainSmall1BannerImagesProvider =
-    FutureProvider<List<CoatMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 coatMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(coatMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<CoatMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<CoatMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 코트 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -614,12 +614,12 @@ final cardiganMainSmall1BannerRepositoryProvider =
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final cardiganMainSmall1BannerImagesProvider =
-    FutureProvider<List<CardiganMainSmall1BannerImage>>((ref) async {
+    FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 cardiganMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(cardiganMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<CardiganMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<CardiganMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 가디건 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 // ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면에 보여줄 소배너 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 끝
@@ -637,12 +637,12 @@ Provider<ProfileMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final profileMainSmall1BannerImagesProvider =
-FutureProvider<List<ProfileMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 profileMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(profileMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<ProfileMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<ProfileMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 마이페이지 메인 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -660,12 +660,12 @@ Provider<NewSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final newSubMainSmall1BannerImagesProvider =
-FutureProvider<List<NewSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 newSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(newSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<NewSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<NewSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 신상 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -681,12 +681,12 @@ Provider<BestSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final bestSubMainSmall1BannerImagesProvider =
-FutureProvider<List<BestSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 bestSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(bestSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<BestSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<BestSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 스테디 셀러 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -702,12 +702,12 @@ Provider<SaleSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final saleSubMainSmall1BannerImagesProvider =
-FutureProvider<List<SaleSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 saleSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(saleSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<SaleSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<SaleSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 특가 상품 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -723,12 +723,12 @@ Provider<SpringSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final springSubMainSmall1BannerImagesProvider =
-FutureProvider<List<SpringSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 springSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(springSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<SpringSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<SpringSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 봄 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -744,12 +744,12 @@ Provider<SummerSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final summerSubMainSmall1BannerImagesProvider =
-FutureProvider<List<SummerSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 summerSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(summerSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<SummerSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<SummerSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 여름 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -765,12 +765,12 @@ Provider<AutumnSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final autumnSubMainSmall1BannerImagesProvider =
-FutureProvider<List<AutumnSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 autumnSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(autumnSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<AutumnSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<AutumnSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 가을 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 
@@ -786,12 +786,12 @@ Provider<WinterSubMainSmall1BannerRepository>((ref) {
 // 비동기적으로 작은 배너1 이미지를 가져오는 FutureProvider.
 // 이 프로바이더는 앱에서 사용되는 여러 배너 이미지들을 Firestore로부터 받아와서 리스트 형태로 제공함.
 final winterSubMainSmall1BannerImagesProvider =
-FutureProvider<List<WinterSubMainSmall1BannerImage>>((ref) async {
+FutureProvider<List<AllSmallBannerImage>>((ref) async {
   // 위에서 정의한 winterSubMainSmall1BannerImagesProvider를 사용하여 리포지토리 인스턴스를 가져옴.
   final repository = ref.watch(winterSubMainSmall1BannerRepositoryProvider);
   // 리포지토리를 통해 Firestore에서 배너 이미지 데이터를 비동기적으로 가져옴.
-  // fetchBannerImages 메소드는 배너 이미지 정보를 포함하는 List<WinterSubMainSmall1BannerImage>를 반환함.
-  return await repository.fetchBannerImages();
+  // fetchBannerImagesAndLink 메소드는 배너 이미지 정보를 포함하는 List<WinterSubMainSmall1BannerImage>를 반환함.
+  return await repository.fetchBannerImagesAndLink();
 });
 // ------- 겨울 섹션 더보기 화면 내 Firestore로부터 첫 번째 작은 배너 데이터 가져오는 로직 관련 provider 끝
 

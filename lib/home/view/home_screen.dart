@@ -111,32 +111,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
   // 소배너
   int bannerImageCount2 = 3;
 
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 큰 배너 클릭 시 이동할 URL 목록
-  final List<String> largeBannerLinks = [
-    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
-    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
-  ];
-
-  // 첫 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small1BannerLinks = [
-    'https://www.coupang.com', // 첫 번째 배너 클릭 시 쿠팡으로 이동
-    'https://www.temu.com/kr', // 두 번째 배너 클릭 시 테무로 이동
-  ];
-
-  // 두 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small2BannerLinks = [
-    'https://ko.aliexpress.com/', // 첫 번째 배너 클릭 시 알리익스프레스로 이동
-    'https://www.yanolja.com/', // 두 번째 배너 클릭 시 야놀자로 이동
-  ];
-
-  // 세 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small3BannerLinks = [
-    'https://www.kakaocorp.com/', // 첫 번째 배너 클릭 시 카카오로 이동
-    'https://www.netflix.com/kr', // 두 번째 배너 클릭 시 넷플릭스로 이동
-  ];
-
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
@@ -569,36 +543,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         homeCurrentTabProvider, homeTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
-    // 작은 배너1 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onSmall1BannerTap(BuildContext context, int index) async {
-      final url = small1BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
-    // 작은 배너2 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onSmall2BannerTap(BuildContext context, int index) async {
-      final url = small2BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
-    // 작은 배너3 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onSmall3BannerTap(BuildContext context, int index) async {
-      final url = small3BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -769,8 +713,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _largeBannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 링크들을 전달
-                                  bannerLinks: largeBannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                       allLargeBannerImagesProvider,
@@ -833,7 +775,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 height: homeScreenSmallBannerViewHeight,
                                 // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    HomeSmall1BannerImage>(
+                                    AllSmallBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
@@ -845,13 +787,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _small1BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small1BannerAutoScroll,
-                                  // 배너에 사용될 링크들을 전달
-                                  bannerLinks: small1BannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                       homeSmall1BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onSmall1BannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // homeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(homeSmall1BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenSmallBannerWidth,
                                   // 원하는 너비
                                   height: homeScreenSmallBannerHeight,
@@ -912,7 +860,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 height: homeScreenSmallBannerViewHeight,
                                 // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    HomeSmall2BannerImage>(
+                                    AllSmallBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
@@ -924,13 +872,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _small2BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small2BannerAutoScroll,
-                                  // 배너에 사용될 링크들을 전달
-                                  bannerLinks: small2BannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                       homeSmall2BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onSmall2BannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // homeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(homeSmall2BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenSmallBannerWidth,
                                   // 원하는 너비
                                   height: homeScreenSmallBannerHeight,
@@ -980,7 +934,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 height: homeScreenSmallBannerViewHeight,
                                 // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    HomeSmall3BannerImage>(
+                                    AllSmallBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
@@ -992,13 +946,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _small3BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small3BannerAutoScroll,
-                                  // 배너에 사용될 링크들을 전달
-                                  bannerLinks: small3BannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                       homeSmall3BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onSmall3BannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // homeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(homeSmall3BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenSmallBannerWidth,
                                   // 원하는 너비
                                   height: homeScreenSmallBannerHeight,
