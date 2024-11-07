@@ -636,6 +636,11 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 문의하기 화면 관련 초기화 부분 끝
 
+  // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 시작
+  ref.invalidate(mainProductRepositoryProvider);
+  ref.invalidate(sectionProductRepositoryProvider);
+  // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 끝
+
   // ------ 2차 메인 화면 관련 부분 시작
   // 블라우스 메인 화면 관련 초기화 부분 시작
   ref.read(blouseMainScrollPositionProvider.notifier).state =
@@ -1103,7 +1108,7 @@ class ProductInfoDetailScreenNavigation {
     final double DetailDoc3Y =
         screenSize.height * (-11 / referenceHeight);
     final double DetailDocTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (16 / referenceHeight);
     final double DetailDocTextFontSize2 =
         screenSize.height * (12 / referenceHeight);
     final double DetailDocTextFontSize3 =

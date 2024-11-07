@@ -65,31 +65,25 @@ class EventPosterImgItemsNotifier extends StateNotifier<List<Map<String, dynamic
         isLoadingMore = true; // 로딩 상태를 true로 설정함
         ref.read(isLoadingProvider.notifier).state = true; // 로딩 상태를 관리하는 프로바이더의 상태를 true로 설정함
 
-        // 사용자 인증 상태를 확인함
-        final user = FirebaseAuth.instance.currentUser;
-        if (user == null) {
-            print("사용자가 로그인되어 있지 않습니다.");
-            state = []; // 로그인하지 않은 경우 상태를 빈 리스트로 설정함
-            isLoadingMore = false; // 로딩 상태를 해제함
-            return;
-        }
-
         // Firestore에서 데이터를 4개씩 페이징 처리로 불러옴
         final newItems = await eventPosterImgItemRepository.getPagedEventPosterImgItems(
             lastDocument: lastDocument,
             limit: 4,
         );
 
+        // 불러온 데이터가 있을 경우
         if (newItems.isNotEmpty) {
             lastDocument = newItems.last['snapshot']; // 마지막 문서를 저장함
             state = [...state, ...newItems]; // 기존 데이터에 새로 불러온 데이터를 추가함
             print("새로 불러온 데이터: ${newItems.length}개");
             print("현재 전체 데이터: ${state.length}개");
         } else {
-            hasMoreData = false; // 더 이상 불러올 데이터가 없음을 표시
+            // 불러온 데이터가 없을 경우 더 이상 불러올 데이터가 없음을 표시
+            hasMoreData = false;
             print("더 이상 불러올 데이터가 없습니다.");
         }
 
+        // 로딩 상태를 false로 설정하여 로딩 종료를 알림
         ref.read(isLoadingProvider.notifier).state = false; // 로딩 상태를 false로 설정함
         isLoadingMore = false; // 로딩 플래그를 해제함
         print("데이터 로드를 완료했습니다.");

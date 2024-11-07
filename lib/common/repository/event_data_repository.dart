@@ -60,7 +60,14 @@ class EventRepository {
     print(
         "Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
 
-    Query query = firestore.collection('event_data').doc('event_poster_image').collection('poster_img').limit(limit);
+    // Firestore 쿼리에서 boolExistence가 true인 문서만 가져오고, boolExistence와 sequence 필드로 정렬
+    Query query = firestore
+        .collection('event_data')
+        .doc('event_poster_image')
+        .collection('poster_img')
+        .where('boolExistence', isEqualTo: true) // boolExistence가 true인 문서만 가져옴
+        .orderBy('sequence', descending: false) // sequence 필드를 오름차순으로 정렬
+        .limit(limit);
 
     // 마지막 문서가 있을 경우, 해당 문서 이후의 데이터를 불러옴
     if (lastDocument != null) {

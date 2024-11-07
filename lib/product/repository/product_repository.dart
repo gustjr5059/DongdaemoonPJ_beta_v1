@@ -58,6 +58,7 @@ class NewProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {
@@ -149,6 +150,7 @@ class BestProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {
@@ -240,6 +242,7 @@ class SaleProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {
@@ -332,6 +335,7 @@ class SpringProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {
@@ -424,6 +428,7 @@ class SummerProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {
@@ -516,6 +521,7 @@ class AutumnProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {
@@ -608,6 +614,7 @@ class WinterProductRepository {
           .doc('couture') // 'couture' 문서 접근
           .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
           .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .orderBy('discount_price', descending: false) // discount_price 필드를 오름차순으로 정렬
           .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       if (lastDocument != null) {

@@ -779,6 +779,13 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
     // 아이템 간 여백 비율 설정
     final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
 
+    final double interval1X = screenSize.width * (80 / referenceWidth);
+
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (10 / referenceHeight);
+
+
     return SingleChildScrollView(
       controller: _scrollController, // 수평 스크롤 컨트롤러 설정
       scrollDirection: Axis.horizontal, // 수평 스크롤 방향 설정
@@ -817,11 +824,37 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
                   ),
                 );
               },
-              child: Image.network(
+              // 포스터 이미지가 있으면 이미지를 표시하고, 없으면 아이콘을 표시
+              child: posterImg != null && posterImg!.isNotEmpty
+              ? Image.network(
                 posterImg, // 네트워크 이미지 URL 설정
                 width: DetailDocWidth, // 이미지 가로 크기 설정
                 height: DetailDocHeight, // 이미지 세로 크기 설정
                 fit: BoxFit.cover, // 이미지 맞춤 방식 설정
+                // 이미지 로드 실패 시 아이콘 표시
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: DetailDocHeight, // 전체 화면 높이 설정
+                  alignment: Alignment.center, // 중앙 정렬
+                  child: buildCommonErrorIndicator(
+                    message: '에러가 발생했습니다.', // 첫 번째 메시지 설정
+                    secondMessage: '재실행해주세요.', // 두 번째 메시지 설정
+                    fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                    fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                    color: Colors.black, // 색상 설정
+                    showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                  ),
+                ),
+              ) : Container(
+                height: DetailDocHeight, // 전체 화면 높이 설정
+                alignment: Alignment.center, // 중앙 정렬
+                child: buildCommonErrorIndicator(
+                  message: '에러가 발생했습니다.', // 첫 번째 메시지 설정
+                  secondMessage: '재실행해주세요.', // 두 번째 메시지 설정
+                  fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                  fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                  color: Colors.black, // 색상 설정
+                  showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                ),
               ),
             ),
           );
