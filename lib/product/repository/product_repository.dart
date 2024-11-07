@@ -670,6 +670,8 @@ abstract class CategoryProductsRepository {
     DocumentSnapshot? startAfter,
     bool boolExistence = true,
   });
+
+  void reset(); // 상태 초기화를 위한 메서드 추가
 }
 // -------- MainCategoryProductsRepository, SectionCategoryProductsRepository를 분기해서 사용하도록 하는 추상 클래스 내용 끝
 

@@ -337,6 +337,7 @@ abstract class BaseProductListNotifier
     state = [];
     // 카테고리에 따른 컬렉션 이름 리스트를 얻음
     List<String> collectionNames = _getCollectionNames(category);
+    reset(); // 상태 초기화
     // 초기 상품 데이터를 페칭
     await _fetchProducts(isInitial: true, collectionNames: collectionNames);
   }
@@ -356,6 +357,15 @@ abstract class BaseProductListNotifier
     state = [];
     _lastDocument = null;
     _sortType = '';
+    // 현재 사용하는 레퍼지토리의 상태 초기화
+    final CategoryProductsRepository repository = this is ProductMainListNotifier
+    // 만약 현재 클래스가 ProductMainListNotifier 타입이라면,
+        ? ref.read(mainProductRepositoryProvider)
+    // mainProductRepositoryProvider를 사용하여 메인 제품 레퍼지토리를 불러옴.
+        : ref.read(sectionProductRepositoryProvider);
+    // 그렇지 않다면 sectionProductRepositoryProvider를 사용하여 섹션별 제품 레퍼지토리를 불러옴.
+    repository.reset();
+    // 불러온 레퍼지토리의 상태를 reset() 함수를 호출하여 초기화.
   }
 
   // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 추상 메서드
