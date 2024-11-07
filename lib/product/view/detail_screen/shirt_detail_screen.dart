@@ -253,6 +253,10 @@ class _ShirtDetailProductScreenState
     final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
     final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
@@ -351,13 +355,24 @@ class _ShirtDetailProductScreenState
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Center(
-                                          child: CircularProgressIndicator()),
+                                          child: buildCommonLoadingIndicator()),
                                     ),
                                 ],
                               );
                             },
-                            loading: () => Center(child: CircularProgressIndicator()),
-                            error: (error, _) => Center(child: Text('오류 발생: $error')),
+                            loading: () => Center(child: buildCommonLoadingIndicator()), // 로딩 인디케이터를 중앙에 배치
+                            error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+                              height: errorTextHeight, // 전체 화면 높이 설정
+                              alignment: Alignment.center, // 중앙 정렬
+                              child: buildCommonErrorIndicator(
+                                message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+                                secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+                                fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                                fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                                color: Colors.black, // 색상 설정
+                                showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                              ),
+                            ),
                           ),
                         ],
                       );

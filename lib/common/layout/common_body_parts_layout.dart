@@ -4,7 +4,6 @@ import 'dart:async';
 // 네트워크 이미지를 캐싱하는 기능을 제공하는 'cached_network_image' 패키지를 임포트합니다.
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -17,12 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 // 여러 의류 카테고리 화면을 정의한 파일들을 임포트합니다.
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
-import '../../product/provider/product_state_provider.dart';
 import '../../product/view/detail_screen/product_detail_original_image_screen.dart';
-import '../../product/view/main_screen/blouse_main_screen.dart'; // 블라우스 화면
-import '../../product/view/main_screen/cardigan_main_screen.dart'; // 가디건 화면
-import '../../product/view/main_screen/coat_main_screen.dart'; // 코트 화면
-import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 화면
 // 비동기 데이터 로딩을 위해 상태 관리에 사용되는 FutureProvider 파일을 임포트합니다.
 // 이 파일은 네트워크 요청과 같은 비동기 작업 결과를 처리하고 상태 관리에 사용됩니다.
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
@@ -32,9 +26,7 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
-import '../const/colors.dart';
 import '../model/banner_model.dart';
-import '../provider/common_all_providers.dart'; // 비동기 데이터 로드를 위한 FutureProvider
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
 
@@ -120,15 +112,50 @@ class BannerImageClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
 
-    // CachedNetworkImage 위젯을 사용하여 네트워크 이미지를 로딩하고 캐싱함.
-    return CachedNetworkImage(
-      imageUrl: imageUrl, // imageUrl 프로퍼티를 통해 이미지 URL을 지정함.
-      fit: BoxFit.cover, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
-      // 이미지 로딩 중 에러가 발생한 경우 errorWidget을 통해 에러 아이콘을 표시함.
-      errorWidget: (context, url, error) => Icon(Icons.error),
-    );
-  }
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
+    return imageUrl.isNotEmpty // 이미지 URL이 비어 있지 않은 경우
+        ? CachedNetworkImage(
+          imageUrl: imageUrl, // imageUrl 프로퍼티를 통해 이미지 URL을 지정함.
+          fit: BoxFit.cover, // 이미지가 부모 위젯의 경계 내에 들어가도록 조정함.
+          // 이미지 로드 실패 시 에러 인디케이터 표시
+          errorWidget: (context, url, error) => Container(
+            height: errorTextHeight, // 전체 화면 높이 설정
+            alignment: Alignment.center, // 중앙 정렬
+            child: buildCommonErrorIndicator(
+              message: '오픈 예정입니다.',
+              // message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지
+              // secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지
+              fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+              fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+              showSecondMessage: false, // 두 번째 메시지 표시 여부
+              color: Colors.black, // 색상 설정 // 에러 메시지 색상
+            ),
+          ),
+        ) : Container(
+            height: errorTextHeight, // 전체 화면 높이 설정
+            alignment: Alignment.center, // 중앙 정렬
+            child: buildCommonErrorIndicator(
+              message: '오픈 예정입니다.',
+              // message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지
+              // secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지
+              fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+              fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+              showSecondMessage: false, // 두 번째 메시지 표시 여부
+              color: Colors.black, // 색상 설정 // 에러 메시지 색상
+            ),
+        );
+    }
 }
 // ------ 배너 페이지 뷰에 사용되는 파이어베이스의 이미지 데이터를 캐시에 임시 저장하기 위한 클래스 끝
 
@@ -194,6 +221,10 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X
   final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y
 
+  // 에러 관련 텍스트 수치
+  final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+  final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+
   final asyncBannerImages = ref.watch(bannerImagesProvider);
 
   return asyncBannerImages.when(
@@ -246,8 +277,15 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
         ],
       );
     },
-    loading: () => Center(child: CircularProgressIndicator()),
-    error: (error, stack) => Center(child: Text('이미지를 불러오는 중 에러가 발생했습니다.')),
+    loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+    error: (error, stack) => buildCommonErrorIndicator(
+      message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+      secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+      fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+      fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+      color: Colors.black, // 색상 설정
+      showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+    ),
   );
 }
 // ------ 공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 - 모든 배너를 해당 위젯을 재사용하여 데이터만 다르게 교체하여 사용(모델, 레퍼지토리, 프로바이더만 다르게 변경하여..)
@@ -788,8 +826,60 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
             ),
           );
         }).toList(),
-      ),
+      )
     );
   }
 }
 // ------- EventPosterImgSectionList 클래스 내용 구현 끝
+
+// ------- 공통 로딩 인디케이터 위젯 함수 내용 시작
+Widget buildCommonLoadingIndicator() {
+  return Center(
+    child: CircularProgressIndicator(
+      color: Color(0xFF6FAD96), // 원하는 색상 지정
+    ),
+  );
+}
+// ------- 공통 로딩 인디케이터 위젯 함수 내용 끝
+
+// ------- 공통 에러 인디케이터 위젯 함수 내용 시작
+Widget buildCommonErrorIndicator({
+  required String message, // 첫 번째 메시지, 필수 매개변수
+  String? secondMessage, // 두 번째 메시지, 선택 매개변수
+  bool showSecondMessage = false, // 두 번째 메시지 표시 여부를 설정할 플래그
+  double fontSize1 = 14, // 기본 폰트 크기, 재사용하는 곳에서 변경 가능
+  double fontSize2 = 12, // 기본 폰트 크기, 재사용하는 곳에서 변경 가능
+  Color color = Colors.black, // 기본 폰트 색상, 재사용하는 곳에서 변경 가능
+}) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center, // 세로 중앙 정렬
+      children: [
+        Text(
+          message,
+          style: TextStyle(
+            color: color, // 재사용하는 곳에서 설정 가능
+            fontSize: fontSize1, // 재사용하는 곳에서 설정 가능
+            fontWeight: FontWeight.bold, // 고정된 굵기
+            fontFamily: 'NanumGothic', // 고정된 폰트 패밀리
+          ),
+          textAlign: TextAlign.center,
+        ),
+        if (showSecondMessage && secondMessage != null)...[ // 두 번째 메시지를 표시할 조건
+          SizedBox(height: 8.0), // 두 텍스트 사이에 간격 추가
+          Text(
+            secondMessage,
+            style: TextStyle(
+              color: color, // 재사용하는 곳에서 설정 가능
+              fontSize: fontSize2, // 재사용하는 곳에서 설정 가능
+              fontWeight: FontWeight.normal, // 고정된 굵기
+              fontFamily: 'NanumGothic', // 고정된 폰트 패밀리
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    ),
+  );
+}
+// ------- 공통 에러 인디케이터 위젯 함수 내용 끝

@@ -217,6 +217,10 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     final double completePaymentAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
     final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
@@ -302,8 +306,19 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 위젯
-      error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 텍스트
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+          color: Colors.black, // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // 화면 구성 끝

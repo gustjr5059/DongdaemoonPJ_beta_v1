@@ -216,11 +216,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
 
     // 발주 내역 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double orderlistEmptyTextX =
-        screenSize.width * (50 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextY =
         screenSize.height * (100 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextFontSize =
@@ -243,9 +241,11 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
               child: Container(
                 width: orderlistEmptyTextWidth,
                 height: orderlistEmptyTextHeight,
-                margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                margin: EdgeInsets.only(top: orderlistEmptyTextY),
+                // 텍스트를 중앙에 위치하도록 설정함.
+                alignment: Alignment.center,
                 child: Text(
-                  '요청 내역이 없습니다.',
+                  '현재 요청 내역이 없습니다.',
                   style: TextStyle(
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',

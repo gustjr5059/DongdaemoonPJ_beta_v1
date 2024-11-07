@@ -121,6 +121,9 @@ class CartItemsList extends ConsumerWidget {
     final double cartlist2Y =
         screenSize.width * (8 / referenceWidth); // 텍스트 간 세로 여백 설정함
 
+    final double interval1X =
+        screenSize.width * (70 / referenceWidth);
+
     // cartItemsProvider를 통해 장바구니 아이템 목록 상태를 가져옴
     final cartItems = ref.watch(cartItemsProvider);
 
@@ -136,10 +139,10 @@ class CartItemsList extends ConsumerWidget {
         : Column(
       // 장바구니 아이템을 반복하여 UI를 생성함
       children: cartItems.map((cartItem) {
-        // 상품의 원래 가격을 정수형으로 변환하며, 값이 없을 경우 0으로 설정함
-        final int originalPrice = cartItem['original_price']?.round() ?? 0;
-        // 상품의 할인 가격을 정수형으로 변환하며, 값이 없을 경우 0으로 설정함
-        final int discountPrice = cartItem['discount_price']?.round() ?? 0;
+        // 상품의 원래 가격을 정수형으로 변환하며, 값이 없을 경우 빈 값으로 설정함
+        final int originalPrice = cartItem['original_price']?.round() ?? '';
+        // 상품의 할인 가격을 정수형으로 변환하며, 값이 없을 경우 빈 값으로 설정함
+        final int discountPrice = cartItem['discount_price']?.round() ?? '';
 
         // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장함
         final product = ProductContent(
@@ -270,17 +273,17 @@ class CartItemsList extends ConsumerWidget {
                   ),
                   Row(
                     children: [
-                      // 썸네일 이미지를 표시함
-                      if (cartItem['thumbnails'] != null)
+                      // // 썸네일 이미지를 표시함
+                      // if (cartItem['thumbnails'] != null)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // 상품 번호를 표시함
-                            if (cartItem['product_number'] != null)
+                            if (cartItem['product_number'] != null && cartItem['product_number'] != '')
                               Padding(
                                 padding: EdgeInsets.only(left: cartlistDataPaddingX, bottom: cartlistDataPaddingY),
                                 child: Text(
-                                  '상품번호: ${cartItem['product_number']}',
+                                  '상품번호: ${cartItem['product_number'] ?? ''}',
                                   style: TextStyle(
                                     fontSize: cartlistProductNumberFontSize,
                                     fontWeight: FontWeight.bold,
@@ -293,14 +296,23 @@ class CartItemsList extends ConsumerWidget {
                               height: cartlistThumnailPartHeight,
                               width: cartlistThumnailPartWidth,
                               padding: EdgeInsets.only(left: cartlistDataPaddingX, bottom: cartlistDataPaddingY),
-                              child: cartItem['thumbnails'] != null
+                              child: cartItem['thumbnails'] != null && cartItem['thumbnails'] != ''
                                   ? FittedBox(
                                 fit: BoxFit.cover,
                                 child: Image.network(
-                                  cartItem['thumbnails'] ?? '',
+                                  cartItem['thumbnails']!,
+                                  errorBuilder: (context, error, stackTrace) => Icon(
+                                    Icons.image_not_supported, // 이미지 로드 실패 시 아이콘 표시
+                                    color: Colors.grey.shade300,
+                                    size: interval1X,
+                                  ),
                                 ),
                               )
-                                  : Container(), // 썸네일이 없을 경우 빈 컨테이너를 표시함
+                                  : Icon(
+                                Icons.image_not_supported, // 썸네일 데이터가 없을 경우 아이콘 표시
+                                color: Colors.grey.shade300,
+                                size: interval1X,
+                              ),
                             ),
                           ],
                         ),
@@ -313,7 +325,7 @@ class CartItemsList extends ConsumerWidget {
                           children: [
                             // 원래 가격을 취소선과 함께 표시함
                             Text(
-                              '${numberFormat.format(originalPrice)}원',
+                              '${numberFormat.format(originalPrice) ?? ''}원',
                               style: TextStyle(
                                 fontSize: cartlistOriginalPriceFontSize,
                                 fontFamily: 'NanumGothic',
@@ -325,7 +337,7 @@ class CartItemsList extends ConsumerWidget {
                               children: [
                                 // 할인 가격을 Bold체로 표시함
                                 Text(
-                                  '${numberFormat.format(discountPrice)}원',
+                                  '${numberFormat.format(discountPrice) ?? ''}원',
                                   style: TextStyle(
                                     fontSize: cartlistDiscountPriceFontSize,
                                     fontFamily: 'NanumGothic',
@@ -336,7 +348,7 @@ class CartItemsList extends ConsumerWidget {
                                 SizedBox(width: cartlist2X),
                                 // 할인 퍼센트를 빨간색으로 Bold체로 표시함
                                 Text(
-                                  '${cartItem['discount_percent']?.round() ?? 0}%',
+                                  '${cartItem['discount_percent']?.round() ?? ''}%',
                                   style: TextStyle(
                                     fontSize: cartlistDiscountPercentFontSize,
                                     fontFamily: 'NanumGothic',
@@ -350,7 +362,7 @@ class CartItemsList extends ConsumerWidget {
                             Row(
                               children: [
                                 // 선택된 색상 이미지가 있을 경우 이미지를 표시함
-                                if (cartItem['selected_color_image'] != null)
+                                if (cartItem['selected_color_image'] != null && cartItem['selected_color_image'] != '')
                                   Image.network(
                                     cartItem['selected_color_image'] ?? '',
                                     height: cartlistSelctedColorImageDataHeight,

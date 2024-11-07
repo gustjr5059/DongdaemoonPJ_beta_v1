@@ -23,22 +23,22 @@ class CartItemRepository {
   Future<String> uploadImage(String imageUrl, String storagePath) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외 발생
+      print('사용자가 로그인되어 있지 않습니다.');
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email; // 이메일 주소를 가져옴
     if (userEmail == null) {
-      print('User email not available');
-      throw Exception('User email not available');
+      print('사용자 이메일을 가져올 수 없습니다.');
+      throw Exception('사용자 이메일을 가져올 수 없습니다.');
     }
-    print('Uploading image from URL: $imageUrl to path: $storagePath for user: $userEmail');
+    print('이미지를 업로드합니다. URL: $imageUrl, 경로: $storagePath, 사용자: $userEmail');
     final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
     final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
     final ref = storage.ref().child('$userEmail/$storagePath'); // Firebase Storage에 저장할 경로 생성
     await ref.putData(bytes, SettableMetadata(contentType: 'image/png')); // 이미지를 Firebase Storage에 저장
     final downloadUrl = await ref.getDownloadURL(); // 저장된 이미지의 다운로드 URL을 가져옴
-    print('Image uploaded and accessible at: $downloadUrl');
+    print('이미지 업로드 완료, 접근 가능 URL: $downloadUrl');
     return downloadUrl; // 다운로드 URL을 반환
   }
 
@@ -47,14 +47,14 @@ class CartItemRepository {
       String? selectedColorUrl, String? selectedSize) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외 발생
+      print('사용자가 로그인되어 있지 않습니다.');
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email; // 이메일 주소를 가져옴
     if (userEmail == null) {
-      print('User email not available');
-      throw Exception('User email not available');
+      print('사용자 이메일을 가져올 수 없습니다.');
+      throw Exception('사용자 이메일을 가져올 수 없습니다.');
     }
 
     // // 중복 체크를 위한 해시 생성
@@ -107,7 +107,7 @@ class CartItemRepository {
       return false; // 중복이 있으면 false 반환하여 성공 메시지 표시하지 않음
     }
 
-    print('Adding product to cart: ${product.docId}, selected color: $selectedColorText, size: $selectedSize');
+    print('상품을 장바구니에 추가합니다. 상품 ID: ${product.docId}, 선택 색상: $selectedColorText, 선택 사이즈: $selectedSize');
 
     // 파이어스토리지에 저장할 경로 생성
     final storagePath = 'couture_request_item_image/couture_request_${DateTime.now().millisecondsSinceEpoch}'; // 저장할 경로 생성
@@ -117,7 +117,7 @@ class CartItemRepository {
       final thumbnailUrl = await uploadImage(product.thumbnail!,
           '$storagePath/thumbnails'); // 썸네일 이미지를 업로드하고 URL을 가져옴
       data['thumbnails'] = thumbnailUrl; // 데이터를 업데이트
-      print('Thumbnail image uploaded and added to data: $thumbnailUrl');
+      print('썸네일 이미지 업로드 완료: $thumbnailUrl');
     }
 
     // 선택한 색상 이미지 저장
@@ -125,12 +125,12 @@ class CartItemRepository {
       final colorImageUrl = await uploadImage(selectedColorUrl,
           '$storagePath/selected_color'); // 색상 이미지를 업로드하고 URL을 가져옴
       data['selected_color_image'] = colorImageUrl; // 데이터를 업데이트
-      print('Selected color image uploaded and added to data: $colorImageUrl');
+      print('선택된 색상 이미지 업로드 완료: $colorImageUrl');
     }
 
     // Firestore에 데이터 저장 - 문서 ID를 타임스탬프 기반으로 설정하여 최신순으로 정렬되도록 함
     await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
-    print('Product added to cart for user: $userEmail');
+    print('상품이 장바구니에 추가되었습니다. 사용자: $userEmail');
 
     return true; // 성공적으로 저장되면 true 반환
   }
@@ -139,7 +139,7 @@ class CartItemRepository {
   Future<List<Map<String, dynamic>>> getPagedCartItems({DocumentSnapshot? lastDocument, required int limit}) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
 
@@ -168,7 +168,7 @@ class CartItemRepository {
   Stream<Map<String, dynamic>> cartItemStream(String itemId) {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     return firestore.collection('couture_request_item')
         .doc(userEmail)
@@ -176,7 +176,7 @@ class CartItemRepository {
         .doc(itemId)
         .snapshots() // 지정한 아이템에 대한 실시간 스트림을 구독함
         .handleError((error) { // 구독 중 오류가 발생하면 처리함
-      print('Error in cartItemStream: $error'); // 오류 메시지를 출력함
+      print('cartItemStream에서 오류 발생: $error'); // 오류 메시지를 출력함
     }).map((docSnapshot) {
       if (docSnapshot.exists) { // 문서가 존재하는 경우
         final data = docSnapshot.data() as Map<String, dynamic>; // 문서 데이터를 Map<String, dynamic>으로 변환함
@@ -184,7 +184,7 @@ class CartItemRepository {
         return data;
       } else {
         // 문서가 존재하지 않는 경우 구독을 해제함
-        print('Document does not exist for itemId: $itemId'); // 문서가 존재하지 않음을 출력함
+        print('itemId에 대한 문서가 존재하지 않습니다: $itemId'); // 문서가 존재하지 않음을 출력함
         return null; // 예외를 던지지 않고 null을 반환함
       }
     }).where((data) => data != null).cast<Map<String, dynamic>>(); // null 값을 필터링하여 스트림에서 제외함
@@ -194,35 +194,35 @@ class CartItemRepository {
   Future<void> removeCartItem(String docId) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외를 발생시킴
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외를 발생시킴
+      print('사용자가 로그인되어 있지 않습니다.');
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외를 발생시킴
     }
     final userEmail = user.email; // 현재 로그인한 사용자의 이메일 주소를 가져옴
     if (userEmail == null) {
-      print('User email not available'); // 사용자의 이메일이 없는 경우 예외를 발생시킴
-      throw Exception('User email not available');
+      print('사용자 이메일을 가져올 수 없습니다.'); // 사용자의 이메일이 없는 경우 예외를 발생시킴
+      throw Exception('사용자 이메일을 가져올 수 없습니다.');
     }
-    print('Removing cart item for docId: $docId for user: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
+    print('장바구니 아이템을 삭제합니다. 문서 ID: $docId, 사용자: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
     await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제함
-    print('Cart item removed for docId: $docId'); // 문서 삭제 완료 메시지를 출력함
+    print('장바구니 아이템 삭제 완료: 문서 ID: $docId'); // 문서 삭제 완료 메시지를 출력함
   }
 
   // Firestore에서 특정 아이템의 체크 상태를 업데이트하는 함수인 updateCartItemChecked
   Future<void> updateCartItemChecked(String id, bool checked) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
     if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('User not logged in');
-      throw Exception('User not logged in'); // 예외 발생
+      print('사용자가 로그인되어 있지 않습니다.');
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email; // 이메일 주소를 가져옴
     if (userEmail == null) {
-      print('User email not available');
-      throw Exception('User email not available');
+      print('사용자 이메일을 가져올 수 없습니다.');
+      throw Exception('사용자 이메일을 가져올 수 없습니다.');
     }
-    print('Updating cart item checked status for id: $id to $checked for user: $userEmail');
+    print('장바구니 아이템 체크 상태를 업데이트합니다. ID: $id, 상태: $checked, 사용자: $userEmail');
     await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(id).update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
-    print('Cart item checked status updated for id: $id');
+    print('장바구니 아이템 체크 상태 업데이트 완료: ID: $id');
   }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝

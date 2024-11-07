@@ -280,9 +280,11 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
     // 저장된 홈 화면 내 섹션 스크롤 위치를 설정
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final savedScrollPosition =
-          ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
-      _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
+      if (_scrollController.hasClients) { // _scrollController가 뷰에 attach되었는지 확인
+        final savedScrollPosition =
+            ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
+        _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
+      }
     });
   }
 
@@ -369,11 +371,13 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
         []; // 현재 카테고리의 제품 리스트 가져오기
     return Column(
       children: [
-        buildHorizontalDocumentsList(
-            ref, products, context, widget.category, _scrollController),
-        // 가로 스크롤 문서 리스트 빌드
-        if (_isFetching) CircularProgressIndicator(),
-        // 데이터 가져오는 중일 때 로딩 인디케이터 표시
+        if (_isFetching)
+          buildCommonLoadingIndicator(), // 로딩 중일 때 로딩 인디케이터 표시
+        if (products.isNotEmpty)
+          buildHorizontalDocumentsList(ref, products, context, widget.category, _scrollController),
+        // 데이터가 없을 때는 빈칸으로 표시
+        if (products.isEmpty && !_isFetching)
+          SizedBox.shrink(), // 데이터가 없을 때 아무것도 표시하지 않음
       ],
     );
   }
@@ -438,6 +442,20 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
     final isFetching = ref.watch(widget.productListProvider.notifier
         .select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    final double interval1X =
+        screenSize.width * (8 / referenceWidth);
+    final double interval1Y =
+        screenSize.height * (8 / referenceHeight);
+    final double interval2Y =
+        screenSize.height * (10 / referenceHeight);
+
     return Column(
       children: [
         ListView.builder(
@@ -445,7 +463,7 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
           // 높이 제한
           physics: NeverScrollableScrollPhysics(),
           // 스크롤 비활성화
-          padding: EdgeInsets.symmetric(vertical: 10.0),
+          padding: EdgeInsets.symmetric(vertical: interval2Y),
           // 상하 패딩 설정
           itemCount: (products.length / 3).ceil(),
           // 행의 개수 계산
@@ -464,8 +482,8 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
         ),
         if (isFetching) // 가져오는 중이라면
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(), // 로딩 표시
+            padding: EdgeInsets.symmetric(vertical: interval1Y, horizontal: interval1X),
+            child: buildCommonLoadingIndicator() // 로딩 표시
           ),
       ],
     );
@@ -480,22 +498,39 @@ Widget buildGeneralProductRow(
   final productInfo =
       ProductInfoDetailScreenNavigation(ref); // 제품 정보 상세 화면 내비게이션 객체 생성
 
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  final double interval1X =
+      screenSize.width * (2 / referenceWidth);
+  final double interval1Y =
+      screenSize.height * (2 / referenceHeight);
+
+  final itemWidth = (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
+
   return Row(
-    children: products
-        .map((product) => Expanded(
-              // 각 제품을 확장된 위젯으로 변환
-              child: Padding(
-                padding: const EdgeInsets.all(2.0), // 패딩 설정
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
-                  children: [
-                    productInfo.buildProdFirestoreDetailDocument(
-                        context, product, ref),
-                    // 제품 정보 상세 화면 빌드 함수 호출
-                  ],
-                ),
-              ),
-            ))
+    // mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 수평 중앙 정렬
+    children: products.map((product) {
+      return SizedBox(
+        width: itemWidth, // 아이템의 너비를 설정
+        // 각 제품을 확장된 위젯으로 변환
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: interval1Y), // 패딩 설정
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
+            children: [
+              productInfo.buildProdFirestoreDetailDocument(
+                  context, product, ref),
+              // 제품 정보 상세 화면 빌드 함수 호출
+            ],
+          ),
+        ),
+      );
+    })
         .toList(), // 리스트로 변환
   );
 }
@@ -1068,7 +1103,7 @@ class ProductInfoDetailScreenNavigation {
     final double DetailDoc3Y =
         screenSize.height * (-11 / referenceHeight);
     final double DetailDocTextFontSize1 =
-        screenSize.height * (11 / referenceHeight);
+        screenSize.height * (14 / referenceHeight);
     final double DetailDocTextFontSize2 =
         screenSize.height * (12 / referenceHeight);
     final double DetailDocTextFontSize3 =
@@ -1082,6 +1117,7 @@ class ProductInfoDetailScreenNavigation {
 
     final double interval1Y = screenSize.height * (4 / referenceHeight);
     final double interval1X = screenSize.width * (6 / referenceWidth);
+    final double interval2Y = screenSize.height * (135 / referenceHeight);
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
@@ -1117,16 +1153,31 @@ class ProductInfoDetailScreenNavigation {
               children: [
                 // 제품 썸네일을 표시함.
                 // 썸네일이 null이 아니고 빈 문자열이 아닐 때만 실행
-                if (product.thumbnail != null && product.thumbnail!.isNotEmpty)
                 // 썸네일을 가운데 정렬
                   Center(
                     // 썸네일 이미지와 좋아요 아이콘을 겹쳐서 표시
                     child: Stack(
                       children: [
+                        // 썸네일이 있으면 이미지를 표시하고, 없으면 아이콘을 표시
+                        product.thumbnail != null && product.thumbnail!.isNotEmpty
                         // 네트워크에서 이미지를 가져와서 표시
                         // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
-                        Image.network(product.thumbnail!,
-                            width: DetailDocThumnailWidth, fit: BoxFit.cover),
+                        ? Image.network(
+                            product.thumbnail!,
+                            width: DetailDocThumnailWidth,
+                            fit: BoxFit.cover,
+                          // 이미지 로드 실패 시 아이콘 표시
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey.shade300,
+                            size: interval2Y,
+                          ),
+                        )
+                            : Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey.shade300,
+                          size: interval2Y,
+                        ), // 썸네일이 없을 때 아이콘을 표시
                         // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
                         Positioned(
                           top: DetailDoc3Y,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
@@ -1141,7 +1192,7 @@ class ProductInfoDetailScreenNavigation {
                   ),
                 SizedBox(height: interval1Y),
                 // 제품 간단한 소개를 표시함.
-                if (product.briefIntroduction != null)
+                if (product.briefIntroduction != null && product.briefIntroduction!.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc1Y),
                     child: Text(
@@ -1163,7 +1214,7 @@ class ProductInfoDetailScreenNavigation {
                     child: Row(
                       children: [
                         Text(
-                          '${numberFormat.format(product.originalPrice!)}원',
+                          product.originalPrice != null ? '${numberFormat.format(product.originalPrice!)}원' : '',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize2,
                               color: Color(0xFF6C6C6C), // 텍스트 색상
@@ -1176,7 +1227,7 @@ class ProductInfoDetailScreenNavigation {
                           // 할인율을 빨간색으로 표시함.
                           if (product.discountPercent != null)
                             Text(
-                              '${numberFormat.format(product.discountPercent!)}%',
+                              product.discountPercent != null ? '${numberFormat.format(product.discountPercent!)}%' : '',
                               style: TextStyle(
                                   fontSize: DetailDocTextFontSize3,
                                   color: Colors.red, // 텍스트 색상
@@ -1192,7 +1243,7 @@ class ProductInfoDetailScreenNavigation {
                   Padding(
                     padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Text(
-                          '${numberFormat.format(product.discountPrice!)}원',
+                          product.discountPrice != null ? '${numberFormat.format(product.discountPrice!)}원' : '',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize4,
                               color: Colors.black, // 텍스트 색상
@@ -1203,7 +1254,6 @@ class ProductInfoDetailScreenNavigation {
                       ),
                 SizedBox(height: interval1Y),
                 // 제품 색상 옵션을 표시함.
-                if (product.colors != null)
                   Row(
                     children: product.colors!
                         .asMap()
@@ -1214,7 +1264,24 @@ class ProductInfoDetailScreenNavigation {
                           left: index == 0 ? DetailDoc1X : DetailDoc2X, // 첫 번째 이미지만 left: 14.0, 나머지는 right: 2.0
                           right: DetailDoc2X,
                         ),
-                        child: Image.network(color, width: DetailDocColorImageWidth, height: DetailDocColorImageHeight),
+                        // 썸네일이 있으면 이미지를 표시하고, 없으면 아이콘을 표시
+                        child: color != null && color!.isNotEmpty
+                        ? Image.network(
+                            color,
+                            width: DetailDocColorImageWidth,
+                            height: DetailDocColorImageHeight,
+                          // 이미지 로드 실패 시 아이콘 표시
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey.shade300,
+                            size: DetailDocColorImageWidth,
+                          ),
+                        )
+                            : Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey.shade300,
+                          size: DetailDocColorImageWidth,
+                        ), // 썸네일이 없을 때 아이콘을 표시
                       ),
                     ))
                         .values
@@ -1316,6 +1383,8 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
   final double ImageSliderSectionIndicatorWidth = screenSize.height * (12 / referenceHeight);
   final double ImageSliderSectionIndicatorHeight = screenSize.height * (12 / referenceHeight);
 
+  final double interval1X = screenSize.width * (250 / referenceWidht);
+
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
 
@@ -1348,11 +1417,24 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
                     ),
                   );
                 },
-                child: Image.network( // 네트워크 이미지를 보여주는 위젯
+                // 이미지가 있으면 이미지를 표시하고, 없으면 아이콘을 표시
+                child: image != null && image!.isNotEmpty
+                ? Image.network( // 네트워크 이미지를 보여주는 위젯
                   image, // 이미지 URL 설정
                   fit: BoxFit.cover, // 이미지가 컨테이너를 가득 채우도록 설정
                   width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
-                ),
+                  // 이미지 로드 실패 시 아이콘 표시
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.image_not_supported,
+                    color: Colors.grey.shade300,
+                    size: interval1X,
+                  ),
+                )
+                    : Icon(
+                  Icons.image_not_supported,
+                  color: Colors.grey.shade300,
+                  size: interval1X,
+                ), // 썸네일이 없을 때 아이콘을 표시
               );
             },
           );
@@ -1433,7 +1515,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
           Padding(
             padding: EdgeInsets.only(top: section1Y), // 상단 패딩을 section1Y로 설정
             child: Text(
-              '상품번호: ${product.productNumber}', // productNumber 내용을 표시
+              '상품번호: ${product.productNumber ?? ''}', // productNumber 내용을 표시
               style: TextStyle(
                   fontSize: productNumberFontSize,
                   fontWeight: FontWeight.bold,
@@ -1447,7 +1529,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
           Padding(
             padding: EdgeInsets.only(top: section2Y), // 상단 패딩을 section2Y로 설정
             child: Text(
-              product.briefIntroduction!, // briefIntroduction 내용을 표시
+              product.briefIntroduction ?? '', // briefIntroduction 내용을 표시
               style: TextStyle(
                 fontSize: productIntroductionFontSize,
                 fontWeight: FontWeight.bold,
@@ -1463,7 +1545,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
           Padding(
             padding: EdgeInsets.only(top: section1Y), // 상단 패딩을 section1Y로 설정
             child: Text(
-              '${product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', // 원래 가격을 표시, 소수점 없음
+              '${product.originalPrice != null ? product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원', // 원래 가격을 표시, 소수점 없음
               style: TextStyle(
                 fontSize: productOriginalPriceFontSize,
                 decoration: TextDecoration.lineThrough, // 취소선을 추가
@@ -1480,7 +1562,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
             child: Row(
               children: [
                 Text(
-                  '${product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},')}원', // 할인된 가격을 표시, 소수점 없음
+                  '${product.discountPrice != null ? product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원', // 할인된 가격을 표시, 소수점 없음
                     style: TextStyle(
                       fontSize: productDiscountPriceFontSize,
                       fontWeight: FontWeight.bold,
@@ -1492,7 +1574,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                 // 할인율을 빨간색으로 표시함.
                 if (product.discountPercent != null) // discountPercent가 null이 아닌 경우에만 표시
                   Text(
-                    '${product.discountPercent!.toStringAsFixed(0)}%', // 할인율을 표시, 소수점 없음
+                    '${product.discountPercent != null ? product.discountPercent!.toStringAsFixed(0) : ''}%', // 할인율을 표시, 소수점 없음
                     style: TextStyle(
                       fontSize: productDiscountPercentFontSize,
                       fontWeight: FontWeight.w800,
@@ -1603,14 +1685,16 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                   // 드롭다운 버튼의 너비를 최대로 확장.
                   underline: SizedBox.shrink(),
                   // 아래 선을 보이지 않게 설정.
-                  value: ref.watch(colorSelectionUrlProvider),
+                  value: product.colorOptions?.any((option) => option['url'] == ref.watch(colorSelectionUrlProvider)) == true
+                      ? ref.watch(colorSelectionUrlProvider)
+                      : null,
                   // 선택된 색상 값을 가져옴.
                   onChanged: (newValue) {
                     final selectedIndex = product.colorOptions?.indexWhere((option) => option['url'] == newValue) ?? -1;
                     final selectedText = product.colorOptions?.firstWhere((option) => option['url'] == newValue)?['text'];
                     // 새로운 값과 일치하는 색상 옵션의 인덱스를 찾음.
                     ref.read(colorSelectionIndexProvider.notifier).state = selectedIndex;
-                    ref.read(colorSelectionTextProvider.notifier).state = selectedText; // 색상 텍스트 업데이트
+                    ref.read(colorSelectionTextProvider.notifier).state = selectedText ?? ''; // 색상 텍스트 업데이트
                     // 색상 인덱스를 업데이트.
                     ref.read(colorSelectionUrlProvider.notifier).state = newValue;
                     // 선택된 색상 URL을 업데이트.
@@ -1620,10 +1704,19 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                     value: option['url'], // 각 옵션의 URL을 값으로 사용.
                     child: Row(
                       children: [
-                        Image.network(option['url'],
-                            width: colorImageLength, height: colorImageLength), // 색상을 나타내는 이미지를 표시.
+                        option['url'] != null && option['url'] != ''
+                            ? Image.network(
+                          option['url'],
+                          width: colorImageLength,
+                          height: colorImageLength,
+                        ) // URL이 있는 경우 이미지를 표시
+                            : Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey.shade300,
+                          size: colorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
+                        ), // URL이 없을 경우 아이콘을 표시
                         SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
-                        Text(option['text'],
+                        Text(option['text'] ?? '', // 색상의 텍스트 설명을 표시, 값이 없을 경우 빈 문자열.
                           style: TextStyle(
                             fontSize: colorTextSize,
                             fontWeight: FontWeight.bold,
@@ -1634,7 +1727,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                       ],
                     ),
                   ))
-                      .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
+                      .toList() ?? [], // 드롭다운 메뉴 아이템 목록을 생성하며, 목록이 없을 경우 빈 리스트 사용.
                 ),
               ),
             ],
@@ -1660,7 +1753,9 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                   // 드롭다운 버튼의 너비를 최대로 확장.
                   underline: SizedBox.shrink(),
                   // 아래 선을 보이지 않게 설정.
-                  value: ref.watch(sizeSelectionIndexProvider),
+                  value: product.sizes?.contains(ref.watch(sizeSelectionIndexProvider)) == true
+                      ? ref.watch(sizeSelectionIndexProvider)
+                      : null,
                   // 선택된 사이즈 값을 가져옴.
                   onChanged: (newValue) {
                     ref.read(sizeSelectionIndexProvider.notifier).state = newValue!;
@@ -1678,7 +1773,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                       )
                     ), // 사이즈 텍스트를 표시.
                   ))
-                      .toList(), // 드롭다운 메뉴 아이템 목록을 생성.
+                      .toList() ?? [], // 드롭다운 메뉴 아이템 목록을 생성.
                 ),
               ),
               SizedBox(height: section1Y)
@@ -1750,12 +1845,16 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
                   ),
                   SizedBox(width: width1X), // 텍스트와 이미지 사이의 간격을 width1X로 설정.
                   // 선택한 색상이 존재하면 이미지를 표시함.
-                  if (selectedColorUrl != null)
-                    Image.network(
+                  selectedColorUrl != null && selectedColorUrl != ''
+                      ? Image.network(
                       selectedColorUrl,
                       width: selectedColorImageLength,
                       height: selectedColorImageLength,
-                    ),
+                    ) : Icon(
+                    Icons.image_not_supported,
+                    color: Colors.grey.shade300,
+                    size: selectedColorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
+                  ),
                   SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
                   // 선택한 색상 이름을 텍스트로 표시함.
                   Text(selectedColorText ?? '',
@@ -1908,176 +2007,6 @@ class ProductDetailScreenTabs extends ConsumerWidget {
 // ------ 상품 상세 화면에서 '상품 정보', '문의' 탭으로 각 탭이 선택될 때마다 각 내용이 나오도록 하는 ProductDetailScreenTabs 클래스 구현 부분 끝
 
 // -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 시작
-// class ProductInfoContents extends StatefulWidget {
-//   // ProductContent 타입의 product를 인자로 받는 ProductInfoContents 위젯 클래스 정의
-//   final ProductContent product;
-//
-//   // 생성자: product를 필수 인자로 받고, key는 선택적으로 받음
-//   const ProductInfoContents({Key? key, required this.product}) : super(key: key);
-//
-//   @override
-//   _ProductInfoContentsState createState() => _ProductInfoContentsState();
-// }
-//
-// class _ProductInfoContentsState extends State<ProductInfoContents> {
-//   // 추가 이미지를 표시할지 여부를 저장하는 변수, 초기값은 false
-//   bool showMoreImages = false;
-//
-//   // 이미지 URL을 받아서 이미지를 좌우로 꽉 차도록 원본비율을 유지하며 표시하는 위젯을 생성하는 함수인 buildProdInfoImage
-//   Widget buildProdInfoImage(String? imageUrl) {
-//     if (imageUrl == null || imageUrl.isEmpty) {
-//       // 이미지 URL이 null이거나 비어있으면 빈 컨테이너 반환
-//       return Container();
-//     }
-//     return Image.network(
-//       imageUrl,
-//       fit: BoxFit.fitWidth, // 원본 비율 유지하며 좌우로 꽉 차도록 설정
-//       width: MediaQuery.of(context).size.width, // 화면 너비에 맞춤
-//     );
-//   }
-//
-//   // 밑줄과 텍스트를 포함하는 위젯 생성하는 함수인 buildSectionTitle
-//   Widget buildSectionTitle(String title) {
-//
-//     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-//     final Size screenSize = MediaQuery.of(context).size;
-//
-//     // 기준 화면 크기: 가로 393, 세로 852
-//     final double referenceWidth = 393.0;
-//     final double referenceHeight = 852.0;
-//
-//     // 상세정보 및 문의 버튼 아래 정보 선 내 텍스트 크기 부분 수치
-//     final double buildSectionTitleFontSize = screenSize.height * (16 / referenceHeight);
-//     // 상세정보 및 문의 버튼 아래 정보 선과 텍스트 사이 간격 부분 수치
-//     final double buildSectionWidthX = screenSize.width * (8 / referenceWidth);
-//     // 상세정보 및 문의 버튼 아래 정보 선 아래 간격 부분 수치
-//     final double buildSectionLineY = screenSize.height * (10 / referenceHeight);
-//
-//     return Column(
-//       children: [
-//         Row(
-//           children: [
-//             Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 좌측 선
-//             Padding(
-//               padding: EdgeInsets.only(left: buildSectionWidthX, right: buildSectionWidthX), // 좌우 여백 설정
-//               child: Text(
-//                 title,
-//                 style: TextStyle(
-//                   fontFamily: 'NanumGothic',
-//                   fontWeight: FontWeight.bold, // 글자 굵게 설정
-//                   fontSize: buildSectionTitleFontSize, // 글자 크기 설정
-//                   color: Color(0xFFDADADA), // 글자 색상 설정
-//                 ),
-//               ),
-//             ),
-//             Expanded(child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 우측 선
-//           ],
-//         ),
-//         SizedBox(height: buildSectionLineY), // 아래쪽 여백 설정
-//       ],
-//     );
-//   }
-//
-//   // 내용 확장 관련 버튼을 빌드하는 위젯인 buildExpandButton
-//   Widget buildExpandButton(String text, IconData icon) {
-//
-//     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-//     final Size screenSize = MediaQuery.of(context).size;
-//
-//     // 기준 화면 크기: 가로 393, 세로 852
-//     final double referenceWidth = 393.0;
-//     final double referenceHeight = 852.0;
-//
-//     // 비율을 기반으로 동적으로 크기와 위치 설정
-//     final double ExpandBtnWidth = screenSize.width * (345 / referenceWidth);
-//     final double ExpandBtnHeight = screenSize.height * (54 / referenceHeight);
-//     final double ExpandBtnX = screenSize.width * (24 / referenceWidth);
-//     final double ExpandBtnFontSize = screenSize.height * (14 / referenceHeight);
-//     // ExpandButton과 정보 사이의 간격 수치
-//     final double ExpandBtnY = screenSize.height * (20 / referenceHeight);
-//
-//     return Container(
-//       height: ExpandBtnHeight,
-//       width: ExpandBtnWidth,
-//       margin: EdgeInsets.only(left: ExpandBtnX, top: ExpandBtnY),
-//       child: ElevatedButton.icon(
-//         onPressed: () {
-//           // 버튼 클릭 시 showMoreImages 값 토글
-//           setState(() {
-//             showMoreImages = !showMoreImages;
-//           });
-//         },
-//         style: ElevatedButton.styleFrom(
-//           foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
-//           backgroundColor: Colors.white, // 배경 색상
-//           side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
-//         ),
-//         icon: Icon(icon, size: ExpandBtnFontSize, color: Color(0xFF6FAD96)), // 아이콘 색상 설정
-//         label: Text(
-//           text,
-//           style: TextStyle(
-//               fontFamily: 'NanumGothic',
-//               fontSize: ExpandBtnFontSize,
-//               fontWeight: FontWeight.bold,
-//               color: Color(0xFF6FAD96)
-//           ), // 텍스트를 굵게 설정
-//         ),
-//       ),
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-//     final Size screenSize = MediaQuery.of(context).size;
-//
-//     // 기준 화면 크기: 세로 852
-//     final double referenceHeight = 852.0;
-//
-//     // 상품정보 내 내용 간의 간격 수치
-//     final double productInfoY = screenSize.height * (20 / referenceHeight);
-//
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start, // 이미지가 세로로 나열되도록 설정
-//       children: [
-//         buildSectionTitle('INTRO INFO'), // 섹션 제목 설정
-//         if (widget.product.detailIntroImages != null)
-//         // product의 detailIntroImages가 null이 아니면
-//           ...widget.product.detailIntroImages!.take(2).map(buildProdInfoImage).toList(), // 처음 두 개의 이미지를 표시
-//         if (!showMoreImages && widget.product.detailIntroImages != null && widget.product.detailIntroImages!.length > 2)
-//         // 추가 이미지를 표시하지 않는 상태에서 이미지가 2개 이상일 경우
-//           buildExpandButton('상품 정보 펼쳐보기', Icons.arrow_downward), // 확장 버튼 표시
-//         if (showMoreImages) ...[
-//           // 추가 이미지를 표시하는 상태일 경우
-//           if (widget.product.detailIntroImages != null)
-//           // product의 detailIntroImages가 null이 아니면
-//             ...widget.product.detailIntroImages!.skip(2).map(buildProdInfoImage).toList(), // 나머지 이미지를 표시
-//           SizedBox(height: productInfoY), // 여백 설정
-//           buildSectionTitle('COLOR INFO'), // 섹션 제목 설정
-//           ...?widget.product.detailColorImages?.map(buildProdInfoImage).toList(), // 색상 정보 이미지 표시
-//           SizedBox(height: productInfoY), // 여백 설정
-//           buildSectionTitle('SIZE INFO'), // 섹션 제목 설정
-//           buildProdInfoImage(widget.product.detailSizeImage), // 사이즈 정보 이미지 표시
-//           SizedBox(height: productInfoY), // 여백 설정
-//           buildSectionTitle('DETAILS INFO'), // 섹션 제목 설정
-//           buildProdInfoImage(widget.product.detailDetailsImage), // 상세 정보 이미지 표시
-//           SizedBox(height: productInfoY), // 여백 설정
-//           buildSectionTitle('FABRIC INFO'), // 섹션 제목 설정
-//           buildProdInfoImage(widget.product.detailFabricImage), // 원단 정보 이미지 표시
-//           SizedBox(height: productInfoY), // 여백 설정
-//           buildSectionTitle('WASHING INFO'), // 섹션 제목 설정
-//           buildProdInfoImage(widget.product.detailWashingImage), // 세탁 정보 이미지 표시
-//           buildExpandButton('접기', Icons.arrow_upward), // 접기 버튼 표시
-//         ],
-//       ],
-//     );
-//   }
-// }
-// -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 끝
-
-
-// -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 시작
 class ProductInfoContents extends ConsumerStatefulWidget {
   final String fullPath;
 
@@ -2093,17 +2022,38 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
   // 이미지 URL을 받아서 이미지의 1/5만 표시하는 위젯을 생성하는 함수
   // 이미지의 상단 부분만 보여줌.
   Widget buildPartialImage(BuildContext context, String imageUrl) {
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    final double interval3X = screenSize.width * (150 / referenceWidth);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return ClipRect(
           child: Align(
             alignment: Alignment.topCenter, // 이미지의 상단을 기준으로 정렬함.
             heightFactor: 0.2, // 이미지 높이를 1/5만큼 설정함.
-            child: Image.network(
-              imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
-              fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
-              width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
-            ),
+            child: imageUrl != null && imageUrl.isNotEmpty
+                ? Image.network(
+                    imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
+                    fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
+                    width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey.shade300,
+                      size: interval3X,
+                    ), // 이미지 로드 실패 시 아이콘 표시
+                  )
+                : Icon(
+              Icons.image_not_supported,
+              color: Colors.grey.shade300,
+              size: interval3X,
+            ), // 이미지 URL이 없을 때 아이콘 표시
           ),
         );
       },
@@ -2113,11 +2063,32 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
   // 전체 이미지를 표시하는 함수
   // 이미지 전체를 보여줌.
   Widget buildFullImage(BuildContext context, String imageUrl) {
-    return Image.network(
-      imageUrl, // 네트워크에서 이미지를 불러옴.
-      fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
-      width: MediaQuery.of(context).size.width, // 화면 너비에 맞춰 이미지를 표시함.
-    );
+
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    final double interval3X = screenSize.width * (150 / referenceWidth);
+
+    return imageUrl != null && imageUrl.isNotEmpty
+          ? Image.network(
+              imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
+              fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
+              width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
+              errorBuilder: (context, error, stackTrace) => Icon(
+                Icons.image_not_supported,
+                color: Colors.grey.shade300,
+                size: interval3X,
+              ), // 이미지 로드 실패 시 아이콘 표시
+            )
+          : Icon(
+              Icons.image_not_supported,
+              color: Colors.grey.shade300,
+              size: interval3X,
+            );// 이미지 URL이 없을 때 아이콘 표시
   }
 
   // 밑줄과 텍스트를 포함하는 UI 위젯을 생성하는 함수

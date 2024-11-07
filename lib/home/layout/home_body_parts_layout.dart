@@ -65,8 +65,9 @@ Widget buildSectionCard(
   // AppBar 관련 수치 동적 적용
   final double plusBtnWidth = screenSize.width * (24 / referenceWidth);
   final double plusBtnHeight = screenSize.width * (24 / referenceWidth);
-  final double plusBtnX = screenSize.width * (8 / referenceWidth);
-  final double plusBtnY = screenSize.height * (1 / referenceHeight);
+  final double plusBtn1X = screenSize.width * (8 / referenceWidth);
+  final double plusBtn1Y = screenSize.height * (1 / referenceHeight);
+  final double plusBtn2Y = screenSize.height * (8 / referenceHeight);
 
   // 공통 카드 뷰를 반환함. 이 카드는 Stack 위젯을 사용하여 contentBuilder로 생성된 콘텐츠와 오른쪽 상단에 위치한 '더보기' 버튼을 포함함.
   return CommonCardView(
@@ -77,8 +78,8 @@ Widget buildSectionCard(
         if (showPlusButton && destinationScreen != null) // showPlusButton이 true이고, destinationScreen이 null이 아닌 경우
         // '더보기' 버튼을 위치시키며, 이 버튼을 탭하면 destinationScreen으로 네비게이션함.
         Positioned(
-          right: plusBtnX,
-          top: plusBtnY,
+          right: plusBtn1X,
+          top: plusBtn1Y,
           child: GestureDetector(
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) => destinationScreen)),
@@ -90,7 +91,7 @@ Widget buildSectionCard(
     ),
     backgroundColor: backgroundColor,
     elevation: 0, // 카드의 높이(그림자 깊이)를 설정함.
-    padding: const EdgeInsets.all(8.0), // 카드 내부의 패딩을 설정함.
+    padding: EdgeInsets.symmetric(vertical: plusBtn2Y, horizontal: plusBtn1X), // 카드 내부의 패딩을 설정함.
   );
 }
 // ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -

@@ -106,7 +106,7 @@ class WishlistIconButton extends ConsumerWidget {
         );
       },
       // 데이터가 로딩 중인 경우
-      loading: () => CircularProgressIndicator(),
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
       // 에러가 발생한 경우
       error: (e, stack) => Icon(Icons.error),
     );
@@ -180,7 +180,7 @@ class WishlistItemsList extends ConsumerWidget {
 
     // 찜 목록 비어있는 경우의 알림 부분 수치
     final double wishlistEmptyTextWidth =
-        screenSize.width * (200 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double wishlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double wishlistEmptyTextX =
@@ -189,29 +189,31 @@ class WishlistItemsList extends ConsumerWidget {
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double wishlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
+    final double interval1X = screenSize.width * (70 / referenceWidth);
 
-    // wishlistItemsStreamProvider로 처음 데이터를 한 번만 불러옴
-    final wishlistItemsFuture = ref.watch(wishlistItemsLoadFutureProvider(userEmail));
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
     // StreamProvider로 실시간 데이터 변경을 구독
     final wishlistItemStream = ref.watch(wishlistItemLoadStreamProvider(userEmail));
 
     // wishlistItemsFuture의 상태에 따라 위젯을 빌드.
-    return wishlistItemsFuture.when(
+    return wishlistItemStream.when(
         // 데이터를 처음 불러왔을 때의 처리
-        data: (initialData) {
-      return wishlistItemStream.when(
         data: (realtimeData) {
-          // 실시간 데이터가 없으면 초기 데이터를 사용
-          final wishlistItems = realtimeData.isNotEmpty ? realtimeData : initialData;
 
         // 찜 목록 항목이 비어있을 경우의 조건문.
-        if (wishlistItems.isEmpty) {
+        if (realtimeData.isEmpty) {
           // 찜 목록이 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
           return Container(
               width: wishlistEmptyTextWidth,
               height: wishlistEmptyTextHeight,
-              margin: EdgeInsets.only(left: wishlistEmptyTextX, top: wishlistEmptyTextY),
-              child: Text('찜 목록이 비어 있습니다.',
+              margin: EdgeInsets.only(top: wishlistEmptyTextY),
+              // 텍스트를 중앙에 위치하도록 설정함.
+              alignment: Alignment.center,
+              child: Text('현재 찜 목록이 비어 있습니다.',
                 style: TextStyle(
                   fontSize: wishlistEmptyTextFontSize,
                   fontFamily: 'NanumGothic',
@@ -230,12 +232,12 @@ class WishlistItemsList extends ConsumerWidget {
 
         // 장바구니 아이템들을 UI로 표시
         return Column(
-          children: wishlistItems.map((wishlistItem) {
+          children: realtimeData.map((wishlistItem) {
 
             // 원래 가격을 정수로 변환
-            final int originalPrice = wishlistItem['original_price']?.round() ?? 0;
+            final int originalPrice = wishlistItem['original_price']?.round() ?? '';
             // 할인된 가격을 정수로 변환
-            final int discountPrice = wishlistItem['discount_price']?.round() ?? 0;
+            final int discountPrice = wishlistItem['discount_price']?.round() ?? '';
 
             // ProductContent 객체 생성
             final product = ProductContent(
@@ -270,15 +272,24 @@ class WishlistItemsList extends ConsumerWidget {
                         width: wishlistThumnailPartWidth,
                         // 이미지 컨테이너의 높이를 설정함
                         height: wishlistThumnailPartHeight,
-                        // 썸네일이 있을 경우 이미지를 표시하고, 없을 경우 빈 컨테이너를 표시함
-                        child: wishlistItem['thumbnails'] != null
+                        // 썸네일이 있을 경우 이미지를 표시하고, 없을 경우 아이콘을 표시함
+                        child: wishlistItem['thumbnails'] != null && wishlistItem['thumbnails'] != ''
                             ? FittedBox(
                           fit: BoxFit.cover,
                           child: Image.network(
-                            wishlistItem['thumbnails'] ?? '',
+                            wishlistItem['thumbnails']!,
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.image_not_supported, // 이미지 로드 실패 시 아이콘 표시
+                              color: Colors.grey.shade300,
+                              size: interval1X,
+                            ),
                           ),
                         )
-                            : Container(), // 썸네일이 없을 경우 빈 컨테이너를 표시함
+                            : Icon(
+                          Icons.image_not_supported, // 썸네일 데이터가 없을 경우 아이콘 표시
+                          color: Colors.grey.shade300,
+                          size: interval1X,
+                        ),
                       ),
                       SizedBox(width: wishlist1X),
                       // 텍스트 데이터와 삭제 버튼을 포함하는 컬럼(세로 정렬)을 정의함
@@ -311,7 +322,7 @@ class WishlistItemsList extends ConsumerWidget {
                                       children: [
                                         // 상품의 원래 가격 텍스트를 표시함
                                         Text(
-                                          '${numberFormat.format(originalPrice)}원',
+                                          '${numberFormat.format(originalPrice) ?? ''}원',
                                           style: TextStyle(
                                             fontSize: wishlistOriginalPriceFontSize,
                                             fontWeight: FontWeight.bold,
@@ -323,7 +334,7 @@ class WishlistItemsList extends ConsumerWidget {
                                         SizedBox(width: wishlist2X),
                                         // 상품 할인율 텍스트를 표시함
                                         Text(
-                                          '${wishlistItem['discount_percent']?.round() ?? 0}%',
+                                          '${wishlistItem['discount_percent']?.round() ?? ''}%',
                                           style: TextStyle(
                                             fontSize: wishlistDiscountPercentFontSize,
                                             fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
@@ -335,7 +346,7 @@ class WishlistItemsList extends ConsumerWidget {
                                     ),
                                     // 상품 할인가 텍스트를 표시함
                                     Text(
-                                      '${numberFormat.format(discountPrice)}원',
+                                      '${numberFormat.format(discountPrice) ?? ''}원',
                                       style: TextStyle(
                                         fontSize: wishlistDiscountPriceFontSize,
                                         fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
@@ -427,15 +438,20 @@ class WishlistItemsList extends ConsumerWidget {
             );
           },
           // 실시간 데이터 로드 중일 때 처리
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
           // 실시간 데이터 로드 중 오류가 발생했을 때 처리
-          error: (error, stack) => Center(child: Text('실시간 데이터 불러오기 중 오류가 발생했습니다.')),
-          );
-        },
-        // 로딩 중일 때 표시할 위젯
-        loading: () => Center(child: CircularProgressIndicator()),
-        // 에러 발생 시 표시할 위젯
-        error: (error, stack) => Center(child: Text('데이터를 불러오기 중 오류가 발생했습니다.')),
+          error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+              height: errorTextHeight, // 전체 화면 높이 설정
+              alignment: Alignment.center, // 중앙 정렬
+              child: buildCommonErrorIndicator(
+                message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+                secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+                fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                color: Colors.black, // 색상 설정
+                showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+              ),
+            ),
         );
       }
     }

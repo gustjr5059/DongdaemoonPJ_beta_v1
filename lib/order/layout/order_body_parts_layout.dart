@@ -53,16 +53,20 @@ class UserInfoWidget extends ConsumerWidget {
     final double ordererInfo3Y =
         screenSize.height * (8 / referenceHeight);
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     final userInfoAsyncValue = ref.watch(
         userInfoProvider(email)); // Riverpod을 사용하여 사용자 정보 프로바이더를 구독
 
     return userInfoAsyncValue.when(
       data: (userInfo) {
-        // userInfo가 null인 경우에도 표를 유지하고, 데이터 필드에 '-'를 표시
-        final name = userInfo?['name'] ?? '-';
-        final email = userInfo?['email'] ?? '-';
-        final phoneNumber = userInfo?['phone_number'] ?? '-';
+        // userInfo가 null인 경우에도 표를 유지하고, 데이터 필드에 ''를 표시
+        final name = userInfo?['name'] ?? '';
+        final email = userInfo?['email'] ?? '';
+        final phoneNumber = userInfo?['phone_number'] ?? '';
 
         // // 휴대폰 번호 입력 필드에 사용할 컨트롤러 생성
         // // 파이어베이스 내 휴대폰 번호 데이터가 있을 시, 불러오고 없으면 직접 입력 부분이 바로 구현
@@ -116,8 +120,19 @@ class UserInfoWidget extends ConsumerWidget {
           ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태 처리
-      error: (error, stack) => Center(child: Text('Error: $error')), // 에러 상태 처리
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+          color: Colors.black, // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
     );
   }
 
@@ -543,7 +558,7 @@ class OrderListItemWidget extends ConsumerWidget {
               children: [
                 // 발주일자를 텍스트로 표시.
                 Text(
-                  '요청 일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                  '요청 일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                   style: TextStyle(
                     fontSize: orderlistInfoOrderDateDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -555,7 +570,7 @@ class OrderListItemWidget extends ConsumerWidget {
                 SizedBox(height: interval1Y),
                 // 발주번호를 텍스트로 표시.
                 Text(
-                  '요청 접수번호: $orderNumber',
+                  '요청 접수번호: ${orderNumber ?? ''}',
                   style: TextStyle(
                     fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -746,6 +761,7 @@ class _OrderListDetailItemWidgetState
     final double interval3Y = screenSize.height * (15 / referenceHeight); // 세로 간격 3 계산
     final double interval1X = screenSize.width * (40 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval3X = screenSize.width * (70 / referenceWidth); // 가로 간격 3 계산
 
     // 날짜 형식을 'yyyy-MM-dd'로 지정함
     final dateFormat = DateFormat('yyyy-MM-dd');
@@ -764,7 +780,7 @@ class _OrderListDetailItemWidgetState
         .isNotEmpty ==
         true
         ? widget.order!['numberInfo']['order_number']
-        : '에러 발생';
+        : '';
 
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
@@ -798,7 +814,7 @@ class _OrderListDetailItemWidgetState
                       children: [
                     // 발주일자를 텍스트로 표시.
                     Text(
-                    '요청 일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                    '요청 일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderDateDataFontSize, // 텍스트 크기 설정
                       fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -810,7 +826,7 @@ class _OrderListDetailItemWidgetState
                     SizedBox(height: interval2Y),
                     // 발주번호를 텍스트로 표시.
                     Text(
-                      '요청 접수번호: $orderNumber',
+                      '요청 접수번호: ${orderNumber ?? ''}',
                       style: TextStyle(
                         fontSize: orderlistDtInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                         fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -849,18 +865,18 @@ class _OrderListDetailItemWidgetState
                             final product = ProductContent(
                               docId: productInfo['product_id'] ?? '',
                               category: productInfo['category']?.toString() ??
-                                  '에러 발생',
+                                  '',
                               productNumber: productInfo['product_number']
                                   ?.toString() ??
-                                  '에러 발생',
+                                  '',
                               thumbnail:
                               productInfo['thumbnails']?.toString() ?? '',
                               briefIntroduction: productInfo['brief_introduction']
                                   ?.toString() ??
-                                  '에러 발생',
-                              originalPrice: productInfo['original_price'] ?? 0,
-                              discountPrice: productInfo['discount_price'] ?? 0,
-                              discountPercent: productInfo['discount_percent'] ?? 0,
+                                  '',
+                              originalPrice: productInfo['original_price'] ?? '',
+                              discountPrice: productInfo['discount_price'] ?? '',
+                              discountPercent: productInfo['discount_percent'] ?? '',
                             );
                             navigatorProductDetailScreen.navigateToDetailScreen(
                                 context, product);
@@ -885,7 +901,7 @@ class _OrderListDetailItemWidgetState
                                             .isNotEmpty ==
                                             true
                                             ? productInfo['brief_introduction']
-                                            : '에러 발생',
+                                            : '',
                                         '',
                                         bold: true,
                                         fontSize: orderlistDtInfoBriefIntroDataFontSize),
@@ -895,7 +911,7 @@ class _OrderListDetailItemWidgetState
                                         productInfo['product_number']?.toString().isNotEmpty ==
                                             true
                                             ? '상품 번호: ${productInfo['product_number']}'
-                                            : '에러 발생',
+                                            : '',
                                         '',
                                         bold: true,
                                         fontSize: orderlistDtInfoProdNumberDataFontSize),
@@ -912,7 +928,7 @@ class _OrderListDetailItemWidgetState
                                                 true
                                                 ? Image.network(productInfo['thumbnails'],
                                                 fit: BoxFit.cover)
-                                                : Icon(Icons.image_not_supported)),
+                                                : Icon(Icons.image_not_supported, size: interval3X)),
                                         SizedBox(width: interval1X),
                                         // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
                                         Expanded(
@@ -922,7 +938,7 @@ class _OrderListDetailItemWidgetState
                                             CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)}원',
+                                                '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : '')}원',
                                                 style: TextStyle(
                                                   fontSize: orderlistDtInfoOriginalPriceDataFontSize,
                                                   fontFamily: 'NanumGothic',
@@ -933,7 +949,7 @@ class _OrderListDetailItemWidgetState
                                               Row(
                                                 children: [
                                                   Text(
-                                                    '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)}원',
+                                                    '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : '')}원',
                                                     style: TextStyle(
                                                       fontSize: orderlistDtInfoDiscountPriceDataFontSize,
                                                       fontFamily: 'NanumGothic',
@@ -979,7 +995,7 @@ class _OrderListDetailItemWidgetState
                                                         true
                                                         ? productInfo[
                                                     'selected_color_text']
-                                                        : '에러 발생',
+                                                        : '',
                                                     overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize: orderlistDtInfoColorTextDataFontSize,
@@ -993,7 +1009,7 @@ class _OrderListDetailItemWidgetState
                                               SizedBox(height: interval1Y),
                                               // 선택된 사이즈와 수량을 표시
                                               Text(
-                                                  '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}',
+                                                  '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
                                                 style: TextStyle(
                                                   fontSize: orderlistDtInfoSizeTextDataFontSize,
                                                   fontFamily: 'NanumGothic',

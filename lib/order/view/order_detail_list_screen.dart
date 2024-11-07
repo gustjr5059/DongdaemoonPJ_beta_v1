@@ -203,11 +203,9 @@ class _OrderListDetailScreenState
 
     // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
-        screenSize.width * (270 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double orderlistEmptyTextX =
-        screenSize.width * (60 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextY =
         screenSize.height * (100 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextFontSize =
@@ -223,15 +221,17 @@ class _OrderListDetailScreenState
     return Scaffold(
       body: Stack(
         children: [
-          // 발주 상세 내역이 비어 있을 경우, '발주 데이터를 불러올 수 없습니다.' 메시지를 표시함.
+          // 발주 상세 내역이 비어 있을 경우, '에러가 발생했으니, 앱을 재실행해주세요.' 메시지를 표시함.
           if (orderlistDetailItem.isEmpty)
             Center(
               child: Container(
                 width: orderlistEmptyTextWidth,
                 height: orderlistEmptyTextHeight,
-                margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                margin: EdgeInsets.only( top: orderlistEmptyTextY),
+                // 텍스트를 중앙에 위치하도록 설정함.
+                alignment: Alignment.center,
                 child: Text(
-                  '요청 내역을 불러올 수 없습니다. ',
+                  '에러가 발생했으니, 앱을 재실행해주세요.',
                   style: TextStyle(
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',

@@ -16,6 +16,18 @@ import '../model/product_model.dart'; // 상품 데이터 모델 정의 파일�
 // 이 레포지토리는 Firestore와의 직접적인 상호작용을 캡슐화하며, 데이터를 가져오거나 업데이트하는 메서드를 제공합니다.
 import '../repository/product_repository.dart'; // 상품 데이터를 Firestore에서 가져오는 로직이 구현된 레포지토리 클래스의 임포트
 
+
+// Firestore로부터 티셔츠 ~ 가디건의 1차 카테고리와 신상 ~ 겨울의 2차 카테고리 상품 정보를 불러오는 각 레퍼지토 인스턴스를 생성하는 프로바이더
+// 메인 화면 관련 ProductMainListNotifier용 CategoryProductsRepository Provider
+final mainProductRepositoryProvider = Provider<MainCategoryProductsRepository>((ref) {
+  return MainCategoryProductsRepository(FirebaseFirestore.instance);
+});
+
+// 섹션 더보기 화면 관련 SectionMoreProductListNotifier용 CategoryProductsRepository Provider
+final sectionProductRepositoryProvider = Provider<SectionCategoryProductsRepository>((ref) {
+  return SectionCategoryProductsRepository(FirebaseFirestore.instance);
+});
+
 // ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 // newProdFirestoreDataProvider 등의 여러 문서 데이터를 가져오는 FutureProvider는 현재 사용 안되고 있음-추후,사용 가능성이 있어 우선 놧두기!!
 // ----- 신상 부분 시작
@@ -142,6 +154,8 @@ final winterProdFirestoreDataProvider =
 // ----- 겨울 부분 끝
 // ------ 신상, 최고, 할인, 봄, 여름, 가을, 겨울 관련 홈 화면에 보여줄 섹션 부분 - 파이어베이스의 데이터를 불러올 때 사용할 provider 끝
 
+// 섹션 더보기 화면, 2차 메인 화면 데이터를 불러오는 provider는 sectionProductRepositoryProvider로 변경했으므로,
+// 이젠 상품 상세 화면에만 사용될 Provider임!!!
 // ------ 블라우스, 가디건, 코트, 청바지, 맨투맨, 니트, 원피스, 패딩, 팬츠, 폴라티, 티셔츠, 스커트 관련 2차 메인 화면과
 // 섹션 더보기 화면(신상, 최고, 할인, 봄, 여름, 가을, 겨울), 상품 상세 화면에 보여줄 상품 데이터 부분 -파이어베이스의 데이터를 불러올 때 사용할 provider 시작
 // 2차 메인 화면과 섹션 더보기 화면, 상품 상세 화면 부분에 적용 1차 provider(범용성)-파이어베이스의 데이터를 불러올 때 사용할 provider

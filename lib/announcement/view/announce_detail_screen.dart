@@ -210,11 +210,9 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementDetailEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율임
+        screenSize.width * (393 / referenceWidth); // 가로 비율임
     final double announcementDetailEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율임
-    final double announcementDetailEmptyTextX =
-        screenSize.width * (115 / referenceWidth); // 가로 비율임
     final double announcementDetailEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율임
     final double announcementDetailEmptyTextFontSize =
@@ -269,6 +267,10 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                     final announceDetailItem = ref.watch(announceDetailItemProvider(widget.documentId));
 
                     // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 그대신 로딩 표시를 못 넣음...
                     return announceDetailItem.isEmpty
                         ? SliverToBoxAdapter(
                           // 공지사항이 없을 때, 텍스트가 포함된 컨테이너를 화면에 표시함.
@@ -279,11 +281,12 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                             height: announcementDetailEmptyTextHeight,
                             // 텍스트의 위치를 화면 상단으로부터 조정함.
                             margin: EdgeInsets.only(
-                                left: announcementDetailEmptyTextX,
                                 top: announcementDetailEmptyTextY),
+                            // 텍스트를 중앙에 위치하도록 설정함.
+                            alignment: Alignment.center,
                             // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
                             child: Text(
-                              '현재 공지사항이 없습니다.',
+                              '에러가 발생했으니, 앱을 재실행해주세요.',
                               style: TextStyle(
                                 // 텍스트의 폰트 크기를 설정함.
                                 fontSize: announcementDetailEmptyTextFontSize,

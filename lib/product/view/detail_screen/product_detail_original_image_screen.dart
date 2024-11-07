@@ -52,6 +52,15 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
   Widget build(BuildContext context) { // build 메소드 오버라이드
     final pageIndex = ref.watch(detailImagePageProvider); // 현재 페이지 인덱스를 상태로부터 읽음
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393 세로 852
+    final double referenceWidht = 393.0;
+    final double referenceHeight = 852.0;
+
+    final double interval1X = screenSize.width * (250 / referenceWidht);
+
     return Scaffold(
       backgroundColor: Colors.black, // 배경색을 검은색으로 설정
       body: Stack( // 여러 위젯을 겹쳐서 배치
@@ -74,6 +83,11 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
                     widget.images[itemIndex], // 이미지 URL 설정
                     fit: BoxFit.contain, // 원본 비율을 유지하고 상하가 더 작게 차지하도록 설정
                     width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
+                    errorBuilder: (context, error, stackTrace) => Icon( // 이미지 로드 실패 시 아이콘 표시
+                      Icons.image_not_supported,
+                      color: Colors.white, // 아이콘 색상을 흰색으로 설정
+                      size: interval1X, // 아이콘 크기 설정
+                    ),
                   ),
                 ),
               ),

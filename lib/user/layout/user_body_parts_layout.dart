@@ -68,14 +68,19 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double interval1X = screenSize.width * (80 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
     // 유저 정보를 userInfoProvider로부터 가져옴
     final userInfoAsyncValue = ref.watch(userInfoProvider(email));
 
     return userInfoAsyncValue.when( // 유저 정보의 상태에 따라 반환할 위젯을 설정함
       data: (userInfo) { // 데이터가 로드되었을 경우 실행됨
-        final name = userInfo?['name'] ?? '-'; // 이름 정보를 가져오고, 없으면 '-'로 설정함
-        final email = userInfo?['email'] ?? '-'; // 이메일 정보를 가져오고, 없으면 '-'로 설정함
-        final phoneNumber = userInfo?['phone_number'] ?? '-'; // 전화번호 정보를 가져오고, 없으면 '-'로 설정함
+        final name = userInfo?['name'] ?? ''; // 이름 정보를 가져오고, 없으면 ''로 설정함
+        final email = userInfo?['email'] ?? ''; // 이메일 정보를 가져오고, 없으면 ''로 설정함
+        final phoneNumber = userInfo?['phone_number'] ?? ''; // 전화번호 정보를 가져오고, 없으면 ''로 설정함
 
         // 클립 위젯을 사용하여 모서리를 둥글게 설정함
         return ClipRRect(
@@ -181,8 +186,19 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
           ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 로딩 위젯을 표시함
-      error: (error, stack) => Center(child: Text('Error: $error')), // 오류 발생 시 오류 메시지를 표시함
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+          color: Colors.black, // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
     );
   }
 
@@ -205,7 +221,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
           ),
         ),
         Expanded( // 남은 공간을 차지하는 위젯
-          child: Text(value), // 유저 정보 텍스트 표시
+          child: Text(value ?? ''),// 유저 정보 텍스트 표시
         ),
       ],
     );

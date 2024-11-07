@@ -19,6 +19,7 @@ class NewProductRepository {
     'a1b1', 'a2b1', 'a3b1', 'a4b1', 'a5b1', 'a6b1',
     'a7b1', 'a8b1', 'a9b1', 'a10b1', 'a11b1', 'a12b1'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   NewProductRepository(this.firestore); // 생성자
 
@@ -26,22 +27,46 @@ class NewProductRepository {
   Future<List<ProductContent>> fetchNewProductContents({int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -51,6 +76,7 @@ class NewProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -60,11 +86,18 @@ class NewProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 
@@ -77,6 +110,7 @@ class BestProductRepository {
     'a1b2', 'a2b2', 'a3b2', 'a4b2', 'a5b2', 'a6b2',
     'a7b2', 'a8b2', 'a9b2', 'a10b2', 'a11b2', 'a12b2'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   BestProductRepository(this.firestore); // 생성자
 
@@ -84,22 +118,46 @@ class BestProductRepository {
   Future<List<ProductContent>> fetchBestProductContents({int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -109,6 +167,7 @@ class BestProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -118,11 +177,18 @@ class BestProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 
@@ -135,6 +201,7 @@ class SaleProductRepository {
     'a1b3', 'a2b3', 'a3b3', 'a4b3', 'a5b3', 'a6b3',
     'a7b3', 'a8b3', 'a9b3', 'a10b3', 'a11b3', 'a12b3'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   SaleProductRepository(this.firestore); // 생성자
 
@@ -142,22 +209,46 @@ class SaleProductRepository {
   Future<List<ProductContent>> fetchSaleProductContents({int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -167,6 +258,7 @@ class SaleProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -176,11 +268,18 @@ class SaleProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 
@@ -193,6 +292,7 @@ class SpringProductRepository {
     'a1b4', 'a2b4', 'a3b4', 'a4b4', 'a5b4', 'a6b4',
     'a7b4', 'a8b4', 'a9b4', 'a10b4', 'a11b4', 'a12b4'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   SpringProductRepository(this.firestore); // 생성자
 
@@ -201,22 +301,46 @@ class SpringProductRepository {
       {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -226,6 +350,7 @@ class SpringProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -235,11 +360,18 @@ class SpringProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 
@@ -252,6 +384,7 @@ class SummerProductRepository {
     'a1b5', 'a2b5', 'a3b5', 'a4b5', 'a5b5', 'a6b5',
     'a7b5', 'a8b5', 'a9b5', 'a10b5', 'a11b5', 'a12b5'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   SummerProductRepository(this.firestore); // 생성자
 
@@ -260,22 +393,46 @@ class SummerProductRepository {
       {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -285,6 +442,7 @@ class SummerProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -294,11 +452,18 @@ class SummerProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 
@@ -311,6 +476,7 @@ class AutumnProductRepository {
     'a1b6', 'a2b6', 'a3b6', 'a4b6', 'a5b6', 'a6b6',
     'a7b6', 'a8b6', 'a9b6', 'a10b6', 'a11b6', 'a12b6'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   AutumnProductRepository(this.firestore); // 생성자
 
@@ -319,22 +485,46 @@ class AutumnProductRepository {
       {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -344,6 +534,7 @@ class AutumnProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -353,11 +544,18 @@ class AutumnProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 
@@ -370,6 +568,7 @@ class WinterProductRepository {
     'a1b7', 'a2b7', 'a3b7', 'a4b7', 'a5b7', 'a6b7',
     'a7b7', 'a8b7', 'a9b7', 'a10b7', 'a11b7', 'a12b7'
   ];
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
 
   WinterProductRepository(this.firestore); // 생성자
 
@@ -378,22 +577,46 @@ class WinterProductRepository {
       {int limit = 4}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
+    // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
+    if (allCollectionsExhausted()) {
+      print('모든 컬렉션에서 더 이상 가져올 데이터가 없습니다.');
+      return products; // 빈 리스트 반환
+    }
+
     // 필요한 만큼 제품을 가져올 때까지 루프 실행
     while (products.length < limit &&
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      print('현재 조회 중인 컬렉션: $currentCollection');
+      // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      final collectionKey = '$mainCollection/$currentCollection';
 
+      // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
+      if (noMoreDataPerCollection[collectionKey] == true) {
+        currentCollectionIndex++;
+        continue;
+      }
+
+      print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+
+      // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
       Query query = firestore
-          .collectionGroup(currentCollection)
-          .limit(limit - products.length); // 쿼리 설정
+          .collection('products')
+          .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+          .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+          .doc('couture') // 'couture' 문서 접근
+          .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+          .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+          .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
+
       if (lastDocument != null) {
         print('이전 문서 이후부터 조회 시작: ${lastDocument!.id}');
         query = query.startAfterDocument(lastDocument!); // 마지막 문서 이후의 데이터 가져오기
       }
 
       final snapshots = await query.get(); // 쿼리 실행 및 스냅샷 가져오기
+
       if (snapshots.docs.isNotEmpty) {
         lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
         print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
@@ -403,6 +626,7 @@ class WinterProductRepository {
             .toList()); // 제품 리스트에 추가
       } else {
         print('컬렉션 $currentCollection 에서 더 이상 가져올 데이터가 없습니다.');
+        noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
         lastDocument = null;
         currentCollectionIndex++; // 다음 컬렉션으로 이동
       }
@@ -412,15 +636,188 @@ class WinterProductRepository {
     return products; // 제품 리스트 반환
   }
 
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.length == collections.length &&
+        noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
   // 각 레포지토리에 데이터를 초기화하는 reset 메서드
   void reset() {
     print('데이터 초기화: 마지막 문서 및 컬렉션 인덱스를 리셋합니다.');
     lastDocument = null;
     currentCollectionIndex = 0;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
   }
 }
 // -------- 2차 카테고리(신상, 최고 ~~) 끝 부분
 
+// -------- MainCategoryProductsRepository, SectionCategoryProductsRepository를 분기해서 사용하도록 하는 추상 클래스 내용 시작
+// repository를 사용할 때 구체적인 인터페이스 또는 추상 클래스를 정의하여 이를 기반으로
+// 각 레퍼지토리에서 상속하도록 해서 BaseProductListNotifier에서 각 노티파이어에 맞는 레퍼지토리의 fetchProductContents 메서드를 인식하도록 함
+abstract class CategoryProductsRepository {
+  Future<List<ProductContent>> fetchProductContents({
+    required String mainCollection,
+    required String subCollection,
+    required int limit,
+    DocumentSnapshot? startAfter,
+    bool boolExistence = true,
+  });
+}
+// -------- MainCategoryProductsRepository, SectionCategoryProductsRepository를 분기해서 사용하도록 하는 추상 클래스 내용 끝
+
+// -------- 1차 카테고리 관련 데이터를 불러오는 로직인 MainCategoryProductsRepository 시작 부분
+class MainCategoryProductsRepository implements CategoryProductsRepository {
+  final FirebaseFirestore firestore;
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷을 저장
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
+
+  MainCategoryProductsRepository(this.firestore);
+
+  // boolExistence 조건을 적용하여 Firestore에서 데이터를 가져오는 메서드
+  Future<List<ProductContent>> fetchProductContents({
+    required String mainCollection, // 최상위 컬렉션 문서 ID
+    required String subCollection, // 서브 컬렉션 이름
+    required int limit,
+    DocumentSnapshot? startAfter,
+    bool boolExistence = true, // boolExistence 필터
+  }) async {
+    // 해당 서브 컬렉션에 대해 데이터 없음 상태인지 확인
+    final collectionKey = '$mainCollection/$subCollection';
+    if (noMoreDataPerCollection[collectionKey] == true) {
+      print('추가로 불러올 데이터가 없습니다. (컬렉션: $collectionKey)');
+      return []; // 데이터 없음 상태인 경우 빈 리스트 반환
+    }
+
+    print('데이터 조회 시작: 메인 컬렉션 - $mainCollection, 서브 컬렉션 - $subCollection');
+    List<ProductContent> products = []; // 제품 리스트 초기화
+
+    // Firestore에서 데이터 쿼리 설정
+    Query query = firestore
+        .collection('products')
+        .doc(mainCollection) // 'a10', 'a2' 등의 메인 문서
+        .collection(subCollection) // 'a10b1', 'a2b1' 등의 서브 컬렉션
+        .doc('couture') // 하위 문서 'couture'
+        .collection('couture_items') // 최하위 컬렉션 'couture_items'
+        .where('boolExistence', isEqualTo: boolExistence) // boolExistence 필터 추가
+        .limit(limit);
+
+    // 페이지네이션을 위해 이전 문서 이후로 시작 설정
+    if (startAfter != null) {
+      print('이전 문서 이후부터 조회 시작: ${startAfter.id}');
+      query = query.startAfterDocument(startAfter);
+    }
+
+    // 쿼리 실행 및 결과 가져오기
+    final snapshots = await query.get();
+
+    if (snapshots.docs.isNotEmpty) {
+      lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+      print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+      products = snapshots.docs
+          .map((doc) => ProductContent.fromFirestore(doc))
+          .toList(); // ProductContent 객체로 변환하여 반환
+    } else {
+      print('컬렉션에서 더 이상 가져올 데이터가 없습니다. (컬렉션: $collectionKey)');
+      noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
+      lastDocument = null;
+    }
+
+    print('총 가져온 제품 수: ${products.length}');
+    return products;
+  }
+
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
+  // 데이터를 초기화하는 reset 메서드
+  void reset() {
+    print('데이터 초기화: 마지막 문서를 리셋합니다.');
+    lastDocument = null;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
+  }
+}
+// -------- 1차 카테고리 관련 데이터를 불러오는 로직인 MainCategoryProductsRepository 끝 부분
+
+// -------- 2차 카테고리 관련 데이터를 불러오는 로직인 SectionCategoryProductsRepository 시작 부분
+class SectionCategoryProductsRepository implements CategoryProductsRepository {
+  final FirebaseFirestore firestore;
+  DocumentSnapshot? lastDocument; // 마지막으로 가져온 문서 스냅샷을 저장
+  final Map<String, bool> noMoreDataPerCollection = {}; // 각 컬렉션별 데이터 없음 상태 저장
+
+  SectionCategoryProductsRepository(this.firestore);
+
+  // boolExistence 조건을 적용하여 Firestore에서 데이터를 가져오는 메서드
+  Future<List<ProductContent>> fetchProductContents({
+    required String mainCollection, // 최상위 컬렉션 문서 ID
+    required String subCollection, // 서브 컬렉션 이름
+    required int limit,
+    DocumentSnapshot? startAfter,
+    bool boolExistence = true, // boolExistence 필터
+  }) async {
+    // 해당 서브 컬렉션에 대해 데이터 없음 상태인지 확인
+    final collectionKey = '$mainCollection/$subCollection';
+    if (noMoreDataPerCollection[collectionKey] == true) {
+      print('추가로 불러올 데이터가 없습니다. (컬렉션: $collectionKey)');
+      return []; // 데이터 없음 상태인 경우 빈 리스트 반환
+    }
+
+    print('데이터 조회 시작: 메인 컬렉션 - $mainCollection, 서브 컬렉션 - $subCollection');
+    List<ProductContent> products = []; // 제품 리스트 초기화
+
+    // Firestore에서 데이터 쿼리 설정
+    Query query = firestore
+        .collection('products')
+        .doc(mainCollection) // 'a10', 'a2' 등의 메인 문서
+        .collection(subCollection) // 'a10b1', 'a2b1' 등의 서브 컬렉션
+        .doc('couture') // 하위 문서 'couture'
+        .collection('couture_items') // 최하위 컬렉션 'couture_items'
+        .where('boolExistence', isEqualTo: boolExistence) // boolExistence 필터 추가
+        .limit(limit);
+
+    // 페이지네이션을 위해 이전 문서 이후로 시작 설정
+    if (startAfter != null) {
+      print('이전 문서 이후부터 조회 시작: ${startAfter.id}');
+      query = query.startAfterDocument(startAfter);
+    }
+
+    // 쿼리 실행 및 결과 가져오기
+    final snapshots = await query.get();
+
+    if (snapshots.docs.isNotEmpty) {
+      lastDocument = snapshots.docs.last; // 마지막 문서 업데이트
+      print('가져온 문서 수: ${snapshots.docs.length}, 마지막 문서 ID: ${lastDocument!.id}');
+      products = snapshots.docs
+          .map((doc) => ProductContent.fromFirestore(doc))
+          .toList(); // ProductContent 객체로 변환하여 반환
+    } else {
+      print('컬렉션에서 더 이상 가져올 데이터가 없습니다. (컬렉션: $collectionKey)');
+      noMoreDataPerCollection[collectionKey] = true; // 현재 컬렉션 데이터 없음 표시
+      lastDocument = null;
+    }
+
+    print('총 가져온 제품 수: ${products.length}');
+    return products;
+  }
+
+  // 모든 컬렉션의 데이터가 끝났는지 확인하는 메서드
+  bool allCollectionsExhausted() {
+    return noMoreDataPerCollection.values.every((isExhausted) => isExhausted);
+  }
+
+  // 데이터를 초기화하는 reset 메서드
+  void reset() {
+    print('데이터 초기화: 마지막 문서를 리셋합니다.');
+    lastDocument = null;
+    noMoreDataPerCollection.clear(); // 모든 컬렉션의 데이터 상태 초기화
+  }
+}
+// -------- 2차 카테고리 관련 데이터를 불러오는 로직인 SectionCategoryProductsRepository 끝 부분
+
+
+// 이젠 상품 상세 화면 관련 데이터를 불러오는 곳에서만 사용됨!!
 // -------- 1차 카테고리(블라우스, 가디건 ~~), 상품 상세 화면 관련 데이터 등의 범용성 있게 파이어스토어 데이터를 일정 단위로 불러오도록 하는 클래스 시작 부분
 // -------- 파이어스토어 내 데이터를 불러오는 범용성 리포지토리 (데이터 범위는 provider에서 정함) 시작
 class GeneralProductRepository<T> {
@@ -460,6 +857,20 @@ class GeneralProductRepository<T> {
       Query query = firestore
           .collectionGroup(currentCollection)
           .limit(limit - products.length); // 현재 컬렉션에서 제한된 수의 상품 가져오기
+
+      // // `currentCollection` 문자열의 두 번째 문자부터 세 번째 문자까지 가져오도록 해서 'a'와 붙여서 조합한 문서 이름
+      // String mainCollection = 'a' + currentCollection.substring(1, 3); // 예: a10b1 -> a10
+      // print('현재 조회 중인 메인 컬렉션: $mainCollection, 서브 컬렉션: $currentCollection');
+      //
+      // // /products/mainCollection/currentCollection/couture/couture_items 경로에서 문서를 가져오는 쿼리
+      // Query query = firestore
+      //     .collection('products')
+      //     .doc(mainCollection) // 'a10', 'a2' 등 메인 컬렉션에 해당하는 문서 접근
+      //     .collection(currentCollection) // 세부 컬렉션 (예: 'a10b1', 'a2b1' 등)
+      //     .doc('couture') // 'couture' 문서 접근
+      //     .collection('couture_items') // 'couture_items' 하위 컬렉션 접근
+      //     .where('boolExistence', isEqualTo: true) // 'boolExistence' 필터링 조건 추가
+      //     .limit(limit - products.length); // 남은 limit 수 만큼만 가져오기
 
       // 상품 데이터를 가져올 때, 마지막 데이터 이후부터 새롭게 가져오도록 하는 로직 부분
       if (startAfter != null) {

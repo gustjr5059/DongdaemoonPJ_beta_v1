@@ -284,31 +284,40 @@ abstract class BaseProductListNotifier
     if (_isFetching) return;
     // 페칭 상태를 true로 설정
     _isFetching = true;
+
     try {
-      // 상품 데이터를 페칭 (제한: 3개, 시작 문서: _lastDocument)
-      final products = await ref
-          .read(productRepositoryProvider(collectionNames))
-          .fetchProductContents(
-            limit: 3,
-            startAfter: isInitial ? null : _lastDocument,
-          );
+      for (String fullCollection in collectionNames) {
+        String mainCollection = 'a' + fullCollection.substring(1, 3);
+        String subCollection = fullCollection;
 
-      // 디버깅 출력 추가
-      // debugPrint('Fetched products count: ${products.length}');
-      // if (_lastDocument != null) {
-      //   debugPrint('Last document before fetch: ${_lastDocument!.id}');
-      // }
+        // CategoryProductsRepository 타입으로 분기하여 메인화면인 ProductMainListNotifier인 경우에는
+        // MainCategoryProductsRepository 인스턴스를 제공하는 mainProductRepositoryProvider를 불러오도록 함
+        // 섹션 더보기 화면인 SectionMoreProductListNotifier인 경우에는 SectionCategoryProductsRepository 인스턴스를 제공하는 sectionProductRepositoryProvider를 불러오도록 함
+        final CategoryProductsRepository repository = this is ProductMainListNotifier
+            ? ref.read(mainProductRepositoryProvider)
+            : ref.read(sectionProductRepositoryProvider);
 
-      // 페칭된 상품 데이터가 비어있지 않으면
-      if (products.isNotEmpty) {
-        // 마지막 문서를 업데이트
-        _lastDocument = products.last.documentSnapshot;
-        // debugPrint('Last document after fetch: ${_lastDocument!.id}');
-        // 상태를 초기화 또는 기존 상태에 추가
-        state = isInitial ? products : [...state, ...products];
-      } else {
-        // 초기화 시 비어있는 상태로 설정
-        if (isInitial) state = [];
+
+        final products = await repository.fetchProductContents(
+          mainCollection: mainCollection,
+          subCollection: subCollection,
+          limit: 3,
+          startAfter: isInitial ? null : _lastDocument,
+          boolExistence: true,
+        );
+
+        // 페칭된 상품 데이터가 비어있지 않으면
+        if (products.isNotEmpty) {
+          // 마지막 문서를 업데이트
+          _lastDocument = products.last.documentSnapshot;
+          // debugPrint('Last document after fetch: ${_lastDocument!.id}');
+          // 상태를 초기화 또는 기존 상태에 추가
+          state = isInitial ? products : [...state, ...products];
+          break; // 원하는 개수만큼 가져왔으면 중지
+        } else {
+          // 초기화 시 비어있는 상태로 설정
+          if (isInitial) state = [];
+        }
       }
       // 상품 데이터를 정렬
       _sortProducts();
@@ -359,6 +368,7 @@ abstract class BaseProductListNotifier
 // ------- ProductMainListNotifier 클래스 내용 구현 시작
 // BaseProductListNotifier 클래스를 상속받는 ProductMainListNotifier 클래스 정의
 class ProductMainListNotifier extends BaseProductListNotifier {
+
   // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
   ProductMainListNotifier(Ref ref, String baseCollection)
       : super(ref, baseCollection);
@@ -382,7 +392,7 @@ class ProductMainListNotifier extends BaseProductListNotifier {
         return ['${baseCollection}6'];
       case '겨울':
         return ['${baseCollection}7'];
-      // 기본적으로 모든 컬렉션 반환
+    // 기본적으로 모든 컬렉션 반환
       default:
         return [
           '${baseCollection}1',
@@ -477,6 +487,7 @@ final skirtMainProductListProvider =
 // ------- SectionMoreProductListNotifier 클래스 내용 구현 시작
 // BaseProductListNotifier 클래스를 상속받는 SectionMoreProductListNotifier 클래스 정의
 class SectionMoreProductListNotifier extends BaseProductListNotifier {
+
   // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
   SectionMoreProductListNotifier(Ref ref, String baseCollection)
       : super(ref, baseCollection);
@@ -500,7 +511,7 @@ class SectionMoreProductListNotifier extends BaseProductListNotifier {
         return List.generate(12, (index) => '${baseCollection}${index + 1}b6');
       case '겨울':
         return List.generate(12, (index) => '${baseCollection}${index + 1}b7');
-      // 기본적으로 신상 컬렉션 반환
+    // 기본적으로 신상 컬렉션 반환
       default:
         return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
     }
@@ -559,7 +570,6 @@ final winterSubMainProductListProvider =
 });
 // ------- SectionMoreProductListNotifier 클래스 내용 구현 끝
 // ------- 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
-
 
 // 상품 상세화면 내 상품정보 안에서 이미지의 전체 이미지로 보이도록하는 확장 유무 상태관리인 showFullImageProvider
 final showFullImageProvider = StateProvider<bool>((ref) => false);

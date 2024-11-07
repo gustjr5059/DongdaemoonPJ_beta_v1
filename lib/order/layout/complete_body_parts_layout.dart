@@ -271,7 +271,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
   }
 
   // 각 정보 행을 구성하는 함수
-  Widget _buildInfoRow(BuildContext context, String label, String value) {
+  Widget _buildInfoRow(BuildContext context, String label, String? value) {
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -325,12 +325,14 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                 color: Color(0xFFFBFBFB), // 배경 색상 설정
                 padding: EdgeInsets.only(left: updateRequireCompleteInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
-                child: Text(value,
+                child: Text(
+                  value ?? '', // value가 null일 경우 빈 문자열로 처리
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: updateRequireCompleteInfoDataFontSize,
                     color: Colors.black,
-                  ),), // 값 표시
+                  ),
+                ), // 값 표시
               ),
             ),
           ],

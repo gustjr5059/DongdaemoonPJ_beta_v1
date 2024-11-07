@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../common/layout/common_body_parts_layout.dart';
-import '../provider/announce_all_provider.dart';
 import 'package:http/http.dart' as http;
 import '../provider/announce_state_provider.dart';
 import '../view/announce_detail_screen.dart';
@@ -33,19 +32,34 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
 
     // 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
+    final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
 
     // announceItemsProvider를 통해 공지사항 아이템 목록 상태를 가져옴
     final announceItems = ref.watch(announceItemsProvider);
 
     // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함
+    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+    // loading: (), error: (err, stack)를 구분해서 구현 못함
+    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+    // 그대신 로딩 표시를 못 넣음...
     return announceItems.isEmpty
-        ? Center(child: Text('현재 공지사항이 없습니다.'))
-    // 공지사항이 있으면 Column 위젯을 사용해 공지사항 목록을 보여줌
+        ? Center(
+            child:
+            Text('현재 공지사항이 없습니다.',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+                fontSize: errorTextFontSize,
+                color: Colors.black,
+              ),
+            ),
+          )
+      // 공지사항이 있으면 Column 위젯을 사용해 공지사항 목록을 보여줌
         : Column(
       // 공지사항 아이템을 반복하여 UI를 생성함
       children: announceItems.map((announceItem) {
         // 공지사항 제목을 가져오며, 없을 경우 'No Title'로 대체함
-        final title = (announceItem['title'] as String?) ?? 'No Title';
+        final title = (announceItem['title'] as String?) ?? '';
         // 공지사항의 document_id를 가져옴
         final documentId = (announceItem['document_id'] as String?) ?? '';
         // 공지사항의 시간 정보를 가져옴
@@ -53,7 +67,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
         // 시간 정보를 문자열로 변환함
         final timeString = timestamp != null
             ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
-            : 'No Date';
+            : '';
 
         // 공지사항 항목을 터치할 수 있도록 GestureDetector 사용함
         return GestureDetector(
@@ -132,6 +146,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
@@ -152,22 +167,39 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     // 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
+    final double interval1X = screenSize.width * (250 / referenceWidth); // 가로 간격 1 계산
+
+    final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
 
     // 공지사항 상세 데이터를 가져옴
     final announceDetailItem = ref.watch(announceDetailItemProvider(documentId));
 
     // 공지사항 상세 데이터가 없을 경우
+    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+    // loading: (), error: (err, stack)를 구분해서 구현 못함
+    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+    // 그대신 로딩 표시를 못 넣음...
     if (announceDetailItem.isEmpty) {
-      return Center(child: Text('공지사항을 불러올 수 없습니다.')); // 데이터가 없을 때 표시할 텍스트임
-    }
+      return Center(
+              child:
+                Text('에러가 발생했으니, 앱을 재실행해주세요.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                    fontSize: errorTextFontSize,
+                    color: Colors.black,
+                  ),
+                ),
+              ); // 데이터가 없을 때 표시할 텍스트임
+            }
 
     // 공지사항 상세 데이터를 변수에 저장함
-    final title = (announceDetailItem['title'] as String?) ?? 'No Title'; // 공지사항 제목을 가져오며 없을 경우 'No Title'로 설정함
+    final title = (announceDetailItem['title'] as String?) ?? ''; // 공지사항 제목을 가져오며 없을 경우 'No Title'로 설정함
     final timestamp = announceDetailItem['time'] as Timestamp?; // 공지사항의 시간 정보를 가져옴
     // 시간 정보를 문자열로 변환함
     final timeString = timestamp != null
         ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
-        : 'No Date'; // 시간 정보를 포맷팅함
+        : ''; // 시간 정보를 포맷팅함
 
     // URL을 통해 가져오는 텍스트 데이터임
     final contentsTextUrl = (announceDetailItem['contents_text'] as String?) ?? ''; // 텍스트 콘텐츠 URL을 가져옴
@@ -208,7 +240,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               future: fetchTextFromUrl(contentsTextUrl), // 텍스트 파일을 URL에서 가져옴
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // 로딩 중일 때 로딩 표시를 보여줌
+                  return buildCommonLoadingIndicator(); // 로딩 중일 때 로딩 표시를 보여줌
                 } else if (snapshot.hasError) {
                   return Text('Error loading content: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
                 } else { // 성공적으로 로드된 경우
@@ -251,12 +283,15 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               ),
             ),
           SizedBox(height: interval2Y), // 웹 링크와 이미지 사이의 간격을 설정함
-          if (contentsImageUrl.isNotEmpty)
-            Image.network(
-              contentsImageUrl, // 이미지를 네트워크에서 가져옴
-              fit: BoxFit.contain, // 이미지 크기를 적절히 조절함
-              width: MediaQuery.of(context).size.width / 1, // 화면 너비의 1/1로 이미지 너비를 설정함
-            ),
+          // 데이터가 null이거나 빈 값인 경우
+          contentsImageUrl != null && contentsImageUrl != ''
+              ? Image.network(
+                contentsImageUrl, // 이미지를 네트워크에서 가져옴
+                fit: BoxFit.contain, // 이미지 크기를 적절히 조절함
+                width: MediaQuery.of(context).size.width, // 화면 너비에 맞게 이미지 너비를 설정함
+                errorBuilder: (context, error, stackTrace) => Container(), // 이미지 로드 실패 시 빈 컨테이너를 표시
+          )
+              : Container(), // 데이터가 없을 경우 빈 컨테이너를 표시
         ],
       ),
     );

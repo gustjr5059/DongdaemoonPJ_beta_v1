@@ -219,7 +219,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
 
     // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
     final double cartlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double cartlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double cartlistEmptyTextX =
@@ -296,14 +296,20 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                   builder: (context, ref, child) {
                     // cartItemsProvider의 상태를 가져옴
                     final cartItems = ref.watch(cartItemsProvider);
-                    // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
+                    // 장바구니가 비어 있을 경우 '현재 요청품목이 없습니다.' 텍스트를 중앙에 표시
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 그대신 로딩 표시를 못 넣음...
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
                             child: Container(
                                 width: cartlistEmptyTextWidth,
                                 height: cartlistEmptyTextHeight,
-                                margin: EdgeInsets.only(left: cartlistEmptyTextX, top: cartlistEmptyTextY),
-                                child: Text('요청품목이 비어 있습니다.',
+                                margin: EdgeInsets.only(top: cartlistEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                                child: Text('현재 요청품목이 없습니다.',
                               style: TextStyle(
                                 fontSize: cartlistEmptyTextFontSize,
                                 fontFamily: 'NanumGothic',
