@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -50,7 +51,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
                 fontFamily: 'NanumGothic',
                 fontSize: errorTextFontSize,
-                color: Colors.black,
+                color: BLACK_COLOR,
               ),
             ),
           )
@@ -96,7 +97,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                     fontSize: announcelistTitleDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Colors.black, // 텍스트 색상 설정
+                    color: BLACK_COLOR, // 텍스트 색상 설정
                   ), // 텍스트 스타일을 설정함
                 ),
                 SizedBox(height: interval1Y), // 제목과 시간 사이에 간격을 줌
@@ -107,7 +108,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                     fontSize: announcelistTimeDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Color(0xFF999999), // 텍스트 색상 설정
+                    color: GRAY60_COLOR, // 텍스트 색상 설정
                   ),  // 시간 텍스트의 스타일을 설정함
                 ),
                 Divider(), // 항목 간에 구분선을 삽입함
@@ -135,7 +136,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     if (response.statusCode == 200) { // 요청이 성공한 경우
       return const Utf8Decoder(allowMalformed: true).convert(response.bodyBytes); // UTF-8로 인코딩된 텍스트 데이터를 반환함
     } else { // 요청이 실패한 경우
-      throw Exception('Failed to load text from URL'); // 예외를 발생시킴
+      throw Exception('URL에서 텍스트 로드에 실패했습니다'); // 예외를 발생시킴
     }
   }
 
@@ -167,7 +168,6 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     // 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
-    final double interval1X = screenSize.width * (250 / referenceWidth); // 가로 간격 1 계산
 
     final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
 
@@ -187,7 +187,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'NanumGothic',
                     fontSize: errorTextFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ),
               ); // 데이터가 없을 때 표시할 텍스트임
@@ -219,7 +219,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               fontSize: announceDtlistTitleDataFontSize, // 텍스트 크기 설정
               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
               fontFamily: 'NanumGothic', // 글꼴 설정
-              color: Colors.black, // 텍스트 색상 설정
+              color: BLACK_COLOR, // 텍스트 색상 설정
             ),  // 제목의 텍스트 스타일을 설정함
           ),
           SizedBox(height: interval1Y), // 제목과 시간 사이의 간격을 설정함
@@ -230,10 +230,10 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               fontSize: announceDtlistTimeDataFontSize, // 텍스트 크기 설정
               fontWeight: FontWeight.normal, // 텍스트 굵기 설정
               fontFamily: 'NanumGothic', // 글꼴 설정
-              color: Color(0xFF999999), // 텍스트 색상 설정
+              color: GRAY60_COLOR, // 텍스트 색상 설정
             ),  // 시간 텍스트의 스타일을 설정함
           ),
-          Divider(color: Color(0xFFB0B0B0)), // 구분선을 삽입함
+          Divider(color: GRAY69_COLOR), // 구분선을 삽입함
           if (contentsTextUrl.isNotEmpty)
           // 텍스트 파일을 비동기로 로드하여 표시하는 FutureBuilder임
             FutureBuilder<String>(
@@ -242,7 +242,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return buildCommonLoadingIndicator(); // 로딩 중일 때 로딩 표시를 보여줌
                 } else if (snapshot.hasError) {
-                  return Text('Error loading content: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
+                  return Text('콘텐츠 로드 중 오류 발생: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
                 } else { // 성공적으로 로드된 경우
                   return Text(
                     snapshot.data ?? '', // 로드된 텍스트를 표시함
@@ -250,7 +250,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                       fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
                       fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic', // 글꼴 설정
-                      color: Colors.black, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),  // 텍스트 스타일을 설정함
                   );
                 }
@@ -278,7 +278,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                   fontSize: announceDtlistWeblinkDataFontSize, // 텍스트 크기 설정
                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                   fontFamily: 'NanumGothic', // 글꼴 설정
-                  color: Colors.blue, // 텍스트 색상 설정
+                  color: BLUE49_COLOR, // 텍스트 색상 설정
                 ),  // 웹 링크 텍스트 스타일을 설정함
               ),
             ),

@@ -45,7 +45,7 @@ final orderDataProvider = FutureProvider.family<Map<String, dynamic>, String>((r
 
   // 사용자가 로그인되어 있지 않으면 예외를 발생시킴
   if (userEmail == null) {
-    throw Exception('User not logged in');
+    throw Exception('사용자가 로그인하지 않았습니다');
   }
 
   // 발주 데이터를 가져와 반환함

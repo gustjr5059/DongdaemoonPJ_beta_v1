@@ -268,7 +268,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                   fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: Colors.black, // 텍스트 색상 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
                             ),
@@ -280,7 +280,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: Colors.black, // 텍스트 색상 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
                             ),
@@ -291,7 +291,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: Colors.black, // 텍스트 색상 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                ),
                             ),
@@ -311,8 +311,8 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                   }
                                 },
                                 style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                                  foregroundColor: Color(0xFF6FAD96), // 버튼의 글자 색상을 설정함
-                                  backgroundColor: Color(0xFF6FAD96), // 버튼의 배경 색상을 설정함
+                                  foregroundColor: SOFTGREEN60_COLOR, // 버튼의 글자 색상을 설정함
+                                  backgroundColor: SOFTGREEN60_COLOR, // 버튼의 배경 색상을 설정함
                                   padding: EdgeInsets.symmetric(vertical: inquiryBtnPaddingY, horizontal: inquiryBtnPaddingX), // 패딩 설정
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -324,7 +324,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                     fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                     fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: Colors.white, // 텍스트 색상 설정
+                                    color: WHITE_COLOR, // 텍스트 색상 설정
                                   ), // 텍스트 스타일
                                 ),
                               ),

@@ -265,7 +265,7 @@ class _PantsDetailProductScreenState
     final productContent =
         ref.watch(pantsDetailProdFirestoreDataProvider(widget.fullPath));
 
-    print("PantsDetailProductScreen: Loading screen for product path: ${widget.fullPath}"); // 디버깅 메시지 추가
+    print("PantsDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
 
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
@@ -345,6 +345,7 @@ class _PantsDetailProductScreenState
                         children: [
                           productContent.when(
                             data: (product) {
+                              print("PantsDetailProductScreen: 제품 데이터 로드 완료"); // 디버깅 메시지 추가
                               return Column(
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
@@ -373,7 +374,7 @@ class _PantsDetailProductScreenState
                                 secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
                                 fontSize1: errorTextFontSize1, // 폰트1 크기 설정
                                 fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                                color: Colors.black, // 색상 설정
+                                color: BLACK_COLOR, // 색상 설정
                                 showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
                               ),
                             ),

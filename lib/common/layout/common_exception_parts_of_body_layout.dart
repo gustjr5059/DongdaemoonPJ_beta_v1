@@ -52,12 +52,10 @@ import 'common_body_parts_layout.dart';
 
 // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
 void updateStatusBar() {
-  // Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
 
   if (Platform.isAndroid) {
     // 안드로이드에서는 상태표시줄 색상을 직접 지정
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // statusBarColor: statusBarColor,
       statusBarIconBrightness: Brightness.light,
     ));
   } else if (Platform.isIOS) {
@@ -68,47 +66,45 @@ void updateStatusBar() {
   }
 }
 
-// ------ AppBar 생성 함수 내용 구현 시작
+// ------ 공통 AppBar 생성 함수 내용 구현 시작
 // 공통 앱 바
 AppBar buildCommonAppBar({
-  required BuildContext
-      context, // BuildContext를 필수 인자로 받고, 각종 위젯에서 위치 정보 등을 제공받음.
-  required WidgetRef ref, // WidgetRef를 필수 인자로 받음.
+  required BuildContext context, // BuildContext를 필수 인자로 받아 각종 위젯의 위치 정보 등을 제공받음.
+  required WidgetRef ref, // 위젯 상태 참조를 위한 WidgetRef를 필수 인자로 받음.
   required String title, // AppBar에 표시될 제목을 문자열로 받음.
-  required double appBarTitleWidth,
-  required double appBarTitleHeight,
-  required double appBarTitleX,
-  required double appBarTitleY,
-  // 이벤트 이미지 버튼 클릭 시, 이벤트 섹션으로 이동시키기 위한 변수
-  ScrollController? scrollController, // 스크롤 컨트롤 변수
-  GlobalKey? sectionKey, // 위치 동적 변수
-  double? drawerIconWidth,
-  double? drawerIconHeight,
-  double? drawerIconX,
-  double? drawerIconY,
-  double? chevronIconWidth,
-  double? chevronIconHeight,
-  double? chevronIconX,
-  double? chevronIconY,
-  double? wishlistBtnWidth,
-  double? wishlistBtnHeight,
-  double? wishlistBtnX,
-  double? wishlistBtnY,
-  double? homeBtnWidth,
-  double? homeBtnHeight,
-  double? homeBtnX,
-  double? homeBtnY,
-  double? cartlistBtnWidth,
-  double? cartlistBtnHeight,
-  double? cartlistBtnX,
-  double? cartlistBtnY,
-  LeadingType leadingType =
-      LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
-  int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
-  String? fontFamily, // fontFamily 추가: 앱 바 제목의 글꼴을 지정하기 위한 선택적 매개변수
-  String? titleImagePath, // 이미지 경로를 받는 선택적 매개변수 추가
+  required double appBarTitleWidth, // 앱 바 제목의 너비 설정
+  required double appBarTitleHeight, // 앱 바 제목의 높이 설정
+  required double appBarTitleX, // 앱 바 제목의 X축 위치 설정
+  required double appBarTitleY, // 앱 바 제목의 Y축 위치 설정
+  // 이벤트 이미지 버튼 클릭 시 이벤트 섹션으로 이동시키기 위한 변수
+  ScrollController? scrollController, // 스크롤 컨트롤러 설정 변수
+  GlobalKey? sectionKey, // 동적 위치 지정 키
+  double? drawerIconWidth, // 드로어 아이콘의 너비 설정
+  double? drawerIconHeight, // 드로어 아이콘의 높이 설정
+  double? drawerIconX, // 드로어 아이콘의 X축 위치 설정
+  double? drawerIconY, // 드로어 아이콘의 Y축 위치 설정
+  double? chevronIconWidth, // 뒤로가기 아이콘의 너비 설정
+  double? chevronIconHeight, // 뒤로가기 아이콘의 높이 설정
+  double? chevronIconX, // 뒤로가기 아이콘의 X축 위치 설정
+  double? chevronIconY, // 뒤로가기 아이콘의 Y축 위치 설정
+  double? wishlistBtnWidth, // 위시리스트 버튼 너비 설정
+  double? wishlistBtnHeight, // 위시리스트 버튼 높이 설정
+  double? wishlistBtnX, // 위시리스트 버튼 X축 위치 설정
+  double? wishlistBtnY, // 위시리스트 버튼 Y축 위치 설정
+  double? homeBtnWidth, // 홈 버튼 너비 설정
+  double? homeBtnHeight, // 홈 버튼 높이 설정
+  double? homeBtnX, // 홈 버튼 X축 위치 설정
+  double? homeBtnY, // 홈 버튼 Y축 위치 설정
+  double? cartlistBtnWidth, // 장바구니 버튼 너비 설정
+  double? cartlistBtnHeight, // 장바구니 버튼 높이 설정
+  double? cartlistBtnX, // 장바구니 버튼 X축 위치 설정
+  double? cartlistBtnY, // 장바구니 버튼 Y축 위치 설정
+  LeadingType leadingType = LeadingType.drawer, // 앱 바 왼쪽 상단 버튼 유형 결정, 기본값은 드로어 버튼으로 설정
+  int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수, 기본값은 케이스 1
+  String? fontFamily, // 제목의 글꼴을 설정하는 선택적 매개변수
+  String? titleImagePath, // 이미지 경로를 설정하기 위한 선택적 매개변수
   bool boolEventImg = false, // 이벤트 이미지 표시 여부 설정
-  bool boolTitleImg = false, // Firestore title_img 사용 여부를 설정
+  bool boolTitleImg = false, // Firestore의 title_img 사용 여부 설정
 }) {
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -173,41 +169,38 @@ AppBar buildCommonAppBar({
           chevronIconX != null &&
           chevronIconY != null) {
         leadingWidget = Container(
-          width: chevronIconWidth,
-          height: chevronIconHeight,
-          margin: EdgeInsets.only(left: chevronIconX, top: chevronIconY),
-          // 아이콘 위치 설정
+          width: chevronIconWidth, // 뒤로가기 아이콘 너비 설정
+          height: chevronIconHeight, // 뒤로가기 아이콘 높이 설정
+          margin: EdgeInsets.only(left: chevronIconX, top: chevronIconY), // 아이콘 위치 설정
           child: IconButton(
-            icon: Icon(Icons.chevron_left),
-            // 뒤로 가기 아이콘을 설정
+            icon: Icon(Icons.chevron_left), // 뒤로가기 아이콘 설정
             onPressed: () {
               if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
+                Navigator.of(context).pop(); // 이전 페이지로 이동
               } else {
-                showCustomSnackBar(context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 돌아갈 수 없다는 메시지 표시
+                showCustomSnackBar(context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 이동 불가 시 메시지 표시
               }
             },
           ),
         );
       }
       break;
-  // 드로워화면 버튼인 경우
+  // 드로어 화면 버튼인 경우
     case LeadingType.drawer:
       if (drawerIconWidth != null &&
           drawerIconHeight != null &&
           drawerIconX != null &&
           drawerIconY != null) {
         leadingWidget = Container(
-          width: drawerIconWidth,
-          height: drawerIconHeight,
-          margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY),
-          // 아이콘 위치 설정
+          width: drawerIconWidth, // 드로어 아이콘 너비 설정
+          height: drawerIconHeight, // 드로어 아이콘 높이 설정
+          margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY), // 아이콘 위치 설정
           child: Builder(
             builder: (BuildContext context) {
               return IconButton(
                 icon: Icon(Icons.menu, size: drawerIconHeight), // 메뉴 아이콘 크기 설정
                 onPressed: () =>
-                    Scaffold.of(context).openDrawer(), // 버튼을 누르면 드로어 메뉴를 열게됨.
+                    Scaffold.of(context).openDrawer(), // 드로어 메뉴 열기
               );
             },
           ),
@@ -216,7 +209,7 @@ AppBar buildCommonAppBar({
       break;
   // 버튼이 없는 경우
     case LeadingType.none:
-      leadingWidget = null; // 아무런 위젯도 표시하지 않음.
+      leadingWidget = null; // 왼쪽 상단에 아무런 위젯 표시하지 않음
       break;
   }
 
@@ -224,29 +217,23 @@ AppBar buildCommonAppBar({
   List<Widget> actions = [];
   switch (buttonCase) {
     case 1:
-      // 케이스 1: 아무 내용도 없음
-      //   actions.add(Container(width: 48)); // 빈 공간 추가
+    // 케이스 1: 아무 내용도 없음
       break;
     case 2:
-      // 케이스 2: 찜 목록 버튼만 노출
+    // 케이스 2: 찜 목록 버튼만 노출
       if (wishlistBtnWidth != null &&
           wishlistBtnHeight != null &&
           wishlistBtnX != null &&
           wishlistBtnY != null) {
         actions.add(
           Container(
-            width: wishlistBtnWidth,
-            height: wishlistBtnHeight,
+            width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
+            height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
             margin: EdgeInsets.only(
                 right: wishlistBtnX,
-                top: wishlistBtnY
-            ), // 찜 목록 버튼의 위치 설정
+                top: wishlistBtnY), // 찜 목록 버튼 위치 설정
             child: IconButton(
-              icon: Icon(Icons.favorite_border, color: Colors.black),
-              // 찜 목록 아이콘을 사용함.
-              // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
-              // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
-              // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
+              icon: Icon(Icons.favorite_border, color: BLACK_COLOR), // 찜 목록 아이콘
               onPressed: () =>
                   navigateToScreenAndRemoveUntil(
                       context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
@@ -256,7 +243,7 @@ AppBar buildCommonAppBar({
       }
       break;
     case 3:
-      // 케이스 3: 찜 목록 버튼, 홈 버튼 노출
+    // 케이스 3: 찜 목록 버튼, 홈 버튼 노출
       if (wishlistBtnWidth != null &&
           wishlistBtnHeight != null &&
           wishlistBtnX != null &&
@@ -268,14 +255,14 @@ AppBar buildCommonAppBar({
         actions.addAll([
           // 찜 목록 버튼
           Container(
-            width: wishlistBtnWidth,
-            height: wishlistBtnHeight,
+            width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
+            height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
             margin: EdgeInsets.only(
               right: wishlistBtnX,
               top: wishlistBtnY,
             ),
             child: IconButton(
-              icon: Icon(Icons.favorite_border, color: Colors.black),
+              icon: Icon(Icons.favorite_border, color: BLACK_COLOR), // 찜 목록 아이콘
               onPressed: () =>
                   navigateToScreenAndRemoveUntil(
                       context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
@@ -283,14 +270,14 @@ AppBar buildCommonAppBar({
           ),
           // 홈 버튼
           Container(
-            width: homeBtnWidth,
-            height: homeBtnHeight,
+            width: homeBtnWidth, // 홈 버튼 너비 설정
+            height: homeBtnHeight, // 홈 버튼 높이 설정
             margin: EdgeInsets.only(
               right: homeBtnX,
               top: homeBtnY,
             ),
             child: IconButton(
-              icon: Icon(Icons.home_outlined, color: Colors.black),
+              icon: Icon(Icons.home_outlined, color: BLACK_COLOR), // 홈 아이콘
               onPressed: () =>
                   navigateToScreenAndRemoveUntil(
                       context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
@@ -316,14 +303,14 @@ AppBar buildCommonAppBar({
         actions.addAll([
           // 찜 목록 버튼
           Container(
-            width: wishlistBtnWidth,
-            height: wishlistBtnHeight,
+            width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
+            height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
             margin: EdgeInsets.only(
               right: wishlistBtnX,
               top: wishlistBtnY,
             ),
             child: IconButton(
-              icon: Icon(Icons.favorite_border, color: Colors.black),
+              icon: Icon(Icons.favorite_border, color: BLACK_COLOR), // 찜 목록 아이콘
               onPressed: () =>
                   navigateToScreenAndRemoveUntil(
                       context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
@@ -331,14 +318,14 @@ AppBar buildCommonAppBar({
           ),
           // 홈 버튼
           Container(
-            width: homeBtnWidth,
-            height: homeBtnHeight,
+            width: homeBtnWidth, // 홈 버튼 너비 설정
+            height: homeBtnHeight, // 홈 버튼 높이 설정
             margin: EdgeInsets.only(
               right: homeBtnX,
               top: homeBtnY,
             ),
             child: IconButton(
-              icon: Icon(Icons.home_outlined, color: Colors.black),
+              icon: Icon(Icons.home_outlined, color: BLACK_COLOR), // 홈 아이콘
               onPressed: () =>
                   navigateToScreenAndRemoveUntil(
                       context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
@@ -346,14 +333,14 @@ AppBar buildCommonAppBar({
           ),
           // 장바구니 버튼
           Container(
-            width: cartlistBtnWidth,
-            height: cartlistBtnHeight,
+            width: cartlistBtnWidth, // 장바구니 버튼 너비 설정
+            height: cartlistBtnHeight, // 장바구니 버튼 높이 설정
             margin: EdgeInsets.only(
               right: cartlistBtnX,
               top: cartlistBtnY,
             ),
             child: IconButton(
-              icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
+              icon: Icon(Icons.shopping_cart_outlined, color: BLACK_COLOR), // 장바구니 아이콘
               onPressed: () =>
                   navigateToScreenAndRemoveUntil(
                       context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
@@ -364,7 +351,7 @@ AppBar buildCommonAppBar({
       break;
   }
 
-// AppBar를 반환하는 함수
+  // AppBar를 반환하는 함수
   return AppBar(
     backgroundColor: Theme.of(context).scaffoldBackgroundColor, // AppBar의 배경 색상 설정, 앱의 기본 배경 색상을 사용함
     toolbarHeight: appBarHeight, // AppBar의 높이를 설정함
@@ -390,7 +377,7 @@ AppBar buildCommonAppBar({
                 : Text(
               title, // 설정된 제목을 텍스트로 표시함
               style: TextStyle(
-                color: Colors.black, // 텍스트 색상을 검정색으로 설정함
+                color: BLACK_COLOR, // 텍스트 색상을 검정색으로 설정함
                 fontSize: titleFontSize, // 텍스트 크기를 설정함
                 fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                 fontFamily: fontFamily, // 텍스트 폰트를 설정함
@@ -421,31 +408,31 @@ Widget buildCommonBottomNavigationBar(
   // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
     case 1:
     // 선택된 아이템의 색상을 초기화
-      Color selectedColor = Colors.black;
+      Color selectedColor = BLACK_COLOR;
       // 선택되지 않은 아이템의 색상을 초기화
-      Color unselectedColor = Colors.white;
+      Color unselectedColor = WHITE_COLOR;
 
       // colorCase 값에 따라 선택된 아이템의 색상을 설정
       switch (colorCase) {
         case 1: // 홈 버튼만 선택된 경우
-          selectedColor = Colors.black;
+          selectedColor = BLACK_COLOR;
           break;
         case 2: // 장바구니 버튼만 선택된 경우
-          selectedColor = Colors.black;
+          selectedColor = BLACK_COLOR;
           break;
         case 3: // 발주 내역 버튼만 선택된 경우
-          selectedColor = Colors.black;
+          selectedColor = BLACK_COLOR;
           break;
         case 4: // 마이페이지 버튼만 선택된 경우
-          selectedColor = Colors.black;
+          selectedColor = BLACK_COLOR;
           break;
         case 5: // 모든 버튼이 선택되지 않은 경우
-          selectedColor = Colors.white;
+          selectedColor = WHITE_COLOR;
           break;
       }
 
       return Container(
-        color: Color(0xFF6FAD96), // 전체 배경색을 지정
+        color: SOFTGREEN60_COLOR, // 전체 배경색을 지정
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
@@ -453,7 +440,7 @@ Widget buildCommonBottomNavigationBar(
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               // BottomNavigationBar 타입을 고정형으로 설정
-              backgroundColor: Color(0xFF6FAD96), // 배경색을 0xFF6FAD96으로 설정,
+              backgroundColor: SOFTGREEN60_COLOR, // 배경색을 0xFF6FAD96으로 설정,
               currentIndex: selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0,
               // 현재 선택된 인덱스를 설정, 범위가 벗어나면 0으로 설정
               onTap: (index) {
@@ -538,55 +525,14 @@ Widget buildCommonBottomNavigationBar(
                 fontSize: 10, // 텍스트 크기를 10으로 설정
               ),
             ),
-            // if (selectedIndex == 0) // 선택된 항목에만 하단 바 표시
-            //   Positioned(
-            //     bottom: 35,
-            //     left: 34.5, // 홈 아이템의 위치에 맞게 바를 배치
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width / 12, // 바의 너비를 화면의 1/12로 설정
-            //       height: 3, // 바의 높이
-            //       color: selectedColor, // 선택된 색상
-            //     ),
-            //   ),
-            // // 다른 선택된 항목들에 대해서도 같은 방식으로 적용
-            // if (selectedIndex == 1)
-            //   Positioned(
-            //     bottom: 35,
-            //     left: 125, // 요청품목 위치
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width / 10,
-            //       height: 3,
-            //       color: selectedColor,
-            //     ),
-            //   ),
-            // if (selectedIndex == 2)
-            //   Positioned(
-            //     bottom: 35,
-            //     left: 225, // 발주내역 위치
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width / 10,
-            //       height: 3,
-            //       color: selectedColor,
-            //     ),
-            //   ),
-            // if (selectedIndex == 3)
-            //   Positioned(
-            //     bottom: 35,
-            //     left: 320, // 마이페이지 위치
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width / 8,
-            //       height: 3,
-            //       color: selectedColor,
-            //     ),
-            //   ),
          ),
       ),
     );
 
-  // '요청품목', '바로 발주' 버튼을 UI로 구현한 케이스
+  // '요청품목', '바로 업데이트 요청' 버튼을 UI로 구현한 케이스
     case 2:
       if (product == null) {
-        throw ArgumentError('Product must be provided for navigation case 2'); // 제품이 제공되지 않은 경우 예외 처리
+        throw ArgumentError('네비게이션 케이스 2에서는 제품이 반드시 제공되어야 합니다'); // 제품이 제공되지 않은 경우 예외 처리
       }
 
       // 선택된 색상, 사이즈, 수량 등을 상태에서 가져옴
@@ -647,15 +593,15 @@ Widget buildCommonBottomNavigationBar(
                       child: ElevatedButton(
                         onPressed: () => onCartButtonPressed(context, ref, product), // 요청품목 버튼 클릭 시 실행될 함수 지정
                         style: ElevatedButton.styleFrom(
-                          foregroundColor:  Colors.white, // 텍스트 색상
-                          backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                          foregroundColor:  WHITE_COLOR, // 텍스트 색상
+                          backgroundColor: SOFTGREEN60_COLOR, // 배경 색상
                         ),
                         child: Text('요청품목 담기',
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             fontSize: bottomBtnFontSize,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: WHITE_COLOR,
                           ),
                         ), // 버튼 텍스트 설정
                       ),
@@ -675,15 +621,15 @@ Widget buildCommonBottomNavigationBar(
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          foregroundColor:  Colors.white, // 텍스트 색상
-                          backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                          foregroundColor:  WHITE_COLOR, // 텍스트 색상
+                          backgroundColor: SOFTGREEN60_COLOR, // 배경 색상
                         ),
                         child: Text('바로 업데이트 요청',
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             fontSize: bottomBtnFontSize,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: WHITE_COLOR,
                             ),
                         ),// 텍스트를 굵게 설정 // 버튼 텍스트 설정
                       ),
@@ -695,7 +641,7 @@ Widget buildCommonBottomNavigationBar(
           ),
         );
 
-  // '전체 체크박스', '발주하기' 버튼을 UI로 구현한 케이스 - 장바구니 화면에 구현
+  // '전체 체크박스', '업데이트 요청하기' 버튼을 UI로 구현한 케이스 - 요청내역 화면에 구현
     case 3:
     // 전체 체크박스 선택 여부를 상태로 관리
       final allChecked = ref.watch(allCheckedProvider);
@@ -777,7 +723,7 @@ Widget buildCommonBottomNavigationBar(
                         child: Checkbox(
                           // 체크박스의 선택 여부를 allChecked 상태로 설정
                           value: allChecked,
-                          activeColor: Color(0xFF6FAD96),  // 체크박스 색상 변경
+                          activeColor: SOFTGREEN60_COLOR,  // 체크박스 색상 변경
                           // 체크박스 상태 변경 시 호출되는 함수
                           onChanged: (bool? value) {
                             // allCheckedProvider 상태 업데이트
@@ -797,7 +743,7 @@ Widget buildCommonBottomNavigationBar(
                             fontSize: bottomTextFontSize,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'NanumGothic',
-                            color: Colors.black,
+                            color: BLACK_COLOR,
                         ),
                       ),
                     ],
@@ -824,8 +770,8 @@ Widget buildCommonBottomNavigationBar(
                       },
                       // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
                       style: ElevatedButton.styleFrom(
-                        foregroundColor:  Colors.white, // 텍스트 색상
-                        backgroundColor: Color(0xFF6FAD96), // 배경 색상
+                        foregroundColor:  WHITE_COLOR, // 텍스트 색상
+                        backgroundColor: SOFTGREEN60_COLOR, // 배경 색상
                       ),
                       // 버튼에 표시될 텍스트
                       child: Text('업데이트 요청하기',
@@ -833,7 +779,7 @@ Widget buildCommonBottomNavigationBar(
                           fontFamily: 'NanumGothic',
                           fontSize: bottomBtnFontSize,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: WHITE_COLOR,
                         ),
                       ),
                     ),
@@ -884,50 +830,22 @@ void navigateToScreenAndRemoveUntil(
   );
 }
 
-// ------ 상단 탭 바 텍스트 스타일 관련 topBarTextStyle 함수 내용 구현 시작
-// 상단 탭 바 텍스트 스타일 설정 함수
-// TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
-//   return TextStyle(
-//     fontSize: 14,
-//     // 텍스트 크기를 16으로 설정
-//     fontWeight: FontWeight.bold,
-//     // 텍스트 굵기를 굵게 설정
-//     color: currentIndex == buttonIndex ? GOLD_COLOR : INPUT_BORDER_COLOR,
-//     // 현재 선택된 탭과 탭 인덱스가 같다면 금색, 아니면 입력창 테두리 색상으로 설정
-//     shadows: [
-//       // 텍스트에 그림자 효과를 추가
-//       Shadow(
-//         // 하단에 그림자 설정
-//         offset: Offset(0, 2), // 그림자의 위치를 하단으로 설정
-//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-//         blurRadius: 0, // 흐림 효과 없음
-//       ),
-//       Shadow(
-//         // 오른쪽에 그림자 설정
-//         offset: Offset(2, 0), // 그림자의 위치를 오른쪽으로 설정
-//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-//         blurRadius: 0, // 흐림 효과 없음
-//       ),
-//       Shadow(
-//         // 상단에 그림자 설정
-//         offset: Offset(0, -2), // 그림자의 위치를 상단으로 설정
-//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-//         blurRadius: 0, // 흐림 효과 없음
-//       ),
-//       Shadow(
-//         // 왼쪽에 그림자 설정
-//         offset: Offset(-2, 0), // 그림자의 위치를 왼쪽으로 설정
-//         color: LOGO_COLOR, // 그림자 색상을 로고 색상으로 설정
-//         blurRadius: 0, // 흐림 효과 없음
-//       ),
-//     ],
-//   );
-// }
-TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
+TextStyle topBarTextStyle(int currentIndex, int buttonIndex, BuildContext context) {
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  final double topBarTextFontSize =
+      screenSize.height * (16 / referenceHeight);
+
   return TextStyle(
-    fontSize: 16, // Figma에서 확인한 텍스트 크기
+    fontSize: topBarTextFontSize, // Figma에서 확인한 텍스트 크기
     fontWeight: FontWeight.bold, // 폰트 굵기 설정
-    color: currentIndex == buttonIndex ? Color(0xFF6FAD96) : Color(0xFF737373),
+    color: currentIndex == buttonIndex ? SOFTGREEN60_COLOR : GRAY45_COLOR,
     // 현재 탭이 활성화된 경우 연한 초록색, 비활성화된 경우 회색 적용
   );
 }
@@ -998,7 +916,7 @@ Widget buildTopBarList(
                 height: topBarBtnHeight,
                 padding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우로 패딩 적용
                 child:
-                    Text(category, style: topBarTextStyle(currentIndex, index)),
+                    Text(category, style: topBarTextStyle(currentIndex, index, context)),
               ),
             );
           },
@@ -1013,8 +931,8 @@ Widget buildTopBarList(
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
-  // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 'No Email'이라는 기본 문자열을 표시함.
-  final userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No Email';
+  // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 '에러 발생'이라는 기본 문자열을 표시함.
+  final userEmail = FirebaseAuth.instance.currentUser?.email ?? '에러 발생';
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -1057,7 +975,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
     child: Container(
-      color: Colors.white, // 전체 드로어의 배경색을 흰색으로 설정
+      color: WHITE_COLOR, // 전체 드로어의 배경색을 흰색으로 설정
       child: Stack(
         children: [
           // 로고 및 이메일 배치
@@ -1072,12 +990,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   height: drawerLogoIconHeight,
                   padding: EdgeInsets.zero, // 패딩 제거
                   margin: EdgeInsets.zero, // 마진 제거
-                  // decoration: BoxDecoration(
-                  //   color: Colors.grey, // 회색 배경 설정 (테스트용)
-                  // ),
                   child: Image.asset(
                     'asset/img/misc/logo_img/couture_logo_v1.png',
-                    // fit: BoxFit.contain, // 이미지의 fit 속성 설정
                   ),
                 ),
                 Padding(
@@ -1086,7 +1000,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     userEmail,
                     style: TextStyle(
                       fontSize: emailTextFontSize,
-                      color: Colors.black, // 텍스트 색상
+                      color: BLACK_COLOR, // 텍스트 색상
                       fontFamily: 'NanumGothic',
                       fontWeight: FontWeight.bold,
                     ),
@@ -1171,13 +1085,13 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                         Text('Logout',
                             style: TextStyle(
                                 fontFamily: 'NanumGothic',
-                                color: Color(0xFF777777),
+                                color: GRAY47_COLOR,
                                 fontSize: logoutTextFontSize,
                                 fontWeight: FontWeight.bold,
                             ),
                         ), // 로그아웃 텍스트
                         SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
-                        Icon(Icons.logout, color: Color(0xFF777777), size: logoutBtnSize), // 로그아웃 아이콘
+                        Icon(Icons.logout, color: GRAY47_COLOR, size: logoutBtnSize), // 로그아웃 아이콘
                       ],
                     ),
                   ),
@@ -1223,7 +1137,7 @@ Widget _buildListTile(
         title,
         style: TextStyle(
           fontSize: iconTextFontSize,
-          color: Colors.black, // 텍스트 색상
+          color: BLACK_COLOR, // 텍스트 색상
           fontFamily: 'NanumGothic',
           fontWeight: FontWeight.bold,
         )), // 제목을 설정

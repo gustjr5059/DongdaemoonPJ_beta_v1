@@ -250,7 +250,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ),
               ),

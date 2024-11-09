@@ -8,6 +8,7 @@ class EventRepository {
   // 생성자, firestore 인스턴스를 전달받아 초기화함
   EventRepository({required this.firestore});
 
+  // ------ event 이미지 URL을 가져오는 함수 시작 부분
   // event 이미지 URL을 가져오는 함수
   Future<String?> fetchEventImage() async {
     try {
@@ -18,17 +19,18 @@ class EventRepository {
           .get();
 
       // event_img 필드 값을 콘솔에 출력하여 확인함
-      print('Fetched event_img: ${doc['event_img']}');
+      print('가져온 event_img: ${doc['event_img']}');
 
       // event_img 필드 값을 String으로 변환하여 반환함
       return doc['event_img'] as String?;
     } catch (e) {
       // 에러 발생 시, 에러 메시지를 콘솔에 출력함
-      print('Error fetching event image: $e');
+      print('event 이미지 가져오는 중 오류 발생: $e');
       return null; // 에러가 발생하면 null을 반환함
     }
   }
 
+  // ------ title 이미지 URL을 가져오는 함수 시작 부분
   // title 이미지 URL을 가져오는 함수
   Future<String?> fetchTitleImage() async {
     try {
@@ -39,26 +41,26 @@ class EventRepository {
           .get();
 
       // title_img 필드 값을 콘솔에 출력하여 확인함
-      print('Fetched title_img: ${doc['title_img']}');
+      print('가져온 title_img: ${doc['title_img']}');
 
       // title_img 필드 값을 String으로 변환하여 반환함
       return doc['title_img'] as String?;
     } catch (e) {
       // 에러 발생 시, 에러 메시지를 콘솔에 출력함
-      print('Error fetching title image: $e');
+      print('title 이미지 가져오는 중 오류 발생: $e');
       return null; // 에러가 발생하면 null을 반환함
     }
   }
 
+  // ------ 이벤트 포스터 상품 데이터를 가져오는 함수 시작 부분
   // 이벤트 포스터 상품 데이터를 가져오는 함수
   Future<List<Map<String, dynamic>>> getPagedEventPosterImgItems(
       {DocumentSnapshot? lastDocument, required int limit}) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    if (userEmail == null) throw Exception('사용자가 로그인하지 않았습니다'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
-    print(
-        "Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
+    print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
 
     // Firestore 쿼리에서 boolExistence가 true인 문서만 가져오고, boolExistence와 sequence 필드로 정렬
     Query query = firestore

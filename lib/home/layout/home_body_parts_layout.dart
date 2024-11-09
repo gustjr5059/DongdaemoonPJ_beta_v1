@@ -52,7 +52,7 @@ Widget buildSectionCard(
   Color backgroundColor =
   (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
       ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
-      : Color(0xFFF1F1F1); // F1F1F1 색상
+      : GRAY95_COLOR; // F1F1F1 색상
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -84,7 +84,7 @@ Widget buildSectionCard(
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) => destinationScreen)),
             child: Image.asset('asset/img/misc/button_img/plus_button1.png',
-                width: plusBtnWidth, height: plusBtnHeight, color: Color(0xFF6FAD96)),
+                width: plusBtnWidth, height: plusBtnHeight, color: SOFTGREEN60_COLOR),
           ),
         ),
       ],
@@ -116,22 +116,35 @@ class MidCategoryButtonList extends ConsumerWidget {
     final boolExpanded =
     ref.watch(midCategoryViewBoolExpandedProvider);
 
-    // 현재 화면의 너비를 MediaQuery를 통해 얻음
-    final screenWidth = MediaQuery.of(context).size.width;
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 비율을 기반으로 동적으로 크기와 위치 설정
+    final double totalPadding = screenSize.width * (16 / referenceWidth); // 전체적인 좌우 패딩 값을 설정
+    final double spacingBetweenButtons = screenSize.width * (8 / referenceWidth); // 버튼들 사이의 간격을 설정
+    final double iconSize = screenSize.height * (70 / referenceHeight);
+    final double iconWidth = screenSize.width * (70 / referenceWidth);
+    final double iconHeight = screenSize.width * (70 / referenceHeight);
+
+
     // 화면의 너비에 따라 한 줄에 표시할 카테고리 버튼의 수를 결정
-    int midCategoryPerRow = screenWidth > 900
+    int midCategoryPerRow = screenSize.width > 900
         ? 6
-        : screenWidth > 600
+        : screenSize.width > 600
         ? 5
-        : screenWidth > 300
+        : screenSize.width > 300
         ? 4
         : 3;
-    // 전체적인 좌우 패딩 값을 설정
-    double totalPadding = 16.0;
-    // 버튼들 사이의 간격을 설정
-    double spacingBetweenButtons = 8.0;
+    // // 전체적인 좌우 패딩 값을 설정
+    // double totalPadding = 16.0;
+    // // 버튼들 사이의 간격을 설정
+    // double spacingBetweenButtons = 8.0;
     // 버튼의 너비를 계산 (화면 너비에서 좌우 패딩과 버튼 사이 간격을 제외한 너비를 버튼 수로 나눔)
-    double buttonWidth = (screenWidth -
+    double buttonWidth = (screenSize.width -
         totalPadding * 2 -
         (midCategoryPerRow - 1) * spacingBetweenButtons) /
         midCategoryPerRow;
@@ -187,14 +200,14 @@ class MidCategoryButtonList extends ConsumerWidget {
         ),
         // 지퍼 아이콘(확장/축소 아이콘)을 위한 버튼이며, 클릭 시 카테고리 뷰가 토글됨.
         IconButton(
-          iconSize: 30, // 아이콘 크기 설정
+          iconSize: iconSize, // 아이콘 크기 설정
           icon: Image.asset(
             boolExpanded
                 ? 'asset/img/misc/button_img/expand_button_top.png'
                 : 'asset/img/misc/button_img/expand_button_bottom.png',
             // 확장일 때와 축소일 때의 이미지 경로
-            width: 30, // 아이콘 너비 설정
-            height: 30, // 아이콘 높이 설정
+            width: iconWidth, // 아이콘 너비 설정
+            height: iconHeight, // 아이콘 높이 설정
           ),
           onPressed: toggleCategoryView,
         ),
@@ -222,18 +235,6 @@ final List<String> midCategories = [
 
 // 카테고리명과 해당하는 이미지 파일명을 매핑하는 변수
 final Map<String, String> midCategoryImageMap = {
-  // "티셔츠": "shirt_button_v1.png",
-  // "블라우스": "blouse_button_v1.png",
-  // "맨투맨": "mtm_button_v1.png",
-  // "니트": "neat_button_v1.png",
-  // "폴라티": "pola_button_v1.png",
-  // "원피스": "onepiece_button_v1.png",
-  // "팬츠": "pants_button_v1.png",
-  // "청바지": "jean_button_v1.png",
-  // "스커트": "skirt_button_v1.png",
-  // "아우터": "paeding_button_v1.png",
-  // "코트": "coat_button_v1.png",
-  // "가디건": "cardigan_button_v1.png"
 "티셔츠": "shirt_button_v1.png",
 "블라우스": "blouse_button_v1.png",
 "맨투맨": "mtm_button_v1.png",
@@ -299,6 +300,17 @@ Widget buildDetailMidCategoryButton({
   String imageAsset =
       'asset/img/misc/button_img/${midCategoryImageMap[category]}'; // 해당 카테고리에 매핑된 이미지 파일의 경로.
 
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+  final double categoryBtnTextFontSize = screenSize.height * (10 / referenceHeight);
+  final double interval1Y = screenSize.height * (8 / referenceHeight);
+
   return GestureDetector(
     onTap: () {
       onCategoryTap(context, ref, index); // 해당 카테고리를 탭했을 때 실행할 함수 호출
@@ -310,9 +322,6 @@ Widget buildDetailMidCategoryButton({
       padding: EdgeInsets.all(5.0), // 모든 방향에 5.0의 패딩 설정
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-        // 카드뷰 배경 색상 : 앱 기본 배경색
-        // borderRadius: BorderRadius.circular(20), // 테두리를 둥글게 처리
-        // border: Border.all(color: GOLD_COLOR, width: 2), // 선택 상태에 따라 테두리 색상 변경
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // 컬럼 내부의 아이템들을 중앙에 위치시킴.
@@ -322,12 +331,12 @@ Widget buildDetailMidCategoryButton({
             aspectRatio: 1.3, // 너비와 높이의 비율을 1.8:1로 설정
             child: Image.asset(imageAsset, fit: BoxFit.contain), // 이미지 파일을 보여줌
           ),
-          SizedBox(height: 8), // 이미지와 텍스트 사이의 공간을 8로 설정함.
+          SizedBox(height: interval1Y), // 이미지와 텍스트 사이의 공간을 8로 설정함.
           Text(
             category, // 카테고리 이름 표시
             style: TextStyle(
-              color: Colors.black, // 텍스트 색상
-              fontSize: 10, // 텍스트 크기
+              color: BLACK_COLOR, // 텍스트 색상
+              fontSize: categoryBtnTextFontSize, // 텍스트 크기
               fontFamily: 'NanumGothic',
               fontWeight: FontWeight.bold,
             ),
@@ -369,7 +378,7 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '신상', // 섹션 제목을 '신상'으로 설정
           style: TextStyle(
-              color: Colors.black, // 텍스트 색상
+              color: BLACK_COLOR, // 텍스트 색상
               fontSize: SectionTextFontSize, // 텍스트 크기
               fontFamily: 'NanumGothic',
               fontWeight: FontWeight.bold,
@@ -429,7 +438,7 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '스테디 셀러', // 섹션 제목을 '최고'로 설정
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상
+            color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
             fontFamily: 'NanumGothic',
             fontWeight: FontWeight.bold,
@@ -489,7 +498,7 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '특가 상품', // 섹션 제목을 '특가 상품'으로 설정
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상
+            color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
             fontFamily: 'NanumGothic',
             fontWeight: FontWeight.bold,
@@ -549,7 +558,7 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '봄', // 섹션 제목을 '봄'으로 설정
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상
+            color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
             fontFamily: 'NanumGothic',
             fontWeight: FontWeight.bold,
@@ -609,7 +618,7 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '여름', // 섹션 제목을 '여름'으로 설정
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상
+            color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
             fontFamily: 'NanumGothic',
             fontWeight: FontWeight.bold,
@@ -669,7 +678,7 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '가을', // 섹션 제목을 '가을'로 설정
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상
+            color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
             fontFamily: 'NanumGothic',
             fontWeight: FontWeight.bold,
@@ -729,7 +738,7 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '겨울', // 섹션 제목을 '겨울'로 설정
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상
+            color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
             fontFamily: 'NanumGothic',
             fontWeight: FontWeight.bold,
@@ -787,7 +796,7 @@ Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '이벤트', // 섹션 제목을 '이벤트'로 설정함
           style: TextStyle(
-            color: Colors.black, // 텍스트 색상 설정
+            color: BLACK_COLOR, // 텍스트 색상 설정
             fontSize: SectionTextFontSize, // 텍스트 크기 설정
             fontFamily: 'NanumGothic', // 폰트 스타일 설정
             fontWeight: FontWeight.bold, // 텍스트 굵기 설정

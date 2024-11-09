@@ -217,7 +217,6 @@ final winterSubMainSortButtonProvider =
 // ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트)과 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 기본 추상 클래스 시작
 // ------- BaseProductListNotifier 클래스 내용 구현 시작
 // 해당 내용은 추상 클래스이며, 해당 클래스를 다른 클래스에 오버라이드(extends 사용)를 하면 해당 클래스 기능은 그대로 사용하면서 추가되는 내용을 각기 적용 가능하므로, 이렇게 구성
-
 // 상태 관리 추상 클래스 BaseProductListNotifier를 정의 (상품 데이터 관리)
 abstract class BaseProductListNotifier
     extends StateNotifier<List<ProductContent>> {
@@ -296,7 +295,6 @@ abstract class BaseProductListNotifier
         final CategoryProductsRepository repository = this is ProductMainListNotifier
             ? ref.read(mainProductRepositoryProvider)
             : ref.read(sectionProductRepositoryProvider);
-
 
         final products = await repository.fetchProductContents(
           mainCollection: mainCollection,

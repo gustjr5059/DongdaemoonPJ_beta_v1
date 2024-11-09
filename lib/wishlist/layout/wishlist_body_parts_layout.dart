@@ -21,9 +21,9 @@ class WishlistIconButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-// 현재 로그인된 사용자 정보를 가져옴
+    // 현재 로그인된 사용자 정보를 가져옴
     final user = FirebaseAuth.instance.currentUser;
-// user가 null인 경우 (로그인되지 않은 경우)
+    // user가 null인 경우 (로그인되지 않은 경우)
     if (user == null) {
       // 빈 위젯 반환
       return SizedBox.shrink();
@@ -31,9 +31,9 @@ class WishlistIconButton extends ConsumerWidget {
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email; // 이메일 주소를 가져옴
     if (userEmail == null) {
-      throw Exception('User email not available');
+      throw Exception('사용자 이메일을 사용할 수 없습니다');
     }
-// wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
+    // wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
     final asyncWishlist = ref.watch(wishlistItemProvider(userEmail));
 
     // asyncWishlist 상태에 따라 위젯을 빌드
@@ -51,7 +51,7 @@ class WishlistIconButton extends ConsumerWidget {
           icon: Icon(
             isWished ? Icons.favorite : Icons.favorite_border,
             // 찜 목록에 있는 경우 빨간색, 그렇지 않은 경우 회색
-            color: isWished ? Colors.red : Colors.grey,
+            color: isWished ? RED46_COLOR : GRAY62_COLOR,
           ),
           // 버튼 클릭 시 동작 정의
           onPressed: () async {
@@ -130,7 +130,7 @@ class WishlistItemsList extends ConsumerWidget {
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email;
     if (userEmail == null) {
-      throw Exception('User email not available');
+      throw Exception('사용자 이메일을 사용할 수 없습니다');
     }
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -218,7 +218,7 @@ class WishlistItemsList extends ConsumerWidget {
                   fontSize: wishlistEmptyTextFontSize,
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
           );
@@ -260,7 +260,7 @@ class WishlistItemsList extends ConsumerWidget {
                 // height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Color(0xFFCECECE), width: 1.0), // 하단 테두리 색상을 지정함
+                    bottom: BorderSide(color: GRAY81_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
                   ),
                 ),
                 child: CommonCardView(
@@ -280,14 +280,14 @@ class WishlistItemsList extends ConsumerWidget {
                             wishlistItem['thumbnails']!,
                             errorBuilder: (context, error, stackTrace) => Icon(
                               Icons.image_not_supported, // 이미지 로드 실패 시 아이콘 표시
-                              color: Colors.grey.shade300,
+                              color: GRAY88_COLOR,
                               size: interval1X,
                             ),
                           ),
                         )
                             : Icon(
                           Icons.image_not_supported, // 썸네일 데이터가 없을 경우 아이콘 표시
-                          color: Colors.grey.shade300,
+                          color: GRAY88_COLOR,
                           size: interval1X,
                         ),
                       ),
@@ -311,7 +311,7 @@ class WishlistItemsList extends ConsumerWidget {
                                         fontSize: wishlistBriefIntroductionFontSize,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'NanumGothic',
-                                        color: Colors.black,
+                                        color: BLACK_COLOR,
                                       ),
                                       maxLines: 1, // 한 줄로 표시되도록 설정함
                                       overflow: TextOverflow.ellipsis, // 넘칠 경우 말줄임표로 처리함
@@ -327,7 +327,7 @@ class WishlistItemsList extends ConsumerWidget {
                                             fontSize: wishlistOriginalPriceFontSize,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'NanumGothic',
-                                            color: Color(0xFF6C6C6C),
+                                            color: GRAY42_COLOR,
                                             decoration: TextDecoration.lineThrough, // 가격에 줄을 긋는 스타일을 적용함
                                           ),
                                         ),
@@ -339,7 +339,7 @@ class WishlistItemsList extends ConsumerWidget {
                                             fontSize: wishlistDiscountPercentFontSize,
                                             fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
                                             fontFamily: 'NanumGothic',
-                                            color: Colors.red, // 빨간색으로 할인율을 강조함
+                                            color: RED46_COLOR, // 빨간색으로 할인율을 강조함
                                           ),
                                         ),
                                       ],
@@ -351,7 +351,7 @@ class WishlistItemsList extends ConsumerWidget {
                                         fontSize: wishlistDiscountPriceFontSize,
                                         fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
                                         fontFamily: 'NanumGothic',
-                                        color: Colors.black,
+                                        color: BLACK_COLOR,
                                       ),
                                     ),
                                   ],
@@ -373,12 +373,12 @@ class WishlistItemsList extends ConsumerWidget {
                                         yesText: '예', // '예' 버튼 텍스트를 설정함
                                         noTextStyle: TextStyle(
                                           fontFamily: 'NanumGothic',
-                                          color: Colors.black, // '아니요' 텍스트 색상을 검정색으로 설정함
+                                          color: BLACK_COLOR, // '아니요' 텍스트 색상을 검정색으로 설정함
                                           fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
                                         yesTextStyle: TextStyle(
                                           fontFamily: 'NanumGothic',
-                                          color: Colors.red, // '예' 텍스트 색상을 빨간색으로 설정함
+                                          color: RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                           fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
                                         // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
@@ -407,7 +407,7 @@ class WishlistItemsList extends ConsumerWidget {
                                     padding: EdgeInsets.symmetric(horizontal: wishlistDeleteBtn1X, vertical: wishlistDeleteBtn1Y), // 버튼의 크기를 패딩으로 설정
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(37), // 버튼을 둥글게 설정함
-                                      side: BorderSide(color: Color(0xFF6F6F6F)), // 테두리 색상을 설정함
+                                      side: BorderSide(color: GRAY44_COLOR), // 테두리 색상을 설정함
                                     ),
                                     backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색 // 버튼 배경색을 앱 배경색과 동일하게 설정함
                                   ),
@@ -417,7 +417,7 @@ class WishlistItemsList extends ConsumerWidget {
                                       fontSize: wishlistDeleteBtnFontSize,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'NanumGothic',
-                                      color: Colors.black, // 버튼 텍스트 색상을 검정색으로 설정함
+                                      color: BLACK_COLOR, // 버튼 텍스트 색상을 검정색으로 설정함
                                     ),
                                   ),
                                 ),
@@ -448,7 +448,7 @@ class WishlistItemsList extends ConsumerWidget {
                 secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
                 fontSize1: errorTextFontSize1, // 폰트1 크기 설정
                 fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                color: Colors.black, // 색상 설정
+                color: BLACK_COLOR, // 색상 설정
                 showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
               ),
             ),

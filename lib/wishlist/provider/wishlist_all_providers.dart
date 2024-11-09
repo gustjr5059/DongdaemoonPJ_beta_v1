@@ -52,7 +52,7 @@ final wishlistItemsLoadFutureProvider = FutureProvider.autoDispose.family<List<M
   }).toList();  // 변환된 데이터를 리스트로 반환함.
 });
 
-// 찜 목록에서 실시간으로 삭제된 항목이 반영되도록 StreamProvider를 통해 데이터를 구독함.
+// 찜 목록에서 실시간으로 삭제된 항목이 반영되도록 StreamProvider를 통해 데이터를 구독함. (찜 목록 화면 내 데이터를 불러오는 로직)
 // 실시간 데이터 업데이트를 위해 wishlistItemLoadStreamProvider는 StreamProvider.autoDispose.family로 선언됨.
 final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, userEmail) {
 

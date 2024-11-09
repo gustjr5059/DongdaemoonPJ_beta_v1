@@ -62,7 +62,7 @@ class OrderItemsNotifier extends StateNotifier<List<ProductContent>> {
 }
 // ------- order_screen.dart - 발주 관련 내용 끝 부분
 
-// ------- Firestore에서 발주 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 시작 부분
+// ------- Firestore에서 요청내역 화면 내 요청내역 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 시작 부분
 class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // OrderlistRepository와 Ref를 저장하는 필드 선언.
   final OrderlistRepository orderlistRepository;
@@ -141,9 +141,9 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     super.dispose();  // 부모 클래스의 dispose 함수 호출.
   }
 }
-// ------- Firestore에서 발주 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 끝 부분
+// ------- Firestore에서 요청내역 화면 내 요청내역 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 끝 부분
 
-// OrderItemsNotifier를 사용하는 StateNotifierProvider.
+// 요청내역을 가져오는 OrderItemsNotifier를 사용하는 StateNotifierProvider.
 // 외부에서 접근할 수 있도록 StateNotifierProvider로 제공함.
 final orderlistItemsProvider = StateNotifierProvider<OrderlistItemsNotifier, List<Map<String, dynamic>>>((ref) {
   // OrderlistRepository를 Provider에서 읽어옴.
@@ -154,7 +154,7 @@ final orderlistItemsProvider = StateNotifierProvider<OrderlistItemsNotifier, Lis
 });
 
 
-// ------ OrderlistDetailItemNotifier 클래스: Firestore와의 상호작용을 통해 발주 내역 상세 내용 상태를 관리하는 StateNotifier 클래스 내용 시작
+// ------ OrderlistDetailItemNotifier 클래스: Firestore와의 상호작용을 통해 요청내역 상세 화면 내 요청내역 상세 내용 상태를 관리하는 StateNotifier 클래스 내용 시작
 class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
   // orderlistRepository 인스턴스를 저장하는 변수임
   final OrderlistRepository orderlistRepository;
@@ -247,9 +247,9 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
     super.dispose();
   }
 }
-// ------ OrderlistDetailItemNotifier 클래스 내용 끝
+// ------ OrderlistDetailItemNotifier 클래스: Firestore와의 상호작용을 통해 요청내역 상세 화면 내 요청내역 상세 내용 상태를 관리하는 StateNotifier 클래스 내용 끝
 
-// 발주 내역 상세 데이터를 제공하는 StateNotifierProvider 설정임
+// 요청 내역 상세 데이터를 제공하는 StateNotifierProvider 설정임
 // Tuple2 사용 이유: family를 사용하면 기존에서 매개변수 1개를 추가 가능한데,
 // 여기에서는 매개변수를 2개를 추가해야하므로 autoDispose.family, Tuple2를 사용함!!
 final orderlistDetailItemProvider = StateNotifierProvider.autoDispose.family<

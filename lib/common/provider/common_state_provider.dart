@@ -3,7 +3,6 @@
 // 효율적으로 관리할 수 있도록 설계되어 있습니다.
 // Riverpod는 Provider 패키지의 기능을 확장하며, 더 유연하고 테스트하기 쉬운 코드를 작성할 수 있게 해 줍니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

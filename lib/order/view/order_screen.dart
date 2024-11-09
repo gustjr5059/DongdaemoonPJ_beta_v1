@@ -316,7 +316,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                                   secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
                                   fontSize1: errorTextFontSize1, // 폰트1 크기 설정
                                   fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                                  color: Colors.black, // 색상 설정
+                                  color: BLACK_COLOR, // 색상 설정
                                   showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
                                 ),
                               ),

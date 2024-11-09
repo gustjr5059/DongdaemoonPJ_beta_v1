@@ -13,32 +13,35 @@ import '../../common/api_key.dart';
 import '../../product/model/product_model.dart'; // API 키 로드 함수가 포함된 파일을 임포트
 
 
-// 발주 관련 화면의 레퍼지토리 클래스
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// ------ 요청내역 관련 화면의 레퍼지토리 클래스인 OrderRepository 내용 시작
 class OrderRepository {
   final FirebaseFirestore firestore; // Firestore 인스턴스를 저장할 필드
 
-  // 생성자에서 Firestore 인스턴스를 받아 초기화합니다.
+  // 생성자에서 Firestore 인스턴스를 받아 초기화.
   OrderRepository({required this.firestore});
 
+  // ------ 이메일을 이용해 사용자 정보를 가져오는 함수 시작 부분
   // 이메일을 이용해 사용자 정보를 가져오는 비동기 함수
   Future<Map<String, dynamic>?> getUserInfoByEmail(String email) async {
     try {
-      print('Fetching user info for email: $email');
+      print('이메일에 대한 사용자 정보 가져오는 중: $email');
       QuerySnapshot querySnapshot = await firestore
           .collection('users')
           .where('email', isEqualTo: email)
           .get(); // Firestore에서 이메일로 사용자 정보 검색
 
       if (querySnapshot.docs.isNotEmpty) {
-        print('User info found for email: $email');
-        return querySnapshot.docs.first.data() as Map<String,
-            dynamic>?; // 사용자 정보 반환
+        print('이메일에 대한 사용자 정보 확인됨: $email');
+        return querySnapshot.docs.first.data() as Map<String, dynamic>?; // 사용자 정보 반환
       } else {
-        print('No user info found for email: $email');
+        print('이메일에 대한 사용자 정보 없음: $email');
         return null; // 사용자 정보가 없을 경우 null 반환
       }
     } catch (e) {
-      print('Error fetching user data: $e'); // 에러 발생 시 에러 메시지 출력
+      print('사용자 데이터 가져오는 중 오류 발생: $e'); // 에러 발생 시 에러 메시지 출력
       return null; // 에러 발생 시 null 반환
     }
   }
@@ -49,18 +52,18 @@ class OrderRepository {
     required Map<String, dynamic> ordererInfo, // 발주자 정보
     required List<ProductContent> productInfo, // 상품 정보 리스트
   }) async {
-    print('Placing order...');
+    print('발주 처리 중...');
     // 현재 로그인한 사용자의 이메일을 가져옴
     final userEmail = FirebaseAuth.instance.currentUser?.email;
     if (userEmail == null) {
-      print('User not logged in');
-      throw Exception('User not logged in');
+      print('사용자가 로그인하지 않았습니다');
+      throw Exception('사용자가 로그인하지 않았습니다');
     }
 
     // 현재 시간을 기반으로 주문 번호를 생성
     final now = DateTime.now(); // 현재 시간을 가져옴
     final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
-    print('Generated order number: $orderNumber');
+    print('생성된 주문 번호: $orderNumber');
 
     // 발주 문서를 생성할 위치를 Firestore에서 지정 (order_number를 문서 ID로 사용)
     final orderDoc = firestore.collection('couture_order_list')
@@ -70,13 +73,13 @@ class OrderRepository {
 
     // 발주자 정보를 Firestore에 저장
     await orderDoc.collection('orderer_info').doc('info').set(ordererInfo);
-    print('Orderer info saved.');
+    print('발주자 정보 저장됨.');
 
     // 발주 데이터를 Firestore에 저장할 때 버튼 상태 필드를 추가.
     await orderDoc.collection('button_info').doc('info').set({
       'private_orderList_closed_button': false // 초기값은 false로 설정
     });
-    print('Button info saved.');
+    print('버튼 정보 저장됨.');
 
     // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var i = 0; i < productInfo.length; i++) {
@@ -96,7 +99,7 @@ class OrderRepository {
         'selected_color_text': item.selectedColorText, // 선택한 색상 텍스트
         'selected_size': item.selectedSize, // 선택한 사이즈
       });
-      print('Product info saved for product ID: ${item.docId}');
+      print('상품 정보 저장됨 - 상품 ID: ${item.docId}');
     }
 
     // number_info 컬렉션에 order_number와 order_date 추가
@@ -104,7 +107,7 @@ class OrderRepository {
       'order_number': orderNumber, // 주문 번호 저장
       'order_date': now, // 주문 날짜 저장
     });
-    print('Number info saved.');
+    print('주문 번호 정보 저장됨.');
 
     // 이메일로 발주 데이터 전송할 때, Firestore에 주문 정보를 저장하는 로직
     await firestore.collection('couture_order_list')
@@ -120,15 +123,15 @@ class OrderRepository {
       },
       'private_orderList_closed_button': false,
     });
-    print('Order data saved to Firestore.');
+    print('발주 데이터 Firestore에 저장됨.');
 
     return orderNumber; // orderId 대신 orderNumber 반환
   }
 
-  // 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수
+  // ------ 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수 시작 부분
   // 발주 데이터를 가져오는 함수
   Future<Map<String, dynamic>> fetchOrderData(String userEmail, String orderNumber) async {
-    print('Fetching order data for email: $userEmail and order number: $orderNumber');
+    print('발주 데이터 가져오는 중 - 이메일: $userEmail, 주문 번호: $orderNumber');
     // 발주 문서를 Firestore에서 가져옴
     final orderDoc = firestore.collection('couture_order_list')
         .doc(userEmail)
@@ -142,8 +145,8 @@ class OrderRepository {
 
     // 정보 문서가 존재하지 않으면 예외를 발생시킴
     if (!ordererInfoDoc.exists || !numberInfoDoc.exists) {
-      print('Order not found for email: $userEmail and order number: $orderNumber');
-      throw Exception('Order not found');
+      print('주문 데이터 없음 - 이메일: $userEmail, 주문 번호: $orderNumber');
+      throw Exception('주문 데이터 없음');
     }
 
     // 상품 정보를 리스트로 변환
@@ -156,12 +159,11 @@ class OrderRepository {
       'productInfo': productInfo, // 상품 정보 리스트
     };
 
-    print('Successfully fetched order data.');
+    print('발주 데이터 성공적으로 가져옴.');
     return orderData;
   }
 }
-// 발주 관련 화면의 레퍼지토리 내용 끝
-
+// ------ 요청내역 관련 화면의 레퍼지토리 클래스인 OrderRepository 내용 끝
 
 // ------ 발주내역 화면 내 데이터 불러오는 OrderlistRepository 클래스 내용 시작 부분
 class OrderlistRepository {

@@ -60,6 +60,10 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
     final double referenceHeight = 852.0;
 
     final double interval1X = screenSize.width * (250 / referenceWidht);
+    final double interval2X = screenSize.width * (20 / referenceWidht);
+    final double interval1Y = screenSize.height * (40 / referenceHeight);
+    final double interval2Y = screenSize.height * (54 / referenceHeight);
+    final double pageTextFontSize = screenSize.height * (16 / referenceHeight);
 
     return Scaffold(
       backgroundColor: Colors.black, // 배경색을 검은색으로 설정
@@ -85,7 +89,7 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
                     width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
                     errorBuilder: (context, error, stackTrace) => Icon( // 이미지 로드 실패 시 아이콘 표시
                       Icons.image_not_supported,
-                      color: Colors.white, // 아이콘 색상을 흰색으로 설정
+                      color: WHITE_COLOR, // 아이콘 색상을 흰색으로 설정
                       size: interval1X, // 아이콘 크기 설정
                     ),
                   ),
@@ -94,24 +98,28 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
             ],
           ),
           Positioned(
-            top: 40, // 위쪽에서 40픽셀 아래에 위치
-            right: 20, // 오른쪽에서 20픽셀 안쪽에 위치
+            top: interval1Y, // 위쪽에서 40픽셀 아래에 위치
+            right: interval2X, // 오른쪽에서 20픽셀 안쪽에 위치
             child: IconButton(
               icon: Icon(Icons.close), // 닫기 아이콘 설정
-              color: INPUT_BG_COLOR, // 색상 설정
+              color: GRAY98_COLOR, // 색상 설정
               onPressed: () {
                 Navigator.pop(context); // 누르면 이전 화면으로 돌아가기
               },
             ),
           ),
           Positioned(
-            top: 52, // 위쪽에서 52픽셀 아래에 위치
+            top: interval2Y, // 위쪽에서 52픽셀 아래에 위치
             left: 0, // 왼쪽에 위치
             right: 0, // 오른쪽에 위치
             child: Center(
               child: Text(
                 '${pageIndex + 1} / ${widget.images.length}', // 현재 페이지와 전체 페이지 수 표시
-                style: TextStyle(color: INPUT_BG_COLOR, fontSize: 16), // 색상과 크기 설정
+                style: TextStyle(
+                    color: GRAY98_COLOR,
+                    fontSize: pageTextFontSize,
+                    fontFamily: 'NanumGothic',
+                ), // 색상과 크기 설정
               ),
             ),
           ),

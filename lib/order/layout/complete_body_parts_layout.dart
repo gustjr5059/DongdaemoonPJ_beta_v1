@@ -76,7 +76,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireCompleteTitleFontSize,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: updateRequireCompleteInfo1Y), // 간격
@@ -86,7 +86,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireCompleteSubTitleFontSize,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: updateRequireCompleteInfo2Y), // 간격
@@ -95,119 +95,13 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
               _buildInfoRow(context, '요청 일자', orderDate),
               _buildInfoRow(context, '요청자 성함', customerName),
               SizedBox(height: updateRequireCompleteInfo2Y), // 간격
-              // ...orderItems.map((product) {
-              //   final int originalPrice = product.originalPrice?.round() ?? 0;
-              //   final int discountPrice = product.discountPrice?.round() ?? 0;
-              //   return Padding(
-              //     padding: const EdgeInsets.only(bottom: 16.0),
-              //     child: CommonCardView(
-              //       content: Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           Text(
-              //             product.briefIntroduction ?? '',
-              //             style: TextStyle(
-              //               fontSize: 18,
-              //               fontWeight: FontWeight.bold,
-              //             ),
-              //           ),
-              //           SizedBox(height: 8),
-              //           Row(
-              //             children: [
-              //               if (product.thumbnail != null)
-              //                 Image.network(
-              //                   product.thumbnail!,
-              //                   height: 130,
-              //                   width: 130,
-              //                   fit: BoxFit.cover,
-              //                 ),
-              //               SizedBox(width: 8),
-              //               Column(
-              //                 crossAxisAlignment: CrossAxisAlignment.start,
-              //                 children: [
-              //                   if (product.productNumber != null)
-              //                     Padding(
-              //                       padding: const EdgeInsets.only(bottom: 4.0),
-              //                       child: Text(
-              //                         '상품번호: ${product.productNumber}',
-              //                         style: TextStyle(
-              //                           fontSize: 14,
-              //                           fontWeight: FontWeight.bold,
-              //                         ),
-              //                       ),
-              //                     ),
-              //                   Text(
-              //                     '${numberFormat.format(originalPrice)}원',
-              //                     style: TextStyle(
-              //                       fontSize: 14,
-              //                       color: Colors.grey[500],
-              //                       decoration: TextDecoration.lineThrough,
-              //                     ),
-              //                   ),
-              //                   Row(
-              //                     children: [
-              //                       Text(
-              //                         '${numberFormat.format(discountPrice)}원',
-              //                         style: TextStyle(
-              //                           fontSize: 18,
-              //                           fontWeight: FontWeight.bold,
-              //                         ),
-              //                       ),
-              //                       SizedBox(width: 8),
-              //                       Text(
-              //                         '${product.discountPercent?.round() ?? 0}%',
-              //                         style: TextStyle(
-              //                           fontSize: 18,
-              //                           color: Colors.red,
-              //                           fontWeight: FontWeight.bold,
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                   SizedBox(height: 8),
-              //                   Row(
-              //                     children: [
-              //                       if (product.selectedColorImage != null)
-              //                         Image.network(
-              //                           product.selectedColorImage!,
-              //                           height: 20,
-              //                           width: 20,
-              //                           fit: BoxFit.cover,
-              //                         ),
-              //                       SizedBox(width: 8),
-              //                       Text(
-              //                         product.selectedColorText ?? '',
-              //                         style: TextStyle(fontSize: 18),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                   SizedBox(height: 5),
-              //                   Padding(
-              //                     padding: const EdgeInsets.only(left: 30.0),
-              //                     child: Text(
-              //                       product.selectedSize ?? '',
-              //                       style: TextStyle(fontSize: 18),
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ],
-              //           ),
-              //         ],
-              //       ),
-              //       backgroundColor: BEIGE_COLOR,
-              //       elevation: 2,
-              //       padding: const EdgeInsets.all(8),
-              //     ),
-              //   );
-              // }).toList(),
               Text(
                 "품목별로 유통사 재고 확인 후 별도 안내 예정입니다.", // 설명 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize1,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: updateRequireCompleteInfo3Y),
@@ -217,7 +111,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize1,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: updateRequireCompleteInfo1Y),
@@ -227,7 +121,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize2,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               Text(
@@ -236,7 +130,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize2,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: combackHomeBtn2Y),
@@ -250,9 +144,9 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Color(0xFF6FAD96), // 버튼 텍스트 색상
-                    backgroundColor: Color(0xFF6FAD96), // 버튼 배경 색상
-                    side: BorderSide(color: Color(0xFF6FAD96),), // 버튼 테두리 색상
+                    foregroundColor: SOFTGREEN60_COLOR, // 버튼 텍스트 색상
+                    backgroundColor: SOFTGREEN60_COLOR, // 버튼 배경 색상
+                    side: BorderSide(color: SOFTGREEN60_COLOR,), // 버튼 테두리 색상
                     padding: EdgeInsets.symmetric(vertical: combackHomeBtn1X, horizontal: combackHomeBtn1Y), // 버튼 패딩
                   ),
                   child: Text('홈으로 이동',
@@ -307,7 +201,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
             Container(
               height: updateRequireCompleteInfoTextPartHeight,
               width: updateRequireCompleteInfoTextPartWidth,
-              color: Color(0xFFF2F2F2), // 배경 색상 설정
+              color: GRAY96_COLOR, // 배경 색상 설정
               alignment: Alignment.center,
               child: Text(
                 label,
@@ -315,14 +209,14 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireCompleteInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),  // 텍스트 스타일 설정
               ),
             ),
             SizedBox(width: updateRequireCompleteInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 padding: EdgeInsets.only(left: updateRequireCompleteInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
@@ -330,7 +224,7 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: updateRequireCompleteInfoDataFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ), // 값 표시
               ),

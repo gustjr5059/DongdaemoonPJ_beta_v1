@@ -148,7 +148,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
             child: Text(
               '확인',
               style: TextStyle(
-                color: Color(0xFF6FAD96),
+                color: SOFTGREEN60_COLOR,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'NanumGothic',
               ),
@@ -315,7 +315,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
           fontSize1: errorTextFontSize1, // 폰트1 크기 설정
           fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-          color: Colors.black, // 색상 설정
+          color: BLACK_COLOR, // 색상 설정
           showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
         ),
       ),

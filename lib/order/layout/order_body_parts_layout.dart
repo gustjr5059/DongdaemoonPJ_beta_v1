@@ -86,7 +86,7 @@ class UserInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: ordererInfoTitleFontSize,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: ordererInfo1Y),
@@ -102,7 +102,7 @@ class UserInfoWidget extends ConsumerWidget {
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize1,
-                  color: Color(0xFF585858),
+                  color: GRAY35_COLOR,
                   fontWeight: FontWeight.bold, // 텍스트 색상을 회색으로 설정
                 ),
               ),
@@ -113,7 +113,7 @@ class UserInfoWidget extends ConsumerWidget {
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireNoticeFontSize2, // 텍스트 크기 12
-                  color: Color(0xFF585858),
+                  color: GRAY35_COLOR,
                 ),
               ),
             ],
@@ -129,7 +129,7 @@ class UserInfoWidget extends ConsumerWidget {
           secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
           fontSize1: errorTextFontSize1, // 폰트1 크기 설정
           fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-          color: Colors.black, // 색상 설정
+          color: BLACK_COLOR, // 색상 설정
           showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
         ),
       ),
@@ -174,7 +174,7 @@ class UserInfoWidget extends ConsumerWidget {
               height: ordererInfoTextPartHeight,
               width: ordererInfoTextPartWidth,
               // 라벨 셀의 너비 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // color: Colors.green,
               // 배경 색상 설정
               alignment: Alignment.center,
@@ -185,14 +185,14 @@ class UserInfoWidget extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'NanumGothic',
                     fontSize: ordererInfoTextFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
               ),
             ),
             SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
               // color: Colors.red, // 배경 색상 설정
                 padding: EdgeInsets.only(left: ordererInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
@@ -200,7 +200,7 @@ class UserInfoWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: ordererInfoDataFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ), // 값 표시
               ),
@@ -264,7 +264,7 @@ class UpdateInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: updateInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
           ),
           SizedBox(height: updateInfo1Y),
@@ -274,7 +274,7 @@ class UpdateInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: updateRequireNoticeFontSize1,
               // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
           ),
           SizedBox(height: updateInfo2Y),
@@ -284,7 +284,7 @@ class UpdateInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: updateRequireNoticeFontSize1,
               // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
           ),
           SizedBox(height: updateInfo2Y),
@@ -294,7 +294,7 @@ class UpdateInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: updateRequireNoticeFontSize1,
               // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
           ),
           SizedBox(height: updateInfo3Y),
@@ -307,7 +307,7 @@ class UpdateInfoWidget extends StatelessWidget {
                 fontFamily: 'NanumGothic',
                 fontWeight: FontWeight.normal,
                 fontSize: guidelineText1FontSize,
-                color: Colors.black, // 텍스트 색상을 검정으로 설정
+                color: BLACK_COLOR, // 텍스트 색상을 검정으로 설정
               ),
             ),
           ),
@@ -335,9 +335,9 @@ class UpdateInfoWidget extends StatelessWidget {
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   fontSize: guidelineText2FontSize,
-                  color: Colors.blue, // 텍스트 색상을 파란색으로 설정
+                  color: BLUE49_COLOR, // 텍스트 색상을 파란색으로 설정
                   decoration: TextDecoration.underline, // 밑줄 추가하여 링크처럼 보이게
-                  decorationColor: Colors.blue, // 밑줄 색상도 파란색으로 설정
+                  decorationColor: BLUE49_COLOR, // 밑줄 색상도 파란색으로 설정
                   decorationStyle: TextDecorationStyle.solid, // 밑줄 스타일 설정
                 ),
               ),
@@ -386,9 +386,9 @@ class UpdateOrderButton extends ConsumerWidget {
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              foregroundColor: Color(0xFF6FAD96), // 버튼 텍스트 색상 설정
-              backgroundColor: Color(0xFF6FAD96),  // 버튼 배경 색상 설정
-              side: BorderSide(color: Color(0xFF6FAD96),), // 버튼 테두리 색상 설정
+              foregroundColor: SOFTGREEN60_COLOR, // 버튼 텍스트 색상 설정
+              backgroundColor: SOFTGREEN60_COLOR,  // 버튼 배경 색상 설정
+              side: BorderSide(color: SOFTGREEN60_COLOR,), // 버튼 테두리 색상 설정
               padding: EdgeInsets.symmetric(vertical: updateRequireBtn1X, horizontal: updateRequireBtn2Y), // 패딩을 늘려 버튼 크기를 조정
             ),
             onPressed: () async {
@@ -403,12 +403,12 @@ class UpdateOrderButton extends ConsumerWidget {
                   yesText: '예', // 예 버튼 텍스트 설정
                   noTextStyle: TextStyle(
                     fontFamily: 'NanumGothic',
-                    color: Colors.black, // 아니요 버튼 텍스트 색상 설정
+                    color: BLACK_COLOR, // 아니요 버튼 텍스트 색상 설정
                     fontWeight: FontWeight.bold, // 아니요 버튼 텍스트 굵기 설정
                   ),
                   yesTextStyle: TextStyle(
                     fontFamily: 'NanumGothic',
-                    color: Colors.red, // 예 버튼 텍스트 색상 설정
+                    color: RED46_COLOR, // 예 버튼 텍스트 색상 설정
                     fontWeight: FontWeight.bold, // 예 버튼 텍스트 굵기 설정
                   ),
                   onYesPressed: () async {
@@ -511,27 +511,6 @@ class OrderListItemWidget extends ConsumerWidget {
     final double interval1X = screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
-
-    // // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
-    // if (order == null || order!.isEmpty) {
-    //   return Center( // Center 위젯을 추가하여 컨테이너가 화면 중앙에 배치되도록 함
-    //     child: Container(
-    //       width: orderlistEmptyTextWidth,
-    //       height: orderlistEmptyTextHeight,
-    //       margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
-    //       child: Text(
-    //         '발주 내역이 없습니다.',
-    //         style: TextStyle(
-    //           fontSize: orderlistEmptyTextFontSize,
-    //           fontFamily: 'NanumGothic',
-    //           fontWeight: FontWeight.bold,
-    //           color: Colors.black,
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
-
     // 날짜 포맷을 지정.
     final dateFormat = DateFormat('yyyy-MM-dd');
     // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
@@ -546,9 +525,9 @@ class OrderListItemWidget extends ConsumerWidget {
       child: Container(
         width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
         height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
-        color: Color(0xFFF3F3F3), // 배경색 설정
+        color: GRAY97_COLOR, // 배경색 설정
         child: CommonCardView( // 공통 카드뷰 위젯 사용
-          backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+          backgroundColor: GRAY97_COLOR, // 배경색 설정
           elevation: 0, // 그림자 깊이 설정
           content: Padding( // 패딩 설정
             padding: EdgeInsets.symmetric(vertical: orderlistInfoCardViewPadding1Y, horizontal: orderlistInfoCardViewPaddingX), // 상하 좌우 패딩 설정
@@ -563,7 +542,7 @@ class OrderListItemWidget extends ConsumerWidget {
                     fontSize: orderlistInfoOrderDateDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Colors.black, // 텍스트 색상 설정
+                    color: BLACK_COLOR, // 텍스트 색상 설정
                   ),
                 ),
                 // 여백을 추가.
@@ -575,7 +554,7 @@ class OrderListItemWidget extends ConsumerWidget {
                     fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Color(0xFF676767), // 텍스트 색상 설정
+                    color: GRAY41_COLOR, // 텍스트 색상 설정
                   ),
                 ),
                 // 여백을 추가.
@@ -598,8 +577,8 @@ class OrderListItemWidget extends ConsumerWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                            foregroundColor: Color(0xFF6FAD96), // 버튼의 글자 색상을 설정함
-                            backgroundColor: Color(0xFF6FAD96), // 버튼의 배경 색상을 설정함
+                            foregroundColor: SOFTGREEN60_COLOR, // 버튼의 글자 색상을 설정함
+                            backgroundColor: SOFTGREEN60_COLOR, // 버튼의 배경 색상을 설정함
                             padding: EdgeInsets.symmetric(vertical: orderlistInfoDetailViewBtnPaddingY, horizontal: orderlistInfoDetailViewBtnPaddingX), // 패딩 설정
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -611,7 +590,7 @@ class OrderListItemWidget extends ConsumerWidget {
                               fontSize: orderlistInfoDetailViewBtnFontSize, // 텍스트 크기 설정
                               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                               fontFamily: 'NanumGothic', // 글꼴 설정
-                              color: Colors.white, // 텍스트 색상 설정
+                              color: WHITE_COLOR, // 텍스트 색상 설정
                             ),
                           ),
                         ),
@@ -631,11 +610,11 @@ class OrderListItemWidget extends ConsumerWidget {
                                 noText: '아니요', // '아니요' 버튼의 텍스트를 설정함
                                 yesText: '예', // '예' 버튼의 텍스트를 설정함
                                 noTextStyle: TextStyle( // '아니요' 버튼의 텍스트 스타일을 설정함
-                                  color: Colors.black, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
+                                  color: BLACK_COLOR, // '아니요' 버튼의 글자 색상을 검정색으로 설정함
                                   fontWeight: FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
                                 ),
                                 yesTextStyle: TextStyle( // '예' 버튼의 텍스트 스타일을 설정함
-                                  color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
+                                  color: RED46_COLOR, // '예' 버튼의 글자 색상을 빨간색으로 설정함
                                   fontWeight: FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
                                 ),
                                 onYesPressed: () async { // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
@@ -654,9 +633,9 @@ class OrderListItemWidget extends ConsumerWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom( // 두 번째 버튼의 스타일을 설정함
-                            foregroundColor: Color(0xFF6FAD96), // 두 번째 버튼의 글자 색상을 설정함
+                            foregroundColor: SOFTGREEN60_COLOR, // 두 번째 버튼의 글자 색상을 설정함
                             backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                            side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                            side: BorderSide(color: SOFTGREEN60_COLOR), // 버튼 테두리 색상 설정
                             padding: EdgeInsets.symmetric(vertical: deleteBtnPaddingY, horizontal: deleteBtnPaddingX), // 패딩 설정
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -668,7 +647,7 @@ class OrderListItemWidget extends ConsumerWidget {
                             fontSize: deleteBtnFontSize, // 텍스트 크기 설정
                             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                             fontFamily: 'NanumGothic', // 글꼴 설정
-                            color: Color(0xFF6FAD96), // 텍스트 색상 설정
+                            color: SOFTGREEN60_COLOR, // 텍스트 색상 설정
                           ),
                         ),
                       ),
@@ -802,9 +781,9 @@ class _OrderListDetailItemWidgetState
             child: Container(
               width: orderlistDtInfo1CardViewWidth, // 카드뷰 가로 크기 설정
               height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
-              color: Color(0xFFF3F3F3), // 배경색 설정
+              color: GRAY97_COLOR, // 배경색 설정
               child: CommonCardView( // 공통 카드뷰 위젯 사용
-                backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                backgroundColor: GRAY97_COLOR, // 배경색 설정
                 elevation: 0, // 그림자 깊이 설정
                 content: Padding( // 패딩 설정
                   padding: EdgeInsets.symmetric(vertical: orderlistDtInfoCardViewPadding1Y, horizontal: orderlistDtInfoCardViewPaddingX), // 상하 좌우 패딩 설정
@@ -819,7 +798,7 @@ class _OrderListDetailItemWidgetState
                       fontSize: orderlistDtInfoOrderDateDataFontSize, // 텍스트 크기 설정
                       fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic', // 글꼴 설정
-                      color: Colors.black, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
                     ),
                     // 여백을 추가.
@@ -831,7 +810,7 @@ class _OrderListDetailItemWidgetState
                         fontSize: orderlistDtInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                         fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                         fontFamily: 'NanumGothic', // 글꼴 설정
-                        color: Color(0xFF676767), // 텍스트 색상 설정
+                        color: GRAY41_COLOR, // 텍스트 색상 설정
                       ),
                      ),
                     ],
@@ -849,9 +828,9 @@ class _OrderListDetailItemWidgetState
               child: Container(
                 // width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
                 // height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
-                color: Color(0xFFF3F3F3), // 배경색 설정
+                color: GRAY97_COLOR, // 배경색 설정
                 child: CommonCardView(
-                  backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                  backgroundColor: GRAY97_COLOR, // 배경색 설정
                   elevation: 0, // 그림자 깊이 설정
                   content: Padding(
                     padding: EdgeInsets.zero, // 패딩을 없앰
@@ -884,9 +863,9 @@ class _OrderListDetailItemWidgetState
                           child: Container(
                             // width: orderlistDtInfo3CardViewWidth, // 카드뷰 가로 크기 설정
                             // height: orderlistDtInfo3CardViewHeight, // 카드뷰 세로 크기 설정
-                            color: Color(0xFFF3F3F3), // 배경색 설정
+                            color: GRAY97_COLOR, // 배경색 설정
                             child: CommonCardView(
-                              backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+                              backgroundColor: GRAY97_COLOR, // 배경색 설정
                               elevation: 0, // 그림자 깊이 설정
                               content: Padding(
                                 padding: EdgeInsets.zero, // 패딩을 없앰
@@ -942,7 +921,7 @@ class _OrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize: orderlistDtInfoOriginalPriceDataFontSize,
                                                   fontFamily: 'NanumGothic',
-                                                  color: Color(0xFF999999),
+                                                  color: GRAY60_COLOR,
                                                   decoration: TextDecoration.lineThrough,
                                                 ),
                                               ),
@@ -954,7 +933,7 @@ class _OrderListDetailItemWidgetState
                                                       fontSize: orderlistDtInfoDiscountPriceDataFontSize,
                                                       fontFamily: 'NanumGothic',
                                                       fontWeight: FontWeight.bold,
-                                                      color: Colors.black,
+                                                      color: BLACK_COLOR,
                                                     ),
                                                   ),
                                                   // SizedBox(width: interval2X),
@@ -1001,7 +980,7 @@ class _OrderListDetailItemWidgetState
                                                       fontSize: orderlistDtInfoColorTextDataFontSize,
                                                       fontFamily: 'NanumGothic',
                                                       fontWeight: FontWeight.bold,
-                                                      color: Colors.black,
+                                                      color: BLACK_COLOR,
                                                     ),
                                                   ),
                                                 ],
@@ -1014,7 +993,7 @@ class _OrderListDetailItemWidgetState
                                                   fontSize: orderlistDtInfoSizeTextDataFontSize,
                                                   fontFamily: 'NanumGothic',
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
+                                                  color: BLACK_COLOR,
                                                 ),
                                               ),
                                             ],

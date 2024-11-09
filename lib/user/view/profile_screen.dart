@@ -389,7 +389,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.normal,
                                   fontSize: guideTextFontSize,
-                                  color: Colors.black, // 검은색 텍스트
+                                  color: BLACK_COLOR, // 검은색 텍스트
                                   decoration: TextDecoration.underline, // 밑줄 추가
                                 ),
                               ),

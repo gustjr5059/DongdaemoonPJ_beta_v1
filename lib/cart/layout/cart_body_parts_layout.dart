@@ -166,7 +166,7 @@ class CartItemsList extends ConsumerWidget {
             height: cartlistCardViewHeight, // CommonCardView의 높이를 설정함
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFFDADADA), width: 5.0), // 하단 테두리 색상을 설정함
+                bottom: BorderSide(color: GRAY85_COLOR, width: 5.0), // 하단 테두리 색상을 설정함
               ),
             ),
             child: CommonCardView(
@@ -180,7 +180,7 @@ class CartItemsList extends ConsumerWidget {
                         child: Checkbox(
                           // 체크박스의 체크 여부를 cartItem의 bool_checked 값으로 설정함
                           value: cartItem['bool_checked'] ?? false,
-                          activeColor: Color(0xFF6FAD96),
+                          activeColor: SOFTGREEN60_COLOR,
                           // 체크박스 상태 변경 시 cartItemsProvider의 상태를 업데이트함
                           onChanged: (bool? value) {
                             ref.read(cartItemsProvider.notifier)
@@ -207,12 +207,12 @@ class CartItemsList extends ConsumerWidget {
                                 yesText: '예', // '예' 버튼 텍스트를 설정함
                                 noTextStyle: TextStyle(
                                   fontFamily: 'NanumGothic',
-                                  color: Colors.black, // '아니요' 텍스트 색상을 검정색으로 설정함
+                                  color: BLACK_COLOR, // '아니요' 텍스트 색상을 검정색으로 설정함
                                   fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                 ),
                                 yesTextStyle: TextStyle(
                                   fontFamily: 'NanumGothic',
-                                  color: Colors.red, // '예' 텍스트 색상을 빨간색으로 설정함
+                                  color: RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                   fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                 ),
                                 // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
@@ -239,7 +239,7 @@ class CartItemsList extends ConsumerWidget {
                             padding: EdgeInsets.symmetric(horizontal: cartlistDeleteBtn1X, vertical: cartlistDeleteBtn1Y), // 버튼의 크기를 패딩으로 설정함
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(35), // 버튼을 둥글게 설정함
-                              side: BorderSide(color: Color(0xFFA5A5A5)),
+                              side: BorderSide(color: GRAY65_COLOR),
                             ),
                             backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색 // 버튼 배경색을 앱 배경색과 동일하게 설정함
                           ),
@@ -249,7 +249,7 @@ class CartItemsList extends ConsumerWidget {
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'NanumGothic',
                                 fontSize: cartlistDeleteBtnFontSize,
-                                color: Color(0xFF666666),
+                                color: GRAY40_COLOR,
                               )
                           ),
                         ),
@@ -265,7 +265,7 @@ class CartItemsList extends ConsumerWidget {
                         fontSize: cartlistBriefIntroductionFontSize,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'NanumGothic',
-                        color: Colors.black,
+                        color: BLACK_COLOR,
                       ),
                       maxLines: 1, // 한 줄로 표시되도록 설정함
                       overflow: TextOverflow.ellipsis, // 넘칠 경우 말줄임표로 처리함
@@ -288,7 +288,7 @@ class CartItemsList extends ConsumerWidget {
                                     fontSize: cartlistProductNumberFontSize,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'NanumGothic',
-                                    color: Colors.black,
+                                    color: BLACK_COLOR,
                                   ),
                                 ),
                               ),
@@ -303,14 +303,14 @@ class CartItemsList extends ConsumerWidget {
                                   cartItem['thumbnails']!,
                                   errorBuilder: (context, error, stackTrace) => Icon(
                                     Icons.image_not_supported, // 이미지 로드 실패 시 아이콘 표시
-                                    color: Colors.grey.shade300,
+                                    color: GRAY88_COLOR,
                                     size: interval1X,
                                   ),
                                 ),
                               )
                                   : Icon(
                                 Icons.image_not_supported, // 썸네일 데이터가 없을 경우 아이콘 표시
-                                color: Colors.grey.shade300,
+                                color: GRAY88_COLOR,
                                 size: interval1X,
                               ),
                             ),
@@ -329,7 +329,7 @@ class CartItemsList extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: cartlistOriginalPriceFontSize,
                                 fontFamily: 'NanumGothic',
-                                color: Color(0xFF999999),
+                                color: GRAY60_COLOR,
                                 decoration: TextDecoration.lineThrough,
                               ),
                             ),
@@ -342,7 +342,7 @@ class CartItemsList extends ConsumerWidget {
                                     fontSize: cartlistDiscountPriceFontSize,
                                     fontFamily: 'NanumGothic',
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    color: BLACK_COLOR,
                                   ),
                                 ),
                                 SizedBox(width: cartlist2X),
@@ -352,7 +352,7 @@ class CartItemsList extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: cartlistDiscountPercentFontSize,
                                     fontFamily: 'NanumGothic',
-                                    color: Colors.red,
+                                    color: RED46_COLOR,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -377,7 +377,7 @@ class CartItemsList extends ConsumerWidget {
                                     fontSize: cartlistSelectedColorTextFontSize,
                                     fontFamily: 'NanumGothic',
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    color: BLACK_COLOR,
                                   ),
                                 ),
                               ],
@@ -392,7 +392,7 @@ class CartItemsList extends ConsumerWidget {
                                   fontSize: cartlistSelectedSizeTextFontSize,
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: BLACK_COLOR,
                                 ),
                               ),
                             ),

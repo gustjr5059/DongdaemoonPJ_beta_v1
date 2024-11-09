@@ -5,6 +5,7 @@ import 'dart:async';
 // 이 패키지는 이미지 로딩 속도를 개선하고 데이터 사용을 최적화합니다.
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:flutter/cupertino.dart';
 
 // Flutter의 기본 디자인과 인터페이스 요소들을 사용하기 위한 Material 디자인 패키지를 임포트합니다.
@@ -139,7 +140,7 @@ class BannerImageClass extends StatelessWidget {
               fontSize1: errorTextFontSize1, // 폰트1 크기 설정
               fontSize2: errorTextFontSize2, // 폰트2 크기 설정
               showSecondMessage: false, // 두 번째 메시지 표시 여부
-              color: Colors.black, // 색상 설정 // 에러 메시지 색상
+              color: BLACK_COLOR, // 색상 설정 // 에러 메시지 색상
             ),
           ),
         ) : Container(
@@ -152,7 +153,7 @@ class BannerImageClass extends StatelessWidget {
               fontSize1: errorTextFontSize1, // 폰트1 크기 설정
               fontSize2: errorTextFontSize2, // 폰트2 크기 설정
               showSecondMessage: false, // 두 번째 메시지 표시 여부
-              color: Colors.black, // 색상 설정 // 에러 메시지 색상
+              color: BLACK_COLOR, // 색상 설정 // 에러 메시지 색상
             ),
         );
     }
@@ -196,79 +197,83 @@ Widget buildBannerPageView({
 
 // ------ 공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 - 모든 배너를 해당 위젯을 재사용하여 데이터만 다르게 교체하여 사용(모델, 레퍼지토리, 프로바이더만 다르게 변경하여..)
 Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
-  required BuildContext context,
-  required WidgetRef ref,
-  required StateProvider<int> currentPageProvider,
-  required PageController pageController,
-  required BannerAutoScrollClass bannerAutoScroll,
+  required BuildContext context, // 빌드 컨텍스트
+  required WidgetRef ref, // 위젯 참조
+  required StateProvider<int> currentPageProvider, // 현재 페이지 상태 제공자
+  required PageController pageController, // 페이지 컨트롤러
+  required BannerAutoScrollClass bannerAutoScroll, // 배너 자동 스크롤 클래스
   // required List<String> bannerLinks,
-  required FutureProvider<List<T>> bannerImagesProvider,
-  required void Function(BuildContext, int) onPageTap, // 콜백 함수의 반환 타입을 void로 변경
-  required double width,  // 배너의 너비
-  required double height, // 배너의 높이
-  required double borderRadius, // 모서리 반경
+  required FutureProvider<List<T>> bannerImagesProvider, // 배너 이미지 제공자
+  required void Function(BuildContext, int) onPageTap, // 페이지 클릭 시 콜백 함수, 반환 타입은 void
+  required double width,  // 배너 너비
+  required double height, // 배너 높이
+  required double borderRadius, // 배너 모서리 반경
 }) {
-  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  // MediaQuery로 화면 크기를 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
   // 기준 화면 크기: 가로 393, 세로 852
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  // 비율을 기반으로 동적으로 크기와 위치 설정
+  // 비율을 기준으로 배너 페이지 뷰 인디케이터 크기와 위치 설정
   final double commonBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
   final double commonBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
-  final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X
-  final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y
+  final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X 위치
+  final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y 위치
 
-  // 에러 관련 텍스트 수치
-  final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-  final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+  // 에러 메시지 텍스트 크기 설정
+  final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
+  final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
 
+  // 배너 이미지를 비동기로 가져옴
   final asyncBannerImages = ref.watch(bannerImagesProvider);
 
   return asyncBannerImages.when(
+    // 데이터가 로드되었을 때 UI 렌더링
     data: (List<T> commonBannerImages) {
-      bannerAutoScroll.itemCount = commonBannerImages.length;
-      bannerAutoScroll.startAutoScroll();
+      bannerAutoScroll.itemCount = commonBannerImages.length; // 자동 스크롤 항목 개수 설정
+      bannerAutoScroll.startAutoScroll(); // 자동 스크롤 시작
 
       return Stack(
         children: [
+          // 배너 페이지 뷰 생성
           buildBannerPageView(
-            ref: ref,
-            pageController: pageController,
-            itemCount: commonBannerImages.length,
+            ref: ref, // 위젯 참조 전달
+            pageController: pageController, // 페이지 컨트롤러 전달
+            itemCount: commonBannerImages.length, // 항목 개수 설정
             itemBuilder: (context, index) => GestureDetector(
               onTap: () {
-                onPageTap(context, index); // 콜백 함수 호출
+                onPageTap(context, index); // 클릭 시 콜백 함수 호출
               },
               child: BannerImageClass(
-                  imageUrl: commonBannerImages[index].imageUrl,
+                imageUrl: commonBannerImages[index].imageUrl, // 배너 이미지 URL 설정
               ),
             ),
-            currentPageProvider: currentPageProvider,
-            context: context,
-            width: width, // 배너의 너비 전달
-            height: height, // 배너의 높이 전달
-            borderRadius: borderRadius, // 모서리 반경 전달
+            currentPageProvider: currentPageProvider, // 현재 페이지 상태 제공자 설정
+            context: context, // 빌드 컨텍스트 설정
+            width: width, // 배너 너비 설정
+            height: height, // 배너 높이 설정
+            borderRadius: borderRadius, // 배너 모서리 반경 설정
           ),
+          // 페이지 인디케이터 위치 설정
           Positioned(
-            right: commonBannerViewPageIndicatorX,
-            bottom: commonBannerViewPageIndicatorY,
+            right: commonBannerViewPageIndicatorX, // X 위치 설정
+            bottom: commonBannerViewPageIndicatorY, // Y 위치 설정
             child: Consumer(
               builder: (context, ref, child) {
-                final currentPage = ref.watch(currentPageProvider);
+                final currentPage = ref.watch(currentPageProvider); // 현재 페이지 번호 감시
                 return Container(
-                  width: commonBannerViewPageIndicatorWidth, // 페이지 번호 너비 설정
-                  height: commonBannerViewPageIndicatorHeight, // 페이지 번호 높이 설정
-                  alignment: Alignment.center, // 중앙 정렬
+                  width: commonBannerViewPageIndicatorWidth, // 인디케이터 너비 설정
+                  height: commonBannerViewPageIndicatorHeight, // 인디케이터 높이 설정
+                  alignment: Alignment.center, // 중앙 정렬 설정
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.black.withOpacity(0.5), // 배경색 및 투명도 설정
+                    borderRadius: BorderRadius.circular(12), // 모서리 반경 설정
                   ),
                   child: Text(
-                    '${currentPage + 1} / ${commonBannerImages.length}',
-                    style: TextStyle(color: Colors.white),
+                    '${currentPage + 1} / ${commonBannerImages.length}', // 페이지 번호 표시
+                    style: TextStyle(color: WHITE_COLOR), // 텍스트 색상 설정
                   ),
                 );
               },
@@ -277,14 +282,16 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
         ],
       );
     },
-    loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+    // 로딩 중일 때 로딩 인디케이터 표시
+    loading: () => buildCommonLoadingIndicator(),
+    // 에러 발생 시 에러 인디케이터 표시
     error: (error, stack) => buildCommonErrorIndicator(
       message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
       secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
-      fontSize1: errorTextFontSize1, // 폰트1 크기 설정
-      fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-      color: Colors.black, // 색상 설정
-      showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+      fontSize1: errorTextFontSize1, // 첫 번째 폰트 크기 설정
+      fontSize2: errorTextFontSize2, // 두 번째 폰트 크기 설정
+      color: BLACK_COLOR, // 텍스트 색상 설정
+      showSecondMessage: true, // 두 번째 메시지 표시 여부 설정
     ),
   );
 }
@@ -408,7 +415,7 @@ class CommonCardView extends StatelessWidget {
 // 필요한 'content'는 반드시 제공되어야 하며, 나머지는 선택적으로 제공될 수 있음.
   CommonCardView({
     required this.content, // content는 필수로 제공되어야 함
-    this.backgroundColor = Colors.white, // 배경색은 선택적이며 기본값은 BACKGROUND_COLOR로 설정
+    this.backgroundColor = WHITE_COLOR, // 배경색은 선택적이며 기본값은 BACKGROUND_COLOR로 설정
     this.elevation = 4.0, // elevation은 선택적이며 기본값은 4.0으로 설정
     this.margin = const EdgeInsets.all(
         2), // margin은 선택적이며 기본값은 EdgeInsets.all(2)로 설정
@@ -447,30 +454,32 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
-  final double topBarX = screenSize.width * (22 / referenceWidth); // X
-  final double topBarY = screenSize.height * (170 / referenceHeight); // Y
+  final double topBarX = screenSize.width * (22 / referenceWidth); // X 위치 설정
+  final double topBarY = screenSize.height * (170 / referenceHeight); // Y 위치 설정
 
   return Positioned(
     top: screenSize.height - topBarY, // 화면 하단에서 200px 위로 위치
     right: topBarX, // 화면 오른쪽 끝에서 20px 왼쪽으로 위치
     child: FloatingActionButton(
-      mini: true, // 버튼을 작게 설정
-      backgroundColor: Colors.white, // 버튼 배경색을 하얀색으로 설정
+      mini: true, // 버튼 크기를 작게 설정
+      backgroundColor: WHITE_COLOR, // 버튼 배경색을 흰색으로 설정
       onPressed: () {
         if (scrollController.hasClients) {
+          // ScrollController가 연결된 경우
           scrollController.animateTo(
-            0.0,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
+            0.0, // 스크롤 위치를 최상단으로 이동
+            duration: Duration(milliseconds: 500), // 애니메이션 지속 시간
+            curve: Curves.easeInOut, // 애니메이션 곡선 설정
           );
         } else {
           // ScrollController가 클라이언트에 연결되지 않은 경우 처리
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (scrollController.hasClients) {
+              // 클라이언트가 연결된 후 다시 최상단으로 이동
               scrollController.animateTo(
-                0.0,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
+                0.0, // 스크롤 위치를 최상단으로 이동
+                duration: Duration(milliseconds: 500), // 애니메이션 지속 시간
+                curve: Curves.easeInOut, // 애니메이션 곡선 설정
               );
             }
           });
@@ -478,7 +487,7 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
       },
       child: Icon(
         Icons.arrow_upward, // 위로 가리키는 화살표 아이콘
-        color: Colors.black, // 아이콘 색상은 검은색으로 설정
+        color: BLACK_COLOR, // 아이콘 색상 설정을 검정으로
       ),
     ),
   );
@@ -486,7 +495,6 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
 // ------ 공통적으로 사용될 'top' 버튼 위젯 내용 끝
 
 // ------ 공통적으로 사용될 알림창 관련 함수 내용 시작
-
 // 공통적으로 사용할 수 있는 알림창 생성 함수
 // showSubmitAlertDialog: 다양한 플랫폼(iOS, Android)에서 사용할 수 있는 알림창을 생성하는 함수
 Future<bool> showSubmitAlertDialog(BuildContext context, {
@@ -619,31 +627,32 @@ void showCustomSnackBar(BuildContext context, String message) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  // 스낵바 부분 수치
-  final double commonSnackBarWidth = screenSize.width * (393 / referenceWidth);
-  final double commonSnackBarX = screenSize.width * (20 / referenceWidth);
-  final double commonSnackBarY = screenSize.height * (16 / referenceHeight);
-  final double commonSnackBarTextFontSize = screenSize.height * (14 / referenceHeight);
+  // 스낵바 부분 수치 설정
+  final double commonSnackBarWidth = screenSize.width * (393 / referenceWidth); // 스낵바 너비 설정
+  final double commonSnackBarX = screenSize.width * (20 / referenceWidth); // X축 패딩
+  final double commonSnackBarY = screenSize.height * (16 / referenceHeight); // Y축 패딩
+  final double commonSnackBarTextFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 폰트 크기 설정
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(message,
-      style: TextStyle(
-        fontFamily: 'NanumGothic',
-        fontWeight: FontWeight.bold,
-        fontSize: commonSnackBarTextFontSize,
-        color: Colors.white,
+      content: Text(
+        message, // 스낵바에 표시할 메시지
+        style: TextStyle(
+          fontFamily: 'NanumGothic', // 폰트 설정
+          fontWeight: FontWeight.bold, // 폰트 굵기 설정
+          fontSize: commonSnackBarTextFontSize, // 폰트 크기 설정
+          color: WHITE_COLOR, // 텍스트 색상 설정
         ),
       ),
-      backgroundColor: Color(0xCC718B82),  // 색상을 80% 투명도로 설정
-      width: commonSnackBarWidth,
-      behavior: SnackBarBehavior.floating,
+      backgroundColor: SOFTGREENGRAY51_COLOR, // 스낵바 배경색 설정
+      width: commonSnackBarWidth, // 스낵바 너비 설정
+      behavior: SnackBarBehavior.floating, // 스낵바를 떠 있는 형태로 표시
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10), // 모서리를 둥글게 설정
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: commonSnackBarX,
-        vertical: commonSnackBarY,
+        horizontal: commonSnackBarX, // X축 패딩 설정
+        vertical: commonSnackBarY, // Y축 패딩 설정
       ),
     ),
   );
@@ -695,7 +704,7 @@ class NetworkChecker {
           child: Text(
             '확인',
             style: TextStyle(
-              color: Color(0xFF6FAD96), // 버튼 텍스트 색상 지정
+              color: SOFTGREEN60_COLOR, // 버튼 텍스트 색상 지정
               fontWeight: FontWeight.bold, // 텍스트의 굵기를 두껍게 설정
               fontFamily: 'NanumGothic', // 글꼴 설정
             ),
@@ -779,8 +788,6 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
     // 아이템 간 여백 비율 설정
     final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
 
-    final double interval1X = screenSize.width * (80 / referenceWidth);
-
     // 에러 관련 텍스트 수치
     final double errorTextFontSize1 = screenSize.height * (12 / referenceHeight);
     final double errorTextFontSize2 = screenSize.height * (10 / referenceHeight);
@@ -792,18 +799,18 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
       child: Row(
         children: eventPosterImgItems.map((eventPosterImgItem) {
           // 각 항목의 이미지 URL 가져오기, 이미지가 없을 경우 'No Image' 텍스트 사용
-          final posterImg = eventPosterImgItem['poster_img'] as String? ?? 'No Image';
+          final posterImg = eventPosterImgItem['poster_img'] as String? ?? '';
 
           return Container(
             width: DetailDocWidth, // 설정된 가로 크기 사용
             padding: EdgeInsets.all(DetailDoc1X), // 아이템 간 여백 설정
             margin: EdgeInsets.all(DetailDoc1X), // 아이템 외부 여백 설정
             decoration: BoxDecoration(
-              color: Colors.white, // 배경색 설정
+              color: WHITE_COLOR, // 배경색 설정
               borderRadius: BorderRadius.circular(10.0), // 둥근 모서리 설정
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5), // 그림자 색상 및 불투명도 설정
+                  color: GRAY62_COLOR.withOpacity(0.5), // 그림자 색상 및 불투명도 설정
                   spreadRadius: 0, // 그림자 퍼짐 정도 설정
                   blurRadius: 1, // 그림자 흐림 정도 설정
                   offset: Offset(0, 4), // 그림자 위치 설정
@@ -840,7 +847,7 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
                     secondMessage: '재실행해주세요.', // 두 번째 메시지 설정
                     fontSize1: errorTextFontSize1, // 폰트1 크기 설정
                     fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                    color: Colors.black, // 색상 설정
+                    color: BLACK_COLOR, // 색상 설정
                     showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
                   ),
                 ),
@@ -852,7 +859,7 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
                   secondMessage: '재실행해주세요.', // 두 번째 메시지 설정
                   fontSize1: errorTextFontSize1, // 폰트1 크기 설정
                   fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                  color: Colors.black, // 색상 설정
+                  color: BLACK_COLOR, // 색상 설정
                   showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
                 ),
               ),
@@ -869,7 +876,7 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
 Widget buildCommonLoadingIndicator() {
   return Center(
     child: CircularProgressIndicator(
-      color: Color(0xFF6FAD96), // 원하는 색상 지정
+      color: SOFTGREEN60_COLOR, // 원하는 색상 지정
     ),
   );
 }
@@ -882,7 +889,7 @@ Widget buildCommonErrorIndicator({
   bool showSecondMessage = false, // 두 번째 메시지 표시 여부를 설정할 플래그
   double fontSize1 = 14, // 기본 폰트 크기, 재사용하는 곳에서 변경 가능
   double fontSize2 = 12, // 기본 폰트 크기, 재사용하는 곳에서 변경 가능
-  Color color = Colors.black, // 기본 폰트 색상, 재사용하는 곳에서 변경 가능
+  Color color = BLACK_COLOR, // 기본 폰트 색상, 재사용하는 곳에서 변경 가능
 }) {
   return Center(
     child: Column(

@@ -236,7 +236,7 @@ class _OrderListDetailScreenState
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ),
               ),
@@ -256,8 +256,8 @@ class _OrderListDetailScreenState
                 // 스크롤 다운시 AppBar가 상단에 고정됨.
                 expandedHeight: 0.0,
                 // 확장된 높이를 0으로 설정하여 확장 기능 제거
-            // 확장 높이 설정
-            // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                // 확장 높이 설정
+                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                    // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능

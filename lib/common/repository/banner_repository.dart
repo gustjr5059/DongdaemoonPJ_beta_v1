@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore를 사용하기 위한 패키지
 import '../model/banner_model.dart'; // 배너 이미지 데이터 모델 정의 파일
 
+// ------ CommonBannerRepository 클래스 시작
 // 'CommonBannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class CommonBannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -14,14 +15,14 @@ class CommonBannerRepository {
   // 'fetchBannerImages' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<CommonBannerImage> 타입의 Future를 반환함.
   Future<List<CommonBannerImage>> fetchBannerImages() async {
-    print('Fetching common banner images from Firestore...');
+    print('Firestore에서 공통 배너 이미지를 가져오는 중...'); // Firestore에서 공통 배너 이미지 가져오기 시작 메시지 출력
     // 'item' 컬렉션 내의 'banners' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('item').doc('banners').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재하여 데이터를 처리 중...'); // 문서가 존재할 때 데이터 처리 시작 메시지 출력
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 CommonBannerImage 객체로 변환함.
@@ -33,12 +34,14 @@ class CommonBannerRepository {
         CommonBannerImage.fromJson({'imageUrl': data['commsmallbanner3']})
       ].whereType<CommonBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch common banner images: Document does not exist.');
+    print('공통 배너 이미지를 가져오지 못함: 문서가 존재하지 않음.'); // 문서가 존재하지 않을 때 메시지 출력
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다.');
   }
 }
+// ------ CommonBannerRepository 클래스 끝
 
+// ------ AllLargeBannerRepository 클래스 시작
 // 'AllLargeBannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class AllLargeBannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -51,14 +54,14 @@ class AllLargeBannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllLargeBannerImage> 타입의 Future를 반환함.
   Future<List<AllLargeBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching large banner images from Firestore...');
+    print('Firestore에서 큰 배너 이미지를 가져오는 중...'); // Firestore에서 큰 배너 이미지 가져오기 시작 메시지 출력
     // 'banners' 컬렉션 내의 'large_banner' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('large_banner').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재하여 데이터를 처리 중...'); // 문서가 존재할 때 데이터 처리 시작 메시지 출력
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllLargeBannerImage 객체로 변환함.
@@ -91,12 +94,14 @@ class AllLargeBannerRepository {
         })
       ].whereType<AllLargeBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch large banner images: Document does not exist.');
+    print('큰 배너 이미지를 가져오지 못함: 문서가 존재하지 않음.'); // 문서가 존재하지 않을 때 메시지 출력
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다.');
   }
 }
+// ------ AllLargeBannerRepository 클래스 끝
 
+// ------ HomeSmall1BannerRepository 클래스 시작
 // 'HomeSmall1BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class HomeSmall1BannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -109,42 +114,41 @@ class HomeSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching small banner 1 images from Firestore...');
+    print('Firestore에서 작은 배너 1 이미지를 가져오는 중...'); // Firestore에서 작은 배너 1 이미지 가져오기 시작 메시지 출력
     // 'banners' 컬렉션 내의 'home_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('home_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재하여 데이터를 처리 중...'); // 문서가 존재할 때 데이터 처리 시작 메시지 출력
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 Small1BannerImage 객체로 변환함.
       return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
           'productId': data['product_id'],  // 제품 ID 정보 포함
           'category': data['category']  // 카테고리 정보 포함
         }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
           'url': data['ad_url_1']  // 연결 URL 정보 포함
         }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
           'url': data['ad_url_2']  // 연결 URL 정보 포함
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch small banner 1 images: Document does not exist.');
+    print('작은 배너 1 이미지를 가져오지 못함: 문서가 존재하지 않음.'); // 문서가 존재하지 않을 때 메시지 출력
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다.');
   }
 }
+// ------ HomeSmall1BannerRepository 클래스 끝
 
+// ------ HomeSmall2BannerRepository 클래스 시작
 // 'HomeSmall2BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class HomeSmall2BannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -157,42 +161,41 @@ class HomeSmall2BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching small banner 2 images from Firestore...');
+    print('Firestore에서 작은 배너 2 이미지를 가져오는 중...'); // Firestore에서 작은 배너 2 이미지 가져오기 시작 메시지 출력
     // 'banners' 컬렉션 내의 'home_small_banner_2' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('home_small_banner_2').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재하여 데이터를 처리 중...'); // 문서가 존재할 때 데이터 처리 시작 메시지 출력
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
       return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
           'productId': data['product_id'],  // 제품 ID 정보 포함
           'category': data['category']  // 카테고리 정보 포함
         }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
           'url': data['ad_url_1']  // 연결 URL 정보 포함
         }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
           'url': data['ad_url_2']  // 연결 URL 정보 포함
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch small banner 2 images: Document does not exist.');
+    print('작은 배너 2 이미지를 가져오지 못함: 문서가 존재하지 않음.'); // 문서가 존재하지 않을 때 메시지 출력
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다.');
   }
 }
+// ------ HomeSmall2BannerRepository 클래스 끝
 
+// ------ HomeSmall3BannerRepository 클래스 시작
 // 'HomeSmall3BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class HomeSmall3BannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -205,44 +208,41 @@ class HomeSmall3BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching small banner 3 images from Firestore...');
+    print('Firestore에서 작은 배너 3 이미지를 가져오는 중...'); // Firestore에서 작은 배너 3 이미지 가져오기 시작 메시지 출력
     // 'banners' 컬렉션 내의 'home_small_banner_3' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('home_small_banner_3').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재하여 데이터를 처리 중...'); // 문서가 존재할 때 데이터 처리 시작 메시지 출력
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
       return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
           'productId': data['product_id'],  // 제품 ID 정보 포함
           'category': data['category']  // 카테고리 정보 포함
         }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
           'url': data['ad_url_1']  // 연결 URL 정보 포함
         }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
         AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
           'url': data['ad_url_2']  // 연결 URL 정보 포함
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch small banner 3 images: Document does not exist.');
+    print('작은 배너 3 이미지를 가져오지 못함: 문서가 존재하지 않음.'); // 문서가 존재하지 않을 때 메시지 출력
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다.');
   }
 }
+// ------ HomeSmall3BannerRepository 클래스 끝
 
 // -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 시작
-
 // 'ShirtMainSmall1BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class ShirtMainSmall1BannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -255,14 +255,14 @@ class ShirtMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching shirt main small banner images from Firestore...');
+    print('Firestore에서 셔츠 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'shirt_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('shirt_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -285,9 +285,9 @@ class ShirtMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch shirt main small banner images: Document does not exist.');
+    print('셔츠 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -303,14 +303,14 @@ class BlouseMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching blouse main small banner images from Firestore...');
+    print('Firestore에서 블라우스 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'blouse_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('blouse_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -333,9 +333,9 @@ class BlouseMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch blouse main small banner images: Document does not exist.');
+    print('블라우스 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -351,14 +351,14 @@ class MtmMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching mtm main small banner images from Firestore...');
+    print('Firestore에서 맨투맨 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'mtm_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('mtm_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -381,9 +381,9 @@ class MtmMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch mtm main small banner images: Document does not exist.');
+    print('맨투맨 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -399,14 +399,14 @@ class NeatMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching neat main small banner images from Firestore...');
+    print('Firestore에서 니트 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'neat_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('neat_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -429,9 +429,9 @@ class NeatMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch neat main small banner images: Document does not exist.');
+    print('니트 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -447,14 +447,14 @@ class PolaMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching pola main small banner images from Firestore...');
+    print('Firestore에서 폴라 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'pola_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('pola_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -477,9 +477,9 @@ class PolaMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch pola main small banner images: Document does not exist.');
+    print('폴라티 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -495,14 +495,14 @@ class OnepieceMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching onepiece main small banner images from Firestore...');
+    print('Firestore에서 원피스 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'onepiece_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('onepiece_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -525,9 +525,9 @@ class OnepieceMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch onepiece main small banner images: Document does not exist.');
+    print('원피스 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -543,14 +543,14 @@ class PantsMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching pants main small banner images from Firestore...');
+    print('Firestore에서 바지 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'pants_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('pants_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -573,9 +573,9 @@ class PantsMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch pants main small banner images: Document does not exist.');
+    print('바지 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -591,14 +591,14 @@ class JeanMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching jean main small banner images from Firestore...');
+    print('Firestore에서 청바지 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'jean_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('jean_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -621,9 +621,9 @@ class JeanMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch jean main small banner images: Document does not exist.');
+    print('청바지 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -639,14 +639,14 @@ class SkirtMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching skirt main small banner images from Firestore...');
+    print('Firestore에서 스커트 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'skirt_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('skirt_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -669,9 +669,9 @@ class SkirtMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch skirt main small banner images: Document does not exist.');
+    print('스커트 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -687,14 +687,14 @@ class PaedingMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching paeding main small banner images from Firestore...');
+    print('Firestore에서 패딩 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'paeding_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('paeding_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -717,9 +717,9 @@ class PaedingMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch paeding main small banner images: Document does not exist.');
+    print('패딩 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -735,14 +735,14 @@ class CoatMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching coat main small banner images from Firestore...');
+    print('Firestore에서 코트 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'coat_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('coat_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -765,9 +765,9 @@ class CoatMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch coat main small banner images: Document does not exist.');
+    print('코트 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -783,14 +783,14 @@ class CardiganMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching cardigan main small banner images from Firestore...');
+    print('Firestore에서 가디건 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'cardigan_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('cardigan_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -813,12 +813,11 @@ class CardiganMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch cardigan main small banner images: Document does not exist.');
+    print('가디건 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
-
 // -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
 
 // -------- 마이페이지 메인 화면 작은 배너 관련 레퍼지토리 내용 시작
@@ -831,19 +830,25 @@ class ProfileMainSmall1BannerRepository {
   // 생성자에서는 FirebaseFirestore의 인스턴스를 받아 'firestore' 변수에 할당함.
   ProfileMainSmall1BannerRepository(this.firestore);
 
+  // ------ 'fetchBannerImagesAndLink' 메서드 시작 부분
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching profile main small banner images from Firestore...');
+    // 'Firestore에서 프로필 메인 작은 배너 이미지를 가져오는 중...'이라는 메시지를 출력함.
+    print('Firestore에서 프로필 메인 작은 배너 이미지를 가져오는 중...');
+
     // 'banners' 컬렉션 내의 'profile_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('profile_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
-      // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
+      // '문서가 존재합니다. 데이터를 처리하는 중...'이라는 메시지를 출력함.
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
+
+      // 문서의 데이터를 Map<String, dynamic> 형태로 변환함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
       return [
         // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
@@ -864,16 +869,18 @@ class ProfileMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch profile main small banner images: Document does not exist.');
+
+    // '프로필 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.'라는 메시지를 출력함.
+    print('프로필 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
+
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
-
+// -------- 마이페이지 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
 // -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
 
 // -------- 각 섹션 더보기 화면 작은 배너 관련 레퍼지토리 내용 시작
-
 // 'NewSubMainSmall1BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
 class NewSubMainSmall1BannerRepository {
   // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
@@ -886,14 +893,14 @@ class NewSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching newSub main small banner images from Firestore...');
+    print('Firestore에서 newSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'new_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('new_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -916,9 +923,9 @@ class NewSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch newSub main small banner images: Document does not exist.');
+    print('newSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -934,14 +941,14 @@ class BestSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching bestSub main small banner images from Firestore...');
+    print('Firestore에서 bestSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'best_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('best_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -964,9 +971,9 @@ class BestSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch bestSub main small banner images: Document does not exist.');
+    print('bestSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -982,14 +989,14 @@ class SaleSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching saleSub main small banner images from Firestore...');
+    print('Firestore에서 saleSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'sale_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('sale_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -1012,9 +1019,9 @@ class SaleSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch saleSub main small banner images: Document does not exist.');
+    print('saleSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -1030,14 +1037,14 @@ class SpringSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching springSub main small banner images from Firestore...');
+    print('Firestore에서 springSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'spring_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('spring_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -1060,9 +1067,9 @@ class SpringSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch springSub main small banner images: Document does not exist.');
+    print('springSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -1078,14 +1085,14 @@ class SummerSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching summerSub main small banner images from Firestore...');
+    print('Firestore에서 summerSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'summer_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('summer_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -1108,9 +1115,9 @@ class SummerSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch summerSub main small banner images: Document does not exist.');
+    print('summerSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -1126,14 +1133,14 @@ class AutumnSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching autumnSub main small banner images from Firestore...');
+    print('Firestore에서 autumnSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'autumn_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('autumn_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -1156,9 +1163,9 @@ class AutumnSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch autumnSub main small banner images: Document does not exist.');
+    print('autumnSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
 
@@ -1174,14 +1181,14 @@ class WinterSubMainSmall1BannerRepository {
   // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
   // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
   Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink() async {
-    print('Fetching winterSub main small banner images from Firestore...');
+    print('Firestore에서 winterSub 메인 작은 배너 이미지를 가져오는 중...');
     // 'banners' 컬렉션 내의 'winter_sub_main_small_banner_1' 문서에 접근하여 데이터를 가져옴.
     DocumentSnapshot snapshot =
     await firestore.collection('banners').doc('winter_sub_main_small_banner_1').get();
 
     // 문서가 존재하는 경우 실행됨.
     if (snapshot.exists) {
-      print('Document exists, processing data...');
+      print('문서가 존재합니다. 데이터를 처리하는 중...');
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
@@ -1204,10 +1211,9 @@ class WinterSubMainSmall1BannerRepository {
         })
       ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
     }
-    print('Failed to fetch winterSub main small banner images: Document does not exist.');
+    print('winterSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('Failed to fetch banner images');
+    throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
-
 // -------- 각 섹션 더보기 화면 작은 배너 관련 레퍼지토리 내용 끝

@@ -314,7 +314,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                                 fontSize: cartlistEmptyTextFontSize,
                                 fontFamily: 'NanumGothic',
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: BLACK_COLOR,
                               ),
                              ),
                            ),

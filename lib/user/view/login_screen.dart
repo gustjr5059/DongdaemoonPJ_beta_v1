@@ -1,6 +1,7 @@
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 import 'dart:async';
 
+import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,6 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/view/home_screen.dart';
 import '../provider/user_me_provider.dart';
-import 'membership_registration_info_screen.dart';
 
 // ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 시작
 class LoginScreen extends ConsumerStatefulWidget {
@@ -140,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (user != null) {
         // 로그인 성공 시 버튼 색상을 변경
         setState(() {
-          buttonColor = Color(0xFF4934CE); // 피그마에서 지정한 색상으로 변경
+          buttonColor = SOFTGREEN50_COLOR; // 피그마에서 지정한 색상으로 변경
         });
 
         // 자동로그인이 체크된 경우에만 이메일과 비밀번호 저장
@@ -260,21 +260,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     // 화면 제목 부분 수치
     final double screenTitleLeft =
-        screenSize.width * (51 / referenceWidth); // 왼쪽 여백 비율
+        screenSize.width * (60 / referenceWidth); // 왼쪽 여백 비율
     final double screenTitleTop =
         screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
     final double screenLoginText1FontSize =
         screenSize.height * (24 / referenceHeight);
     final double screenTitleTextFontSize =
-        screenSize.height * (26 / referenceHeight);
+        screenSize.height * (20 / referenceHeight);
 
     // 화면 서브제목 부분 수치
     final double screenSubTitleLeft =
-        screenSize.width * (49 / referenceWidth); // 왼쪽 여백 비율
+        screenSize.width * (135 / referenceWidth); // 왼쪽 여백 비율
     final double screenSubTitleTop =
         screenSize.height * (268 / referenceHeight); // 위쪽 여백 비율
     final double screenSubTitleTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (16 / referenceHeight);
 
     // 이메일 입력 필드 및 비밀번호 입력 필드 수치
     final double insertFieldWidth =
@@ -316,17 +316,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final double guidelineText1Left =
         screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
     final double guidelineText1Top =
-        screenSize.height * (600 / referenceHeight); // 위쪽 여백 비율
+        screenSize.height * (780 / referenceHeight); // 위쪽 여백 비율
     final double guidelineText1FontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기
+        screenSize.height * (10 / referenceHeight); // 텍스트 크기
 
     // 로그인 개인정보 처리방침 안내 텍스트2 부분 수치
     final double guidelineText2Left =
         screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
     final double guidelineText2Top =
-        screenSize.height * (630 / referenceHeight); // 위쪽 여백 비율
+        screenSize.height * (800 / referenceHeight); // 위쪽 여백 비율
     final double guidelineText2FontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기
+        screenSize.height * (10 / referenceHeight); // 텍스트 크기
 
     // 로그인 버튼 부분 수치
     final double loginBtnLeft =
@@ -364,6 +364,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final double joinAndFindBtnTextFontSize =
         screenSize.height * (12 / referenceHeight);
 
+    final double logoImageLeft = screenSize.width * (0 / referenceWidth);
+    final double logoImageTop = screenSize.height * (635 / referenceHeight);
+    final double logoImageWidth = screenSize.width * (150 / referenceWidth);
+    final double logoImageHeight = screenSize.height * (130 / referenceHeight);
+
+
     return Scaffold(
       body: Stack(
         children: [
@@ -386,56 +392,55 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 style: TextStyle(
                   fontSize: screenLoginText1FontSize,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
             ),
           ),
           // 타이틀 텍스트
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: screenTitleLeft, top: screenTitleTop),
+                  EdgeInsets.only(top: screenTitleTop),
               child: Text(
-                '오늘도 나만의 옷을 PICK!',
+                '동대문 의류도매 제로마진 플랫폼',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold,
                   fontSize: screenTitleTextFontSize,
-                  color: Colors.white,
+                  color: WHITE_COLOR,
                 ),
               ),
             ),
           ),
           // 서브 타이틀 텍스트
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(
-                  left: screenSubTitleLeft, top: screenSubTitleTop),
+              padding: EdgeInsets.only(top: screenSubTitleTop),
               child: Text(
-                '이메일과 비밀번호를 입력해서 로그인해주세요! :)',
+                '꾸띠르, Couture',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   fontSize: screenSubTitleTextFontSize,
-                  color: Colors.white,
+                  color: WHITE_COLOR,
                 ),
               ),
             ),
           ),
           // 이메일 입력 필드
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: insertFieldLeft, top: emailFieldTop),
+                  EdgeInsets.only(top: emailFieldTop),
               child: Container(
                 width: insertFieldWidth,
                 height: insertFieldHeight,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.85), // Figma에서 지정한 투명도 반영
+                  color: WHITE_COLOR.withOpacity(0.85), // Figma에서 지정한 투명도 반영
                   borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
                   // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
                 ),
@@ -447,7 +452,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
                     fontSize: insertFieldTextFontSize1, // Figma에서 설정된 폰트 크기
                     fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
-                    color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
+                    color: GRAY51_COLOR, // Figma에서 설정된 색상 (818181)
                   ),
                   hintTextPadding: EdgeInsets.only(left: insertFieldX, top: insertFieldY),
                   // Figma에서 제공된 위치 반영
@@ -459,7 +464,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
                     fontSize: insertFieldTextFontSize2, // 피그마에서 지정된 폰트 크기
                     fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
-                    color: Color(0xFF4933CE), // 텍스트 색상
+                    color: SOFTGREEN50_COLOR, // 텍스트 색상
                   ),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -470,13 +475,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFF4933CE),
+                        color: SOFTGREEN50_COLOR,
                         // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
                         width: 2.0, // 테두리 두께
                       ),
                       borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
                     ),
-                    fillColor: Colors.white.withOpacity(0.85), // 배경색
+                    fillColor: WHITE_COLOR.withOpacity(0.85), // 배경색
                     filled: true, // 배경색 채우기
                   ),
                 ),
@@ -485,15 +490,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           // 비밀번호 입력 필드
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding:
-                  EdgeInsets.only(left: insertFieldLeft, top: passwordFieldTop),
+                  EdgeInsets.only(top: passwordFieldTop),
               child: Container(
                 width: insertFieldWidth,
                 height: insertFieldHeight,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.85), // Figma에서 지정한 투명도 반영
+                  color: WHITE_COLOR.withOpacity(0.85), // Figma에서 지정한 투명도 반영
                   borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
                   // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
                 ),
@@ -505,7 +510,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
                     fontSize: insertFieldTextFontSize1, // Figma에서 설정된 폰트 크기
                     fontWeight: FontWeight.normal, // Figma에서 설정된 굵기
-                    color: Color(0xFF818181), // Figma에서 설정된 색상 (818181)
+                    color: GRAY51_COLOR, // Figma에서 설정된 색상 (818181)
                   ),
                   hintTextPadding: EdgeInsets.only(left: insertFieldX, top: insertFieldY),
                   // Figma에서 제공된 위치 반영
@@ -517,7 +522,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
                     fontSize: insertFieldTextFontSize2, // 피그마에서 지정된 폰트 크기
                     fontWeight: FontWeight.normal, // 피그마에서 설정된 굵기
-                    color: Color(0xFF4933CE), // 텍스트 색상
+                    color: SOFTGREEN50_COLOR, // 텍스트 색상
                   ),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -528,13 +533,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFF4933CE),
+                        color: SOFTGREEN50_COLOR,
                         // 활성화된 상태에서는 지정된 색상 (피그마에서 설정된 테두리 색상)
                         width: 2.0, // 테두리 두께
                       ),
                       borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 반영
                     ),
-                    fillColor: Colors.white.withOpacity(0.85), // 배경색
+                    fillColor: WHITE_COLOR.withOpacity(0.85), // 배경색
                     filled: true, // 배경색 채우기
                   ),
                 ),
@@ -551,7 +556,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: autoLoginCheckboxWidth, // Figma에서 지정한 너비
                 height: autoLoginCheckboxHeight, // Figma에서 지정한 높이
                 decoration: BoxDecoration(
-                  color: Colors.white, // Figma에서 지정한 색상
+                  color: WHITE_COLOR, // Figma에서 지정한 색상
                   borderRadius:
                       BorderRadius.circular(2.0), // Figma에서 지정한 둥근 모서리
                 ),
@@ -562,8 +567,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       autoLogin = value ?? false;
                     });
                   },
-                  activeColor: Color(0xFF4933CE), // 피그마에서 체크박스 색상을 투명하게 설정
-                  checkColor: Colors.white, // 체크 표시 색상
+                  activeColor: SOFTGREEN60_COLOR, // 피그마에서 체크박스 색상을 투명하게 설정
+                  checkColor: WHITE_COLOR, // 체크 표시 색상
                 ),
               ),
             ),
@@ -580,21 +585,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
                   fontSize: autoLoginCheckboxTextFontSize, // 피그마에서 지정된 폰트 크기
                   fontWeight: FontWeight.bold, // 피그마에서 지정된 굵기
-                  color: Colors.white.withOpacity(0.9), // 피그마에서 지정된 색상 및 투명도
+                  color: WHITE_COLOR.withOpacity(0.9), // 피그마에서 지정된 색상 및 투명도
                 ),
               ),
             ),
           ),
           // 로그인 버튼
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(left: loginBtnLeft, top: loginBtnTop),
+              padding: EdgeInsets.only(top: loginBtnTop),
               child: Container(
                 width: loginBtnWidth,
                 height: loginBtnHeight,
                 decoration: BoxDecoration(
-                  color: Color(0xFF303030), // Figma에서 지정한 버튼 배경 색상
+                  color: GRAY19_COLOR, // Figma에서 지정한 버튼 배경 색상
                   borderRadius:
                       BorderRadius.circular(5.0), // Figma에서 지정한 둥근 모서리 반영
                   // Figma에서 설정된 효과 추가 (Background blur는 Flutter에서 직접 지원하지 않으므로 Color와 Opacity로 대체)
@@ -622,7 +627,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       fontFamily: 'NanumGothic', // Figma에서 사용된 폰트
                       fontSize: loginBtnTextFontSize, // Figma에서 지정한 폰트 크기
                       fontWeight: FontWeight.bold, // Figma에서 지정한 굵기
-                      color: Colors.white
+                      color: WHITE_COLOR
                           .withOpacity(0.9), // Figma에서 지정한 텍스트 색상 및 투명도
                     ),
                   ),
@@ -643,7 +648,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   height: loginErrorMessageBarHeight,
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    color: Color(0xFFFF0000), // 피그마에서 지정한 배경색
+                    color: RED30_COLOR, // 피그마에서 지정한 배경색
                     borderRadius:
                         BorderRadius.circular(5.0), // 피그마에서 설정된 둥근 모서리
                   ),
@@ -655,7 +660,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
                         fontSize: loginErrorMessageBarTextFontSize, // 피그마에서 지정한 폰트 크기
                         fontWeight: FontWeight.bold, // 피그마에서 설정된 굵기
-                        color: Colors.white, // 피그마에서 지정한 텍스트 색상
+                        color: WHITE_COLOR, // 피그마에서 지정한 텍스트 색상
                       ),
                     ),
                   ),
@@ -698,7 +703,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
                                 fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
                                 fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                color: Colors.white, // 피그마에서 지정된 텍스트 색상
+                                color: WHITE_COLOR, // 피그마에서 지정된 텍스트 색상
                               ),
                             ),
                             style: TextButton.styleFrom(
@@ -729,7 +734,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
                                 fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
                                 fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                color: Colors.white, // 피그마에서 지정된 텍스트 색상
+                                color: WHITE_COLOR, // 피그마에서 지정된 텍스트 색상
                               ),
                             ),
                             style: TextButton.styleFrom(
@@ -745,6 +750,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ],
           ),
+          // 로고 이미지를 나타내는 부분
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: logoImageLeft, top: logoImageTop,),
+              child: Image.asset(
+                'asset/img/misc/logo_img/couture_logo_image.png',
+                width: logoImageWidth,
+                height: logoImageHeight,
+                fit: BoxFit.contain, // 이미지 크기 조정
+              ),
+            ),
+          ),
           // 개인정보 처리방침 안내 텍스트1
           Align(
             alignment: Alignment.topCenter,
@@ -757,7 +776,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   fontSize: guidelineText1FontSize,
-                  color: Colors.white,
+                  color: WHITE_COLOR,
                 ),
               ),
             ),
@@ -788,7 +807,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontFamily: 'NanumGothic',
                     fontWeight: FontWeight.normal,
                     fontSize: guidelineText2FontSize,
-                    color: Colors.blue, // 파란색 텍스트
+                    color: BLUE49_COLOR, // 파란색 텍스트
                     decoration: TextDecoration.underline, // 밑줄 추가
                   ),
                 ),

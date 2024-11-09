@@ -213,7 +213,7 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
             // print("정렬 버튼 클릭: $title");
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected ? Color(0xFF6FAD96) : Color(0xFFCACACA),
+            backgroundColor: isSelected ? SOFTGREEN60_COLOR : GRAY79_COLOR,
             // 선택된 버튼 배경 색상 설정
             minimumSize: Size(0, 40),
             // 최소 버튼 크기 설정
@@ -229,7 +229,7 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
               textAlign: TextAlign.center, // 텍스트 가운데 정렬
               style: TextStyle(
                 fontSize: sortBtnTextFontSize,
-                color: Color(0xFFFFFFFF),
+                color: WHITE_COLOR,
                 fontFamily: 'NanumGothic',
                 fontWeight: FontWeight.w800, // ExtraBold
               ),
@@ -327,7 +327,7 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
         }
       });
     } catch (e) {
-      debugPrint('Error fetching initial products: $e'); // 에러 출력
+      debugPrint('초기 상품 데이터를 가져오는 중 오류 발생: $e'); // 에러 출력
     } finally {
       setState(() {
         _isFetching = false; // 데이터 가져오기 완료 상태로 설정
@@ -357,7 +357,7 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
         }
       });
     } catch (e) {
-      debugPrint('Error fetching more products: $e'); // 에러 출력
+      debugPrint('추가 상품 데이터를 가져오는 중 오류 발생: $e'); // 에러 출력
     } finally {
       setState(() {
         _isFetching = false; // 데이터 가져오기 완료 상태로 설정
@@ -371,11 +371,13 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
         []; // 현재 카테고리의 제품 리스트 가져오기
     return Column(
       children: [
+        // 데이터를 불러옲 때 로딩되고 있는 경우
         if (_isFetching)
           buildCommonLoadingIndicator(), // 로딩 중일 때 로딩 인디케이터 표시
+        // 데이터가 있어서 불러온 경우
         if (products.isNotEmpty)
           buildHorizontalDocumentsList(ref, products, context, widget.category, _scrollController),
-        // 데이터가 없을 때는 빈칸으로 표시
+        // 데이터가 없는 경우
         if (products.isEmpty && !_isFetching)
           SizedBox.shrink(), // 데이터가 없을 때 아무것도 표시하지 않음
       ],
@@ -386,6 +388,7 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
 // ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
 // GeneralProductList 클래스 내용 구현 시작
+// 1차 카테고리 관련 메인 화면과 섹션 더보기 화면에서 데이터를 불러올 때 사용하는 UI 구현 부분
 class GeneralProductList<T extends BaseProductListNotifier>
     extends ConsumerStatefulWidget {
   final ScrollController scrollController; // 스크롤 컨트롤러 선언
@@ -1140,11 +1143,11 @@ class ProductInfoDetailScreenNavigation {
         margin: EdgeInsets.all(DetailDoc3X),
         decoration: BoxDecoration(
           // 컨테이너의 배경색을 흰색으로 설정하고 둥근 모서리 및 그림자 효과를 추가함
-          color: Colors.white,
+          color: WHITE_COLOR,
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: GRAY62_COLOR.withOpacity(0.5),
               spreadRadius: 0, // 그림자의 퍼짐 정도
               blurRadius: 1, // 그림자 흐림 정도 (숫자가 작을수록 선명함)
               offset: Offset(0, 4), // 그림자의 위치를 설정함 (x: 0으로 수평 위치를 고정, y: 4로 하단에만 그림자 발생)
@@ -1174,13 +1177,13 @@ class ProductInfoDetailScreenNavigation {
                           // 이미지 로드 실패 시 아이콘 표시
                           errorBuilder: (context, error, stackTrace) => Icon(
                             Icons.image_not_supported,
-                            color: Colors.grey.shade300,
+                            color: GRAY88_COLOR,
                             size: interval2Y,
                           ),
                         )
                             : Icon(
                           Icons.image_not_supported,
-                          color: Colors.grey.shade300,
+                          color: GRAY88_COLOR,
                           size: interval2Y,
                         ), // 썸네일이 없을 때 아이콘을 표시
                         // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
@@ -1204,7 +1207,7 @@ class ProductInfoDetailScreenNavigation {
                       product.briefIntroduction!,
                       style: TextStyle(
                           fontSize: DetailDocTextFontSize1,
-                          color: Colors.black, // 텍스트 색상
+                          color: BLACK_COLOR, // 텍스트 색상
                           fontFamily: 'NanumGothic',
                           fontWeight: FontWeight.bold,),
                       maxLines: 2, // 최대 2줄까지 표시함.
@@ -1222,7 +1225,7 @@ class ProductInfoDetailScreenNavigation {
                           product.originalPrice != null ? '${numberFormat.format(product.originalPrice!)}원' : '',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize2,
-                              color: Color(0xFF6C6C6C), // 텍스트 색상
+                              color: GRAY42_COLOR, // 텍스트 색상
                               fontFamily: 'NanumGothic',
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.lineThrough
@@ -1235,7 +1238,7 @@ class ProductInfoDetailScreenNavigation {
                               product.discountPercent != null ? '${numberFormat.format(product.discountPercent!)}%' : '',
                               style: TextStyle(
                                   fontSize: DetailDocTextFontSize3,
-                                  color: Colors.red, // 텍스트 색상
+                                  color: RED46_COLOR, // 텍스트 색상
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.w800, // ExtraBold로 설정
                                ),
@@ -1251,7 +1254,7 @@ class ProductInfoDetailScreenNavigation {
                           product.discountPrice != null ? '${numberFormat.format(product.discountPrice!)}원' : '',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize4,
-                              color: Colors.black, // 텍스트 색상
+                              color: BLACK_COLOR, // 텍스트 색상
                               fontFamily: 'NanumGothic',
                               fontWeight: FontWeight.w800, // ExtraBold로 설정,
                           ),
@@ -1278,13 +1281,13 @@ class ProductInfoDetailScreenNavigation {
                           // 이미지 로드 실패 시 아이콘 표시
                           errorBuilder: (context, error, stackTrace) => Icon(
                             Icons.image_not_supported,
-                            color: Colors.grey.shade300,
+                            color: GRAY88_COLOR,
                             size: DetailDocColorImageWidth,
                           ),
                         )
                             : Icon(
                           Icons.image_not_supported,
-                          color: Colors.grey.shade300,
+                          color: GRAY88_COLOR,
                           size: DetailDocColorImageWidth,
                         ), // 썸네일이 없을 때 아이콘을 표시
                       ),
@@ -1306,8 +1309,6 @@ class ProductInfoDetailScreenNavigation {
 Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
     ProductContent product, PageController pageController) {
 
-  // print('buildProductDetails 호출');
-  // print('상품 소개: ${product.briefIntroduction}');
   return SingleChildScrollView(
     // 스크롤이 가능하도록 SingleChildScrollView 위젯을 사용.
     child: Column(
@@ -1320,12 +1321,12 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+              bottom: BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
             content: buildProductBriefIntroAndPriceInfoSection(context, ref, product), // 제품 소개 및 가격 정보 부분 섹션
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 배경색
             elevation: 0.0, // 그림자 효과 0
             margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
             padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 0.0으로 설정.
@@ -1335,12 +1336,12 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+              bottom: BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
             content: ProductColorAndSizeSelection(product: product), // 색상과 사이즈 선택 관련 섹션
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 배경색
             elevation: 0.0, // 그림자 효과 0
             margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
             padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 1.0으로 설정.
@@ -1350,12 +1351,12 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Color(0xFFDADADA), width: 1.0), // 하단 테두리 색상을 지정함
+              bottom: BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
             content: buildProductSelectOptionsSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
-            backgroundColor: Color(0xFFEEEEEE),
+            backgroundColor: GRAY93_COLOR,
             elevation: 0.0,
             margin: const EdgeInsets.symmetric(horizontal: 0.0),
             padding: const EdgeInsets.all(0.0),
@@ -1431,13 +1432,13 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
                   // 이미지 로드 실패 시 아이콘 표시
                   errorBuilder: (context, error, stackTrace) => Icon(
                     Icons.image_not_supported,
-                    color: Colors.grey.shade300,
+                    color: GRAY88_COLOR,
                     size: interval1X,
                   ),
                 )
                     : Icon(
                   Icons.image_not_supported,
-                  color: Colors.grey.shade300,
+                  color: GRAY88_COLOR,
                   size: interval1X,
                 ), // 썸네일이 없을 때 아이콘을 표시
               );
@@ -1465,8 +1466,8 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
                   shape: BoxShape.circle,
                   // 현재 페이지를 기준으로 인디케이터 색상을 변경함.
                   color: ref.watch(pageProvider) == entry.key
-                      ? Colors.black
-                      : Colors.white,
+                      ? BLACK_COLOR
+                      : WHITE_COLOR,
                 ),
               ),
             );
@@ -1525,7 +1526,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                   fontSize: productNumberFontSize,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
-                  color: Colors.black,
+                  color: BLACK_COLOR,
               ), // 글자 크기를 14로 설정
             ),
           ),
@@ -1539,7 +1540,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                 fontSize: productIntroductionFontSize,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'NanumGothic',
-                color: Colors.black,
+                color: BLACK_COLOR,
               ),
               maxLines: 2, // 최대 2줄로 표시
               overflow: TextOverflow.visible, // 넘치는 텍스트를 표시
@@ -1554,8 +1555,8 @@ Widget buildProductBriefIntroAndPriceInfoSection(
               style: TextStyle(
                 fontSize: productOriginalPriceFontSize,
                 decoration: TextDecoration.lineThrough, // 취소선을 추가
-                color: Color(0xFF999999), // 색상을 연한 회색으로 설정
-                decorationColor: Colors.grey[700], // 취소선 색상을 진한 회색으로 설정
+                color: GRAY60_COLOR, // 색상을 연한 회색으로 설정
+                decorationColor: GRAY38_COLOR, // 취소선 색상을 진한 회색으로 설정
                 fontFamily: 'NanumGothic',
               ),
             ),
@@ -1571,7 +1572,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                     style: TextStyle(
                       fontSize: productDiscountPriceFontSize,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: BLACK_COLOR,
                       fontFamily: 'NanumGothic',
                     ),
                 ),
@@ -1583,7 +1584,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                     style: TextStyle(
                       fontSize: productDiscountPercentFontSize,
                       fontWeight: FontWeight.w800,
-                      color: Colors.red,
+                      color: RED46_COLOR,
                       fontFamily: 'NanumGothic',
                     ),
                   ),
@@ -1678,7 +1679,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                 style: TextStyle(
                   fontSize: colorFontSize,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                   fontFamily: 'NanumGothic',
                 )
               ),// '색상' 라벨을 표시.
@@ -1717,7 +1718,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                         ) // URL이 있는 경우 이미지를 표시
                             : Icon(
                           Icons.image_not_supported,
-                          color: Colors.grey.shade300,
+                          color: GRAY88_COLOR,
                           size: colorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
                         ), // URL이 없을 경우 아이콘을 표시
                         SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
@@ -1725,7 +1726,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                           style: TextStyle(
                             fontSize: colorTextSize,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: BLACK_COLOR,
                             fontFamily: 'NanumGothic',
                           ),
                         ),// 색상의 텍스트 설명을 표시.
@@ -1746,7 +1747,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                   style: TextStyle(
                     fontSize: sizeFontSize,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                     fontFamily: 'NanumGothic',
                   )
               ), // '사이즈' 라벨을 표시.
@@ -1773,7 +1774,7 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                       style: TextStyle(
                         fontSize: sizeTextSize,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: BLACK_COLOR,
                         fontFamily: 'NanumGothic',
                       )
                     ), // 사이즈 텍스트를 표시.
@@ -1844,7 +1845,7 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
                       style: TextStyle(
                         fontSize: selectedColorFontSize,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: BLACK_COLOR,
                         fontFamily: 'NanumGothic',
                       )
                   ),
@@ -1857,7 +1858,7 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
                       height: selectedColorImageLength,
                     ) : Icon(
                     Icons.image_not_supported,
-                    color: Colors.grey.shade300,
+                    color: GRAY88_COLOR,
                     size: selectedColorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
                   ),
                   SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
@@ -1866,7 +1867,7 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
                     style: TextStyle(
                       fontSize: selectedColorTextSize,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: BLACK_COLOR,
                       fontFamily: 'NanumGothic',
                     ),
                   ),
@@ -1880,7 +1881,7 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
                         style: TextStyle(
                           fontSize: selectedSizeFontSize,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: BLACK_COLOR,
                           fontFamily: 'NanumGothic',
                       ),
                   ),
@@ -1890,7 +1891,7 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
                     style: TextStyle(
                       fontSize: selectedSizeTextSize,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: BLACK_COLOR,
                       fontFamily: 'NanumGothic',
                       )
                   ),
@@ -1982,7 +1983,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
             style: TextStyle(
               fontSize: _buildTabButtonFontSize,
               fontFamily: 'NanumGothic',
-              color: isSelected ? Colors.black : Colors.grey, // 선택된 탭이면 검정색, 아니면 회색
+              color: isSelected ? BLACK_COLOR : GRAY62_COLOR, // 선택된 탭이면 검정색, 아니면 회색
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // 선택된 탭이면 굵게, 아니면 일반
             ),
           ),
@@ -1990,7 +1991,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
             Container(
               width: _buildTabButtonFontSize * 4.5,
               height: 2,
-              color: Colors.black, // 밑줄 색상 검정
+              color: BLACK_COLOR, // 밑줄 색상 검정
             ),
         ],
       ),
@@ -2050,13 +2051,13 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
                     width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
                     errorBuilder: (context, error, stackTrace) => Icon(
                       Icons.image_not_supported,
-                      color: Colors.grey.shade300,
+                      color: GRAY88_COLOR,
                       size: interval3X,
                     ), // 이미지 로드 실패 시 아이콘 표시
                   )
                 : Icon(
               Icons.image_not_supported,
-              color: Colors.grey.shade300,
+              color: GRAY88_COLOR,
               size: interval3X,
             ), // 이미지 URL이 없을 때 아이콘 표시
           ),
@@ -2085,13 +2086,13 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
               width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
               errorBuilder: (context, error, stackTrace) => Icon(
                 Icons.image_not_supported,
-                color: Colors.grey.shade300,
+                color: GRAY88_COLOR,
                 size: interval3X,
               ), // 이미지 로드 실패 시 아이콘 표시
             )
           : Icon(
               Icons.image_not_supported,
-              color: Colors.grey.shade300,
+              color: GRAY88_COLOR,
               size: interval3X,
             );// 이미지 URL이 없을 때 아이콘 표시
   }
@@ -2115,7 +2116,7 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
         Row(
           children: [
             Expanded(
-                child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 왼쪽 구분선
+                child: Divider(thickness: 3, color: GRAY85_COLOR)), // 왼쪽 구분선
             Padding(
               padding: EdgeInsets.only(
                   left: buildSectionWidthX, right: buildSectionWidthX), // 텍스트 양옆 여백 설정
@@ -2125,12 +2126,12 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold,
                   fontSize: buildSectionTitleFontSize, // 텍스트 크기 설정
-                  color: Color(0xFFDADADA), // 텍스트 색상 설정
+                  color: GRAY85_COLOR, // 텍스트 색상 설정
                 ),
               ),
             ),
             Expanded(
-                child: Divider(thickness: 3, color: Color(0xFFDADADA))), // 오른쪽 구분선
+                child: Divider(thickness: 3, color: GRAY85_COLOR)), // 오른쪽 구분선
           ],
         ),
         SizedBox(height: buildSectionLineY), // 텍스트와 아래 여백 설정
@@ -2186,19 +2187,19 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
           }
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Color(0xFF6FAD96), // 아이콘 및 텍스트 색상 설정
+          foregroundColor: SOFTGREEN60_COLOR, // 아이콘 및 텍스트 색상 설정
           backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-          side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+          side: BorderSide(color: SOFTGREEN60_COLOR), // 버튼 테두리 색상 설정
         ),
         icon: Icon(icon,
-            size: expandBtnFontSize, color: Color(0xFF6FAD96)), // 아이콘 크기 및 색상 설정
+            size: expandBtnFontSize, color: SOFTGREEN60_COLOR), // 아이콘 크기 및 색상 설정
         label: Text(
           text, // 전달받은 텍스트를 버튼에 표시함.
           style: TextStyle(
             fontFamily: 'NanumGothic',
             fontSize: expandBtnFontSize, // 텍스트 크기 설정
             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-            color: Color(0xFF6FAD96), // 텍스트 색상 설정
+            color: SOFTGREEN60_COLOR, // 텍스트 색상 설정
           ),
         ),
       ),
@@ -2281,9 +2282,9 @@ class ProductInquiryContents extends StatelessWidget {
           // ElevatedButton 위젯을 사용하여 버튼을 생성
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              foregroundColor: Color(0xFF6FAD96), // 텍스트 색상
+              foregroundColor: SOFTGREEN60_COLOR, // 텍스트 색상
               backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-              side: BorderSide(color: Color(0xFF6FAD96)), // 테두리 색상
+              side: BorderSide(color: SOFTGREEN60_COLOR), // 테두리 색상
             ),
             // 버튼이 눌렸을 때의 동작 정의
             onPressed: () async {
@@ -2306,7 +2307,7 @@ class ProductInquiryContents extends StatelessWidget {
                     fontFamily: 'NanumGothic',
                     fontSize: productInquiryBtnFontSize,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF6FAD96)
+                    color: SOFTGREEN60_COLOR
                 ),
             ),
           ),

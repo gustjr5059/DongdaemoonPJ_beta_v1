@@ -45,7 +45,7 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       // FocusNode 할당
-      cursorColor: PRIMARY_COLOR,
+      cursorColor: SOFTGREEN50_COLOR,
       // 커서 색상을 PRIMARY_COLOR로 설정
       // 비밀번호 입력할때
       obscureText: obscureText,
@@ -62,16 +62,16 @@ class CustomTextFormField extends StatelessWidget {
         hintText: hintText,
         errorText: errorText,
         hintStyle: hintStyle ?? TextStyle(
-          color: BODY_TEXT_COLOR,
+          color: GRAY53_COLOR,
           fontSize: 14.0,
         ),
-        fillColor: decoration?.fillColor ?? INPUT_BG_COLOR,
+        fillColor: decoration?.fillColor ?? GRAY98_COLOR,
         filled: decoration?.filled ?? true,
         border: baseBorder,
         enabledBorder: baseBorder,
         focusedBorder: decoration?.focusedBorder ?? OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFF4933CE), // 외부에서 제공된 색상으로 포커스된 테두리 색상 설정
+            color: SOFTGREEN50_COLOR, // 외부에서 제공된 색상으로 포커스된 테두리 색상 설정
             width: 2.0,
           ),
           borderRadius: BorderRadius.circular(5.0),

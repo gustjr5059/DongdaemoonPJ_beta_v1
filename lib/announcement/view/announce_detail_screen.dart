@@ -295,7 +295,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                                 // 폰트 굵기를 'bold'로 설정함.
                                 fontWeight: FontWeight.bold,
                                 // 텍스트 색상을 검은색으로 설정함.
-                                color: Colors.black,
+                                color: BLACK_COLOR,
                               ),
                             ),
                           ),
