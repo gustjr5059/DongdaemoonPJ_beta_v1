@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// EventRepository 클래스 정의
+// ------ EventRepository 클래스 내용 시작
 class EventRepository {
   final FirebaseFirestore firestore; // FirebaseFirestore 인스턴스를 저장함
 
@@ -91,4 +91,53 @@ class EventRepository {
       return data;
     }).toList(); // 데이터를 리스트로 변환하여 반환함
   }
+
+  // ------ 이벤트 포스터 상품의 모든 이미지 URL을 가져오는 함수 getEventPosterOriginalImages 시작 부분
+  // 특정 documentId를 통해 이벤트 포스터의 원본 이미지를 Firestore에서 가져오는 함수 정의
+  Future<List<String>> getEventPosterOriginalImages(String documentId) async {
+    try {
+      // Firestore에서 'event_data' 컬렉션의 'event_poster_image' 문서 하위의
+      // 'poster_img' 컬렉션 내에서 documentId에 해당하는 문서를 가져옴
+      DocumentSnapshot doc = await firestore
+          .collection('event_data')
+          .doc('event_poster_image')
+          .collection('poster_img')
+          .doc(documentId)
+          .get();
+
+      // 이미지 URL들을 저장할 리스트 초기화
+      List<String> images = [];
+
+      // 최대 10개의 포스터 이미지 URL을 불러오기 위해 반복문 실행
+      for (int i = 1; i <= 10; i++) {
+        // 각 포스터 필드 이름을 'poster_i'로 지정하여 이미지 URL을 가져옴
+        final String? imageUrl = doc['poster_$i'] as String?;
+
+        // 유효한 이미지 URL이 있으면 리스트에 추가하고 해당 URL을 콘솔에 출력
+        if (imageUrl != null && imageUrl.isNotEmpty) {
+          images.add(imageUrl);
+          print("포스터_$i 필드에서 이미지 URL 추가: $imageUrl");
+        } else {
+          // 해당 포스터 필드에 이미지 URL이 없을 경우 메시지 출력
+          print("포스터_$i 필드에 유효한 이미지 URL이 없습니다.");
+        }
+      }
+
+      // 가져온 이미지 URL 리스트가 비어 있는지 확인하고, 상태에 따른 메시지 출력
+      if (images.isEmpty) {
+        print("가져온 이미지가 없습니다."); // 이미지가 없을 경우 메시지 출력
+      } else {
+        print("총 ${images.length}개의 이미지를 불러왔습니다."); // 이미지 수를 출력
+      }
+
+      // 최종적으로 이미지 URL 리스트를 반환
+      return images;
+    } catch (e) {
+      // 오류가 발생할 경우, 오류 메시지를 출력하고 빈 리스트를 반환
+      print("이벤트 이미지 가져오는 중 오류 발생: $e");
+      return [];
+    }
+  }
+// ------ 이벤트 포스터 상품의 모든 이미지 URL을 가져오는 함수 getEventPosterOriginalImages 끝 부분
 }
+// ------ EventRepository 클래스 내용 끝

@@ -62,7 +62,8 @@ class OrderRepository {
 
     // 현재 시간을 기반으로 주문 번호를 생성
     final now = DateTime.now(); // 현재 시간을 가져옴
-    final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
+    // final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
+    final orderNumber = DateFormat('yyyyMMddHHmmss').format(now); // 주문 번호 생성
     print('생성된 주문 번호: $orderNumber');
 
     // 발주 문서를 생성할 위치를 Firestore에서 지정 (order_number를 문서 ID로 사용)
@@ -190,17 +191,23 @@ class OrderlistRepository {
       final userDocRef = firestore.collection('couture_order_list').doc(userEmail);
 
       // 'orders' 컬렉션에서 'private_orderList_closed_button' 값이 false인 문서들만 조회하며, 제한된 개수로 불러옴.
+      // 'numberInfo.order_number' 필드 기준 내림차순으로 해서 최신 문서 순으로 정렬되도록 함.
+      // 해당 조건값으로 하는 색인 추가함!!
       Query query = userDocRef.collection('orders')
           .where('private_orderList_closed_button', isEqualTo: false)
+          .orderBy('numberInfo.order_number', descending: true)
           .limit(limit);
 
       // 마지막 문서가 존재하면, 그 문서 이후의 데이터만 불러옴.
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
+        print("이전 데이터 이후로 데이터를 불러옵니다."); // 마지막 문서 이후 데이터를 불러온다는 메시지를 출력함
       }
 
       // 위에서 정의한 쿼리 실행 및 결과를 가져옴.
       final ordersQuerySnapshot = await query.get();
+
+      print("가져온 문서 수: ${ordersQuerySnapshot.docs.length}"); // 가져온 문서의 수를 출력함
 
       // 결과가 없으면 빈 리스트를 반환.
       if (ordersQuerySnapshot.docs.isEmpty) {

@@ -71,58 +71,62 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // 마지막 문서 스냅샷과 로딩 상태를 저장하는 필드 선언.
   DocumentSnapshot? lastDocument;
   bool isLoadingMore = false;
-  bool hasLoaded = false; // 이미 데이터를 불러왔는지 확인하는 플래그 추가
 
-  // 생성자에서 OrderlistRepository와 Ref를 받아서 초기 상태를 빈 리스트로 설정함.
+  // 생성자에서 OrderlistRepository와 Ref를 받아 초기 상태를 빈 리스트로 설정함.
   OrderlistItemsNotifier(this.orderlistRepository, this.ref) : super([]) {
-        loadMoreOrderItems();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadMoreOrderItems();  // 첫 데이터 로드를 수행함.
+    });
   }
 
-  // Firestore에서 발주 아이템을 페이징 처리해서 불러오는 함수.
+  // ------ Firestore에서 발주 아이템을 페이징 처리해서 불러오는 함수 시작 부분
   Future<void> loadMoreOrderItems() async {
-    // 이미 로딩 중이면 중복 로딩을 방지함.
+    // 이미 로딩 중일 때 중복 로딩을 방지함.
     if (isLoadingMore) {
       print("이미 로딩 중입니다.");
       return;
     }
 
     print("데이터 로드를 시작합니다.");
-    isLoadingMore = true;  // 로딩 중 상태로 변경.
+    isLoadingMore = true;  // 로딩 상태를 활성화함.
+    // 로딩 상태를 true로 설정함.
+    ref.read(isLoadingProvider.notifier).state = true;
 
     // 현재 로그인한 사용자를 확인함.
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       print("사용자가 로그인되어 있지 않습니다.");
-      state = [];  // 사용자가 없으면 상태를 빈 리스트로 설정.
-      isLoadingMore = false;  // 로딩 상태 해제.
+      state = [];  // 로그인한 사용자가 없을 경우 상태를 빈 리스트로 설정함.
+      isLoadingMore = false;  // 로딩 상태를 해제함.
       return;
     }
 
-    // Firestore에서 발주 데이터를 6개씩 페이징 처리로 가져옴.
+    // Firestore에서 5개의 발주 데이터를 페이징 처리하여 가져옴.
     final newItems = await orderlistRepository.fetchOrdersByEmail(
-      userEmail: user.email!,  // 현재 사용자 이메일을 매개변수로 넘김.
-      lastDocument: lastDocument,  // 마지막 문서 이후의 데이터를 불러옴.
-      limit: 6,  // 한번에 6개의 아이템을 불러옴.
+      userEmail: user.email!,  // 현재 사용자 이메일을 넘김.
+      lastDocument: lastDocument,  // 마지막 문서 이후 데이터를 불러옴.
+      limit: 5,  // 한 번에 5개의 아이템을 불러옴.
     );
 
-    // disposed된 후 상태 업데이트가 발생하지 않도록 확인함.
-    if (!mounted) return;
-
-    // 새로 불러온 데이터가 있으면 상태를 업데이트함.
+    // 새로 불러온 데이터가 있을 경우 상태를 업데이트함.
     if (newItems.isNotEmpty) {
       lastDocument = newItems.last['snapshot'];  // 마지막 문서를 기록함.
-      state = [...state, ...newItems];  // 기존 데이터에 새로운 데이터를 추가.
+      state = [...state, ...newItems];  // 기존 데이터에 새 데이터를 추가함.
       print("새로 불러온 데이터: ${newItems.length}개");
+      print("현재 전체 데이터: ${state.length}개");
     } else {
       print("더 이상 불러올 데이터가 없습니다.");
     }
-
-    // 로딩 상태 해제.
+    // 로딩 상태를 false로 설정함.
+    ref.read(isLoadingProvider.notifier).state = false;
+    // 로딩 상태를 해제함.
     isLoadingMore = false;
+    print("데이터 로드를 완료했습니다.");
   }
+  // ------ Firestore에서 발주 아이템을 페이징 처리해서 불러오는 함수 끝 부분
 
-  // 발주 아이템을 삭제하는 함수.
-  Future<void> deleteOrderItem(String orderNumber) async {
+  // ------ 발주 아이템을 Firestore에서 삭제하는 함수 시작 부분
+  Future<void> deleteOrderItems(String orderNumber) async {
     // 현재 로그인한 사용자를 확인함.
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -133,13 +137,24 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       state = state.where((item) => item['numberInfo']['order_number'] != orderNumber).toList();
     }
   }
+  // ------ 발주 아이템을 Firestore에서 삭제하는 함수 끝 부분
 
-  // Notifier가 dispose될 때 호출되는 함수.
+  // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 시작 부분
+  void resetOrderItems() {
+    isLoadingMore = false;  // 로딩 상태 플래그 초기화
+    state = [];  // 불러온 데이터를 초기화함
+    lastDocument = null;  // 마지막 문서 스냅샷 초기화
+  }
+  // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 끝 부분
+
+  // ------ Notifier가 dispose될 때 호출되는 함수 시작 부분
   @override
   void dispose() {
-    print('OrderlistItemsNotifier dispose 호출됨');
-    super.dispose();  // 부모 클래스의 dispose 함수 호출.
+    print("OrderlistItemsNotifier dispose 호출됨");
+    resetOrderItems();  // dispose 시 데이터 초기화 수행
+    super.dispose();  // 부모 클래스의 dispose 함수 호출함.
   }
+// ------ Notifier가 dispose될 때 호출되는 함수 끝 부분
 }
 // ------- Firestore에서 요청내역 화면 내 요청내역 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 끝 부분
 

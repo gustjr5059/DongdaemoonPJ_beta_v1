@@ -798,8 +798,8 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
       scrollDirection: Axis.horizontal, // 수평 스크롤 방향 설정
       child: Row(
         children: eventPosterImgItems.map((eventPosterImgItem) {
-          // 각 항목의 이미지 URL 가져오기, 이미지가 없을 경우 'No Image' 텍스트 사용
-          final posterImg = eventPosterImgItem['poster_img'] as String? ?? '';
+          // 각 항목의 이미지 URL 가져오기, 이미지가 없을 경우 '' 빈 칸 사용
+          final posterImg = eventPosterImgItem['poster_1'] as String? ?? '';
 
           return Container(
             width: DetailDocWidth, // 설정된 가로 크기 사용
@@ -818,18 +818,27 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
               ],
             ),
             child: GestureDetector(
-              onTap: () {
-                // 이미지 클릭 시 상세 이미지 화면으로 이동
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    // 클릭된 이미지의 상세 화면으로 이동 라우트 정의
-                    builder: (_) => ProductDetailOriginalImageScreen(
-                      images: [posterImg], // 클릭한 이미지 전달
-                      initialPage: 0, // 첫 번째 페이지로 시작
+              onTap: () async {
+                // ------ 이벤트 포스터 이미지 클릭 시, 원본 이미지를 로드하는 로직 시작 부분
+                // eventPosterImgItemsProvider의 notifier를 통해 원본 이미지를 비동기적으로 로드
+                final images = await ref.read(eventPosterImgItemsProvider.notifier)
+                    .loadEventPosterOriginalImages(eventPosterImgItem['id']);
+
+                // ------ 이미지 클릭 시 상세 이미지 화면으로 이동 시작 부분
+                // 로드된 이미지가 있을 경우, 상세 이미지 화면으로 네비게이션
+                if (images.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      // 클릭된 이미지의 상세 화면으로 이동 라우트 정의
+                      builder: (_) =>
+                          ProductDetailOriginalImageScreen(
+                            images: images, // 클릭한 이미지 리스트를 전달
+                            initialPage: 0, // 첫 번째 페이지로 시작
+                          ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
               // 포스터 이미지가 있으면 이미지를 표시하고, 없으면 아이콘을 표시
               child: posterImg != null && posterImg!.isNotEmpty

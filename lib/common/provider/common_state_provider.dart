@@ -88,6 +88,12 @@ class EventPosterImgItemsNotifier extends StateNotifier<List<Map<String, dynamic
         print("데이터 로드를 완료했습니다.");
     }
 
+    // 이벤트 섹션 내 특정 문서의 모든 이벤트 이미지를 가져오는 함수
+    Future<List<String>> loadEventPosterOriginalImages(String documentId) async {
+        // eventPosterImgItemRepository를 통해 documentId에 해당하는 이벤트 원본 이미지를 가져옴
+        return await eventPosterImgItemRepository.getEventPosterOriginalImages(documentId);
+    }
+
     // 이벤트 포스터 이미지 데이터를 초기화하고 상태를 재설정하는 함수임
     void resetEventPosterImgItems() {
         isLoadingMore = false; // 로딩 플래그를 초기화함

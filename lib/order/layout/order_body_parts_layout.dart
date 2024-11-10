@@ -512,7 +512,7 @@ class OrderListItemWidget extends ConsumerWidget {
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 날짜 포맷을 지정.
-    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateFormat = DateFormat('yyyy.MM.dd');
     // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
     final orderDate = (order!['numberInfo']['order_date'] as Timestamp).toDate();
     // 발주번호를 가져옴.
@@ -622,7 +622,7 @@ class OrderListItemWidget extends ConsumerWidget {
                                     // orderlistItemsProvider에서 OrderlistItemsNotifier를 읽어와 호출함.
                                     await ref.read(orderlistItemsProvider.notifier)
                                     // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
-                                        .deleteOrderItem(orderNumber);
+                                        .deleteOrderItems(orderNumber);
                                     Navigator.of(context).pop(); // 성공적으로 삭제된 후 대화상자를 닫음
                                     showCustomSnackBar(context, '요청 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
                                   } catch (e) { // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
@@ -720,7 +720,7 @@ class _OrderListDetailItemWidgetState
     final double orderlistDtInfoProdNumberDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoOriginalPriceDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPriceDataFontSize =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPercentDataFontSize =
@@ -732,18 +732,19 @@ class _OrderListDetailItemWidgetState
     final double orderlistDtInfoColorTextDataFontSize =
         screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoSizeTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
     final double interval3Y = screenSize.height * (15 / referenceHeight); // 세로 간격 3 계산
+    final double interval4Y = screenSize.height * (2 / referenceHeight); // 세로 간격 4 계산
     final double interval1X = screenSize.width * (40 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
     final double interval3X = screenSize.width * (70 / referenceWidth); // 가로 간격 3 계산
 
     // 날짜 형식을 'yyyy-MM-dd'로 지정함
-    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateFormat = DateFormat('yyyy.MM.dd');
 
     // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환함
     final orderDate = widget.order!['numberInfo']['order_date']
@@ -925,6 +926,7 @@ class _OrderListDetailItemWidgetState
                                                   decoration: TextDecoration.lineThrough,
                                                 ),
                                               ),
+                                              SizedBox(height: interval4Y),
                                               Row(
                                                 children: [
                                                   Text(
@@ -948,6 +950,7 @@ class _OrderListDetailItemWidgetState
                                                   // ),
                                                 ],
                                               ),
+                                              SizedBox(height: interval4Y),
                                               Row(
                                                 children: [
                                                   // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
@@ -985,7 +988,7 @@ class _OrderListDetailItemWidgetState
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(height: interval1Y),
+                                              SizedBox(height: interval4Y),
                                               // 선택된 사이즈와 수량을 표시
                                               Text(
                                                   '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
