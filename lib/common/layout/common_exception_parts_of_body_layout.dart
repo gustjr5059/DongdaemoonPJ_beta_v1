@@ -105,7 +105,6 @@ AppBar buildCommonAppBar({
       LeadingType.drawer, // 왼쪽 상단 버튼 유형을 결정하는 열거형, 기본값은 드로어 버튼.
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수 추가
 }) {
-
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -115,7 +114,8 @@ AppBar buildCommonAppBar({
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 앱 바 내 title 글자 크기
-  final double titleFontSize = screenSize.height * (17 / referenceHeight); // 텍스트 크기
+  final double titleFontSize =
+      screenSize.height * (17 / referenceHeight); // 텍스트 크기
 
   // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
@@ -124,7 +124,7 @@ AppBar buildCommonAppBar({
   // 왼쪽 상단에 표시될 위젯을 설정함.
   Widget? leadingWidget;
   switch (leadingType) {
-  // 이전 화면으로 이동 버튼인 경우
+    // 이전 화면으로 이동 버튼인 경우
     case LeadingType.back:
       if (chevronIconWidth != null &&
           chevronIconHeight != null &&
@@ -142,14 +142,15 @@ AppBar buildCommonAppBar({
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
               } else {
-                showCustomSnackBar(context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 돌아갈 수 없다는 메시지 표시
+                showCustomSnackBar(
+                    context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 돌아갈 수 없다는 메시지 표시
               }
             },
           ),
         );
       }
       break;
-  // 드로워화면 버튼인 경우
+    // 드로워화면 버튼인 경우
     case LeadingType.drawer:
       if (drawerIconWidth != null &&
           drawerIconHeight != null &&
@@ -172,7 +173,7 @@ AppBar buildCommonAppBar({
         );
       }
       break;
-  // 버튼이 없는 경우
+    // 버튼이 없는 경우
     case LeadingType.none:
       leadingWidget = null; // 아무런 위젯도 표시하지 않음.
       break;
@@ -182,11 +183,11 @@ AppBar buildCommonAppBar({
   List<Widget> actions = [];
   switch (buttonCase) {
     case 1:
-    // 케이스 1: 아무 내용도 없음
-    //   actions.add(Container(width: 48)); // 빈 공간 추가
+      // 케이스 1: 아무 내용도 없음
+      //   actions.add(Container(width: 48)); // 빈 공간 추가
       break;
     case 2:
-    // 케이스 2: 찜 목록 버튼만 노출
+      // 케이스 2: 찜 목록 버튼만 노출
       if (wishlistBtnWidth != null &&
           wishlistBtnHeight != null &&
           wishlistBtnX != null &&
@@ -196,25 +197,22 @@ AppBar buildCommonAppBar({
             width: wishlistBtnWidth,
             height: wishlistBtnHeight,
             margin: EdgeInsets.only(
-                right: wishlistBtnX,
-                top: wishlistBtnY
-            ), // 찜 목록 버튼의 위치 설정
+                right: wishlistBtnX, top: wishlistBtnY), // 찜 목록 버튼의 위치 설정
             child: IconButton(
               icon: Icon(Icons.favorite_border, color: Colors.black),
               // 찜 목록 아이콘을 사용함.
               // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
               // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
               // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
-              onPressed: () =>
-                  navigateToScreenAndRemoveUntil(
-                      context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
             ),
           ),
         );
       }
       break;
     case 3:
-    // 케이스 3: 찜 목록 버튼, 홈 버튼 노출
+      // 케이스 3: 찜 목록 버튼, 홈 버튼 노출
       if (wishlistBtnWidth != null &&
           wishlistBtnHeight != null &&
           wishlistBtnX != null &&
@@ -234,9 +232,8 @@ AppBar buildCommonAppBar({
             ),
             child: IconButton(
               icon: Icon(Icons.favorite_border, color: Colors.black),
-              onPressed: () =>
-                  navigateToScreenAndRemoveUntil(
-                      context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
             ),
           ),
           // 홈 버튼
@@ -249,16 +246,15 @@ AppBar buildCommonAppBar({
             ),
             child: IconButton(
               icon: Icon(Icons.home_outlined, color: Colors.black),
-              onPressed: () =>
-                  navigateToScreenAndRemoveUntil(
-                      context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
             ),
           ),
         ]);
       }
       break;
     case 4:
-    // 케이스 4: 찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출
+      // 케이스 4: 찜 목록 버튼, 홈 버튼, 장바구니 버튼 노출
       if (wishlistBtnWidth != null &&
           wishlistBtnHeight != null &&
           wishlistBtnX != null &&
@@ -282,9 +278,8 @@ AppBar buildCommonAppBar({
             ),
             child: IconButton(
               icon: Icon(Icons.favorite_border, color: Colors.black),
-              onPressed: () =>
-                  navigateToScreenAndRemoveUntil(
-                      context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
             ),
           ),
           // 홈 버튼
@@ -297,9 +292,8 @@ AppBar buildCommonAppBar({
             ),
             child: IconButton(
               icon: Icon(Icons.home_outlined, color: Colors.black),
-              onPressed: () =>
-                  navigateToScreenAndRemoveUntil(
-                      context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
             ),
           ),
           // 장바구니 버튼
@@ -312,9 +306,8 @@ AppBar buildCommonAppBar({
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
-              onPressed: () =>
-                  navigateToScreenAndRemoveUntil(
-                      context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
+              onPressed: () => navigateToScreenAndRemoveUntil(
+                  context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
             ),
           ),
         ]);
@@ -324,15 +317,20 @@ AppBar buildCommonAppBar({
 
   // AppBar를 반환
   return AppBar(
-    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    // 앱 기본 배경색
     // 앱 바 배경 색상 : 앱 기본 배경색
     // AppBar 색상 설정
-    toolbarHeight: appBarHeight, // 앱 바의 높이를 설정
+    toolbarHeight: appBarHeight,
+    // 앱 바의 높이를 설정
     title: Container(
       // alignment: Alignment.center,
-      width: appBarTitleWidth, // 텍스트 너비 설정
-      height: appBarTitleHeight, // 텍스트 높이 설정
-      margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY), // 텍스트 위치 설정
+      width: appBarTitleWidth,
+      // 텍스트 너비 설정
+      height: appBarTitleHeight,
+      // 텍스트 높이 설정
+      margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY),
+      // 텍스트 위치 설정
 
       // children: <Widget>[
       //   Expanded(
@@ -379,16 +377,16 @@ AppBar buildCommonAppBar({
 
 // ------ buildCommonBottomNavigationBar 위젯 내용 구현 시작
 // BottomNavigationBar 생성 함수
-Widget buildCommonBottomNavigationBar(
-    int selectedIndex, WidgetRef ref, BuildContext context, int colorCase, int navigationCase, {ProductContent? product, required ScrollController scrollController}) {
-
+Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
+    BuildContext context, int colorCase, int navigationCase,
+    {ProductContent? product, required ScrollController scrollController}) {
   // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
   final numberFormat = NumberFormat('###,###'); // 천 단위일때마다 쉼표 표시
 
   switch (navigationCase) {
-  // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
+    // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
     case 1:
-    // 선택된 아이템의 색상을 초기화
+      // 선택된 아이템의 색상을 초기화
       Color selectedColor = Colors.black;
       // 선택되지 않은 아이템의 색상을 초기화
       Color unselectedColor = Colors.white;
@@ -417,12 +415,15 @@ Widget buildCommonBottomNavigationBar(
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.098, // 화면 높이에 비례하여 동적 높이 설정
+            height: MediaQuery.of(context).size.height *
+                0.098, // 화면 높이에 비례하여 동적 높이 설정
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               // BottomNavigationBar 타입을 고정형으로 설정
-              backgroundColor: Color(0xFFE17735), // 배경색을 0xFF6FAD96으로 설정,
-              currentIndex: selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0,
+              backgroundColor: Color(0xFFE17735),
+              // 배경색을 0xFF6FAD96으로 설정,
+              currentIndex:
+                  selectedIndex >= 0 && selectedIndex < 4 ? selectedIndex : 0,
               // 현재 선택된 인덱스를 설정, 범위가 벗어나면 0으로 설정
               onTap: (index) {
                 // 다른 인덱스가 선택된 경우
@@ -447,7 +448,7 @@ Widget buildCommonBottomNavigationBar(
                           return HomeMainScreen();
                       }
                     }),
-                        (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
+                    (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
                   );
                 } else {
                   // 현재 화면이 이미 선택된 화면인 경우, 스크롤 위치를 초기화
@@ -464,22 +465,28 @@ Widget buildCommonBottomNavigationBar(
               items: [
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.5), // 간격을 51로 설정 (좌우 25.5씩)
-                    child: Icon(Icons.home_outlined, size: 24,), // 홈 아이콘
+                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
+                    // 간격을 51로 설정 (좌우 25.5씩)
+                    child: Icon(
+                      Icons.home_outlined,
+                      size: 24,
+                    ), // 홈 아이콘
                   ),
                   label: '홈', // 홈 라벨
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.5),
-                    child: Icon(Icons.shopping_cart_outlined, size: 24), // 장바구니 아이콘
+                    child: Icon(Icons.shopping_cart_outlined,
+                        size: 24), // 장바구니 아이콘
                   ),
                   label: '장바구니', // 장바구니 라벨
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.5),
-                    child: Icon(Icons.receipt_long_outlined, size: 24), // 발주 내역 아이콘
+                    child: Icon(Icons.receipt_long_outlined,
+                        size: 24), // 발주 내역 아이콘
                   ),
                   label: '발주내역', // 발주 내역 라벨
                 ),
@@ -493,8 +500,10 @@ Widget buildCommonBottomNavigationBar(
               ],
               selectedItemColor: selectedColor,
               unselectedItemColor: unselectedColor,
-              selectedFontSize: 10, // 선택된 아이템의 폰트 크기
-              unselectedFontSize: 10, // 선택되지 않은 아이템의 폰트 크기
+              selectedFontSize: 10,
+              // 선택된 아이템의 폰트 크기
+              unselectedFontSize: 10,
+              // 선택되지 않은 아이템의 폰트 크기
               selectedLabelStyle: TextStyle(
                 fontFamily: 'NanumGothic', // 폰트 패밀리 설정
                 fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
@@ -551,36 +560,56 @@ Widget buildCommonBottomNavigationBar(
         ),
       );
 
-  // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
+    // '장바구니', '바로 발주' 버튼을 UI로 구현한 케이스
     case 2:
       if (product == null) {
-        throw ArgumentError('Product must be provided for navigation case 2'); // 제품이 제공되지 않은 경우 예외 처리
+        throw ArgumentError(
+            'Product must be provided for navigation case 2'); // 제품이 제공되지 않은 경우 예외 처리
       }
 
       // 선택된 색상, 사이즈, 수량 등을 상태에서 가져옴
-      final selectedColorUrl = ref.watch(colorSelectionUrlProvider); // 선택된 색상 URL 상태 값 가져오기
-      final selectedColorText = ref.watch(colorSelectionTextProvider); // 선택된 색상 텍스트 상태 값 가져오기
-      final selectedSize = ref.watch(sizeSelectionIndexProvider); // 선택된 사이즈 상태 값 가져오기
-      final quantity = ref.watch(detailQuantityIndexProvider); // 선택된 수량 상태 값 가져오기
+      final selectedColorUrl =
+          ref.watch(colorSelectionUrlProvider); // 선택된 색상 URL 상태 값 가져오기
+      final selectedColorText =
+          ref.watch(colorSelectionTextProvider); // 선택된 색상 텍스트 상태 값 가져오기
+      final selectedSize =
+          ref.watch(sizeSelectionIndexProvider); // 선택된 사이즈 상태 값 가져오기
+      final quantity =
+          ref.watch(detailQuantityIndexProvider); // 선택된 수량 상태 값 가져오기
 
       // 선택된 수량을 반영하여 가격 계산
-      double totalProductPrice = (product.originalPrice ?? 0).toDouble() * quantity; // 총 제품 가격 계산
-      double productDiscountPrice = ((product.originalPrice ?? 0).toDouble() - (product.discountPrice ?? 0).toDouble()) * quantity; // 할인된 금액 계산
-      double totalPaymentPrice = (product.discountPrice ?? 0).toDouble() * quantity; // 총 결제 금액 계산
+      double totalProductPrice =
+          (product.originalPrice ?? 0).toDouble() * quantity; // 총 제품 가격 계산
+      double productDiscountPrice = ((product.originalPrice ?? 0).toDouble() -
+              (product.discountPrice ?? 0).toDouble()) *
+          quantity; // 할인된 금액 계산
+      double totalPaymentPrice =
+          (product.discountPrice ?? 0).toDouble() * quantity; // 총 결제 금액 계산
 
       // 선택된 옵션과 수량을 반영한 ProductContent 객체 생성
       final orderProduct = ProductContent(
-        docId: product.docId, // 제품 문서 ID 설정
-        category: product.category ?? '', // 제품 카테고리 설정
-        productNumber: product.productNumber ?? '', // 제품 번호 설정
-        thumbnail: product.thumbnail ?? '', // 제품 썸네일 설정
-        briefIntroduction: product.briefIntroduction ?? '', // 제품 간단 소개 설정
-        originalPrice: (product.originalPrice ?? 0), // 원래 가격 설정
-        discountPrice: (product.discountPrice ?? 0), // 할인 가격 설정
-        discountPercent: (product.discountPercent ?? 0), // 할인 퍼센트 설정
-        selectedCount: quantity, // 선택한 수량 설정
-        selectedColorImage: selectedColorUrl ?? '', // 선택한 색상 이미지 URL 설정
-        selectedColorText: selectedColorText ?? '', // 선택한 색상 텍스트 설정
+        docId: product.docId,
+        // 제품 문서 ID 설정
+        category: product.category ?? '',
+        // 제품 카테고리 설정
+        productNumber: product.productNumber ?? '',
+        // 제품 번호 설정
+        thumbnail: product.thumbnail ?? '',
+        // 제품 썸네일 설정
+        briefIntroduction: product.briefIntroduction ?? '',
+        // 제품 간단 소개 설정
+        originalPrice: (product.originalPrice ?? 0),
+        // 원래 가격 설정
+        discountPrice: (product.discountPrice ?? 0),
+        // 할인 가격 설정
+        discountPercent: (product.discountPercent ?? 0),
+        // 할인 퍼센트 설정
+        selectedCount: quantity,
+        // 선택한 수량 설정
+        selectedColorImage: selectedColorUrl ?? '',
+        // 선택한 색상 이미지 URL 설정
+        selectedColorText: selectedColorText ?? '',
+        // 선택한 색상 텍스트 설정
         selectedSize: selectedSize ?? '', // 선택한 사이즈 설정
       );
 
@@ -595,86 +624,105 @@ Widget buildCommonBottomNavigationBar(
 
       // 버튼 관련 수치 동적 적용
       final double bottomBtnC2Width = screenSize.width * (166 / referenceWidth);
-      final double bottomBtnC2Height = screenSize.height * (50 / referenceHeight);
+      final double bottomBtnC2Height =
+          screenSize.height * (50 / referenceHeight);
       final double bottomBtnC2X = screenSize.width * (20 / referenceWidth);
       final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
       final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
-      final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
+      final double bottomBtnFontSize =
+          screenSize.height * (14 / referenceHeight);
 
       // 컨텐츠 사이의 수치 적용
       final double interval1X = screenSize.width * (10 / referenceWidth);
 
-  return Container(
-    color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
-    child: SafeArea(
-      bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.098, // 화면 높이에 비례하여 동적 높이 설정
-          padding: EdgeInsets.only(bottom: bottomBarC2Y),
-          // UI 패딩 설정
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: bottomBtnC2X, vertical: bottomBtnC2Y), // 좌우 bottomBtnC2X, 상하 bottomBtnC2Y의 여백 추가
-            child: Row( // 수평으로 배치되는 Row 위젯 사용
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Row 내부 위젯들을 양 끝에 배치
-              children: [
-                Container(
-                  width: bottomBtnC2Width,
-                  height: bottomBtnC2Height,
-                  child: ElevatedButton(
-                    onPressed: () => onCartButtonPressed(context, ref, product), // 요청품목 버튼 클릭 시 실행될 함수 지정
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:  Colors.white, // 텍스트 색상
-                      backgroundColor: Color(0xFFE17735), // 배경 색상
-                    ),
-                    child: Text('장바구니 담기',
-                      style: TextStyle(
-                        fontFamily: 'NanumGothic',
-                        fontSize: bottomBtnFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
+        child: SafeArea(
+          bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
+          child: Container(
+            height: MediaQuery.of(context).size.height *
+                0.098, // 화면 높이에 비례하여 동적 높이 설정
+            padding: EdgeInsets.only(bottom: bottomBarC2Y),
+            // UI 패딩 설정
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: bottomBtnC2X, vertical: bottomBtnC2Y),
+              // 좌우 bottomBtnC2X, 상하 bottomBtnC2Y의 여백 추가
+              child: Row(
+                // 수평으로 배치되는 Row 위젯 사용
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Row 내부 위젯들을 양 끝에 배치
+                children: [
+                  Container(
+                    width: bottomBtnC2Width,
+                    height: bottomBtnC2Height,
+                    child: ElevatedButton(
+                      onPressed: () =>
+                          onCartButtonPressed(context, ref, product),
+                      // 요청품목 버튼 클릭 시 실행될 함수 지정
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, // 텍스트 색상
+                        backgroundColor: Color(0xFFE17735), // 배경 색상
                       ),
-                    ), // 버튼 텍스트 설정
-                  ),
-                ),
-                SizedBox(width: interval1X), // 버튼들 사이에 10픽셀 너비의 여백 추가
-                Container(
-                  width: bottomBtnC2Width,
-                  height: bottomBtnC2Height,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
-                      ref.read(orderItemsProvider.notifier).setOrderItems([orderProduct]); // 주문 아이템 상태 업데이트
-                      // OrderMainScreen으로 화면 전환
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => OrderMainScreen(
-                          totalProductPrice: totalProductPrice.toDouble(), // 총 제품 가격 전달
-                          productDiscountPrice: productDiscountPrice.toDouble(), // 할인된 금액 전달
-                          totalPaymentPrice: totalPaymentPrice.toDouble(), // 총 결제 금액 전달
-                        )),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:  Colors.white, // 텍스트 색상
-                      backgroundColor: Color(0xFFE17735), // 배경 색상
+                      child: Text(
+                        '장바구니 담기',
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: bottomBtnFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ), // 버튼 텍스트 설정
                     ),
-                    child: Text('바로 발주',
-                      style: TextStyle(
-                        fontFamily: 'NanumGothic',
-                        fontSize: bottomBtnFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),// 텍스트를 굵게 설정 // 버튼 텍스트 설정
                   ),
-                ),
-              ],
+                  SizedBox(width: interval1X), // 버튼들 사이에 10픽셀 너비의 여백 추가
+                  Container(
+                    width: bottomBtnC2Width,
+                    height: bottomBtnC2Height,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
+                        ref
+                            .read(orderItemsProvider.notifier)
+                            .setOrderItems([orderProduct]); // 주문 아이템 상태 업데이트
+                        // OrderMainScreen으로 화면 전환
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (_) => OrderMainScreen(
+                                    totalProductPrice:
+                                        totalProductPrice.toDouble(),
+                                    // 총 제품 가격 전달
+                                    productDiscountPrice:
+                                        productDiscountPrice.toDouble(),
+                                    // 할인된 금액 전달
+                                    totalPaymentPrice: totalPaymentPrice
+                                        .toDouble(), // 총 결제 금액 전달
+                                  )),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, // 텍스트 색상
+                        backgroundColor: Color(0xFFE17735), // 배경 색상
+                      ),
+                      child: Text(
+                        '바로 발주',
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: bottomBtnFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ), // 텍스트를 굵게 설정 // 버튼 텍스트 설정
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-    ),
-  );
+      );
 
-  // '전체 체크박스', '합계' '발주하기' 버튼을 UI로 구현한 케이스 - 장바구니 화면에 구현
+    // '전체 체크박스', '합계' '발주하기' 버튼을 UI로 구현한 케이스 - 장바구니 화면에 구현
     case 3:
       // 전체 체크박스 선택 여부를 상태로 관리
       final allChecked = ref.watch(allCheckedProvider);
@@ -686,23 +734,41 @@ Widget buildCommonBottomNavigationBar(
           // 아이템 목록 중 선택된 아이템만 필터링
           .where((item) => item['bool_checked'] == true)
           // 선택된 아이템들의 합계 금액을 계산
-          .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt());
+          .fold(
+              0,
+              (sum, item) =>
+                  sum +
+                  (item['discount_price'] as num).toInt() *
+                      (item['selected_count'] as num).toInt());
 
       int totalProductPrice = cartItems
           .where((item) => item['bool_checked'] == true) // 선택된 아이템들만 필터링
-          .fold(0, (sum, item) => sum + (item['original_price'] as num).toInt() * (item['selected_count'] as num).toInt()); // 원래 가격과 선택된 수량을 곱한 값을 더하여 총 상품금액 계산
+          .fold(
+              0,
+              (sum, item) =>
+                  sum +
+                  (item['original_price'] as num).toInt() *
+                      (item['selected_count'] as num)
+                          .toInt()); // 원래 가격과 선택된 수량을 곱한 값을 더하여 총 상품금액 계산
 
       int totalPaymentPrice = cartItems
           .where((item) => item['bool_checked'] == true) // 선택된 아이템들만 필터링
-          .fold(0, (sum, item) => sum + (item['discount_price'] as num).toInt() * (item['selected_count'] as num).toInt()); // 할인된 가격과 선택된 수량을 곱한 값을 더하여 총 결제금액 계산
+          .fold(
+              0,
+              (sum, item) =>
+                  sum +
+                  (item['discount_price'] as num).toInt() *
+                      (item['selected_count'] as num)
+                          .toInt()); // 할인된 가격과 선택된 수량을 곱한 값을 더하여 총 결제금액 계산
 
-      int totalDiscountPrice = totalProductPrice - totalPaymentPrice; // 총 상품금액에서 총 결제금액을 빼서 총 할인금액 계산
+      int totalDiscountPrice = totalProductPrice -
+          totalPaymentPrice; // 총 상품금액에서 총 결제금액을 빼서 총 할인금액 계산
 
       // 발주 화면에서 사용할 선택된 아이템들을 필터링하고 ProductContent 객체로 변환하여 리스트로 저장
       final orderProducts = cartItems
-      // cartItems 리스트에서 'bool_checked'가 true인 아이템들만 필터링
+          // cartItems 리스트에서 'bool_checked'가 true인 아이템들만 필터링
           .where((item) => item['bool_checked'] == true)
-      // 필터링된 아이템들을 map 함수를 사용하여 ProductContent 객체로 변환
+          // 필터링된 아이템들을 map 함수를 사용하여 ProductContent 객체로 변환
           .map((item) {
         return ProductContent(
           // ProductContent 객체의 docId 필드를 item의 'product_id' 값으로 설정
@@ -731,7 +797,7 @@ Widget buildCommonBottomNavigationBar(
           selectedSize: item['selected_size'],
         );
       })
-      // 변환된 ProductContent 객체들을 리스트로 저장
+          // 변환된 ProductContent 객체들을 리스트로 저장
           .toList();
 
       // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -745,117 +811,132 @@ Widget buildCommonBottomNavigationBar(
 
       // 버튼 관련 수치 동적 적용
       final double bottomBtnC2Width = screenSize.width * (100 / referenceWidth);
-      final double bottomBtnC2Height = screenSize.height * (40 / referenceHeight);
+      final double bottomBtnC2Height =
+          screenSize.height * (40 / referenceHeight);
       final double bottomBtnC1X = screenSize.width * (2 / referenceWidth);
       final double bottomBtnC2X = screenSize.width * (24 / referenceWidth);
       final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
       final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
-      final double bottomTextFontSize = screenSize.height * (14 / referenceHeight);
-      final double bottomBtnFontSize = screenSize.height * (14 / referenceHeight);
+      final double bottomTextFontSize =
+          screenSize.height * (14 / referenceHeight);
+      final double bottomBtnFontSize =
+          screenSize.height * (14 / referenceHeight);
 
-  return Container(
-    color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
-    child: SafeArea(
-      bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.098, // 화면 높이에 비례하여 동적 높이 설정
-        padding: EdgeInsets.only(bottom: bottomBarC2Y),
-        child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: bottomBtnC2X, vertical: bottomBtnC2Y), // 좌우 bottomBtnC2X, 상하 bottomBtnC2Y의 여백 추가
-          child: Row(
-            // Row의 주 축 방향에서의 정렬 방식을 공간을 동일하게 나눔
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // 전체 선택 체크박스와 텍스트를 담을 Row
-              Row(
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
+        child: SafeArea(
+          bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
+          child: Container(
+            height: MediaQuery.of(context).size.height *
+                0.098, // 화면 높이에 비례하여 동적 높이 설정
+            padding: EdgeInsets.only(bottom: bottomBarC2Y),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: bottomBtnC2X, vertical: bottomBtnC2Y),
+              // 좌우 bottomBtnC2X, 상하 bottomBtnC2Y의 여백 추가
+              child: Row(
+                // Row의 주 축 방향에서의 정렬 방식을 공간을 동일하게 나눔
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // 체크박스 크기를 1.3배로 확대
-                  Transform.scale(
-                    scale: 1.2,
-                    child: Checkbox(
-                      // 체크박스의 선택 여부를 allChecked 상태로 설정
-                      value: allChecked,
-                      activeColor: Color(0xFFE17735),  // 체크박스 색상 변경
-                      // 체크박스 상태 변경 시 호출되는 함수
-                      onChanged: (bool? value) {
-                        // allCheckedProvider 상태 업데이트
-                        ref.read(allCheckedProvider.notifier).state = value!;
-                        // cartItemsProvider 상태에서 모든 아이템의 체크 상태를 변경
-                        ref.read(cartItemsProvider.notifier).toggleAll(value);
-                      },
-                    ),
+                  // 전체 선택 체크박스와 텍스트를 담을 Row
+                  Row(
+                    children: [
+                      // 체크박스 크기를 1.3배로 확대
+                      Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          // 체크박스의 선택 여부를 allChecked 상태로 설정
+                          value: allChecked,
+                          activeColor: Color(0xFFE17735), // 체크박스 색상 변경
+                          // 체크박스 상태 변경 시 호출되는 함수
+                          onChanged: (bool? value) {
+                            // allCheckedProvider 상태 업데이트
+                            ref.read(allCheckedProvider.notifier).state =
+                                value!;
+                            // cartItemsProvider 상태에서 모든 아이템의 체크 상태를 변경
+                            ref
+                                .read(cartItemsProvider.notifier)
+                                .toggleAll(value);
+                          },
+                        ),
+                      ),
+                      // 체크박스와 텍스트 사이의 간격 설정
+                      SizedBox(width: bottomBtnC1X),
+                      // "전체" 텍스트를 표시
+                      Text(
+                        '전체',
+                        // 텍스트 스타일 설정
+                        style: TextStyle(
+                          fontSize: bottomTextFontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumGothic',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
-                  // 체크박스와 텍스트 사이의 간격 설정
-                  SizedBox(width: bottomBtnC1X),
-                  // "전체" 텍스트를 표시
-                  Text(
-                    '전체',
-                      // 텍스트 스타일 설정
-                      style: TextStyle(
-                        fontSize: bottomTextFontSize,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'NanumGothic',
-                        color: Colors.black,
+                  // 합계 텍스트를 중앙에 위치하도록 Expanded로 감쌈
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        '합계: ${numberFormat.format(totalSelectedPrice)}원',
+                        style: TextStyle(
+                          fontSize: bottomTextFontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumGothic',
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                 ],
-              ),
-              // 합계 텍스트를 중앙에 위치하도록 Expanded로 감쌈
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '합계: ${numberFormat.format(totalSelectedPrice)}원',
-                    style: TextStyle(
-                      fontSize: bottomTextFontSize,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
-                      color: Colors.black,
-                    ),
                   ),
-                ),
-              ),
 
-              // 오른쪽에 "발주하기" 버튼을 배치
-              Container(
-                width: bottomBtnC2Width,
-                height: bottomBtnC2Height,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (orderProducts.isEmpty) {
-                      showCustomSnackBar(context, '업데이트 요청할 상품을 선택해주세요.');
-                    } else {
-                      ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => OrderMainScreen(
-                          totalProductPrice: totalProductPrice.toDouble(),
-                          productDiscountPrice: totalDiscountPrice.toDouble(),
-                          totalPaymentPrice: totalPaymentPrice.toDouble(),
-                        )),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Color(0xFFE17735),
-                  ),
-                  child: Text(
-                    '발주하기',
-                    style: TextStyle(
-                      fontFamily: 'NanumGothic',
-                      fontSize: bottomBtnFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  // 오른쪽에 "발주하기" 버튼을 배치
+                  Container(
+                    width: bottomBtnC2Width,
+                    height: bottomBtnC2Height,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (orderProducts.isEmpty) {
+                          showCustomSnackBar(context, '업데이트 요청할 상품을 선택해주세요.');
+                        } else {
+                          ref
+                              .read(orderItemsProvider.notifier)
+                              .setOrderItems(orderProducts);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => OrderMainScreen(
+                                      totalProductPrice:
+                                          totalProductPrice.toDouble(),
+                                      productDiscountPrice:
+                                          totalDiscountPrice.toDouble(),
+                                      totalPaymentPrice:
+                                          totalPaymentPrice.toDouble(),
+                                    )),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Color(0xFFE17735),
+                      ),
+                      child: Text(
+                        '발주하기',
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: bottomBtnFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
     default:
       return Container(); // 기본으로 빈 컨테이너 반환
   }
@@ -936,7 +1017,6 @@ void navigateToScreenAndRemoveUntil(
 //   );
 // }
 TextStyle topBarTextStyle(int currentIndex, int buttonIndex) {
-
   return TextStyle(
     fontFamily: 'NanumGothic',
     fontSize: 16, // Figma에서 확인한 텍스트 크기
@@ -977,10 +1057,14 @@ Widget buildTopBarList(
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 탑 바 부분 수치
-  final double topBarListHeight = screenSize.width * (52 / referenceWidth); // 탑 바 리스트 높이
-  final double topBarListX = screenSize.width * (16 / referenceWidth); // 탑 바 리스트 X 좌표
-  final double topBarBtnHeight = screenSize.height * (52 / referenceHeight); // 탑 바 버튼 높이
-  final double topBarListPaddingX = screenSize.width * (22 / referenceWidth); // 탑 바 리스트 패딩 X 좌표
+  final double topBarListHeight =
+      screenSize.width * (52 / referenceWidth); // 탑 바 리스트 높이
+  final double topBarListX =
+      screenSize.width * (16 / referenceWidth); // 탑 바 리스트 X 좌표
+  final double topBarBtnHeight =
+      screenSize.height * (52 / referenceHeight); // 탑 바 버튼 높이
+  final double topBarListPaddingX =
+      screenSize.width * (22 / referenceWidth); // 탑 바 리스트 패딩 X 좌표
 
   // 각 카테고리를 탭했을 때 실행될 함수. 카테고리에 따라 다른 페이지로 이동함.
   return Consumer(
@@ -1007,11 +1091,13 @@ Widget buildTopBarList(
               },
               child: Container(
                 // 수정된 부분: Padding을 Container로 변경
-                alignment: Alignment.center, // Container 내부 내용을 중앙 정렬
+                alignment: Alignment.center,
+                // Container 내부 내용을 중앙 정렬
                 height: topBarBtnHeight,
-                padding: EdgeInsets.symmetric(horizontal: topBarListPaddingX), // 좌우로 패딩 적용
+                padding: EdgeInsets.symmetric(horizontal: topBarListPaddingX),
+                // 좌우로 패딩 적용
                 child:
-                Text(category, style: topBarTextStyle(currentIndex, index)),
+                    Text(category, style: topBarTextStyle(currentIndex, index)),
               ),
             );
           },
@@ -1054,26 +1140,18 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   final double flowImageHeight = screenSize.height * (20 / referenceHeight);
 
   // 이메일 부분 수치
-  final double emailTextFontSize =
-      screenSize.height * (17 / referenceHeight);
+  final double emailTextFontSize = screenSize.height * (17 / referenceHeight);
 
   // 로그아웃 버튼 부분 수치
-  final double logoutTextFontSize =
-      screenSize.height * (20 / referenceHeight);
-  final double logoutBtnSize =
-      screenSize.height * (20 / referenceHeight);
+  final double logoutTextFontSize = screenSize.height * (20 / referenceHeight);
+  final double logoutBtnSize = screenSize.height * (20 / referenceHeight);
 
   // 아이콘 사이의 간격 수치
-  final double interval1Y =
-      screenSize.height * (10 / referenceHeight);
-  final double interval2Y =
-      screenSize.height * (130 / referenceHeight);
-  final double interval3Y =
-      screenSize.height * (20 / referenceHeight);
-  final double interval1X =
-      screenSize.width * (10 / referenceWidth);
-  final double interval2X =
-      screenSize.width * (15 / referenceWidth);
+  final double interval1Y = screenSize.height * (10 / referenceHeight);
+  final double interval2Y = screenSize.height * (130 / referenceHeight);
+  final double interval3Y = screenSize.height * (20 / referenceHeight);
+  final double interval1X = screenSize.width * (10 / referenceWidth);
+  final double interval2X = screenSize.width * (15 / referenceWidth);
 
   // Drawer 위젯을 반환합니다. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
   return Drawer(
@@ -1091,8 +1169,10 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                 Container(
                   width: drawerLogoIconWidth,
                   height: drawerLogoIconHeight,
-                  padding: EdgeInsets.zero, // 패딩 제거
-                  margin: EdgeInsets.zero, // 마진 제거
+                  padding: EdgeInsets.zero,
+                  // 패딩 제거
+                  margin: EdgeInsets.zero,
+                  // 마진 제거
                   // decoration: BoxDecoration(
                   //   color: Colors.grey, // 회색 배경 설정 (테스트용)
                   // ),
@@ -1121,7 +1201,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(
-                left: flowImageLeft, top: flowImageTop,
+                left: flowImageLeft,
+                top: flowImageTop,
               ),
               child: Image.asset(
                 'asset/img/misc/drawer_img/flow_image.png',
@@ -1143,34 +1224,54 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   '네이버 카페',
                   'https://cafe.naver.com/ottbayo',
                   'asset/img/misc/drawer_img/naver_logo_v1.png',
-                 ),
-                SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+                ),
+                SizedBox(height: interval1Y),
+                // 간격을 위한 SizedBox
                 _buildListTile(
                   context,
                   '카카오톡',
                   'https://pf.kakao.com/_xjVrbG',
                   'asset/img/misc/drawer_img/kakao_logo_v1.png',
                 ),
-                SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+                SizedBox(height: interval1Y),
+                // 간격을 위한 SizedBox
                 _buildListTile(
-                   context,
-                   '유튜브',
-                   'https://www.youtube.com/@OTTBAYO',
-                   'asset/img/misc/drawer_img/youtube_logo_v1.png',
-                 ),
-                 SizedBox(height: interval1Y), // 간격을 위한 SizedBox
-                 _buildListTile(
-                    context,
-                    '인스타그램',
-                    'https://www.instagram.com/ottbayo',
-                    'asset/img/misc/drawer_img/instagram_logo_v1.png',
-                 ),
-                // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     await createFirestoreDocuments();
+                  context,
+                  '유튜브',
+                  'https://www.youtube.com/@OTTBAYO',
+                  'asset/img/misc/drawer_img/youtube_logo_v1.png',
+                ),
+                SizedBox(height: interval1Y),
+                // 간격을 위한 SizedBox
+                _buildListTile(
+                  context,
+                  '인스타그램',
+                  'https://www.instagram.com/ottbayo',
+                  'asset/img/misc/drawer_img/instagram_logo_v1.png',
+                ),
+                // // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
+                // // DB 생성 버튼
+                // GestureDetector(
+                //   onTap: () async {
+                //     // await createFirestoreDocuments_1();
+                //     // await createFirestoreDocuments_2();
+                //     await createFirestoreDocuments_3();
+                //     // 사용자에게 완료 메시지를 보여줌
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       SnackBar(content: Text('DB 생성이 완료되었습니다.')),
+                //     );
                 //   },
-                //   child: Text('FireStore 문서 생성'),
+                //   child: Center(
+                //     child: Text(
+                //       'DB 생성',
+                //       style: TextStyle(
+                //         fontFamily: 'NanumGothic',
+                //         color: Colors.blue,
+                //         fontSize: 18,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
                 // ),
 
                 // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
@@ -1180,24 +1281,27 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     context,
                     Icons.star,
                     '리뷰 관리',
-                        () => onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
+                    () =>
+                        onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
                   ),
                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
                   _buildAdminListTile(
                     context,
                     Icons.message,
                     '쪽지 관리',
-                        () => onMessageManagementClick(context, ref), // 클릭 시 실행될 함수 전달
+                    () => onMessageManagementClick(
+                        context, ref), // 클릭 시 실행될 함수 전달
                   ),
                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
                   _buildAdminListTile(
                     context,
                     Icons.receipt_long_outlined,
                     '발주내역 관리',
-                        () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
+                    () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
                   ),
                 ],
-                SizedBox(height: isAdmin ? interval3Y : interval2Y), // 관리자 여부에 따라 간격 조정
+                SizedBox(height: isAdmin ? interval3Y : interval2Y),
+                // 관리자 여부에 따라 간격 조정
                 // 로그아웃 버튼 항목
                 GestureDetector(
                   onTap: () async {
@@ -1208,11 +1312,13 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => LoginScreen()));
                   },
-                  child: Center( // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
+                  child: Center(
+                    // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
                     child: Row(
                       mainAxisSize: MainAxisSize.min, // Row 안의 요소들에 맞게 크기 조정
                       children: [
-                        Text('Logout',
+                        Text(
+                          'Logout',
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             color: Color(0xFF777777),
@@ -1221,7 +1327,9 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                           ),
                         ), // 로그아웃 텍스트
                         SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
-                        Icon(Icons.logout, color: Color(0xFF777777), size: logoutBtnSize), // 로그아웃 아이콘
+                        Icon(Icons.logout,
+                            color: Color(0xFF777777),
+                            size: logoutBtnSize), // 로그아웃 아이콘
                       ],
                     ),
                   ),
@@ -1235,7 +1343,6 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   );
 }
 // ------ buildCommonDrawer 위젯 내용 구현 끝
-
 
 // Widget _buildAdminListTile(
 //     BuildContext context, IconData icon, String title, Widget screen) {
@@ -1253,8 +1360,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //   );
 // }
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
-Widget _buildAdminListTile(BuildContext context, IconData icon, String title, void Function()? onTap) {
-
+Widget _buildAdminListTile(
+    BuildContext context, IconData icon, String title, void Function()? onTap) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -1268,47 +1375,49 @@ Widget _buildAdminListTile(BuildContext context, IconData icon, String title, vo
       screenSize.width * (40 / referenceWidth); // 가로 비율
 
   // 아이콘 텍스트 부분 수치
-  final double iconTextFontSize =
-      screenSize.height * (16 / referenceHeight);
+  final double iconTextFontSize = screenSize.height * (16 / referenceHeight);
 
   // 아이콘 사이의 간격 수치
-  final double interval1X =
-      screenSize.width * (14 / referenceWidth);
+  final double interval1X = screenSize.width * (14 / referenceWidth);
 
   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
   return ListTile(
-    leading: Icon(icon, color: Colors.black, size: iconImageWidth), // 아이콘을 왼쪽에 배치
-    title: Text(
-        title,
+    leading: Icon(icon, color: Colors.black, size: iconImageWidth),
+    // 아이콘을 왼쪽에 배치
+    title: Text(title,
         style: TextStyle(
           fontSize: iconTextFontSize,
           color: Colors.black, // 텍스트 색상
           fontFamily: 'NanumGothic',
           fontWeight: FontWeight.bold,
-        )), // 제목을 설정
-    contentPadding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우 간격 조정
+        )),
+    // 제목을 설정
+    contentPadding: EdgeInsets.symmetric(horizontal: interval1X),
+    // 좌우 간격 조정
     onTap: onTap, // 탭 이벤트 핸들러를 외부에서 전달받은 함수로 설정
   );
 }
 
 // 관리자 계정 항목 클릭 시, 실행될 함수들
 void onReviewManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, AdminReviewMainScreen(), 4); // 화면 이동 함수 호출
+  navigateToScreenAndRemoveUntil(
+      context, ref, AdminReviewMainScreen(), 4); // 화면 이동 함수 호출
 }
 
 void onMessageManagementClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, AdminMessageMainScreen(), 4); // 화면 이동 함수 호출
+  navigateToScreenAndRemoveUntil(
+      context, ref, AdminMessageMainScreen(), 4); // 화면 이동 함수 호출
 }
 
 void onOrderListClick(BuildContext context, WidgetRef ref) {
-  navigateToScreenAndRemoveUntil(context, ref, AdminOrderlistMainScreen(), 4); // 화면 이동 함수 호출
+  navigateToScreenAndRemoveUntil(
+      context, ref, AdminOrderlistMainScreen(), 4); // 화면 이동 함수 호출
 }
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 끝
 
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 시작
 Widget _buildListTile(
     BuildContext context, String title, String url, String leadingImage) {
-
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -1322,18 +1431,15 @@ Widget _buildListTile(
       screenSize.width * (40 / referenceWidth); // 가로 비율
 
   // 아이콘 텍스트 부분 수치
-  final double iconTextFontSize =
-      screenSize.height * (16 / referenceHeight);
+  final double iconTextFontSize = screenSize.height * (16 / referenceHeight);
 
   // 아이콘 사이의 간격 수치
-  final double interval1X =
-      screenSize.width * (14 / referenceWidth);
+  final double interval1X = screenSize.width * (14 / referenceWidth);
 
   // ListTile 위젯 반환
   return ListTile(
     leading: Image.asset(leadingImage, width: iconImageWidth), // 이미지를 왼쪽에 배치
-    title: Text(
-        title,
+    title: Text(title,
         style: TextStyle(
           fontSize: iconTextFontSize,
           color: Colors.black, // 텍스트 색상
@@ -1360,7 +1466,7 @@ Widget _buildListTile(
 // ------ 웹 링크를 포함한 리스트 타일을 생성하는 함수(위젯) 끝
 
 // ------ Firestore 문서를 생성하는 함수 구현 시작
-Future<void> createFirestoreDocuments() async {
+Future<void> createFirestoreDocuments_1() async {
   final firestore = FirebaseFirestore.instance;
   final batch = firestore.batch();
   const int originalPrice = 10000;
@@ -1450,12 +1556,14 @@ Future<void> createFirestoreDocuments() async {
 
       for (int k = 1; k < 16; k++) {
         int discountPercent = 9 + k; // k=1이면 10, k=2이면 11, ...
-        int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
+        int discountPrice =
+            originalPrice - (originalPrice * discountPercent ~/ 100);
         String subDocId = 'a${i}b${j}_${k}';
         String productNumber = 'A${i}B${j}_${k.toString().padLeft(3, '0')}';
         DocumentReference subDocRef = subCollectionRef.doc(subDocId);
 
-        String thumbnailUrl = 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
+        String thumbnailUrl =
+            'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
 
         // // 해당 필드값만 기존 필드값에서 새롭게 변경하고 싶을 때 사용하는 매서드
         // batch.update(subDocRef, {
@@ -1467,50 +1575,70 @@ Future<void> createFirestoreDocuments() async {
         // });
 
         // 해당 필드값으로 세팅하는 매서드 (SetOptions(merge: true)); // merge 옵션 사용을 해서 기존것이 날라가지않고 유지됨)
-        batch.set(subDocRef, {
-          'brief_introduction': briefIntroduction,
-          'clothes_color1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=37afbb86-6b75-470d-b00c-98e03e23f3e4',
-          'clothes_color2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=5925c7d9-2966-4273-b1bb-3207475200cd',
-          'clothes_color3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Flavender.png?alt=media&token=45ee6a67-62bf-4aa7-a5f3-a12b13684bd1',
-          'clothes_color4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=db961f7e-17da-4cd4-aad1-0ebb0e8ab8b2',
-          'clothes_color5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=869e517b-c07d-4744-acc9-592604438485',
-          'clothes_size1': 'S',
-          'clothes_size2': 'M',
-          'clothes_size3': 'L',
-          'clothes_size4': 'XL',
-          'color1_text': 'black',
-          'color2_text': 'brown',
-          'color3_text': 'lavender',
-          'color4_text': 'pink',
-          'color5_text': 'yellow',
-          // 상품 상세 화면 내 상단 이미지 페이지 뷰 관련 이미지 데이터
-          'detail_page_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
-          'detail_page_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
-          'detail_page_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
-          'detail_page_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
-          'detail_page_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
-          // 상품 상세 화면 내 상품 정보 관련 이미지 데이터
-          // 'detail_color_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image1.png?alt=media',
-          // 'detail_color_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image2.png?alt=media',
-          // 'detail_color_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image3.png?alt=media',
-          // 'detail_color_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image4.png?alt=media',
-          // 'detail_color_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image5.png?alt=media',
-          // 'detail_details_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fdetails_info%2Fdetail_details_image1.png?alt=media',
-          // 'detail_fabric_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Ffabric_info%2Fdetail_fabric_image1.png?alt=media',
-          'detail_intro_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image1.png?alt=media',
-          'detail_intro_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image2.png?alt=media',
-          'detail_intro_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image3.png?alt=media',
-          'detail_intro_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image4.png?alt=media',
-          // 'detail_intro_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image5.png?alt=media',
-          // 'detail_size_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media',
-          // 'detail_washing_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fwashing_info%2Fdetail_washing_image1.png?alt=media',
-          'discount_percent': discountPercent,
-          'discount_price': discountPrice,
-          'original_price': originalPrice,
-          'thumbnails': thumbnailUrl, // thumbnails 필드값 추가
-          'category': categoryText, // category 필드값 추가
-          'product_number': productNumber, // product_number 필드 추가
-        }, SetOptions(merge: true)); // merge 옵션 사용
+        batch.set(
+            subDocRef,
+            {
+              'brief_introduction': briefIntroduction,
+              'clothes_color1':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=37afbb86-6b75-470d-b00c-98e03e23f3e4',
+              'clothes_color2':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=5925c7d9-2966-4273-b1bb-3207475200cd',
+              'clothes_color3':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Flavender.png?alt=media&token=45ee6a67-62bf-4aa7-a5f3-a12b13684bd1',
+              'clothes_color4':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fpink.png?alt=media&token=db961f7e-17da-4cd4-aad1-0ebb0e8ab8b2',
+              'clothes_color5':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fyellow.png?alt=media&token=869e517b-c07d-4744-acc9-592604438485',
+              'clothes_size1': 'S',
+              'clothes_size2': 'M',
+              'clothes_size3': 'L',
+              'clothes_size4': 'XL',
+              'color1_text': 'black',
+              'color2_text': 'brown',
+              'color3_text': 'lavender',
+              'color4_text': 'pink',
+              'color5_text': 'yellow',
+              // 상품 상세 화면 내 상단 이미지 페이지 뷰 관련 이미지 데이터
+              'detail_page_image1':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+              'detail_page_image2':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+              'detail_page_image3':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+              'detail_page_image4':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+              'detail_page_image5':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+              // 상품 상세 화면 내 상품 정보 관련 이미지 데이터
+              // 'detail_color_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image1.png?alt=media',
+              // 'detail_color_image2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image2.png?alt=media',
+              // 'detail_color_image3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image3.png?alt=media',
+              // 'detail_color_image4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image4.png?alt=media',
+              // 'detail_color_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fcolor_info%2Fdetail_color_image5.png?alt=media',
+              // 'detail_details_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fdetails_info%2Fdetail_details_image1.png?alt=media',
+              // 'detail_fabric_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Ffabric_info%2Fdetail_fabric_image1.png?alt=media',
+              'detail_intro_image1':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image1.png?alt=media',
+              'detail_intro_image2':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image2.png?alt=media',
+              'detail_intro_image3':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image3.png?alt=media',
+              'detail_intro_image4':
+                  'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image4.png?alt=media',
+              // 'detail_intro_image5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2Fdetail_intro_image5.png?alt=media',
+              // 'detail_size_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fsize_info%2Fdetail_size_image1.png?alt=media',
+              // 'detail_washing_image1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fwashing_info%2Fdetail_washing_image1.png?alt=media',
+              'discount_percent': discountPercent,
+              'discount_price': discountPrice,
+              'original_price': originalPrice,
+              'thumbnails': thumbnailUrl,
+              // thumbnails 필드값 추가
+              'category': categoryText,
+              // category 필드값 추가
+              'product_number': productNumber,
+              // product_number 필드 추가
+            },
+            SetOptions(merge: true)); // merge 옵션 사용
 
         // // 장바구니 관련 필드들 삭제
         // batch.update(subDocRef, {
@@ -1532,3 +1660,296 @@ Future<void> createFirestoreDocuments() async {
   await batch.commit();
 }
 // ------ Firestore 문서를 생성하는 함수 구현 끝
+
+// ------ products 컬렉션 데이터 관련 Firestore 문서를 생성하는 함수 구현 시작
+Future<void> createFirestoreDocuments_2() async {
+  // final firestore = FirebaseFirestore.instance;
+  // final batch = firestore.batch();
+  // const int originalPrice = 10000;
+  final firestore = FirebaseFirestore.instance;
+  const int originalPrice = 10000;
+  const int batchSize = 500; // 한 번에 커밋할 문서 수 제한
+  int batchCounter = 0;
+  WriteBatch batch = firestore.batch();
+
+
+  final Map<int, String> briefIntroductionMap = {
+    1: '해당 상품은 티셔츠입니다.',
+    2: '해당 상품은 블라우스입니다.',
+    3: '해당 상품은 맨투맨입니다.',
+    4: '해당 상품은 니트입니다.',
+    5: '해당 상품은 폴라티입니다.',
+    6: '해당 상품은 원피스입니다.',
+    7: '해당 상품은 팬츠입니다.',
+    8: '해당 상품은 청바지입니다.',
+    9: '해당 상품은 스커트입니다.',
+    10: '해당 상품은 아우터입니다.',
+    11: '해당 상품은 코트입니다.',
+    12: '해당 상품은 가디건입니다.',
+  };
+
+  final Map<int, String> categoryMap = {
+    1: 'shirt',
+    2: 'blouse',
+    3: 'mtm',
+    4: 'neat',
+    5: 'pola',
+    6: 'onepiece',
+    7: 'pants',
+    8: 'jean',
+    9: 'skirt',
+    10: 'paeding',
+    11: 'coat',
+    12: 'cardigan',
+  };
+
+  final Map<int, String> typeMap = {
+    1: 'new',
+    2: 'best',
+    3: 'sale',
+    4: 'spring',
+    5: 'summer',
+    6: 'autumn',
+    7: 'winter',
+  };
+
+  final Map<int, String> categoryTextMap = {
+    1: '티셔츠',
+    2: '블라우스',
+    3: '맨투맨',
+    4: '니트',
+    5: '폴라티',
+    6: '원피스',
+    7: '팬츠',
+    8: '청바지',
+    9: '스커트',
+    10: '아우터',
+    11: '코트',
+    12: '가디건',
+  };
+
+  final Map<int, String> detailImagePathMap = {
+    1: 'shirt',
+    2: 'blouse',
+    3: 'mtm',
+    4: 'neat',
+    5: 'pola',
+    6: 'onepiece',
+    7: 'pants',
+    8: 'jean',
+    9: 'skirt',
+    10: 'paeding',
+    11: 'coat',
+    12: 'cardigan',
+  };
+
+  final int baseChar = 'a'.codeUnitAt(0); // 소문자 'a' 시작 문자
+
+  for (int i = 1; i <= 12; i++) {
+    String docId = 'product_$i';
+    DocumentReference wearcanoDocRef = firestore.collection('products').doc('wearcano');
+    CollectionReference productCollectionRef = wearcanoDocRef.collection(docId);
+
+    // 'aa', 'ab', ..., 'al' 생성
+    String secondChar = String.fromCharCode(baseChar + ((i - 1) ~/ 12));
+    String thirdChar = String.fromCharCode(baseChar + ((i - 1) % 12));
+
+    for (int j = 1; j <= 12; j++) {
+      // 각 product에 맞춰 문서 ID를 생성 (예: Aaa1, Aaa2, ..., Aal12)
+      String productDocId = 'A$secondChar$thirdChar$j';
+      DocumentReference productDocRef = productCollectionRef.doc(productDocId);
+      String briefIntroduction = briefIntroductionMap[j] ?? '설명이 없습니다.';
+      String category = categoryMap[j] ?? '';
+      String categoryText = categoryTextMap[j] ?? '카테고리가 없습니다.';
+      String detailImagePath = detailImagePathMap[j] ?? '';
+
+      for (int k = 1; k <= 7; k++) {
+        String subCollectionId = '${productDocId}B$k';
+        DocumentReference subWearcanoDocRef =
+            productDocRef.collection(subCollectionId).doc('wearcano');
+        CollectionReference wearcanoItemsCollectionRef =
+            subWearcanoDocRef.collection('wearcano_items');
+        String type = typeMap[j] ?? '';
+
+        for (int l = 1; l <= 15; l++) {
+          int discountPercent = 10 + l;
+          int discountPrice =
+              originalPrice - (originalPrice * discountPercent ~/ 100);
+          String subDocId = '${subCollectionId}_$l';
+          String productNumber = '${subDocId}_${l.toString().padLeft(3, '0')}';
+          DocumentReference subDocRef =
+              wearcanoItemsCollectionRef.doc(subDocId);
+
+          String thumbnailUrl =
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
+
+          batch.set(
+              subDocRef,
+              {
+                'brief_introduction': briefIntroduction,
+                'clothes_color1':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=37afbb86-6b75-470d-b00c-98e03e23f3e4',
+                'clothes_color2':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=5925c7d9-2966-4273-b1bb-3207475200cd',
+                'clothes_color3':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Flavender.png?alt=media&token=45ee6a67-62bf-4aa7-a5f3-a12b13684bd1',
+                'clothes_size1': 'Free',
+                'color1_text': 'black',
+                'color2_text': 'brown',
+                'color3_text': 'lavender',
+                'detail_page_image1':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+                'detail_page_image2':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+                'detail_page_image3':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+                'detail_page_image4':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+                'detail_page_image5':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+                'detail_intro_image1':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d1.png?alt=media',
+                'detail_intro_image2':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d2.png?alt=media',
+                'detail_intro_image3':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d3.png?alt=media',
+                'detail_intro_image4':
+                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d4.png?alt=media',
+                'discount_percent': discountPercent,
+                'discount_price': discountPrice,
+                'original_price': originalPrice,
+                'thumbnails': thumbnailUrl,
+                'category': categoryText,
+                'product_number': productNumber,
+                'boolExistence': false
+              });
+
+          batchCounter++;
+
+          // 배치 한도를 넘으면 커밋하고 새 배치 생성
+          if (batchCounter >= batchSize) {
+            await batch.commit();
+            batchCounter = 0; // 카운터 초기화
+            batch = firestore.batch(); // 새 배치 시작
+            await Future.delayed(Duration(milliseconds: 100)); // 서버 과부하 방지용 딜레이
+          }
+        }
+      }
+    }
+  }
+
+  // 남아 있는 문서 커밋
+  if (batchCounter > 0) {
+    await batch.commit();
+  }
+  print("모든 문서 생성이 완료되었습니다.");
+}
+// ------ products 컬렉션 데이터 관련 Firestore 문서를 생성하는 함수 구현 끝
+
+// ------ banners 컬렉션 데이터 관련 Firestore 문서를 생성하는 함수 구현 시작
+Future<void> createFirestoreDocuments_3() async {
+  final firestore = FirebaseFirestore.instance;
+  const int batchSize = 500;
+  int batchCounter = 0;
+  WriteBatch batch = firestore.batch();
+
+  DocumentReference wearcanoDocRef = firestore.collection('banners').doc('wearcano');
+
+  for (int i = 1; i <= 12; i++) {
+    // 'banner_1' ~ 'banner_12' 컬렉션 참조 생성
+    CollectionReference bannerCollectionRef = wearcanoDocRef.collection('banner_$i');
+
+    final int baseChar = 'a'.codeUnitAt(0); // 소문자 'a' 시작 문자
+
+    // 'aa', 'ab', ..., 'al' 생성
+    String secondChar = String.fromCharCode(baseChar + ((i - 1) ~/ 12));
+    String thirdChar = String.fromCharCode(baseChar + ((i - 1) % 12));
+
+    // 각 product에 맞춰 문서 ID를 생성 (예: Aaa1, Aaa2, ..., Aal12)
+    String docId1 = 'product_$i';
+    String collectionId1 = 'A${secondChar}${thirdChar}10';
+    String docId2 = '${collectionId1}B1';
+    String docId3 = '${docId2}_1';
+
+    String productId = 'products/wearcano/$docId1/$collectionId1/$docId2/wearcano/wearcano_items/$docId3';
+
+    // 각 배너 타입에 맞춰 하위 문서 생성
+    List<String> bannerTypes = [
+      'large_banner', 'home_small_banner_1', 'home_small_banner_2', 'home_small_banner_3',
+      'shirt_main_small_banner_1', 'blouse_main_small_banner_1', 'mtm_main_small_banner_1',
+      'cardigan_main_small_banner_1', 'coat_main_small_banner_1', 'jean_main_small_banner_1',
+      'neat_main_small_banner_1', 'onepiece_main_small_banner_1', 'paeding_main_small_banner_1',
+      'pants_main_small_banner_1', 'pola_main_small_banner_1', 'skirt_main_small_banner_1',
+      'profile_main_small_banner_1', 'new_sub_main_small_banner_1', 'best_sub_main_small_banner_1',
+      'sale_sub_main_small_banner_1', 'spring_sub_main_small_banner_1', 'summer_sub_main_small_banner_1',
+      'autumn_sub_main_small_banner_1', 'winter_sub_main_small_banner_1'
+    ];
+
+    int homeImgCounter = 1; // 홈 배너 이미지 순서 관리를 위한 카운터
+    int othersImgCounter = 1; // 나머지 화면 이미지 순서 관리를 위한 카운터
+    for (String bannerType in bannerTypes) {
+      DocumentReference bannerDocRef = bannerCollectionRef.doc(bannerType);
+
+      // 필드 설정
+      if (bannerType == 'large_banner') {
+        batch.set(bannerDocRef, {
+          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon1.png?alt=media',
+          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon2.png?alt=media',
+          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon3.png?alt=media',
+          'ad_img_4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_4.png?alt=media',
+          'ad_img_5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_5.png?alt=media',
+          'ad_url_1': 'https://www.naver.com',
+          'ad_url_2': 'https://ko.aliexpress.com/',
+          'ad_url_3': 'https://www.temu.com/kr',
+          'category': '아우터',
+          'product_id': productId,
+          'sub_category': '신상',
+        });
+      } else if (['home_small_banner_1', 'home_small_banner_2', 'home_small_banner_3'].contains(bannerType)) {
+        // home_small_banner는 ad_image1 ~ ad_image9
+        batch.set(bannerDocRef, {
+          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'category': '아우터',
+          'product_id': productId,
+        });
+      } else if (bannerType == 'profile_main_small_banner_1') {
+        // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
+        batch.set(bannerDocRef, {
+          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
+          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
+          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
+          'category': '아우터',
+          'product_id': productId,
+        });
+      } else {
+        // 나머지 배너 타입들은 mb1 ~ mb57로 설정
+        batch.set(bannerDocRef, {
+          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'category': '아우터',
+          'product_id': productId,
+        });
+      }
+
+      batchCounter++;
+
+      // 배치 한도에 도달하면 커밋하고 초기화
+      if (batchCounter >= batchSize) {
+        await batch.commit();
+        batchCounter = 0;
+        batch = firestore.batch();
+        await Future.delayed(Duration(milliseconds: 100)); // 서버 과부하 방지용 딜레이
+      }
+    }
+  }
+
+  // 남은 데이터 커밋
+  if (batchCounter > 0) {
+    await batch.commit();
+  }
+  print("모든 배너 문서 생성이 완료되었습니다.");
+}
+// ------ banners 컬렉션 데이터 관련 Firestore 문서를 생성하는 함수 구현 끝

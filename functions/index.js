@@ -52,7 +52,7 @@ function formatNumber(number) { // 숫자를 포맷팅하는 함수.
 }
 
 // Firestore 문서 생성 시 이메일 발송 함수
-exports.sendOrderEmailV2 = functions.firestore
+exports.sendOrderEmailV2 = functions.region('asia-northeast3').firestore
   .document('order_list/{userId}/orders/{order_number}') // Firestore의 order_list/{userId}/orders/{order_number} 문서 생성 시 트리거됨.
   .onCreate(async (snap, context) => { // 문서 생성 이벤트 핸들러를 비동기로 정의.
     const userId = context.params.userId; // URL 파라미터에서 userId를 가져옴.
@@ -261,7 +261,7 @@ async function getUnreadMessagesCount(recipientId) {
 //    }
 //  });
 
-exports.sendMessageWithNotification = functions.firestore
+exports.sendMessageWithNotification = functions.region('asia-northeast3').firestore
   .document('message_list/{recipientId}/message/{messageId}')
   .onCreate(async (snap, context) => {
     const messageData = snap.data();
@@ -371,7 +371,7 @@ exports.sendMessageWithNotification = functions.firestore
 
 // ------ "배송 중 메세지" 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
 // Firestore에 새로운 문서가 생성될 때, 특정 "배송 중 메세지"를 감지하고 발주 상태를 자동으로 업데이트
-exports.orderlistOrderStatusAutoUpdate = functions.firestore
+exports.orderlistOrderStatusAutoUpdate = functions.region('asia-northeast3').firestore
   .document('message_list/{recipientId}/message/{messageId}')  // message_list 컬렉션 안의 특정 recipientId와 messageId에 해당하는 문서 경로를 지정
   .onCreate(async (snap, context) => {  // 지정된 경로에 문서가 생성될 때 트리거되는 이벤트 리스너 함수 정의
     const messageData = snap.data();  // 생성된 문서의 데이터를 가져옴
@@ -409,7 +409,7 @@ exports.orderlistOrderStatusAutoUpdate = functions.firestore
 // ------ 메시지 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 끝 부분
 
 // ------ Firestore에서 '배송 중 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 시작 부분
-exports.updateButtonStatusOnMessage = functions.firestore
+exports.updateButtonStatusOnMessage = functions.region('asia-northeast3').firestore
     .document('message_list/{recipientId}/message/{messageId}')
     .onCreate(async (snap, context) => {
         const messageData = snap.data();
@@ -463,7 +463,7 @@ exports.updateButtonStatusOnMessage = functions.firestore
 // ------ Firestore에서 '배송 중 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 끝 부분
 
 // ------ Firestore에서 '환불 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 시작 부분
-exports.updateButtonStatusOnRefundMessage = functions.firestore
+exports.updateButtonStatusOnRefundMessage = functions.region('asia-northeast3').firestore
     .document('message_list/{recipientId}/message/{messageId}')
     .onCreate(async (snap, context) => {
         const messageData = snap.data();
