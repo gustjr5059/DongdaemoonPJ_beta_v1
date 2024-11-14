@@ -43,8 +43,8 @@ class _SplashScreenState extends State<SplashScreen2> {
     // 'autoLogin' 키에 저장된 값을 불러오며, 값이 없을 경우 기본값으로 false를 사용.
     bool autoLogin = prefs.getBool('autoLogin') ?? false;
 
-    // 1초 후에 다음 동작을 수행.
-    Timer(Duration(seconds: 1), () {
+    // 1.75초 후에 다음 동작을 수행.
+    Timer(Duration(milliseconds: 1750), () {
       if (autoLogin) {
         // autoLogin이 true인 경우 HomeMainScreen으로 이동.
         Navigator.of(context).pushReplacement(
@@ -66,8 +66,6 @@ class _SplashScreenState extends State<SplashScreen2> {
         children: <Widget>[
           Positioned.fill(
             child: Image.asset(
-              // 'asset/img/misc/splash_img/splash2_image.png',
-              // 'asset/img/misc/splash_img/ssamjang.png',
               'asset/img/misc/splash_image/couture_splash2_bg_img.png', // 이미지 파일 경로를 설정.
               fit: BoxFit.cover, // 이미지 비율을 유지하면서 화면에 맞게 조절
             ),

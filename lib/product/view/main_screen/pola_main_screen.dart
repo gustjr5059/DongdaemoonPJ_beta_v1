@@ -99,20 +99,6 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
   // 소배너
   int bannerImageCount2 = 3;
 
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 큰 배너 클릭 시 이동할 URL 목록
-  final List<String> largeBannerLinks = [
-    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
-    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
-  ];
-
-  // 첫 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small1BannerLinks = [
-    'https://www.coupang.com', // 첫 번째 배너 클릭 시 쿠팡으로 이동
-    'https://www.temu.com/kr', // 두 번째 배너 클릭 시 테무로 이동
-  ];
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -384,24 +370,6 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
         polaCurrentTabProvider, polaMainTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
-    void _onLargeBannerTap(BuildContext context, int index) async {
-      final url = largeBannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
-    void _onSmall1BannerTap(BuildContext context, int index) async {
-      final url = small1BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -428,22 +396,22 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double productMainAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double productMainAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productMainAppBarTitleX = screenSize.height * (83 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.height * (4 / referenceHeight);
     final double productMainAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double productMainChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double productMainChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double productMainChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double productMainChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double productMainChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double productMainChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double productMainWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double productMainWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double productMainWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double productMainWishlistBtnY = screenSize.height * (9 / referenceHeight);
+    final double productMainWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 컨텐츠 사이의 높이 수치
     final double interval1Y = screenSize.height * (3 / referenceHeight);
@@ -483,6 +451,7 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
                     // 참조(ref) 전달
                     title: '폴라티 메인',
                     // AppBar의 제목을 '폴라티 메인'로 설정
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
                     buttonCase: 2, // 버튼 케이스를 2로 설정
@@ -513,8 +482,8 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: Colors.black, width: 1.0), // 상단 테두리 색상을 설정함
-                        bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                        top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 설정함
+                        bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                       ),
                     ),
                   ),
@@ -555,10 +524,18 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
                                   polaMainLargeBannerPageProvider, // 큰 배너 페이지의 상태 제공자를 전달함
                                   pageController: _largeBannerPageController, // 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
                                   bannerAutoScroll: _largeBannerAutoScroll, // 배너의 자동 스크롤 설정을 전달함
-                                  bannerLinks: largeBannerLinks, // 배너 이미지의 링크 목록을 전달함
                                   bannerImagesProvider:
                                   allLargeBannerImagesProvider, // 배너 이미지의 상태 제공자를 전달함
-                                  onPageTap: _onLargeBannerTap, // 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                  // 배너를 탭했을 때 실행할 함수를 전달
+                                  onPageTap: (context, index) =>
+                                  // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
+                                  onLargeBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(allLargeBannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: polaMainScreenLargeBannerWidth, // 배너 섹션의 너비를 설정함
                                   height: polaMainScreenLargeBannerHeight, // 배너 섹션의 높이를 설정함
                                   borderRadius: 0, // 배너의 모서리 반경을 0으로 설정함
@@ -581,17 +558,25 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
                                 height: polaMainScreenSmallBannerViewHeight,
                                 // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    PolaMainSmall1BannerImage>(
+                                    AllSmallBannerImage>(
                                   context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
                                   ref: ref, // 상태 관리를 위한 참조 전달함
                                   currentPageProvider:
                                   polaMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
                                   pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
                                   bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
-                                  bannerLinks: small1BannerLinks, // 작은 배너 이미지의 링크 목록을 전달함
                                   bannerImagesProvider:
                                   polaMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
-                                  onPageTap: _onSmall1BannerTap, // 작은 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                  // 배너를 탭했을 때 실행할 함수를 전달
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // polaMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(polaMainSmall1BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: polaMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
                                   height: polaMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
                                   borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함

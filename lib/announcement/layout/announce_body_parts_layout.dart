@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import 'package:http/http.dart' as http;
 import '../provider/announce_state_provider.dart';
@@ -35,19 +36,35 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
 
     // 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
+    final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
+
 
     // announceItemsProvider를 통해 공지사항 아이템 목록 상태를 가져옴
     final announceItems = ref.watch(announceItemsProvider);
 
     // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함
+    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+    // loading: (), error: (err, stack)를 구분해서 구현 못함
+    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+    // 그대신 로딩 표시를 못 넣음...
     return announceItems.isEmpty
-        ? Center(child: Text('현재 공지사항이 없습니다.'))
-    // 공지사항이 있으면 Column 위젯을 사용해 공지사항 목록을 보여줌
+        ? Center(
+            child:
+            Text('현재 공지사항이 없습니다.',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+                fontSize: errorTextFontSize,
+                color: BLACK_COLOR,
+              ),
+            ),
+          )
+        // 공지사항이 있으면 Column 위젯을 사용해 공지사항 목록을 보여줌
         : Column(
       // 공지사항 아이템을 반복하여 UI를 생성함
       children: announceItems.map((announceItem) {
-        // 공지사항 제목을 가져오며, 없을 경우 'No Title'로 대체함
-        final title = (announceItem['title'] as String?) ?? 'No Title';
+        // 공지사항 제목을 가져오며, 없을 경우 ''로 대체함
+        final title = (announceItem['title'] as String?) ?? '';
         // 공지사항의 document_id를 가져옴
         final documentId = (announceItem['document_id'] as String?) ?? '';
         // 공지사항의 시간 정보를 가져옴
@@ -55,7 +72,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
         // 시간 정보를 문자열로 변환함
         final timeString = timestamp != null
             ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
-            : 'No Date';
+            : '';
 
         // 공지사항 항목을 터치할 수 있도록 GestureDetector 사용함
         return GestureDetector(
@@ -84,7 +101,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                     fontSize: announcelistTitleDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Colors.black, // 텍스트 색상 설정
+                    color: BLACK_COLOR, // 텍스트 색상 설정
                   ), // 텍스트 스타일을 설정함
                 ),
                 SizedBox(height: interval1Y), // 제목과 시간 사이에 간격을 줌
@@ -95,7 +112,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                     fontSize: announcelistTimeDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Color(0xFF999999), // 텍스트 색상 설정
+                    color: GRAY60_COLOR, // 텍스트 색상 설정
                   ),  // 시간 텍스트의 스타일을 설정함
                 ),
                 Divider(), // 항목 간에 구분선을 삽입함
@@ -123,7 +140,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     if (response.statusCode == 200) { // 요청이 성공한 경우
       return const Utf8Decoder(allowMalformed: true).convert(response.bodyBytes); // UTF-8로 인코딩된 텍스트 데이터를 반환함
     } else { // 요청이 실패한 경우
-      throw Exception('Failed to load text from URL'); // 예외를 발생시킴
+      throw Exception('URL에서 텍스트 로드에 실패했습니다'); // 예외를 발생시킴
     }
   }
 
@@ -157,21 +174,37 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
 
+    final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
+
     // 공지사항 상세 데이터를 가져옴
     final announceDetailItem = ref.watch(announceDetailItemProvider(documentId));
 
     // 공지사항 상세 데이터가 없을 경우
+    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+    // loading: (), error: (err, stack)를 구분해서 구현 못함
+    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+    // 그대신 로딩 표시를 못 넣음...
     if (announceDetailItem.isEmpty) {
-      return Center(child: Text('공지사항을 불러올 수 없습니다.')); // 데이터가 없을 때 표시할 텍스트임
+      return Center(
+        child:
+        Text('에러가 발생했으니, 앱을 재실행해주세요.',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'NanumGothic',
+            fontSize: errorTextFontSize,
+            color: BLACK_COLOR,
+          ),
+        ),
+      ); // 데이터가 없을 때 표시할 텍스트임
     }
 
     // 공지사항 상세 데이터를 변수에 저장함
-    final title = (announceDetailItem['title'] as String?) ?? 'No Title'; // 공지사항 제목을 가져오며 없을 경우 'No Title'로 설정함
+    final title = (announceDetailItem['title'] as String?) ?? ''; // 공지사항 제목을 가져오며 없을 경우 ''로 설정함
     final timestamp = announceDetailItem['time'] as Timestamp?; // 공지사항의 시간 정보를 가져옴
     // 시간 정보를 문자열로 변환함
     final timeString = timestamp != null
         ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
-        : 'No Date'; // 시간 정보를 포맷팅함
+        : ''; // 시간 정보를 포맷팅함
 
     // URL을 통해 가져오는 텍스트 데이터임
     final contentsTextUrl = (announceDetailItem['contents_text'] as String?) ?? ''; // 텍스트 콘텐츠 URL을 가져옴
@@ -191,7 +224,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               fontSize: announceDtlistTitleDataFontSize, // 텍스트 크기 설정
               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
               fontFamily: 'NanumGothic', // 글꼴 설정
-              color: Colors.black, // 텍스트 색상 설정
+              color: BLACK_COLOR, // 텍스트 색상 설정
             ),  // 제목의 텍스트 스타일을 설정함
           ),
           SizedBox(height: interval1Y), // 제목과 시간 사이의 간격을 설정함
@@ -202,19 +235,19 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               fontSize: announceDtlistTimeDataFontSize, // 텍스트 크기 설정
               fontWeight: FontWeight.normal, // 텍스트 굵기 설정
               fontFamily: 'NanumGothic', // 글꼴 설정
-              color: Color(0xFF999999), // 텍스트 색상 설정
+              color: GRAY60_COLOR, // 텍스트 색상 설정
             ),  // 시간 텍스트의 스타일을 설정함
           ),
-          Divider(color: Color(0xFFB0B0B0)), // 구분선을 삽입함
+          Divider(color: GRAY69_COLOR), // 구분선을 삽입함
           if (contentsTextUrl.isNotEmpty)
           // 텍스트 파일을 비동기로 로드하여 표시하는 FutureBuilder임
             FutureBuilder<String>(
               future: fetchTextFromUrl(contentsTextUrl), // 텍스트 파일을 URL에서 가져옴
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // 로딩 중일 때 로딩 표시를 보여줌
+                  return buildCommonLoadingIndicator(); // 로딩 중일 때 로딩 표시를 보여줌
                 } else if (snapshot.hasError) {
-                  return Text('Error loading content: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
+                  return Text('콘텐츠 로드 중 오류 발생: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
                 } else { // 성공적으로 로드된 경우
                   return Text(
                     snapshot.data ?? '', // 로드된 텍스트를 표시함
@@ -222,7 +255,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                       fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
                       fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic', // 글꼴 설정
-                      color: Colors.black, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),  // 텍스트 스타일을 설정함
                   );
                 }
@@ -250,17 +283,20 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                   fontSize: announceDtlistWeblinkDataFontSize, // 텍스트 크기 설정
                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                   fontFamily: 'NanumGothic', // 글꼴 설정
-                  color: Colors.blue, // 텍스트 색상 설정
+                  color: BLUE49_COLOR, // 텍스트 색상 설정
                 ),  // 웹 링크 텍스트 스타일을 설정함
               ),
             ),
           SizedBox(height: interval2Y), // 웹 링크와 이미지 사이의 간격을 설정함
-          if (contentsImageUrl.isNotEmpty)
-            Image.network(
+          // 데이터가 null이거나 빈 값인 경우
+          contentsImageUrl != null && contentsImageUrl != ''
+            ? Image.network(
               contentsImageUrl, // 이미지를 네트워크에서 가져옴
               fit: BoxFit.contain, // 이미지 크기를 적절히 조절함
-              width: MediaQuery.of(context).size.width / 1, // 화면 너비의 1/1로 이미지 너비를 설정함
-            ),
+              width: MediaQuery.of(context).size.width, // 화면 너비에 맞게 이미지 너비를 설정함
+              errorBuilder: (context, error, stackTrace) => Container(), // 이미지 로드 실패 시 빈 컨테이너를 표시
+            )
+                : Container(), // 데이터가 없을 경우 빈 컨테이너를 표시
         ],
       ),
     );

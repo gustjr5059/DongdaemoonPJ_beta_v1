@@ -1,31 +1,40 @@
 import 'package:flutter/material.dart';
 
-// 주색상
-const PRIMARY_COLOR = Color(0xFF22A45D);
-// 글자 색상
-const BODY_TEXT_COLOR = Color(0xFF868686);
-// 텍스트필드 배경 색상
-const INPUT_BG_COLOR = Color(0xFFFBFBFB);
-// 텍스트필드 테두리 색상
-const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
-// 배경 기본 색상
-const BACKGROUND_COLOR = Color(0xFFFFFFFF);
-// 드로워 색상
-const DRAWER_COLOR = Color(0xFFC77AA1);
-// 버튼 색상
-const BUTTON_COLOR = Color(0xFFD5A4C2);
-// 로고 색상
-const LOGO_COLOR = Color(0xFF3A2D4C);
-// 금색 색상
-const GOLD_COLOR = Color(0xFFFFD700);
-// 할인가 색상
-const DISCOUNT_COLOR = Color(0xFFFF0000);
-// 카드뷰 배경 색상
-// 베이지 색상
-const BEIGE_COLOR = Color(0xFFFFFBF0);
-// 연보라 색상
-const LIGHT_PURPLE_COLOR = Color(0xFFD6CDEA);
-// 연노랑 색상
-const LIGHT_YELLOW_COLOR = Color(0xFFFFFBD0);
-// 연한 하늘색 색상
-const LIGHT_SKY_BLUE_COLOR = Color(0xFFB0F2FF);
+// ------- 웨어카노 앱 1차 단계 프로젝트 관련 색상 시작 부분
+const INPUT_BORDER_COLOR = Color(0xFFF3F2F2); // 텍스트필드 테두리 색상
+const BLACK_COLOR = Color(0xFF000000); // Colors.black 색상
+const WHITE_COLOR = Color(0xFFFFFFFF); // Colors.white 색상
+const GRAY19_COLOR = Color(0xFF303030);
+const GRAY35_COLOR = Color(0xFF585858);
+const GRAY36_COLOR = Color(0xFF5C5C5C);
+const GRAY38_COLOR = Color(0xFF616161); // Colors.grey[700] 색상
+const GRAY40_COLOR = Color(0xFF666666);
+const GRAY41_COLOR = Color(0xFF676767);
+const GRAY42_COLOR = Color(0xFF6C6C6C);
+const GRAY44_COLOR = Color(0xFF6F6F6F);
+const GRAY45_COLOR = Color(0xFF737373);
+const GRAY47_COLOR = Color(0xFF777777);
+const GRAY51_COLOR = Color(0xFF818181);
+const GRAY53_COLOR = Color(0xFF868686);
+const GRAY60_COLOR = Color(0xFF999999);
+const GRAY62_COLOR = Color(0xFF9E9E9E); // Colors.grey 색상
+const GRAY65_COLOR = Color(0xFFA5A5A5);
+const GRAY69_COLOR = Color(0xFFB0B0B0);
+const GRAY74_COLOR = Color(0xFFBDBDBD); // Colors.grey.shade400 색상
+const GRAY77_COLOR = Color(0xFFC5C5C5);
+const GRAY79_COLOR = Color(0xFFCACACA);
+const GRAY81_COLOR = Color(0xFFCECECE);
+const GRAY85_COLOR = Color(0xFFDADADA);
+const GRAY88_COLOR = Color(0xFFE0E0E0); // Colors.grey.shade300 색상
+const GRAY93_COLOR = Color(0xFFEEEEEE);
+const GRAY95_COLOR = Color(0xFFF1F1F1);
+const GRAY96_COLOR = Color(0xFFF2F2F2);
+const GRAY97_COLOR = Color(0xFFF3F3F3);
+const GRAY98_COLOR = Color(0xFFFBFBFB);
+const BLUE49_COLOR = Color(0xFF2196F3); // Colors.blue 색상
+const ORANGEGRAY56_COLOR = Color(0xCCE17735);
+const ORANGE56_COLOR = Color(0xFFE17735);
+const RED30_COLOR = Color(0xFFFF0000);
+const RED46_COLOR = Color(0xFFF44336); // Colors.red 색상
+// ------- 웨어카노 앱 1차 단계 프로젝트 관련 색상 끝 부분
+

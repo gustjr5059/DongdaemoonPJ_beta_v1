@@ -54,15 +54,22 @@ class UserInfoWidget extends ConsumerWidget {
     final double ordererInfo2Y = screenSize.height * (24 / referenceHeight);
     final double ordererInfo3Y = screenSize.height * (8 / referenceHeight);
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 =
+        screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 =
+        screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
     final userInfoAsyncValue =
         ref.watch(userInfoProvider(email)); // Riverpod을 사용하여 사용자 정보 프로바이더를 구독
 
     return userInfoAsyncValue.when(
       data: (userInfo) {
         // userInfo가 null인 경우에도 표를 유지하고, 데이터 필드에 '-'를 표시
-        final name = userInfo?['name'] ?? '-';
-        final email = userInfo?['email'] ?? '-';
-        final phoneNumber = userInfo?['phone_number'] ?? '-';
+        final name = userInfo?['name'] ?? '';
+        final email = userInfo?['email'] ?? '';
+        final phoneNumber = userInfo?['phone_number'] ?? '';
 
         // // 휴대폰 번호 입력 필드에 사용할 컨트롤러 생성
         // // 파이어베이스 내 휴대폰 번호 데이터가 있을 시, 불러오고 없으면 직접 입력 부분이 바로 구현
@@ -84,7 +91,7 @@ class UserInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: ordererInfoTitleFontSize,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: ordererInfo1Y),
@@ -96,30 +103,47 @@ class UserInfoWidget extends ConsumerWidget {
               // _buildEditablePhoneNumberRow(context, '휴대폰 번호', phoneNumberController),
               SizedBox(height: ordererInfo2Y),
               Text(
-                '[정보 불일치로 인한 불이익시 당사가 책임지지 않습니다.]', // 안내문 텍스트
+                '[정보 불일치로 인한 불이익 시 당사가 책임지지 않습니다.]', // 안내문 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: orderRequireNoticeFontSize1,
-                  color: Color(0xFF585858),
+                  color: GRAY35_COLOR,
                   fontWeight: FontWeight.bold, // 텍스트 색상을 회색으로 설정
                 ),
               ),
               SizedBox(height: ordererInfo3Y),
               Text(
-                '* 해당 정보의 변경이 필요할 시, 로그인 화면 내 회원가입 절차를 통해 변경된 내용으로 재전송 해주세요.',
+                '* 정보 변경이 필요할 시, [로그인 화면] => [회원가입] 절차로 재진행해주세요.',
                 // 안내문 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: orderRequireNoticeFontSize2, // 텍스트 크기 12
-                  color: Color(0xFF585858),
+                  color: GRAY35_COLOR,
                 ),
               ),
             ],
           ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태 처리
-      error: (error, stack) => Center(child: Text('Error: $error')), // 에러 상태 처리
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container(
+        // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.',
+          // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+          // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1,
+          // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2,
+          // 폰트2 크기 설정
+          color: BLACK_COLOR,
+          // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
     );
   }
 
@@ -157,7 +181,7 @@ class UserInfoWidget extends ConsumerWidget {
               height: ordererInfoTextPartHeight,
               width: ordererInfoTextPartWidth,
               // 라벨 셀의 너비 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // color: Colors.green,
               // 배경 색상 설정
               alignment: Alignment.center,
@@ -168,23 +192,23 @@ class UserInfoWidget extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: ordererInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
               ),
             ),
             SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 // color: Colors.red, // 배경 색상 설정
                 padding: EdgeInsets.only(left: ordererInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
-                  value,
+                  value ?? '',
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: ordererInfoDataFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ), // 값 표시
               ),
@@ -197,7 +221,7 @@ class UserInfoWidget extends ConsumerWidget {
 }
 // ------ 발주 화면 내 발주자 정보 관련 UI 내용을 구현하는 UserInfoWidget 클래스 내용 끝
 
-// ------ 발주 화면 내 받는사람정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
+// ------ 발주 화면 내 수령자 정보 관련 UI 내용을 구현하는 RecipientInfoWidget 클래스 내용 시작
 // RecipientInfoWidget 클래스는 수령자의 정보를 입력받고 화면에 표시하는 역할을 담당.
 class RecipientInfoWidget extends ConsumerStatefulWidget {
   final String email; // 이메일 정보를 저장하는 필드
@@ -376,7 +400,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 fontFamily: 'NanumGothic',
                 fontSize: RecipientInfoTitleFontSize,
                 fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                color: Colors.black,
+                color: BLACK_COLOR,
               ),
             ),
             SizedBox(height: ordererInfo1Y), // 제목과 폼 사이에 16 픽셀 높이의 여백 추가
@@ -386,7 +410,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 _buildEditableRow(context, '이름', _nameController,
                     _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
                 // 수정 가능한 이름 행 생성
-                _buildEditableRow(context, '연락처', _phoneNumberController,
+                _buildEditableRow(context, '휴대폰 번호', _phoneNumberController,
                     _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."),
                 // 수정 가능한 연락처 행 생성
                 _buildFixedValueRowWithButton(
@@ -418,92 +442,6 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 // 사용자 지정 메모가 활성화된 경우 수정 가능한 배송 메모 행 생성
                 _buildFavoritesMemoAndBtnRow(context, '즐겨찾기 등록', '즐겨찾기 선택'),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 드롭다운 행을 생성하는 함수
-  Widget _buildDropdownRow(BuildContext context, String label, String hint) {
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 수령자 정보 표 부분 수치
-    final double recipientInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double recipientInfoDataFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double recipientInfoTextPartWidth =
-        screenSize.width * (97 / referenceWidth);
-    final double recipientInfoTextPartHeight =
-        screenSize.height * (30 / referenceHeight);
-    // 행 간 간격 수치
-    final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo5Y = screenSize.height * (4 / referenceHeight);
-    // 데이터 부분 패딩 수치
-    final double recipientInfoDataPartX =
-        screenSize.width * (8 / referenceWidth);
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y),
-      // 행의 상하단에 2.0 픽셀의 여백 추가
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
-          children: [
-            Container(
-              width: recipientInfoTextPartWidth,
-              // 셀의 너비 설정
-              height: recipientInfoTextPartHeight,
-              // 셀의 높이 설정
-              color: Color(0xFFF2F2F2),
-              // 셀 배경색 설정
-              alignment: Alignment.center,
-              // 텍스트를 중앙 정렬
-              child: Text(
-                label, // 셀에 표시될 텍스트
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
-                  fontSize: recipientInfoTextFontSize,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            SizedBox(width: recipientInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
-            Expanded(
-              child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
-                padding: EdgeInsets.only(left: recipientInfoDataPartX),
-                alignment: Alignment.center, // 텍스트 정렬
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: hint, // 드롭다운의 기본값 설정
-                    onChanged: (String? newValue) {}, // 변경 이벤트 처리
-                    items: <String>[hint]
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                            fontFamily: 'NanumGothic',
-                            fontWeight: FontWeight.normal,
-                            fontSize: recipientInfoDataFontSize,
-                            color: Colors.black,
-                          ),
-                        ), // 드롭다운에 표시될 텍스트
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
             ),
           ],
         ),
@@ -550,7 +488,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // 셀 배경색 설정
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -560,13 +498,13 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: recipientInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: GestureDetector(
@@ -586,14 +524,14 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                       style: TextStyle(
                         fontFamily: 'NanumGothic',
                         fontSize: recipientInfoDataFontSize,
-                        color: Colors.black,
+                        color: BLACK_COLOR,
                         fontWeight: FontWeight.normal,
                       ),
                       // 텍스트 필드 스타일 설정
                       decoration: InputDecoration(
                         hintText: hintText,
                         // 힌트 텍스트 설정
-                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        hintStyle: TextStyle(color: GRAY74_COLOR),
                         // 힌트 텍스트 색상 설정
                         hintMaxLines: 2,
                         // 힌트 텍스트 최대 줄 수 설정
@@ -606,7 +544,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                       maxLines: null,
                       // 최대 줄 수 설정
                       onChanged: (value) {
-                        print('TextField $label changed: $value'); // 디버깅 메시지 추가
+                        print('텍스트 필드 $label 변경됨: $value'); // 디버깅 메시지 추가
                         if (label == '배송메모') {
                           widget.onMemoChanged(_isCustomMemo, value,
                               _selectedMemo); // 배송메모 변경 시 콜백 호출
@@ -661,7 +599,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // 셀 배경색 설정
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -671,13 +609,13 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: recipientInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
@@ -686,7 +624,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                     fontWeight: FontWeight.normal,
                     fontFamily: 'NanumGothic',
                     fontSize: recipientInfoDataFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ), // 고정된 값을 텍스트로 표시
               ),
@@ -747,7 +685,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // 셀 배경색 설정
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -757,13 +695,13 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: recipientInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Row(
@@ -775,7 +713,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           fontWeight: FontWeight.normal,
                           fontFamily: 'NanumGothic',
                           fontSize: recipientInfoDataFontSize,
-                          color: Colors.black,
+                          color: BLACK_COLOR,
                         ),
                       ),
                     ), // 고정된 값을 텍스트로 표시
@@ -787,11 +725,11 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                         onPressed: _openPostcodeSearch,
                         // 우편번호 찾기 버튼을 눌렀을 때 실행되는 함수
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
+                          foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
                           backgroundColor: Theme.of(context)
                               .scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
                           side: BorderSide(
-                            color: Color(0xFFE17735),
+                            color: ORANGE56_COLOR,
                           ), // 버튼 테두리 색상 설정
                           padding: EdgeInsets.symmetric(
                               vertical: postcodeSearchBtnPaddingY,
@@ -803,7 +741,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                             fontWeight: FontWeight.bold,
                             fontFamily: 'NanumGothic',
                             fontSize: postcodeSearchBtnFontSize,
-                            color: Color(0xFFE17735),
+                            color: ORANGE56_COLOR,
                           ),
                         ), // 버튼 텍스트
                       ),
@@ -855,7 +793,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // 셀 배경색 설정
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -865,13 +803,13 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: recipientInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ), // 텍스트를 굵게 설정
               ),
             ),
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.center, // 텍스트 정렬
                 child: DropdownButtonHideUnderline(
@@ -887,7 +825,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                             widget.customMemoController
                                 .clear(); // 직접 입력이 아닌 경우 내용 지우기
                           }
-                          print('Selected Memo: $_selectedMemo'); // 디버깅 메시지 추가
+                          print('선택된 메모: $_selectedMemo'); // 디버깅 메시지 추가
                           widget.onMemoChanged(
                               _isCustomMemo,
                               widget.customMemoController.text,
@@ -911,7 +849,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                             fontWeight: FontWeight.normal,
                             fontFamily: 'NanumGothic',
                             fontSize: recipientInfoDataFontSize,
-                            color: Colors.black,
+                            color: BLACK_COLOR,
                           ),
                         ), // 드롭다운에 표시될 텍스트
                       );
@@ -976,7 +914,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
-              color: Colors.grey,
+              color: GRAY62_COLOR,
             ),
           ),
           SizedBox(height: interval1Y), // 텍스트와 설명 텍스트 사이에 8px의 여백을 추가함
@@ -986,7 +924,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
-              color: Colors.grey,
+              color: GRAY62_COLOR,
             ),
           ),
           SizedBox(height: interval1Y), // 텍스트와 설명 텍스트 사이에 8px의 여백을 추가함
@@ -1000,11 +938,11 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   onPressed: _saveRecipientInfo,
                   // 즐겨찾기 등록 버튼 클릭 시 수령자 정보를 저장하는 함수 호출
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Color(0xFFE17735),
+                    foregroundColor: ORANGE56_COLOR,
                     // 버튼 텍스트 색상을 설정함
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     // 버튼 배경색을 설정함
-                    side: BorderSide(color: Color(0xFFE17735)),
+                    side: BorderSide(color: ORANGE56_COLOR),
                     // 버튼 테두리 색상을 설정함
                     padding: EdgeInsets.symmetric(
                         vertical: favoritesSelectBtnPaddingY,
@@ -1016,7 +954,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                       fontWeight: FontWeight.bold, // 버튼 텍스트를 굵게 설정함
                       fontFamily: 'NanumGothic', // 버튼 텍스트의 폰트를 설정함
                       fontSize: favoritesSelectBtnFontSize, // 버튼 텍스트의 크기를 설정함
-                      color: Color(0xFFE17735), // 텍스트 색상을 설정함
+                      color: ORANGE56_COLOR, // 텍스트 색상을 설정함
                     ),
                   ), // 버튼 텍스트를 설정함
                 ),
@@ -1076,11 +1014,11 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Color(0xFFE17735),
+                    foregroundColor: ORANGE56_COLOR,
                     // 텍스트 색상을 설정함
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     // 버튼 배경색을 설정함
-                    side: BorderSide(color: Color(0xFFE17735)),
+                    side: BorderSide(color: ORANGE56_COLOR),
                     // 버튼 테두리 색상을 설정함
                     padding: EdgeInsets.symmetric(
                         vertical: favoritesSelectBtnPaddingY,
@@ -1092,7 +1030,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                       fontWeight: FontWeight.bold, // 버튼 텍스트를 굵게 설정함
                       fontFamily: 'NanumGothic', // 버튼 텍스트의 폰트를 설정함
                       fontSize: favoritesSelectBtnFontSize, // 버튼 텍스트의 크기를 설정함
-                      color: Color(0xFFE17735), // 텍스트 색상을 설정함
+                      color: ORANGE56_COLOR, // 텍스트 색상을 설정함
                     ),
                   ), // 버튼 텍스트를 설정함
                 ),
@@ -1185,7 +1123,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                          color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                          color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                     ),
                   ),
                   child: CommonCardView(
@@ -1207,7 +1145,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                               fontSize: recipientInfolistTextDataFontSize2,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'NanumGothic',
-                              color: Colors.black,
+                              color: BLACK_COLOR,
                             ),
                           ),
                           SizedBox(height: interval1Y), // 텍스트 사이에 여백 추가
@@ -1219,7 +1157,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                               fontSize: recipientInfolistTextDataFontSize1,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'NanumGothic',
-                              color: Colors.grey,
+                              color: GRAY62_COLOR,
                             ),
                           ),
                           SizedBox(height: interval1Y), // 텍스트 사이에 여백 추가
@@ -1231,7 +1169,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                               fontSize: recipientInfolistTextDataFontSize1,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'NanumGothic',
-                              color: Colors.black,
+                              color: BLACK_COLOR,
                               overflow: TextOverflow.visible, // 넘칠 경우 다음 줄로 넘어감
                             ),
                           ),
@@ -1244,7 +1182,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                               fontSize: recipientInfolistTextDataFontSize1,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'NanumGothic',
-                              color: Colors.grey,
+                              color: GRAY62_COLOR,
                             ),
                           ),
                           SizedBox(height: interval2Y), // 텍스트 사이에 여백 추가
@@ -1261,12 +1199,12 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                         recipientInfo); // 버튼 클릭 시 선택된 정보를 반환하고 화면을 닫음
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    foregroundColor: Color(0xFFE17735),
+                                    foregroundColor: ORANGE56_COLOR,
                                     // 텍스트 색상을 설정함
                                     backgroundColor: Theme.of(context)
                                         .scaffoldBackgroundColor,
                                     // 버튼 배경색을 앱 배경색으로 설정함
-                                    side: BorderSide(color: Color(0xFFE17735)),
+                                    side: BorderSide(color: ORANGE56_COLOR),
                                     // 버튼 테두리 색상을 설정함
                                     padding: EdgeInsets.symmetric(
                                         vertical: SelectBtnPaddingY,
@@ -1278,7 +1216,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'NanumGothic',
                                       fontSize: SelectBtnFontSize,
-                                      color: Color(0xFFE17735),
+                                      color: ORANGE56_COLOR,
                                     ),
                                   ), // 버튼 텍스트
                                 ),
@@ -1306,15 +1244,15 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                         // '예' 버튼 텍스트를 설정함
                                         noTextStyle: TextStyle(
                                           fontFamily: 'NanumGothic',
-                                          color: Colors.black,
+                                          color: BLACK_COLOR,
                                           // '아니요' 텍스트 색상을 검정색으로 설정함
                                           fontWeight:
                                               FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
                                         yesTextStyle: TextStyle(
                                           fontFamily: 'NanumGothic',
-                                          color: Colors
-                                              .red, // '예' 텍스트 색상을 빨간색으로 설정함
+                                          color:
+                                              RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                           fontWeight:
                                               FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
@@ -1349,12 +1287,12 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    foregroundColor: Color(0xFFE17735),
+                                    foregroundColor: ORANGE56_COLOR,
                                     // 텍스트 색상 설정
                                     backgroundColor: Theme.of(context)
                                         .scaffoldBackgroundColor,
                                     // 버튼 배경색을 앱 배경색으로 설정함
-                                    side: BorderSide(color: Color(0xFFE17735)),
+                                    side: BorderSide(color: ORANGE56_COLOR),
                                     // 버튼 테두리 색상 설정
                                     padding: EdgeInsets.symmetric(
                                         vertical: DeleteBtnPaddingY,
@@ -1366,7 +1304,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'NanumGothic',
                                       fontSize: DeleteBtnFontSize,
-                                      color: Color(0xFFE17735),
+                                      color: ORANGE56_COLOR,
                                     ),
                                   ),
                                 ),
@@ -1440,16 +1378,16 @@ class TotalPaymentWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: priceInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
           ),
           SizedBox(height: priceInfo1Y), // 텍스트와 테이블 사이에 16 픽셀 높이의 여백 추가
-          _buildInfoRow(
-              context, '총 상품금액', '${numberFormat.format(totalProductPrice)}원'),
+          _buildInfoRow(context, '총 상품금액',
+              '${totalProductPrice != null ? numberFormat.format(totalProductPrice) : 0}원'),
           _buildInfoRow(context, '상품 할인금액',
-              '-${numberFormat.format(productDiscountPrice)}원'),
-          _buildInfoRow(
-              context, '총 결제금액', '${numberFormat.format(totalPaymentPrice)}원',
+              '-${productDiscountPrice != null ? numberFormat.format(productDiscountPrice) : 0}원'),
+          _buildInfoRow(context, '총 결제금액',
+              '${totalPaymentPrice != null ? numberFormat.format(totalPaymentPrice) : 0}원',
               isTotal: true),
         ],
       ),
@@ -1491,7 +1429,7 @@ class TotalPaymentWidget extends StatelessWidget {
               height: ordererInfoTextPartHeight,
               width: ordererInfoTextPartWidth,
               // 라벨 셀의 너비 설정
-              color: Color(0xFFF2F2F2),
+              color: GRAY96_COLOR,
               // color: Colors.green,
               // 배경 색상 설정
               alignment: Alignment.center,
@@ -1502,23 +1440,23 @@ class TotalPaymentWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: ordererInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
               ),
             ),
             SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 // color: Colors.red, // 배경 색상 설정
                 padding: EdgeInsets.only(left: ordererInfoDataPartX),
                 alignment: Alignment.centerRight, // 텍스트 정렬
                 child: Text(
-                  value,
+                  value ?? '',
                   style: TextStyle(
                     fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
                     // 총 결제금액인 경우 텍스트 굵게 설정
-                    color: isTotal ? Colors.red : Colors.black,
+                    color: isTotal ? RED46_COLOR : BLACK_COLOR,
                     // 총 결제금액인 경우 텍스트 색상을 빨간색으로 설정
                     fontFamily: 'NanumGothic',
                     fontSize: ordererInfoDataFontSize,
@@ -1549,8 +1487,10 @@ class PaymentMethodInfoWidget extends StatelessWidget {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequirePadding1 = screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 = screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding1 =
+        screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding2 =
+        screenSize.width * (32 / referenceWidth);
     final double paymentMethodInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double orderRequireNoticeFontSize =
@@ -1573,7 +1513,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: paymentMethodInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
           ),
           SizedBox(height: paymentMethodInfo1Y),
@@ -1584,7 +1524,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.grey,
+              color: GRAY62_COLOR,
             ),
           ),
           Text(
@@ -1593,7 +1533,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-              color: Colors.grey,
+              color: GRAY62_COLOR,
             ),
           ),
         ],
@@ -1676,7 +1616,7 @@ class CompleteOrderButton extends ConsumerWidget {
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
-              color: Color(0xFF585858),
+              color: GRAY35_COLOR,
               fontWeight: FontWeight.normal, // 텍스트 색상을 회색으로 설정
             ),
           ),
@@ -1689,7 +1629,7 @@ class CompleteOrderButton extends ConsumerWidget {
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: guidelineText1FontSize,
-              color: Color(0xFF585858),
+              color: GRAY35_COLOR,
               fontWeight: FontWeight.normal, // 텍스트 색상을 회색으로 설정
             ),
           ),
@@ -1719,10 +1659,12 @@ class CompleteOrderButton extends ConsumerWidget {
                 fontFamily: 'NanumGothic',
                 fontWeight: FontWeight.normal,
                 fontSize: guidelineText2FontSize,
-                color: Colors.blue,
+                color: BLUE49_COLOR,
                 // 텍스트 색상을 파란색으로 설정
-                decoration: TextDecoration.underline, // 밑줄 추가하여 링크처럼 보이게
-                decorationColor: Colors.blue, // 밑줄 색상도 파란색으로 설정
+                decoration: TextDecoration.underline,
+                // 밑줄 추가하여 링크처럼 보이게
+                decorationColor: BLUE49_COLOR,
+                // 밑줄 색상도 파란색으로 설정
                 decorationStyle: TextDecorationStyle.solid, // 밑줄 스타일 설정
               ),
             ),
@@ -1760,9 +1702,9 @@ class CompleteOrderButton extends ConsumerWidget {
                           isCustomMemo ? customMemoController.text : '';
 
                       print(
-                          'Custom Memo Controller Text: ${customMemoController.text}'); // 디버깅 메시지 추가
-                      print('Is Custom Memo: $isCustomMemo'); // 디버깅 메시지 추가
-                      print('Extra Memo: $extraMemo'); // 디버깅 메시지 추가
+                          '사용자 메모 컨트롤러 텍스트: ${customMemoController.text}'); // 디버깅 메시지 추가
+                      print('사용자 메모 여부: $isCustomMemo'); // 디버깅 메시지 추가
+                      print('추가 메모: $extraMemo'); // 디버깅 메시지 추가
 
                       final recipientInfo = {
                         'name': nameController.text, // 수령자 이름
@@ -1795,7 +1737,6 @@ class CompleteOrderButton extends ConsumerWidget {
                       )).future);
 
                       // 발주 완료 메시지를 스낵바로 표시
-                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('발주가 완료되었습니다. 이메일이 전송되었습니다.')));
                       showCustomSnackBar(context, '발주가 완료되었습니다. 이메일이 전송되었습니다.');
 
                       // navigateToScreenAndRemoveUntil 함수를 사용하여 발주완료 화면으로 이동
@@ -1808,15 +1749,14 @@ class CompleteOrderButton extends ConsumerWidget {
                     }
                   : () {
                       // 결제금액이 15,000원 미만일 경우 경고 메시지 표시
-                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('15,000원 이상 금액부터 결제가 가능합니다.')));
                       showCustomSnackBar(context, '15,000원 이상 금액부터 결제가 가능합니다.');
                     }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
               style: ElevatedButton.styleFrom(
-                foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
+                foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
                 backgroundColor: Theme.of(context)
                     .scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
                 side: BorderSide(
-                  color: Color(0xFFE17735),
+                  color: ORANGE56_COLOR,
                 ), // 버튼 테두리 색상 설정
                 padding: EdgeInsets.symmetric(
                     vertical: paymentBtnPaddingY,
@@ -1828,7 +1768,7 @@ class CompleteOrderButton extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: paymentBtnFontSize,
-                  color: Color(0xFFE17735),
+                  color: ORANGE56_COLOR,
                 ),
               ), // 버튼 텍스트 설정
             ),
@@ -1839,91 +1779,6 @@ class CompleteOrderButton extends ConsumerWidget {
   }
 }
 // ------- 주문 완료 버튼을 구성하는 UI 관련 CompleteOrderButton 클래스 내용 끝 부분
-
-// // ------- 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 시작
-// // OrderItemWidget 클래스는 상품의 상세 정보를 화면에 표시하는 역할을 담당.
-// class OrderItemWidget extends StatelessWidget {
-//   final ProductContent product; // 상품 정보를 저장하는 필드
-//
-//   OrderItemWidget({required this.product}); // 생성자에서 상품 정보를 받아옴
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final numberFormat = NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
-//     return Card(
-//       child: Padding(
-//         padding: const EdgeInsets.all(8.0), // 카드 내부 여백 설정
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-//           children: [
-//             if (product.briefIntroduction != null) // briefIntroduction가 null이 아닌 경우에만 표시
-//               Text(
-//                 product.briefIntroduction!,
-//                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 글자 크기 18, 굵게 설정
-//               ),
-//             if (product.productNumber != null) // productNumber가 null이 아닌 경우에만 표시
-//               Text(
-//                 '상품번호: ${product.productNumber}', // productNumber 내용을 표시
-//                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // 글자 크기를 14로 설정
-//               ),
-//             SizedBox(height: 8), // 텍스트와 이미지 사이에 8 픽셀 높이의 여백 추가
-//             Row(
-//               children: [
-//                 if (product.thumbnail != null) // thumbnail이 null이 아닌 경우에만 표시
-//                   Image.network(
-//                     product.thumbnail!,
-//                     height: 100, // 이미지 높이 100 픽셀
-//                     width: 100, // 이미지 너비 100 픽셀
-//                     fit: BoxFit.cover, // 이미지를 잘라서 맞춤
-//                   ),
-//                 SizedBox(width: 8), // 이미지와 텍스트 사이에 8 픽셀 너비의 여백 추가
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-//                   children: [
-//                     Text(
-//                       '${numberFormat.format(product.originalPrice)}원',
-//                       style: TextStyle(
-//                         fontSize: 14, // 글자 크기 14
-//                         color: Colors.grey[500], // 글자 색상 회색
-//                         decoration: TextDecoration.lineThrough, // 취소선 스타일 적용
-//                       ),
-//                     ),
-//                     Text(
-//                       '${numberFormat.format(product.discountPrice)}원',
-//                       style: TextStyle(
-//                         fontSize: 18, // 글자 크기 18
-//                         fontWeight: FontWeight.bold, // 글자 굵게 설정
-//                       ),
-//                     ),
-//                     Text(
-//                       '${product.discountPercent?.round()}%',
-//                       style: TextStyle(
-//                         fontSize: 18, // 글자 크기 18
-//                         color: Colors.red, // 글자 색상 빨간색
-//                         fontWeight: FontWeight.bold, // 글자 굵게 설정
-//                       ),
-//                     ),
-//                     Text('수량: ${product.selectedCount}'), // 수량 표시
-//                     if (product.selectedColorImage != null) // selectedColorImage가 null이 아닌 경우에만 표시
-//                       Image.network(
-//                         product.selectedColorImage!,
-//                         height: 20, // 이미지 높이 20 픽셀
-//                         width: 20, // 이미지 너비 20 픽셀
-//                         fit: BoxFit.cover, // 이미지를 잘라서 맞춤
-//                       ),
-//                     Text('색상: ${product.selectedColorText}'), // 색상 텍스트 표시
-//                     Text('사이즈: ${product.selectedSize}'), // 사이즈 텍스트 표시
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-// // ------ 상품 상세 화면과 장바구니 화면에서 상품 데이터를 발주 화면으로 전달되는 부분을 UI로 구현한 OrderItemWidget 클래스 내용 끝
 
 // ------ 발주 목록 화면 내 발주 리스트 아이템을 표시하는 위젯 클래스인 OrderListItemWidget 내용 시작
 class OrderListItemWidget extends ConsumerWidget {
@@ -1996,15 +1851,8 @@ class OrderListItemWidget extends ConsumerWidget {
     final double interval2X =
         screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
-    // // 발주 데이터가 없는 경우 '발주 내역이 없습니다.' 메시지 표시
-    // if (order == null || order!.isEmpty) {
-    //   return Center(
-    //     child: Text('발주 내역이 없습니다.'),
-    //   );
-    // }
-
     // 날짜 포맷을 지정.
-    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateFormat = DateFormat('yyyy.MM.dd');
     // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
     final orderDate =
         (order!['numberInfo']['order_date'] as Timestamp).toDate();
@@ -2041,7 +1889,7 @@ class OrderListItemWidget extends ConsumerWidget {
                   children: [
                     // 발주일자를 텍스트로 표시.
                     Text(
-                      '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                      '발주 일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                       style: TextStyle(
                         fontSize: orderlistInfoOrderDateDataFontSize,
                         // 텍스트 크기 설정
@@ -2049,7 +1897,7 @@ class OrderListItemWidget extends ConsumerWidget {
                         // 텍스트 굵기 설정
                         fontFamily: 'NanumGothic',
                         // 글꼴 설정
-                        color: Colors.black, // 텍스트 색상 설정
+                        color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
                     ),
                     // 발주상태를 텍스트로 표시.
@@ -2062,7 +1910,7 @@ class OrderListItemWidget extends ConsumerWidget {
                         // 텍스트 굵기 설정
                         fontFamily: 'NanumGothic',
                         // 글꼴 설정
-                        color: Colors.red, // 텍스트 색상 설정
+                        color: RED46_COLOR, // 텍스트 색상 설정
                       ),
                     ),
                   ],
@@ -2071,12 +1919,12 @@ class OrderListItemWidget extends ConsumerWidget {
                 SizedBox(height: interval1Y),
                 // 발주번호를 텍스트로 표시.
                 Text(
-                  '발주번호: $orderNumber',
+                  '발주 번호: ${orderNumber ?? ''}',
                   style: TextStyle(
                     fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                     fontFamily: 'NanumGothic', // 글꼴 설정
-                    color: Color(0xFF676767), // 텍스트 색상 설정
+                    color: GRAY41_COLOR, // 텍스트 색상 설정
                   ),
                 ),
                 // 여백을 추가.
@@ -2109,9 +1957,9 @@ class OrderListItemWidget extends ConsumerWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           // 버튼의 스타일을 설정함
-                          foregroundColor: Color(0xFFE17735),
+                          foregroundColor: ORANGE56_COLOR,
                           // 버튼의 글자 색상을 설정함
-                          backgroundColor: Color(0xFFE17735),
+                          backgroundColor: ORANGE56_COLOR,
                           // 버튼의 배경 색상을 설정함
                           padding: EdgeInsets.symmetric(
                               vertical: orderlistInfoDetailViewBtnPaddingY,
@@ -2132,7 +1980,7 @@ class OrderListItemWidget extends ConsumerWidget {
                             // 텍스트 굵기 설정
                             fontFamily: 'NanumGothic',
                             // 글꼴 설정
-                            color: Colors.white, // 텍스트 색상 설정
+                            color: WHITE_COLOR, // 텍스트 색상 설정
                           ),
                         ),
                       ),
@@ -2162,14 +2010,14 @@ class OrderListItemWidget extends ConsumerWidget {
                               // '예' 버튼의 텍스트를 설정함
                               noTextStyle: TextStyle(
                                 // '아니요' 버튼의 텍스트 스타일을 설정함
-                                color: Colors.black,
+                                color: BLACK_COLOR,
                                 // '아니요' 버튼의 글자 색상을 검정색으로 설정함
                                 fontWeight:
                                     FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
                               ),
                               yesTextStyle: TextStyle(
                                 // '예' 버튼의 텍스트 스타일을 설정함
-                                color: Colors.red, // '예' 버튼의 글자 색상을 빨간색으로 설정함
+                                color: RED46_COLOR, // '예' 버튼의 글자 색상을 빨간색으로 설정함
                                 fontWeight:
                                     FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
                               ),
@@ -2180,7 +2028,7 @@ class OrderListItemWidget extends ConsumerWidget {
                                   await ref
                                       .read(orderlistItemsProvider.notifier)
                                       // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
-                                      .deleteOrderItem(orderNumber);
+                                      .deleteOrderItems(orderNumber);
                                   Navigator.of(context)
                                       .pop(); // 성공적으로 삭제된 후 대화상자를 닫음
                                   showCustomSnackBar(context,
@@ -2196,13 +2044,13 @@ class OrderListItemWidget extends ConsumerWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           // 두 번째 버튼의 스타일을 설정함
-                          foregroundColor: Color(0xFFE17735),
+                          foregroundColor: ORANGE56_COLOR,
                           // 두 번째 버튼의 글자 색상을 설정함
                           backgroundColor:
                               Theme.of(context).scaffoldBackgroundColor,
                           // 버튼 배경색을 앱 배경색으로 설정
                           side: BorderSide(
-                            color: Color(0xFFE17735),
+                            color: ORANGE56_COLOR,
                           ),
                           // 버튼 테두리 색상 설정
                           padding: EdgeInsets.symmetric(
@@ -2221,7 +2069,7 @@ class OrderListItemWidget extends ConsumerWidget {
                             fontSize: deleteBtnFontSize, // 텍스트 크기 설정
                             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                             fontFamily: 'NanumGothic', // 글꼴 설정
-                            color: Color(0xFFE17735), // 텍스트 색상 설정
+                            color: ORANGE56_COLOR, // 텍스트 색상 설정
                           ),
                         ),
                       ),
@@ -2346,10 +2194,19 @@ class _OrderListDetailItemWidgetState
     final double interval2X =
         screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
     final double interval3X =
-        screenSize.width * (20 / referenceWidth); // 가로 간격 2 계산
+        screenSize.width * (20 / referenceWidth); // 가로 간격 3 계산
+    final double interval4X =
+        screenSize.width * (70 / referenceWidth); // 가로 간격 4 계산
+
+    // 에러 메시지 텍스트 크기 설정
+    final double errorTextFontSize1 =
+        screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
+    final double errorTextFontSize2 =
+        screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // 날짜 형식을 'yyyy-MM-dd'로 지정함
-    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateFormat = DateFormat('yyyy.MM.dd');
 
     // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환함
     final orderDate =
@@ -2362,7 +2219,7 @@ class _OrderListDetailItemWidgetState
         widget.order!['numberInfo']['order_number']?.toString().isNotEmpty ==
                 true
             ? widget.order!['numberInfo']['order_number']
-            : '에러 발생';
+            : '';
 
     // 결제 완료일 데이터를 비동기로 가져오는 provider를 호출하고 결과를 paymentCompleteDateAsyncValue에 저장함
     final paymentCompleteDateAsyncValue =
@@ -2402,32 +2259,32 @@ class _OrderListDetailItemWidgetState
     // 수령자 정보에서 이름, 연락처, 주소, 상세주소, 우편번호를 가져오고, 값이 유효하지 않으면 기본 메시지를 설정함
     final recipientName = recipientInfo['name']?.toString().isNotEmpty == true
         ? recipientInfo['name']
-        : '이름 없음';
+        : '';
     final recipientPhone =
         recipientInfo['phone_number']?.toString().isNotEmpty == true
             ? recipientInfo['phone_number']
-            : '연락처 없음';
+            : '';
     final recipientAddress =
         recipientInfo['address']?.toString().isNotEmpty == true
             ? recipientInfo['address']
-            : '주소 없음';
+            : '';
     final recipientDetailAddress =
         recipientInfo['detail_address']?.toString().isNotEmpty == true
             ? recipientInfo['detail_address']
-            : '상세주소 없음';
+            : '';
     final recipientPostalCode =
         recipientInfo['postal_code']?.toString().isNotEmpty == true
             ? recipientInfo['postal_code']
-            : '우편번호 없음';
+            : '';
 
     // 배송 메모 데이터를 처리하고, '직접입력'일 경우 추가 메모를 가져옴
     String deliveryMemo = recipientInfo['memo']?.toString().isNotEmpty == true
         ? recipientInfo['memo']
-        : '배송 메모 없음';
+        : '';
     if (deliveryMemo == '직접입력') {
       deliveryMemo = recipientInfo['extra_memo']?.toString().isNotEmpty == true
           ? recipientInfo['extra_memo']
-          : '추가 메모 없음';
+          : '';
     }
 
     // productInfo 리스트를 가져와서 해당 발주번호 관련 상품별로 productInfo 데이터를 구현 가능하도록 하는 로직
@@ -2451,7 +2308,7 @@ class _OrderListDetailItemWidgetState
           decoration: BoxDecoration(
             border: Border(
               bottom:
-                  BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                  BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
             ),
           ),
           // 발주 날짜와 발주 번호, 결제 완료일을 표시하는 섹션
@@ -2471,7 +2328,7 @@ class _OrderListDetailItemWidgetState
                 children: [
                   // 발주 일자를 표시
                   Text(
-                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : '에러 발생'}',
+                    '발주 일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderDateDataFontSize,
                       // 텍스트 크기 설정
@@ -2479,13 +2336,13 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic',
                       // 글꼴 설정
-                      color: Colors.black, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
                   ),
                   SizedBox(height: interval2Y),
                   // 발주 번호를 표시
                   Text(
-                    '발주번호: $orderNumber',
+                    '발주 번호: ${orderNumber ?? ''}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderNumberDataFontSize,
                       // 텍스트 크기 설정
@@ -2493,7 +2350,7 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic',
                       // 글꼴 설정
-                      color: Color(0xFF676767), // 텍스트 색상 설정
+                      color: GRAY41_COLOR, // 텍스트 색상 설정
                     ),
                   ),
                   SizedBox(height: interval2Y),
@@ -2502,7 +2359,7 @@ class _OrderListDetailItemWidgetState
                     data: (date) {
                       if (date != null) {
                         return Text(
-                          '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
+                          '결제완료일: ${date != null ? DateFormat('yyyy.MM.dd').format(date) : ''}',
                           style: TextStyle(
                             fontSize:
                                 orderlistDtInfoPaymentCompletionDateDataFontSize,
@@ -2511,15 +2368,33 @@ class _OrderListDetailItemWidgetState
                             // 텍스트 굵기 설정
                             fontFamily: 'NanumGothic',
                             // 글꼴 설정
-                            color: Color(0xFF676767), // 텍스트 색상 설정
+                            color: GRAY41_COLOR, // 텍스트 색상 설정
                           ),
                         );
                       } else {
                         return SizedBox.shrink(); // UI에 아무것도 표시하지 않음
                       }
                     },
-                    loading: () => CircularProgressIndicator(), // 로딩 상태 처리
-                    error: (error, stack) => Text('오류 발생'), // 오류 상태 처리
+                    loading: () => buildCommonLoadingIndicator(),
+                    // 공통 로딩 인디케이터 호출
+                    error: (error, stack) => Container(
+                      // 에러 상태에서 중앙 배치
+                      height: errorTextHeight, // 전체 화면 높이 설정
+                      alignment: Alignment.center, // 중앙 정렬
+                      child: buildCommonErrorIndicator(
+                        message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                        // 첫 번째 메시지 설정
+                        secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+                        // 두 번째 메시지 설정
+                        fontSize1: errorTextFontSize1,
+                        // 폰트1 크기 설정
+                        fontSize2: errorTextFontSize2,
+                        // 폰트2 크기 설정
+                        color: BLACK_COLOR,
+                        // 색상 설정
+                        showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -2540,7 +2415,7 @@ class _OrderListDetailItemWidgetState
           decoration: BoxDecoration(
             border: Border(
               bottom:
-                  BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                  BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
             ),
           ),
           child: CommonCardView(
@@ -2568,22 +2443,22 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic',
                       // 글꼴 설정
-                      color: Colors.black, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
                   ),
                   SizedBox(height: interval3Y),
                   // 각 결제 정보 항목을 표시하는 _buildAmountRow 함수 호출
                   _buildAmountRow(context, '총 상품금액',
-                      '${numberFormat.format(totalProductPrice)} 원',
+                      '${numberFormat.format(totalProductPrice)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                   _buildAmountRow(context, '상품 할인금액',
-                      '-${numberFormat.format(productDiscountPrice)} 원',
+                      '-${numberFormat.format(productDiscountPrice)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
-                  _buildAmountRow(context, '배송비', '0 원',
+                  _buildAmountRow(context, '배송비', '0원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                   Divider(),
                   _buildAmountRow(context, '총 결제금액',
-                      '${numberFormat.format(totalPaymentPrice)} 원',
+                      '${numberFormat.format(totalPaymentPrice)}원',
                       isTotal: true,
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                 ],
@@ -2605,7 +2480,7 @@ class _OrderListDetailItemWidgetState
           decoration: BoxDecoration(
             border: Border(
               bottom:
-                  BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                  BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
             ),
           ),
           child: CommonCardView(
@@ -2633,7 +2508,7 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic',
                       // 글꼴 설정
-                      color: Colors.black, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
                   ),
                   SizedBox(height: interval3Y),
@@ -2649,7 +2524,7 @@ class _OrderListDetailItemWidgetState
                       '$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)',
                       '',
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  Divider(color: Colors.grey),
+                  Divider(color: GRAY62_COLOR),
                   _buildRecipientInfoRow(context, '배송메모', '',
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                   _buildRecipientInfoRow(context, deliveryMemo, '',
@@ -2684,7 +2559,7 @@ class _OrderListDetailItemWidgetState
               child: CommonCardView(
                 // backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
                 // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                backgroundColor: Color(0xFFF3F3F3),
+                backgroundColor: GRAY97_COLOR,
                 elevation: 0, // 그림자 깊이 설정
                 content: Padding(
                   padding: EdgeInsets.zero, // 패딩을 없앰
@@ -2699,7 +2574,7 @@ class _OrderListDetailItemWidgetState
                           child: Text(
                             '환불 완료', // '환불 완료' 텍스트를 표시함.
                             style: TextStyle(
-                              color: Colors.red,
+                              color: RED46_COLOR,
                               // 텍스트 색상을 빨간색으로 설정함.
                               fontWeight: FontWeight.bold,
                               // 텍스트를 굵게 표시함.
@@ -2717,16 +2592,14 @@ class _OrderListDetailItemWidgetState
                           // 상품 상세 화면으로 이동함
                           final product = ProductContent(
                             docId: productInfo['product_id'] ?? '',
-                            category:
-                                productInfo['category']?.toString() ?? '에러 발생',
+                            category: productInfo['category']?.toString() ?? '',
                             productNumber:
-                                productInfo['product_number']?.toString() ??
-                                    '에러 발생',
+                                productInfo['product_number']?.toString() ?? '',
                             thumbnail:
                                 productInfo['thumbnails']?.toString() ?? '',
                             briefIntroduction:
                                 productInfo['brief_introduction']?.toString() ??
-                                    '에러 발생',
+                                    '',
                             originalPrice: productInfo['original_price'] ?? 0,
                             discountPrice: productInfo['discount_price'] ?? 0,
                             discountPercent:
@@ -2741,10 +2614,10 @@ class _OrderListDetailItemWidgetState
                           height: orderlistDtInfo3CardViewHeight,
                           // 카드뷰 세로 크기 설정
                           // color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-                          color: Color(0xFFF3F3F3),
+                          color: GRAY97_COLOR,
                           child: CommonCardView(
                             // backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-                            backgroundColor: Color(0xFFF3F3F3),
+                            backgroundColor: GRAY97_COLOR,
                             elevation: 0, // 그림자 깊이 설정
                             content: Padding(
                               padding: EdgeInsets.zero, // 패딩을 없앰
@@ -2759,7 +2632,7 @@ class _OrderListDetailItemWidgetState
                                                   .isNotEmpty ==
                                               true
                                           ? productInfo['brief_introduction']
-                                          : '에러 발생',
+                                          : '',
                                       '',
                                       bold: true,
                                       fontSize:
@@ -2772,7 +2645,7 @@ class _OrderListDetailItemWidgetState
                                                   .isNotEmpty ==
                                               true
                                           ? '상품 번호: ${productInfo['product_number']}'
-                                          : '에러 발생',
+                                          : '',
                                       '',
                                       bold: true,
                                       fontSize:
@@ -2783,16 +2656,29 @@ class _OrderListDetailItemWidgetState
                                     children: [
                                       // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
                                       Expanded(
-                                          flex: 4,
-                                          child: productInfo['thumbnails']
-                                                      ?.toString()
-                                                      .isNotEmpty ==
-                                                  true
-                                              ? Image.network(
-                                                  productInfo['thumbnails'],
-                                                  fit: BoxFit.cover)
-                                              : Icon(
-                                                  Icons.image_not_supported)),
+                                        flex: 4,
+                                        child: productInfo['thumbnails']
+                                                    ?.toString()
+                                                    .isNotEmpty ==
+                                                true
+                                            ? Image.network(
+                                                productInfo['thumbnails'],
+                                                fit: BoxFit.cover,
+                                                // 이미지 로드 실패 시 아이콘 표시
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    Icon(
+                                                  Icons.image_not_supported,
+                                                  color: GRAY88_COLOR,
+                                                  size: interval4X,
+                                                ),
+                                              )
+                                            : Icon(
+                                                Icons.image_not_supported,
+                                                color: GRAY88_COLOR,
+                                                size: interval4X,
+                                              ),
+                                      ), // 썸네일이 없을 때 아이콘을 표시
                                       SizedBox(width: interval1X),
                                       // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
                                       Expanded(
@@ -2802,12 +2688,12 @@ class _OrderListDetailItemWidgetState
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)} 원',
+                                              '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)}원',
                                               style: TextStyle(
                                                 fontSize:
                                                     orderlistDtInfoOriginalPriceDataFontSize,
                                                 fontFamily: 'NanumGothic',
-                                                color: Color(0xFF999999),
+                                                color: GRAY60_COLOR,
                                                 decoration:
                                                     TextDecoration.lineThrough,
                                               ),
@@ -2815,13 +2701,13 @@ class _OrderListDetailItemWidgetState
                                             Row(
                                               children: [
                                                 Text(
-                                                  '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)} 원',
+                                                  '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)}원',
                                                   style: TextStyle(
                                                     fontSize:
                                                         orderlistDtInfoDiscountPriceDataFontSize,
                                                     fontFamily: 'NanumGothic',
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
+                                                    color: BLACK_COLOR,
                                                   ),
                                                 ),
                                                 SizedBox(width: interval2X),
@@ -2831,7 +2717,7 @@ class _OrderListDetailItemWidgetState
                                                     fontSize:
                                                         orderlistDtInfoDiscountPercentDataFontSize,
                                                     fontFamily: 'NanumGothic',
-                                                    color: Colors.red,
+                                                    color: RED46_COLOR,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -2852,12 +2738,20 @@ class _OrderListDetailItemWidgetState
                                                         width:
                                                             orderlistDtInfoColorImageDataWidth,
                                                         fit: BoxFit.cover,
-                                                      )
+                                                  // 이미지 로드 실패 시 아이콘 표시
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) =>
+                                                      Icon(
+                                                        Icons.image_not_supported,
+                                                        color: GRAY88_COLOR,
+                                                        size: orderlistDtInfoColorImageDataHeight,
+                                                      ),
+                                                )
                                                     : Icon(
-                                                        Icons
-                                                            .image_not_supported,
-                                                        size:
-                                                            orderlistDtInfoColorImageDataHeight),
+                                                  Icons.image_not_supported,
+                                                  color: GRAY88_COLOR,
+                                                  size: orderlistDtInfoColorImageDataHeight,
+                                                ),
                                                 SizedBox(width: interval2X),
                                                 // 선택된 색상 텍스트를 표시
                                                 Text(
@@ -2867,7 +2761,7 @@ class _OrderListDetailItemWidgetState
                                                           true
                                                       ? productInfo[
                                                           'selected_color_text']
-                                                      : '에러 발생',
+                                                      : '',
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -2875,7 +2769,7 @@ class _OrderListDetailItemWidgetState
                                                         orderlistDtInfoColorTextDataFontSize,
                                                     fontFamily: 'NanumGothic',
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
+                                                    color: BLACK_COLOR,
                                                   ),
                                                 ),
                                               ],
@@ -2883,13 +2777,13 @@ class _OrderListDetailItemWidgetState
                                             SizedBox(height: interval1Y),
                                             // 선택된 사이즈와 수량을 표시
                                             Text(
-                                              '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : '에러 발생'}',
+                                              '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
                                               style: TextStyle(
                                                 fontSize:
                                                     orderlistDtInfoSizeTextDataFontSize,
                                                 fontFamily: 'NanumGothic',
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black,
+                                                color: BLACK_COLOR,
                                               ),
                                             ),
                                             Text(
@@ -2899,7 +2793,7 @@ class _OrderListDetailItemWidgetState
                                                     orderlistDtInfoCountTextDataFontSize,
                                                 fontFamily: 'NanumGothic',
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black,
+                                                color: BLACK_COLOR,
                                               ),
                                             ),
                                           ],
@@ -2945,14 +2839,14 @@ class _OrderListDetailItemWidgetState
                                     : null, // 환불 버튼 활성화 여부에 따라 동작함
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: boolRefundBtn
-                                      ? Color(0xFFE17735)
-                                      : Colors.grey,
+                                      ? ORANGE56_COLOR
+                                      : GRAY62_COLOR,
                                   backgroundColor:
                                       Theme.of(context).scaffoldBackgroundColor,
                                   side: BorderSide(
                                       color: boolRefundBtn
-                                          ? Color(0xFFE17735)
-                                          : Colors.grey),
+                                          ? ORANGE56_COLOR
+                                          : GRAY62_COLOR),
                                   padding: EdgeInsets.symmetric(
                                       vertical: interval4Y,
                                       horizontal: interval3X),
@@ -2964,7 +2858,7 @@ class _OrderListDetailItemWidgetState
                                     fontFamily: 'NanumGothic',
                                     fontSize:
                                         orderlistDtInfoBottomBtnDataFontSize,
-                                    color: Color(0xFFE17735),
+                                    color: ORANGE56_COLOR,
                                   ),
                                 ),
                               ),
@@ -2995,14 +2889,14 @@ class _OrderListDetailItemWidgetState
                                     : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작함
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: boolRefundBtn
-                                      ? Color(0xFFE17735)
-                                      : Colors.grey,
+                                      ? ORANGE56_COLOR
+                                      : GRAY62_COLOR,
                                   backgroundColor:
                                       Theme.of(context).scaffoldBackgroundColor,
                                   side: BorderSide(
                                       color: boolRefundBtn
-                                          ? Color(0xFFE17735)
-                                          : Colors.grey),
+                                          ? ORANGE56_COLOR
+                                          : GRAY62_COLOR),
                                   padding: EdgeInsets.symmetric(
                                       vertical: interval4Y,
                                       horizontal: interval3X),
@@ -3014,7 +2908,7 @@ class _OrderListDetailItemWidgetState
                                     fontFamily: 'NanumGothic',
                                     fontSize:
                                         orderlistDtInfoBottomBtnDataFontSize,
-                                    color: Color(0xFFE17735),
+                                    color: ORANGE56_COLOR,
                                   ),
                                 ),
                               ),
@@ -3025,14 +2919,14 @@ class _OrderListDetailItemWidgetState
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: boolRefundBtn
-                                      ? Color(0xFFE17735)
-                                      : Colors.grey,
+                                      ? ORANGE56_COLOR
+                                      : GRAY62_COLOR,
                                   backgroundColor:
                                       Theme.of(context).scaffoldBackgroundColor,
                                   side: BorderSide(
                                       color: boolRefundBtn
-                                          ? Color(0xFFE17735)
-                                          : Colors.grey),
+                                          ? ORANGE56_COLOR
+                                          : GRAY62_COLOR),
                                   padding: EdgeInsets.symmetric(
                                       vertical: interval4Y,
                                       horizontal: interval3X),
@@ -3044,17 +2938,33 @@ class _OrderListDetailItemWidgetState
                                     fontFamily: 'NanumGothic',
                                     fontSize:
                                         orderlistDtInfoBottomBtnDataFontSize,
-                                    color: Color(0xFFE17735),
+                                    color: ORANGE56_COLOR,
                                   ),
                                 ),
                               ),
                             ],
                           );
                         },
-                        loading: () => CircularProgressIndicator(),
-                        // 버튼 정보 로딩 중일 때 로딩 인디케이터 표시함
-                        error: (error, stack) =>
-                            Text('버튼 상태를 불러오는 중 오류 발생'), // 오류 발생 시 메시지 표시
+                        loading: () => buildCommonLoadingIndicator(),
+                        // 공통 로딩 인디케이터 호출
+                        error: (error, stack) => Container(
+                          // 에러 상태에서 중앙 배치
+                          height: errorTextHeight, // 전체 화면 높이 설정
+                          alignment: Alignment.center, // 중앙 정렬
+                          child: buildCommonErrorIndicator(
+                            message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                            // 첫 번째 메시지 설정
+                            secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+                            // 두 번째 메시지 설정
+                            fontSize1: errorTextFontSize1,
+                            // 폰트1 크기 설정
+                            fontSize2: errorTextFontSize2,
+                            // 폰트2 크기 설정
+                            color: BLACK_COLOR,
+                            // 색상 설정
+                            showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -3084,16 +2994,16 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
             fontSize: fontSize,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
             fontFamily: 'NanumGothic',
-            color: Colors.black,
+            color: BLACK_COLOR,
           ),
         ),
         // 값을 표시하는 텍스트
         Text(
-          value,
+          value ?? '',
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal ? Colors.red : Colors.black,
+            color: isTotal ? RED46_COLOR : BLACK_COLOR,
             fontFamily: 'NanumGothic',
           ),
         ),
@@ -3117,18 +3027,18 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
             fontSize: fontSize,
             fontWeight: FontWeight.normal,
             fontFamily: 'NanumGothic',
-            color: Colors.black,
+            color: BLACK_COLOR,
           ),
         ),
         // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
         Expanded(
           child: Text(
-            value,
+            value ?? '',
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.normal,
               fontFamily: 'NanumGothic',
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
             textAlign: TextAlign.end,
             softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정함
@@ -3154,18 +3064,18 @@ Widget _buildProductInfoRow(BuildContext context, String label, String value,
             fontFamily: 'NanumGothic',
             fontSize: fontSize,
             fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-            color: Colors.black,
+            color: BLACK_COLOR,
           ),
         ),
         // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
         Expanded(
           child: Text(
-            value,
+            value ?? '',
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
               fontFamily: 'NanumGothic',
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
             textAlign: TextAlign.end,
             softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정함

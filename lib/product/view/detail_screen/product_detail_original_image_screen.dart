@@ -53,8 +53,21 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
   Widget build(BuildContext context) { // build 메소드 오버라이드
     final pageIndex = ref.watch(detailImagePageProvider); // 현재 페이지 인덱스를 상태로부터 읽음
 
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393 세로 852
+    final double referenceWidht = 393.0;
+    final double referenceHeight = 852.0;
+
+    final double interval1X = screenSize.width * (250 / referenceWidht);
+    final double interval2X = screenSize.width * (20 / referenceWidht);
+    final double interval1Y = screenSize.height * (40 / referenceHeight);
+    final double interval2Y = screenSize.height * (54 / referenceHeight);
+    final double pageTextFontSize = screenSize.height * (16 / referenceHeight);
+
     return Scaffold(
-      backgroundColor: Colors.black, // 배경색을 검은색으로 설정
+      backgroundColor: BLACK_COLOR, // 배경색을 검은색으로 설정
       body: Stack( // 여러 위젯을 겹쳐서 배치
         children: [
           Column(
@@ -71,34 +84,43 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
                     },
                   ),
                   itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) => // 이미지 빌더 함수
-                  Image.network(
+                   Image.network(
                     widget.images[itemIndex], // 이미지 URL 설정
                     fit: BoxFit.contain, // 원본 비율을 유지하고 상하가 더 작게 차지하도록 설정
                     width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
+                    errorBuilder: (context, error, stackTrace) => Icon( // 이미지 로드 실패 시 아이콘 표시
+                      Icons.image_not_supported,
+                      color: WHITE_COLOR, // 아이콘 색상을 흰색으로 설정
+                      size: interval1X, // 아이콘 크기 설정
+                    ),
                   ),
                 ),
               ),
             ],
           ),
           Positioned(
-            top: 40, // 위쪽에서 40픽셀 아래에 위치
-            right: 20, // 오른쪽에서 20픽셀 안쪽에 위치
+            top: interval1Y, // 위쪽에서 40픽셀 아래에 위치
+            right: interval2X, // 오른쪽에서 20픽셀 안쪽에 위치
             child: IconButton(
               icon: Icon(Icons.close), // 닫기 아이콘 설정
-              color: INPUT_BG_COLOR, // 색상 설정
+              color: GRAY98_COLOR, // 색상 설정
               onPressed: () {
                 Navigator.pop(context); // 누르면 이전 화면으로 돌아가기
               },
             ),
           ),
           Positioned(
-            top: 52, // 위쪽에서 52픽셀 아래에 위치
+            top: interval2Y, // 위쪽에서 52픽셀 아래에 위치
             left: 0, // 왼쪽에 위치
             right: 0, // 오른쪽에 위치
             child: Center(
               child: Text(
                 '${pageIndex + 1} / ${widget.images.length}', // 현재 페이지와 전체 페이지 수 표시
-                style: TextStyle(color: INPUT_BG_COLOR, fontSize: 16), // 색상과 크기 설정
+                style: TextStyle(
+                  color: GRAY98_COLOR,
+                  fontSize: pageTextFontSize,
+                  fontFamily: 'NanumGothic',
+                ), // 색상과 크기 설정
               ),
             ),
           ),

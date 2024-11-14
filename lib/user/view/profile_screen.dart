@@ -76,14 +76,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
   // 배너 이미지의 총 개수를 저장하는 변수
   int bannerImageCount = 3;
 
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 첫 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small1BannerLinks = [
-    'https://www.coupang.com', // 첫 번째 배너 클릭 시 쿠팡으로 이동
-    'https://www.temu.com/kr', // 두 번째 배너 클릭 시 테무로 이동
-  ];
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -250,15 +242,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
   @override
   Widget build(BuildContext context) {
 
-    void _onSmall1BannerTap(BuildContext context, int index) async {
-      final url = small1BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -275,9 +258,9 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double profileAppBarTitleWidth = screenSize.width * (100 / referenceWidth);
+    final double profileAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double profileAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double profileAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double profileAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -321,6 +304,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                     context: context,
                     ref: ref,
                     title: '마이페이지',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: profileAppBarTitleWidth,
@@ -352,7 +336,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),
@@ -371,17 +355,25 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                   height: profileMainScreenSmallBannerViewHeight,
                                   // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                   child: buildCommonBannerPageViewSection<
-                                      ProfileMainSmall1BannerImage>(
+                                      AllSmallBannerImage>(
                                     context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
                                     ref: ref, // 상태 관리를 위한 참조 전달함
                                     currentPageProvider:
                                     profileMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
                                     pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
                                     bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
-                                    bannerLinks: small1BannerLinks, // 작은 배너 이미지의 링크 목록을 전달함
                                     bannerImagesProvider:
                                     profileMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
-                                    onPageTap: _onSmall1BannerTap, // 배너를 탭했을 때의 이벤트 핸들러를 전달함
+                                    // 배너를 탭했을 때 실행할 함수를 전달
+                                    onPageTap: (context, index) =>
+                                    // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                    onSmallBannerTap(
+                                        context, // 현재 화면의 컨텍스트를 전달함
+                                        index, // 클릭된 배너의 인덱스를 전달함
+                                        // profileMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                        ref.watch(profileMainSmall1BannerImagesProvider).value ?? [],
+                                        ref // Provider의 참조를 전달함
+                                    ),
                                     width: profileMainScreenSmallBannerWidth, // 배너 섹션의 너비를 설정함
                                     height: profileMainScreenSmallBannerHeight, // 배너 섹션의 높이를 설정함
                                     borderRadius: 8, // 배너의 모서리 반경을 8로 설정함
@@ -398,7 +390,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),// 높이 profilePadding1Y로 간격 설정
@@ -414,7 +406,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.normal,
                                   fontSize: guideTextFontSize,
-                                  color: Colors.black, // 검은색 텍스트
+                                  color: BLACK_COLOR, // 검은색 텍스트
                                   decoration: TextDecoration.underline, // 밑줄 추가
                                 ),
                               ),
@@ -432,7 +424,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
           ),
           // buildTopButton 함수는 주어진 context와 profileScreenPointScrollController를 사용하여
           // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
-          // buildTopButton(context, profileScreenPointScrollController),
+          buildTopButton(context, profileScreenPointScrollController),
         ],
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.

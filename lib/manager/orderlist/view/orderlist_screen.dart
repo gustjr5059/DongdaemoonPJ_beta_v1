@@ -191,9 +191,9 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistAppBarTitleWidth = screenSize.width * (170 / referenceWidth);
+    final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double orderlistAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -223,6 +223,7 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
                     context: context,
                     ref: ref,
                     title: '발주내역 관리(관리자)',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: orderlistAppBarTitleWidth,

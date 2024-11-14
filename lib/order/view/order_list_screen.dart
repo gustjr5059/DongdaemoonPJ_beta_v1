@@ -126,6 +126,10 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 발주내역 버튼 인덱스인 2와 매핑
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
+      // 데이터 로드를 초기화하는 함수 호출
+      ref.read(orderlistItemsProvider.notifier).resetOrderItems();
+      // 추가 데이터를 로드하는 함수를 호출
+      ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -199,9 +203,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistAppBarTitleWidth = screenSize.width * (77 / referenceWidth);
+    final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.height * (15 / referenceHeight);
+    final double orderlistAppBarTitleX = screenSize.height * (4 / referenceHeight);
     final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -211,12 +215,12 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 찜 목록 버튼 수치 (Case 2)
     final double orderlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double orderlistWishlistBtnX = screenSize.width * (12 / referenceWidth);
-    final double orderlistWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 발주 내역 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextX =
@@ -242,14 +246,16 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
               child: Container(
                 width: orderlistEmptyTextWidth,
                 height: orderlistEmptyTextHeight,
-                margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                margin: EdgeInsets.only(top: orderlistEmptyTextY),
+                // 텍스트를 중앙에 위치하도록 설정함.
+                alignment: Alignment.center,
                 child: Text(
-                  '발주 내역이 없습니다.',
+                  '현재 발주 내역이 없습니다.',
                   style: TextStyle(
                     fontSize: orderlistEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ),
               ),
@@ -280,6 +286,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                       ref: ref,
                       // 참조(ref) 전달
                       title: '발주 내역',
+                      fontFamily: 'NanumGothic',
                       // AppBar의 제목을 '발주 목록'로 설정
                       leadingType: LeadingType.none,
                       // 아무 버튼도 없음.
@@ -311,8 +318,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                     delegate: SliverChildBuilderDelegate(
                       // 각 항목을 빌드하는 빌더 함수.
                           (BuildContext context, int index) {
-                        // 발주 목록을 역순으로 정렬함.
-                        final reversedOrders = orderlistItems.reversed.toList();
+                            // 발주 목록을 불러옴.
+                            final Orders = orderlistItems.toList();
 
                         return Padding(
                           // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
@@ -323,13 +330,13 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                               Container(
                                 decoration: BoxDecoration(
                                   border: Border(
-                                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                    bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                   ),
                                 ),
                               ),
                               // SizedBox(height: orderlistPadding1Y),
                               // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
-                              OrderListItemWidget(order: reversedOrders[index]),
+                              OrderListItemWidget(order: Orders[index]),
                             ],
                           ),
                         );

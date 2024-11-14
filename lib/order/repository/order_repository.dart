@@ -17,48 +17,6 @@ import '../../product/model/product_model.dart'; // API 키 로드 함수가 포
 import 'package:crypto/crypto.dart'; // 해시 계산을 위한 crypto 패키지 사용
 import 'dart:convert'; // utf8 변환을 위해 사용
 
-// // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 시작
-// // KA 헤더를 생성하는 비동기 함수
-// Future<String> getKAHeader() async {
-//   print('Generating KA header...');
-//   String sdkVersion = '3.24.3'; // SDK 버전은 수동으로 입력합니다.
-//   String osVersion; // 운영체제 버전을 저장할 변수
-//   String device; // 기기명을 저장할 변수
-//   String appName; // 앱 이름을 저장할 변수
-//   String appVersion; // 앱 버전을 저장할 변수
-//   String lang = PlatformDispatcher.instance.locale.toLanguageTag(); // 시스템 언어 설정
-//   String origin = 'com.gshe.wearcano'; // origin 필드 추가
-//
-//   // package_info_plus 패키지를 사용한 동적으로 패키지명을 가져오는 로직
-//   // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-//   // String origin = packageInfo.packageName;
-//
-//   // 운영체제와 기기명 얻기
-//   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-//   if (Platform.isIOS) {
-//     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-//     osVersion = 'ios-${iosInfo.systemVersion}'; // iOS 운영체제 버전
-//     device = iosInfo.utsname.machine; // iOS 기기명
-//   } else if (Platform.isAndroid) {
-//     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-//     osVersion = 'android-${androidInfo.version.release}'; // 안드로이드 운영체제 버전
-//     device = androidInfo.model; // 안드로이드 기기명
-//   } else {
-//     osVersion = 'unknown'; // 알 수 없는 운영체제 버전
-//     device = 'unknown'; // 알 수 없는 기기명
-//   }
-//
-//   // 앱 이름과 버전 얻기
-//   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-//   appName = packageInfo.appName; // 앱 이름
-//   appVersion = packageInfo.version; // 앱 버전
-//
-//   // KA 헤더 문자열 생성 및 반환
-//   final kaHeader = 'sdk/$sdkVersion os/$osVersion lang/$lang device/$device appName/$appName appVersion/$appVersion origin/$origin';
-//   print('Generated KA header: $kaHeader');
-//   return kaHeader;
-// }
-// // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
 
 // 발주 관련 화면의 레퍼지토리 클래스
 class OrderRepository {
@@ -70,70 +28,25 @@ class OrderRepository {
   // 이메일을 이용해 사용자 정보를 가져오는 비동기 함수
   Future<Map<String, dynamic>?> getUserInfoByEmail(String email) async {
     try {
-      print('Fetching user info for email: $email');
+      print('이메일에 대한 사용자 정보 가져오는 중: $email');
       QuerySnapshot querySnapshot = await firestore
           .collection('users')
           .where('email', isEqualTo: email)
           .get(); // Firestore에서 이메일로 사용자 정보 검색
 
       if (querySnapshot.docs.isNotEmpty) {
-        print('User info found for email: $email');
+        print('이메일에 대한 사용자 정보 확인됨: $email');
         return querySnapshot.docs.first.data() as Map<String,
             dynamic>?; // 사용자 정보 반환
       } else {
-        print('No user info found for email: $email');
+        print('이메일에 대한 사용자 정보 없음: $email');
         return null; // 사용자 정보가 없을 경우 null 반환
       }
     } catch (e) {
-      print('Error fetching user data: $e'); // 에러 발생 시 에러 메시지 출력
+      print('사용자 데이터 가져오는 중 오류 발생: $e'); // 에러 발생 시 에러 메시지 출력
       return null; // 에러 발생 시 null 반환
     }
   }
-
-  // // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 시작
-  // // 주소를 검색하는 비동기 함수
-  // Future<List<dynamic>> searchAddress(String query) async {
-  //   try {
-  //     if (query.isEmpty) {
-  //       print('Query parameter is empty.');
-  //       throw Exception('Query parameter is required.'); // 쿼리가 비어있을 경우 예외 발생
-  //     }
-  //     final apiKey = await loadApiKey(); // 환경 변수에서 API 키 로드
-  //     final kaHeader = await getKAHeader(); // KA 헤더 얻기
-  //     final encodedQuery = Uri.encodeComponent(query); // 쿼리 인코딩
-  //     final url = Uri.parse(
-  //         'https://dapi.kakao.com/v2/local/search/address.json?query=$encodedQuery'); // API 호출 URL 생성
-  //
-  //     print('API 호출 URL: $url'); // 디버깅을 위해 URL 출력
-  //     print('KA Header: $kaHeader'); // 디버깅을 위해 KA 헤더 출력
-  //
-  //     final response = await http.get(
-  //       url,
-  //       headers: {
-  //         'Authorization': 'KakaoAK $apiKey', // API 키를 헤더에 추가
-  //         'KA': kaHeader, // KA 헤더 추가
-  //       },
-  //     );
-  //
-  //     print('HTTP 상태 코드: ${response.statusCode}'); // 디버깅을 위해 상태 코드 출력
-  //     print('HTTP 응답 본문: ${response.body}'); // 디버깅을 위해 응답 본문 출력
-  //
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body); // 응답 본문을 JSON으로 디코딩
-  //       print('Successfully fetched address data.');
-  //       return data['documents']; // 주소 데이터 반환
-  //     } else {
-  //       print('Failed to load addresses: ${response.statusCode}');
-  //       throw Exception(
-  //           'Failed to load addresses: ${response.statusCode}'); // 실패 시 예외 발생
-  //     }
-  //   } catch (e) {
-  //     print('Error during address search: $e');
-  //     throw Exception('Failed to load addresses: $e'); // 예외 발생 시 예외 메시지 출력
-  //   }
-  // }
-  //
-  // // ------ 주소검색 기능 관련 데이터 처리 로직 내용 부분 끝
 
   // ------ 발주자 정보, 수령자 정보, 결제 정보, 상품 정보, 발주 관련 번호 정보를 매개변수로 받는 함수 내용 시작
   // 발주를 처리하고, 발주 ID를 반환하는 함수
@@ -143,36 +56,37 @@ class OrderRepository {
     required Map<String, dynamic> amountInfo, // 결제 정보
     required List<ProductContent> productInfo, // 상품 정보 리스트
   }) async {
-    print('Placing order...');
+    print('발주 처리 중...');
     // 현재 로그인한 사용자의 이메일을 가져옴
     final userEmail = FirebaseAuth.instance.currentUser?.email;
     if (userEmail == null) {
-      print('User not logged in');
-      throw Exception('User not logged in');
+      print('사용자가 로그인하지 않았습니다');
+      throw Exception('사용자가 로그인하지 않았습니다');
     }
 
     // 현재 시간을 기반으로 주문 번호를 생성
     final now = DateTime.now(); // 현재 시간을 가져옴
-    final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
-    print('Generated order number: $orderNumber');
+    // final orderNumber = DateFormat('yyyyMMdd').format(now) + (now.hour * 3600 + now.minute * 60 + now.second).toString(); // 주문 번호 생성
+    final orderNumber = DateFormat('yyyyMMddHHmmss').format(now); // 주문 번호 생성
+    print('생성된 주문 번호: $orderNumber');
 
     // 발주 문서를 생성할 위치를 Firestore에서 지정 (order_number를 문서 ID로 사용)
-    final orderDoc = firestore.collection('order_list')
+    final orderDoc = firestore.collection('wearcano_order_list')
         .doc(userEmail)
         .collection('orders')
         .doc(orderNumber); // orderId 대신 orderNumber 사용
 
     // 발주자 정보를 Firestore에 저장
     await orderDoc.collection('orderer_info').doc('info').set(ordererInfo);
-    print('Orderer info saved.');
+    print('발주자 정보 저장됨.');
 
     // 수령자 정보를 Firestore에 저장
     await orderDoc.collection('recipient_info').doc('info').set(recipientInfo);
-    print('Recipient info saved.');
+    print('수령자 정보 저장됨.');
 
     // 결제 정보를 Firestore에 저장
     await orderDoc.collection('amount_info').doc('info').set(amountInfo);
-    print('Amount info saved.');
+    print('결제 정보 저장됨.');
 
     // 발주 데이터를 Firestore에 저장할 때 버튼 상태 필드를 추가.
     await orderDoc.collection('button_info').doc('info').set({
@@ -180,7 +94,7 @@ class OrderRepository {
       'boolReviewWriteBtn': false, // 초기값은 false로 설정
       'private_orderList_closed_button': false // 초기값은 false로 설정
     });
-    print('Button info saved.');
+    print('버튼 정보 저장됨.');
 
     // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var i = 0; i < productInfo.length; i++) {
@@ -203,7 +117,7 @@ class OrderRepository {
         'boolReviewCompleteBtn': false, // 초기값은 false로 설정
         'boolRefundCompleteBtn': false, // 초기값은 false로 설정
       });
-      print('Product info saved for product ID: ${item.docId}');
+      print('상품 정보 저장됨 - 상품 ID: ${item.docId}');
     }
 
     // 발주 상태 정보를 Firestore에 저장
@@ -211,17 +125,17 @@ class OrderRepository {
       'order_status': '발주신청 완료', // 기본 값으로 '발주신청 완료'를 저장
     };
     await orderDoc.collection('order_status_info').doc('info').set(orderStatusInfo);
-    print('Order status info saved.');
+    print('발주 상태 정보 저장됨.');
 
     // number_info 컬렉션에 order_number와 order_date 추가
     await orderDoc.collection('number_info').doc('info').set({
       'order_number': orderNumber, // 주문 번호 저장
       'order_date': now, // 주문 날짜 저장
     });
-    print('Number info saved.');
+    print('숫자 정보 저장됨.');
 
     // 이메일로 발주 데이터 전송할 때, Firestore에 주문 정보를 저장하는 로직
-    await firestore.collection('order_list')
+    await firestore.collection('wearcano_order_list')
         .doc(userEmail)
         .collection('orders')
         .doc(orderNumber) // orderId 대신 orderNumber 사용
@@ -236,7 +150,7 @@ class OrderRepository {
       },
       'private_orderList_closed_button': false, // 발주내역 화면에서 발주내역을 삭제 시, UI에서 안 보이도록 하기 위한 로직
     });
-    print('Order data saved to Firestore.');
+    print('발주 데이터 Firestore에 저장됨.');
 
     return orderNumber; // orderId 대신 orderNumber 반환
   }
@@ -244,9 +158,9 @@ class OrderRepository {
   // 파이어스토어에 저장된 발주 내역 데이터를 불러오는 로직 관련 함수
   // 발주 데이터를 가져오는 함수
   Future<Map<String, dynamic>> fetchOrderData(String userEmail, String orderNumber) async {
-    print('Fetching order data for email: $userEmail and order number: $orderNumber');
+    print('발주 데이터 가져오는 중 - 이메일: $userEmail, 주문 번호: $orderNumber');
     // 발주 문서를 Firestore에서 가져옴
-    final orderDoc = firestore.collection('order_list')
+    final orderDoc = firestore.collection('wearcano_order_list')
         .doc(userEmail)
         .collection('orders')
         .doc(orderNumber); // orderId 대신 orderNumber 사용
@@ -260,8 +174,8 @@ class OrderRepository {
 
     // 정보 문서가 존재하지 않으면 예외를 발생시킴
     if (!ordererInfoDoc.exists || !recipientInfoDoc.exists || !amountInfoDoc.exists || !numberInfoDoc.exists) {
-      print('Order not found for email: $userEmail and order number: $orderNumber');
-      throw Exception('Order not found');
+      print('주문 데이터 없음 - 이메일: $userEmail, 주문 번호: $orderNumber');
+      throw Exception('주문 데이터 없음');
     }
 
     // 상품 정보를 리스트로 변환
@@ -276,22 +190,22 @@ class OrderRepository {
       'productInfo': productInfo, // 상품 정보 리스트
     };
 
-    print('Successfully fetched order data.');
+    print('발주 데이터 성공적으로 가져옴.');
     return orderData;
   }
 
   // 입금계좌 정보를 불러오는 함수
   Future<String> fetchAccountNumber() async {
-    print('Fetching account number...');
+    print('입금계좌번호 정보 불러오는 중...');
     // 특정 계좌 문서를 Firestore에서 가져옴
     final accountDoc = await firestore.collection('accounts').doc('account_1').get();
     // 계좌 문서가 존재하지 않으면 예외를 발생시킴
     if (!accountDoc.exists) {
-      print('Account not found.');
-      throw Exception('Account not found');
+      print('계좌 문서를 찾을 수 없습니다.');
+      throw Exception('계좌 문서를 찾을 수 없습니다.');
     }
-    final accountNumber = accountDoc.data()?['account_number'] ?? 'No account number';
-    print('Fetched account number: $accountNumber');
+    final accountNumber = accountDoc.data()?['account_number'] ?? '';
+    print('불러온 입금계좌번호: $accountNumber');
     return accountNumber;
   }
 }
@@ -319,20 +233,26 @@ class OrderlistRepository {
       }
 
       // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
-      final userDocRef = firestore.collection('order_list').doc(userEmail);
+      final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
 
       // 'orders' 컬렉션에서 'private_orderList_closed_button' 값이 false인 문서들만 조회하며, 제한된 개수로 불러옴.
+      // 'numberInfo.order_number' 필드 기준 내림차순으로 해서 최신 문서 순으로 정렬되도록 함.
+      // 해당 조건값으로 하는 색인 추가함!!
       Query query = userDocRef.collection('orders')
           .where('private_orderList_closed_button', isEqualTo: false)
+          .orderBy('numberInfo.order_number', descending: true)
           .limit(limit);
 
       // 마지막 문서가 존재하면, 그 문서 이후의 데이터만 불러옴.
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
+        print("이전 데이터 이후로 데이터를 불러옵니다."); // 마지막 문서 이후 데이터를 불러온다는 메시지를 출력함
       }
 
       // 위에서 정의한 쿼리 실행 및 결과를 가져옴.
       final ordersQuerySnapshot = await query.get();
+
+      print("가져온 문서 수: ${ordersQuerySnapshot.docs.length}"); // 가져온 문서의 수를 출력함
 
       // 결과가 없으면 빈 리스트를 반환.
       if (ordersQuerySnapshot.docs.isEmpty) {
@@ -372,7 +292,7 @@ class OrderlistRepository {
             'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {}, // 'orderer_info' 데이터.
             'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {}, // 'amount_info' 데이터.
             'productInfo': productInfo, // 'product_info' 리스트.
-            'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음', // 'order_status_info' 데이터.
+            'orderStatus': orderStatusDoc.data()?['order_status'] ?? '', // 'order_status_info' 데이터.
             'snapshot': orderDoc,  // 마지막 문서 스냅샷.
           });
       }
@@ -383,15 +303,13 @@ class OrderlistRepository {
     }
   }
 
-
-
   // 특정 발주 번호에 해당하는 발주를 삭제하는 함수.
   Future<void> fetchDeleteOrders(String userEmail, String orderNumber) async {
     try {
       print('Firestore에서 발주 삭제 요청: 사용자 이메일 - $userEmail, 발주 번호 - $orderNumber');
 
       // 사용자의 이메일을 기준으로 order_list 컬렉션의 문서 참조를 가져옴
-      final userDocRef = firestore.collection('order_list').doc(userEmail);
+      final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
 
       // 'orders' 컬렉션에서 특정 발주 번호와 일치하는 문서를 조회.
       final ordersQuerySnapshot = await userDocRef.collection('orders')
@@ -429,7 +347,7 @@ class OrderlistRepository {
 
     try {
       // Firestore의 'couture_order_list' 컬렉션에서 사용자의 이메일을 기준으로 문서 참조를 가져옴
-      final userDocRef = firestore.collection('order_list').doc(userEmail);
+      final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
 
       // 'orders' 서브 컬렉션에서 'numberInfo.order_number' 필드와 일치하는 주문 번호를 가진 문서를 조회함
       final ordersQuerySnapshot = await userDocRef.collection('orders')
@@ -501,7 +419,7 @@ class OrderlistRepository {
         // 수령인 정보
         'productInfo': productInfo,
         // 제품 정보 리스트
-        'orderStatus': orderStatusDoc.data()?['order_status'] ?? '없음',
+        'orderStatus': orderStatusDoc.data()?['order_status'] ?? '',
         // 주문 상태 정보
       };
 
@@ -532,7 +450,7 @@ class RecipientInfoItemRepository {
   Future<bool> saveRecipientInfo(BuildContext context, Map<String, dynamic> recipientInfo) async {
     try {
       final userEmail = FirebaseAuth.instance.currentUser?.email;
-      if (userEmail == null) throw Exception('User not logged in'); // 로그인되지 않은 경우 예외를 발생시킴
+      if (userEmail == null) throw Exception('사용자가 로그인 되어있지 않습니다.'); // 로그인되지 않은 경우 예외를 발생시킴
 
       // 필수 항목 검증
       // 수령자 정보의 필수 항목들이 모두 기입되었는지 확인함
@@ -558,7 +476,7 @@ class RecipientInfoItemRepository {
       // Firestore 내 동일한 해시값이 있는지 확인
       // 중복된 수령자 정보가 있는지 Firestore에서 확인함
       final querySnapshot = await firestore
-          .collection('recipient_info_list')
+          .collection('wearcano_recipient_info_list')
           .doc(userEmail)
           .collection('recipient_info')
           .where('hashKey', isEqualTo: hashKey) // 해시로 중복 여부 확인
@@ -579,7 +497,7 @@ class RecipientInfoItemRepository {
       // Firestore에 수령자 정보 저장
       // Firestore에 수령자 정보를 저장하는 과정임
       await firestore
-          .collection('recipient_info_list')
+          .collection('wearcano_recipient_info_list')
           .doc(userEmail)
           .collection('recipient_info')
           .doc('${DateTime.now().millisecondsSinceEpoch}')
@@ -589,12 +507,12 @@ class RecipientInfoItemRepository {
         'timestamp': timestamp, // 저장된 시간 데이터 추가
       });
 
-      print('Recipient info saved to Firestore with hashKey: $hashKey.');
+      print('수신자 정보가 Firestore에 저장되었습니다. 해시 키: $hashKey.');
       return true; // 성공적으로 저장된 경우 true 반환
     } catch (e) {
       // 에러 발생 시 처리
       // 저장 중 오류 발생 시 에러 메시지 출력함
-      print('Error saving recipient info: $e');
+      print('수신자 정보 저장 중 오류 발생: $e');
       showCustomSnackBar(context, '저장 중 오류가 발생했습니다.');
       return false; // 에러 발생 시 false 반환
     }
@@ -605,12 +523,12 @@ class RecipientInfoItemRepository {
   Future<List<Map<String, dynamic>>> getPagedRecipientInfoItems({DocumentSnapshot? lastDocument, required int limit}) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // 지정된 갯수만큼 데이터를 불러온다는 메시지를 출력함
 
     // Firestore에서 지정한 개수만큼 데이터를 가져오도록 쿼리를 작성함
-    Query query = firestore.collection('recipient_info_list')
+    Query query = firestore.collection('wearcano_recipient_info_list')
         .doc(userEmail)
         .collection('recipient_info')
         .orderBy('timestamp', descending: true)
@@ -642,23 +560,23 @@ class RecipientInfoItemRepository {
   Stream<Map<String, dynamic>> recipientInfoItemStream(String itemId) {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('User not logged in'); // 로그인하지 않은 경우 예외 발생
+    if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 로그인하지 않은 경우 예외 발생
 
     // 지정한 아이템에 대한 실시간 스트림을 구독함
-    return firestore.collection('recipient_info_list')
+    return firestore.collection('wearcano_recipient_info_list')
         .doc(userEmail)
         .collection('recipient_info')
         .doc(itemId)
         .snapshots() // 실시간 스트림을 구독함
         .handleError((error) {
-      print('Error in recipientInfoItemStream: $error'); // 구독 중 오류가 발생하면 처리함
+      print('recipientInfoItemStream에서 오류 발생: $error'); // 구독 중 오류가 발생하면 처리함
     }).map((docSnapshot) {
       if (docSnapshot.exists) { // 문서가 존재하는 경우
         final data = docSnapshot.data() as Map<String, dynamic>; // 데이터를 Map으로 변환함
         data['id'] = docSnapshot.id; // 문서 ID를 추가함
         return data;
       } else {
-        print('Document does not exist for itemId: $itemId'); // 문서가 존재하지 않음을 알림
+        print('itemId: $itemId에 대한 문서가 존재하지 않습니다.'); // 문서가 존재하지 않음을 알림
         return null;
       }
     }).where((data) => data != null).cast<Map<String, dynamic>>(); // null 값을 필터링하여 스트림에서 제외함
@@ -669,20 +587,20 @@ class RecipientInfoItemRepository {
   Future<void> removeRecipientInfoItem(String docId) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     if (user == null) {
-      print('User not logged in'); // 사용자가 로그인되지 않은 경우 예외 발생
-      throw Exception('User not logged in');
+      print('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인되지 않은 경우 예외 발생
+      throw Exception('사용자가 로그인되어 있지 않습니다.');
     }
     final userEmail = user.email; // 사용자의 이메일 주소를 가져옴
     if (userEmail == null) {
-      print('User email not available'); // 이메일이 없는 경우 예외 발생
-      throw Exception('User email not available');
+      print('사용자 이메일을 불러올 수 없습니다.'); // 이메일이 없는 경우 예외 발생
+      throw Exception('사용자 이메일을 불러올 수 없습니다.');
     }
-    print('Removing RecipientInfo item for docId: $docId for user: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
-    await firestore.collection('recipient_info_list').doc(userEmail)
+    print('사용자: $userEmail의 docId: $docId에 대한 RecipientInfo 항목을 삭제합니다.'); // 삭제할 문서 ID와 사용자를 출력함
+    await firestore.collection('wearcano_recipient_info_list').doc(userEmail)
         .collection('recipient_info')
         .doc(docId)
         .delete(); // Firestore에서 문서를 삭제함
-    print('RecipientInfo item removed for docId: $docId'); // 문서 삭제 완료 메시지 출력
+    print('docId: $docId에 대한 RecipientInfo 항목이 삭제되었습니다.'); // 문서 삭제 완료 메시지 출력
   }
 }
 // ------- 수령자 정보 즐겨찾기 선택 화면과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오는 관리 관련 데이터 처리 로직인 RecipientInfoItemRepository 클래스 끝

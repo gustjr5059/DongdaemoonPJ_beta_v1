@@ -264,25 +264,30 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderAppBarTitleWidth = screenSize.width * (150 / referenceWidth);
+    final double orderAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderAppBarTitleX = screenSize.height * (85 / referenceHeight);
+    final double orderAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double orderChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double orderChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double orderChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double orderChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double orderChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double orderWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     final double interval1Y = screenSize.height * (20 / referenceHeight);
     final double interval2Y = screenSize.height * (40 / referenceHeight);
+
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     return GestureDetector(
       onTap: () {
@@ -313,6 +318,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                       context: context,
                       ref: ref,
                       title: '발주 요청',
+                      fontFamily: 'NanumGothic',
                       leadingType: LeadingType.back,
                       // 이전화면으로 이동 버튼.
                       buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
@@ -351,7 +357,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),
@@ -391,9 +397,9 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                                 productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액 전달
                                 totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액 전달
                                 ordererInfo: {
-                                  'name': userInfo?['name'] ?? '-', // 발주자 이름
-                                  'email': userInfo?['email'] ?? '-', // 발주자 이메일
-                                  'phone_number': userInfo?['phone_number'] ?? '-', // 발주자 휴대폰 번호
+                                  'name': userInfo?['name'] ?? '', // 발주자 이름
+                                  'email': userInfo?['email'] ?? '', // 발주자 이메일
+                                  'phone_number': userInfo?['phone_number'] ?? '', // 발주자 휴대폰 번호
                                 },
                                 nameController: nameController, // 이름 입력 컨트롤러 전달
                                 phoneNumberController: phoneNumberController, // 휴대폰 번호 입력 컨트롤러 전달
@@ -405,8 +411,19 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                                 isCustomMemo: isCustomMemo, // 사용자 지정 메모 여부 전달
                                 orderItems: orderItems, // 주문 상품 목록 전달
                               ),
-                              loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 위젯
-                              error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 위젯
+                              loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+                              error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+                                height: errorTextHeight, // 전체 화면 높이 설정
+                                alignment: Alignment.center, // 중앙 정렬
+                                child: buildCommonErrorIndicator(
+                                  message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+                                  secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+                                  fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                                  fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                                  color: BLACK_COLOR, // 색상 설정
+                                  showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                                ),
+                              ),
                             ),
                             // AddressSearchWidget(), // 주소 검색 위젯 추가
                             SizedBox(height: interval1Y), // 높이를 3000으로 설정하여 간격 조정

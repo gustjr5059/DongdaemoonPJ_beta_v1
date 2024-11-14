@@ -54,6 +54,7 @@ class WishlistItemRepository {
       // Firestore에 저장할 데이터 생성
       final data = {
         'product_id': product.docId, // 상품 ID
+        'category': product.category, // 상품의 카테고리 저장
         'thumbnails': product.thumbnail, // 상품 썸네일
         'brief_introduction': product.briefIntroduction, // 간단한 소개
         'original_price': product.originalPrice, // 원래 가격
@@ -63,7 +64,7 @@ class WishlistItemRepository {
       };
 
       // 파이어스토리지에 저장할 경로 생성
-      final storagePath = 'wishlist_item_image/$userEmail/wishlist_${DateTime.now().millisecondsSinceEpoch}';
+      final storagePath = 'wearcano_wishlist_item_image/$userEmail/wishlist_${DateTime.now().millisecondsSinceEpoch}';
       // 저장할 경로 생성
 
       // 썸네일 이미지 저장
@@ -77,7 +78,7 @@ class WishlistItemRepository {
       // Firestore에 데이터 저장
       final docId = '${DateTime.now().millisecondsSinceEpoch}';
       print('FireStore에 찜 목록 항목을 저장합니다. 문서 ID: $docId'); // 디버깅 메시지 추가
-      await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(docId).set(data);
+      await firestore.collection('wearcano_wishlist_item').doc(userEmail).collection('items').doc(docId).set(data);
       print('찜 목록에 상품이 성공적으로 추가되었습니다: ${product.docId}'); // 성공 메시지 출력
     } catch (e) {
       print('찜 목록에 추가하는 중 오류 발생: $e'); // 오류 메시지 출력
@@ -91,18 +92,18 @@ class WishlistItemRepository {
       final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일 가져옴
       print('사용자 $userEmail 의 찜 목록에서 상품 $productId 를 제거합니다.'); // 디버깅 메시지 추가
       // Firestore에서 해당 상품 ID를 가진 문서를 검색
-      final snapshot = await firestore.collection('wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
+      final snapshot = await firestore.collection('wearcano_wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
       for (var doc in snapshot.docs) {
         print('삭제할 찜 목록 항목 ID: ${doc.id}'); // 삭제할 항목의 ID 출력
         // 해당 문서를 Firestore에서 삭제
-        await firestore.collection('wishlist_item').doc(userEmail).collection('items').doc(doc.id).delete();
+        await firestore.collection('wearcano_wishlist_item').doc(userEmail).collection('items').doc(doc.id).delete();
         try {
           // Firebase Storage에서 해당 이미지를 삭제
-          await storage.ref('wishlist_item_image/$userEmail/${doc.id}').delete();
-          print('Firebase Storage에서 이미지가 삭제되었습니다: wishlist_item_image/$userEmail/${doc.id}'); // 삭제 완료 메시지 출력
+          await storage.ref('wearcano_wishlist_item_image/$userEmail/${doc.id}').delete();
+          print('Firebase Storage에서 이미지가 삭제되었습니다: wearcano_wishlist_item_image/$userEmail/${doc.id}'); // 삭제 완료 메시지 출력
         } catch (e) {
           if (e is FirebaseException && e.code == 'object-not-found') {
-            print('이미지를 찾을 수 없습니다: wishlist_item_image/$userEmail/${doc.id}'); // 이미지가 없는 경우 메시지 출력
+            print('이미지를 찾을 수 없습니다: wearcano_wishlist_item_image/$userEmail/${doc.id}'); // 이미지가 없는 경우 메시지 출력
           } else {
             print('이미지 삭제 중 오류 발생: $e'); // 다른 오류 발생 시 메시지 출력
             rethrow; // 오류 발생 시 다시 던짐

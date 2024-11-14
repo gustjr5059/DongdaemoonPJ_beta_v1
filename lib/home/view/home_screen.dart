@@ -110,32 +110,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
   // 소배너
   int bannerImageCount2 = 3;
 
-  // 배너 클릭 시 이동할 URL 리스트를 정의함.
-  // 각 배너 클릭 시 연결될 웹사이트 주소를 리스트로 관리함.
-  // 큰 배너 클릭 시 이동할 URL 목록
-  final List<String> largeBannerLinks = [
-    'https://www.naver.com', // 첫 번째 배너 클릭 시 네이버로 이동
-    'https://www.youtube.com', // 두 번째 배너 클릭 시 유튜브로 이동
-  ];
-
-  // 첫 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small1BannerLinks = [
-    'https://www.coupang.com', // 첫 번째 배너 클릭 시 쿠팡으로 이동
-    'https://www.temu.com/kr', // 두 번째 배너 클릭 시 테무로 이동
-  ];
-
-  // 두 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small2BannerLinks = [
-    'https://ko.aliexpress.com/', // 첫 번째 배너 클릭 시 알리익스프레스로 이동
-    'https://www.yanolja.com/', // 두 번째 배너 클릭 시 야놀자로 이동
-  ];
-
-  // 세 번째 작은 배너 클릭 시 이동할 URL 목록
-  final List<String> small3BannerLinks = [
-    'https://www.kakaocorp.com/', // 첫 번째 배너 클릭 시 카카오로 이동
-    'https://www.netflix.com/kr', // 두 번째 배너 클릭 시 넷플릭스로 이동
-  ];
-
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
@@ -173,19 +147,59 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
   // => 그러므로, 서로 다른 UI 요소 제어, 다른 동작 방식, _onScroll 함수 내 다르게 사용하므로 두 컨트롤러를 병합하면 복잡성 증가하고, 동작이 충돌할 수 있어 독립적으로 제작!!
   // => homeTopBarPointAutoScrollController는 전체 화면의 UI를 담당하는게 아니므로 scaffold의 body 내 컨트롤러에 연결이 안되어도 addListener()에 _onScroll()로 연결해놓은거라 해당 기능 사용이 가능!!
 
+  // 기존의 int currentIndex 선언 대신 ref로 상태를 읽어오기 위한 변수 선언
+  late int currentIndex;
+
+  // 각 섹션에 대한 GlobalKey를 정의함.
+  // GlobalKey를 사용하여 각 섹션의 위치를 추적함.
+  final GlobalKey scrollKey = GlobalKey(); // '전체' 섹션의 키
+  final GlobalKey sectionNewKey = GlobalKey(); // '신상' 섹션의 키
+  final GlobalKey sectionBestSellerKey = GlobalKey(); // '베스트 셀러' 섹션의 키
+  final GlobalKey sectionSaleKey = GlobalKey(); // '특가 상품' 섹션의 키
+  final GlobalKey sectionSpringKey = GlobalKey(); // '봄' 섹션의 키
+  final GlobalKey sectionSummerKey = GlobalKey(); // '여름' 섹션의 키
+  final GlobalKey sectionAutumnKey = GlobalKey(); // '가을' 섹션의 키
+  final GlobalKey sectionWinterKey = GlobalKey(); // '겨울' 섹션의 키
+
+  // ------ 선택된 섹션에 따라 GlobalKey를 반환하는 함수 내용 시작
+  // 선택된 섹션 인덱스에 따라 해당하는 GlobalKey를 반환함.
+  GlobalKey _getSectionKey(int index) {
+    switch (index) {
+      case 1:
+        return sectionNewKey; // '신상' 섹션의 GlobalKey를 반환함.
+      case 2:
+        return sectionBestSellerKey; // '베스트 셀러' 섹션의 GlobalKey를 반환함.
+      case 3:
+        return sectionSaleKey; // '특가 상품' 섹션의 GlobalKey를 반환함.
+      case 4:
+        return sectionSpringKey; // '봄' 섹션의 GlobalKey를 반환함.
+      case 5:
+        return sectionSummerKey; // '여름' 섹션의 GlobalKey를 반환함.
+      case 6:
+        return sectionAutumnKey; // '가을' 섹션의 GlobalKey를 반환함.
+      case 7:
+        return sectionWinterKey; // '겨울' 섹션의 GlobalKey를 반환함.
+      default:
+        return scrollKey; // 기본값으로 '전체' 섹션의 GlobalKey를 반환함.
+    }
+  }
+
+  // ------ 선택된 섹션에 따라 GlobalKey를 반환하는 함수 내용 끝
+
   // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 시작
+  // 스크롤이 발생할 때마다 현재 탭 인덱스를 계산하여 상태를 업데이트함.
   void _onScroll() {
-    // 현재 스크롤 위치를 homeScreenPointScrollController의 offset 값으로부터 가져옴.
-    double currentScroll = homeScreenPointScrollController.offset;
-    // 현재 스크롤 위치에 따른 탭 인덱스를 계산함.
-    int currentIndex = _determineCurrentTabIndex(currentScroll);
-    // 계산된 탭 인덱스를 상태 관리 객체를 통해 업데이트 함.
-    ref.read(homeCurrentTabProvider.notifier).state = currentIndex;
+    // 현재 탭 인덱스를 선언 (_determineCurrentTabIndex(context) 값으로 지정)
+    int newCurrentIndex = _determineCurrentTabIndex(context);
+    if (newCurrentIndex != currentIndex) {
+      // 현재 인덱스가 변경된 경우
+      currentIndex = newCurrentIndex; // 현재 인덱스를 갱신함
+      ref.read(homeCurrentTabProvider.notifier).state = currentIndex; // 상태 업데이트
+    }
 
-// '가을'이나 '겨울' 탭이 활성화될 때 자동 스크롤
-    if (currentIndex >= 6) {
-      // currentIndex가 6 이상인 경우 (즉, '가을'이나 '겨울' 탭이 활성화된 경우)
-
+    // '봄'이나 '여름' 탭이 활성화될 때 자동 스크롤
+    if (currentIndex >= 4) {
+      // currentIndex가 4 이상인 경우 (즉, '봄'이나 '여름' 탭이 활성화된 경우)
       // 스크롤 컨트롤러의 최대 스크롤 값을 offset에 저장
       double offset =
           homeTopBarPointAutoScrollController.position.maxScrollExtent;
@@ -197,8 +211,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         curve: Curves.easeInOut, // 애니메이션 커브 (서서히 시작하고 서서히 끝나는 곡선)
       );
     } else if (currentIndex <= 1) {
-      // currentIndex가 1 이하인 경우 (즉, 처음 몇 개의 탭이 활성화된 경우)
-
+      // currentIndex가 1 이하인 경우 (처음 몇 개의 탭이 활성화된 경우)
       // 스크롤 애니메이션을 사용하여 homeTopBarPointAutoScrollController를 0.0 위치로 이동 (맨 처음 위치)
       homeTopBarPointAutoScrollController.animateTo(
         0.0, // 이동할 위치 (맨 처음)
@@ -210,36 +223,49 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
 
   // ------ 스크롤 이벤트가 발생할 때마다 호출되는 함수인 _onScroll() 내용 끝
 
-  // ------ 스크롤 오프셋을 받아 현재의 탭 인덱스를 결정하는 함수인 _determineCurrentTabIndex 내용 시작
-  int _determineCurrentTabIndex(double scrollOffset) {
-    // 기기의 화면 높이를 가져옴
-    double screenHeight = MediaQuery.of(context).size.height;
-    // 각 섹션의 스크롤 시작 위치를 배열로 정의함.
-    // 이 배열의 각 요소는 각 섹션의 시작 스크롤 위치를 나타냄.
-    final sectionOffsets = [
-      0.0,
-      screenHeight * 0.95,
-      screenHeight * 1.35,
-      screenHeight * 1.73,
-      screenHeight * 2.31,
-      screenHeight * 2.69,
-      screenHeight * 3.27,
-      screenHeight * 3.65,
-    ];
+  // ------ 현재 탭 인덱스를 계산하여 반환하는 함수 내용 시작
+  // 현재 탭 인덱스를 계산하여 반환함.
+  int _determineCurrentTabIndex(BuildContext context) {
+    int currentIndex = 0; // 초기 탭 인덱스 설정
 
-    // 섹션 오프셋 배열의 마지막 요소부터 처음 요소까지 역순으로 검사함.
-    for (int i = sectionOffsets.length - 1; i >= 0; i--) {
-      // 현재 스크롤 오프셋이 검사 중인 섹션의 시작 위치보다 크거나 같다면,
-      if (scrollOffset >= sectionOffsets[i]) {
-        // 현재 섹션의 인덱스를 반환함.
-        return i;
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 세로 852 (비율 계산에 사용)
+    final double referenceHeight = 852.0;
+
+    // preferredSizeHeight 계산 (기준 높이를 바탕으로 계산된 높이)
+    double preferredSizeHeight = screenSize.height * (60 / referenceHeight);
+    double intervalY = screenSize.height * (10 / referenceHeight); // 여백 계산
+
+    // 선택된 섹션의 가시성 여부를 체크하는 함수
+    void checkVisibility(int index, GlobalKey key) {
+      final context = key.currentContext;
+      if (context != null) {
+        // 섹션의 context가 null이 아닐 경우
+        final renderBox =
+        context.findRenderObject() as RenderBox; // RenderBox 객체로 변환
+        final position = renderBox.localToGlobal(Offset.zero); // 글로벌 좌표로 변환
+        if (position.dy <= kToolbarHeight + preferredSizeHeight + intervalY) {
+          // 위치가 특정 높이 내에 있을 경우
+          currentIndex = index; // 현재 인덱스 업데이트
+        }
       }
     }
-    // 어떤 섹션의 시작 위치보다 현재 스크롤 위치가 작은 경우 첫 번째 섹션의 인덱스인 0을 반환함.
-    return 0;
+
+    // 각 섹션의 가시성을 체크하여 currentIndex 업데이트
+    checkVisibility(1, sectionNewKey); // '신상' 섹션의 가시성 확인
+    checkVisibility(2, sectionBestSellerKey); // '베스트 셀러' 섹션의 가시성 확인
+    checkVisibility(3, sectionSaleKey); // '특가 상품' 섹션의 가시성 확인
+    checkVisibility(4, sectionSpringKey); // '봄' 섹션의 가시성 확인
+    checkVisibility(5, sectionSummerKey); // '여름' 섹션의 가시성 확인
+    checkVisibility(6, sectionAutumnKey); // '가을' 섹션의 가시성 확인
+    checkVisibility(7, sectionWinterKey); // '겨울' 섹션의 가시성 확인
+
+    return currentIndex; // 계산된 현재 인덱스 반환
   }
 
-  // ------ 스크롤 오프셋을 받아 현재의 탭 인덱스를 결정하는 함수인 _determineCurrentTabIndex 내용 끝
+  // ------ 현재 탭 인덱스를 계산하여 반환하는 함수 내용 끝
 
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 시작
   // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -262,9 +288,14 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
   @override
   void initState() {
     super.initState();
+
     // ScrollController를 초기화
     homeScreenPointScrollController = ScrollController();
     homeTopBarPointAutoScrollController = ScrollController();
+
+    // 초기값으로 임시 currentIndex 설정
+    currentIndex = 0;
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임 렌더링 후 콜백을 등록.
@@ -277,14 +308,30 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         double savedScrollPosition = FirebaseAuth.instance.currentUser != null
             ? ref.read(homeScrollPositionProvider)
             : ref.read(homeLoginAndLogoutScrollPositionProvider);
+        // 저장된 위치로 스크롤 이동
         homeScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
       ref.read(midCategoryViewBoolExpandedProvider.notifier).state = false;
+
       // tabIndexProvider의 상태를 하단 탭 바 내 홈 버튼 인덱스인 0과 매핑
       // -> 홈 화면 초기화 시, 하단 탭 바 내 홈 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 0;
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+      // 저장된 인덱스를 가져와 currentIndex 초기화
+      currentIndex = ref.read(homeCurrentTabProvider);
+
+      // 초기화 시 상단 탭 바 위치 복구를 위한 조건문
+      if (currentIndex >= 4) {
+        // currentIndex가 4 이상일 경우 ('봄' 섹션 이후가 선택된 경우)
+        double offset = homeTopBarPointAutoScrollController
+            .position.maxScrollExtent; // 최대 스크롤 위치를 offset에 저장함
+        homeTopBarPointAutoScrollController
+            .jumpTo(offset); // 스크롤을 최대 위치로 즉시 이동함
+      } else if (currentIndex <= 1) {
+        // currentIndex가 1 이하일 경우 ('전체' 또는 '신상' 섹션이 선택된 경우)
+        homeTopBarPointAutoScrollController.jumpTo(0.0); // 스크롤을 맨 처음 위치로 즉시 이동함
+      }
     });
 
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
@@ -295,12 +342,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     // homeScreenPointScrollController에 스크롤 이벤트 리스너를 추가함.
     // 이 리스너는 사용자가 스크롤할 때마다 _onScroll 함수를 호출하도록 설정됨.
     homeScreenPointScrollController.addListener(_onScroll);
-
-    // homeScreenPointScrollController.addListener(() {
-    //   debugPrint('Scroll position: ${homeScreenPointScrollController.position.pixels}');
-    //   _updateScrollPosition();
-    //   _onScroll();
-    // });
 
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'homeLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
@@ -466,92 +507,34 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-  // // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
-  // void _updateStatusBar() {
-  //   Color statusBarColor = BUTTON_COLOR; // 여기서 원하는 색상을 지정
-  //
-  //   if (Platform.isAndroid) {
-  //     // 안드로이드에서는 상태표시줄 색상을 직접 지정
-  //     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //       statusBarColor: statusBarColor,
-  //       statusBarIconBrightness: Brightness.light,
-  //     ));
-  //   } else if (Platform.isIOS) {
-  //     // iOS에서는 앱 바 색상을 통해 상태표시줄 색상을 간접적으로 조정
-  //     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //       statusBarBrightness: Brightness.light, // 밝은 아이콘 사용
-  //     ));
-  //   }
-  // }
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // 각 섹션의 스크롤 위치를 계산하는 함수
-    double calculateScrollOffset(BuildContext context, String sectionTitle) {
-      // 기기의 화면 높이를 가져옴
-      double screenHeight = MediaQuery.of(context).size.height;
-
-      switch (sectionTitle) {
-        case '신상': //260  360
-          return screenHeight * 0.95; // '신상품 섹션'의 스크롤 위치
-        case '스테디 셀러':
-          return screenHeight * 1.35; // '스테디 셀러 제품 섹션'의 스크롤 위치
-        case '특가 상품':
-          return screenHeight * 1.73; // '특가 상품 섹션'의 스크롤 위치
-        case '봄':
-          return screenHeight * 2.31; // '봄 제품 섹션'의 스크롤 위치
-        case '여름':
-          return screenHeight * 2.69; // '여름 제품 섹션'의 스크롤 위치
-        case '가을':
-          return screenHeight * 3.27; // '가을 제품 섹션'의 스크롤 위치
-        case '겨울':
-          return screenHeight * 3.65; // '겨울 제품 섹션'의 스크롤 위치
-        default:
-          return 0.0; // 해당하지 않는 섹션의 경우 0.0으로 반환
-      }
-    }
-
-    // 탭의 인덱스에 따라 해당하는 섹션 이름을 결정하는 String 변수 관련 함수
-    String getSectionFromIndex(int index) {
-      switch (index) {
-        case 0:
-          return '전체'; // 전체 항목
-        case 1:
-          return '신상'; // 신상품 항목
-        case 2:
-          return '스테디 셀러'; // 스테디 셀러 상품 항목
-        case 3:
-          return '특가 상품'; // 특가 상품 항목
-        case 4:
-          return '봄'; // 봄 제품 항목
-        case 5:
-          return '여름'; // 여름 제품 항목
-        case 6:
-          return '가을'; // 가을 제품 항목
-        case 7:
-          return '겨울'; // 겨울 제품 항목
-        default:
-          return '';
-      }
-    }
-
-    // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
-    // 탭을 탭했을 때 호출될 함수
-    // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
-    // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     void onTopBarTap(int index) {
-
-      String section = getSectionFromIndex(index);
-      // 선택된 섹션에 따라 계산된 스크롤 오프셋으로 스크롤 이동
-      double scrollToPosition = calculateScrollOffset(context, section);
-      homeScreenPointScrollController.animateTo(scrollToPosition,
-          duration: Duration(milliseconds: 500), // 이동에 걸리는 시간: 500 밀리초
-          curve: Curves.easeInOut // 이동하는 동안의 애니메이션 효과: 시작과 끝이 부드럽게
+      if (index == 0) {
+        // '전체' 탭이 선택된 경우
+        homeScreenPointScrollController.animateTo(
+          0.0, // 화면을 맨 위로 스크롤 이동함
+          duration: Duration(milliseconds: 500), // 애니메이션 지속 시간 설정 (500밀리초)
+          curve: Curves.easeInOut, // 스크롤 애니메이션 커브 설정 (서서히 시작하고 끝나는 곡선)
+        );
+      } else {
+        // 다른 탭이 선택된 경우
+        GlobalKey sectionKey = _getSectionKey(index); // 선택된 섹션의 GlobalKey를 가져옴
+        if (sectionKey.currentContext != null) {
+          // 섹션의 컨텍스트가 null이 아닌 경우
+          Scrollable.ensureVisible(
+            sectionKey.currentContext!, // 해당 섹션을 화면에 보이도록 스크롤함
+            duration: Duration(milliseconds: 500), // 애니메이션 지속 시간 설정 (500밀리초)
+            curve: Curves.easeInOut, // 스크롤 애니메이션 커브 설정
           );
-      // 스크롤 위치를 StateProvider에 저장
-      ref.read(homeScrollPositionProvider.notifier).state = scrollToPosition;
+        }
+      }
+      // 탭 선택 시, 선택된 인덱스를 상태에 저장함
+      currentIndex = index; // 현재 인덱스를 업데이트함
+      ref.read(homeCurrentTabProvider.notifier).state =
+          index; // 상태에 현재 탭 인덱스를 저장함
     }
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
@@ -560,46 +543,6 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     Widget topBarList = buildTopBarList(context, onTopBarTap,
         homeCurrentTabProvider, homeTopBarPointAutoScrollController);
     // ------ common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
-
-    // 큰 배너 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onLargeBannerTap(BuildContext context, int index) async {
-      final url = largeBannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
-    // 작은 배너1 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onSmall1BannerTap(BuildContext context, int index) async {
-      final url = small1BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
-    // 작은 배너2 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onSmall2BannerTap(BuildContext context, int index) async {
-      final url = small2BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
-
-    // 작은 배너3 클릭 시, 해당 링크로 이동하도록 하는 로직 관련 함수
-    void _onSmall3BannerTap(BuildContext context, int index) async {
-      final url = small3BannerLinks[index];
-      if (await canLaunchUrl(Uri.parse(url))) {
-        await launchUrl(Uri.parse(url));
-      } else {
-        throw '네트워크 오류';
-      }
-    }
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -629,27 +572,27 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double homeAppBarTitleWidth = screenSize.width * (115 / referenceWidth);
+    final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double homeAppBarTitleX = screenSize.width * (25 / referenceHeight);
-    final double homeAppBarTitleY = screenSize.height * (8 / referenceHeight);
+    final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 드로어 아이콘 관련 수치 동적 적용
     final double homeDrawerIconWidth = screenSize.width * (28 / referenceWidth);
     final double homeDrawerIconHeight = screenSize.height * (24 / referenceHeight);
-    final double homeDrawerIconX = screenSize.width * (18 / referenceWidth);
+    final double homeDrawerIconX = screenSize.width * (10 / referenceWidth);
     final double homeDrawerIconY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (6 / referenceHeight);
+    final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 홈 화면 컨텐츠 사이의 간격 수치
     final double interval1Y = screenSize.height * (5 / referenceHeight);
     final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (350 / referenceHeight);
+    final double interval3Y = screenSize.height * (60 / referenceHeight);
     final double interval4Y = screenSize.height * (13 / referenceHeight);
     final double interval5Y = screenSize.height * (8 / referenceHeight);
 
@@ -681,6 +624,12 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                     context: context,
                     ref: ref,
                     title: 'WEARCANO',
+                    fontFamily: 'Charter',
+                    boolEventImg: true,
+                    boolTitleImg: true,
+                    titleImagePath:
+                    'asset/img/misc/appbar_img/home_appbar_title_img.png',
+                    // 앱 바 타이틀 이미지 경로 추가
                     leadingType: LeadingType.drawer,
                     // 아무 버튼도 없음.
                     buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
@@ -696,6 +645,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                     wishlistBtnHeight: homeWishlistBtnHeight,
                     wishlistBtnX: homeWishlistBtnX,
                     wishlistBtnY: homeWishlistBtnY,
+                    scrollController: homeScreenPointScrollController,
+                    sectionKey: sectionWinterKey,
                   ),
                 ),
                 leading: null,
@@ -711,8 +662,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: Colors.black, width: 1.0), // 상단 테두리 색상을 설정함
-                        bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                        top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 설정함
+                        bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                       ),
                     ),
                   ),
@@ -758,13 +709,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _largeBannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 링크들을 전달
-                                  bannerLinks: largeBannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                   allLargeBannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onLargeBannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
+                                  onLargeBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(allLargeBannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenLargeBannerWidth, // 원하는 너비
                                   height: homeScreenLargeBannerHeight, // 원하는 높이
                                   borderRadius: 0,
@@ -798,7 +755,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 ),
                                 decoration: BoxDecoration(
                                   border: Border(
-                                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                    bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                   ),
                                 ),
                             ),
@@ -816,7 +773,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 height: homeScreenSmallBannerViewHeight,
                                 // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    HomeSmall1BannerImage>(
+                                    AllSmallBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
@@ -828,13 +785,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _small1BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small1BannerAutoScroll,
-                                  // 배너에 사용될 링크들을 전달
-                                  bannerLinks: small1BannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                   homeSmall1BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onSmall1BannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // homeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(homeSmall1BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenSmallBannerWidth, // 원하는 너비
                                   height: homeScreenSmallBannerHeight, // 원하는 높이
                                   borderRadius: 5,
@@ -852,25 +815,40 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
                           SizedBox(height: interval2Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
                           // 신상품 섹션
-                          _buildSectionCard(context, ref, "신상",
-                              buildNewProductsSection, NewSubMainScreen()),
+                          Container(
+                            key: sectionNewKey,
+                            child: buildSectionCard(
+                                context, ref, "신상", buildNewProductsSection,
+                                destinationScreen: NewSubMainScreen(),
+                                showPlusButton: true),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
                           // 베스트 제품 섹션
-                          _buildSectionCard(context, ref, "스테디 셀러",
-                              buildBestProductsSection, BestSubMainScreen()),
+                          Container(
+                            key: sectionBestSellerKey,
+                            child: buildSectionCard(context, ref, "스테디 셀러",
+                                buildBestProductsSection,
+                                destinationScreen: BestSubMainScreen(),
+                                showPlusButton: true),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
                           // 할인 제품 섹션
-                          _buildSectionCard(context, ref, "특가 상품",
-                              buildSaleProductsSection, SaleSubMainScreen()),
+                          Container(
+                            key: sectionSaleKey,
+                            child: buildSectionCard(
+                                context, ref, "특가 상품", buildSaleProductsSection,
+                                destinationScreen: SaleSubMainScreen(),
+                                showPlusButton: true),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           SizedBox(height: interval4Y), // 높이 간격 설정
                           // 두 번째 홈 소배너 섹션
@@ -885,7 +863,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 height: homeScreenSmallBannerViewHeight,
                                 // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    HomeSmall2BannerImage>(
+                                    AllSmallBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
@@ -897,13 +875,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _small2BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small2BannerAutoScroll,
-                                  // 배너에 사용될 링크들을 전달
-                                  bannerLinks: small2BannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                   homeSmall2BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onSmall2BannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // homeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(homeSmall2BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenSmallBannerWidth, // 원하는 너비
                                   height: homeScreenSmallBannerHeight, // 원하는 높이
                                   borderRadius: 5,
@@ -921,27 +905,29 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
                           // SizedBox(height: interval2Y), // 높이 간격 설정
                           // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
                           // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
-                          _buildSectionCard(
-                              context,
-                              ref,
-                              "봄",
-                              buildSpringProductsSection,
-                              SpringSubMainScreen()),
+                          Container(
+                            key: sectionSpringKey,
+                            child: buildSectionCard(
+                                context, ref, "봄", buildSpringProductsSection,
+                                destinationScreen: SpringSubMainScreen(),
+                                showPlusButton: true),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
-                          _buildSectionCard(
-                              context,
-                              ref,
-                              "여름",
-                              buildSummerProductsSection,
-                              SummerSubMainScreen()),
+                          Container(
+                            key: sectionSummerKey,
+                            child: buildSectionCard(
+                                context, ref, "여름", buildSummerProductsSection,
+                                destinationScreen: SummerSubMainScreen(),
+                                showPlusButton: true),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           SizedBox(height: interval4Y), // 높이 간격 설정
                           // 세 번째 홈 소배너 섹션
@@ -956,7 +942,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 height: homeScreenSmallBannerViewHeight,
                                 // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
                                 child: buildCommonBannerPageViewSection<
-                                    HomeSmall3BannerImage>(
+                                    AllSmallBannerImage>(
                                   // 현재 빌드 컨텍스트를 전달
                                   context: context,
                                   // Provider의 참조를 전달 (상태 관리를 위해 사용)
@@ -968,13 +954,19 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                   pageController: _small3BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small3BannerAutoScroll,
-                                  // 배너에 사용될 링크들을 전달
-                                  bannerLinks: small3BannerLinks,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
                                   homeSmall3BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: _onSmall3BannerTap,
+                                  onPageTap: (context, index) =>
+                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                  onSmallBannerTap(
+                                      context, // 현재 화면의 컨텍스트를 전달함
+                                      index, // 클릭된 배너의 인덱스를 전달함
+                                      // homeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(homeSmall3BannerImagesProvider).value ?? [],
+                                      ref // Provider의 참조를 전달함
+                                  ),
                                   width: homeScreenSmallBannerWidth, // 원하는 너비
                                   height: homeScreenSmallBannerHeight, // 원하는 높이
                                   borderRadius: 5,
@@ -992,26 +984,31 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
                           // SizedBox(height: interval2Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
-                          _buildSectionCard(
-                              context,
-                              ref,
-                              "가을",
-                              buildAutumnProductsSection,
-                              AutumnSubMainScreen()),
+                          Container(
+                            key: sectionAutumnKey,
+                            child: buildSectionCard(
+                                context, ref, "가을", buildAutumnProductsSection,
+                                destinationScreen: AutumnSubMainScreen(),
+                                showPlusButton: true),
+                          ),
                           // SizedBox(height: interval2Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
-                          _buildSectionCard(
-                              context,
-                              ref,
-                              "겨울",
-                              buildWinterProductsSection,
-                              WinterSubMainScreen()),
+                          Container(
+                            key: sectionWinterKey,
+                            child: buildSectionCard(
+                                context, ref, "겨울", buildWinterProductsSection,
+                                destinationScreen: WinterSubMainScreen(),
+                                showPlusButton: true),
+                          ),
+                          buildSectionCard(context, ref, "이벤트",
+                              buildEventPosterImgProductsSection,
+                              showPlusButton: false),
                           SizedBox(height: interval3Y), // 높이 간격 설정
                         ],
                       ),
@@ -1039,76 +1036,5 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
 
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
-
-// ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -
-// (카드뷰 색상, 카드뷰 섹션 내용-CommonCardView, "+" 버튼 이미지로 버튼 구현-버튼 클릭 시, 서브 메인 페이지로 이동) 위젯 구현 내용 시작
-// Flutter의 context와 ref 객체, 섹션의 제목, 내용을 빌드하는 함수, 그리고 네비게이션할 목적지 스크린을 인자로 받는 위젯 빌드 함수임.
-  Widget _buildSectionCard(
-      BuildContext context,
-      WidgetRef ref,
-      String title,
-      Widget Function(WidgetRef, BuildContext) contentBuilder,
-      Widget destinationScreen) {
-    // 제목에 따라 다른 배경색을 설정함. '신상', '특가 상품', '여름', '겨울' 일 경우 BEIGE_COLOR를, 그 외의 경우는 LIGHT_YELLOW_COLOR를 배경색으로 사용함.
-    Color backgroundColor =
-    (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
-        // ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
-        // : Color(0xFFF1F1F1); // F1F1F1 색상
-        ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
-        : Theme.of(context).scaffoldBackgroundColor; // 앱 기본 배경색
-
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 비율을 기반으로 동적으로 크기와 위치 설정
-    // 카드뷰 섹션 관련 수치 동적 적용
-    final double plusBtnWidth = screenSize.width * (24 / referenceWidth);
-    final double plusBtnHeight = screenSize.width * (24 / referenceWidth);
-    final double plusBtnX = screenSize.width * (8 / referenceWidth);
-    final double plusBtnY = screenSize.height * (1 / referenceHeight);
-    final double paddingX = screenSize.width * (8 / referenceWidth);
-    final double paddingY = screenSize.height * (15 / referenceHeight);
-
-    // 공통 카드 뷰를 반환함. 이 카드는 Stack 위젯을 사용하여 contentBuilder로 생성된 콘텐츠와 오른쪽 상단에 위치한 '더보기' 버튼을 포함함.
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black, // 검은색 테두리
-            width: 1.0, // 테두리 두께 1.0
-          ),
-        ),
-      ),
-      child: CommonCardView(
-        content: Stack(
-            children: [
-              // 사용자 정의 콘텐츠를 빌드하는 함수를 호출함.
-              contentBuilder(ref, context),
-              // '더보기' 버튼을 위치시키며, 이 버튼을 탭하면 destinationScreen으로 네비게이션함.
-              Positioned(
-                right: plusBtnX,
-                top: plusBtnY,
-                child: GestureDetector(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => destinationScreen)),
-                  child: Image.asset('asset/img/misc/button_img/plus_button1.png',
-                      width: plusBtnWidth, height: plusBtnHeight, color: Color(0xFFE17735),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        backgroundColor: backgroundColor,
-        elevation: 0, // 카드의 높이(그림자 깊이)를 설정함.
-        padding: EdgeInsets.symmetric(horizontal: paddingX, vertical: paddingY), // 카드 내부의 패딩을 설정함.
-      ),
-    );
-  }
-// ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -
-// (카드뷰 색상, 카드뷰 섹션 내용-CommonCardView, "+" 버튼 이미지로 버튼 구현-버튼 클릭 시, 서브 메인 페이지로 이동) 위젯 구현 내용 끝
 }
 // _HomeScreenState 클래스 끝

@@ -58,17 +58,18 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     // UI가 그려진 후 상태를 업데이트함
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(allCheckedProvider.notifier).state = allChecked;
+      print("전체 체크박스 상태 업데이트: $allChecked");
     });
   }
 
   // Firestore에서 장바구니 아이템을 페이징 처리해서 불러오는 함수
   Future<void> loadMoreCartItems() async {
     if (isLoadingMore) {
-      print("이미 로딩 중입니다.");
+      print("데이터 로드 중 중복 요청 방지됨.");
       return; // 이미 로딩 중이면 중복 로딩 방지함
     }
 
-    print("데이터 로드를 시작합니다.");
+    print("데이터 로드 시작...");
     isLoadingMore = true;
     // 로딩 상태를 true로 설정함
     ref.read(isLoadingProvider.notifier).state = true;
@@ -76,12 +77,13 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     // 사용자 인증 상태 확인
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      print("사용자가 로그인되어 있지 않습니다.");
+      print("사용자 인증 실패: 로그인 필요.");
       state = [];
       isLoadingMore = false;
       return;
     }
 
+    print("Firestore에서 새로운 장바구니 아이템 3개를 요청합니다.");
     // Firestore에서 데이터를 3개씩 페이징 처리로 가져옴
     final newItems = await cartItemRepository.getPagedCartItems(
       lastDocument: lastDocument,
@@ -99,7 +101,7 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     // 로딩 상태를 false로 설정함
     ref.read(isLoadingProvider.notifier).state = false;
     isLoadingMore = false;
-    print("데이터 로드를 완료했습니다.");
+    print("데이터 로드 완료.");
 
     // 초기 로딩이 완료되면 각 아이템에 대해 실시간 구독을 시작함
     if (!_isInitialLoadComplete) {
@@ -120,13 +122,15 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
       // itemId가 비어있지 않은 경우에만 구독을 시작함
       if (itemId.isNotEmpty && !_itemSubscriptions.containsKey(itemId)) {
+        print("itemId: $itemId에 대한 실시간 구독 시작.");
         final subscription = cartItemRepository.cartItemStream(itemId).listen((updatedItem) {
           if (updatedItem == null) {
             // 문서가 삭제된 경우 구독을 해제함
             _itemSubscriptions[itemId]?.cancel();
             _itemSubscriptions.remove(itemId);
-            print('Cancelled subscription for itemId: $itemId as document does not exist.');
+            print("itemId: $itemId 구독 취소됨 (문서 삭제됨).");
           } else {
+            print("itemId: $itemId 상태 업데이트 발생.");
             // 상태를 업데이트함
             state = [
               for (final cartItem in state)
@@ -135,7 +139,6 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
                 else
                   cartItem
             ];
-
             // 전체 체크박스 상태를 업데이트함
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _updateAllCheckedState(state);
@@ -149,32 +152,16 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     }
   }
 
-  // // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수
-  // Future<void> updateItemQuantity(String id, int newQuantity) async {
-  //   // Firestore에서 수량 업데이트
-  //   await cartItemRepository.updateCartItemQuantity(id, newQuantity);
-  //   // 상태를 새로운 수량으로 업데이트
-  //   state = [
-  //     for (final item in state)
-  //       if (item['id'] == id)
-  //         // 수량이 변경된 아이템 업데이트
-  //         {...item, 'selected_count': newQuantity}
-  //       else
-  //         // 수량이 변경되지 않은 아이템은 그대로 유지
-  //         item
-  //   ];
-  //   // 전체 체크박스 상태 업데이트
-  //   _updateAllCheckedState(state);
-  // }
-
   // 장바구니 아이템의 수량을 업데이트하고 상태를 갱신하는 함수
   Future<void> updateItemQuantity(String id, int newQuantity) async {
+    print("Firestore에서 itemId: $id의 수량을 $newQuantity로 업데이트합니다.");
     // Firestore에서 수량 업데이트
     await cartItemRepository.updateCartItemQuantity(id, newQuantity);
 
     // 상태를 새로운 수량으로 즉시 업데이트
     state = state.map((item) {
       if (item['id'] == id) {
+        print("itemId: $id 수량 업데이트 반영됨.");
         return {...item, 'selected_count': newQuantity}; // 수량이 변경된 아이템 업데이트
       }
       return item;
@@ -188,8 +175,10 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
   // 장바구니에서 아이템을 제거하고 상태를 갱신하는 함수
   Future<void> removeItem(String id) async {
+    print("Firestore에서 itemId: $id 제거 요청.");
     await cartItemRepository.removeCartItem(id); // Firestore에서 아이템을 제거함
     state = state.where((item) => item['id'] != id).toList(); // 상태에서 해당 아이템을 제거함
+    print("itemId: $id 상태에서 제거됨.");
 
     // 해당 아이템에 대한 구독을 해제하고 Map에서 제거함
     _itemSubscriptions[id]?.cancel();
@@ -206,6 +195,7 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     isLoadingMore = false; // 로딩 플래그 초기화
     state = []; // 불러온 데이터를 초기화함
     lastDocument = null; // 마지막 문서 스냅샷 초기화
+    print("장바구니 초기화: 모든 데이터와 구독 해제.");
 
     // 모든 아이템에 대한 실시간 구독을 해제함
     _unsubscribeFromAllItems();
@@ -217,10 +207,12 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       subscription.cancel(); // 모든 구독을 해제함
     }
     _itemSubscriptions.clear(); // 구독 관리 Map을 초기화함
+    print("모든 구독 해제 완료.");
   }
 
   // 장바구니 아이템의 체크 상태를 변경하는 함수
   Future<void> toggleItemChecked(String id, bool checked) async {
+    print("Firestore에서 itemId: $id의 체크 상태를 $checked로 변경 요청.");
     // 특정 아이템의 체크 상태를 Firestore에 업데이트
     await cartItemRepository.updateCartItemChecked(id, checked);
     // 상태를 업데이트
@@ -240,6 +232,7 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
   // 장바구니 내 모든 아이템의 체크 상태를 변경하는 함수
   void toggleAll(bool checked) {
+    print("모든 아이템의 체크 상태를 $checked로 설정.");
     for (final item in state) {
       toggleItemChecked(item['id'], checked); // 모든 아이템의 체크 상태를 변경함
     }
@@ -253,6 +246,7 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     }
     _itemSubscriptions.clear(); // 구독 관리 Map을 초기화함
     super.dispose(); // 상위 클래스의 dispose 메서드를 호출함
+    print("CartItemsNotifier가 해제되었습니다.");
   }
 }
 // ------ Firestore와의 상호작용을 위해 CartItemRepository를 사용하여 상태를 관리하는 provider인 CartItemsNotifier 클래스 내용 끝

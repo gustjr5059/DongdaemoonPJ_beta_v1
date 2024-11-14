@@ -26,6 +26,8 @@ class ProductContent {
   final String? selectedColorText; // 선택된 색상 텍스트를 저장하는 필드.
   final String? selectedSize; // 선택된 사이즈를 저장하는 필드.
   final String? productNumber; // 제품 번호를 저장하는 필드.
+  final String? eventPosterImg; // 이벤트 포스터 이미지 저장하는 필드.
+  final int maxStockQuantity; // maxStockQuantity 필드 추가
 
   // 클래스의 생성자입니다. 모든 필드를 초기화함.
   ProductContent({
@@ -52,6 +54,8 @@ class ProductContent {
     this.selectedColorText,
     this.selectedSize,
     this.productNumber,
+    this.eventPosterImg,
+    this.maxStockQuantity = 10001, // 기본값을 설정하거나 외부에서 전달받은 값을 사용
   });
 
   // Firestore 문서 스냅샷으로부터 ProductContent 객체를 생성하는 팩토리 생성자임.
@@ -84,6 +88,7 @@ class ProductContent {
         selectedColorText: null,
         selectedSize: null,
         productNumber: null,
+        eventPosterImg: null,
       );
     }
 
@@ -210,6 +215,7 @@ class ProductContent {
       selectedColorText: data['selected_color_text'] as String?, // 선택된 색상 텍스트
       selectedSize: data['selected_size'] as String?, // 선택된 사이즈
       productNumber: data['product_number'] as String?, // 제품 번호
+      eventPosterImg: data['event_poster_img'] as String?, // 이벤트 포스터 이미지
     );
   }
 

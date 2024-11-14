@@ -148,7 +148,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
             child: Text(
               '확인',
               style: TextStyle(
-                color: Color(0xFFE17735),
+                color: ORANGE56_COLOR,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'NanumGothic',
               ),
@@ -212,10 +212,15 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double completePaymentAppBarTitleWidth = screenSize.width * (120 / referenceWidth);
+    final double completePaymentAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double completePaymentAppBarTitleX = screenSize.width * (100 / referenceHeight);
+    final double completePaymentAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
+
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
     final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
@@ -224,13 +229,15 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     return orderDataFuture.when(
       data: (data) {
         // 주문 데이터를 각각의 변수로 분리
-        final amountInfo = data['amountInfo'];
-        final ordererInfo = data['ordererInfo'];
-        final recipientInfo = data['recipientInfo'];
-        final numberInfo = data['numberInfo'];
-        final orderNumber = numberInfo['order_number'];
+        final amountInfo = data['amountInfo'] ?? '';
+        final ordererInfo = data['ordererInfo'] ?? '';
+        final recipientInfo = data['recipientInfo'] ?? '';
+        final numberInfo = data['numberInfo'] ?? '';
+        final orderNumber = numberInfo['order_number'] ?? '';
         // 주문 날짜를 원하는 형식으로 포맷
-        final orderDate = DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(numberInfo['order_date'].toDate());
+        final orderDate = numberInfo['order_date'] != null
+            ? DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(numberInfo['order_date'].toDate())
+            : '';
         final orderItems = data['orderItems'] ?? []; // null일 경우 빈 리스트로 대체
 
         return Scaffold(
@@ -254,6 +261,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                         context: context,
                         ref: ref,
                         title: '발주 완료', // 앱바 제목 설정
+                        fontFamily: 'NanumGothic',
                         leadingType: LeadingType.none, // 리딩 아이콘 없음
                         buttonCase: 1, // 버튼 타입 설정
                         appBarTitleWidth: completePaymentAppBarTitleWidth,
@@ -277,7 +285,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                                 Container(
                                   decoration: BoxDecoration(
                                     border: Border(
-                                      bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                      bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                     ),
                                   ),
                                 ),
@@ -312,8 +320,19 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 위젯
-      error: (error, stack) => Center(child: Text('Error: $error')), // 에러 발생 시 표시할 텍스트
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+          color: BLACK_COLOR, // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // 화면 구성 끝

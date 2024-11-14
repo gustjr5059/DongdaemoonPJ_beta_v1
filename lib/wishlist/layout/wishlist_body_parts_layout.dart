@@ -31,7 +31,7 @@ class WishlistIconButton extends ConsumerWidget {
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email; // 이메일 주소를 가져옴
     if (userEmail == null) {
-      throw Exception('User email not available');
+      throw Exception('사용자 이메일을 사용할 수 없습니다');
     }
 // wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
     final asyncWishlist = ref.watch(wishlistItemProvider(userEmail));
@@ -51,7 +51,7 @@ class WishlistIconButton extends ConsumerWidget {
           icon: Icon(
             isWished ? Icons.favorite : Icons.favorite_border,
             // 찜 목록에 있는 경우 빨간색, 그렇지 않은 경우 회색
-            color: isWished ? Colors.red : Colors.grey,
+            color: isWished ? RED46_COLOR : GRAY62_COLOR,
           ),
           // 버튼 클릭 시 동작 정의
           onPressed: () async {
@@ -130,7 +130,7 @@ class WishlistItemsList extends ConsumerWidget {
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email;
     if (userEmail == null) {
-      throw Exception('User email not available');
+      throw Exception('사용자 이메일을 사용할 수 없습니다');
     }
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -196,37 +196,40 @@ class WishlistItemsList extends ConsumerWidget {
     final double wishlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
-    // wishlistItemsStreamProvider로 처음 데이터를 한 번만 불러옴
-    final wishlistItemsFuture = ref.watch(wishlistItemsLoadFutureProvider(userEmail));
+    final double interval1X = screenSize.width * (70 / referenceWidth);
+
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
     // StreamProvider로 실시간 데이터 변경을 구독
     final wishlistItemStream = ref.watch(wishlistItemLoadStreamProvider(userEmail));
 
     // wishlistItemsFuture의 상태에 따라 위젯을 빌드.
-    return wishlistItemsFuture.when(
+    return wishlistItemStream.when(
       // 데이터를 처음 불러왔을 때의 처리
-      data: (initialData) {
-        return wishlistItemStream.when(
-          data: (realtimeData) {
-            // 실시간 데이터가 없으면 초기 데이터를 사용
-            final wishlistItems = realtimeData.isNotEmpty ? realtimeData : initialData;
+      data: (realtimeData) {
 
-            // 찜 목록 항목이 비어있을 경우의 조건문.
-            if (wishlistItems.isEmpty) {
-              // 찜 목록이 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
-              return Container(
-                width: wishlistEmptyTextWidth,
-                height: wishlistEmptyTextHeight,
-                margin: EdgeInsets.only(left: wishlistEmptyTextX, top: wishlistEmptyTextY),
-                child: Text('찜 목록이 비어 있습니다.',
-                  style: TextStyle(
-                    fontSize: wishlistEmptyTextFontSize,
-                    fontFamily: 'NanumGothic',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              );
-            }
+        // 찜 목록 항목이 비어있을 경우의 조건문.
+        if (realtimeData.isEmpty) {
+          // 찜 목록이 비어있을 때 화면에 보여줄 텍스트 위젯을 반환.
+          return Container(
+            width: wishlistEmptyTextWidth,
+            height: wishlistEmptyTextHeight,
+            margin: EdgeInsets.only(top: wishlistEmptyTextY),
+            // 텍스트를 중앙에 위치하도록 설정함.
+            alignment: Alignment.center,
+            child: Text('현재 찜 목록이 비어 있습니다.',
+              style: TextStyle(
+                fontSize: wishlistEmptyTextFontSize,
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.bold,
+                color: BLACK_COLOR,
+              ),
+            ),
+          );
+        }
 
             // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
             final numberFormat = NumberFormat('###,###');
@@ -236,7 +239,7 @@ class WishlistItemsList extends ConsumerWidget {
 
             // 장바구니 아이템들을 UI로 표시
             return Column(
-              children: wishlistItems.map((wishlistItem) {
+              children: realtimeData.map((wishlistItem) {
 
                 // 원래 가격을 정수로 변환
                 final int originalPrice = wishlistItem['original_price']?.round() ?? 0;
@@ -246,6 +249,7 @@ class WishlistItemsList extends ConsumerWidget {
                 // ProductContent 객체 생성
                 final product = ProductContent(
                   docId: wishlistItem['product_id'],
+                  category: wishlistItem['category'],
                   thumbnail: wishlistItem['thumbnails'],
                   briefIntroduction: wishlistItem['brief_introduction'],
                   originalPrice: wishlistItem['original_price'],
@@ -259,12 +263,12 @@ class WishlistItemsList extends ConsumerWidget {
                     navigatorProductDetailScreen.navigateToDetailScreen(context, product);
                   },
                   child: Container(
-                    width: wishlistCardViewWidth,  // CommonCardView의 너비를 지정함
-                    height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
-                    padding: EdgeInsets.only(top: wishlist2Y, bottom: wishlist2Y, left: wishlist3X, right: wishlist4X),
+                    // width: wishlistCardViewWidth,  // CommonCardView의 너비를 지정함
+                    // height: wishlistCardViewHeight, // CommonCardView의 높이를 지정함
+                    // padding: EdgeInsets.only(top: wishlist2Y, bottom: wishlist2Y, left: wishlist3X, right: wishlist4X),
                     decoration: BoxDecoration(
                       border: Border(
-                         bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                         bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                       ),
                     ),
                     child: CommonCardView(
@@ -276,15 +280,24 @@ class WishlistItemsList extends ConsumerWidget {
                             width: wishlistThumnailPartWidth,
                             // 이미지 컨테이너의 높이를 설정함
                             height: wishlistThumnailPartHeight,
-                            // 썸네일이 있을 경우 이미지를 표시하고, 없을 경우 빈 컨테이너를 표시함
-                            child: wishlistItem['thumbnails'] != null
+                            // 썸네일이 있을 경우 이미지를 표시하고, 없을 경우 아이콘을 표시함
+                            child: wishlistItem['thumbnails'] != null && wishlistItem['thumbnails'] != ''
                                 ? FittedBox(
                               fit: BoxFit.cover,
                               child: Image.network(
-                                wishlistItem['thumbnails'] ?? '',
+                                wishlistItem['thumbnails']!,
+                                errorBuilder: (context, error, stackTrace) => Icon(
+                                  Icons.image_not_supported, // 이미지 로드 실패 시 아이콘 표시
+                                  color: GRAY88_COLOR,
+                                  size: interval1X,
+                                ),
                               ),
                             )
-                                : Container(), // 썸네일이 없을 경우 빈 컨테이너를 표시함
+                                : Icon(
+                              Icons.image_not_supported, // 썸네일 데이터가 없을 경우 아이콘 표시
+                              color: GRAY88_COLOR,
+                              size: interval1X,
+                            ),
                           ),
                           SizedBox(width: wishlist1X),
                           // 텍스트 데이터와 삭제 버튼을 포함하는 컬럼(세로 정렬)을 정의함
@@ -306,7 +319,7 @@ class WishlistItemsList extends ConsumerWidget {
                                             fontSize: wishlistBriefIntroductionFontSize,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'NanumGothic',
-                                            color: Colors.black,
+                                            color: BLACK_COLOR,
                                           ),
                                           maxLines: 1, // 한 줄로 표시되도록 설정함
                                           overflow: TextOverflow.ellipsis, // 넘칠 경우 말줄임표로 처리함
@@ -317,12 +330,12 @@ class WishlistItemsList extends ConsumerWidget {
                                           children: [
                                             // 상품의 원래 가격 텍스트를 표시함
                                             Text(
-                                              '${numberFormat.format(originalPrice)}원',
+                                              '${originalPrice != null ? numberFormat.format(originalPrice) : 0}원',
                                               style: TextStyle(
                                                 fontSize: wishlistOriginalPriceFontSize,
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: 'NanumGothic',
-                                                color: Color(0xFF6C6C6C),
+                                                color: GRAY42_COLOR,
                                                 decoration: TextDecoration.lineThrough, // 가격에 줄을 긋는 스타일을 적용함
                                               ),
                                             ),
@@ -334,19 +347,19 @@ class WishlistItemsList extends ConsumerWidget {
                                                 fontSize: wishlistDiscountPercentFontSize,
                                                 fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
                                                 fontFamily: 'NanumGothic',
-                                                color: Colors.red, // 빨간색으로 할인율을 강조함
+                                                color: RED46_COLOR, // 빨간색으로 할인율을 강조함
                                               ),
                                             ),
                                           ],
                                         ),
                                         // 상품 할인가 텍스트를 표시함
                                         Text(
-                                          '${numberFormat.format(discountPrice)}원',
+                                          '${discountPrice != null ? numberFormat.format(discountPrice) : 0}원',
                                           style: TextStyle(
                                             fontSize: wishlistDiscountPriceFontSize,
                                             fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
                                             fontFamily: 'NanumGothic',
-                                            color: Colors.black,
+                                            color: BLACK_COLOR,
                                           ),
                                         ),
                                       ],
@@ -368,12 +381,12 @@ class WishlistItemsList extends ConsumerWidget {
                                             yesText: '예', // '예' 버튼 텍스트를 설정함
                                             noTextStyle: TextStyle(
                                               fontFamily: 'NanumGothic',
-                                              color: Colors.black, // '아니요' 텍스트 색상을 검정색으로 설정함
+                                              color: BLACK_COLOR, // '아니요' 텍스트 색상을 검정색으로 설정함
                                               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                             ),
                                             yesTextStyle: TextStyle(
                                               fontFamily: 'NanumGothic',
-                                              color: Colors.red, // '예' 텍스트 색상을 빨간색으로 설정함
+                                              color: RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                             ),
                                             // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
@@ -402,7 +415,7 @@ class WishlistItemsList extends ConsumerWidget {
                                         padding: EdgeInsets.symmetric(horizontal: wishlistDeleteBtn1X, vertical: wishlistDeleteBtn1Y), // 버튼의 크기를 패딩으로 설정
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(37), // 버튼을 둥글게 설정함
-                                          side: BorderSide(color: Color(0xFF6F6F6F)), // 테두리 색상을 설정함
+                                          side: BorderSide(color: GRAY44_COLOR), // 테두리 색상을 설정함
                                         ),
                                         backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                                       ),
@@ -412,7 +425,7 @@ class WishlistItemsList extends ConsumerWidget {
                                           fontSize: wishlistDeleteBtnFontSize,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'NanumGothic',
-                                          color: Colors.black, // 버튼 텍스트 색상을 검정색으로 설정함
+                                          color: BLACK_COLOR, // 버튼 텍스트 색상을 검정색으로 설정함
                                         ),
                                       ),
                                     ),
@@ -433,16 +446,21 @@ class WishlistItemsList extends ConsumerWidget {
             );
           },
           // 실시간 데이터 로드 중일 때 처리
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
           // 실시간 데이터 로드 중 오류가 발생했을 때 처리
-          error: (error, stack) => Center(child: Text('실시간 데이터 불러오기 중 오류가 발생했습니다.')),
+          error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+            height: errorTextHeight, // 전체 화면 높이 설정
+            alignment: Alignment.center, // 중앙 정렬
+            child: buildCommonErrorIndicator(
+              message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+              secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+              fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+              fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+              color: BLACK_COLOR, // 색상 설정
+              showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+            ),
+          ),
         );
-      },
-      // 로딩 중일 때 표시할 위젯
-      loading: () => Center(child: CircularProgressIndicator()),
-      // 에러 발생 시 표시할 위젯
-      error: (error, stack) => Center(child: Text('데이터를 불러오기 중 오류가 발생했습니다.')),
-    );
-  }
-}
-// ------- 찜 목록 화면 내 파이어베이스의 찜 목록 상품 데이터를 불러와서 UI로 구현하는 클래스 내용 끝
+      }
+    }
+    // ------- 찜 목록 화면 내 파이어베이스의 찜 목록 상품 데이터를 불러와서 UI로 구현하는 클래스 내용 끝

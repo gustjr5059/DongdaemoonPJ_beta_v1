@@ -199,11 +199,11 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
 
     // AppBar 관련 수치 동적 적용
     final double cartlistAppBarTitleWidth =
-        screenSize.width * (77 / referenceWidth);
+        screenSize.width * (240 / referenceWidth);
     final double cartlistAppBarTitleHeight =
         screenSize.height * (22 / referenceHeight);
     final double cartlistAppBarTitleX =
-        screenSize.width * (50 / referenceHeight);
+        screenSize.width * (215 / referenceHeight);
     final double cartlistAppBarTitleY =
         screenSize.height * (11 / referenceHeight);
 
@@ -212,8 +212,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         screenSize.width * (40 / referenceWidth);
     final double cartlistHomeBtnHeight =
         screenSize.height * (40 / referenceHeight);
-    final double cartlistHomeBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistHomeBtnY = screenSize.height * (6 / referenceHeight);
+    final double cartlistHomeBtnX = screenSize.width * (10 / referenceWidth);
+    final double cartlistHomeBtnY = screenSize.height * (7 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 3)
     final double cartlistWishlistBtnWidth =
@@ -222,11 +222,11 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         screenSize.height * (40 / referenceHeight);
     final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
     final double cartlistWishlistBtnY =
-        screenSize.height * (6 / referenceHeight);
+        screenSize.height * (7 / referenceHeight);
 
     // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
     final double cartlistEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double cartlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double cartlistEmptyTextX =
@@ -269,6 +269,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 참조(ref) 전달
                     title: '장바구니',
                     // AppBar의 제목을 '장바구니'로 설정
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     // 버튼 없음.
                     buttonCase: 3,
@@ -303,19 +304,25 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                   builder: (context, ref, child) {
                     // cartItemsProvider의 상태를 가져옴
                     final cartItems = ref.watch(cartItemsProvider);
-                    // 장바구니가 비어 있을 경우 '장바구니가 비어 있습니다.' 텍스트를 중앙에 표시
+                    // 장바구니가 비어 있을 경우 '현재 장바구니 상품이 없습니다.' 텍스트를 중앙에 표시
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 그대신 로딩 표시를 못 넣음...
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
                             child: Container(
                               width: cartlistEmptyTextWidth,
                               height: cartlistEmptyTextHeight,
-                              margin: EdgeInsets.only(left: cartlistEmptyTextX, top: cartlistEmptyTextY),
-                              child: Text('장바구니가 비어 있습니다.',
+                              margin: EdgeInsets.only(top: cartlistEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                              child: Text('현재 장바구니 상품이 없습니다.',
                                 style: TextStyle(
                                   fontSize: cartlistEmptyTextFontSize,
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: BLACK_COLOR,
                                 ),
                               ),
                             ),

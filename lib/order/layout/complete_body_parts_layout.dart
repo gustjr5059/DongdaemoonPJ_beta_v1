@@ -2,6 +2,7 @@ import 'package:flutter/material.dart'; // 플러터 위젯 및 머터리얼 디
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위한 플러터 리버팟 라이브러리 임포트
 import 'package:intl/intl.dart'; // 숫자 및 날짜 포맷을 위한 intl 라이브러리 임포트
 import '../../common/const/colors.dart'; // 공통 색상 상수 파일 임포트
+import '../../common/layout/common_body_parts_layout.dart';
 import '../../home/view/home_screen.dart'; // 홈 화면 관련 파일 임포트
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart'; // 주문 관련 프로바이더 파일 임포트
@@ -49,12 +50,14 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
         screenSize.height * (16 / referenceHeight);
     final double orderGuideInfoFontSize2 =
         screenSize.height * (14 / referenceHeight);
+    final double orderGuideInfoFontSize3 =
+        screenSize.height * (12 / referenceHeight);
     final double interval1Y =
         screenSize.height * (16 / referenceHeight);
     final double interval2Y =
         screenSize.height * (5 / referenceHeight);
     final double interval3Y =
-        screenSize.height * (30 / referenceHeight);
+        screenSize.height * (20 / referenceHeight);
 
     // 버튼 관련 수치 동적 적용
     final double combackHomeBtnHeight =
@@ -67,6 +70,13 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
         screenSize.width * (12 / referenceWidth);
     final double combackHomeBtnFontSize =
         screenSize.height * (16 / referenceHeight);
+
+    // 에러 메시지 텍스트 크기 설정
+    final double errorTextFontSize1 =
+        screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
+    final double errorTextFontSize2 =
+        screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // 숫자 포맷을 설정 (천 단위 콤마 추가)
     final numberFormat = NumberFormat('###,###');
@@ -88,7 +98,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: orderGuideInfoTitleFontSize,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: interval1Y), // 간격
@@ -98,7 +108,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: orderGuideInfoFontSize1,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),
               ),
               SizedBox(height: interval2Y), // 간격
@@ -108,16 +118,16 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                   fontFamily: 'NanumGothic',
                   fontSize: orderGuideInfoFontSize2,
                   fontWeight: FontWeight.normal,
-                  color: Colors.grey,
+                  color: GRAY62_COLOR,
                 ),
               ),
               Text(
-                '발주자와 입금자 성함은 같아야 합니다.',
+                '발주자와 입금자 성함은 일치해야 합니다.',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: orderGuideInfoFontSize2,
                   fontWeight: FontWeight.normal,
-                  color: Colors.grey,
+                  color: GRAY62_COLOR,
                 ),
               ),
               SizedBox(height: interval1Y), // 간격
@@ -130,6 +140,26 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               _buildInfoRow(context, '우편번호', recipientInfo['postal_code']),
               _buildInfoRow(context, '주소', recipientInfo['address']),
               _buildInfoRow(context, '상세주소', recipientInfo['detail_address']),
+              SizedBox(height: interval1Y),
+              Text(
+                "요청 실수 등의 문의사항이 있을 시,", // 설명 텍스트
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoFontSize3,
+                  // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: BLACK_COLOR,
+                ),
+              ),
+              Text(
+                "[마이페이지] => [문의하기] 절차로 진행해주세요.", // 설명 텍스트
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoFontSize3,
+                  // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
+                  color: BLACK_COLOR,
+                ),
+              ),
+
               SizedBox(height: interval3Y), // 간격
               // 홈으로 이동하는 버튼
               Center(
@@ -144,9 +174,9 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
+                      foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                      side: BorderSide(color: Color(0xFFE17735),
+                      side: BorderSide(color: ORANGE56_COLOR,
                       ), // 버튼 테두리 색상 설정
                       padding: EdgeInsets.symmetric(vertical: combackHomeBtnPaddingY, horizontal: combackHomeBtnPaddingX), // 버튼 패딩
                     ),
@@ -155,7 +185,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'NanumGothic',
                         fontSize: combackHomeBtnFontSize,
-                        color: Color(0xFFE17735),
+                        color: ORANGE56_COLOR,
                       ),
                     ), // 버튼 텍스트
                   ),
@@ -166,8 +196,19 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
           ),
         );
       },
-      loading: () => CircularProgressIndicator(), // 로딩 중일 때 표시할 위젯
-      error: (error, stack) => Text('Error: $error'), // 에러 발생 시 표시할 텍스트
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+          color: BLACK_COLOR, // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
     );
   }
 
@@ -192,9 +233,9 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
         screenSize.height * (40 / referenceHeight);
     // 행 간 간격 수치
     final double updateRequireCompleteInfo4Y =
-        screenSize.height * (2 / referenceHeight);
+        screenSize.height * (3 / referenceHeight);
     final double updateRequireCompleteInfo5Y =
-        screenSize.height * (4 / referenceHeight);
+        screenSize.height * (6 / referenceHeight);
     final double updateRequireCompleteInfo1X =
         screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
@@ -210,7 +251,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
             Container(
               height: updateRequireCompleteInfoTextPartHeight,
               width: updateRequireCompleteInfoTextPartWidth,
-              color: Color(0xFFF2F2F2), // 배경 색상 설정
+              color: GRAY96_COLOR, // 배경 색상 설정
               alignment: Alignment.center,
               child: Text(
                 label,
@@ -218,22 +259,22 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'NanumGothic',
                   fontSize: updateRequireCompleteInfoTextFontSize,
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                 ),  // 텍스트 스타일 설정
               ),
             ),
             SizedBox(width: updateRequireCompleteInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: Color(0xFFFBFBFB), // 배경 색상 설정
+                color: GRAY98_COLOR, // 배경 색상 설정
                 padding: EdgeInsets.only(left: updateRequireCompleteInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
-                  value,
+                  value ?? '', // value가 null일 경우 빈 문자열로 처리
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: updateRequireCompleteInfoDataFontSize,
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                   ),
                 ), // 값 표시
               ),

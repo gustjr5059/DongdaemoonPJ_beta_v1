@@ -35,20 +35,38 @@ class SectionDataStateNotifier
 
   // 카테고리에 해당하는 섹션을 업데이트하는 함수
   void updateSection(String category, List<ProductContent> products) {
+    print("섹션 업데이트 시작 - 카테고리: $category, 제품 수: ${products.length}"); // 섹션 업데이트 시작 로그
+
+    // 현재 상태를 복사한 후 새로운 데이터를 추가하여 상태를 업데이트
     state = {
       ...state,
       category: products
-    }; // 현재 상태를 복사한 후 새로운 데이터를 추가하여 상태를 업데이트
+    };
+
+    print("섹션 업데이트 완료 - 현재 상태: ${state.keys.toList()}"); // 상태 업데이트 완료 후 상태 로그
   }
 
   // 카테고리에 해당하는 섹션을 초기화하는 함수
   void resetSection(String category) {
-    state = {...state, category: []}; // 현재 상태를 복사한 후 해당 카테고리의 리스트를 빈 리스트로 초기화
+
+    print("섹션 초기화 시작 - 카테고리: $category"); // 섹션 초기화 시작 로그
+
+    // 현재 상태를 복사한 후 해당 카테고리의 리스트를 빈 리스트로 초기화
+    state = {
+      ...state,
+      category: []
+    };
+
+    print("섹션 초기화 완료 - 카테고리 $category가 초기화됨, 현재 상태: ${state.keys.toList()}"); // 초기화 완료 후 상태 로그
   }
 
   // 카테고리에 해당하는 제품 리스트를 반환하는 함수
   List<ProductContent> getSectionProducts(String category) {
-    return state[category] ?? []; // 해당 카테고리에 데이터가 없으면 빈 리스트를 반환
+    print("제품 리스트 요청 - 카테고리: $category"); // 제품 리스트 요청 로그
+    final products = state[category] ?? []; // 해당 카테고리에 데이터가 없으면 빈 리스트를 반환
+
+    print("제품 리스트 반환 - 카테고리: $category, 제품 수: ${products.length}"); // 반환되는 제품 리스트 정보 로그
+    return products;
   }
 }
 // ------ SectionStateNotifier 클래스 내용 구현 끝

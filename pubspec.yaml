@@ -89,6 +89,16 @@ dev_dependencies:
   json_serializable: ^6.8.0
   retrofit_generator: ^8.1.0
 
+  # 앱 아이콘 자동 생성 설정 추가
+  flutter_launcher_icons: ^0.9.2 # 최신 버전 확인하여 변경 가능
+
+  # ios도 true로 하고, flutter clean -> flutter pub get -> flutter pub run flutter_launcher_icons:main 명령어 입력 시,
+  # 필요 해상도별 아이콘 이미지 생성됨 (기본 이미지는 1024x1024로 설정)
+#  flutter_icons:
+#    android: false  # 안드로이드 아이콘 생성 활성화
+#    ios: false  # iOS 아이콘 생성 활성화
+#    image_path: "asset/img/misc/app_icon_img/common_img_1024x1024.png"  # 앱 아이콘 경로
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -169,6 +179,7 @@ flutter:
     - asset/img/misc/login_image/login_bottom_image1.png
     - asset/img/misc/drawer_img/flow_image.png
     - asset/img/misc/logo_img/wearcano_logo_v1.png
+    - asset/img/misc/appbar_img/home_appbar_title_img.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen1>
     // initState에서 애니메이션 컨트롤러와 애니메이션 값을 초기화함.
     _controller = AnimationController(
       vsync: this, // 현재 클래스가 애니메이션의 vsync를 담당함.
-      duration: Duration(milliseconds: 2000), // 애니메이션 지속 시간을 2초로 설정함.
+      duration: Duration(milliseconds: 1500), // 애니메이션 지속 시간을 1.5초로 설정함.
     );
 
     // Tween을 사용하여 애니메이션의 시작과 끝 값을 설정함.
@@ -66,8 +66,8 @@ class _SplashScreenState extends State<SplashScreen1>
 
     _loadingController.repeat();
 
-    // 1초 후에 SplashScreen2로 화면을 전환함.
-    Timer(Duration(seconds: 1), () {
+    // 1.5초 후에 SplashScreen2로 화면을 전환함.
+    Timer(Duration(milliseconds: 1500), () {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
     });
@@ -123,7 +123,7 @@ class _SplashScreenState extends State<SplashScreen1>
                   );
                 },
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(WHITE_COLOR),
                 ),
               ),
             ),

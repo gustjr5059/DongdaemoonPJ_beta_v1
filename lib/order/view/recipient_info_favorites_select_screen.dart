@@ -181,9 +181,9 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double recipientInfoAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double recipientInfoAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double recipientInfoAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double recipientInfoAppBarTitleX = screenSize.height * (60 / referenceHeight);
+    final double recipientInfoAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double recipientInfoAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -194,7 +194,7 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
 
     // 수령자 정보 즐겨찾기 목록 비어있는 경우의 알림 부분 수치
     final double recipientInfoEmptyTextWidth =
-        screenSize.width * (170 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double recipientInfoEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double recipientInfoEmptyTextX =
@@ -236,6 +236,7 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                     ref: ref,
                     // 참조(ref) 전달
                     title: '즐겨찾기 목록',
+                    fontFamily: 'NanumGothic',
                     // AppBar의 제목을 '즐겨찾기 목록'으로 설정
                     leadingType: LeadingType.back,
                     // 버튼 없음.
@@ -273,40 +274,42 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                             child: Container(
                               width: recipientInfoEmptyTextWidth,
                               height: recipientInfoEmptyTextHeight,
-                              margin: EdgeInsets.only(left: recipientInfoEmptyTextX, top: recipientInfoEmptyTextY),
-                              child: Text('저장된 수령자 정보가 없습니다.',
+                              margin: EdgeInsets.only(top: recipientInfoEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                              child: Text('현재 수령자 정보가 없습니다.',
                                 style: TextStyle(
                                   fontSize: recipientInfoEmptyTextFontSize,
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: BLACK_COLOR,
                                 ),
                               ),
                             ),
                         )
                         // 저장된 수령자 정보가 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
-                      // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          return Column(
-                            // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                          // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                          delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                              return Column(
+                                // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
-                              RecipientInfoItemsList(),
-                            ],
-                          );
-                        },
-                        // 아이템 개수를 1로 설정
-                        childCount: 1,
-                      ),
+                                  // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
+                                  RecipientInfoItemsList(),
+                                ],
+                              );
+                            },
+                            // 아이템 개수를 1로 설정
+                            childCount: 1,
+                          ),
                     );
                   },
                 ),

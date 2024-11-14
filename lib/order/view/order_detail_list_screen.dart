@@ -146,13 +146,6 @@ class _OrderListDetailScreenState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      // // 앱이 다시 포커스를 얻었을 때 상태를 업데이트 (다른 화면 이동 후 복귀 시, 해당 초기화 로직이 동작함)
-      // ref.read(orderListDetailScrollPositionProvider.notifier).state =
-      // 0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
-      // // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-      // ref.invalidate(orderListDetailProvider);
-      // ref.invalidate(buttonInfoProvider);  // 초기화
-      // ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
       updateStatusBar();
     }
   }
@@ -195,9 +188,9 @@ class _OrderListDetailScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistDtAppBarTitleWidth = screenSize.width * (150 / referenceWidth);
+    final double orderlistDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistDtAppBarTitleX = screenSize.width * (100 / referenceHeight);
+    final double orderlistDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -207,18 +200,18 @@ class _OrderListDetailScreenState
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderlistDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double orderlistDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double orderlistDtChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double orderlistDtChevronIconY = screenSize.height * (10 / referenceHeight);
+    final double orderlistDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double orderlistDtChevronIconY = screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
     final double orderlistDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double orderlistDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
     final double orderlistDtWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double orderlistDtWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
-        screenSize.width * (270 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextX =
@@ -245,13 +238,15 @@ class _OrderListDetailScreenState
                   width: orderlistEmptyTextWidth,
                   height: orderlistEmptyTextHeight,
                   margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                  // 텍스트를 중앙에 위치하도록 설정함.
+                  alignment: Alignment.center,
                   child: Text(
-                    '발주 데이터를 불러올 수 없습니다.',
+                    '에러가 발생했으니, 앱을 재실행해주세요.',
                     style: TextStyle(
                       fontSize: orderlistEmptyTextFontSize,
                       fontFamily: 'NanumGothic',
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: BLACK_COLOR,
                     ),
                   ),
                 ),
@@ -283,6 +278,7 @@ class _OrderListDetailScreenState
                       ref: ref,
                       // 참조(ref) 전달
                       title: '발주 내역 상세',
+                      fontFamily: 'NanumGothic',
                       // AppBar의 제목을 '발주 목록 상세'로 설정
                       leadingType: LeadingType.back,
                       // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
@@ -324,7 +320,7 @@ class _OrderListDetailScreenState
                                 Container(
                                   decoration: BoxDecoration(
                                     border: Border(
-                                      bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                                      bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                     ),
                                   ),
                                 ),

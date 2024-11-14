@@ -181,9 +181,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double inquiryAppBarTitleWidth = screenSize.width * (90 / referenceWidth);
+    final double inquiryAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double inquiryAppBarTitleX = screenSize.width * (50 / referenceHeight);
+    final double inquiryAppBarTitleX = screenSize.width * (5 / referenceHeight);
     final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
@@ -194,12 +194,12 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
     final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
     final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (20 / referenceWidth); // 가로 간격 2 계산
+    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
-    final double inquiryGuideFontSize1 =
+    final double inquiryGuidFontSize1 =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double inquiryGuideFontSize2 =
+    final double inquiryGuidFontSize2 =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 문의하기로 이동 버튼 수치
@@ -233,6 +233,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                     context: context,
                     ref: ref,
                     title: '문의하기',
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.none,
                     buttonCase: 1,
                     appBarTitleWidth: inquiryAppBarTitleWidth,
@@ -253,29 +254,21 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       return Padding(
-                        // 각 항목의 좌우 간격을 inquiryPaddingX로 설정함.
-                        // padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
-                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
+                        padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
                         child: Column(
                           // 자식 위젯들을 왼쪽 정렬.
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
-                                ),
-                              ),
-                            ),
                             SizedBox(height: interval1Y),
                             Container(
                               padding: EdgeInsets.only(left: interval1X), // 패딩 설정
                               child: Text('* 문의는 아래 절차에 따라 진행해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuideFontSize1, // 텍스트 크기 설정
+                                  fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: Colors.black, // 텍스트 색상 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
                             ),
@@ -284,10 +277,10 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               padding: EdgeInsets.only(left: interval2X), // 패딩 설정
                               child: Text('1. [문의하기로 이동] 버튼을 클릭해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuideFontSize2, // 텍스트 크기 설정
+                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: Colors.black, // 텍스트 색상 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
                             ),
@@ -295,10 +288,10 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               padding: EdgeInsets.only(left: interval2X), // 패딩 설정
                               child: Text('2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuideFontSize2, // 텍스트 크기 설정
+                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: Colors.black, // 텍스트 색상 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
                             ),
@@ -310,16 +303,16 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               child: ElevatedButton(
                                 onPressed: () async {
                                   // 버튼이 눌렸을 때 해당 링크로 이동함
-                                  final Uri url = Uri.parse('https://pf.kakao.com/_xjVrbG');
+                                  final Uri url = Uri.parse('http://pf.kakao.com/_ceKEn');
                                   if (await canLaunchUrl(url)) {
                                     await launchUrl(url); // url_launcher 패키지를 사용하여 링크를 엶
                                   } else {
-                                    throw 'Could not launch $url'; // 링크를 열 수 없는 경우 예외를 발생시킴
+                                    throw '$url 해당 url를 열 수 없습니다.'; // 링크를 열 수 없는 경우 예외를 발생시킴
                                   }
                                 },
                                 style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                                  foregroundColor: Color(0xFFE17735), // 버튼의 글자 색상을 설정함
-                                  backgroundColor: Color(0xFFE17735), // 버튼의 배경 색상을 설정함
+                                  foregroundColor: ORANGE56_COLOR, // 버튼의 글자 색상을 설정함
+                                  backgroundColor: ORANGE56_COLOR, // 버튼의 배경 색상을 설정함
                                   padding: EdgeInsets.symmetric(vertical: inquiryBtnPaddingY, horizontal: inquiryBtnPaddingX), // 패딩 설정
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -331,7 +324,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                     fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                     fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: Theme.of(context).scaffoldBackgroundColor, // 텍스트 색상 설정
+                                    color: WHITE_COLOR, // 텍스트 색상 설정
                                   ), // 텍스트 스타일
                                 ),
                               ),

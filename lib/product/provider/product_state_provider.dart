@@ -240,258 +240,6 @@ final autumnSubMainSortButtonProvider =
 final winterSubMainSortButtonProvider =
     StateProvider<String>((ref) => ''); // 기본값을 빈 문자열로 설정
 
-// 주석처리한 해당 프로바이더는 현재 사용하지 않는 부분
-// // -------- product_main_screen.dart 관련 ScrollControllerProvider 시작
-// // 2차 메인 화면-블라우스 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 blouseMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final blouseMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-가디건 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 cardiganMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final cardiganMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-코트 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 coatMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final coatMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-청바지 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 jeanMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final jeanMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-맨투맨 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 mtmMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final mtmMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-니트 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 neatMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final neatMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-원피스 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 onepieceMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final onepieceMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-패딩 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 paedingMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final paedingMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-팬츠 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 pantsMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final pantsMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-폴라티 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 polaMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final polaMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-티셔츠 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 shirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final shirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 2차 메인 화면-스커트 메인 화면
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final skirtMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-// // -------- product_main_screen.dart 관련 ScrollControllerProvider 끝
-//
-// // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 시작
-// // 신상 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 skirtMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final newSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 최고 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 bestSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final bestSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 할인 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 saleSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final saleSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 봄 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 springSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final springSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 여름 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 summerSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final summerSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 가을 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 autumnSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final autumnSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-//
-// // 겨울 서브 메인
-// // ScrollController를 프로바이더로 추가하는 코드
-// // 이 코드는 winterSubMainScrollControllerProvider라는 이름의 Provider를 정의함.
-// final winterSubMainScrollControllerProvider = Provider<ScrollController>((ref) {
-//   // ScrollController 객체를 생성함.
-//   final scrollController = ScrollController();
-//   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.
-//   // 이것은 메모리 누수를 방지하고 자원을 적절하게 해제하기 위함.
-//   ref.onDispose(scrollController.dispose);
-//   // 생성된 ScrollController 객체를 반환함.
-//   return scrollController;
-// });
-// // -------- product_sub_main_screen.dart 관련 ScrollControllerProvider 끝
-
 // ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트)과 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 기본 추상 클래스 시작
 // ------- BaseProductListNotifier 클래스 내용 구현 시작
 // 해당 내용은 추상 클래스이며, 해당 클래스를 다른 클래스에 오버라이드(extends 사용)를 하면 해당 클래스 기능은 그대로 사용하면서 추가되는 내용을 각기 적용 가능하므로, 이렇게 구성
@@ -562,37 +310,46 @@ abstract class BaseProductListNotifier
     if (_isFetching) return;
     // 페칭 상태를 true로 설정
     _isFetching = true;
+
     try {
-      // 상품 데이터를 페칭 (제한: 3개, 시작 문서: _lastDocument)
-      final products = await ref
-          .read(productRepositoryProvider(collectionNames))
-          .fetchProductContents(
-            limit: 3,
-            startAfter: isInitial ? null : _lastDocument,
-          );
+      for (String fullCollection in collectionNames) {
+        // `fullCollection` 문자열의 두 번째 문자부터 네 번째 문자까지 가져오도록 해서 'A'와 붙여서 조합한 문서 이름
+        String mainCollection = 'A' + fullCollection.substring(1, 4); // 예: Aaa10B1 -> Aaa10
+        String subCollection = fullCollection;
 
-      // 디버깅 출력 추가
-      // debugPrint('Fetched products count: ${products.length}');
-      // if (_lastDocument != null) {
-      //   debugPrint('Last document before fetch: ${_lastDocument!.id}');
-      // }
+        // CategoryProductsRepository 타입으로 분기하여 메인화면인 ProductMainListNotifier인 경우에는
+        // MainCategoryProductsRepository 인스턴스를 제공하는 mainProductRepositoryProvider를 불러오도록 함
+        // 섹션 더보기 화면인 SectionMoreProductListNotifier인 경우에는 SectionCategoryProductsRepository 인스턴스를 제공하는 sectionProductRepositoryProvider를 불러오도록 함
+        final CategoryProductsRepository repository = this is ProductMainListNotifier
+            ? ref.read(mainProductRepositoryProvider)
+            : ref.read(sectionProductRepositoryProvider);
 
-      // 페칭된 상품 데이터가 비어있지 않으면
-      if (products.isNotEmpty) {
-        // 마지막 문서를 업데이트
-        _lastDocument = products.last.documentSnapshot;
-        // debugPrint('Last document after fetch: ${_lastDocument!.id}');
-        // 상태를 초기화 또는 기존 상태에 추가
-        state = isInitial ? products : [...state, ...products];
-      } else {
-        // 초기화 시 비어있는 상태로 설정
-        if (isInitial) state = [];
+        final products = await repository.fetchProductContents(
+          mainCollection: mainCollection,
+          subCollection: subCollection,
+          limit: 3,
+          startAfter: isInitial ? null : _lastDocument,
+          boolExistence: true,
+        );
+
+        // 페칭된 상품 데이터가 비어있지 않으면
+        if (products.isNotEmpty) {
+          // 마지막 문서를 업데이트
+          _lastDocument = products.last.documentSnapshot;
+          // debugPrint('Last document after fetch: ${_lastDocument!.id}');
+          // 상태를 초기화 또는 기존 상태에 추가
+          state = isInitial ? products : [...state, ...products];
+          break; // 원하는 개수만큼 가져왔으면 중지
+        } else {
+          // 초기화 시 비어있는 상태로 설정
+          if (isInitial) state = [];
+        }
       }
       // 상품 데이터를 정렬
       _sortProducts();
     } catch (e) {
       // 에러 발생 시 디버깅 출력
-      debugPrint('Error fetching products: $e');
+      debugPrint('products 불러오는 중 에러 발생: $e');
     } finally {
       // 페칭 상태를 false로 설정
       _isFetching = false;
@@ -606,6 +363,7 @@ abstract class BaseProductListNotifier
     state = [];
     // 카테고리에 따른 컬렉션 이름 리스트를 얻음
     List<String> collectionNames = _getCollectionNames(category);
+    reset(); // 상태 초기화
     // 초기 상품 데이터를 페칭
     await _fetchProducts(isInitial: true, collectionNames: collectionNames);
   }
@@ -625,6 +383,15 @@ abstract class BaseProductListNotifier
     state = [];
     _lastDocument = null;
     _sortType = '';
+    // 현재 사용하는 레퍼지토리의 상태 초기화
+    final CategoryProductsRepository repository = this is ProductMainListNotifier
+    // 만약 현재 클래스가 ProductMainListNotifier 타입이라면,
+        ? ref.read(mainProductRepositoryProvider)
+    // mainProductRepositoryProvider를 사용하여 메인 제품 레퍼지토리를 불러옴.
+        : ref.read(sectionProductRepositoryProvider);
+    // 그렇지 않다면 sectionProductRepositoryProvider를 사용하여 섹션별 제품 레퍼지토리를 불러옴.
+    repository.reset();
+    // 불러온 레퍼지토리의 상태를 reset() 함수를 호출하여 초기화.
   }
 
   // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 추상 메서드
@@ -637,6 +404,7 @@ abstract class BaseProductListNotifier
 // ------- ProductMainListNotifier 클래스 내용 구현 시작
 // BaseProductListNotifier 클래스를 상속받는 ProductMainListNotifier 클래스 정의
 class ProductMainListNotifier extends BaseProductListNotifier {
+
   // 생성자를 정의, ref와 baseCollection을 부모 클래스에 전달
   ProductMainListNotifier(Ref ref, String baseCollection)
       : super(ref, baseCollection);
@@ -680,73 +448,73 @@ class ProductMainListNotifier extends BaseProductListNotifier {
 final blouseMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 블라우스 컬렉션
-  return ProductMainListNotifier(ref, 'a2b');
+  return ProductMainListNotifier(ref, 'Aaa2B');
 });
 
 final cardiganMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 가디건 컬렉션
-  return ProductMainListNotifier(ref, 'a12b');
+  return ProductMainListNotifier(ref, 'Aaa12B');
 });
 
 final coatMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 코트 컬렉션
-  return ProductMainListNotifier(ref, 'a11b');
+  return ProductMainListNotifier(ref, 'Aaa11B');
 });
 
 final jeanMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 청바지 컬렉션
-  return ProductMainListNotifier(ref, 'a8b');
+  return ProductMainListNotifier(ref, 'Aaa8B');
 });
 
 final mtmMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 맨투맨 컬렉션
-  return ProductMainListNotifier(ref, 'a3b');
+  return ProductMainListNotifier(ref, 'Aaa3B');
 });
 
 final neatMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 니트 컬렉션
-  return ProductMainListNotifier(ref, 'a4b');
+  return ProductMainListNotifier(ref, 'Aaa4B');
 });
 
 final onepieceMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 원피스 컬렉션
-  return ProductMainListNotifier(ref, 'a6b');
+  return ProductMainListNotifier(ref, 'Aaa6B');
 });
 
 final paedingMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 패딩 컬렉션
-  return ProductMainListNotifier(ref, 'a10b');
+  return ProductMainListNotifier(ref, 'Aaa10B');
 });
 
 final pantsMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 바지 컬렉션
-  return ProductMainListNotifier(ref, 'a7b');
+  return ProductMainListNotifier(ref, 'Aaa7B');
 });
 
 final polaMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 폴라티 컬렉션
-  return ProductMainListNotifier(ref, 'a5b');
+  return ProductMainListNotifier(ref, 'Aaa5B');
 });
 
 final shirtMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 셔츠 컬렉션
-  return ProductMainListNotifier(ref, 'a1b');
+  return ProductMainListNotifier(ref, 'Aaa1B');
 });
 
 final skirtMainProductListProvider =
     StateNotifierProvider<ProductMainListNotifier, List<ProductContent>>((ref) {
   // 스커트 컬렉션
-  return ProductMainListNotifier(ref, 'a9b');
+  return ProductMainListNotifier(ref, 'Aaa9B');
 });
 // ------- ProductMainListNotifier 클래스 내용 구현 끝
 // ------- 2차 메인 화면 (블라우스, 가디건, ~ 스커트) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
@@ -765,22 +533,22 @@ class SectionMoreProductListNotifier extends BaseProductListNotifier {
     // 카테고리별로 다른 컬렉션 이름 반환 (12개의 서브 컬렉션)
     switch (category) {
       case '신상':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B1');
       case '스테디 셀러':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b2');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B2');
       case '특가 상품':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b3');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B3');
       case '봄':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b4');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B4');
       case '여름':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b5');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B5');
       case '가을':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b6');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B6');
       case '겨울':
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b7');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B7');
       // 기본적으로 신상 컬렉션 반환
       default:
-        return List.generate(12, (index) => '${baseCollection}${index + 1}b1');
+        return List.generate(12, (index) => '${baseCollection}${index + 1}B1');
     }
   }
 }
@@ -791,49 +559,49 @@ final newSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 신상 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 
 final bestSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 최고 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 
 final saleSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 할인 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 
 final springSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 봄 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 
 final summerSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 여름 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 
 final autumnSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 가을 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 
 final winterSubMainProductListProvider =
     StateNotifierProvider<SectionMoreProductListNotifier, List<ProductContent>>(
         (ref) {
   // 겨울 섹션
-  return SectionMoreProductListNotifier(ref, 'a');
+  return SectionMoreProductListNotifier(ref, 'Aaa');
 });
 // ------- SectionMoreProductListNotifier 클래스 내용 구현 끝
 // ------- 섹션 더보기 화면 (신상, ~ 겨울)) 상품 데이터 불러오고 상태를 관리하는 클래스 (BaseProductListNotifier 추상 클래스를 오버라이드함-기능 상속받는 구조) 끝
@@ -887,13 +655,12 @@ class ImageNotifier extends StateNotifier<List<String>> {
 
       if (images.isNotEmpty) {
         currentIndex++;  // 이미지가 로드되면 인덱스를 증가시킴.
+        state = [...state, ...images]; // 새로 불러온 이미지를 기존 상태에 추가함.
 
         // 두 번째 페이지일 때 바로 '접기' 버튼을 표시하도록 설정
         if (currentIndex == 2) {
           showCollapseButton = true;
         }
-
-        state = [...state, ...images]; // 새로 불러온 이미지를 기존 상태에 추가함.
         print("ImageNotifier: 이미지 로드 성공, 현재 이미지 수: ${state.length}, 현재 인덱스: $currentIndex");
       } else {
         hasMore = false; // 불러올 이미지가 없으면 더 이상 로드하지 않도록 설정함.

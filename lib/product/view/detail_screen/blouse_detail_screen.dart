@@ -226,15 +226,15 @@ class _BlouseDetailProductScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double productDtAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
+    final double productDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productDtAppBarTitleX = screenSize.height * (78 / referenceHeight);
+    final double productDtAppBarTitleX = screenSize.height * (70 / referenceHeight);
     final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double productDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
     final double productDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double productDtChevronIconX = screenSize.width * (12 / referenceWidth);
+    final double productDtChevronIconX = screenSize.width * (10 / referenceWidth);
     final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
 
     //  업데이트 요청 목록 버튼 수치 (Case 4)
@@ -255,12 +255,17 @@ class _BlouseDetailProductScreenState
     final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
     final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(blouseDetailProdFirestoreDataProvider(widget.fullPath));
     final productReviews = ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
 
-    print("BlouseDetailProductScreen: Loading screen for product path: ${widget.fullPath}"); // 디버깅 메시지 추가
+    print("BlouseDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
 
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
@@ -297,6 +302,7 @@ class _BlouseDetailProductScreenState
                     // 참조(ref) 전달
                     title: widget.title,
                     // AppBar의 제목을 '블라우스 상세'로 설정
+                    fontFamily: 'NanumGothic',
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
                     buttonCase: 4, // 버튼 케이스를 4로 설정
@@ -339,14 +345,14 @@ class _BlouseDetailProductScreenState
                         children: [
                           productContent.when(
                             data: (product) {
-                              print("BlouseDetailProductScreen: Product data loaded"); // 디버깅 메시지 추가
+                              print("BlouseDetailProductScreen: 제품 데이터 로드 완료"); // 디버깅 메시지 추가
                               return Column(
                                 children: [
                                   buildProdDetailScreenContents(context, ref, product, pageController),
                                   // ProductDetailScreenTabs를 사용하여 탭을 생성하고 리뷰 데이터를 전달
                                   productReviews.when(
                                     data: (reviewsContent) {
-                                      print("BlouseDetailProductScreen: Loaded ${reviewsContent.length} reviews"); // 디버깅 메시지 추가
+                                      print("BlouseDetailProductScreen: ${reviewsContent.length} reviews가 로드됨"); // 디버깅 메시지 추가
                                       return ProductDetailScreenTabs(
                                         productInfoContent: ProductInfoContents(
                                           fullPath: widget.fullPath,
@@ -355,20 +361,43 @@ class _BlouseDetailProductScreenState
                                         inquiryContent: ProductInquiryContents(),
                                       );
                                     },
-                                    loading: () => CircularProgressIndicator(),
-                                    error: (error, _) {
-                                      print("BlouseDetailProductScreen: Error loading reviews: $error"); // 오류 메시지 추가
-                                      return Text('오류 발생: $error');
-                                    },
+                                    loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+                                    error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+                                      height: errorTextHeight, // 전체 화면 높이 설정
+                                      alignment: Alignment.center, // 중앙 정렬
+                                      child: buildCommonErrorIndicator(
+                                        message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+                                        secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+                                        fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                                        fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                                        color: BLACK_COLOR, // 색상 설정
+                                        showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                                      ),
+                                    ),
                                   ),
+                                  // 로딩 인디케이터를 표시 (로그아웃 후 재로그인 시, 로딩 표시가 안나오도록 추가 설정)
+                                  if (ref.watch(imagesProvider(widget.fullPath)).isEmpty && ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: buildCommonLoadingIndicator()),
+                                    ),
                                 ],
                               );
                             },
-                            loading: () => Center(child: CircularProgressIndicator()),
-                            error: (error, _) {
-                              print("BlouseDetailProductScreen: Error loading product data: $error"); // 오류 메시지 추가
-                              return Center(child: Text('오류 발생: $error'));
-                            },
+                            loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+                            error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+                              height: errorTextHeight, // 전체 화면 높이 설정
+                              alignment: Alignment.center, // 중앙 정렬
+                              child: buildCommonErrorIndicator(
+                                message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+                                secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+                                fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+                                fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+                                color: BLACK_COLOR, // 색상 설정
+                                showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                              ),
+                            ),
                           ),
                         ],
                       );

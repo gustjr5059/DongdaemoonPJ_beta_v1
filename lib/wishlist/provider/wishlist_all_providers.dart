@@ -17,27 +17,28 @@ final wishlistItemRepositoryProvider = Provider((ref) => WishlistItemRepository(
 final wishlistItemsLoadFutureProvider = FutureProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, userEmail) async {
 
   // Firestore에서 찜 목록 데이터를 불러오기 시작함을 출력함.
-  print('Firestore에서 찜 목록 데이터를 불러오기 시작함');
+  print('Firestore에서 찜 목록 데이터를 불러오기 시작');
 
   // WishlistItemRepository 인스턴스를 가져옴.
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  print('WishlistItemRepository 인스턴스 획득 완료');
 
-  // Firestore의 'couture_wishlist_item' 컬렉션 내에서 해당 사용자의 찜 목록 데이터를 불러옴.
+  // Firestore의 'wearcano_wishlist_item' 컬렉션 내에서 해당 사용자의 찜 목록 데이터를 불러옴.
   // 최신 항목이 위로 오도록 timestamp 기준으로 내림차순 정렬함.
   final wishlistSnapshot = await wishlistRepository.firestore
-      .collection('wishlist_item')
+      .collection('wearcano_wishlist_item')
       .doc(userEmail)
       .collection('items')
       .orderBy('timestamp', descending: true)
       .get();
 
-  // 찜 목록 데이터를 처리하는 로직을 알림.
-  print('WishlistItemRepository 인스턴스를 가져옴');
+  // Firestore에서 데이터를 불러왔음을 알림
+  print('Firestore에서 찜 목록 데이터 획득 - 항목 수: ${wishlistSnapshot.docs.length}개');
 
   // Firestore에서 불러온 데이터를 map 함수를 사용하여 변환함.
   return wishlistSnapshot.docs.map((doc) {
     // 각 찜 목록 항목의 데이터를 변환함을 출력함.
-    print('각 찜 항목의 데이터를 변환함: product_id = ${doc['product_id']}');
+    print('찜 목록 항목 데이터 변환 - product_id: ${doc['product_id']}');
 
     // 찜 목록의 각 항목의 데이터를 Map 형식으로 반환함.
     return {
@@ -56,23 +57,30 @@ final wishlistItemsLoadFutureProvider = FutureProvider.autoDispose.family<List<M
 final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, userEmail) {
 
   // Firestore의 실시간 데이터 스트림 구독을 시작함을 출력함.
-  print('Firestore 실시간 데이터 스트림 구독 시작함');
+  print('Firestore 실시간 데이터 스트림 구독 시작');
 
   // WishlistItemRepository 인스턴스를 가져옴.
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  print('WishlistItemRepository 인스턴스 획득 완료');
 
-  // Firestore의 'couture_wishlist_item' 컬렉션 내 해당 사용자의 찜 목록 데이터를 실시간으로 스트리밍함.
+  // Firestore의 'wearcano_wishlist_item' 컬렉션 내 해당 사용자의 찜 목록 데이터를 실시간으로 스트리밍함.
   // timestamp 기준으로 내림차순 정렬하여 최신 항목을 먼저 불러옴.
   return wishlistRepository.firestore
-      .collection('wishlist_item')
+      .collection('wearcano_wishlist_item')
       .doc(userEmail)
       .collection('items')
       .orderBy('timestamp', descending: true)
       .snapshots()
       .map((snapshot) {
 
+    // 실시간으로 가져온 데이터 개수를 출력함.
+    print('실시간 찜 목록 업데이트 - 항목 수: ${snapshot.docs.length}개');
+
     // 실시간으로 가져온 데이터를 map 함수로 변환하여 반환함.
     return snapshot.docs.map((doc) {
+      // 각 항목을 변환할 때 product_id와 관련 정보를 출력함.
+      print('실시간 데이터 항목 변환 - product_id: ${doc['product_id']}');
+
       // Firestore에서 가져온 데이터를 Map 형식으로 반환함.
       return {
         'product_id': doc['product_id'],

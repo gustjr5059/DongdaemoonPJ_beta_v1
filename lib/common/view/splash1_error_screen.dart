@@ -76,7 +76,7 @@ class _SplashErrorScreenState extends State<SplashErrorScreen1>
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold,
                   fontSize: errorTextFontSize,
-                  color: Colors.red,
+                  color: RED46_COLOR,
                 ),
               ),
             ),

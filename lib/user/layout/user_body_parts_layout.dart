@@ -71,13 +71,18 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
     final double interval3X = screenSize.width * (120 / referenceWidth); // 가로 간격 3 계산
 
+    // 에러 관련 텍스트 수치
+    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+
     final userInfoAsyncValue = ref.watch(userInfoProvider(email)); // userInfoProvider를 통해 유저 정보를 가져옴
 
     return userInfoAsyncValue.when( // 유저 정보의 상태에 따라 반환할 위젯을 설정함
       data: (userInfo) { // 데이터가 로드되었을 경우 실행됨
-        final name = userInfo?['name'] ?? '-'; // 이름 정보를 가져오고, 없으면 '-'로 설정함
-        final email = userInfo?['email'] ?? '-'; // 이메일 정보를 가져오고, 없으면 '-'로 설정함
-        final phoneNumber = userInfo?['phone_number'] ?? '-'; // 전화번호 정보를 가져오고, 없으면 '-'로 설정함
+        final name = userInfo?['name'] ?? ''; // 이름 정보를 가져오고, 없으면 ''로 설정함
+        final email = userInfo?['email'] ?? ''; // 이메일 정보를 가져오고, 없으면 ''로 설정함
+        final phoneNumber = userInfo?['phone_number'] ?? ''; // 전화번호 정보를 가져오고, 없으면 ''로 설정함
 
         // // 클립 위젯을 사용하여 모서리를 둥글게 설정함
         // return ClipRRect(
@@ -89,7 +94,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
             // color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
               ),
             ),
             child: CommonCardView( // 공통 카드뷰 위젯 사용
@@ -106,7 +111,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                         fontSize: userInfoCardViewTitleFontSize, // 텍스트 크기 설정
                         fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                         fontFamily: 'NanumGothic', // 글꼴 설정
-                        color: Colors.black, // 텍스트 색상 설정
+                        color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
                     ),
                     SizedBox(height: interval1Y), // 간격 설정
@@ -133,8 +138,8 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                               }
                             },
                             style: ElevatedButton.styleFrom( // 버튼 스타일 설정
-                              foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
-                              backgroundColor: Color(0xFFE17735), // 버튼 배경색 설정
+                              foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
+                              backgroundColor: ORANGE56_COLOR, // 버튼 배경색 설정
                               padding: EdgeInsets.symmetric(vertical: uesrInfoModifyBtnPaddingY, horizontal: uesrInfoModifyBtnPaddingX), // 패딩 설정
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -145,7 +150,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                                 fontSize: uesrInfoModifyBtnFontSize, // 텍스트 크기 설정
                                 fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                 fontFamily: 'NanumGothic', // 글꼴 설정
-                                color: Colors.white, // 텍스트 색상 설정
+                                color: WHITE_COLOR, // 텍스트 색상 설정
                               ),
                             ),
                           ),
@@ -162,9 +167,9 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                               );
                             },
                             style: ElevatedButton.styleFrom( // 버튼 스타일 설정
-                              foregroundColor: Color(0xFFE17735), // 텍스트 색상 설정
+                              foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
                               backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                              side: BorderSide(color: Color(0xFFE17735),
+                              side: BorderSide(color: ORANGE56_COLOR,
                               ), // 버튼 테두리 색상 설정
                               padding: EdgeInsets.symmetric(vertical: logoutBtnPaddingY, horizontal: logoutBtnPaddingX), // 패딩 설정
                               shape: RoundedRectangleBorder(
@@ -176,7 +181,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                                 fontSize: logoutBtnFontSize, // 텍스트 크기 설정
                                 fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                 fontFamily: 'NanumGothic', // 글꼴 설정
-                                color: Color(0xFFE17735), // 텍스트 색상 설정
+                                color: ORANGE56_COLOR, // 텍스트 색상 설정
                               ),
                             ),
                           ),
@@ -189,8 +194,19 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
             ),
         );
       },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 로딩 위젯을 표시함
-      error: (error, stack) => Center(child: Text('Error: $error')), // 오류 발생 시 오류 메시지를 표시함
+      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+        height: errorTextHeight, // 전체 화면 높이 설정
+        alignment: Alignment.center, // 중앙 정렬
+        child: buildCommonErrorIndicator(
+          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
+          color: BLACK_COLOR, // 색상 설정
+          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
     );
   }
 
@@ -209,11 +225,11 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
             fontSize: uesrInfoTextFontSize, // 레이블 텍스트 크기 설정
             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
             fontFamily: 'NanumGothic', // 글꼴 설정
-            color: Color(0xFF676767), // 색상 설정
+            color: GRAY41_COLOR, // 색상 설정
           ),
         ),
         Expanded( // 남은 공간을 차지하는 위젯
-          child: Text(value), // 유저 정보 텍스트 표시
+          child: Text(value ?? ''), // 유저 정보 텍스트 표시
         ),
       ],
     );
@@ -352,7 +368,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
             padding: EdgeInsets.symmetric(horizontal: 0, vertical: optionTitleY), // 상하 패딩 설정
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 설정함
+                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
               ),
             ),
             child: Row( // 아이콘, 타이틀, 화살표 이미지를 한 줄로 배치함
@@ -372,7 +388,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                         fontSize: iconTextFontSize, // 텍스트 크기 설정
                         fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                         fontFamily: 'NanumGothic', // 글꼴 설정
-                        color: Colors.black, // 텍스트 색상 설정
+                        color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
                     ),
                   ],
