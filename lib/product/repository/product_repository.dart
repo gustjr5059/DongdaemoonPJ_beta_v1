@@ -38,8 +38,10 @@ class NewProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -132,8 +134,10 @@ class BestProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -226,8 +230,10 @@ class SaleProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -320,8 +326,10 @@ class SpringProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -415,8 +423,10 @@ class SummerProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -510,8 +520,10 @@ class AutumnProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -605,8 +617,10 @@ class WinterProductRepository {
         currentCollectionIndex < collections.length) {
       String currentCollection =
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
-      // `currentCollection` 문자열의 세 번째 문자부터 네번째 문자까지 가져오도록 해서 'Aa'와 붙여서 조합한 문서 이름
-      String mainCollection = 'Aa' + currentCollection.substring(2, 4); // 예: Aaa10B1 -> Aaa10
+      // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
+      String mainCollection = currentCollection.length == 7
+          ? 'Aa' + currentCollection.substring(2, 5)
+          : 'Aa' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동

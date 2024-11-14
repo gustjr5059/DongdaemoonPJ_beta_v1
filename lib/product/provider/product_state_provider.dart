@@ -271,6 +271,7 @@ abstract class BaseProductListNotifier
   // 정렬 타입을 설정하는 setter 정의
   set sortType(String value) {
     _sortType = value;
+    debugPrint('정렬 타입 설정됨: $_sortType');
     _sortProducts();
   }
 
@@ -278,6 +279,8 @@ abstract class BaseProductListNotifier
   void _sortProducts() {
     // 상태를 복사하여 새로운 리스트에 저장
     List<ProductContent> sortedProducts = [...state];
+    debugPrint('정렬 시작. 현재 상태의 상품 수: ${state.length}');
+
     // 가격 높은 순 정렬
     if (_sortType == '가격 높은 순') {
       sortedProducts
@@ -295,6 +298,8 @@ abstract class BaseProductListNotifier
       sortedProducts
           .sort((a, b) => a.discountPercent!.compareTo(b.discountPercent!));
     }
+
+    debugPrint('정렬 완료. 정렬된 상품 목록: $sortedProducts');
     // 상태를 정렬된 리스트로 업데이트
     state = sortedProducts;
   }
@@ -307,15 +312,24 @@ abstract class BaseProductListNotifier
     required List<String> collectionNames,
   }) async {
     // 이미 페칭 중이면 리턴
-    if (_isFetching) return;
+    if (_isFetching) {
+      debugPrint('현재 페칭 중이므로 새로운 페칭을 중단합니다.');
+      return;
+    }
     // 페칭 상태를 true로 설정
     _isFetching = true;
+    debugPrint('상품 데이터 페칭 시작. 초기화 여부: $isInitial');
 
     try {
       for (String fullCollection in collectionNames) {
-        // `fullCollection` 문자열의 두 번째 문자부터 네 번째 문자까지 가져오도록 해서 'A'와 붙여서 조합한 문서 이름
-        String mainCollection = 'A' + fullCollection.substring(1, 4); // 예: Aaa10B1 -> Aaa10
+        // 한 자리 숫자는 substring(1, 4), 두 자리 숫자는 substring(1, 5) 사용
+        String mainCollection = fullCollection.length == 7
+            ? 'A' + fullCollection.substring(1, 5)
+            : 'A' + fullCollection.substring(1, 4);
+
         String subCollection = fullCollection;
+
+        debugPrint('현재 컬렉션: $mainCollection, 서브 컬렉션: $subCollection');
 
         // CategoryProductsRepository 타입으로 분기하여 메인화면인 ProductMainListNotifier인 경우에는
         // MainCategoryProductsRepository 인스턴스를 제공하는 mainProductRepositoryProvider를 불러오도록 함
@@ -336,11 +350,12 @@ abstract class BaseProductListNotifier
         if (products.isNotEmpty) {
           // 마지막 문서를 업데이트
           _lastDocument = products.last.documentSnapshot;
-          // debugPrint('Last document after fetch: ${_lastDocument!.id}');
+          debugPrint('가져온 문서 수: ${products.length}, 마지막 문서 ID: ${_lastDocument?.id}');
           // 상태를 초기화 또는 기존 상태에 추가
           state = isInitial ? products : [...state, ...products];
           break; // 원하는 개수만큼 가져왔으면 중지
         } else {
+          debugPrint('컬렉션 $fullCollection 에서 더 이상 가져올 데이터가 없습니다.');
           // 초기화 시 비어있는 상태로 설정
           if (isInitial) state = [];
         }
@@ -353,11 +368,13 @@ abstract class BaseProductListNotifier
     } finally {
       // 페칭 상태를 false로 설정
       _isFetching = false;
+      debugPrint('상품 데이터 페칭 완료.');
     }
   }
 
   // 초기 상품 데이터를 페칭하는 메서드 정의
   Future<void> fetchInitialProducts(String category) async {
+    debugPrint('초기 상품 데이터 페칭 시작. 카테고리: $category');
     // 마지막 문서와 상태를 초기화
     _lastDocument = null;
     state = [];
@@ -366,20 +383,27 @@ abstract class BaseProductListNotifier
     reset(); // 상태 초기화
     // 초기 상품 데이터를 페칭
     await _fetchProducts(isInitial: true, collectionNames: collectionNames);
+    debugPrint('초기 상품 데이터 페칭 완료. 상태의 상품 수: ${state.length}');
   }
 
   // 더 많은 상품 데이터를 페칭하는 메서드 정의
   Future<void> fetchMoreProducts(String category) async {
     // 이미 페칭 중이거나 마지막 문서가 없으면 리턴
-    if (_isFetching || _lastDocument == null) return;
+    if (_isFetching || _lastDocument == null) {
+      debugPrint('추가 상품 데이터를 불러올 수 없는 상태입니다.');
+      return;
+    }
+    debugPrint('추가 상품 데이터 페칭 시작. 카테고리: $category');
     // 카테고리에 따른 컬렉션 이름 리스트를 얻음
     List<String> collectionNames = _getCollectionNames(category);
     // 추가 상품 데이터를 페칭
     await _fetchProducts(collectionNames: collectionNames);
+    debugPrint('추가 상품 데이터 페칭 완료. 상태의 상품 수: ${state.length}');
   }
 
   // 상태와 변수들을 초기화하는 메서드 정의
   void reset() {
+    debugPrint('상태 초기화 시작.');
     state = [];
     _lastDocument = null;
     _sortType = '';
@@ -392,6 +416,7 @@ abstract class BaseProductListNotifier
     // 그렇지 않다면 sectionProductRepositoryProvider를 사용하여 섹션별 제품 레퍼지토리를 불러옴.
     repository.reset();
     // 불러온 레퍼지토리의 상태를 reset() 함수를 호출하여 초기화.
+    debugPrint('상태 초기화 완료.');
   }
 
   // 카테고리에 따른 컬렉션 이름 리스트를 반환하는 추상 메서드
