@@ -237,7 +237,7 @@ class _OrderListDetailScreenState
                 child: Container(
                   width: orderlistEmptyTextWidth,
                   height: orderlistEmptyTextHeight,
-                  margin: EdgeInsets.only(left: orderlistEmptyTextX, top: orderlistEmptyTextY),
+                  margin: EdgeInsets.only(top: orderlistEmptyTextY),
                   // 텍스트를 중앙에 위치하도록 설정함.
                   alignment: Alignment.center,
                   child: Text(

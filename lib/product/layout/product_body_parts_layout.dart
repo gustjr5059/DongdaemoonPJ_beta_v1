@@ -1740,7 +1740,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
           Padding(
             padding: EdgeInsets.only(top: section1Y), // 상단 패딩을 section1Y로 설정
             child: Text(
-              '${product.originalPrice != null ? product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : 0}원', // 원래 가격을 표시, 소수점 없음
+              '${product.originalPrice != null ? product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원', // 원래 가격을 표시, 소수점 없음
               style: TextStyle(
                 fontSize: productOriginalPriceFontSize,
                 decoration: TextDecoration.lineThrough,
@@ -1760,7 +1760,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
             child: Row(
               children: [
                 Text(
-                  '${product.discountPrice != null ? product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : 0}원',
+                  '${product.discountPrice != null ? product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원',
                   // 할인된 가격을 표시, 소수점 없음
                   style: TextStyle(
                     fontSize: productDiscountPriceFontSize,
@@ -1774,7 +1774,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                 if (product.discountPercent !=
                     null) // discountPercent가 null이 아닌 경우에만 표시
                   Text(
-                    '${product.discountPercent != null ? product.discountPercent!.toStringAsFixed(0) : 0}%',
+                    '${product.discountPercent != null ? product.discountPercent!.toStringAsFixed(0) : ''}%',
                     // 할인율을 표시, 소수점 없음
                     // 할인율을 표시, 소수점 없음
                     style: TextStyle(
@@ -2039,7 +2039,7 @@ Widget buildProductAllCountAndPriceSelection(
   // 할인된 가격을 가져오고, 없으면 0을 설정.
   double discountPrice = product.discountPrice ?? 0;
   // 총 가격을 계산.
-  double totalPrice = discountPrice * quantity;
+  double totalPrice = (discountPrice * quantity).isNaN ? 0 : discountPrice * quantity;
   // 상품 최대 수량
   final maxStockQuantity = 10001;
 
@@ -2218,7 +2218,7 @@ Widget buildProductAllCountAndPriceSelection(
                   width: width7X,
                   alignment: Alignment.center,
                   child: Text(
-                    '${quantity != null ? quantity!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : 1}',
+                    quantity != null ? quantity!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : '',
                     style: TextStyle(
                       fontSize: selectedCountTextSize,
                       fontWeight: FontWeight.bold,
@@ -2347,7 +2347,7 @@ Widget buildProductAllCountAndPriceSelection(
         padding:
             EdgeInsets.symmetric(horizontal: sectionX, vertical: section2Y),
         child: Text(
-          '총 가격 : ${totalPrice != null ? totalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : 0}원',
+          '총 가격 : ${totalPrice != null ? totalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원',
           style: TextStyle(
             fontFamily: 'NanumGothic',
             fontSize: selectedAllPriceTextSize,

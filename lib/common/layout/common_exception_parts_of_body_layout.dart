@@ -872,7 +872,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '합계: ${totalSelectedPrice != null ? numberFormat.format(totalSelectedPrice) : 0}원',
+                        '합계: ${totalSelectedPrice != null ? numberFormat.format(totalSelectedPrice) : ''}원',
                         style: TextStyle(
                           fontSize: bottomTextFontSize,
                           fontWeight: FontWeight.bold,

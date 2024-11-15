@@ -330,7 +330,7 @@ class WishlistItemsList extends ConsumerWidget {
                                           children: [
                                             // 상품의 원래 가격 텍스트를 표시함
                                             Text(
-                                              '${originalPrice != null ? numberFormat.format(originalPrice) : 0}원',
+                                              '${originalPrice != null ? numberFormat.format(originalPrice) : ''}원',
                                               style: TextStyle(
                                                 fontSize: wishlistOriginalPriceFontSize,
                                                 fontWeight: FontWeight.bold,
@@ -342,7 +342,7 @@ class WishlistItemsList extends ConsumerWidget {
                                             SizedBox(width: wishlist2X),
                                             // 상품 할인율 텍스트를 표시함
                                             Text(
-                                              '${wishlistItem['discount_percent']?.round() ?? 0}%',
+                                              '${wishlistItem['discount_percent']?.round() ?? ''}%',
                                               style: TextStyle(
                                                 fontSize: wishlistDiscountPercentFontSize,
                                                 fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
@@ -354,7 +354,7 @@ class WishlistItemsList extends ConsumerWidget {
                                         ),
                                         // 상품 할인가 텍스트를 표시함
                                         Text(
-                                          '${discountPrice != null ? numberFormat.format(discountPrice) : 0}원',
+                                          '${discountPrice != null ? numberFormat.format(discountPrice) : ''}원',
                                           style: TextStyle(
                                             fontSize: wishlistDiscountPriceFontSize,
                                             fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함

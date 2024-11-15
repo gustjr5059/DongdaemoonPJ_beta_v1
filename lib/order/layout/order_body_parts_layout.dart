@@ -1383,11 +1383,11 @@ class TotalPaymentWidget extends StatelessWidget {
           ),
           SizedBox(height: priceInfo1Y), // 텍스트와 테이블 사이에 16 픽셀 높이의 여백 추가
           _buildInfoRow(context, '총 상품금액',
-              '${totalProductPrice != null ? numberFormat.format(totalProductPrice) : 0}원'),
+              '${totalProductPrice != null ? numberFormat.format(totalProductPrice) : ''}원'),
           _buildInfoRow(context, '상품 할인금액',
-              '-${productDiscountPrice != null ? numberFormat.format(productDiscountPrice) : 0}원'),
+              '-${productDiscountPrice != null ? numberFormat.format(productDiscountPrice) : ''}원'),
           _buildInfoRow(context, '총 결제금액',
-              '${totalPaymentPrice != null ? numberFormat.format(totalPaymentPrice) : 0}원',
+              '${totalPaymentPrice != null ? numberFormat.format(totalPaymentPrice) : ''}원',
               isTotal: true),
         ],
       ),
@@ -2237,7 +2237,7 @@ class _OrderListDetailItemWidgetState
                 .isNotEmpty ==
             true
         ? (widget.order!['amountInfo']['total_product_price'] as num).toDouble()
-        : 0.0;
+        : 0;
     final productDiscountPrice = widget.order!['amountInfo']
                     ['product_discount_price']
                 ?.toString()
@@ -2245,13 +2245,13 @@ class _OrderListDetailItemWidgetState
             true
         ? (widget.order!['amountInfo']['product_discount_price'] as num)
             .toDouble()
-        : 0.0;
+        : 0;
     final totalPaymentPrice = widget.order!['amountInfo']['total_payment_price']
                 ?.toString()
                 .isNotEmpty ==
             true
         ? (widget.order!['amountInfo']['total_payment_price'] as num).toDouble()
-        : 0.0;
+        : 0;
 
     // 수령자 정보가 null인지 확인하고 각 필드를 안전하게 접근함
     final recipientInfo = widget.order!['recipientInfo'] ?? {};
@@ -2688,7 +2688,7 @@ class _OrderListDetailItemWidgetState
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : 0.0)}원',
+                                              '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : '')}원',
                                               style: TextStyle(
                                                 fontSize:
                                                     orderlistDtInfoOriginalPriceDataFontSize,
@@ -2701,7 +2701,7 @@ class _OrderListDetailItemWidgetState
                                             Row(
                                               children: [
                                                 Text(
-                                                  '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : 0.0)}원',
+                                                  '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : '')}원',
                                                   style: TextStyle(
                                                     fontSize:
                                                         orderlistDtInfoDiscountPriceDataFontSize,
@@ -2712,7 +2712,7 @@ class _OrderListDetailItemWidgetState
                                                 ),
                                                 SizedBox(width: interval2X),
                                                 Text(
-                                                  '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : 0.0).toInt()}%',
+                                                  '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : '')}%',
                                                   style: TextStyle(
                                                     fontSize:
                                                         orderlistDtInfoDiscountPercentDataFontSize,

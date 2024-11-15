@@ -161,10 +161,16 @@ class CartItemsList extends ConsumerWidget {
         final int discountPrice = cartItem['discount_price']?.round() ?? 0;
         // 선택된 상품의 수량을 가져옴, 값이 없을 경우 빈 값으로 설정
         final int selectedCount = cartItem['selected_count'] ?? 1;
-        // 원래 가격에 선택된 수량을 곱한 값을 계산
-        final int totalOriginalPrice = originalPrice * selectedCount;
-        // 할인 가격에 선택된 수량을 곱한 값을 계산
-        final int totalDiscountPrice = discountPrice * selectedCount;
+        // 원래 가격에 선택된 수량을 곱한 값을 계산, 값이 없을 경우 빈 값으로 설정
+        final dynamic totalOriginalPrice =
+        (originalPrice is int && selectedCount is int)
+            ? originalPrice * selectedCount
+            : 0;
+        // 할인 가격에 선택된 수량을 곱한 값을 계산, 값이 없을 경우 빈 값으로 설정
+        final dynamic totalDiscountPrice =
+        (discountPrice is int && selectedCount is int)
+            ? discountPrice * selectedCount
+            : 0;
 
         // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장
         final product = ProductContent(
@@ -347,7 +353,7 @@ class CartItemsList extends ConsumerWidget {
                           children: [
                             // 원래 가격을 취소선과 함께 표시함
                             Text(
-                              '${totalOriginalPrice != null ? numberFormat.format(totalOriginalPrice) : 0}원',
+                              '${totalOriginalPrice != null ? numberFormat.format(totalOriginalPrice) : ''}원',
                               style: TextStyle(
                                 fontSize: cartlistOriginalPriceFontSize,
                                 fontFamily: 'NanumGothic',
@@ -359,7 +365,7 @@ class CartItemsList extends ConsumerWidget {
                               children: [
                                 // 할인 가격을 Bold체로 표시함
                                 Text(
-                                  '${totalDiscountPrice != null ? numberFormat.format(totalDiscountPrice) : 0}원',
+                                  '${totalDiscountPrice != null ? numberFormat.format(totalDiscountPrice) : ''}원',
                                   style: TextStyle(
                                     fontSize: cartlistDiscountPriceFontSize,
                                     fontFamily: 'NanumGothic',
@@ -370,7 +376,7 @@ class CartItemsList extends ConsumerWidget {
                                 SizedBox(width: cartlist2X),
                                 // 할인 퍼센트를 빨간색으로 Bold체로 표시함
                                 Text(
-                                  '${cartItem['discount_percent']?.round() ?? 0}%',
+                                  '${cartItem['discount_percent']?.round() ?? ''}%',
                                   style: TextStyle(
                                     fontSize: cartlistDiscountPercentFontSize,
                                     fontFamily: 'NanumGothic',
@@ -454,7 +460,7 @@ class CartItemsList extends ConsumerWidget {
                           width: cartlistUpdateItemQuantityWidth, // 수량 표시 넓이
                           alignment: Alignment.center, // 텍스트를 중앙에 정렬함
                           child: Text(
-                            '${numberFormat.format(cartItem['selected_count'] ?? 1)}', // 선택된 수량을 형식에 맞게 표시함
+                            numberFormat.format(cartItem['selected_count'] ?? ''), // 선택된 수량을 형식에 맞게 표시함
                             style: TextStyle(
                               fontSize: cartlistUpdateItemQuantityBtnFontSize, // 텍스트 크기 설정
                               fontFamily: 'NanumGothic', // 폰트 설정

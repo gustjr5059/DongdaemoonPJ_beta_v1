@@ -488,7 +488,7 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
   final double topBarX = screenSize.width * (22 / referenceWidth); // X
-  final double topBarY = screenSize.height * (170 / referenceHeight); // Y
+  final double topBarY = screenSize.height * (200 / referenceHeight); // Y
 
   return Positioned(
     top: screenSize.height - topBarY, // 화면 하단에서 topBarY 위로 위치
