@@ -482,22 +482,22 @@ class _BestSubMainScreenState extends ConsumerState<BestSubMainScreen>
                                 SectionMoreProductListNotifier>(
                               productListProvider:
                               bestSubMainProductListProvider,
-                              // 최고 제품 리스트 프로바이더 전달
+                              // 스테디 셀러 제품 리스트 프로바이더 전달
                               sortButtonProvider:
-                              bestSubMainSortButtonProvider, // 최고 정렬 버튼 프로바이더 전달
+                              bestSubMainSortButtonProvider, // 스테디 셀러 정렬 버튼 프로바이더 전달
                             ),
                             // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: interval1Y),
                             // GeneralProductList 위젯을 생성, SectionMoreProductListNotifier를 사용
                             GeneralProductList<SectionMoreProductListNotifier>(
-                              // 스크롤 컨트롤러를 설정 (최고 섹션의 스크롤 컨트롤러)
+                              // 스크롤 컨트롤러를 설정 (스테디 셀러 섹션의 스크롤 컨트롤러)
                               scrollController:
                               bestSubMainScreenPointScrollController,
-                              // 상품 리스트 프로바이더를 설정 (최고 섹션의 상품 리스트 프로바이더)
+                              // 상품 리스트 프로바이더를 설정 (스테디 셀러 섹션의 상품 리스트 프로바이더)
                               productListProvider:
                               bestSubMainProductListProvider,
-                              // 카테고리를 '최고'로 설정
-                              category: '최고',
+                              // 카테고리를 '스테디 셀러'로 설정
+                              category: '스테디 셀러',
                             ),
                             SizedBox(height: interval1Y),
                             // interval1Y의 높이를 가진 간격 추가
