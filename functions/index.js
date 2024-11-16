@@ -132,7 +132,7 @@ function formatNumber(number) { // 숫자를 포맷팅하는 함수.
 //// ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
 
 // Firestore 문서 생성 시 이메일 발송 함수 - Couture 버전
-exports.coutureSendOrderEmail = functions.firestore
+exports.coutureSendOrderEmail = functions.region('asia-northeast3').firestore
   .document('couture_order_list/{userId}/orders/{order_number}') // Firestore의 order_list/{userId}/orders/{order_number} 문서 생성 시 트리거됨.
   .onCreate(async (snap, context) => { // 문서 생성 이벤트 핸들러를 비동기로 정의.
     const userId = context.params.userId; // URL 파라미터에서 userId를 가져옴.
