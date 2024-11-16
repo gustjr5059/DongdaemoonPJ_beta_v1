@@ -251,7 +251,14 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
             Container(
               height: updateRequireCompleteInfoTextPartHeight,
               width: updateRequireCompleteInfoTextPartWidth,
-              color: GRAY96_COLOR, // 배경 색상 설정
+              // 라벨 셀의 너비 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               child: Text(
                 label,
@@ -266,7 +273,14 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
             SizedBox(width: updateRequireCompleteInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY96_COLOR,
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius:
+                  BorderRadius.circular(6),
+                ),
                 padding: EdgeInsets.only(left: updateRequireCompleteInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(

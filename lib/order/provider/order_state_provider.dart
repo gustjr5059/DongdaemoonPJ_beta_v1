@@ -62,6 +62,20 @@ class OrderItemsNotifier extends StateNotifier<List<ProductContent>> {
     state = items;
   }
 }
+
+// 발주 화면 내 수령방식 선택 부분 정보 관련 상태 프로바이더
+final deliveryMethodSelectProvider = StateNotifierProvider<DeliveryMethodSelectNotifier, String>((ref) {
+  return DeliveryMethodSelectNotifier();
+});
+
+// 발주 화면 내 수령방식 선택 부분 정보 관련 DeliveryMethodNotifier 클래스
+class DeliveryMethodSelectNotifier extends StateNotifier<String> {
+  DeliveryMethodSelectNotifier() : super('현장수령'); // 기본값은 '현장수령'
+
+  void selectMethod(String method) {
+    state = method;
+  }
+}
 // ------- order_screen.dart - 발주 화면 내용 데이터 처리 로직 끝 부분
 
 // ------- order_list_screen.dart - 발주 내역 화면 내용 데이터 처리 로직 시작 부분

@@ -124,6 +124,7 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
   body += `<table border="1" cellpadding="5" cellspacing="0">`;
   body += `<tr><td><b>총 상품금액</b></td><td>${formatNumber(amountInfo.total_product_price)}원</td></tr>`;
   body += `<tr><td><b>상품 할인금액</b></td><td>${formatNumber(amountInfo.product_discount_price)}원</td></tr>`;
+  body += `<tr><td><b>선택된 배송비</b></td><td>${formatNumber(amountInfo.delivery_fee)}원</td></tr>`;
   body += `<tr><td><b>총 결제금액</b></td><td>${formatNumber(amountInfo.total_payment_price)}원</td></tr>`;
   body += `</table><br>`;
 

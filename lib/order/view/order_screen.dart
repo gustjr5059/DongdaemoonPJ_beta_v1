@@ -248,11 +248,17 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
     final User? user = FirebaseAuth.instance.currentUser;
 
+    // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
+    final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
+
     // 주문할 상품 목록을 상태로 관리하고 이를 가져옴
     final orderItems = ref.watch(orderItemsProvider);
 
-    // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
-    final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
+    final String selectedMethod = ref.watch(deliveryMethodSelectProvider); // 선택된 수령방식
+    final double deliveryFee = selectedMethod == '택배수령' ? 4000.0 : 0.0; // 배송비용
+
+    // totalPaymentPrice를 재계산하여 업데이트
+    final double totalPaymentPrice = widget.totalProductPrice - widget.productDiscountPrice + deliveryFee;
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -383,6 +389,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                                   });
                                 },
                               ),
+                            DeliveryMethodSelectInfoWidget(), // 수령방식 선택 위젯
                             TotalPaymentWidget(
                               totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액을 TotalPaymentWidget에 전달
                               totalProductPrice: widget.totalProductPrice, // 총 상품금액을 TotalPaymentWidget에 전달
@@ -395,7 +402,8 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                               data: (userInfo) => CompleteOrderButton(
                                 totalProductPrice: widget.totalProductPrice, // 총 상품금액 전달
                                 productDiscountPrice: widget.productDiscountPrice, // 상품 할인금액 전달
-                                totalPaymentPrice: widget.totalPaymentPrice, // 총 결제금액 전달
+                                deliveryFee: deliveryFee, // 배송비용 전달
+                                totalPaymentPrice: totalPaymentPrice, // 재계산된 총 결제금액인 totalPaymentPrice 전달
                                 ordererInfo: {
                                   'name': userInfo?['name'] ?? '', // 발주자 이름
                                   'email': userInfo?['email'] ?? '', // 발주자 이메일

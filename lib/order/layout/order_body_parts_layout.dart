@@ -42,7 +42,8 @@ class UserInfoWidget extends ConsumerWidget {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequirePadding = screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding1 = screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding2 = screenSize.height * (32 / referenceHeight);
     final double ordererInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double orderRequireNoticeFontSize1 =
@@ -78,9 +79,9 @@ class UserInfoWidget extends ConsumerWidget {
 
         return Padding(
           padding: EdgeInsets.only(
-              left: orderRequirePadding,
-              right: orderRequirePadding,
-              top: orderRequirePadding),
+              left: orderRequirePadding1,
+              right: orderRequirePadding1,
+              top: orderRequirePadding2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
             mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
@@ -165,9 +166,11 @@ class UserInfoWidget extends ConsumerWidget {
         screenSize.width * (97 / referenceWidth);
     final double ordererInfoTextPartHeight =
         screenSize.height * (30 / referenceHeight);
+
     // 행 간 간격 수치
     final double ordererInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double ordererInfo5Y = screenSize.height * (4 / referenceHeight);
+    final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
+
     // 데이터 부분 패딩 수치
     final double ordererInfoDataPartX = screenSize.width * (8 / referenceWidth);
 
@@ -181,8 +184,14 @@ class UserInfoWidget extends ConsumerWidget {
               height: ordererInfoTextPartHeight,
               width: ordererInfoTextPartWidth,
               // 라벨 셀의 너비 설정
-              color: GRAY96_COLOR,
-              // color: Colors.green,
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
+                BorderRadius.circular(6),
+              ),
               // 배경 색상 설정
               alignment: Alignment.center,
               // 텍스트 정렬
@@ -196,10 +205,20 @@ class UserInfoWidget extends ConsumerWidget {
                 ), // 텍스트 스타일 설정
               ),
             ),
-            SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
+            SizedBox(width: ordererInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY98_COLOR, // 앱 기본 배경색
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  // borderRadius: BorderRadius.only(
+                  //   topRight: Radius.circular(6),
+                  //   bottomRight: Radius.circular(6),
+                  // ), // 오른쪽만 둥글게
+                  borderRadius: BorderRadius.circular(6),
+                ),
                 // color: Colors.red, // 배경 색상 설정
                 padding: EdgeInsets.only(left: ordererInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
@@ -376,7 +395,10 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequirePadding = screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding1 =
+        screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding2 =
+        screenSize.height * (32 / referenceHeight);
     final double RecipientInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double ordererInfo1Y = screenSize.height * (16 / referenceHeight);
@@ -387,9 +409,9 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
       },
       child: Padding(
         padding: EdgeInsets.only(
-            left: orderRequirePadding,
-            right: orderRequirePadding,
-            top: orderRequirePadding),
+            left: orderRequirePadding1,
+            right: orderRequirePadding1,
+            top: orderRequirePadding2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
           mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
@@ -471,7 +493,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
         screenSize.height * (30 / referenceHeight);
     // 행 간 간격 수치
     final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo5Y = screenSize.height * (4 / referenceHeight);
+    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double recipientInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
@@ -488,8 +510,14 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: GRAY96_COLOR,
-              // 셀 배경색 설정
+              // 라벨 셀의 너비 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
               child: Text(
@@ -502,9 +530,17 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 ),
               ),
             ),
+            SizedBox(width: recipientInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY96_COLOR,
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius:
+                  BorderRadius.circular(6),
+                ),
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: GestureDetector(
@@ -582,7 +618,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
         screenSize.height * (30 / referenceHeight);
     // 행 간 간격 수치
     final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo5Y = screenSize.height * (4 / referenceHeight);
+    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double recipientInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
@@ -599,8 +635,14 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: GRAY96_COLOR,
-              // 셀 배경색 설정
+              // 라벨 셀의 너비 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
               child: Text(
@@ -613,9 +655,17 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 ),
               ),
             ),
+            SizedBox(width: recipientInfo1X),
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY96_COLOR,
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius:
+                  BorderRadius.circular(6),
+                ),
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
@@ -656,7 +706,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
         screenSize.height * (60 / referenceHeight);
     // 행 간 간격 수치
     final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo5Y = screenSize.height * (4 / referenceHeight);
+    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double recipientInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
@@ -685,8 +735,14 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: GRAY96_COLOR,
-              // 셀 배경색 설정
+              // 라벨 셀의 너비 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
               child: Text(
@@ -699,9 +755,17 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 ),
               ),
             ),
+            SizedBox(width: recipientInfo1X),
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY96_COLOR,
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius:
+                  BorderRadius.circular(6),
+                ),
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Row(
@@ -776,7 +840,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
         screenSize.height * (30 / referenceHeight);
     // 행 간 간격 수치
     final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo5Y = screenSize.height * (4 / referenceHeight);
+    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double recipientInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
@@ -793,8 +857,14 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
               // 셀의 너비 설정
               height: recipientInfoTextPartHeight,
               // 셀의 높이 설정
-              color: GRAY96_COLOR,
-              // 셀 배경색 설정
+              // 라벨 셀의 너비 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
               child: Text(
@@ -807,9 +877,17 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 ), // 텍스트를 굵게 설정
               ),
             ),
+            SizedBox(width: recipientInfo1X),
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY96_COLOR,
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius:
+                  BorderRadius.circular(6),
+                ),
                 padding: EdgeInsets.only(left: recipientInfoDataPartX),
                 alignment: Alignment.center, // 텍스트 정렬
                 child: DropdownButtonHideUnderline(
@@ -1330,9 +1408,150 @@ class RecipientInfoItemsList extends ConsumerWidget {
 }
 // ------ 수령자 정보 즐겨찾기 선택 화면 내 파이어스토어에 있는 수령자 정보 즐겨찾기에 담긴 아이템 데이터를 UI로 구현하는 RecipientInfoItemsList 클래스 끝
 
+// ------ 발주 화면 내 수령방식 정보 관련 UI 내용을 구현하는 DeliveryMethodSelectInfoWidget 클래스 시작
+// DeliveryMethodSelectInfoWidget 클래스는 발주 화면에서 구매자의 정보를 화면에 표시하는 역할을 담당함
+class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ——— 수령방식을 선택하는 데이터를 제공하는 Provider에서 현재 선택된 수령방식을 가져옴
+    final String selectedMethod = ref.watch(deliveryMethodSelectProvider);
+
+    // ——— MediaQuery로 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // ——— 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // ——— 발주하기 요청 화면 요소들의 padding 값을 화면 크기에 맞게 동적으로 설정함
+    final double orderRequirePadding1 =
+        screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding2 =
+        screenSize.height * (32 / referenceHeight);
+
+    // ——— 각 요소들의 간격을 화면 크기에 맞게 동적으로 설정함
+    final double deliveryMethodInfo1Y =
+        screenSize.height * (16 / referenceHeight);
+    final double deliveryMethodInfo2Y =
+        screenSize.height * (8 / referenceHeight);
+
+    // ——— 제목 텍스트의 폰트 크기를 화면 크기에 맞게 동적으로 설정함
+    final double deliveryMethodInfoTitleFontSize =
+        screenSize.height * (18 / referenceHeight);
+
+    // ——— 알림 텍스트의 폰트 크기를 화면 크기에 맞게 동적으로 설정함
+    final double deliveryMethodNoticeFontSize =
+        screenSize.height * (12 / referenceHeight);
+
+    return Padding(
+      // ——— 전체 위젯의 여백(padding)을 설정함
+      padding: EdgeInsets.only(
+          left: orderRequirePadding1,
+          right: orderRequirePadding1,
+          top: orderRequirePadding2),
+      child: Column(
+        // ——— 자식 위젯을 왼쪽으로 정렬함
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // ——— 자식 위젯들이 부모의 제약 조건 내에서 최소한의 크기로 표시되도록 설정함
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // ——— 발주자 정보 제목을 텍스트로 표시함
+          Text(
+            '수령방식 선택',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: deliveryMethodInfoTitleFontSize,
+              fontWeight: FontWeight.bold, // ——— 텍스트 굵게 표시
+              color: BLACK_COLOR, // ——— 텍스트 색상을 검은색으로 설정
+            ),
+          ),
+          SizedBox(height: deliveryMethodInfo1Y), // ——— 제목과 알림 텍스트 간의 간격을 설정함
+          // ——— 알림 내용을 텍스트로 표시함
+          Text(
+            '현장수령은 매장 방문 후 상품을 직접 수령하는 방식입니다.',
+            style: TextStyle(
+              fontFamily: 'NanumGothic',
+              fontSize: deliveryMethodNoticeFontSize,
+              color: GRAY35_COLOR, // ——— 텍스트 색상을 회색으로 설정
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          SizedBox(height: deliveryMethodInfo2Y), // ——— 알림 텍스트와 버튼 간의 간격을 설정함
+          // ——— 현장수령 버튼을 표시함
+          _buildDeliveryMethodSelectButton(
+            context,
+            ref,
+            label: '현장수령', // ——— 버튼의 텍스트 레이블
+            price: '무료 (0원)', // ——— 현장수령 비용 텍스트
+            isSelected: selectedMethod == '현장수령', // ——— 선택 여부를 확인함
+          ),
+          // ——— 택배수령 버튼을 표시함
+          _buildDeliveryMethodSelectButton(
+            context,
+            ref,
+            label: '택배수령', // ——— 버튼의 텍스트 레이블
+            price: '4,000원', // ——— 택배수령 비용 텍스트
+            isSelected: selectedMethod == '택배수령', // ——— 선택 여부를 확인함
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ——— 개별 수령방식 버튼을 생성하는 함수
+  Widget _buildDeliveryMethodSelectButton(BuildContext context, WidgetRef ref,
+      {required String label, required String price, required bool isSelected}) {
+    return GestureDetector(
+      // ——— 버튼 클릭 시 Provider를 사용하여 선택된 수령방식을 업데이트함
+      onTap: () {
+        ref.read(deliveryMethodSelectProvider.notifier).selectMethod(label);
+      },
+      child: Container(
+        // ——— 버튼의 padding을 설정함
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        margin: EdgeInsets.symmetric(vertical: 4), // ——— 버튼 간의 간격을 설정함
+        decoration: BoxDecoration(
+          color: Theme.of(context)
+              .scaffoldBackgroundColor, // ——— 버튼 배경 색상을 설정함
+          border: Border.all(
+            color: isSelected ? ORANGE56_COLOR : GRAY83_COLOR, // ——— 선택 여부에 따라 테두리 색상을 변경함
+            width: 1.0, // ——— 테두리 두께를 설정함
+          ),
+          borderRadius: BorderRadius.circular(6), // ——— 버튼의 모서리를 둥글게 설정함
+        ),
+        child: Row(
+          // ——— 버튼 내 요소들을 양쪽 끝에 배치함
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // ——— 버튼 레이블 텍스트
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold, // ——— 텍스트 굵게 표시
+                color: isSelected ? BLACK_COLOR : GRAY83_COLOR, // ——— 선택 여부에 따라 색상을 변경함
+              ),
+            ),
+            // ——— 버튼에 표시되는 비용 텍스트
+            Text(
+              price,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold, // ——— 텍스트 굵게 표시
+                color: isSelected ? BLACK_COLOR : GRAY83_COLOR, // ——— 선택 여부에 따라 색상을 변경함
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+// ------ 발주 화면 내 수령방식 정보 관련 UI 내용을 구현하는 DeliveryMethodSelectInfoWidget 클래스 끝
+
 // ------- 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 시작
 // TotalPaymentWidget 클래스는 결제 금액 정보를 화면에 표시하는 역할을 담당.
-class TotalPaymentWidget extends StatelessWidget {
+class TotalPaymentWidget extends ConsumerWidget {
   final double totalPaymentPrice; // 총 결제금액을 저장하는 변수
   final double totalProductPrice; // 총 상품금액을 저장하는 변수
   final double productDiscountPrice; // 상품 할인금액을 저장하는 변수
@@ -1344,7 +1563,18 @@ class TotalPaymentWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    // 선택된 배송방식
+    final String selectedMethod = ref.watch(deliveryMethodSelectProvider);
+
+    // 배송비 계산
+    final double deliveryFee = selectedMethod == '택배수령' ? 4000.0 : 0.0;
+
+    // 총 결제금액 계산
+    final double totalPaymentPrice =
+        totalProductPrice - productDiscountPrice + deliveryFee;
+
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -1355,7 +1585,10 @@ class TotalPaymentWidget extends StatelessWidget {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequirePadding = screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding1 =
+        screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding2 =
+        screenSize.height * (32 / referenceHeight);
     final double priceInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double priceInfo1Y = screenSize.height * (16 / referenceHeight);
@@ -1365,9 +1598,9 @@ class TotalPaymentWidget extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-          left: orderRequirePadding,
-          right: orderRequirePadding,
-          top: orderRequirePadding),
+          left: orderRequirePadding1,
+          right: orderRequirePadding1,
+          top: orderRequirePadding2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
         mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
@@ -1386,6 +1619,11 @@ class TotalPaymentWidget extends StatelessWidget {
               '${totalProductPrice != null ? numberFormat.format(totalProductPrice) : ''}원'),
           _buildInfoRow(context, '상품 할인금액',
               '-${productDiscountPrice != null ? numberFormat.format(productDiscountPrice) : ''}원'),
+          _buildInfoRow(
+            context,
+            '배송비',
+            '+${deliveryFee != null ? numberFormat.format(deliveryFee) : ''}원',
+          ),
           _buildInfoRow(context, '총 결제금액',
               '${totalPaymentPrice != null ? numberFormat.format(totalPaymentPrice) : ''}원',
               isTotal: true),
@@ -1415,7 +1653,7 @@ class TotalPaymentWidget extends StatelessWidget {
         screenSize.height * (40 / referenceHeight);
     // 행 간 간격 수치
     final double ordererInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double ordererInfo5Y = screenSize.height * (4 / referenceHeight);
+    final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double ordererInfoDataPartX = screenSize.width * (8 / referenceWidth);
 
@@ -1429,9 +1667,13 @@ class TotalPaymentWidget extends StatelessWidget {
               height: ordererInfoTextPartHeight,
               width: ordererInfoTextPartWidth,
               // 라벨 셀의 너비 설정
-              color: GRAY96_COLOR,
-              // color: Colors.green,
-              // 배경 색상 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               // 텍스트 정렬
               child: Text(
@@ -1444,12 +1686,18 @@ class TotalPaymentWidget extends StatelessWidget {
                 ), // 텍스트 스타일 설정
               ),
             ),
-            SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
+            SizedBox(width: ordererInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
-                // color: Colors.red, // 배경 색상 설정
-                padding: EdgeInsets.only(left: ordererInfoDataPartX),
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY96_COLOR,
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius:
+                  BorderRadius.circular(6),
+                ),
+                padding: EdgeInsets.only(left: ordererInfoDataPartX, right: ordererInfoDataPartX),
                 alignment: Alignment.centerRight, // 텍스트 정렬
                 child: Text(
                   value ?? '',
@@ -1490,7 +1738,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
     final double orderRequirePadding1 =
         screenSize.width * (32 / referenceWidth);
     final double orderRequirePadding2 =
-        screenSize.width * (32 / referenceWidth);
+        screenSize.height * (32 / referenceHeight);
     final double paymentMethodInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double orderRequireNoticeFontSize =
@@ -1547,6 +1795,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
 class CompleteOrderButton extends ConsumerWidget {
   final double totalProductPrice; // 총 상품금액
   final double productDiscountPrice; // 상품 할인금액
+  final double deliveryFee; // 배송비용
   final double totalPaymentPrice; // 총 결제금액
   final Map<String, dynamic> ordererInfo; // 발주자 정보
   final TextEditingController nameController; // 이름 입력 컨트롤러
@@ -1562,6 +1811,7 @@ class CompleteOrderButton extends ConsumerWidget {
   CompleteOrderButton({
     required this.totalProductPrice, // 생성자에서 총 상품금액을 받아옴
     required this.productDiscountPrice, // 생성자에서 상품 할인금액을 받아옴
+    required this.deliveryFee, // 생성자에서 배송비용을 받아옴
     required this.totalPaymentPrice, // 생성자에서 총 결제금액을 받아옴
     required this.ordererInfo, // 생성자에서 발주자 정보를 받아옴
     required this.nameController, // 생성자에서 이름 입력 컨트롤러를 받아옴
@@ -1724,6 +1974,7 @@ class CompleteOrderButton extends ConsumerWidget {
                         'total_product_price': totalProductPrice, // 총 상품금액
                         'product_discount_price':
                             productDiscountPrice, // 상품 할인금액
+                        'delivery_fee' : deliveryFee, // 배송비용
                         'total_payment_price': totalPaymentPrice, // 총 결제금액
                       };
 
@@ -2231,7 +2482,7 @@ class _OrderListDetailItemWidgetState
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
 
-    // order 정보에서 총 상품 금액, 상품 할인 금액, 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정함
+    // order 정보에서 총 상품 금액, 상품 할인 금액, 배송비용, 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정함
     final totalProductPrice = widget.order!['amountInfo']['total_product_price']
                 ?.toString()
                 .isNotEmpty ==
@@ -2245,6 +2496,14 @@ class _OrderListDetailItemWidgetState
             true
         ? (widget.order!['amountInfo']['product_discount_price'] as num)
             .toDouble()
+        : 0;
+    final deliveryFee = widget.order!['amountInfo']
+    ['delivery_fee']
+        ?.toString()
+        .isNotEmpty ==
+        true
+        ? (widget.order!['amountInfo']['delivery_fee'] as num)
+        .toDouble()
         : 0;
     final totalPaymentPrice = widget.order!['amountInfo']['total_payment_price']
                 ?.toString()
@@ -2454,7 +2713,7 @@ class _OrderListDetailItemWidgetState
                   _buildAmountRow(context, '상품 할인금액',
                       '-${numberFormat.format(productDiscountPrice)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
-                  _buildAmountRow(context, '배송비', '0원',
+                  _buildAmountRow(context, '배송비', '+${numberFormat.format(deliveryFee)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                   Divider(),
                   _buildAmountRow(context, '총 결제금액',
