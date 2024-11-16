@@ -60,4 +60,4 @@ config.json
 node_modules/
 
 # Firebase Admin SDK 파일 제외
-functions/wearcanopj_firebase-adminsdk-file.json
+functions/wearcano-firebase-adminsdk-file.json
