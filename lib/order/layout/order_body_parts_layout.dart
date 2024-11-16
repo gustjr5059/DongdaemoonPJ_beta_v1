@@ -854,9 +854,9 @@ class _OrderListDetailItemWidgetState
                               briefIntroduction: productInfo['brief_introduction']
                                   ?.toString() ??
                                   '',
-                              originalPrice: productInfo['original_price'] ?? '',
-                              discountPrice: productInfo['discount_price'] ?? '',
-                              discountPercent: productInfo['discount_percent'] ?? '',
+                              originalPrice: productInfo['original_price'] ?? 0,
+                              discountPrice: productInfo['discount_price'] ?? 0,
+                              discountPercent: productInfo['discount_percent'] ?? 0,
                             );
                             navigatorProductDetailScreen.navigateToDetailScreen(
                                 context, product);

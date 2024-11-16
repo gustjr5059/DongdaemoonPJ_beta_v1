@@ -67,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen1>
     _loadingController.repeat();
 
     // 1초 후에 SplashScreen2로 화면을 전환함.
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(milliseconds: 1500), () {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
     });

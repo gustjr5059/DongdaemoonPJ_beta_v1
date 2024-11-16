@@ -244,7 +244,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                 slivers: <Widget>[
                   SliverAppBar(
                     automaticallyImplyLeading: false, // 기본 뒤로 가기 버튼 비활성화
-                    floating: false, // 스크롤 시 앱바 고정
+                    floating: true, // 스크롤 시 앱바 고정
                     pinned: true, // 앱바를 상단에 고정
                     expandedHeight: 0.0, // 확장되지 않도록 설정
                     // 확장 높이 설정

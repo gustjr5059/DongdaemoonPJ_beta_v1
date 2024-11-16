@@ -410,8 +410,8 @@ class _PolaMainScreenState extends ConsumerState<PolaMainScreen>
     // 찜 목록 버튼 수치 (Case 2)
     final double productMainWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
     final double productMainWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double productMainWishlistBtnX = screenSize.width * (7 / referenceWidth);
-    final double productMainWishlistBtnY = screenSize.height * (6 / referenceHeight);
+    final double productMainWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    final double productMainWishlistBtnY = screenSize.height * (7 / referenceHeight);
 
     // 기타 간격 수치
     final double interval1Y = screenSize.height * (3 / referenceHeight);

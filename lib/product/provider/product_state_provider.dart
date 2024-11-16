@@ -286,7 +286,10 @@ abstract class BaseProductListNotifier
 
     try {
       for (String fullCollection in collectionNames) {
-        String mainCollection = 'a' + fullCollection.substring(1, 3);
+        // 한 자리 숫자는 substring(1, 2), 두 자리 숫자는 substring(1, 3) 사용
+        String mainCollection = fullCollection.length == 5
+            ? 'a' + fullCollection.substring(1, 3)
+            : 'a' + fullCollection.substring(1, 2);
         String subCollection = fullCollection;
 
         // CategoryProductsRepository 타입으로 분기하여 메인화면인 ProductMainListNotifier인 경우에는

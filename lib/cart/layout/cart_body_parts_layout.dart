@@ -140,9 +140,9 @@ class CartItemsList extends ConsumerWidget {
       // 장바구니 아이템을 반복하여 UI를 생성함
       children: cartItems.map((cartItem) {
         // 상품의 원래 가격을 정수형으로 변환하며, 값이 없을 경우 빈 값으로 설정함
-        final int originalPrice = cartItem['original_price']?.round() ?? '';
+        final int originalPrice = cartItem['original_price']?.round() ?? 0;
         // 상품의 할인 가격을 정수형으로 변환하며, 값이 없을 경우 빈 값으로 설정함
-        final int discountPrice = cartItem['discount_price']?.round() ?? '';
+        final int discountPrice = cartItem['discount_price']?.round() ?? 0;
 
         // ProductContent 인스턴스를 생성하여 상품의 상세 정보를 저장함
         final product = ProductContent(
