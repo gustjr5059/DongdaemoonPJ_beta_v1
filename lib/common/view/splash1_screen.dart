@@ -9,15 +9,18 @@ import 'package:flutter/material.dart';
 import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리를 가져옴.
 // 애플리케이션의 스플래시 스크린 중 두 번째 화면을 구현한 'SplashScreen2' 파일을 가져옵니다.
 // 이 화면은 앱이 시작할 때 초기 로딩 화면으로 사용되어, 사용자에게 앱 로딩 중임을 알립니다.
-import 'package:dongdaemoon_beta_v1/common/view/splash2_screen.dart'; // 다음 화면으로 전환하기 위해 SplashScreen2를 가져옴.
-import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // 애플리케이션 전반에 걸쳐 사용될 색상의 상수를 정의한 파일을 가져옵니다.
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
+import '../../home/view/home_screen.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../const/colors.dart';
-import '../layout/common_body_parts_layout.dart'; // 앱에서 사용할 색상 상수를 정의한 파일을 가져옴.
+import 'dart:io'; // 플랫폼을 확인하기 위한 dart:io 라이브러리 추가
 
-// 스플래시 스크린의 StatefulWidget을 정의함.
+
+// ------ 스플레시1화면의 UI를 구현하는 SplashScreen1 클래스 시작 부분
 class SplashScreen1 extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -37,8 +40,10 @@ class _SplashScreenState extends State<SplashScreen1>
     // initState에서 애니메이션 컨트롤러와 애니메이션 값을 초기화함.
     _controller = AnimationController(
       vsync: this, // 현재 클래스가 애니메이션의 vsync를 담당함.
-      duration: Duration(milliseconds: 1500), // 애니메이션 지속 시간을 1.5초로 설정함.
+      duration: Duration(milliseconds: 2000), // 애니메이션 지속 시간을 2초로 설정함.
     );
+    // 위젯이 생성될 때 _checkAutoLogin 메서드를 호출하여 자동 로그인 여부를 확인.
+    _checkAutoLogin();
 
     // Tween을 사용하여 애니메이션의 시작과 끝 값을 설정함.
     _animation = Tween(begin: 1.0, end: 0.5).animate(_controller)
@@ -65,13 +70,6 @@ class _SplashScreenState extends State<SplashScreen1>
     );
 
     _loadingController.repeat();
-
-    // 1.5초 후에 SplashScreen2로 화면을 전환함.
-    Timer(Duration(milliseconds: 1500), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => SplashScreen2()));
-    });
-
   }
 
   @override
@@ -81,6 +79,42 @@ class _SplashScreenState extends State<SplashScreen1>
     _loadingController.dispose(); // 새로 추가한 컨트롤러도 정리함.
 
     super.dispose();
+  }
+
+  // 자동 로그인을 확인하는 비동기 메서드.
+  void _checkAutoLogin() async {
+    // SharedPreferences 인스턴스를 가져옴.
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // 'autoLogin' 키에 저장된 값을 불러오며, 값이 없을 경우 기본값으로 false를 사용.
+    bool autoLogin = prefs.getBool('autoLogin') ?? false;
+
+    // 2초 후에 다음 동작을 수행.
+    Timer(Duration(milliseconds: 2000), () {
+      if (autoLogin) {
+        // autoLogin이 true인 경우 HomeMainScreen으로 이동.
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => HomeMainScreen()),
+        );
+      } else {
+        // autoLogin이 false인 경우 플랫폼에 따라 분기
+        // IOS 플랫폼은 IOS 화면으로 이동
+        if (Platform.isIOS) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
+          );
+          // AOS 플랫폼은 AOS 화면으로 이동
+        } else if (Platform.isAndroid) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+          );
+        } else {
+          // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+          );
+        }
+      }
+    });
   }
 
   @override
@@ -106,7 +140,7 @@ class _SplashScreenState extends State<SplashScreen1>
           // 피그마에서 추출한 배경 이미지를 SVG로 추가
           Positioned.fill(
             child: Image.asset(
-              'asset/img/misc/splash_image/couture_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
+              'asset/img/misc/splash_image/wearcano_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
               fit: BoxFit.cover, // 화면 전체에 맞게 조정
             ),
           ),
@@ -123,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen1>
                   );
                 },
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(WHITE_COLOR),
+                  valueColor: AlwaysStoppedAnimation<Color>(ORANGE56_COLOR),
                 ),
               ),
             ),
@@ -133,3 +167,4 @@ class _SplashScreenState extends State<SplashScreen1>
     );
   }
 }
+// ------ 스플레시1화면의 UI를 구현하는 SplashScreen1 클래스 끝 부분

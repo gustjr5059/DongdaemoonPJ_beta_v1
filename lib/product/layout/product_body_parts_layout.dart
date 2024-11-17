@@ -602,7 +602,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // ----- 발주 화면 관련 초기화 부분 시작
   // 발주 화면에서 단순 화면 스크롤 초기화
   ref.read(orderMainScrollPositionProvider.notifier).state = 0.0;
-  ref.invalidate(orderItemsProvider); // 발주 상품 정보를 불러오는 프로바이더 초기화
+  // ref.invalidate(orderItemsProvider); // 발주 상품 정보를 불러오는 프로바이더 초기화
   ref.invalidate(deliveryMethodSelectProvider); // 수령방식 선택 정보를 불러오는 프로바이더 초기화
   // 발주 화면 내 수령자 정보 관련 초기화 부분 시작
   ref.invalidate(recipientInfoItemsProvider); // 수령자 정보 목록 초기화

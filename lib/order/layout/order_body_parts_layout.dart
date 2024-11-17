@@ -2441,7 +2441,7 @@ class _OrderListDetailItemWidgetState
     final double interval6Y =
         screenSize.height * (5 / referenceHeight); // 세로 간격 6 계산
     final double interval1X =
-        screenSize.width * (40 / referenceWidth); // 가로 간격 1 계산
+        screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
     final double interval2X =
         screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
     final double interval3X =

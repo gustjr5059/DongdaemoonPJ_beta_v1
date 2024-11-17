@@ -49,10 +49,11 @@ Widget buildSectionCard(
         {Widget? destinationScreen,
       bool showPlusButton = true}) {
   // 제목에 따라 다른 배경색을 설정함. '신상', '특가 상품', '여름', '겨울' 일 경우 앱 기본 색상을, 그 외의 경우는 F1F1F1 색상를 배경색으로 사용함.
-  Color backgroundColor =
-  (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
-      ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
-      : GRAY95_COLOR; // F1F1F1 색상
+  // Color backgroundColor =
+  // (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
+  //     ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
+  //     : GRAY95_COLOR; // F1F1F1 색상
+  Color backgroundColor = Theme.of(context).scaffoldBackgroundColor; // 앱 기본 배경색
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -126,9 +127,9 @@ class MidCategoryButtonList extends ConsumerWidget {
     // 비율을 기반으로 동적으로 크기와 위치 설정
     final double totalPadding = screenSize.width * (16 / referenceWidth); // 전체적인 좌우 패딩 값을 설정
     final double spacingBetweenButtons = screenSize.width * (8 / referenceWidth); // 버튼들 사이의 간격을 설정
-    final double iconSize = screenSize.height * (70 / referenceHeight);
-    final double iconWidth = screenSize.width * (70 / referenceWidth);
-    final double iconHeight = screenSize.width * (70 / referenceHeight);
+    final double iconSize = screenSize.height * (90 / referenceHeight);
+    final double iconWidth = screenSize.width * (90 / referenceWidth);
+    final double iconHeight = screenSize.width * (90 / referenceHeight);
 
 
     // 화면의 너비에 따라 한 줄에 표시할 카테고리 버튼의 수를 결정

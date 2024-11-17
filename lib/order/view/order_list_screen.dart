@@ -63,7 +63,6 @@ class OrderListMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     with WidgetsBindingObserver {
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -186,13 +185,13 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -203,20 +202,28 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.height * (4 / referenceHeight);
-    final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double orderlistAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double orderlistAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double orderlistAppBarTitleX =
+        screenSize.height * (4 / referenceHeight);
+    final double orderlistAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double orderlistPaddingX = screenSize.width * (16 / referenceWidth);
     final double orderlistPadding1Y = screenSize.height * (5 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double orderlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderlistWishlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double orderlistWishlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double orderlistWishlistBtnX =
+        screenSize.width * (10 / referenceWidth);
+    final double orderlistWishlistBtnY =
+        screenSize.height * (7 / referenceHeight);
 
     // 발주 내역 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
@@ -279,26 +286,35 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                    background: buildCommonAppBar(
-                      // 공통 AppBar 빌드
-                      context: context,
-                      // 현재 context 전달
-                      ref: ref,
-                      // 참조(ref) 전달
-                      title: '발주 내역',
-                      fontFamily: 'NanumGothic',
-                      // AppBar의 제목을 '발주 목록'로 설정
-                      leadingType: LeadingType.none,
-                      // 아무 버튼도 없음.
-                      buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
-                      appBarTitleWidth: orderlistAppBarTitleWidth,
-                      appBarTitleHeight: orderlistAppBarTitleHeight,
-                      appBarTitleX: orderlistAppBarTitleX,
-                      appBarTitleY: orderlistAppBarTitleY,
-                      wishlistBtnWidth: orderlistWishlistBtnWidth,
-                      wishlistBtnHeight: orderlistWishlistBtnHeight,
-                      wishlistBtnX: orderlistWishlistBtnX,
-                      wishlistBtnY: orderlistWishlistBtnY,
+                    background: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                        ),
+                      ),
+                      child: buildCommonAppBar(
+                        // 공통 AppBar 빌드
+                        context: context,
+                        // 현재 context 전달
+                        ref: ref,
+                        // 참조(ref) 전달
+                        title: '발주 내역',
+                        fontFamily: 'NanumGothic',
+                        // AppBar의 제목을 '발주 목록'로 설정
+                        leadingType: LeadingType.none,
+                        // 아무 버튼도 없음.
+                        buttonCase: 2,
+                        // 2번 케이스 (찜 목록 버튼만 노출)
+                        appBarTitleWidth: orderlistAppBarTitleWidth,
+                        appBarTitleHeight: orderlistAppBarTitleHeight,
+                        appBarTitleX: orderlistAppBarTitleX,
+                        appBarTitleY: orderlistAppBarTitleY,
+                        wishlistBtnWidth: orderlistWishlistBtnWidth,
+                        wishlistBtnHeight: orderlistWishlistBtnHeight,
+                        wishlistBtnX: orderlistWishlistBtnX,
+                        wishlistBtnY: orderlistWishlistBtnY,
+                      ),
                     ),
                   ),
                   leading: null,
@@ -317,9 +333,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                     // SliverChildBuilderDelegate는 리스트 항목을 동적으로 생성함.
                     delegate: SliverChildBuilderDelegate(
                       // 각 항목을 빌드하는 빌더 함수.
-                          (BuildContext context, int index) {
-                            // 발주 목록을 불러옴.
-                            final Orders = orderlistItems.toList();
+                      (BuildContext context, int index) {
+                        // 발주 목록을 불러옴.
+                        final Orders = orderlistItems.toList();
 
                         return Padding(
                           // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
@@ -327,16 +343,18 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           child: Column(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                  ),
-                                ),
-                              ),
                               // SizedBox(height: orderlistPadding1Y),
                               // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
                               OrderListItemWidget(order: Orders[index]),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        color: BLACK_COLOR,
+                                        width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         );
@@ -355,10 +373,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          3, 1, scrollController: orderListScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          ref.watch(tabIndexProvider), ref, context, 3, 1,
+          scrollController:
+              orderListScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

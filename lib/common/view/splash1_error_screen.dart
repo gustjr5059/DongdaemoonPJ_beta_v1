@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리를 가져옴.
 // 애플리케이션의 스플래시 스크린 중 두 번째 화면을 구현한 'SplashScreen2' 파일을 가져옵니다.
 // 이 화면은 앱이 시작할 때 초기 로딩 화면으로 사용되어, 사용자에게 앱 로딩 중임을 알립니다.
-import 'package:dongdaemoon_beta_v1/common/view/splash2_screen.dart'; // 다음 화면으로 전환하기 위해 SplashScreen2를 가져옴.
 import 'package:flutter_svg/svg.dart';
 // 애플리케이션 전반에 걸쳐 사용될 색상의 상수를 정의한 파일을 가져옵니다.
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
@@ -62,7 +61,7 @@ class _SplashErrorScreenState extends State<SplashErrorScreen1>
           // 피그마에서 추출한 배경 이미지를 SVG로 추가
           Positioned.fill(
             child: Image.asset(
-              'asset/img/misc/splash_image/couture_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
+              'asset/img/misc/splash_image/wearcano_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
               fit: BoxFit.cover, // 화면 전체에 맞게 조정
             ),
           ),

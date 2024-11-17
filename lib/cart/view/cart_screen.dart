@@ -261,31 +261,39 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    // 공통 AppBar 빌드
-                    context: context,
-                    // 현재 context 전달
-                    ref: ref,
-                    // 참조(ref) 전달
-                    title: '장바구니',
-                    // AppBar의 제목을 '장바구니'로 설정
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    // 버튼 없음.
-                    buttonCase: 3,
-                    // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
-                    appBarTitleWidth: cartlistAppBarTitleWidth,
-                    appBarTitleHeight: cartlistAppBarTitleHeight,
-                    appBarTitleX: cartlistAppBarTitleX,
-                    appBarTitleY: cartlistAppBarTitleY,
-                    homeBtnWidth: cartlistHomeBtnWidth,
-                    homeBtnHeight: cartlistHomeBtnHeight,
-                    homeBtnX: cartlistHomeBtnX,
-                    homeBtnY: cartlistHomeBtnY,
-                    wishlistBtnWidth: cartlistWishlistBtnWidth,
-                    wishlistBtnHeight: cartlistWishlistBtnHeight,
-                    wishlistBtnX: cartlistWishlistBtnX,
-                    wishlistBtnY: cartlistWishlistBtnY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      // 공통 AppBar 빌드
+                      context: context,
+                      // 현재 context 전달
+                      ref: ref,
+                      // 참조(ref) 전달
+                      title: '장바구니',
+                      // AppBar의 제목을 '장바구니'로 설정
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      // 버튼 없음.
+                      buttonCase: 3,
+                      // 3번 케이스 (찜 목록 버튼, 홈 버튼 노출)
+                      appBarTitleWidth: cartlistAppBarTitleWidth,
+                      appBarTitleHeight: cartlistAppBarTitleHeight,
+                      appBarTitleX: cartlistAppBarTitleX,
+                      appBarTitleY: cartlistAppBarTitleY,
+                      homeBtnWidth: cartlistHomeBtnWidth,
+                      homeBtnHeight: cartlistHomeBtnHeight,
+                      homeBtnX: cartlistHomeBtnX,
+                      homeBtnY: cartlistHomeBtnY,
+                      wishlistBtnWidth: cartlistWishlistBtnWidth,
+                      wishlistBtnHeight: cartlistWishlistBtnHeight,
+                      wishlistBtnX: cartlistWishlistBtnX,
+                      wishlistBtnY: cartlistWishlistBtnY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -317,7 +325,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                               margin: EdgeInsets.only(top: cartlistEmptyTextY),
                               // 텍스트를 중앙에 위치하도록 설정함.
                               alignment: Alignment.center,
-                              child: Text('현재 장바구니 상품이 없습니다.',
+                              child: Text(
+                                '현재 장바구니 상품이 없습니다.',
                                 style: TextStyle(
                                   fontSize: cartlistEmptyTextFontSize,
                                   fontFamily: 'NanumGothic',
@@ -327,23 +336,23 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                               ),
                             ),
                           )
-                          // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
-                          : SliverList(
-                              // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                                  return Column(
-                                    // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                                    children: [
-                                      // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
-                                      CartItemsList(),
-                                    ],
-                                  );
-                                },
-                                // 아이템 개수를 1로 설정
-                                childCount: 1,
-                              ),
-                            );
+                        // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                        : SliverList(
+                            // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Column(
+                                  // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                                  children: [
+                                    // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
+                                    CartItemsList(),
+                                  ],
+                                );
+                              },
+                              // 아이템 개수를 1로 설정
+                              childCount: 1,
+                            ),
+                          );
                   },
                 ),
               ),
@@ -354,8 +363,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         ],
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
-      bottomNavigationBar:
-      buildCommonBottomNavigationBar(0, ref, context, 0, 3, scrollController: cartScreenPointScrollController),
+      bottomNavigationBar: buildCommonBottomNavigationBar(0, ref, context, 0, 3,
+          scrollController: cartScreenPointScrollController),
     );
   }
 }

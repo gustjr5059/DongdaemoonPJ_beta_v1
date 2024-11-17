@@ -258,19 +258,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.height * (54 / referenceHeight); // 위쪽 여백 비율
 
     // 화면 제목 부분 수치
-    final double screenTitleLeft =
-        screenSize.width * (51 / referenceWidth); // 왼쪽 여백 비율
     final double screenTitleTop =
         screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
     final double screenLoginText1FontSize =
         screenSize.height * (24 / referenceHeight);
     final double screenTitleTextFontSize =
-        screenSize.height * (26 / referenceHeight);
+        screenSize.height * (22 / referenceHeight);
 
     // 이미지 위치 조정을 위한 비율 기반 수치
-    final double circleImageLeft = screenSize.width * (20 / referenceWidth);
-    final double circleImageTop = screenSize.height * (223 / referenceHeight);
-    final double circleImageWidth = screenSize.width * (120 / referenceWidth);
+    final double circleImageLeft = screenSize.width * (24 / referenceWidth);
+    final double circleImageTop = screenSize.height * (220 / referenceHeight);
+    final double circleImageWidth = screenSize.width * (150 / referenceWidth);
     final double circleImageHeight = screenSize.height * (48 / referenceHeight);
     final double exclamationImageLeft = screenSize.width * (345 / referenceWidth);
     final double exclamationImageTop = screenSize.height * (210 / referenceHeight);
@@ -380,15 +378,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // 화면 크기에 맞게 배경 이미지 설정
-          // Positioned.fill(
-          //   child: Image.asset(
-          //     'asset/img/misc/login_image/couture_login_bg_img.png',
-          //     fit: BoxFit.cover, // 화면을 꽉 채우도록 설정
-          //     width: screenSize.width, // 화면 너비
-          //     height: screenSize.height, // 화면 높이
-          //   ),
-          // ),
           // 화면 제목 (Login)
           Align(
             alignment: Alignment.topCenter,
@@ -404,7 +393,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
           ),
-
           // 동그라미 이미지 (Positioned 위젯 사용)
           Positioned(
             left: circleImageLeft,
@@ -416,27 +404,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               fit: BoxFit.contain, // 이미지 크기 조정
             ),
           ),
-
-          // 느낌표 이미지 (Positioned 위젯 사용)
-          Positioned(
-            left: exclamationImageLeft,
-            top: exclamationImageTop,
-            width: exclamationImageWidth,
-            height: exclamationImageHeight,
-            child: Image.asset(
-              'asset/img/misc/login_image/login_title_image2.png',
-              fit: BoxFit.contain, // 이미지 크기 조정
-            ),
-          ),
-
+          // // 느낌표 이미지 (Positioned 위젯 사용)
+          // Positioned(
+          //   left: exclamationImageLeft,
+          //   top: exclamationImageTop,
+          //   width: exclamationImageWidth,
+          //   height: exclamationImageHeight,
+          //   child: Image.asset(
+          //     'asset/img/misc/login_image/login_title_image2.png',
+          //     fit: BoxFit.contain, // 이미지 크기 조정
+          //   ),
+          // ),
           // 타이틀 텍스트
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding:
-              EdgeInsets.only(left: screenTitleLeft, top: screenTitleTop),
+              EdgeInsets.only(top: screenTitleTop),
               child: Text(
-                '오늘도 나만의 옷을 PICK',
+                '동대문 의류도매 제로마진 플랫폼',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.bold,
@@ -448,12 +434,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           // 서브 타이틀 텍스트
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(
-                  left: screenSubTitleLeft, top: screenSubTitleTop),
+              padding: EdgeInsets.only(top: screenSubTitleTop),
               child: Text(
-                '이메일과 비밀번호를 입력해서 로그인해주세요! :)',
+                '웨어카노, Wearcano',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
@@ -465,10 +450,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           // 이메일 입력 필드
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding:
-              EdgeInsets.only(left: insertFieldLeft, top: emailFieldTop),
+              EdgeInsets.only(top: emailFieldTop),
               child: Container(
                 width: insertFieldWidth,
                 height: insertFieldHeight,
@@ -523,10 +508,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           // 비밀번호 입력 필드
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
               padding:
-              EdgeInsets.only(left: insertFieldLeft, top: passwordFieldTop),
+              EdgeInsets.only(top: passwordFieldTop),
               child: Container(
                 width: insertFieldWidth,
                 height: insertFieldHeight,
@@ -625,9 +610,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           // 로그인 버튼
           Align(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(left: loginBtnLeft, top: loginBtnTop),
+              padding: EdgeInsets.only(top: loginBtnTop),
               child: Container(
                 width: loginBtnWidth,
                 height: loginBtnHeight,
@@ -787,8 +772,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(
-                  left: guidelineText1Left, top: guidelineText1Top),
+              padding: EdgeInsets.only(top: guidelineText1Top),
               child: Text(
                 '로그인함으로써 개인정보 처리방침에 동의합니다.',
                 style: TextStyle(
@@ -804,8 +788,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(
-                  left: guidelineText2Left, top: guidelineText2Top),
+              padding: EdgeInsets.only(top: guidelineText2Top),
               child: GestureDetector( // GestureDetector 사용하여 탭 이벤트 처리
                 onTap: () async {
                   const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
@@ -827,7 +810,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     fontWeight: FontWeight.normal,
                     fontSize: guidelineText2FontSize,
                     color: BLUE49_COLOR, // 파란색 텍스트
-                    decoration: TextDecoration.underline, // 밑줄 추가
                   ),
                 ),
               ),

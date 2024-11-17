@@ -246,7 +246,14 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
                     context: context,
                     ref: ref,
                     title: '찜 목록',
@@ -257,6 +264,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                     appBarTitleHeight: wishlistAppBarTitleHeight,
                     appBarTitleX: wishlistAppBarTitleX,
                     appBarTitleY: wishlistAppBarTitleY,
+                  ),
                   ),
                 ),
                 leading: null,
@@ -275,13 +283,6 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                         padding: EdgeInsets.symmetric(horizontal: 0),
                         child: Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                ),
-                              ),
-                            ),
                             WishlistItemsList(), // WishlistItemsList 클래스 사용
                             SizedBox(height: wishlistPaddingY),
                           ],

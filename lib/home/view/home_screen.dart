@@ -829,6 +829,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: NewSubMainScreen(),
                                 showPlusButton: true),
                           ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
                           // 베스트 제품 섹션
@@ -839,6 +846,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: BestSubMainScreen(),
                                 showPlusButton: true),
                           ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
                           // 할인 제품 섹션
@@ -848,6 +862,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 context, ref, "특가 상품", buildSaleProductsSection,
                                 destinationScreen: SaleSubMainScreen(),
                                 showPlusButton: true),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
                           ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           SizedBox(height: interval4Y), // 높이 간격 설정
@@ -919,6 +940,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: SpringSubMainScreen(),
                                 showPlusButton: true),
                           ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
                           Container(
@@ -927,6 +955,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 context, ref, "여름", buildSummerProductsSection,
                                 destinationScreen: SummerSubMainScreen(),
                                 showPlusButton: true),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
                           ),
                           // SizedBox(height: interval1Y), // 높이 간격 설정
                           SizedBox(height: interval4Y), // 높이 간격 설정
@@ -997,6 +1032,13 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: AutumnSubMainScreen(),
                                 showPlusButton: true),
                           ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
                           // SizedBox(height: interval2Y), // 높이 간격 설정
                           // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                           Container(
@@ -1006,9 +1048,23 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: WinterSubMainScreen(),
                                 showPlusButton: true),
                           ),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
                           buildSectionCard(context, ref, "이벤트",
                               buildEventPosterImgProductsSection,
                               showPlusButton: false),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
                           SizedBox(height: interval3Y), // 높이 간격 설정
                         ],
                       ),

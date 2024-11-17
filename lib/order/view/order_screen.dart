@@ -151,7 +151,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
       // -> 발주요청 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
 
-      ref.invalidate(orderItemsProvider); // 발주 상품 정보를 불러오는 프로바이더 초기화
+      // ref.invalidate(orderItemsProvider); // 발주 상품 정보를 불러오는 프로바이더 초기화
       ref.invalidate(deliveryMethodSelectProvider); // 수령방식 선택 정보를 불러오는 프로바이더 초기화
     });
 

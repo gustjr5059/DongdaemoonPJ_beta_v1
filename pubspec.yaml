@@ -180,6 +180,14 @@ flutter:
     - asset/img/misc/drawer_img/flow_image.png
     - asset/img/misc/logo_img/wearcano_logo_v1.png
     - asset/img/misc/appbar_img/home_appbar_title_img.png
+    - asset/img/misc/splash_image/wearcano_splash1_bg_img.png
+    - asset/img/misc/login_image/wearcano_easy_login_bg_img.png
+    - asset/img/misc/login_image/apple_login_btn_img.png
+    - asset/img/misc/login_image/google_login_btn_img.png
+    - asset/img/misc/login_image/kakao_login_btn_img.png
+    - asset/img/misc/drawer_img/message_management_logo_v1.png
+    - asset/img/misc/drawer_img/orderlist_management_logo_v1.png
+    - asset/img/misc/drawer_img/review_management_logo_v1.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

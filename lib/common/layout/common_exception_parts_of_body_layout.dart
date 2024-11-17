@@ -1117,7 +1117,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // 아이콘 사이의 간격 수치
   final double interval1Y = screenSize.height * (10 / referenceHeight);
   final double interval2Y = screenSize.height * (130 / referenceHeight);
-  final double interval3Y = screenSize.height * (20 / referenceHeight);
+  final double interval3Y = screenSize.height * (10 / referenceHeight);
   final double interval1X = screenSize.width * (10 / referenceWidth);
   final double interval2X = screenSize.width * (15 / referenceWidth);
 
@@ -1251,25 +1251,25 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                   SizedBox(height: interval1Y),
                   _buildAdminListTile(
                     context,
-                    Icons.star,
                     '리뷰 관리',
                     () =>
                         onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
+                    'asset/img/misc/drawer_img/review_management_logo_v1.png',
                   ),
                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
                   _buildAdminListTile(
                     context,
-                    Icons.message,
                     '쪽지 관리',
                     () => onMessageManagementClick(
                         context, ref), // 클릭 시 실행될 함수 전달
+                      'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
                   ),
                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
                   _buildAdminListTile(
                     context,
-                    Icons.receipt_long_outlined,
                     '발주내역 관리',
                     () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
+                    'asset/img/misc/drawer_img/message_management_logo_v1.png',
                   ),
                 ],
                 SizedBox(height: isAdmin ? interval3Y : interval2Y),
@@ -1317,8 +1317,9 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 // ------ buildCommonDrawer 위젯 내용 구현 끝
 
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
+
 Widget _buildAdminListTile(
-    BuildContext context, IconData icon, String title, void Function()? onTap) {
+    BuildContext context, String title, void Function()? onTap, String leadingImage) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -1339,7 +1340,7 @@ Widget _buildAdminListTile(
 
   // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
   return ListTile(
-    leading: Icon(icon, color: BLACK_COLOR, size: iconImageWidth),
+    leading: Image.asset(leadingImage, width: iconImageWidth),
     // 아이콘을 왼쪽에 배치
     title: Text(title,
         style: TextStyle(
