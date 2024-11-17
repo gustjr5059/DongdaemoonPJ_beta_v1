@@ -10,7 +10,6 @@ import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
 
-
 // flutter 패키지의 services 라이브러리를 가져옵니다.
 // 이 라이브러리는 플러터 애플리케이션에서 네이티브 서비스에 접근할 수 있게 해줍니다.
 // 예를 들어, 클립보드, 네트워크 상태, 시스템 설정 등을 제어할 수 있습니다.
@@ -40,17 +39,14 @@ class OrderListDetailScreen extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _OrderListDetailScreenState createState() =>
-      _OrderListDetailScreenState();
+  _OrderListDetailScreenState createState() => _OrderListDetailScreenState();
 }
 
 // _OrderListDetailScreenState 클래스 시작
 // _OrderListDetailScreenState 클래스는 OrderListDetailScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _OrderListDetailScreenState
-    extends ConsumerState<OrderListDetailScreen>
+class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
     with WidgetsBindingObserver {
-
   late String userEmail; // 사용자 이메일을 나중에 초기화할 수 있도록 late 키워드를 사용함
 // FirebaseAuth에서 로그인된 사용자의 이메일을 가져와서 해당 변수에 할당함
 // 가져온 이메일을 매개변수로 활용하여 Firestore 쿼리 등에 사용할 수 있음
@@ -76,7 +72,7 @@ class _OrderListDetailScreenState
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
   late ScrollController
-  orderListDetailScreenPointScrollController; // 스크롤 컨트롤러 선언
+      orderListDetailScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -100,7 +96,8 @@ class _OrderListDetailScreenState
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(orderListDetailScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(orderListDetailScrollPositionProvider);
         // orderListDetailScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         orderListDetailScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -121,7 +118,7 @@ class _OrderListDetailScreenState
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderListDetailScrollPositionProvider.notifier).state =
-        0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+            0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
         // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
         ref.invalidate(buttonInfoProvider);
         ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
@@ -162,8 +159,7 @@ class _OrderListDetailScreenState
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    orderListDetailScreenPointScrollController
-        .dispose(); // ScrollController 해제
+    orderListDetailScreenPointScrollController.dispose(); // ScrollController 해제
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
@@ -177,7 +173,6 @@ class _OrderListDetailScreenState
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -188,26 +183,39 @@ class _OrderListDetailScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double orderlistDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double orderlistDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double orderlistDtAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double orderlistDtAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double orderlistDtAppBarTitleX =
+        screenSize.width * (5 / referenceHeight);
+    final double orderlistDtAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double orderlistDtPaddingX = screenSize.width * (16 / referenceWidth);
-    final double orderlistDtPadding1Y = screenSize.height * (10 / referenceHeight);
+    final double orderlistDtPadding1Y =
+        screenSize.height * (10 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double orderlistDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
-    final double orderlistDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double orderlistDtChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double orderlistDtChevronIconY = screenSize.height * (9 / referenceHeight);
+    final double orderlistDtChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
+    final double orderlistDtChevronIconHeight =
+        screenSize.height * (24 / referenceHeight);
+    final double orderlistDtChevronIconX =
+        screenSize.width * (10 / referenceWidth);
+    final double orderlistDtChevronIconY =
+        screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderlistDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double orderlistDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double orderlistDtWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistDtWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderlistDtWishlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double orderlistDtWishlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double orderlistDtWishlistBtnX =
+        screenSize.width * (10 / referenceWidth);
+    final double orderlistDtWishlistBtnY =
+        screenSize.height * (7 / referenceHeight);
 
     // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
@@ -222,7 +230,8 @@ class _OrderListDetailScreenState
         screenSize.height * (16 / referenceHeight);
 
     // Tuple2로 이메일과 orderNumber 전달
-    final orderlistDetailItem = ref.watch(orderlistDetailItemProvider(Tuple2(userEmail, widget.orderNumber)));
+    final orderlistDetailItem = ref.watch(
+        orderlistDetailItemProvider(Tuple2(userEmail, widget.orderNumber)));
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -230,124 +239,132 @@ class _OrderListDetailScreenState
     // 기본 SliverAppBar의 드로워화면 토글 옵션을 삭제하는 등의 작업이 필요없는 방식-현재는 이슈가 있어 사용 안함..
     return Scaffold(
       body: Stack(
-          children: [
-            // 발주 상세 내역이 비어 있을 경우, '발주 데이터를 불러올 수 없습니다.' 메시지를 표시함.
-            if (orderlistDetailItem.isEmpty)
-              Center(
-                child: Container(
-                  width: orderlistEmptyTextWidth,
-                  height: orderlistEmptyTextHeight,
-                  margin: EdgeInsets.only(top: orderlistEmptyTextY),
-                  // 텍스트를 중앙에 위치하도록 설정함.
-                  alignment: Alignment.center,
-                  child: Text(
-                    '에러가 발생했으니, 앱을 재실행해주세요.',
-                    style: TextStyle(
-                      fontSize: orderlistEmptyTextFontSize,
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.bold,
-                      color: BLACK_COLOR,
+        children: [
+          // 발주 상세 내역이 비어 있을 경우, '발주 데이터를 불러올 수 없습니다.' 메시지를 표시함.
+          if (orderlistDetailItem.isEmpty)
+            Center(
+              child: Container(
+                width: orderlistEmptyTextWidth,
+                height: orderlistEmptyTextHeight,
+                margin: EdgeInsets.only(top: orderlistEmptyTextY),
+                // 텍스트를 중앙에 위치하도록 설정함.
+                alignment: Alignment.center,
+                child: Text(
+                  '에러가 발생했으니, 앱을 재실행해주세요.',
+                  style: TextStyle(
+                    fontSize: orderlistEmptyTextFontSize,
+                    fontFamily: 'NanumGothic',
+                    fontWeight: FontWeight.bold,
+                    color: BLACK_COLOR,
+                  ),
+                ),
+              ),
+            )
+          else
+            CustomScrollView(
+              controller: orderListDetailScreenPointScrollController,
+              // 스크롤 컨트롤러 연결
+              slivers: <Widget>[
+                // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
+                SliverAppBar(
+                  // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
+                  automaticallyImplyLeading: false,
+                  floating: true,
+                  // 스크롤 시 SliverAppBar가 빠르게 나타남.
+                  pinned: true,
+                  // 스크롤 다운시 AppBar가 상단에 고정됨.
+                  expandedHeight: 0.0,
+                  // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                  // 확장 높이 설정
+                  // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                    background: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                        ),
+                      ),
+                      child: buildCommonAppBar(
+                        // 공통 AppBar 빌드
+                        context: context,
+                        // 현재 context 전달
+                        ref: ref,
+                        // 참조(ref) 전달
+                        title: '발주 내역 상세',
+                        fontFamily: 'NanumGothic',
+                        // AppBar의 제목을 '발주 목록 상세'로 설정
+                        leadingType: LeadingType.back,
+                        // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
+                        buttonCase: 2,
+                        // 버튼 케이스를 2로 설정
+                        appBarTitleWidth: orderlistDtAppBarTitleWidth,
+                        appBarTitleHeight: orderlistDtAppBarTitleHeight,
+                        appBarTitleX: orderlistDtAppBarTitleX,
+                        appBarTitleY: orderlistDtAppBarTitleY,
+                        chevronIconWidth: orderlistDtChevronIconWidth,
+                        chevronIconHeight: orderlistDtChevronIconHeight,
+                        chevronIconX: orderlistDtChevronIconX,
+                        chevronIconY: orderlistDtChevronIconY,
+                        wishlistBtnWidth: orderlistDtWishlistBtnWidth,
+                        wishlistBtnHeight: orderlistDtWishlistBtnHeight,
+                        wishlistBtnX: orderlistDtWishlistBtnX,
+                        wishlistBtnY: orderlistDtWishlistBtnY,
+                      ),
+                    ),
+                  ),
+                  leading: null,
+                  // 좌측 상단의 메뉴 버튼 등을 제거함.
+                  // iOS에서는 AppBar의 배경색을 사용
+                  // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
+                  // backgroundColor: BUTTON_COLOR,
+                ),
+                // 실제 컨텐츠를 나타내는 슬리버 리스트
+                // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+                SliverPadding(
+                  padding: EdgeInsets.zero, // 컨텐츠 내용 부분 패딩이 없음.
+                  // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return Padding(
+                          // 각 항목의 좌우 간격을 orderlistDtPaddingX로 설정함.
+                          // padding: EdgeInsets.symmetric(horizontal: orderlistDtPaddingX),
+                          padding: EdgeInsets.symmetric(horizontal: 0),
+                          child: Column(
+                            children: [
+                              // Container(
+                              //   decoration: BoxDecoration(
+                              //     border: Border(
+                              //       bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              //     ),
+                              //   ),
+                              // ),
+                              // SizedBox(height: orderlistDtPadding1Y), // 높이 orderlistDtPadding1Y로 간격 설정
+                              OrderListDetailItemWidget(
+                                  order: orderlistDetailItem),
+                              SizedBox(height: orderlistDtPadding1Y),
+                            ],
+                          ),
+                        );
+                      },
+                      childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                     ),
                   ),
                 ),
-              )
-              else
-              CustomScrollView(
-                controller: orderListDetailScreenPointScrollController,
-                // 스크롤 컨트롤러 연결
-                slivers: <Widget>[
-                  // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
-                  SliverAppBar(
-                    // 'automaticallyImplyLeading: false'를 추가하여 SliverAppBar가 자동으로 leading 버튼을 생성하지 않도록 설정함.
-                    automaticallyImplyLeading: false,
-                    floating: true,
-                    // 스크롤 시 SliverAppBar가 빠르게 나타남.
-                    pinned: true,
-                    // 스크롤 다운시 AppBar가 상단에 고정됨.
-                    expandedHeight: 0.0,
-                    // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                    // 확장 높이 설정
-                    // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                    flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.pin,
-                      // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                      background: buildCommonAppBar(
-                      // 공통 AppBar 빌드
-                      context: context,
-                      // 현재 context 전달
-                      ref: ref,
-                      // 참조(ref) 전달
-                      title: '발주 내역 상세',
-                      fontFamily: 'NanumGothic',
-                      // AppBar의 제목을 '발주 목록 상세'로 설정
-                      leadingType: LeadingType.back,
-                      // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
-                      buttonCase: 2, // 버튼 케이스를 2로 설정
-                      appBarTitleWidth: orderlistDtAppBarTitleWidth,
-                      appBarTitleHeight: orderlistDtAppBarTitleHeight,
-                      appBarTitleX: orderlistDtAppBarTitleX,
-                      appBarTitleY: orderlistDtAppBarTitleY,
-                      chevronIconWidth: orderlistDtChevronIconWidth,
-                      chevronIconHeight: orderlistDtChevronIconHeight,
-                      chevronIconX: orderlistDtChevronIconX,
-                      chevronIconY: orderlistDtChevronIconY,
-                      wishlistBtnWidth: orderlistDtWishlistBtnWidth,
-                      wishlistBtnHeight: orderlistDtWishlistBtnHeight,
-                      wishlistBtnX: orderlistDtWishlistBtnX,
-                      wishlistBtnY: orderlistDtWishlistBtnY,
-                      ),
-                    ),
-                    leading: null,
-                    // 좌측 상단의 메뉴 버튼 등을 제거함.
-                    // iOS에서는 AppBar의 배경색을 사용
-                    // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                    // backgroundColor: BUTTON_COLOR,
-                  ),
-                  // 실제 컨텐츠를 나타내는 슬리버 리스트
-                  // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-                  SliverPadding(
-                    padding: EdgeInsets.zero, // 컨텐츠 내용 부분 패딩이 없음.
-                    // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          return Padding(
-                            // 각 항목의 좌우 간격을 orderlistDtPaddingX로 설정함.
-                            // padding: EdgeInsets.symmetric(horizontal: orderlistDtPaddingX),
-                            padding: EdgeInsets.symmetric(horizontal: 0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                    ),
-                                  ),
-                                ),
-                                // SizedBox(height: orderlistDtPadding1Y), // 높이 orderlistDtPadding1Y로 간격 설정
-                                OrderListDetailItemWidget(order: orderlistDetailItem),
-                                SizedBox(height: orderlistDtPadding1Y),
-                              ],
-                            ),
-                          );
-                        },
-                        childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-          ],
+              ],
+            ),
+        ],
       ),
       // buildTopButton 함수는 주어진 context와 orderListDetailProductScreenPointScrollController를 사용하여
       // 화면 상단으로 스크롤하기 위한 버튼 생성 위젯이며, common_body_parts_layout.dart 내에 있는 곳에서 재사용하여 구현한 부분
       // buildTopButton(
       //     context, orderListDetailScreenPointScrollController),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          3, 1, scrollController: orderListDetailScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 3, 1,
+          scrollController: orderListDetailScreenPointScrollController),
     );
     // ------ 화면구성 끝
   }

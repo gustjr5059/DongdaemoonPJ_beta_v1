@@ -1454,11 +1454,11 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
         Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 지정함
-            ),
-          ),
+          // decoration: BoxDecoration(
+          //   border: Border(
+          //     top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 지정함
+          //   ),
+          // ),
           child: CommonCardView(
             content: buildProductImageSliderSection(
                 context, product, ref, pageController, product.docId),
@@ -1474,6 +1474,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
+              top: BorderSide(color: BLACK_COLOR, width: 1.0),
               bottom:
                   BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
@@ -2192,7 +2193,7 @@ Widget buildProductAllCountAndPriceSelection(
           children: [
             // '수량' 텍스트를 표시함.
             Text(
-              '수량',
+              '수량 : ',
               style: TextStyle(
                 fontSize: selectedCountTextSize,
                 fontWeight: FontWeight.bold,
@@ -2348,7 +2349,7 @@ Widget buildProductAllCountAndPriceSelection(
         padding:
             EdgeInsets.symmetric(horizontal: sectionX, vertical: section2Y),
         child: Text(
-          '총 가격 : ${totalPrice != null ? totalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원',
+          '총 가격 :    ${totalPrice != null ? totalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원',
           style: TextStyle(
             fontFamily: 'NanumGothic',
             fontSize: selectedAllPriceTextSize,

@@ -534,7 +534,7 @@ class _PrivateReviewCreateFormScreenState extends ConsumerState<PrivateReviewCre
                                               ],
                                             ),
                                             // 선택된 사이즈와 수량을 표시
-                                            Text('사이즈: ${productInfo['selected_size']?.toString() ?? '에러 발생'}',
+                                            Text('${productInfo['selected_size']?.toString() ?? '에러 발생'}',
                                               style: TextStyle(
                                                 fontSize: orderlistDtInfoSizeTextDataFontSize,
                                                 fontFamily: 'NanumGothic',
@@ -542,7 +542,7 @@ class _PrivateReviewCreateFormScreenState extends ConsumerState<PrivateReviewCre
                                                 color: Colors.black,
                                               ),
                                             ),
-                                            Text('수량: ${productInfo['selected_count']?.toString() ?? '0 개'} 개',
+                                            Text('${productInfo['selected_count']?.toString() ?? '0 개'} 개',
                                               style: TextStyle(
                                                 fontSize: orderlistDtInfoCountTextDataFontSize,
                                                 fontFamily: 'NanumGothic',

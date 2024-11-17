@@ -515,7 +515,7 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
                 delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
                       // 좌우로 4의 패딩을 추가
                       child: Column(
                         children: [
@@ -526,6 +526,9 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
                               // 모서리에 반경을 주기 위한 BoxDecoration 추가함
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정함
+                                border: Border(
+                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
                               ),
                               child: SizedBox(
                                 // 배너 섹션의 높이를 설정함
@@ -602,7 +605,15 @@ class _BlouseMainScreenState extends ConsumerState<BlouseMainScreen>
                             elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
                             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
                           ),
-                          SizedBox(height: interval1Y), // interval1Y의 높이를 가진 간격 추가
+                          SizedBox(height: interval2Y), // interval1Y의 높이를 가진 간격 추가
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: interval1Y),
                           PriceAndDiscountPercentSortButtons<
                               ProductMainListNotifier>(
                             productListProvider:

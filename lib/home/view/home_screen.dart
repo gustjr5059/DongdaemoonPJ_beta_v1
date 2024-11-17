@@ -681,7 +681,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                       (BuildContext context, int index) {
                     return Padding(
                       // 각 항목의 좌우 간격을 1.0으로 설정함.
-                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
                       child: Column(
                         children: [
                           // SizedBox(height: 5), // 높이 20으로 간격 설정
@@ -691,6 +691,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                               // 모서리에 반경을 주기 위해 BoxDecoration 추가
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정
+                                border: Border(
+                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
                               ),
                               child: SizedBox(
                                 // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정함

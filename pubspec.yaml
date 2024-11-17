@@ -188,6 +188,8 @@ flutter:
     - asset/img/misc/drawer_img/message_management_logo_v1.png
     - asset/img/misc/drawer_img/orderlist_management_logo_v1.png
     - asset/img/misc/drawer_img/review_management_logo_v1.png
+    - asset/img/misc/icon_img/reviewlist_icon.png
+    - asset/img/misc/icon_img/messagelist_icon.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

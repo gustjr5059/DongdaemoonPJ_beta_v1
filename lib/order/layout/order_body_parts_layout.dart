@@ -2140,7 +2140,7 @@ class OrderListItemWidget extends ConsumerWidget {
                   children: [
                     // 발주일자를 텍스트로 표시.
                     Text(
-                      '발주 일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                      '발주일자:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                       style: TextStyle(
                         fontSize: orderlistInfoOrderDateDataFontSize,
                         // 텍스트 크기 설정
@@ -2170,7 +2170,7 @@ class OrderListItemWidget extends ConsumerWidget {
                 SizedBox(height: interval1Y),
                 // 발주번호를 텍스트로 표시.
                 Text(
-                  '발주 번호: ${orderNumber ?? ''}',
+                  '발주번호:  ${orderNumber ?? ''}',
                   style: TextStyle(
                     fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -2587,7 +2587,7 @@ class _OrderListDetailItemWidgetState
                 children: [
                   // 발주 일자를 표시
                   Text(
-                    '발주 일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderDateDataFontSize,
                       // 텍스트 크기 설정
@@ -2601,7 +2601,7 @@ class _OrderListDetailItemWidgetState
                   SizedBox(height: interval2Y),
                   // 발주 번호를 표시
                   Text(
-                    '발주 번호: ${orderNumber ?? ''}',
+                    '발주번호: ${orderNumber ?? ''}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderNumberDataFontSize,
                       // 텍스트 크기 설정
@@ -2903,7 +2903,7 @@ class _OrderListDetailItemWidgetState
                                                   ?.toString()
                                                   .isNotEmpty ==
                                               true
-                                          ? '상품 번호: ${productInfo['product_number']}'
+                                          ? '상품번호: ${productInfo['product_number']}'
                                           : '',
                                       '',
                                       bold: true,
@@ -2971,7 +2971,7 @@ class _OrderListDetailItemWidgetState
                                                 ),
                                                 SizedBox(width: interval2X),
                                                 Text(
-                                                  '${(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : '')}%',
+                                                  '${numberFormat.format(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : '')}%',
                                                   style: TextStyle(
                                                     fontSize:
                                                         orderlistDtInfoDiscountPercentDataFontSize,
@@ -3036,7 +3036,7 @@ class _OrderListDetailItemWidgetState
                                             SizedBox(height: interval1Y),
                                             // 선택된 사이즈와 수량을 표시
                                             Text(
-                                              '사이즈: ${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
+                                              '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
                                               style: TextStyle(
                                                 fontSize:
                                                     orderlistDtInfoSizeTextDataFontSize,
@@ -3045,8 +3045,9 @@ class _OrderListDetailItemWidgetState
                                                 color: BLACK_COLOR,
                                               ),
                                             ),
+                                            SizedBox(height: interval1Y),
                                             Text(
-                                              '수량: ${productInfo['selected_count']?.toString().isNotEmpty == true ? '${productInfo['selected_count']} 개' : '0 개'}',
+                                              '${productInfo['selected_count']?.toString().isNotEmpty == true ? '${productInfo['selected_count']} 개' : '0 개'}',
                                               style: TextStyle(
                                                 fontSize:
                                                     orderlistDtInfoCountTextDataFontSize,

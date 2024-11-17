@@ -253,21 +253,29 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '공지사항 상세',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.back,
-                    buttonCase: 1,
-                    appBarTitleWidth: announceDtAppBarTitleWidth,
-                    appBarTitleHeight: announceDtAppBarTitleHeight,
-                    appBarTitleX: announceDtAppBarTitleX,
-                    appBarTitleY: announceDtAppBarTitleY,
-                    chevronIconWidth: announceDtChevronIconWidth,
-                    chevronIconHeight: announceDtChevronIconHeight,
-                    chevronIconX: announceDtChevronIconX,
-                    chevronIconY: announceDtChevronIconY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '공지사항 상세',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.back,
+                      buttonCase: 1,
+                      appBarTitleWidth: announceDtAppBarTitleWidth,
+                      appBarTitleHeight: announceDtAppBarTitleHeight,
+                      appBarTitleX: announceDtAppBarTitleX,
+                      appBarTitleY: announceDtAppBarTitleY,
+                      chevronIconWidth: announceDtChevronIconWidth,
+                      chevronIconHeight: announceDtChevronIconHeight,
+                      chevronIconX: announceDtChevronIconX,
+                      chevronIconY: announceDtChevronIconY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -319,7 +327,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                                 ),
                               ),
                             ),
-                        )
+                          )
                         // 공지사항 상세에 아이템이 있을 경우, SliverList로 아이템을 표시함.
                         : SliverList(
                             // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
@@ -330,24 +338,25 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                                 //   padding: EdgeInsets.symmetric(
                                 //       horizontal: announceDtlistPaddingX),
                                 return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: announceDtlistPaddingY),
-                                        // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
-                                        AnnounceDetailBodyPartsLayout(
-                                            documentId: widget.documentId),
-                                        SizedBox(height: announceDtlistPaddingY),
-                                      ],
-                                    ),
+                                  padding: EdgeInsets.symmetric(horizontal: 0),
+                                  child: Column(
+                                    children: [
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //     border: Border(
+                                      //       bottom: BorderSide(
+                                      //           color: BLACK_COLOR,
+                                      //           width: 1.0), // 하단 테두리 색상을 설정함
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      SizedBox(height: announceDtlistPaddingY),
+                                      // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
+                                      AnnounceDetailBodyPartsLayout(
+                                          documentId: widget.documentId),
+                                      SizedBox(height: announceDtlistPaddingY),
+                                    ],
+                                  ),
                                 );
                               },
                               // 전체 아이템을 하나의 큰 Column으로 구성하기 때문에 childCount를 1로 설정함.

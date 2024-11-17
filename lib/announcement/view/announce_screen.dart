@@ -44,7 +44,6 @@ import '../layout/announce_body_parts_layout.dart';
 import '../provider/announce_all_provider.dart';
 import '../provider/announce_state_provider.dart';
 
-
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
@@ -189,7 +188,6 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -200,14 +198,20 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double announceAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double announceAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double announceAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double announceAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double announceAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double announceAppBarTitleX =
+        screenSize.width * (5 / referenceHeight);
+    final double announceAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double announcelistPaddingX = screenSize.width * (17 / referenceWidth);
-    final double announcelistPaddingY = screenSize.height * (8 / referenceHeight);
+    final double announcelistPaddingX =
+        screenSize.width * (17 / referenceWidth);
+    final double announcelistPaddingY =
+        screenSize.height * (8 / referenceHeight);
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementlistEmptyTextWidth =
@@ -218,7 +222,6 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
         screenSize.height * (300 / referenceHeight); // 세로 비율임
     final double announcementlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
-
 
     return Scaffold(
       body: Stack(
@@ -236,17 +239,25 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '공지사항',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: announceAppBarTitleWidth,
-                    appBarTitleHeight: announceAppBarTitleHeight,
-                    appBarTitleX: announceAppBarTitleX,
-                    appBarTitleY: announceAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '공지사항',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: announceAppBarTitleWidth,
+                      appBarTitleHeight: announceAppBarTitleHeight,
+                      appBarTitleX: announceAppBarTitleX,
+                      appBarTitleY: announceAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -271,78 +282,78 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                     // 그대신 로딩 표시를 못 넣음...
                     return announceItems.isEmpty
                         ? SliverToBoxAdapter(
-                          // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
-                          child: Container(
-                            // 공지사항이 없을 때 텍스트의 너비를 설정함.
-                            width: announcementlistEmptyTextWidth,
-                            // 공지사항이 없을 때 텍스트의 높이를 설정함.
-                            height: announcementlistEmptyTextHeight,
-                            // 텍스트 위치를 화면의 상단에서부터 설정함.
-                            margin: EdgeInsets.only(
-                                top: announcementlistEmptyTextY),
-                            // 텍스트를 중앙에 위치하도록 설정함.
-                            alignment: Alignment.center,
-                            // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
-                            child: Text('현재 공지사항이 없습니다.',
-                              style: TextStyle(
-                                // 텍스트의 폰트 크기를 설정함.
-                                fontSize: announcementlistEmptyTextFontSize,
-                                // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                                fontFamily: 'NanumGothic',
-                                // 폰트의 굵기를 'bold'로 설정함.
-                                fontWeight: FontWeight.bold,
-                                // 텍스트 색상을 검은색으로 설정함.
-                                color: BLACK_COLOR,
+                            // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
+                            child: Container(
+                              // 공지사항이 없을 때 텍스트의 너비를 설정함.
+                              width: announcementlistEmptyTextWidth,
+                              // 공지사항이 없을 때 텍스트의 높이를 설정함.
+                              height: announcementlistEmptyTextHeight,
+                              // 텍스트 위치를 화면의 상단에서부터 설정함.
+                              margin: EdgeInsets.only(
+                                  top: announcementlistEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                              // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
+                              child: Text(
+                                '현재 공지사항이 없습니다.',
+                                style: TextStyle(
+                                  // 텍스트의 폰트 크기를 설정함.
+                                  fontSize: announcementlistEmptyTextFontSize,
+                                  // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                                  fontFamily: 'NanumGothic',
+                                  // 폰트의 굵기를 'bold'로 설정함.
+                                  fontWeight: FontWeight.bold,
+                                  // 텍스트 색상을 검은색으로 설정함.
+                                  color: BLACK_COLOR,
+                                ),
                               ),
                             ),
-                          ),
-                        )
+                          )
                         // 공지사항에 아이템이 있을 경우, SliverList로 아이템 목록을 표시함.
                         : SliverList(
                             // SliverChildBuilderDelegate를 사용하여 공지사항 아이템 목록을 빌드함.
                             delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
+                              (BuildContext context, int index) {
                                 // 각 항목을 패딩으로 감싸, 좌우 간격을 announcelistPaddingX로 설정함.
                                 // return Padding(
                                 //   padding: EdgeInsets.symmetric(
                                 //       horizontal: announcelistPaddingX),
-                                    return Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 0),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              border: Border(
-                                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: announcelistPaddingY),
-                                          // AnnounceBodyPartsLayout을 재사용하여 공지사항 내용을 구현함.
-                                          AnnounceBodyPartsLayout(),
-                                          SizedBox(height: announcelistPaddingY),
-                                        ],
-                                      ),
-                                  );
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 0),
+                                  child: Column(
+                                    children: [
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //     border: Border(
+                                      //       bottom: BorderSide(
+                                      //           color: BLACK_COLOR,
+                                      //           width: 1.0), // 하단 테두리 색상을 설정함
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      SizedBox(height: announcelistPaddingY),
+                                      // AnnounceBodyPartsLayout을 재사용하여 공지사항 내용을 구현함.
+                                      AnnounceBodyPartsLayout(),
+                                      SizedBox(height: announcelistPaddingY),
+                                    ],
+                                  ),
+                                );
                               },
                               // 하나의 큰 Column이 모든 공지사항 아이템을 포함하므로 childCount를 1로 설정함.
                               childCount: 1,
                             ),
-                        );
-                    },
-                  ),
+                          );
+                  },
                 ),
-              ],
+              ),
+            ],
           ),
           buildTopButton(context, announceScreenPointScrollController),
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: announceScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: announceScreenPointScrollController),
     );
   }
 }

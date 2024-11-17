@@ -57,18 +57,20 @@ class PrivateReviewMainScreen extends ConsumerStatefulWidget {
   final bool navigateToListTab; // 리뷰 목록 탭으로 이동할지 여부를 결정하는 플래그
 
   // ReviewMainScreen 생성자, email, navigateToListTab 매개변수를 필수로 받음
-  const PrivateReviewMainScreen({Key? key, required this.email, this.navigateToListTab = false}) : super(key: key);
-
+  const PrivateReviewMainScreen(
+      {Key? key, required this.email, this.navigateToListTab = false})
+      : super(key: key);
 
   @override
-  _PrivateReviewMainScreenState createState() => _PrivateReviewMainScreenState(); // 상태 관리 객체 생성
+  _PrivateReviewMainScreenState createState() =>
+      _PrivateReviewMainScreenState(); // 상태 관리 객체 생성
 }
 
 // _PrivateReviewMainScreenState 클래스 시작
 // _PrivateReviewMainScreenState 클래스는 ReviewMainScreen 위젯의 상태를 관리함
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시하는 역할을 함
-class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScreen>
-    with WidgetsBindingObserver {
+class _PrivateReviewMainScreenState
+    extends ConsumerState<PrivateReviewMainScreen> with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -109,7 +111,8 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴
-        double savedScrollPosition = ref.read(privateReviewScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(privateReviewScrollPositionProvider);
         // privateReviewScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함
         privateReviewScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -121,9 +124,11 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
       ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
       // navigateToListTab 플래그에 따라 초기 탭 설정
       if (widget.navigateToListTab) {
-        ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.list;
+        ref.read(privateReviewScreenTabProvider.notifier).state =
+            ReviewScreenTab.list;
       } else {
-        ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create;
+        ref.read(privateReviewScreenTabProvider.notifier).state =
+            ReviewScreenTab.create;
       }
       // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
       ref.invalidate(buttonInfoProvider);
@@ -140,7 +145,8 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(privateReviewScrollPositionProvider.notifier).state = 0;
         ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-        ref.read(privateReviewScreenTabProvider.notifier).state = ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
+        ref.read(privateReviewScreenTabProvider.notifier).state =
+            ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
         // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
         ref.invalidate(buttonInfoProvider);
         ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
@@ -181,6 +187,7 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
       updateStatusBar(); // 앱이 다시 활성화될 때 상태표시줄 업데이트
     }
   }
+
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -202,6 +209,7 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
@@ -209,7 +217,6 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
   // build 함수는 위젯의 UI를 그리는 역할을 함
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -220,16 +227,21 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double reviewAppBarTitleWidth = screenSize.width * (160 / referenceWidth);
-    final double reviewAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double reviewAppBarTitleX = screenSize.height * (93 / referenceHeight);
-    final double reviewAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double reviewAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double reviewAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double reviewAppBarTitleX =
+        screenSize.height * (5 / referenceHeight);
+    final double reviewAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    final double interval1Y =
+        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
     // 리뷰관리 화면 내 발주내역 부분이 비어있는 경우의 알림 부분 수치
     final double reviewEmptyTextWidth =
@@ -242,7 +254,6 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double reviewEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
-
 
     return Scaffold(
       body: Stack(
@@ -262,16 +273,27 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '리뷰 관리', // 앱 바의 제목 설정
-                    leadingType: LeadingType.none, // 앱 바의 leading 버튼 설정
-                    buttonCase: 1, // 앱 바 버튼의 경우 설정
-                    appBarTitleWidth: reviewAppBarTitleWidth,
-                    appBarTitleHeight: reviewAppBarTitleHeight,
-                    appBarTitleX: reviewAppBarTitleX,
-                    appBarTitleY: reviewAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '리뷰 관리',
+                      // 앱 바의 제목 설정
+                      leadingType: LeadingType.none,
+                      // 앱 바의 leading 버튼 설정
+                      buttonCase: 1,
+                      // 앱 바 버튼의 경우 설정
+                      appBarTitleWidth: reviewAppBarTitleWidth,
+                      appBarTitleHeight: reviewAppBarTitleHeight,
+                      appBarTitleX: reviewAppBarTitleX,
+                      appBarTitleY: reviewAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -283,41 +305,53 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
                 padding: EdgeInsets.only(top: 5),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: reviewPaddingX),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: reviewPaddingX),
                         child: Column(
                           children: [
                             SizedBox(height: interval1Y),
                             // reviewUserOrdersProvider를 통해 주문 데이터를 가져옴
-                            ref.watch(reviewUserOrdersProvider(widget.email)).when(
-                              data: (orders) {
-                                if (orders.isEmpty) {
-                                  // 리뷰관리 화면에 발주정보가 비어있을 경우 "리뷰 작성할 발주내역이 없습니다." 메시지 표시
-                                  return Container(
-                                    width: reviewEmptyTextWidth,
-                                    height: reviewEmptyTextHeight,
-                                    margin: EdgeInsets.only(left: reviewEmptyTextX, top: reviewEmptyTextY),
-                                    child: Text('리뷰 작성할 발주내역이 없습니다.',
-                                      style: TextStyle(
-                                        fontSize: reviewEmptyTextFontSize,
-                                        fontFamily: 'NanumGothic',
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  );
-                                  // return Center(
-                                  //   child: Text('해당 주문 정보를 찾을 수 없습니다.'),
-                                  // );
-                                }
-                                // PrivateReviewScreenTabs 위젯을 반환
-                                return PrivateReviewScreenTabs(orders: orders);
-                              },
-                              loading: () => Center(child: CircularProgressIndicator()), // 로딩 중일 때 표시할 UI
-                              error: (error, stack) => Center(child: Text('에러가 발생했습니다: $error')), // 오류 발생 시 표시할 UI
-                            ),
+                            ref
+                                .watch(reviewUserOrdersProvider(widget.email))
+                                .when(
+                                  data: (orders) {
+                                    if (orders.isEmpty) {
+                                      // 리뷰관리 화면에 발주정보가 비어있을 경우 "리뷰 작성할 발주내역이 없습니다." 메시지 표시
+                                      return Container(
+                                        width: reviewEmptyTextWidth,
+                                        height: reviewEmptyTextHeight,
+                                        margin: EdgeInsets.only(
+                                            top: reviewEmptyTextY),
+                                        // 텍스트를 중앙에 위치하도록 설정함.
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '리뷰 작성할 발주내역이 없습니다.',
+                                          style: TextStyle(
+                                            fontSize: reviewEmptyTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.bold,
+                                            color: BLACK_COLOR,
+                                          ),
+                                        ),
+                                      );
+                                      // return Center(
+                                      //   child: Text('해당 주문 정보를 찾을 수 없습니다.'),
+                                      // );
+                                    }
+                                    // PrivateReviewScreenTabs 위젯을 반환
+                                    return PrivateReviewScreenTabs(
+                                        orders: orders);
+                                  },
+                                  loading: () => Center(
+                                      child: CircularProgressIndicator()),
+                                  // 로딩 중일 때 표시할 UI
+                                  error: (error, stack) => Center(
+                                      child: Text(
+                                          '에러가 발생했습니다: $error')), // 오류 발생 시 표시할 UI
+                                ),
                             SizedBox(height: interval1Y),
                           ],
                         ),
@@ -335,10 +369,9 @@ class _PrivateReviewMainScreenState extends ConsumerState<PrivateReviewMainScree
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: privateReviewScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController:
+              privateReviewScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

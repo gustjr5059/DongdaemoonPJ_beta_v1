@@ -89,7 +89,8 @@ class _ShirtDetailProductScreenState
     });
 
     // 페이지 컨트롤러를 초기 페이지로 초기화함.
-    pageController = PageController(initialPage: ref.read(getImagePageProvider(widget.fullPath)));
+    pageController = PageController(
+        initialPage: ref.read(getImagePageProvider(widget.fullPath)));
 
     pageController.addListener(() {
       // 페이지 컨트롤러의 현재 페이지를 반올림하여 getImagePageProvider 상태에 업데이트함.
@@ -124,7 +125,9 @@ class _ShirtDetailProductScreenState
         ref.read(sizeSelectionIndexProvider.notifier).state = null;
         // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
         ref.read(showFullImageProvider.notifier).state = false;
-        ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();  // '접기' 버튼 상태 초기화
+        ref
+            .read(imagesProvider(widget.fullPath).notifier)
+            .resetButtonState(); // '접기' 버튼 상태 초기화
         ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
       }
     });
@@ -134,8 +137,10 @@ class _ShirtDetailProductScreenState
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(shirtDetailScrollPositionProvider.notifier).state = 0; // shirtDetailScrollPositionProvider의 상태를 0으로 설정
-        ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0; // getImagePageProvider의 상태를 0으로 설정
+        ref.read(shirtDetailScrollPositionProvider.notifier).state =
+            0; // shirtDetailScrollPositionProvider의 상태를 0으로 설정
+        ref.read(getImagePageProvider(widget.fullPath).notifier).state =
+            0; // getImagePageProvider의 상태를 0으로 설정
         pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
         ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
 
@@ -177,8 +182,8 @@ class _ShirtDetailProductScreenState
 
     // 현재 스크롤 위치가 스크롤 가능한 최대 위치에 도달했는지 확인함
     if (shirtDetailProductScreenPointScrollController.position.pixels ==
-        shirtDetailProductScreenPointScrollController.position
-            .maxScrollExtent) {
+        shirtDetailProductScreenPointScrollController
+            .position.maxScrollExtent) {
       // 스크롤이 끝에 도달했을 때 실행되는 추가 이미지 로드 함수 호출
       ref.read(imagesProvider(widget.fullPath).notifier).loadMoreImages();
     }
@@ -213,7 +218,6 @@ class _ShirtDetailProductScreenState
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -224,46 +228,68 @@ class _ShirtDetailProductScreenState
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double productDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productDtAppBarTitleX = screenSize.height * (70 / referenceHeight);
-    final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double productDtAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double productDtAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double productDtAppBarTitleX =
+        screenSize.height * (70 / referenceHeight);
+    final double productDtAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double productDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
-    final double productDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double productDtChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double productDtChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
+    final double productDtChevronIconHeight =
+        screenSize.height * (24 / referenceHeight);
+    final double productDtChevronIconX =
+        screenSize.width * (10 / referenceWidth);
+    final double productDtChevronIconY =
+        screenSize.height * (8 / referenceHeight);
 
     //  업데이트 요청 목록 버튼 수치 (Case 4)
-    final double productDtCartlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double productDtCartlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double productDtCartlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double productDtCartlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double productDtCartlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double productDtCartlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double productDtCartlistBtnX =
+        screenSize.width * (1 / referenceWidth);
+    final double productDtCartlistBtnY =
+        screenSize.height * (8 / referenceHeight);
 
     // 홈 버튼 수치 (Case 4)
-    final double productDtHomeBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double productDtHomeBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productDtHomeBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double productDtHomeBtnHeight =
+        screenSize.height * (40 / referenceHeight);
     final double productDtHomeBtnX = screenSize.width * (1 / referenceWidth);
     final double productDtHomeBtnY = screenSize.height * (8 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 4)
-    final double productDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double productDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double productDtWishlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double productDtWishlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double productDtWishlistBtnX =
+        screenSize.width * (1 / referenceWidth);
+    final double productDtWishlistBtnY =
+        screenSize.height * (8 / referenceHeight);
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 =
+        screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 =
+        screenSize.height * (12 / referenceHeight);
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(shirtDetailProdFirestoreDataProvider(widget.fullPath));
-    final productReviews = ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
+    final productReviews =
+        ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
 
-    print("ShirtDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
+    print(
+        "ShirtDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -291,38 +317,47 @@ class _ShirtDetailProductScreenState
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    // 공통 AppBar 빌드
-                    context: context,
-                    // 현재 context 전달
-                    ref: ref,
-                    // 참조(ref) 전달
-                    title: widget.title,
-                    // AppBar의 제목을 '티셔츠 상세'로 설정
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.back,
-                    // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
-                    buttonCase: 4, // 버튼 케이스를 4로 설정
-                    appBarTitleWidth: productDtAppBarTitleWidth,
-                    appBarTitleHeight: productDtAppBarTitleHeight,
-                    appBarTitleX: productDtAppBarTitleX,
-                    appBarTitleY: productDtAppBarTitleY,
-                    chevronIconWidth: productDtChevronIconWidth,
-                    chevronIconHeight: productDtChevronIconHeight,
-                    chevronIconX: productDtChevronIconX,
-                    chevronIconY: productDtChevronIconY,
-                    cartlistBtnWidth: productDtCartlistBtnWidth,
-                    cartlistBtnHeight: productDtCartlistBtnHeight,
-                    cartlistBtnX: productDtCartlistBtnX,
-                    cartlistBtnY: productDtCartlistBtnY,
-                    homeBtnWidth: productDtHomeBtnWidth,
-                    homeBtnHeight: productDtHomeBtnHeight,
-                    homeBtnX: productDtHomeBtnX,
-                    homeBtnY: productDtHomeBtnY,
-                    wishlistBtnWidth: productDtWishlistBtnWidth,
-                    wishlistBtnHeight: productDtWishlistBtnHeight,
-                    wishlistBtnX: productDtWishlistBtnX,
-                    wishlistBtnY: productDtWishlistBtnY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      // 공통 AppBar 빌드
+                      context: context,
+                      // 현재 context 전달
+                      ref: ref,
+                      // 참조(ref) 전달
+                      title: widget.title,
+                      // AppBar의 제목을 '티셔츠 상세'로 설정
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.back,
+                      // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
+                      buttonCase: 4,
+                      // 버튼 케이스를 4로 설정
+                      appBarTitleWidth: productDtAppBarTitleWidth,
+                      appBarTitleHeight: productDtAppBarTitleHeight,
+                      appBarTitleX: productDtAppBarTitleX,
+                      appBarTitleY: productDtAppBarTitleY,
+                      chevronIconWidth: productDtChevronIconWidth,
+                      chevronIconHeight: productDtChevronIconHeight,
+                      chevronIconX: productDtChevronIconX,
+                      chevronIconY: productDtChevronIconY,
+                      cartlistBtnWidth: productDtCartlistBtnWidth,
+                      cartlistBtnHeight: productDtCartlistBtnHeight,
+                      cartlistBtnX: productDtCartlistBtnX,
+                      cartlistBtnY: productDtCartlistBtnY,
+                      homeBtnWidth: productDtHomeBtnWidth,
+                      homeBtnHeight: productDtHomeBtnHeight,
+                      homeBtnX: productDtHomeBtnX,
+                      homeBtnY: productDtHomeBtnY,
+                      wishlistBtnWidth: productDtWishlistBtnWidth,
+                      wishlistBtnHeight: productDtWishlistBtnHeight,
+                      wishlistBtnX: productDtWishlistBtnX,
+                      wishlistBtnY: productDtWishlistBtnY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -337,43 +372,67 @@ class _ShirtDetailProductScreenState
                 padding: EdgeInsets.zero,
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Column(
                         children: [
                           productContent.when(
                             data: (product) {
-                              print("ShirtDetailProductScreen: 제품 데이터 로드 완료"); // 디버깅 메시지 추가
+                              print(
+                                  "ShirtDetailProductScreen: 제품 데이터 로드 완료"); // 디버깅 메시지 추가
                               return Column(
                                 children: [
-                                  buildProdDetailScreenContents(context, ref, product, pageController),
+                                  buildProdDetailScreenContents(
+                                      context, ref, product, pageController),
                                   // ProductDetailScreenTabs를 사용하여 탭을 생성하고 리뷰 데이터를 전달
                                   productReviews.when(
                                     data: (reviewsContent) {
-                                      print("ShirtDetailProductScreen: ${reviewsContent.length} reviews가 로드됨"); // 디버깅 메시지 추가
+                                      print(
+                                          "ShirtDetailProductScreen: ${reviewsContent.length} reviews가 로드됨"); // 디버깅 메시지 추가
                                       return ProductDetailScreenTabs(
                                         productInfoContent: ProductInfoContents(
                                           fullPath: widget.fullPath,
                                         ),
-                                        reviewsContent: reviewsContent, // Firestore에서 가져온 리뷰 데이터를 전달
-                                        inquiryContent: ProductInquiryContents(),
+                                        reviewsContent: reviewsContent,
+                                        // Firestore에서 가져온 리뷰 데이터를 전달
+                                        inquiryContent:
+                                            ProductInquiryContents(),
                                       );
                                     },
-                                    loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
-                                    error: (error, stack) => Container( // 에러 상태에서 중앙 배치
-                                      height: errorTextHeight, // 전체 화면 높이 설정
-                                      alignment: Alignment.center, // 중앙 정렬
+                                    loading: () =>
+                                        buildCommonLoadingIndicator(),
+                                    // 공통 로딩 인디케이터 호출
+                                    error: (error, stack) => Container(
+                                      // 에러 상태에서 중앙 배치
+                                      height: errorTextHeight,
+                                      // 전체 화면 높이 설정
+                                      alignment: Alignment.center,
+                                      // 중앙 정렬
                                       child: buildCommonErrorIndicator(
-                                        message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
-                                        secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
-                                        fontSize1: errorTextFontSize1, // 폰트1 크기 설정
-                                        fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                                        color: BLACK_COLOR, // 색상 설정
-                                        showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                                        message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                                        // 첫 번째 메시지 설정
+                                        secondMessage:
+                                            '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+                                        // 두 번째 메시지 설정
+                                        fontSize1: errorTextFontSize1,
+                                        // 폰트1 크기 설정
+                                        fontSize2: errorTextFontSize2,
+                                        // 폰트2 크기 설정
+                                        color: BLACK_COLOR,
+                                        // 색상 설정
+                                        showSecondMessage:
+                                            true, // 두 번째 메시지를 표시하도록 설정
                                       ),
                                     ),
                                   ),
                                   // 로딩 인디케이터를 표시 (로그아웃 후 재로그인 시, 로딩 표시가 안나오도록 추가 설정)
-                                  if (ref.watch(imagesProvider(widget.fullPath)).isEmpty && ref.watch(imagesProvider(widget.fullPath).notifier).isLoadingMore)
+                                  if (ref
+                                          .watch(
+                                              imagesProvider(widget.fullPath))
+                                          .isEmpty &&
+                                      ref
+                                          .watch(imagesProvider(widget.fullPath)
+                                              .notifier)
+                                          .isLoadingMore)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Center(
@@ -382,23 +441,30 @@ class _ShirtDetailProductScreenState
                                 ],
                               );
                             },
-                            loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
-                            error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+                            loading: () => buildCommonLoadingIndicator(),
+                            // 공통 로딩 인디케이터 호출
+                            error: (error, stack) => Container(
+                              // 에러 상태에서 중앙 배치
                               height: errorTextHeight, // 전체 화면 높이 설정
                               alignment: Alignment.center, // 중앙 정렬
                               child: buildCommonErrorIndicator(
-                                message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
-                                secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
-                                fontSize1: errorTextFontSize1, // 폰트1 크기 설정
-                                fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-                                color: BLACK_COLOR, // 색상 설정
+                                message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                                // 첫 번째 메시지 설정
+                                secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+                                // 두 번째 메시지 설정
+                                fontSize1: errorTextFontSize1,
+                                // 폰트1 크기 설정
+                                fontSize2: errorTextFontSize2,
+                                // 폰트2 크기 설정
+                                color: BLACK_COLOR,
+                                // 색상 설정
                                 showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
                               ),
                             ),
                           ),
                         ],
                       );
-                        },
+                    },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                   ),
                 ),
@@ -415,10 +481,12 @@ class _ShirtDetailProductScreenState
       bottomNavigationBar: productContent.when(
         data: (product) {
           return buildCommonBottomNavigationBar(
-              ref.watch(tabIndexProvider), ref, context, 5, 2, product: product, scrollController: shirtDetailProductScreenPointScrollController);
+              ref.watch(tabIndexProvider), ref, context, 5, 2,
+              product: product,
+              scrollController: shirtDetailProductScreenPointScrollController);
         },
-        loading: () => SizedBox.shrink(),  // 로딩 중일 때는 빈 공간으로 처리
-        error: (error, _) => SizedBox.shrink(),  // 에러가 발생했을 때는 빈 공간으로 처리
+        loading: () => SizedBox.shrink(), // 로딩 중일 때는 빈 공간으로 처리
+        error: (error, _) => SizedBox.shrink(), // 에러가 발생했을 때는 빈 공간으로 처리
       ),
     );
     // ------ 화면구성 끝

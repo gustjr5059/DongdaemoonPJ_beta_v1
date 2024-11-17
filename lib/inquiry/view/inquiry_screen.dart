@@ -43,7 +43,6 @@ import '../../../common/provider/common_state_provider.dart';
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../provider/inquiry_state_provider.dart';
 
-
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
@@ -170,7 +169,6 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -181,20 +179,28 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double inquiryAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double inquiryAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double inquiryAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
     final double inquiryAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double inquiryAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double inquiryPaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (200 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
-    final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval1Y =
+        screenSize.height * (200 / referenceHeight); // 세로 간격 1 계산
+    final double interval2Y =
+        screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
+    final double interval3Y =
+        screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
+    final double interval1X =
+        screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
+    final double interval2X =
+        screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
     final double inquiryGuidFontSize1 =
@@ -207,8 +213,10 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
         screenSize.width * (250 / referenceWidth); // 문의하기로 이동 버튼 가로 비율 계산
     final double inquiryBtnHeight =
         screenSize.height * (45 / referenceHeight); // 문의하기로 이동 버튼 세로 비율 계산
-    final double inquiryBtnPaddingX = screenSize.width * (12 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
-    final double inquiryBtnPaddingY = screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
+    final double inquiryBtnPaddingX =
+        screenSize.width * (12 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
+    final double inquiryBtnPaddingY =
+        screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
     final double inquiryBtnFontSize =
         screenSize.height * (14 / referenceHeight); // 문의하기로 이동 버튼 텍스트 크기 비율 계산
     final double inquiryBtnX = screenSize.width * (120 / referenceWidth);
@@ -229,17 +237,25 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '문의하기',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: inquiryAppBarTitleWidth,
-                    appBarTitleHeight: inquiryAppBarTitleHeight,
-                    appBarTitleX: inquiryAppBarTitleX,
-                    appBarTitleY: inquiryAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '문의하기',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: inquiryAppBarTitleWidth,
+                      appBarTitleHeight: inquiryAppBarTitleHeight,
+                      appBarTitleX: inquiryAppBarTitleX,
+                      appBarTitleY: inquiryAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -252,18 +268,21 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: inquiryPaddingX),
                         child: Column(
                           // 자식 위젯들을 왼쪽 정렬.
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: interval1Y),
                             Container(
-                              padding: EdgeInsets.only(left: interval1X), // 패딩 설정
-                              child: Text('* 문의는 아래 절차에 따라 진행해주세요.',
+                              padding: EdgeInsets.only(left: interval1X),
+                              // 패딩 설정
+                              child: Text(
+                                '* 문의는 아래 절차에 따라 진행해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold, // 텍스트 굵기 설정
@@ -274,8 +293,10 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                             ),
                             SizedBox(height: interval2Y),
                             Container(
-                              padding: EdgeInsets.only(left: interval2X), // 패딩 설정
-                              child: Text('1. [문의하기로 이동] 버튼을 클릭해주세요.',
+                              padding: EdgeInsets.only(left: interval2X),
+                              // 패딩 설정
+                              child: Text(
+                                '1. [문의하기로 이동] 버튼을 클릭해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
@@ -285,8 +306,10 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: interval2X), // 패딩 설정
-                              child: Text('2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
+                              padding: EdgeInsets.only(left: interval2X),
+                              // 패딩 설정
+                              child: Text(
+                                '2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
@@ -299,23 +322,33 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                             Container(
                               width: inquiryBtnWidth,
                               height: inquiryBtnHeight,
-                              padding: EdgeInsets.only(left: inquiryBtnX), // 패딩 설정
+                              padding: EdgeInsets.only(left: inquiryBtnX),
+                              // 패딩 설정
                               child: ElevatedButton(
                                 onPressed: () async {
                                   // 버튼이 눌렸을 때 해당 링크로 이동함
-                                  final Uri url = Uri.parse('http://pf.kakao.com/_ceKEn');
+                                  final Uri url =
+                                      Uri.parse('http://pf.kakao.com/_ceKEn');
                                   if (await canLaunchUrl(url)) {
-                                    await launchUrl(url); // url_launcher 패키지를 사용하여 링크를 엶
+                                    await launchUrl(
+                                        url); // url_launcher 패키지를 사용하여 링크를 엶
                                   } else {
                                     throw '$url 해당 url를 열 수 없습니다.'; // 링크를 열 수 없는 경우 예외를 발생시킴
                                   }
                                 },
-                                style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                                  foregroundColor: ORANGE56_COLOR, // 버튼의 글자 색상을 설정함
-                                  backgroundColor: ORANGE56_COLOR, // 버튼의 배경 색상을 설정함
-                                  padding: EdgeInsets.symmetric(vertical: inquiryBtnPaddingY, horizontal: inquiryBtnPaddingX), // 패딩 설정
+                                style: ElevatedButton.styleFrom(
+                                  // 버튼의 스타일을 설정함
+                                  foregroundColor: ORANGE56_COLOR,
+                                  // 버튼의 글자 색상을 설정함
+                                  backgroundColor: ORANGE56_COLOR,
+                                  // 버튼의 배경 색상을 설정함
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: inquiryBtnPaddingY,
+                                      horizontal: inquiryBtnPaddingX),
+                                  // 패딩 설정
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
+                                    borderRadius:
+                                        BorderRadius.circular(45), // 모서리 둥글게 설정
                                   ),
                                 ),
                                 child: Text(
@@ -343,10 +376,8 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: inquiryScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: inquiryScreenPointScrollController),
     );
   }
 }

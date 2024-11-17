@@ -271,7 +271,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
             children: [
               _buildOptionTile( // 옵션 타일 생성
                 context,
-                assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 리뷰관리 아이콘 설정
+                assetPath: 'asset/img/misc/icon_img/reviewlist_icon.png', // 리뷰관리 아이콘 설정
                 title: '리뷰관리', // 제목 설정
                 onTap: () { // 클릭 시 실행될 함수
                   onReviewListClick(context, ref, email); // 리뷰 목록 클릭 함수 실행
@@ -279,7 +279,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
               ),
               _buildOptionTile( // 옵션 타일 생성
                   context,
-                  assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 쪽지함 아이콘 설정
+                  assetPath: 'asset/img/misc/icon_img/messagelist_icon.png', // 쪽지함 아이콘 설정
                   title: '쪽지함', // 제목 설정
                   onTap: () { // 클릭 시 실행될 함수
                     onMessageListClick(context, ref); // 메시지 목록 클릭 함수 실행

@@ -66,7 +66,6 @@ class ProfileMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     with WidgetsBindingObserver {
-
   // 첫 번째 작은 배너를 위한 페이지 컨트롤러
   late PageController _small1BannerPageController;
 
@@ -132,7 +131,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(profileMainScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(profileMainScrollPositionProvider);
         // profileScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         profileScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -241,7 +241,6 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -252,16 +251,21 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 소배너 부분 관련 수치
-    final double profileMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double profileMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    final double profileMainScreenSmallBannerWidth =
+        screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    final double profileMainScreenSmallBannerHeight =
+        screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
     final double profileMainScreenSmallBannerViewHeight =
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double profileAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double profileAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double profileAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double profileAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
     final double profileAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double profileAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double profilePaddingX = screenSize.width * (16 / referenceWidth);
@@ -270,8 +274,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     final double profilePadding3Y = screenSize.height * (20 / referenceHeight);
 
     // 개인정보 처리방침 관련 안내 텍스트 수치
-    final double guideTextFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double guideTextFontSize = screenSize.height * (12 / referenceHeight);
 
     // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
     final User? user = FirebaseAuth.instance.currentUser;
@@ -300,17 +303,25 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '마이페이지',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: profileAppBarTitleWidth,
-                    appBarTitleHeight: profileAppBarTitleHeight,
-                    appBarTitleX: profileAppBarTitleX,
-                    appBarTitleY: profileAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '마이페이지',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: profileAppBarTitleWidth,
+                      appBarTitleHeight: profileAppBarTitleHeight,
+                      appBarTitleX: profileAppBarTitleX,
+                      appBarTitleY: profileAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -326,79 +337,99 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 profilePaddingX으로 설정함.
                         // padding: EdgeInsets.symmetric(horizontal: profilePaddingX),
                         padding: EdgeInsets.symmetric(horizontal: 0),
                         child: Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                ),
-                              ),
-                            ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     border: Border(
+                            //       bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            //     ),
+                            //   ),
+                            // ),
                             // SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
-                            if (user != null) UserProfileInfo(email: user.email!),
+                            if (user != null)
+                              UserProfileInfo(email: user.email!),
                             SizedBox(height: profilePadding2Y),
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위한 BoxDecoration 추가함
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                                  borderRadius: BorderRadius.circular(
+                                      8), // 작은 배너의 모서리 반경을 8로 설정함
                                 ),
                                 child: SizedBox(
                                   // 배너 섹션의 높이를 60으로 설정함
-                                  height: profileMainScreenSmallBannerViewHeight,
+                                  height:
+                                      profileMainScreenSmallBannerViewHeight,
                                   // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                   child: buildCommonBannerPageViewSection<
                                       AllSmallBannerImage>(
-                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
-                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    context: context,
+                                    // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref,
+                                    // 상태 관리를 위한 참조 전달함
                                     currentPageProvider:
-                                    profileMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
-                                    pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
-                                    bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                                        profileMainSmall1BannerPageProvider,
+                                    // 작은 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _small1BannerPageController,
+                                    // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _small1BannerAutoScroll,
+                                    // 작은 배너의 자동 스크롤 설정을 전달함
                                     bannerImagesProvider:
-                                    profileMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                                        profileMainSmall1BannerImagesProvider,
+                                    // 작은 배너 이미지의 상태 제공자를 전달함
                                     // 배너를 탭했을 때 실행할 함수를 전달
                                     onPageTap: (context, index) =>
-                                    // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
-                                    onSmallBannerTap(
-                                        context, // 현재 화면의 컨텍스트를 전달함
-                                        index, // 클릭된 배너의 인덱스를 전달함
-                                        // profileMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                        ref.watch(profileMainSmall1BannerImagesProvider).value ?? [],
-                                        ref // Provider의 참조를 전달함
-                                    ),
-                                    width: profileMainScreenSmallBannerWidth, // 배너 섹션의 너비를 설정함
-                                    height: profileMainScreenSmallBannerHeight, // 배너 섹션의 높이를 설정함
+                                        // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                        onSmallBannerTap(
+                                            context, // 현재 화면의 컨텍스트를 전달함
+                                            index, // 클릭된 배너의 인덱스를 전달함
+                                            // profileMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                            ref
+                                                    .watch(
+                                                        profileMainSmall1BannerImagesProvider)
+                                                    .value ??
+                                                [],
+                                            ref // Provider의 참조를 전달함
+                                            ),
+                                    width: profileMainScreenSmallBannerWidth,
+                                    // 배너 섹션의 너비를 설정함
+                                    height: profileMainScreenSmallBannerHeight,
+                                    // 배너 섹션의 높이를 설정함
                                     borderRadius: 8, // 배너의 모서리 반경을 8로 설정함
                                   ),
                                 ),
                               ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              backgroundColor: Theme.of(context)
+                                  .scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
                               elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
                               // padding: EdgeInsets.zero, // 패딩을 없앰
-                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                  0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0,
+                                  20.0, 0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
                             ),
                             SizedBox(height: profilePadding2Y),
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
-                            ),// 높이 profilePadding1Y로 간격 설정
+                            ),
+                            // 높이 profilePadding1Y로 간격 설정
                             // user 객체가 null이 아닌 경우 실행됨
                             if (user != null)
-                            // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
-                            UserProfileOptions(email: user.email!),
-                            SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
+                              // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
+                              UserProfileOptions(email: user.email!),
+                            SizedBox(height: profilePadding1Y),
+                            // 높이 profilePadding1Y로 간격 설정
                             RichText(
                               text: TextSpan(
                                 text: '* 개인정보 처리방침 관련 세부 내용은 공지사항에서 확인 가능합니다.',
@@ -406,12 +437,14 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                   fontFamily: 'NanumGothic',
                                   fontWeight: FontWeight.normal,
                                   fontSize: guideTextFontSize,
-                                  color: BLACK_COLOR, // 검은색 텍스트
+                                  color: BLACK_COLOR,
+                                  // 검은색 텍스트
                                   decoration: TextDecoration.underline, // 밑줄 추가
                                 ),
                               ),
                             ),
-                            SizedBox(height: profilePadding3Y), // 높이 profilePadding3Y로 간격 설정
+                            SizedBox(height: profilePadding3Y),
+                            // 높이 profilePadding3Y로 간격 설정
                           ],
                         ),
                       );
@@ -429,10 +462,9 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          4, 1, scrollController: profileScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          ref.watch(tabIndexProvider), ref, context, 4, 1,
+          scrollController:
+              profileScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

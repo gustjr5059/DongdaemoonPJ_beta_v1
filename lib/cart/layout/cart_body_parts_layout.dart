@@ -476,9 +476,7 @@ class CartItemsList extends ConsumerWidget {
                                   ),
                                   SizedBox(height: cartlist1Y),
                                   // 선택된 사이즈를 왼쪽 여백을 주어 표시함
-                                  Padding(
-                                    padding: EdgeInsets.only(left: cartlist3X),
-                                    child: Text(
+                                  Text(
                                       '${cartItem['selected_size'] ?? ''}',
                                       style: TextStyle(
                                         fontSize:
@@ -488,7 +486,6 @@ class CartItemsList extends ConsumerWidget {
                                         color: BLACK_COLOR,
                                       ),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),

@@ -74,6 +74,7 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
   // 배너 이미지의 총 개수를 저장하는 변수
   // 대배너
   int bannerImageCount1 = 5;
+
   // 소배너
   int bannerImageCount2 = 3;
 
@@ -269,7 +270,6 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -280,34 +280,50 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 대배너 부분 관련 수치
-    final double newSubMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double newSubMainScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
+    final double newSubMainScreenLargeBannerWidth =
+        screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    final double newSubMainScreenLargeBannerHeight =
+        screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
     final double newSubMainLargeBannerViewHeight =
         screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
-    final double newSubMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double newSubMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    final double newSubMainScreenSmallBannerWidth =
+        screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    final double newSubMainScreenSmallBannerHeight =
+        screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
     final double newSubMainScreenSmallBannerViewHeight =
         screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double sectionPlusAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double sectionPlusAppBarTitleX = screenSize.height * (4 / referenceHeight);
-    final double sectionPlusAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double sectionPlusAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double sectionPlusAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double sectionPlusAppBarTitleX =
+        screenSize.height * (4 / referenceHeight);
+    final double sectionPlusAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double sectionPlusChevronIconWidth = screenSize.width * (24 / referenceWidth);
-    final double sectionPlusChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double sectionPlusChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double sectionPlusChevronIconY = screenSize.height * (9 / referenceHeight);
+    final double sectionPlusChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
+    final double sectionPlusChevronIconHeight =
+        screenSize.height * (24 / referenceHeight);
+    final double sectionPlusChevronIconX =
+        screenSize.width * (10 / referenceWidth);
+    final double sectionPlusChevronIconY =
+        screenSize.height * (9 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double sectionPlusWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double sectionPlusWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double sectionPlusWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double sectionPlusWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double sectionPlusWishlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double sectionPlusWishlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double sectionPlusWishlistBtnX =
+        screenSize.width * (10 / referenceWidth);
+    final double sectionPlusWishlistBtnY =
+        screenSize.height * (7 / referenceHeight);
 
     // 컨텐츠 사이의 높이 수치
     final double interval1Y = screenSize.height * (3 / referenceHeight);
@@ -338,30 +354,39 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    // 공통 AppBar 빌드
-                    context: context,
-                    // 현재 context 전달
-                    ref: ref,
-                    // 참조(ref) 전달
-                    title: '신상 섹션',
-                    // AppBar의 제목을 '신상 섹션'으로 설정
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.back,
-                    // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
-                    buttonCase: 2, // 버튼 케이스를 2로 설정
-                    appBarTitleWidth: sectionPlusAppBarTitleWidth,
-                    appBarTitleHeight: sectionPlusAppBarTitleHeight,
-                    appBarTitleX: sectionPlusAppBarTitleX,
-                    appBarTitleY: sectionPlusAppBarTitleY,
-                    chevronIconWidth: sectionPlusChevronIconWidth,
-                    chevronIconHeight: sectionPlusChevronIconHeight,
-                    chevronIconX: sectionPlusChevronIconX,
-                    chevronIconY: sectionPlusChevronIconY,
-                    wishlistBtnWidth: sectionPlusWishlistBtnWidth,
-                    wishlistBtnHeight: sectionPlusWishlistBtnHeight,
-                    wishlistBtnX: sectionPlusWishlistBtnX,
-                    wishlistBtnY: sectionPlusWishlistBtnY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      // 공통 AppBar 빌드
+                      context: context,
+                      // 현재 context 전달
+                      ref: ref,
+                      // 참조(ref) 전달
+                      title: '신상 섹션',
+                      // AppBar의 제목을 '신상 섹션'으로 설정
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.back,
+                      // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
+                      buttonCase: 2,
+                      // 버튼 케이스를 2로 설정
+                      appBarTitleWidth: sectionPlusAppBarTitleWidth,
+                      appBarTitleHeight: sectionPlusAppBarTitleHeight,
+                      appBarTitleX: sectionPlusAppBarTitleX,
+                      appBarTitleY: sectionPlusAppBarTitleY,
+                      chevronIconWidth: sectionPlusChevronIconWidth,
+                      chevronIconHeight: sectionPlusChevronIconHeight,
+                      chevronIconX: sectionPlusChevronIconX,
+                      chevronIconY: sectionPlusChevronIconY,
+                      wishlistBtnWidth: sectionPlusWishlistBtnWidth,
+                      wishlistBtnHeight: sectionPlusWishlistBtnHeight,
+                      wishlistBtnX: sectionPlusWishlistBtnX,
+                      wishlistBtnY: sectionPlusWishlistBtnY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -373,30 +398,36 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
-                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
                         child: Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                ),
-                              ),
-                            ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     border: Border(
+                            //       bottom: BorderSide(
+                            //           color: BLACK_COLOR,
+                            //           width: 1.0), // 하단 테두리 색상을 설정함
+                            //     ),
+                            //   ),
+                            // ),
                             // SizedBox(height: 5), // 5의 높이를 가진 간격 추가
                             // 큰 배너 섹션을 카드뷰로 구성
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위한 BoxDecoration 추가함
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정함
+                                  borderRadius: BorderRadius.circular(
+                                      0), // 큰 배너의 모서리 반경을 0으로 설정함
+                                  border: Border(
+                                    bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
                                 ),
                                 child: SizedBox(
                                   // 배너 섹션의 높이를 200으로 설정함
@@ -404,40 +435,55 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
                                   // 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                   child: buildCommonBannerPageViewSection<
                                       AllLargeBannerImage>(
-                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
-                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    context: context,
+                                    // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref,
+                                    // 상태 관리를 위한 참조 전달함
                                     currentPageProvider:
-                                    newSubMainLargeBannerPageProvider, // 큰 배너 페이지의 상태 제공자를 전달함
-                                    pageController: _largeBannerPageController, // 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
-                                    bannerAutoScroll: _largeBannerAutoScroll, // 배너의 자동 스크롤 설정을 전달함
+                                        newSubMainLargeBannerPageProvider,
+                                    // 큰 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _largeBannerPageController,
+                                    // 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _largeBannerAutoScroll,
+                                    // 배너의 자동 스크롤 설정을 전달함
                                     bannerImagesProvider:
-                                    allLargeBannerImagesProvider, // 배너 이미지의 상태 제공자를 전달함
+                                        allLargeBannerImagesProvider,
+                                    // 배너 이미지의 상태 제공자를 전달함
                                     // 배너를 탭했을 때 실행할 함수를 전달
                                     onPageTap: (context, index) =>
-                                    // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
-                                    onLargeBannerTap(
-                                        context, // 현재 화면의 컨텍스트를 전달함
-                                        index, // 클릭된 배너의 인덱스를 전달함
-                                        // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                        ref.watch(allLargeBannerImagesProvider).value ?? [],
-                                        ref // Provider의 참조를 전달함
-                                    ),
-                                    width: newSubMainScreenLargeBannerWidth, // 배너 섹션의 너비를 설정함
-                                    height: newSubMainScreenLargeBannerHeight, // 배너 섹션의 높이를 설정함
+                                        // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
+                                        onLargeBannerTap(
+                                            context, // 현재 화면의 컨텍스트를 전달함
+                                            index, // 클릭된 배너의 인덱스를 전달함
+                                            // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                            ref
+                                                    .watch(
+                                                        allLargeBannerImagesProvider)
+                                                    .value ??
+                                                [],
+                                            ref // Provider의 참조를 전달함
+                                            ),
+                                    width: newSubMainScreenLargeBannerWidth,
+                                    // 배너 섹션의 너비를 설정함
+                                    height: newSubMainScreenLargeBannerHeight,
+                                    // 배너 섹션의 높이를 설정함
                                     borderRadius: 0, // 배너의 모서리 반경을 0으로 설정함
                                   ),
                                 ),
                               ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              backgroundColor: Theme.of(context)
+                                  .scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
                               elevation: 4, // 카드뷰의 그림자 깊이를 설정함
                               padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
                             ),
-                            SizedBox(height: interval2Y), // interval2Y의 높이를 가진 간격을 추가함
+                            SizedBox(height: interval2Y),
+                            // interval2Y의 높이를 가진 간격을 추가함
                             CommonCardView(
                               content: Container(
                                 // 모서리에 반경을 주기 위한 BoxDecoration 추가함
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                                  borderRadius: BorderRadius.circular(
+                                      8), // 작은 배너의 모서리 반경을 8로 설정함
                                 ),
                                 child: SizedBox(
                                   // 작은 배너 섹션의 높이를 60으로 설정함
@@ -445,43 +491,67 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
                                   // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
                                   child: buildCommonBannerPageViewSection<
                                       AllSmallBannerImage>(
-                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
-                                    ref: ref, // 상태 관리를 위한 참조 전달함
+                                    context: context,
+                                    // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                                    ref: ref,
+                                    // 상태 관리를 위한 참조 전달함
                                     currentPageProvider:
-                                    newSubMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
-                                    pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
-                                    bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                                        newSubMainSmall1BannerPageProvider,
+                                    // 작은 배너 페이지의 상태 제공자를 전달함
+                                    pageController: _small1BannerPageController,
+                                    // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                                    bannerAutoScroll: _small1BannerAutoScroll,
+                                    // 작은 배너의 자동 스크롤 설정을 전달함
                                     bannerImagesProvider:
-                                    newSubMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                                        newSubMainSmall1BannerImagesProvider,
+                                    // 작은 배너 이미지의 상태 제공자를 전달함
                                     // 배너를 탭했을 때 실행할 함수를 전달
                                     onPageTap: (context, index) =>
-                                    // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
-                                    onSmallBannerTap(
-                                        context, // 현재 화면의 컨텍스트를 전달함
-                                        index, // 클릭된 배너의 인덱스를 전달함
-                                        // newSubMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                        ref.watch(newSubMainSmall1BannerImagesProvider).value ?? [],
-                                        ref // Provider의 참조를 전달함
-                                    ),
-                                    width: newSubMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
-                                    height: newSubMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
+                                        // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                                        onSmallBannerTap(
+                                            context, // 현재 화면의 컨텍스트를 전달함
+                                            index, // 클릭된 배너의 인덱스를 전달함
+                                            // newSubMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                            ref
+                                                    .watch(
+                                                        newSubMainSmall1BannerImagesProvider)
+                                                    .value ??
+                                                [],
+                                            ref // Provider의 참조를 전달함
+                                            ),
+                                    width: newSubMainScreenSmallBannerWidth,
+                                    // 작은 배너 섹션의 너비를 설정함
+                                    height: newSubMainScreenSmallBannerHeight,
+                                    // 작은 배너 섹션의 높이를 설정함
                                     borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
                                   ),
                                 ),
                               ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                              backgroundColor: Theme.of(context)
+                                  .scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
                               elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
-                              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
+                              padding: const EdgeInsets.fromLTRB(
+                                  16.0,
+                                  0.0,
+                                  16.0,
+                                  0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
+                            ),
+                            SizedBox(height: interval2Y), // interval1Y의 높이를 가진 간격 추가
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
                             ),
                             SizedBox(height: interval1Y),
-                            // interval1Y의 높이를 가진 간격 추가
                             PriceAndDiscountPercentSortButtons<
                                 SectionMoreProductListNotifier>(
                               productListProvider:
-                              newSubMainProductListProvider,
+                                  newSubMainProductListProvider,
                               // 신상 제품 리스트 프로바이더 전달
                               sortButtonProvider:
-                              newSubMainSortButtonProvider, // 신상 정렬 버튼 프로바이더 전달
+                                  newSubMainSortButtonProvider, // 신상 정렬 버튼 프로바이더 전달
                             ),
                             // 가격 및 할인 정렬 버튼 추가
                             SizedBox(height: interval1Y),
@@ -489,10 +559,10 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
                             GeneralProductList<SectionMoreProductListNotifier>(
                               // 스크롤 컨트롤러를 설정 (신상 섹션의 스크롤 컨트롤러)
                               scrollController:
-                              newSubMainScreenPointScrollController,
+                                  newSubMainScreenPointScrollController,
                               // 상품 리스트 프로바이더를 설정 (신상 섹션의 상품 리스트 프로바이더)
                               productListProvider:
-                              newSubMainProductListProvider,
+                                  newSubMainProductListProvider,
                               // 카테고리를 '신상'으로 설정
                               category: '신상',
                             ),
@@ -515,7 +585,8 @@ class _NewSubMainScreenState extends ConsumerState<NewSubMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: newSubMainScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: newSubMainScreenPointScrollController),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
