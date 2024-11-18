@@ -9,12 +9,6 @@ enum ReviewScreenTab { create, list }
 // Firestore 인스턴스를 사용하여 ReviewRepository를 생성하는 Provider
 final reviewRepositoryProvider = Provider((ref) => ReviewRepository(firestore: FirebaseFirestore.instance));
 
-// 특정 사용자의 발주 데이터를 실시간으로 가져오는 StreamProvider
-final reviewUserOrdersProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, userEmail) {
-  final repository = ref.read(reviewRepositoryProvider);
-  return repository.streamOrdersByEmail(userEmail);
-});
-
 // 특정 사용자의 'name' 필드값을 가져오는 Provider
 final userNameProvider = FutureProvider.family<String, String>((ref, email) async { // email을 입력으로 받아 사용자의 이름을 제공하는 FutureProvider 선언
   final repository = ref.read(reviewRepositoryProvider); // reviewRepositoryProvider를 통해 Repository 인스턴스를 가져옴

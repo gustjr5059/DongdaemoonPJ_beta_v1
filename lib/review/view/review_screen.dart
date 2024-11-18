@@ -102,6 +102,15 @@ class _PrivateReviewMainScreenState
     super.initState();
     // ScrollController를 초기화함
     privateReviewScreenPointScrollController = ScrollController();
+
+    privateReviewScreenPointScrollController.addListener(() {
+      if (privateReviewScreenPointScrollController.position.pixels ==
+          privateReviewScreenPointScrollController.position.maxScrollExtent) {
+        // 스크롤이 끝에 도달하면 추가 데이터 로드
+        ref.read(reviewOrdersProvider.notifier).loadMoreOrders();
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드, initState는 위젯이 생성될 때 호출되는 초기화 단계임
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함
@@ -121,15 +130,13 @@ class _PrivateReviewMainScreenState
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭되지 않도록 0~3이 아닌 -1로 매핑함
       // -> 리뷰 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼을 비활성화함
       ref.read(tabIndexProvider.notifier).state = -1;
-      ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
       // navigateToListTab 플래그에 따라 초기 탭 설정
-      if (widget.navigateToListTab) {
-        ref.read(privateReviewScreenTabProvider.notifier).state =
-            ReviewScreenTab.list;
-      } else {
-        ref.read(privateReviewScreenTabProvider.notifier).state =
-            ReviewScreenTab.create;
-      }
+      ref.read(privateReviewScreenTabProvider.notifier).state =
+          widget.navigateToListTab
+              ? ReviewScreenTab.list
+              : ReviewScreenTab.create;
+      ref.read(reviewOrdersProvider.notifier).resetOrders(); // 리뷰 작성 탭 데이터를 초기화
+
       // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
       ref.invalidate(buttonInfoProvider);
       ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
@@ -144,7 +151,9 @@ class _PrivateReviewMainScreenState
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(privateReviewScrollPositionProvider.notifier).state = 0;
-        ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
+        ref
+            .read(reviewOrdersProvider.notifier)
+            .resetOrders(); // 리뷰 작성 탭 데이터를 초기화
         ref.read(privateReviewScreenTabProvider.notifier).state =
             ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
         // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
@@ -231,8 +240,7 @@ class _PrivateReviewMainScreenState
         screenSize.width * (240 / referenceWidth);
     final double reviewAppBarTitleHeight =
         screenSize.height * (22 / referenceHeight);
-    final double reviewAppBarTitleX =
-        screenSize.height * (5 / referenceHeight);
+    final double reviewAppBarTitleX = screenSize.height * (5 / referenceHeight);
     final double reviewAppBarTitleY =
         screenSize.height * (11 / referenceHeight);
 
@@ -248,8 +256,6 @@ class _PrivateReviewMainScreenState
         screenSize.width * (250 / referenceWidth); // 가로 비율
     final double reviewEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double reviewEmptyTextX =
-        screenSize.width * (40 / referenceWidth); // 가로 비율
     final double reviewEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
     final double reviewEmptyTextFontSize =
@@ -299,66 +305,57 @@ class _PrivateReviewMainScreenState
                 leading: null,
                 // backgroundColor: BUTTON_COLOR, // 앱 바 배경색 설정
               ),
-              // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+
+              // ——— 리뷰 작성 발주 내역 화면 섹션 시작 부분 ———
+              // 리뷰 작성 발주 내역 화면의 메인 컨텐츠를 표시하는 슬리버 리스트를 정의함.
+              // 리스트는 발주 내역이 없을 경우 빈 메시지를 보여주고,
+              // 발주 내역이 있을 경우 리뷰 작성 탭을 표시함.
               SliverPadding(
+                // 위젯 간 간격을 조정하기 위해 슬리버 패딩을 추가함.
                 padding: EdgeInsets.only(top: 5),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                        padding:
-                            EdgeInsets.symmetric(horizontal: reviewPaddingX),
-                        child: Column(
-                          children: [
-                            SizedBox(height: interval1Y),
-                            // reviewUserOrdersProvider를 통해 주문 데이터를 가져옴
-                            ref
-                                .watch(reviewUserOrdersProvider(widget.email))
-                                .when(
-                                  data: (orders) {
-                                    if (orders.isEmpty) {
-                                      // 리뷰관리 화면에 발주정보가 비어있을 경우 "리뷰 작성할 발주내역이 없습니다." 메시지 표시
-                                      return Container(
-                                        width: reviewEmptyTextWidth,
-                                        height: reviewEmptyTextHeight,
-                                        margin: EdgeInsets.only(
-                                            top: reviewEmptyTextY),
-                                        // 텍스트를 중앙에 위치하도록 설정함.
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '리뷰 작성할 발주내역이 없습니다.',
-                                          style: TextStyle(
-                                            fontSize: reviewEmptyTextFontSize,
-                                            fontFamily: 'NanumGothic',
-                                            fontWeight: FontWeight.bold,
-                                            color: BLACK_COLOR,
-                                          ),
-                                        ),
-                                      );
-                                      // return Center(
-                                      //   child: Text('해당 주문 정보를 찾을 수 없습니다.'),
-                                      // );
-                                    }
-                                    // PrivateReviewScreenTabs 위젯을 반환
-                                    return PrivateReviewScreenTabs(
-                                        orders: orders);
-                                  },
-                                  loading: () => Center(
-                                      child: CircularProgressIndicator()),
-                                  // 로딩 중일 때 표시할 UI
-                                  error: (error, stack) => Center(
-                                      child: Text(
-                                          '에러가 발생했습니다: $error')), // 오류 발생 시 표시할 UI
-                                ),
-                            SizedBox(height: interval1Y),
-                          ],
+                // 컨슈머 위젯을 사용하여 Riverpod 상태를 감지하고 UI를 업데이트함.
+                sliver: Consumer(
+                  builder: (context, ref, child) {
+                    // reviewOrdersProvider를 사용하여 리뷰 가능한 발주 내역 목록을 감시함.
+                    final orders = ref.watch(reviewOrdersProvider);
+
+                    // 발주 내역이 비어 있는 경우
+                    if (orders.isEmpty) {
+                      return SliverToBoxAdapter(
+                        // 빈 발주 내역 메시지를 표시하는 컨테이너를 반환함.
+                        child: Container(
+                          // 컨테이너의 너비와 높이를 설정함.
+                          width: reviewEmptyTextWidth,
+                          height: reviewEmptyTextHeight,
+                          // 컨테이너의 상단 여백을 설정함.
+                          margin: EdgeInsets.only(top: reviewEmptyTextY),
+                          // 텍스트가 컨테이너 중앙에 위치하도록 설정함.
+                          alignment: Alignment.center,
+                          // 빈 메시지를 나타내는 텍스트 위젯을 생성함.
+                          child: Text(
+                            '현재 리뷰 작성할 발주내역이 없습니다.', // 표시할 텍스트 메시지
+                            style: TextStyle(
+                              // 텍스트의 폰트 크기를 설정함.
+                              fontSize: reviewEmptyTextFontSize,
+                              // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                              fontFamily: 'NanumGothic',
+                              // 텍스트를 굵게 설정함.
+                              fontWeight: FontWeight.bold,
+                              // 텍스트 색상을 BLACK_COLOR로 설정함.
+                              color: BLACK_COLOR,
+                            ),
+                          ),
                         ),
                       );
-                    },
-                    childCount: 1, // 리스트 아이템 수
-                  ),
+                    }
+                    // 발주 내역이 있는 경우
+                    else {
+                      return SliverToBoxAdapter(
+                        // 리뷰 작성 탭 위젯을 표시하기 위한 PrivateReviewScreenTabs를 반환함.
+                        child: PrivateReviewScreenTabs(orders: orders),
+                      );
+                    }
+                  },
                 ),
               ),
             ],

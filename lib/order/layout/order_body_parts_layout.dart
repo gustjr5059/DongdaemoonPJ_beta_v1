@@ -2797,10 +2797,11 @@ class _OrderListDetailItemWidgetState
         // SizedBox(height: interval4Y),
         // 각 상품 정보를 표시하는 로직을 반복문으로 구성함
         for (var productInfo in productInfoList) ...[
-          // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20), // 모서리 반경 설정
-            child: Container(
+          // // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(20), // 모서리 반경 설정
+          //   child: Container(
+            Container(
               // width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
               // height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
               // color: Color(0xFFF3F3F3), // 배경색 설정
@@ -2810,6 +2811,12 @@ class _OrderListDetailItemWidgetState
               //   bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
               //   ),
               // ),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                      color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                ),
+              ),
               padding: EdgeInsets.only(
                   left: interval2X,
                   right: interval2X,
@@ -2817,8 +2824,8 @@ class _OrderListDetailItemWidgetState
                   bottom: interval5Y),
               child: CommonCardView(
                 // backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
-                // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                backgroundColor: GRAY97_COLOR,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                // backgroundColor: GRAY97_COLOR,
                 elevation: 0, // 그림자 깊이 설정
                 content: Padding(
                   padding: EdgeInsets.zero, // 패딩을 없앰
@@ -2872,11 +2879,11 @@ class _OrderListDetailItemWidgetState
                           // 카드뷰 가로 크기 설정
                           height: orderlistDtInfo3CardViewHeight,
                           // 카드뷰 세로 크기 설정
-                          // color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-                          color: GRAY97_COLOR,
+                          color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                          // color: GRAY97_COLOR,
                           child: CommonCardView(
-                            // backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-                            backgroundColor: GRAY97_COLOR,
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                            // backgroundColor: GRAY97_COLOR,
                             elevation: 0, // 그림자 깊이 설정
                             content: Padding(
                               padding: EdgeInsets.zero, // 패딩을 없앰
@@ -3231,7 +3238,7 @@ class _OrderListDetailItemWidgetState
                 ),
               ),
             ),
-          ),
+          // ),
         ],
       ],
     );

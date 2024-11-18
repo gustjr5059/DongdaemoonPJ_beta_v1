@@ -670,7 +670,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 리뷰 관리 화면 관련 초기화 부분 시작
   ref.read(privateReviewScrollPositionProvider.notifier).state =
       0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
+  ref.read(reviewOrdersProvider.notifier).resetOrders(); // 리뷰 작성 탭 데이터를 초기화
   ref.read(privateReviewScreenTabProvider.notifier).state =
       ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
   // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
