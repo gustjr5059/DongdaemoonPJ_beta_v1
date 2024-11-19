@@ -38,7 +38,7 @@ class AdminOrderlistRepository {
     try {
       print('Fetching orders for email: $userEmail'); // 시작 디버깅 메시지
       // 'order_list' 컬렉션에서 사용자 이메일에 해당하는 문서를 가져옴
-      final userDocRef = firestore.collection('order_list').doc(userEmail);
+      final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
 
       // 해당 문서의 'orders' 하위 컬렉션의 모든 문서를 가져옴
       final ordersQuerySnapshot = await userDocRef.collection('orders').get();
@@ -100,7 +100,7 @@ class AdminOrderlistRepository {
       // Firestore에서 'order_list' 컬렉션에서 해당 유저의 문서(userEmail)를 선택하고,
       // 그 문서 내 'orders' 컬렉션에서 'numberInfo.order_number'가 orderNumber와 일치하는 발주 문서들을 가져옴
       final orderDoc = await firestore
-          .collection('order_list')
+          .collection('wearcano_order_list')
           .doc(userEmail)
           .collection('orders')
           .where('numberInfo.order_number', isEqualTo: orderNumber)

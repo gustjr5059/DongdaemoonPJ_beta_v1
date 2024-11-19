@@ -10,7 +10,7 @@ class AdminMessageRepository {
   // Firestore에 메시지를 읽음 상태로 업데이트하는 함수
   Future<void> markMessageAsRead(String messageId, String recipientId) async {
     final messageRef = firestore
-        .collection('message_list')
+        .collection('wearcano_message_list')
         .doc(recipientId)
         .collection('message')
         .doc(messageId);
@@ -51,7 +51,7 @@ class AdminMessageRepository {
       print('수신자 $receiver 의 발주번호를 가져오는 중...');
       // Firestore에서 사용자의 이메일을 기준으로 검색.
       final querySnapshot = await firestore
-          .collection('order_list')
+          .collection('wearcano_order_list')
           .doc(receiver)
           .collection('orders')
           .get();
@@ -95,7 +95,7 @@ class AdminMessageRepository {
     try {
       // Firestore에서 특정 수신자와 발주번호에 해당하는 문서를 조회함.
       final querySnapshot = await firestore
-          .collection('order_list')
+          .collection('wearcano_order_list')
           .doc(receiver)
           .collection('orders')
           .where('numberInfo.order_number', isEqualTo: orderNumber)
@@ -139,7 +139,7 @@ class AdminMessageRepository {
     print('발신자: $sender, 수신자: $recipient, 주문 번호: $orderNumber, 내용: $contents');
 
     // Firestore에 저장할 문서의 참조를 생성.
-    final messageDoc = firestore.collection('message_list') // Firestore의 'message_list' 컬렉션을 참조
+    final messageDoc = firestore.collection('wearcano_message_list') // Firestore의 'message_list' 컬렉션을 참조
         .doc(recipient) // 수신자 ID를 문서 ID로 사용하여 하위 컬렉션에 접근
         .collection('message') // 수신자별 메시지를 저장하는 하위 컬렉션 'message'에 접근
         .doc('${DateTime.now().millisecondsSinceEpoch}'); // 현재 시간을 기반으로 고유한 문서 ID를 생성
@@ -187,7 +187,7 @@ class AdminMessageRepository {
     try {
       print('발주 상태를 Firestore에 업데이트 중...');
       final orderDoc = await firestore // Firestore 참조
-          .collection('order_list') // 'order_list' 컬렉션 참조
+          .collection('wearcano_order_list') // 'order_list' 컬렉션 참조
           .doc(recipient) // 수신자 ID를 문서 ID로 사용하여 해당 사용자의 주문 목록에 접근
           .collection('orders') // 사용자의 주문 목록에 접근
           .where('numberInfo.order_number', isEqualTo: orderNumber) // 주어진 주문 번호와 일치하는 주문 검색
@@ -225,7 +225,7 @@ class AdminMessageRepository {
     final oneMinuteAgo = DateTime.now().subtract(Duration(minutes: minutes));
 
     return firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .where('message_sendingTime', isGreaterThanOrEqualTo: oneMinuteAgo) // 'message_sendingTime' 필드가 1분 전보다 늦은(즉, 최근) 문서들만 필터링
@@ -246,7 +246,7 @@ class AdminMessageRepository {
     final thirtyDaysAgo = DateTime.now().subtract(Duration(days: days));
 
     return firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .where('message_sendingTime', isGreaterThanOrEqualTo: thirtyDaysAgo) // 'message_sendingTime' 필드가 30일 전보다 늦은(즉, 최근) 문서들만 필터링
@@ -267,7 +267,7 @@ class AdminMessageRepository {
     final oneYearAgo = DateTime.now().subtract(Duration(days: days));
 
     return firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .where('message_sendingTime', isGreaterThanOrEqualTo: oneYearAgo) // 'message_sendingTime' 필드가 1년 전보다 늦은(즉, 최근) 문서들만 필터링
@@ -287,7 +287,7 @@ class AdminMessageRepository {
   Future<void> fetchDeleteAllMessage(String messageId, String recipient) async {
     print('메시지 삭제 중 (ID: $messageId, 수신자: $recipient)...');
     // Firestore에서 해당 메시지를 삭제.
-    await firestore.collection('message_list')
+    await firestore.collection('wearcano_message_list')
         .doc(recipient)
         .collection('message')
         .doc(messageId)

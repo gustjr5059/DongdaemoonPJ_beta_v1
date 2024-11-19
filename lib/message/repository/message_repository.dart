@@ -24,7 +24,7 @@ class PrivateMessageRepository {
 
     // Firestore에서 1분 이내에 발송된 쪽지들만 가져오기 위한 쿼리
     return firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .where('message_sendingTime', isGreaterThanOrEqualTo: oneMinuteAgo) // 'message_sendingTime' 필드가 1분 전보다 늦은(즉, 최근) 문서들만 필터링
@@ -48,7 +48,7 @@ class PrivateMessageRepository {
 
     // Firestore에서 30일 이내에 발송된 쪽지들만 가져오기 위한 쿼리
     return firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .where('message_sendingTime', isGreaterThanOrEqualTo: thirtyDaysAgo) // 'message_sendingTime' 필드가 30일 전보다 늦은(즉, 최근) 문서들만 필터링
@@ -72,7 +72,7 @@ class PrivateMessageRepository {
 
     // Firestore에서 1년 이내에 발송된 쪽지들만 가져오기 위한 쿼리
     return firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .where('message_sendingTime', isGreaterThanOrEqualTo: oneYearAgo) // 'message_sendingTime' 필드가 1년 전보다 늦은(즉, 최근) 문서들만 필터링
@@ -93,7 +93,7 @@ class PrivateMessageRepository {
     print('Deleting message with ID: $messageId for email: $email');
     // Firestore에서 특정 이메일의 메시지 컬렉션을 참조하여 해당 문서 ID를 찾음.
     final messageDoc = firestore
-        .collection('message_list') // 'message_list' 컬렉션에 접근
+        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
         .doc(email) // 주어진 이메일에 해당하는 문서에 접근
         .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
         .doc(messageId); // 주어진 메시지 ID에 해당하는 문서에 접근
@@ -118,7 +118,7 @@ class PrivateMessageRepository {
     // Firestore에서 'message_list' 컬렉션 내의 특정 이메일에 해당하는 문서(doc)를 참조하고,
     // 그 하위 컬렉션인 'message'에서 주어진 발주번호(order_number)와 특정 내용('해당 발주 건은 결제 완료 되었습니다.')을 가진 문서를 조회하도록 했음.
     final querySnapshot = await firestore
-        .collection('message_list')
+        .collection('wearcano_message_list')
         .doc(email)
         .collection('message')
         .where('order_number', isEqualTo: orderNumber)
@@ -142,7 +142,7 @@ class PrivateMessageRepository {
     print('Fetching delivery start date for order number: $orderNumber for email: $email');
     // Firestore에서 'message_list' 컬렉션의 특정 이메일 문서 안의 'message' 하위 컬렉션을 참조하는 쿼리 스냅샷을 가져옴
     final querySnapshot = await firestore
-        .collection('message_list')
+        .collection('wearcano_message_list')
         .doc(email)
         .collection('message')
     // 주어진 발주번호와 일치하는 메시지를 필터링함

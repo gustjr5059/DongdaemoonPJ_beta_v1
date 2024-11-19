@@ -34,7 +34,7 @@ class AdminReviewRepository {
     try {
       print('Starting to stream reviews for user: $userEmail...'); // 특정 사용자의 리뷰 데이터를 스트리밍 시작하는 로그를 기록
       return firestore
-          .collection('review_list') // 'review_list' 컬렉션에서
+          .collection('wearcano_review_list') // 'review_list' 컬렉션에서
           .doc(userEmail) // 특정 사용자의 이메일 문서를 참조한 후
           .collection('reviews') // 그 안의 'reviews' 하위 컬렉션에서
           .orderBy('review_write_time', descending: true) // 'review_write_time' 기준으로 내림차순 정렬하여
@@ -57,7 +57,7 @@ class AdminReviewRepository {
     try {
       print('Attempting to delete review for user: $userEmail, key: $separatorKey...'); // 특정 리뷰를 삭제하려는 시도를 로그에 기록
       final reviewDoc = firestore
-          .collection('review_list') // 'review_list' 컬렉션에서
+          .collection('wearcano_review_list') // 'review_list' 컬렉션에서
           .doc(userEmail) // 특정 사용자의 이메일 문서를 참조한 후
           .collection('reviews') // 그 안의 'reviews' 하위 컬렉션에서
           .doc(separatorKey); // 삭제할 리뷰의 문서를 참조하는 코드
