@@ -131,22 +131,6 @@ class _PrivateReviewMainScreenState
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭되지 않도록 0~3이 아닌 -1로 매핑함
       // -> 리뷰 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼을 비활성화함
       ref.read(tabIndexProvider.notifier).state = -1;
-      // ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-      // // navigateToListTab 플래그에 따라 초기 탭 설정
-      // if (widget.navigateToListTab) {
-      //   ref.read(privateReviewScreenTabProvider.notifier).state =
-      //       ReviewScreenTab.list;
-      // } else {
-      //   ref.read(privateReviewScreenTabProvider.notifier).state =
-      //       ReviewScreenTab.create;
-      // }
-
-      // // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-      // ref.invalidate(buttonInfoProvider);
-      // ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
-      // ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
-      // ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
-      // ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
 
       // 리뷰 목록 초기화
       ref.read(privateReviewItmesListNotifierProvider.notifier).resetReviews();
@@ -159,15 +143,6 @@ class _PrivateReviewMainScreenState
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(privateReviewScrollPositionProvider.notifier).state = 0;
-        // ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-        // ref.read(privateReviewScreenTabProvider.notifier).state =
-        //     ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
-        // // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-        // ref.invalidate(buttonInfoProvider);
-        // ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
-        // ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
-        // ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
-        // ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
 
         // 리뷰 목록 초기화
         ref.read(privateReviewItmesListNotifierProvider.notifier).resetReviews();
@@ -315,72 +290,6 @@ class _PrivateReviewMainScreenState
                 leading: null,
                 // backgroundColor: BUTTON_COLOR, // 앱 바 배경색 설정
               ),
-
-          //     // 실제 컨텐츠를 나타내는 슬리버 리스트
-          //     // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-          //     SliverPadding(
-          //       // 위젯 간 간격을 조정하기 위해 슬리버 패딩을 추가함.
-          //       padding: EdgeInsets.only(top: 0),
-          //       sliver: SliverList(
-          //         delegate: SliverChildBuilderDelegate(
-          //           (BuildContext context, int index) {
-          //             return Padding(
-          //               // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-          //               padding:
-          //                   EdgeInsets.symmetric(horizontal: reviewPaddingX),
-          //               child: Column(
-          //                 children: [
-          //                   SizedBox(height: interval1Y),
-          //                   // reviewUserOrdersProvider를 통해 주문 데이터를 가져옴
-          //                   ref
-          //                       .watch(reviewUserOrdersProvider(widget.email))
-          //                       .when(
-          //                         data: (orders) {
-          //                           if (orders.isEmpty) {
-          //                             // 리뷰관리 화면에 발주정보가 비어있을 경우 "리뷰 작성할 발주내역이 없습니다." 메시지 표시
-          //                             return Container(
-          //                               width: reviewEmptyTextWidth,
-          //                               height: reviewEmptyTextHeight,
-          //                               margin: EdgeInsets.only(
-          //                                   top: reviewEmptyTextY),
-          //                               // 텍스트를 중앙에 위치하도록 설정함.
-          //                               alignment: Alignment.center,
-          //                               child: Text(
-          //                                 '리뷰 작성할 발주내역이 없습니다.',
-          //                                 style: TextStyle(
-          //                                   fontSize: reviewEmptyTextFontSize,
-          //                                   fontFamily: 'NanumGothic',
-          //                                   fontWeight: FontWeight.bold,
-          //                                   color: BLACK_COLOR,
-          //                                 ),
-          //                               ),
-          //                             );
-          //                             // return Center(
-          //                             //   child: Text('해당 주문 정보를 찾을 수 없습니다.'),
-          //                             // );
-          //                           }
-          //                           // PrivateReviewScreenTabs 위젯을 반환
-          //                           return PrivateReviewScreenTabs(
-          //                               orders: orders);
-          //                         },
-          //                         loading: () => Center(
-          //                             child: CircularProgressIndicator()),
-          //                         // 로딩 중일 때 표시할 UI
-          //                         error: (error, stack) => Center(
-          //                             child: Text(
-          //                                 '에러가 발생했습니다: $error')), // 오류 발생 시 표시할 UI
-          //                       ),
-          //                   SizedBox(height: interval1Y),
-          //                 ],
-          //               ),
-          //             );
-          //           },
-          //           childCount: 1, // 리스트 아이템 수
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               // 상단에 여백을 주는 SliverPadding 위젯

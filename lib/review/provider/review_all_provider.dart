@@ -3,17 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../repository/review_repository.dart';
 
-// ReviewScreenTab enum 정의
-enum ReviewScreenTab { create, list }
 
 // Firestore 인스턴스를 사용하여 PrivateReviewRepository를 생성하는 Provider
 final privateReviewRepositoryProvider = Provider((ref) => PrivateReviewRepository(firestore: FirebaseFirestore.instance));
-
-// // 특정 사용자의 발주 데이터를 실시간으로 가져오는 StreamProvider
-// final reviewUserOrdersProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, userEmail) {
-//   final repository = ref.read(reviewRepositoryProvider);
-//   return repository.streamOrdersByEmail(userEmail);
-// });
 
 // 특정 사용자의 'name' 필드값을 가져오는 Provider
 final userNameProvider = FutureProvider.family<String, String>((ref, email) async { // email을 입력으로 받아 사용자의 이름을 제공하는 FutureProvider 선언
@@ -26,26 +18,6 @@ final submitPrivateReviewProvider = Provider((ref) {  // 리뷰 제출 기능을
   final repository = ref.read(privateReviewRepositoryProvider);  // 리뷰 저장소 프로바이더를 읽어옴
   return repository.submitReview;  // 저장소의 리뷰 제출 함수를 반환함
 });
-
-// // 리뷰 관련 데이터를 실시간으로 가져오는 StreamProvider
-// final reviewListProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, userEmail) {
-//   final repository = ref.read(reviewRepositoryProvider);
-//   return repository.streamReviewList(userEmail);
-// });
-
-// // 리뷰 삭제(실제로는 hidden 상태로 설정) 기능을 제공하는 Provider
-// // PrivateReviewListScreen에서 전달받은 'widget.userEmail'와 'review['separator_key']' 값을 userEmail와 separatorKey로 정의하여
-// // reviewRepository의 hideReview 함수에서 userEmail와 separatorKey로 대입하여 함수 내용 구현!!
-// final deleteReviewProvider = FutureProvider.family<void, Map<String, String>>((ref, params) async {
-//   final repository = ref.read(reviewRepositoryProvider);
-//   final userEmail = params['userEmail']!;
-//   final separatorKey = params['separatorKey']!;
-//
-//   await repository.privateDeleteReview(
-//     userEmail: userEmail,
-//     separatorKey: separatorKey,
-//   );
-// });
 
 // 특정 상품에 대한 리뷰 데이터를 제공하는 Provider 정의
 final productReviewProvider = FutureProvider.family<List<ProductReviewContents>, String>((ref, productId) async {

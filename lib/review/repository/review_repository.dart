@@ -15,69 +15,6 @@ class PrivateReviewRepository {
   // PrivateReviewRepository 생성자 정의
   PrivateReviewRepository({required this.firestore});
 
-  // // 특정 사용자의 발주 데이터를 실시간으로 가져오는 함수
-  // Stream<List<Map<String, dynamic>>> streamOrdersByEmail(String userEmail) {
-  //   try {
-  //     print('Streaming orders for email: $userEmail');
-  //     final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
-  //     // orders 컬렉션을 실시간으로 스트리밍
-  //     return userDocRef.collection('orders').snapshots().asyncMap((
-  //         ordersQuerySnapshot) async {
-  //       print('Fetched orders: ${ordersQuerySnapshot.docs
-  //           .length} for email: $userEmail');
-  //       if (ordersQuerySnapshot.docs.isEmpty) {
-  //         print('No orders found for email $userEmail');
-  //         return [];
-  //       }
-  //       final List<Map<String, dynamic>> allOrders = [];
-  //       for (var orderDoc in ordersQuerySnapshot.docs) {
-  //         print('Processing order: ${orderDoc.id}');
-  //         final numberInfoDoc = await orderDoc.reference.collection(
-  //             'number_info').doc('info').get();
-  //         print('Fetched numberInfo for order: ${orderDoc.id}');
-  //         final ordererInfoDoc = await orderDoc.reference.collection(
-  //             'orderer_info').doc('info').get();
-  //         print('Fetched ordererInfo for order: ${orderDoc.id}');
-  //         final amountInfoDoc = await orderDoc.reference.collection(
-  //             'amount_info').doc('info').get();
-  //         print('Fetched amountInfo for order: ${orderDoc.id}');
-  //         final productInfoQuery = await orderDoc.reference.collection(
-  //             'product_info')
-  //             .where('boolReviewCompleteBtn', isEqualTo: false)
-  //             .get();
-  //         print('Fetched productInfo for order: ${orderDoc.id}');
-  //
-  //         final productInfo = productInfoQuery.docs.map((doc) {
-  //           print('Processing product: ${doc.id}');
-  //           return doc.data() as Map<String, dynamic>;
-  //         }).toList();
-  //
-  //         allOrders.add({
-  //           'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {},
-  //           'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {},
-  //           'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {},
-  //           'productInfo': productInfo,
-  //         });
-  //       }
-  //
-  //       allOrders.sort((a, b) {
-  //         final dateA = a['numberInfo']['order_date'] as Timestamp?;
-  //         final dateB = b['numberInfo']['order_date'] as Timestamp?;
-  //         if (dateA != null && dateB != null) {
-  //           return dateB.compareTo(dateA);
-  //         }
-  //         return 0;
-  //       });
-  //         print('Finished streaming and sorting orders for email: $userEmail');
-  //         return allOrders;
-  //       });
-  //     } catch (e) {
-  //       print('Failed to stream orders for email $userEmail: $e');
-  //       return Stream.value([]); // 오류 발생 시 빈 리스트 스트림 반환
-  //     }
-  //   }
-
-
   // 사용자 이메일을 통해 이름 가져오는 함수
   Future<String> fetchUserNameByEmail(String email) async {
     // 사용자 이메일을 통해 이름을 가져오는 비동기 함수 선언
@@ -247,147 +184,92 @@ class PrivateReviewRepository {
     }
   }
 
-  // // 특정 사용자의 리뷰 목록을 실시간으로 가져오는 함수
-  // Stream<List<Map<String, dynamic>>> streamReviewList(String userEmail) {
-  //   try {
-  //     print('Streaming review list for user: $userEmail');
-  //     final userReviewsRef = firestore
-  //         .collection('wearcano_review_list')
-  //         .doc(userEmail)
-  //         .collection('reviews')
-  //         .where('private_review_closed_button', isEqualTo: false) // 추가된 조건
-  //         .orderBy('product_id', descending: false)
-  //         .orderBy('review_write_time', descending: true);
-  //
-  //     return userReviewsRef.snapshots().map((snapshot) {
-  //       print('Fetched ${snapshot.docs.length} reviews for user: $userEmail');
-  //       return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>)
-  //           .toList();
-  //     });
-  //   } catch (e) {
-  //     print('Failed to fetch reviews for user $userEmail: $e');
-  //     throw Exception('Failed to fetch reviews: $e');
-  //   }
-  // }
-  //
-  // // 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
-  // Future<void> privateDeleteReview({
-  //   required String userEmail,
-  //   required String separatorKey,
-  // }) async {
-  //   try {
-  //     print(
-  //         "Hiding review with separatorKey: $separatorKey for user: $userEmail");
-  //
-  //     // Firestore 경로 확인
-  //     final reviewDoc = firestore
-  //         .collection('wearcano_review_list')
-  //         .doc(userEmail)
-  //         .collection('reviews')
-  //         .doc(separatorKey);
-  //
-  //     // 문서 존재 여부 확인
-  //     final docSnapshot = await reviewDoc.get();
-  //
-  //     if (docSnapshot.exists) {
-  //       // 삭제 시간 기록을 위한 현재 시간 저장
-  //       final DateTime reviewDeleteTime = DateTime.now();
-  //
-  //       // 리뷰 관련 데이터가 있는 문서 내 해당 필드값 수정
-  //       await reviewDoc.update({
-  //         'private_review_closed_button': true,
-  //         'review_delete_time': reviewDeleteTime,
-  //       });
-  //
-  //       print("Review hidden successfully for separatorKey: $separatorKey");
-  //     } else {
-  //       print("Document not found for separatorKey: $separatorKey");
-  //       throw Exception('Document not found for separatorKey: $separatorKey');
-  //     }
-  //   } catch (e) {
-  //     print('Failed to hide review for separatorKey: $separatorKey: $e');
-  //     throw Exception('Failed to hide review: $e');
-  //   }
-  // }
-
-  // 페이징 처리하여 리뷰 목록을 가져오는 함수
+// ——— 페이징 처리하여 리뷰 목록을 가져오는 함수
   Future<List<Map<String, dynamic>>> getPagedReviewItemsList({
-    required String userEmail,
-    DocumentSnapshot? lastDocument,
-    required int limit,
+    required String userEmail, // 사용자 이메일
+    DocumentSnapshot? lastDocument, // 이전 페이지의 마지막 문서 (페이징용)
+    required int limit, // 가져올 리뷰 수의 제한
   }) async {
     try {
-      print("Fetching $limit reviews for user: $userEmail");
-      Query query = firestore
-          .collection('wearcano_review_list')
-          .doc(userEmail)
-          .collection('reviews')
-          .where('private_review_closed_button', isEqualTo: false)
-          .orderBy('product_id', descending: false)
-          .orderBy('review_write_time', descending: true)
-          .limit(limit);
+      // 리뷰 페이징 데이터를 가져오는 로직
+      print("사용자 $userEmail에 대한 리뷰 $limit개 가져오는 중");
 
+      // Firestore 컬렉션 쿼리 작성
+      Query query = firestore
+          .collection('wearcano_review_list') // 리뷰 리스트 컬렉션
+          .doc(userEmail) // 사용자별 문서 지정
+          .collection('reviews') // 리뷰 하위 컬렉션
+          .where('private_review_closed_button', isEqualTo: false) // 공개 상태 조건
+          .orderBy('product_id', descending: false) // 제품 ID 오름차순 정렬
+          .orderBy('review_write_time', descending: true) // 리뷰 작성 시간 내림차순 정렬
+          .limit(limit); // 가져올 데이터 수 제한
+
+      // 이전 페이지의 마지막 문서가 있을 경우 이어서 가져옴
       if (lastDocument != null) {
-        query = query.startAfterDocument(lastDocument);
+        query = query.startAfterDocument(lastDocument); // 페이징 시작점 설정
       }
 
+      // 쿼리 실행 및 데이터 가져오기
       final querySnapshot = await query.get();
 
-      print("Fetched ${querySnapshot.docs.length} reviews for user: $userEmail");
+      print("사용자 $userEmail의 리뷰 ${querySnapshot.docs.length}개를 성공적으로 가져옴");
 
+      // 가져온 데이터를 리스트로 변환
       return querySnapshot.docs.map((doc) {
-        final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        data['separator_key'] = doc.id; // separator_key를 doc.id로 설정
-        data['snapshot'] = doc;
-        return data;
+        final Map<String, dynamic> data = doc.data() as Map<String, dynamic>; // 문서 데이터를 Map 형태로 변환
+        data['id'] = doc.id; // 문서 ID 추가
+        data['separator_key'] = doc.id; // 분리 키로 문서 ID 설정
+        data['snapshot'] = doc; // 원본 문서 Snapshot 저장
+        return data; // 변환된 데이터 반환
       }).toList();
     } catch (e) {
-      print('Failed to fetch reviews for user $userEmail: $e');
-      throw Exception('Failed to fetch reviews: $e');
+      // 데이터 가져오기 실패 시 예외 처리
+      print('사용자 $userEmail의 리뷰 데이터를 가져오는 데 실패: $e');
+      throw Exception('리뷰 데이터를 가져오는 데 실패: $e');
     }
   }
 
-  // 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
+// ——— 리뷰를 삭제 처리하는 함수 (실제로는 삭제하지 않음)
   Future<void> deleteReview({
-    required String userEmail,
-    required String separatorKey,
+    required String userEmail, // 사용자 이메일
+    required String separatorKey, // 삭제할 리뷰의 식별 키
   }) async {
     try {
-      print(
-          "Hiding review with separatorKey: $separatorKey for user: $userEmail");
+      // 리뷰 숨김 처리 로직
+      print("사용자 $userEmail의 separatorKey: $separatorKey 리뷰 숨김 처리 중");
 
-      // Firestore 경로 확인
+      // Firestore 문서 경로 생성
       final reviewDoc = firestore
-          .collection('wearcano_review_list')
-          .doc(userEmail)
-          .collection('reviews')
-          .doc(separatorKey);
+          .collection('wearcano_review_list') // 리뷰 리스트 컬렉션
+          .doc(userEmail) // 사용자별 문서 지정
+          .collection('reviews') // 리뷰 하위 컬렉션
+          .doc(separatorKey); // 리뷰 식별 키로 문서 지정
 
       // 문서 존재 여부 확인
       final docSnapshot = await reviewDoc.get();
 
       if (docSnapshot.exists) {
-        // 삭제 시간 기록을 위한 현재 시간 저장
-        final DateTime reviewDeleteTime = DateTime.now();
+        // 문서가 존재하는 경우
+        final DateTime reviewDeleteTime = DateTime.now(); // 현재 시간 저장
 
-        // 리뷰 관련 데이터가 있는 문서 내 해당 필드값 수정
+        // 문서 데이터 업데이트
         await reviewDoc.update({
-          'private_review_closed_button': true,
-          'review_delete_time': reviewDeleteTime,
+          'private_review_closed_button': true, // 리뷰 숨김 처리
+          'review_delete_time': reviewDeleteTime, // 삭제 처리 시간 기록
         });
 
-        print("Review hidden successfully for separatorKey: $separatorKey");
+        print("사용자 $userEmail의 separatorKey: $separatorKey 리뷰를 성공적으로 숨김 처리 완료");
       } else {
-        print("Document not found for separatorKey: $separatorKey");
-        throw Exception('Document not found for separatorKey: $separatorKey');
+        // 문서가 존재하지 않는 경우 예외 처리
+        print("separatorKey: $separatorKey에 해당하는 문서를 찾을 수 없음");
+        throw Exception('separatorKey: $separatorKey에 해당하는 문서를 찾을 수 없음');
       }
     } catch (e) {
-      print('Failed to hide review for separatorKey: $separatorKey: $e');
-      throw Exception('Failed to hide review: $e');
+      // 리뷰 숨김 처리 실패 시 예외 처리
+      print('separatorKey: $separatorKey 리뷰 숨김 처리 실패: $e');
+      throw Exception('리뷰 숨김 처리 실패: $e');
     }
   }
-
 
   // 특정 상품에 대한 리뷰 목록을 가져오는 비동기 함수
   Future<List<ProductReviewContents>> fetchProductReviews(String productId) async {

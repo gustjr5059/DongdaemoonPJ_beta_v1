@@ -1860,9 +1860,9 @@ class CompleteOrderButton extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center, // 자식 위젯들을 중앙 정렬
       children: [
         Center(
-          // '15,000원 이상 금액부터 결제가 가능합니다.' 텍스트를 중앙에 위치시킴
+          // '30,000원 이상 금액부터 결제가 가능합니다.' 텍스트를 중앙에 위치시킴
           child: Text(
-            '결제하기 버튼은 15,000원 이상일 시 진행 가능합니다.', // 알림 텍스트
+            '결제하기 버튼은 30,000원 이상일 시 진행 가능합니다.', // 알림 텍스트
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
@@ -1927,7 +1927,7 @@ class CompleteOrderButton extends ConsumerWidget {
             width: paymentBtnWidth,
             height: paymentBtnHeight,
             child: ElevatedButton(
-              onPressed: totalPaymentPrice >= 15000
+              onPressed: totalPaymentPrice >= 30000
                   ? () async {
                       // 필수 항목 검증
                       if (nameController.text.isEmpty ||
@@ -2063,11 +2063,11 @@ class OrderListItemWidget extends ConsumerWidget {
         screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double orderlistInfoOrderDateDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistInfoOrderStatusDataFontSize =
         screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistInfoOrderNumberDataFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderDateDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
@@ -2112,10 +2112,11 @@ class OrderListItemWidget extends ConsumerWidget {
     // 발주 상태를 orderStatus 필드에서 가져옴.
     final orderStatus = order!['orderStatus']; // 발주 상태 데이터
 
-    // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-      child: Container(
+    // // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+    // return ClipRRect(
+    //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+    //   child: Container(
+      return Container(
         width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
         height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
         color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
@@ -2138,16 +2139,13 @@ class OrderListItemWidget extends ConsumerWidget {
                   // 자식 위젯들을 양쪽 끝에 배치.
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // 발주일자를 텍스트로 표시.
+                    // 발주번호를 텍스트로 표시.
                     Text(
-                      '발주일자:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                      '발주번호:  ${orderNumber ?? ''}',
                       style: TextStyle(
-                        fontSize: orderlistInfoOrderDateDataFontSize,
-                        // 텍스트 크기 설정
-                        fontWeight: FontWeight.bold,
-                        // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic',
-                        // 글꼴 설정
+                        fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
+                        fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                        fontFamily: 'NanumGothic', // 글꼴 설정
                         color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
                     ),
@@ -2168,13 +2166,16 @@ class OrderListItemWidget extends ConsumerWidget {
                 ),
                 // 여백을 추가.
                 SizedBox(height: interval1Y),
-                // 발주번호를 텍스트로 표시.
+                // 발주일자를 텍스트로 표시.
                 Text(
-                  '발주번호:  ${orderNumber ?? ''}',
+                  '발주일자:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                   style: TextStyle(
-                    fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
-                    fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                    fontFamily: 'NanumGothic', // 글꼴 설정
+                    fontSize: orderlistInfoOrderDateDataFontSize,
+                    // 텍스트 크기 설정
+                    fontWeight: FontWeight.bold,
+                    // 텍스트 굵기 설정
+                    fontFamily: 'NanumGothic',
+                    // 글꼴 설정
                     color: GRAY41_COLOR, // 텍스트 색상 설정
                   ),
                 ),
@@ -2331,7 +2332,7 @@ class OrderListItemWidget extends ConsumerWidget {
             ),
           ),
         ),
-      ),
+      // ),
     );
   }
 }
@@ -2386,11 +2387,13 @@ class _OrderListDetailItemWidgetState
         screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double orderlistDtInfoOrderDateDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoOrderNumberDataFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrderDateDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoPaymentCompletionDateDataFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfodeliveryStartDateDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoPaymentInfoDataFontSize1 =
         screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
@@ -2475,6 +2478,10 @@ class _OrderListDetailItemWidgetState
     // 결제 완료일 데이터를 비동기로 가져오는 provider를 호출하고 결과를 paymentCompleteDateAsyncValue에 저장함
     final paymentCompleteDateAsyncValue =
         ref.watch(paymentCompleteDateProvider(orderNumber));
+
+    // 배송 시작 날짜를 비동기로 가져오는 provider를 호출하고 결과를 deliveryStartDateAsyncValue에 저장함
+    final deliveryStartDateAsyncValue =
+    ref.watch(deliveryStartDateProvider(orderNumber));
 
     // 버튼 활성화 정보를 비동기로 가져오는 provider를 호출하고 결과를 buttonInfoAsyncValue에 저장함
     final buttonInfoAsyncValue = ref.watch(buttonInfoProvider(orderNumber));
@@ -2585,20 +2592,6 @@ class _OrderListDetailItemWidgetState
                 // 컬럼 위젯으로 구성함
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 발주 일자를 표시
-                  Text(
-                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
-                    style: TextStyle(
-                      fontSize: orderlistDtInfoOrderDateDataFontSize,
-                      // 텍스트 크기 설정
-                      fontWeight: FontWeight.bold,
-                      // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
-                      // 글꼴 설정
-                      color: BLACK_COLOR, // 텍스트 색상 설정
-                    ),
-                  ),
-                  SizedBox(height: interval2Y),
                   // 발주 번호를 표시
                   Text(
                     '발주번호: ${orderNumber ?? ''}',
@@ -2609,10 +2602,24 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 굵기 설정
                       fontFamily: 'NanumGothic',
                       // 글꼴 설정
-                      color: GRAY41_COLOR, // 텍스트 색상 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
                   ),
                   SizedBox(height: interval2Y),
+                  // 발주 일자를 표시
+                  Text(
+                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                    style: TextStyle(
+                      fontSize: orderlistDtInfoOrderDateDataFontSize,
+                      // 텍스트 크기 설정
+                      fontWeight: FontWeight.bold,
+                      // 텍스트 굵기 설정
+                      fontFamily: 'NanumGothic',
+                      // 글꼴 설정
+                      color: GRAY41_COLOR, // 텍스트 색상 설정
+                    ),
+                  ),
+                  SizedBox(height: interval1Y),
                   // 결제완료일 데이터를 표시, 비동기 데이터 처리 로직을 추가
                   paymentCompleteDateAsyncValue.when(
                     data: (date) {
@@ -2632,6 +2639,45 @@ class _OrderListDetailItemWidgetState
                         );
                       } else {
                         return SizedBox.shrink(); // UI에 아무것도 표시하지 않음
+                      }
+                    },
+                    loading: () => buildCommonLoadingIndicator(),
+                    // 공통 로딩 인디케이터 호출
+                    error: (error, stack) => Container(
+                      // 에러 상태에서 중앙 배치
+                      height: errorTextHeight, // 전체 화면 높이 설정
+                      alignment: Alignment.center, // 중앙 정렬
+                      child: buildCommonErrorIndicator(
+                        message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                        // 첫 번째 메시지 설정
+                        secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+                        // 두 번째 메시지 설정
+                        fontSize1: errorTextFontSize1,
+                        // 폰트1 크기 설정
+                        fontSize2: errorTextFontSize2,
+                        // 폰트2 크기 설정
+                        color: BLACK_COLOR,
+                        // 색상 설정
+                        showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: interval1Y),
+                  // 배송 시작 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
+                  deliveryStartDateAsyncValue.when(
+                    data: (date) {
+                      if (date != null) {
+                        return Text(
+                          '배송시작일: ${date != null ? DateFormat('yyyy.MM.dd').format(date) : ''}',
+                          style: TextStyle(
+                            fontSize: orderlistDtInfodeliveryStartDateDataFontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'NanumGothic',
+                            color: GRAY41_COLOR,
+                          ),
+                        );
+                      } else {
+                        return SizedBox.shrink();
                       }
                     },
                     loading: () => buildCommonLoadingIndicator(),
@@ -2715,7 +2761,7 @@ class _OrderListDetailItemWidgetState
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                   _buildAmountRow(context, '배송비', '+${numberFormat.format(deliveryFee)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
-                  Divider(),
+                  Divider(color: GRAY62_COLOR),
                   _buildAmountRow(context, '총 결제금액',
                       '${numberFormat.format(totalPaymentPrice)}원',
                       isTotal: true,
@@ -2772,21 +2818,21 @@ class _OrderListDetailItemWidgetState
                   ),
                   SizedBox(height: interval3Y),
                   // 수령자 정보 각 항목을 표시하는 _buildRecipientInfoRow 함수 호출
-                  _buildRecipientInfoRow(context, '수령자명', recipientName,
+                  _buildRecipientInfoRow(context, '이름', recipientName,
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, '수령자 연락처', recipientPhone,
+                  _buildRecipientInfoRow(context, '휴대폰 번호', recipientPhone,
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, '주소(상세주소)', '',
+                  _buildRecipientInfoRow(context, '주소 (상세주소) (우편번호)', '',
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                   _buildRecipientInfoRow(
                       context,
                       '$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)',
                       '',
+                      isLongText: true,
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  Divider(color: GRAY62_COLOR),
                   _buildRecipientInfoRow(context, '배송메모', '',
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, deliveryMemo, '',
+                  _buildRecipientInfoRow(context, deliveryMemo, '', isLongText: true,
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                 ],
               ),
@@ -3259,9 +3305,9 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
           label,
           style: TextStyle(
             fontSize: fontSize,
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            fontWeight: FontWeight.bold,
             fontFamily: 'NanumGothic',
-            color: BLACK_COLOR,
+            color: isTotal ? BLACK_COLOR : GRAY41_COLOR,
           ),
         ),
         // 값을 표시하는 텍스트
@@ -3269,7 +3315,7 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
           value ?? '',
           style: TextStyle(
             fontSize: fontSize,
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            fontWeight: FontWeight.bold,
             color: isTotal ? RED46_COLOR : BLACK_COLOR,
             fontFamily: 'NanumGothic',
           ),
@@ -3281,7 +3327,7 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
 
 // 수령자 정보를 표시하는 행을 구성하는 함수
 Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
-    {double fontSize = 16}) {
+    {bool isLongText = false, double fontSize = 16}) {
   return Padding(
     padding: EdgeInsets.zero, // 패딩을 없앰
     child: Row(
@@ -3292,9 +3338,9 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
           label,
           style: TextStyle(
             fontSize: fontSize,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.bold,
             fontFamily: 'NanumGothic',
-            color: BLACK_COLOR,
+            color: isLongText ? BLACK_COLOR : GRAY41_COLOR,
           ),
         ),
         // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
@@ -3303,7 +3349,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
             value ?? '',
             style: TextStyle(
               fontSize: fontSize,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.bold,
               fontFamily: 'NanumGothic',
               color: BLACK_COLOR,
             ),

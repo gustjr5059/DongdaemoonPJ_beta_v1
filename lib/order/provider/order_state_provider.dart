@@ -119,11 +119,11 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       return;
     }
 
-    // Firestore에서 발주 데이터를 5개씩 페이징 처리로 가져옴.
+    // Firestore에서 발주 데이터를 4개씩 페이징 처리로 가져옴.
     final newItems = await orderlistRepository.fetchOrdersByEmail(
       userEmail: user.email!,  // 현재 사용자 이메일을 매개변수로 넘김.
       lastDocument: lastDocument,  // 마지막 문서 이후의 데이터를 불러옴.
-      limit: 5,  // 한번에 5개의 아이템을 불러옴.
+      limit: 4,  // 한번에 4개의 아이템을 불러옴.
     );
 
     // 새로 불러온 데이터가 있을 경우 상태를 업데이트함.
