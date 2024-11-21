@@ -197,6 +197,10 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
+    final double inquiryGuideTextWidth1 =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double inquiryGuideTextWidth2 =
+        screenSize.width * (310 / referenceWidth); // 가로 비율
     final double inquiryGuidFontSize1 =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
     final double inquiryGuidFontSize2 =
@@ -207,7 +211,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
         screenSize.width * (250 / referenceWidth); // 문의하기로 이동 버튼 가로 비율 계산
     final double inquiryBtnHeight =
         screenSize.height * (45 / referenceHeight); // 문의하기로 이동 버튼 세로 비율 계산
-    final double inquiryBtnPaddingX = screenSize.width * (12 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
+    final double inquiryBtnPaddingX = screenSize.width * (20 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
     final double inquiryBtnPaddingY = screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
     final double inquiryBtnFontSize =
         screenSize.height * (14 / referenceHeight); // 문의하기로 이동 버튼 텍스트 크기 비율 계산
@@ -258,11 +262,12 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                         padding: EdgeInsets.symmetric(horizontal: inquiryPaddingX),
                         child: Column(
                           // 자식 위젯들을 왼쪽 정렬.
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: interval1Y),
                             Container(
-                              padding: EdgeInsets.only(left: interval1X), // 패딩 설정
+                              width: inquiryGuideTextWidth1,
+                              alignment: Alignment.center,
                               child: Text('* 문의는 아래 절차에 따라 진행해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
@@ -274,8 +279,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                             ),
                             SizedBox(height: interval2Y),
                             Container(
-                              padding: EdgeInsets.only(left: interval2X), // 패딩 설정
-                              child: Text('1. [문의하기로 이동] 버튼을 클릭해주세요.',
+                              width: inquiryGuideTextWidth2,
+                              alignment: Alignment.centerLeft,
+                              child: Text('1. [문의하기] 버튼을 클릭해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
@@ -285,8 +291,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: interval2X), // 패딩 설정
-                              child: Text('2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
+                              width: inquiryGuideTextWidth2,
+                              alignment: Alignment.centerLeft,
+                              child: Text('2. 해당 페이지에서 내용 작성 후, 제출해주세요.',
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
@@ -299,15 +306,26 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                             Container(
                               width: inquiryBtnWidth,
                               height: inquiryBtnHeight,
-                              padding: EdgeInsets.only(left: inquiryBtnX), // 패딩 설정
+                              alignment: Alignment.center,
                               child: ElevatedButton(
+                                // 버튼이 눌렸을 때 실행되는 동작을 정의함
                                 onPressed: () async {
-                                  // 버튼이 눌렸을 때 해당 링크로 이동함
-                                  final Uri url = Uri.parse('http://pf.kakao.com/_ceKEn');
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url); // url_launcher 패키지를 사용하여 링크를 엶
-                                  } else {
-                                    throw 'Could not launch $url'; // 링크를 열 수 없는 경우 예외를 발생시킴
+                                  // 열고자 하는 URL을 url 변수에 상수로 저장함
+                                  const url = 'http://pf.kakao.com/_xjVrbG';
+                                  try {
+                                    // URL을 Uri로 변환하여 외부 브라우저에서 실행함
+                                    final bool launched = await launchUrl(
+                                      Uri.parse(url), // URL을 Uri 객체로 변환함
+                                      mode: LaunchMode.externalApplication, // 외부 애플리케이션 실행 모드 설정함
+                                    );
+
+                                    // URL 실행에 실패한 경우 사용자에게 알림을 표시함
+                                    if (!launched) {
+                                      showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                                    }
+                                  } catch (e) {
+                                    // URL 실행 중 예외가 발생한 경우 사용자에게 에러 메시지를 표시함
+                                    showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
                                   }
                                 },
                                 style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
@@ -319,7 +337,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                   ),
                                 ),
                                 child: Text(
-                                  '문의하기로 이동', // 버튼에 표시될 텍스트
+                                  '문의하기', // 버튼에 표시될 텍스트
                                   style: TextStyle(
                                     fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정

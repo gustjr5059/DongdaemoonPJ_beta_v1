@@ -716,7 +716,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Expanded(
                           child: TextButton(
                             onPressed: () async {
-                              const url = 'http://pf.kakao.com/_ceKEn';
+                              const url = 'http://pf.kakao.com/_xjVrbG';
                               try {
                                 final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
                                 if (!launched) {

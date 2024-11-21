@@ -107,11 +107,11 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                       ),
                     ),
                     SizedBox(height: interval1Y), // 간격 설정
-                    _buildUserInfoRow(context, '고객명', name), // 이름 정보 행 생성
+                    _buildUserInfoRow(context, '이름', name), // 이름 정보 행 생성
                     SizedBox(height: interval2Y), // 간격 설정
                     _buildUserInfoRow(context, '이메일', email), // 이메일 정보 행 생성
                     SizedBox(height: interval2Y), // 간격 설정
-                    _buildUserInfoRow(context, '연락처', phoneNumber), // 전화번호 정보 행 생성
+                    _buildUserInfoRow(context, '휴대폰 번호', phoneNumber), // 전화번호 정보 행 생성
                     SizedBox(height: interval3Y), // 간격 설정
                     // 회원정보 수정 및 로그아웃 버튼을 행(Row)으로 배치함
                     Row(
@@ -121,12 +121,17 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                           height: uesrInfoModifyBtn1Y, // 회원정보 수정 버튼 세로 설정
                           margin: EdgeInsets.only(left: interval1X), // 왼쪽 여백 설정
                           child: ElevatedButton( // ElevatedButton 위젯을 사용하여 수정 버튼을 만듦
-                            onPressed: () async { // 클릭 시 실행되는 비동기 함수 설정
-                              const url = 'https://pf.kakao.com/_xjVrbG'; // 수정 링크 설정
-                              if (await canLaunchUrl(Uri.parse(url))) { // URL을 열 수 있는지 확인함
-                                await launchUrl(Uri.parse(url)); // URL을 열음
-                              } else {
-                                throw 'Could not launch $url'; // URL을 열 수 없을 경우 오류 발생
+                            onPressed: () async {
+                              const url = 'http://pf.kakao.com/_xjVrbG';
+                              try {
+                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                                if (!launched) {
+                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                                }
+                              } catch (e) {
+                                // 예외 발생 시 스낵바로 에러 메시지 출력
+                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
                               }
                             },
                             style: ElevatedButton.styleFrom( // 버튼 스타일 설정
@@ -264,7 +269,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
               _buildOptionTile( // 옵션 타일 생성
                 context,
                 assetPath: 'asset/img/misc/icon_img/orderlist_icon.png', // 발주내역 아이콘 설정
-                title: '발주내역', // 발주내역 타이틀 설정
+                title: '요청내역', // 요청내역 타이틀 설정
                 onTap: () { // 클릭 시 실행될 함수 설정
                   onOrderListClick(context, ref); // 발주내역 클릭 시 호출되는 함수 실행
                 },

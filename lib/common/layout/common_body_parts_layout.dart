@@ -346,18 +346,27 @@ void onLargeBannerTap(BuildContext context, int index, List<AllLargeBannerImage>
     // 제품 상세 화면으로 이동하는 함수 호출
     ProductInfoDetailScreenNavigation(ref).navigateToDetailScreen(context, product);
   }
-  // url이 있을 경우 외부 URL로 이동함
+// 배너에 URL이 포함되어 있는 경우 외부 브라우저로 이동함
   else if (bannerImage.url != null) {
-    Uri uri = Uri.parse(bannerImage.url!);  // URL 파싱
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);  // URL 실행
-    } else {
-      // URL이 없을 경우 경고 메시지 출력
-      print('링크가 없는 배너입니다.');
+    // 배너에서 URL 값을 가져와 url 변수에 저장함
+    final url = bannerImage.url!;
+    try {
+      // Uri 객체를 생성하여 외부 브라우저로 URL을 실행함
+      final bool launched = await launchUrl(
+        Uri.parse(url), // URL을 Uri로 변환함
+        mode: LaunchMode.externalApplication, // 외부 애플리케이션 실행 모드 설정함
+      );
+
+      // URL 실행이 실패한 경우 사용자에게 알림을 표시함
+      if (!launched) {
+        showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+      }
+    } catch (e) {
+      // URL 실행 중 예외가 발생한 경우 사용자에게 에러 메시지를 표시함
+      showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
     }
-  }
-  // 위 조건에 모두 해당되지 않을 경우 경고 메시지 출력
-  else {
+  } else {
+    // 배너에 URL이 없는 경우 디버깅용 메시지를 출력함
     print('링크가 없는 배너입니다.');
   }
 }
@@ -379,16 +388,16 @@ void onSmallBannerTap(BuildContext context, int index, List<AllSmallBannerImage>
   }
   // url이 있을 경우 외부 URL로 이동함
   else if (bannerImage.url != null) {
-    Uri uri = Uri.parse(bannerImage.url!);  // URL 파싱
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);  // URL 실행
-    } else {
-      // URL이 없을 경우 경고 메시지 출력
-      print('링크가 없는 배너입니다.');
+    final url = bannerImage.url!;
+    try {
+      final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      if (!launched) {
+        showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+      }
+    } catch (e) {
+      showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
     }
-  }
-  // 위 조건에 모두 해당되지 않을 경우 경고 메시지 출력
-  else {
+  } else {
     print('링크가 없는 배너입니다.');
   }
 }
