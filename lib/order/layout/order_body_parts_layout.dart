@@ -158,8 +158,7 @@ class UserInfoWidget extends ConsumerWidget {
     // 행 간 간격 수치
     final double ordererInfo4Y =
         screenSize.height * (2 / referenceHeight);
-    final double ordererInfo5Y =
-        screenSize.height * (4 / referenceHeight);
+    final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double ordererInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
@@ -174,9 +173,14 @@ class UserInfoWidget extends ConsumerWidget {
               height: ordererInfoTextPartHeight,
               width: ordererInfoTextPartWidth,
               // 라벨 셀의 너비 설정
-              color: GRAY96_COLOR,
-              // color: Colors.green,
-              // 배경 색상 설정
+              decoration: BoxDecoration(
+                // color: GRAY96_COLOR,
+                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                borderRadius:
+                // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
+                BorderRadius.circular(6),
+              ),
               alignment: Alignment.center,
               // 텍스트 정렬
               child: Text(
@@ -189,14 +193,24 @@ class UserInfoWidget extends ConsumerWidget {
                 ), // 텍스트 스타일 설정
               ),
             ),
-            SizedBox(width: ordererInfo5Y), // 왼쪽과 오른쪽 사이 간격 추가
+            SizedBox(width: ordererInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
             Expanded(
               child: Container(
-                color: GRAY98_COLOR, // 배경 색상 설정
-              // color: Colors.red, // 배경 색상 설정
+                // 데이터 셀의 너비 설정
+                decoration: BoxDecoration(
+                  // color: GRAY98_COLOR, // 앱 기본 배경색
+                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  // borderRadius: BorderRadius.only(
+                  //   topRight: Radius.circular(6),
+                  //   bottomRight: Radius.circular(6),
+                  // ), // 오른쪽만 둥글게
+                  borderRadius: BorderRadius.circular(6),
+                ),
                 padding: EdgeInsets.only(left: ordererInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
-                child: Text(value,
+                child: Text(
+                  value ?? '',
                   style: TextStyle(
                     fontFamily: 'NanumGothic',
                     fontSize: ordererInfoDataFontSize,

@@ -63,7 +63,6 @@ class OrderListMainScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     with WidgetsBindingObserver {
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -186,13 +185,13 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
 
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -203,20 +202,28 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.height * (4 / referenceHeight);
-    final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double orderlistAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double orderlistAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double orderlistAppBarTitleX =
+        screenSize.height * (4 / referenceHeight);
+    final double orderlistAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double orderlistPaddingX = screenSize.width * (16 / referenceWidth);
     final double orderlistPadding1Y = screenSize.height * (5 / referenceHeight);
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double orderlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double orderlistWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderlistWishlistBtnWidth =
+        screenSize.width * (40 / referenceWidth);
+    final double orderlistWishlistBtnHeight =
+        screenSize.height * (40 / referenceHeight);
+    final double orderlistWishlistBtnX =
+        screenSize.width * (10 / referenceWidth);
+    final double orderlistWishlistBtnY =
+        screenSize.height * (7 / referenceHeight);
 
     // 발주 내역 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
@@ -224,10 +231,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextY =
-        screenSize.height * (100 / referenceHeight); // 세로 비율
+        screenSize.height * (300 / referenceHeight); // 세로 비율
     final double orderlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
-
 
     // orderlistItemsProvider를 통해 발주 데이터를 구독.
     final orderlistItems = ref.watch(orderlistItemsProvider);
@@ -239,27 +245,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // 발주 내역이 비어 있을 경우, '발주 내역이 없습니다.' 메시지를 표시함.
-          if (orderlistItems.isEmpty)
-            Center(
-              child: Container(
-                width: orderlistEmptyTextWidth,
-                height: orderlistEmptyTextHeight,
-                margin: EdgeInsets.only(top: orderlistEmptyTextY),
-                // 텍스트를 중앙에 위치하도록 설정함.
-                alignment: Alignment.center,
-                child: Text(
-                  '현재 요청 내역이 없습니다.',
-                  style: TextStyle(
-                    fontSize: orderlistEmptyTextFontSize,
-                    fontFamily: 'NanumGothic',
-                    fontWeight: FontWeight.bold,
-                    color: BLACK_COLOR,
-                  ),
-                ),
-              ),
-            )
-          else
           CustomScrollView(
             controller: orderListScreenPointScrollController, // 스크롤 컨트롤러 연결
             slivers: <Widget>[
@@ -279,7 +264,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
-                  // 공통 AppBar 빌드
+                    // 공통 AppBar 빌드
                     context: context,
                     // 현재 context 전달
                     ref: ref,
@@ -289,7 +274,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                     // AppBar의 제목을 '발주 목록'로 설정
                     leadingType: LeadingType.none,
                     // 아무 버튼도 없음.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    buttonCase: 2,
+                    // 2번 케이스 (찜 목록 버튼만 노출)
                     appBarTitleWidth: orderlistAppBarTitleWidth,
                     appBarTitleHeight: orderlistAppBarTitleHeight,
                     appBarTitleX: orderlistAppBarTitleX,
@@ -311,30 +297,56 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
               // 상단에 5픽셀 여백을 추가하는 SliverPadding 위젯.
               SliverPadding(
                 padding: EdgeInsets.only(top: 0),
-                // SliverList를 사용하여 리스트 항목을 슬라이버 형태로 표시함.
-                sliver: SliverList(
-                  // SliverChildBuilderDelegate는 리스트 항목을 동적으로 생성함.
-                  delegate: SliverChildBuilderDelegate(
-                    // 각 항목을 빌드하는 빌더 함수.
-                        (BuildContext context, int index) {
-                      // 발주 목록을 불러옴.
-                      final Orders = orderlistItems.toList();
+                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                sliver: Consumer(
+                  // Consumer 위젯은 Riverpod 상태 관리 값을 구독하는 역할을 함.
+                  builder: (context, ref, child) {
+                    // 발주 목록을 불러옴.
+                    final Orders = orderlistItems.toList();
 
-                      return Padding(
-                          // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
-                          padding: EdgeInsets.symmetric(horizontal: orderlistPaddingX),
-                          child: Column(
-                            children: [
-                             SizedBox(height: orderlistPadding1Y),
-                             // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
-                             OrderListItemWidget(order: Orders[index]),
-                            ],
-                         ),
-                      );
-                    },
-                    // 리스트 항목의 개수를 설정함. 발주 항목의 개수만큼 childCount를 설정.
-                    childCount: orderlistItems.length,
-                  ),
+                    // 발주 내역이 비어 있을 경우, '발주 내역이 없습니다.' 메시지를 표시함.
+                    return orderlistItems.isEmpty
+                        ? SliverToBoxAdapter(
+                            child: Container(
+                              width: orderlistEmptyTextWidth,
+                              height: orderlistEmptyTextHeight,
+                              margin: EdgeInsets.only(top: orderlistEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                              child: Text(
+                                '현재 요청 내역이 없습니다.',
+                                style: TextStyle(
+                                  fontSize: orderlistEmptyTextFontSize,
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.bold,
+                                  color: BLACK_COLOR,
+                                ),
+                              ),
+                            ),
+                          )
+                        // 요청내역에 아이템이 있을 경우, SliverList로 아이템을 표시함.
+                        : SliverList(
+                            // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Padding(
+                                  // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: orderlistPaddingX),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: orderlistPadding1Y),
+                                      // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
+                                      OrderListItemWidget(order: Orders[index]),
+                                    ],
+                                  ),
+                                );
+                              },
+                              // 리스트 항목의 개수를 설정함. 발주 항목의 개수만큼 childCount를 설정.
+                              childCount: orderlistItems.length,
+                            ),
+                          );
+                  },
                 ),
               ),
             ],
@@ -346,10 +358,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          3, 1, scrollController: orderListScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+          ref.watch(tabIndexProvider), ref, context, 3, 1,
+          scrollController:
+              orderListScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }
