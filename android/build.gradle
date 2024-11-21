@@ -9,6 +9,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // Kotlin Gradle 플러그인 설정
         // Multidex는 API 21(Android 5.0 Lollipop) 이상에서 자동으로 활성화되므로, 그 이하 버전에서는 아래와 같은 설정이 필요함.
         //implementation 'com.android.support:multidex:1.0.3'
+        // google-services 등록 (배포용 파일인 AAB 생성 시, 필요!!)
+        classpath 'com.google.gms:google-services:4.3.15'
     }
 }
 

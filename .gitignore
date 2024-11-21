@@ -61,3 +61,10 @@ node_modules/
 
 # Firebase Admin SDK 파일 제외
 functions/wearcano-firebase-adminsdk-file.json
+
+# key.properties 파일 제외
+android/key.properties
+
+
+
+

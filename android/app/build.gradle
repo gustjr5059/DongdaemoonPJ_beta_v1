@@ -22,6 +22,13 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+// 키스토어 속성을 로드하기 위한 설정 추가
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace "com.example.dongdaemoon_beta_v1"
     // compileSdkVersion flutter.compileSdkVersion
@@ -61,11 +68,32 @@ android {
         // 64K 메소드 제한을 초과하여 Multidex 지원 활성화 설정
         multiDexEnabled true
     }
+
+    // 서명 키스토어 설정 추가
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.debug
+            // 릴리스 빌드에 사용될 서명 구성 지정
+            signingConfig signingConfigs.release
+            // 코드 난독화 및 최적화를 위해 minifyEnabled를 활성화
+            // true로 설정하면 코드가 축소되고 최적화됩니다.
+            minifyEnabled true
+            // 사용되지 않는 리소스를 제거하여 APK 크기를 줄이는 옵션
+            shrinkResources true
+            // ProGuard 구성을 지정
+            // 기본 ProGuard 파일을 사용하며, 추가 사용자 정의 규칙 파일(proguard-rules.pro)을 포함
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
     }
 
@@ -82,3 +110,6 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
+apply plugin: 'com.google.gms.google-services'
+
