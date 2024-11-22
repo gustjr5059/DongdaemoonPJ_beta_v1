@@ -292,7 +292,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                                 CompletePaymentInfoWidget(
                                   orderNumber: orderNumber,
                                   orderDate: orderDate,
-                                  totalPayment: amountInfo['total_payment_price'],
+                                  totalPayment: amountInfo['total_payment_price_included_delivery_fee'],
                                   customerName: ordererInfo['name'],
                                   recipientInfo: recipientInfo,
                                   orderItems: orderItems.map<ProductContent>((item) {
