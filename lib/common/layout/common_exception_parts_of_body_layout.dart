@@ -672,7 +672,8 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     width: bottomBtnC2Width,
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: totalPaymentPrice >= 30000
+                          ? () async {
                         // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
                         ref
                             .read(orderItemsProvider.notifier)
@@ -687,11 +688,13 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                     productDiscountPrice:
                                         productDiscountPrice.toDouble(),
                                     // 할인된 금액 전달
-                                    totalPaymentPrice: totalPaymentPrice
-                                        .toDouble(), // 총 결제 금액 전달
                                   )),
                         );
-                      },
+                      }
+                          : () {
+                        // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
+                        showCustomSnackBar(context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                      }, // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
                       style: ElevatedButton.styleFrom(
                         foregroundColor: WHITE_COLOR, // 텍스트 색상
                         backgroundColor: ORANGE56_COLOR, // 배경 색상
@@ -889,7 +892,8 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
                       // 버튼 클릭 시 호출되는 함수
-                      onPressed: () {
+                      onPressed: totalPaymentPrice >= 30000
+                          ? () async  {
                         // 선택된 아이템이 있는지 확인
                         if (orderProducts.isEmpty) {
                           // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
@@ -906,12 +910,14 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                           totalProductPrice.toDouble(),
                                       productDiscountPrice:
                                           totalDiscountPrice.toDouble(),
-                                      totalPaymentPrice:
-                                          totalPaymentPrice.toDouble(),
                                     )),
                           );
                         }
-                      },
+                      }
+                          : () {
+                        // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
+                        showCustomSnackBar(context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                      }, // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
                       // 버튼 스타일 설정
                       style: ElevatedButton.styleFrom(
                         foregroundColor: WHITE_COLOR,

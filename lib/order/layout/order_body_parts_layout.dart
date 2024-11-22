@@ -1552,12 +1552,10 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
 // ------- 발주 화면 내 결제금액 관련 UI 내용을 구현하는 TotalPaymentWidget 클래스 내용 시작
 // TotalPaymentWidget 클래스는 결제 금액 정보를 화면에 표시하는 역할을 담당.
 class TotalPaymentWidget extends ConsumerWidget {
-  final double totalPaymentPrice; // 총 결제금액을 저장하는 변수
   final double totalProductPrice; // 총 상품금액을 저장하는 변수
   final double productDiscountPrice; // 상품 할인금액을 저장하는 변수
 
   TotalPaymentWidget({
-    required this.totalPaymentPrice, // 필수 매개변수로 총 결제금액을 받음
     required this.totalProductPrice, // 필수 매개변수로 총 상품금액을 받음
     required this.productDiscountPrice, // 필수 매개변수로 상품 할인금액을 받음
   });
@@ -1573,7 +1571,10 @@ class TotalPaymentWidget extends ConsumerWidget {
 
     // 총 결제금액 계산
     final double totalPaymentPrice =
-        totalProductPrice - productDiscountPrice + deliveryFee;
+        totalProductPrice - productDiscountPrice;
+
+    // 배송비 포함한 총 결제금액 계산
+    final double totalPaymentPriceIncludedDeliveryFee = totalPaymentPrice + deliveryFee;
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -1625,7 +1626,7 @@ class TotalPaymentWidget extends ConsumerWidget {
             '+${deliveryFee != null ? numberFormat.format(deliveryFee) : ''}원',
           ),
           _buildInfoRow(context, '총 결제금액',
-              '${totalPaymentPrice != null ? numberFormat.format(totalPaymentPrice) : ''}원',
+              '${totalPaymentPriceIncludedDeliveryFee != null ? numberFormat.format(totalPaymentPriceIncludedDeliveryFee) : ''}원',
               isTotal: true),
         ],
       ),
@@ -1797,6 +1798,7 @@ class CompleteOrderButton extends ConsumerWidget {
   final double productDiscountPrice; // 상품 할인금액
   final double deliveryFee; // 배송비용
   final double totalPaymentPrice; // 총 결제금액
+  final double totalPaymentPriceIncludedDeliveryFee; // 배송비 포함한 총 결제금액을 저장하는 변수
   final Map<String, dynamic> ordererInfo; // 발주자 정보
   final TextEditingController nameController; // 이름 입력 컨트롤러
   final TextEditingController phoneNumberController; // 휴대폰 번호 입력 컨트롤러
@@ -1813,6 +1815,7 @@ class CompleteOrderButton extends ConsumerWidget {
     required this.productDiscountPrice, // 생성자에서 상품 할인금액을 받아옴
     required this.deliveryFee, // 생성자에서 배송비용을 받아옴
     required this.totalPaymentPrice, // 생성자에서 총 결제금액을 받아옴
+    required this.totalPaymentPriceIncludedDeliveryFee, // 생성자에서 배송비 포함한 총 결제금액을 받아옴
     required this.ordererInfo, // 생성자에서 발주자 정보를 받아옴
     required this.nameController, // 생성자에서 이름 입력 컨트롤러를 받아옴
     required this.phoneNumberController, // 생성자에서 휴대폰 번호 입력 컨트롤러를 받아옴
@@ -1976,6 +1979,7 @@ class CompleteOrderButton extends ConsumerWidget {
                             productDiscountPrice, // 상품 할인금액
                         'delivery_fee' : deliveryFee, // 배송비용
                         'total_payment_price': totalPaymentPrice, // 총 결제금액
+                        'total_payment_price_included_delivery_fee': totalPaymentPriceIncludedDeliveryFee, // 배송비 포함 총 결제금액
                       };
 
                       // 발주 요청을 보내고 결과로 발주 ID를 받아옴
@@ -1999,9 +2003,9 @@ class CompleteOrderButton extends ConsumerWidget {
                       );
                     }
                   : () {
-                      // 결제금액이 15,000원 미만일 경우 경고 메시지 표시
-                      showCustomSnackBar(context, '15,000원 이상 금액부터 결제가 가능합니다.');
-                    }, // 결제금액이 15,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+                      // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
+                      showCustomSnackBar(context, '30,000원 이상 금액부터 결제가 가능합니다.');
+                    }, // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
               style: ElevatedButton.styleFrom(
                 foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
                 backgroundColor: Theme.of(context)
@@ -2489,7 +2493,7 @@ class _OrderListDetailItemWidgetState
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
 
-    // order 정보에서 총 상품 금액, 상품 할인 금액, 배송비용, 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정함
+    // order 정보에서 총 상품 금액, 상품 할인 금액, 배송비용, 배송비 포함 총 결제 금액을 가져오고, 값이 유효하지 않으면 0.0으로 설정함
     final totalProductPrice = widget.order!['amountInfo']['total_product_price']
                 ?.toString()
                 .isNotEmpty ==
@@ -2512,11 +2516,11 @@ class _OrderListDetailItemWidgetState
         ? (widget.order!['amountInfo']['delivery_fee'] as num)
         .toDouble()
         : 0;
-    final totalPaymentPrice = widget.order!['amountInfo']['total_payment_price']
+    final totalPaymentPriceIncludedDeliveryFee = widget.order!['amountInfo']['total_payment_price_included_delivery_fee']
                 ?.toString()
                 .isNotEmpty ==
             true
-        ? (widget.order!['amountInfo']['total_payment_price'] as num).toDouble()
+        ? (widget.order!['amountInfo']['total_payment_price_included_delivery_fee'] as num).toDouble()
         : 0;
 
     // 수령자 정보가 null인지 확인하고 각 필드를 안전하게 접근함
@@ -2763,7 +2767,7 @@ class _OrderListDetailItemWidgetState
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                   Divider(color: GRAY62_COLOR),
                   _buildAmountRow(context, '총 결제금액',
-                      '${numberFormat.format(totalPaymentPrice)}원',
+                      '${numberFormat.format(totalPaymentPriceIncludedDeliveryFee)}원',
                       isTotal: true,
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                 ],
