@@ -55,7 +55,6 @@ import 'common_body_parts_layout.dart';
 
 // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
 void updateStatusBar() {
-
   if (Platform.isAndroid) {
     // 안드로이드에서는 상태표시줄 색상을 직접 지정
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -72,7 +71,8 @@ void updateStatusBar() {
 // ------ AppBar 생성 함수 내용 구현 시작
 // 공통 앱 바
 AppBar buildCommonAppBar({
-  required BuildContext context, // BuildContext를 필수 인자로 받아 각종 위젯의 위치 정보 등을 제공받음.
+  required BuildContext
+      context, // BuildContext를 필수 인자로 받아 각종 위젯의 위치 정보 등을 제공받음.
   required WidgetRef ref, // 위젯 상태 참조를 위한 WidgetRef를 필수 인자로 받음.
   required String title, // AppBar에 표시될 제목을 문자열로 받음.
   required double appBarTitleWidth, // 앱 바 제목의 너비 설정
@@ -102,18 +102,19 @@ AppBar buildCommonAppBar({
   double? cartlistBtnHeight, // 장바구니 버튼 높이 설정
   double? cartlistBtnX, // 장바구니 버튼 X축 위치 설정
   double? cartlistBtnY, // 장바구니 버튼 Y축 위치 설정
-  LeadingType leadingType = LeadingType.drawer, // 앱 바 왼쪽 상단 버튼 유형 결정, 기본값은 드로어 버튼으로 설정
+  LeadingType leadingType =
+      LeadingType.drawer, // 앱 바 왼쪽 상단 버튼 유형 결정, 기본값은 드로어 버튼으로 설정
   int buttonCase = 1, // 버튼 구성을 선택하기 위한 매개변수, 기본값은 케이스 1
   String? fontFamily, // 제목의 글꼴을 설정하는 선택적 매개변수
   String? titleImagePath, // 이미지 경로를 설정하기 위한 선택적 매개변수
   bool boolEventImg = false, // 이벤트 이미지 표시 여부 설정
   bool boolTitleImg = false, // Firestore의 title_img 사용 여부 설정
 }) {
-
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
-  // 기준 화면 크기: 세로 852
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
   // 비율을 기반으로 동적으로 크기와 위치 설정
@@ -125,25 +126,34 @@ AppBar buildCommonAppBar({
   // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
+  final double appBarCartItemCountTextFontSize =
+      screenSize.height * (10 / referenceHeight); // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
+  final double interval1X = screenSize.width * (1 / referenceWidth); // 가로 비율
+  final double interval1Y = screenSize.height * (1 / referenceHeight); // 세로 비율
 
   // `boolEventImg` 값에 따라 이벤트 이미지를 가져옴
   final eventImage = ref.watch(eventImageProvider).whenOrNull(
-    data: (data) => boolEventImg && data != null && data.isNotEmpty ? data : null,
-  );
+        data: (data) =>
+            boolEventImg && data != null && data.isNotEmpty ? data : null,
+      );
 
   // Firestore에서 제목 이미지를 가져옴
   final titleImage = ref.watch(titleImageProvider).whenOrNull(
-    data: (data) => boolTitleImg && data != null && data.isNotEmpty ? data : null,
-  );
+        data: (data) =>
+            boolTitleImg && data != null && data.isNotEmpty ? data : null,
+      );
 
   // 이벤트 이미지를 클릭 가능하게 만드는 위젯 선언
   Widget? eventImageWidget;
-  if (eventImage != null) { // 이벤트 이미지가 있을 경우 조건문 실행
+  if (eventImage != null) {
+    // 이벤트 이미지가 있을 경우 조건문 실행
     eventImageWidget = GestureDetector(
-      onTap: () { // 이미지 클릭 시 실행할 함수 정의
+      onTap: () {
+        // 이미지 클릭 시 실행할 함수 정의
         // '겨울' 섹션으로 스크롤 이동 기능 구현
         final sectionContext = sectionKey?.currentContext; // 해당 섹션의 컨텍스트 가져옴
-        if (sectionContext != null) { // 섹션 컨텍스트가 null이 아닐 경우 실행
+        if (sectionContext != null) {
+          // 섹션 컨텍스트가 null이 아닐 경우 실행
           Scrollable.ensureVisible(
             sectionContext, // 스크롤하려는 대상 섹션 컨텍스트 전달
             duration: Duration(milliseconds: 500), // 스크롤 애니메이션 시간 설정
@@ -199,9 +209,12 @@ AppBar buildCommonAppBar({
           drawerIconX != null &&
           drawerIconY != null) {
         leadingWidget = Container(
-          width: drawerIconWidth, // 드로어 아이콘 너비 설정
-          height: drawerIconHeight, // 드로어 아이콘 높이 설정
-          margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY), // 아이콘 위치 설정
+          width: drawerIconWidth,
+          // 드로어 아이콘 너비 설정
+          height: drawerIconHeight,
+          // 드로어 아이콘 높이 설정
+          margin: EdgeInsets.only(left: drawerIconX, top: drawerIconY),
+          // 아이콘 위치 설정
           // 아이콘 위치 설정
           child: Builder(
             builder: (BuildContext context) {
@@ -338,18 +351,60 @@ AppBar buildCommonAppBar({
             ),
           ),
           // 장바구니 버튼
-          Container(
-            width: cartlistBtnWidth, // 장바구니 버튼 너비 설정
-            height: cartlistBtnHeight, // 장바구니 버튼 높이 설정
-            margin: EdgeInsets.only(
-              right: cartlistBtnX,
-              top: cartlistBtnY,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.shopping_cart_outlined, color: BLACK_COLOR), // 장바구니 아이콘
-              onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, CartMainScreen(), 1), // 장바구니 화면으로 이동
-            ),
+          Consumer(
+            builder: (context, ref, _) {
+              // cartItemCountProvider를 구독하여 장바구니 아이템 수를 실시간으로 확인
+              final cartItemCount = ref.watch(cartItemCountProvider).value ?? 0;
+
+              return Container(
+                width: cartlistBtnWidth, // 장바구니 버튼 너비
+                height: cartlistBtnHeight, // 장바구니 버튼 높이
+                margin: EdgeInsets.only(
+                  right: cartlistBtnX, // 오른쪽 마진
+                  top: cartlistBtnY, // 위쪽 마진
+                ),
+                child: Stack(
+                  alignment: Alignment.center, // 아이콘과 뱃지를 겹쳐 정렬
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.shopping_cart_outlined, // 장바구니 아이콘
+                        color: BLACK_COLOR,
+                      ),
+                      onPressed: () => navigateToScreenAndRemoveUntil(
+                        context,
+                        ref,
+                        CartMainScreen(), // 장바구니 화면으로 이동
+                        1,
+                      ),
+                    ),
+                    if (cartItemCount > 0)
+                      Positioned(
+                        top: interval1Y, // 뱃지의 Y축 위치
+                        right: interval1X, // 뱃지의 X축 위치
+                        child: Container(
+                          padding: EdgeInsets.all(1), // 뱃지 내부 여백
+                          decoration: BoxDecoration(
+                            color: ORANGE56_COLOR, // 뱃지 배경색 (주황색)
+                            shape: BoxShape.circle, // 뱃지 모양 (원형)
+                          ),
+                          child: Text(
+                            cartItemCount >= 100 ? '99+' : '$cartItemCount',
+                            // 100개 이상은 '99+', 그렇지 않으면 실제 갯수 표시
+                            style: TextStyle(
+                              color: WHITE_COLOR,
+                              // 뱃지 텍스트 색상
+                              fontSize: appBarCartItemCountTextFontSize,
+                              // 텍스트 크기
+                              fontWeight: FontWeight.bold, // 텍스트 두께
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
           ),
         ]);
       }
@@ -358,7 +413,8 @@ AppBar buildCommonAppBar({
 
   // AppBar를 반환
   return AppBar(
-    backgroundColor: Theme.of(context).scaffoldBackgroundColor, // AppBar의 배경 색상 설정, 앱의 기본 배경 색상을 사용함
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    // AppBar의 배경 색상 설정, 앱의 기본 배경 색상을 사용함
     toolbarHeight: appBarHeight,
     // 앱 바의 높이를 설정
     title: Container(
@@ -376,25 +432,26 @@ AppBar buildCommonAppBar({
           Center(
             child: titleImage != null
                 ? Image.network(
-              titleImage, // 네트워크에서 제목 이미지를 불러옴
-              fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
-            )
+                    titleImage, // 네트워크에서 제목 이미지를 불러옴
+                    fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
+                  )
                 : (titleImagePath != null
-                ? Image.asset(
-              titleImagePath, // 로컬 자산에서 제목 이미지를 불러옴
-              fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
-            )
-                : Text(
-              title, // 설정된 제목을 텍스트로 표시함
-              style: TextStyle(
-                color: BLACK_COLOR, // 텍스트 색상을 검정색으로 설정함
-                fontSize: titleFontSize, // 텍스트 크기를 설정함
-                fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
-                fontFamily: fontFamily, // 텍스트 폰트를 설정함
-              ),
-              maxLines: 1, // 텍스트가 한 줄로 표시되도록 설정함
-              overflow: TextOverflow.ellipsis, // 텍스트가 길 경우 생략 부호(...)를 표시함
-            )),
+                    ? Image.asset(
+                        titleImagePath, // 로컬 자산에서 제목 이미지를 불러옴
+                        fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
+                      )
+                    : Text(
+                        title, // 설정된 제목을 텍스트로 표시함
+                        style: TextStyle(
+                          color: BLACK_COLOR, // 텍스트 색상을 검정색으로 설정함
+                          fontSize: titleFontSize, // 텍스트 크기를 설정함
+                          fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
+                          fontFamily: fontFamily, // 텍스트 폰트를 설정함
+                        ),
+                        maxLines: 1, // 텍스트가 한 줄로 표시되도록 설정함
+                        overflow:
+                            TextOverflow.ellipsis, // 텍스트가 길 경우 생략 부호(...)를 표시함
+                      )),
           ),
         ],
       ),
@@ -415,6 +472,30 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
     {ProductContent? product, required ScrollController scrollController}) {
   // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
   final numberFormat = NumberFormat('###,###'); // 천 단위일때마다 쉼표 표시
+
+  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+  final Size screenSize = MediaQuery.of(context).size;
+
+  // 기준 화면 크기: 가로 393, 세로 852
+  final double referenceWidth = 393.0;
+  final double referenceHeight = 852.0;
+
+  // 비율을 기반으로 동적으로 크기와 위치 설정
+
+  // 하단 탭 바 내 장바구니 아이콘의 장바구니 아이템 갯수 구현 부분 관련 수치
+  final double bottomNavigationIconSize =
+      screenSize.width * (24 / referenceWidth);
+  final double interval1X = screenSize.width * (25.5 / referenceWidth); // 세로 비율
+  final double badgeSize = screenSize.width * (20 / referenceWidth); // 배지 크기
+  final double badgeTextFontSize =
+      screenSize.height * (11 / referenceHeight); // 배지 텍스트 크기
+  final double badgeOffsetX =
+      screenSize.width * (20 / referenceWidth); // 배지의 X축 오프셋
+  final double badgeOffsetY =
+      screenSize.height * (5 / referenceHeight); // 배지의 Y축 오프셋
+  final double bottomNavigationIconTextFontSize =
+      screenSize.height * (10 / referenceHeight); // 아이콘 하단 텍스트 수치
+
 
   switch (navigationCase) {
     // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
@@ -498,54 +579,111 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
               items: [
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
+                    padding: EdgeInsets.symmetric(horizontal: interval1X),
                     // 간격을 51로 설정 (좌우 25.5씩)
                     child: Icon(
                       Icons.home_outlined,
-                      size: 24,
+                      size: bottomNavigationIconSize,
                     ), // 홈 아이콘
                   ),
                   label: '홈', // 홈 라벨
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
-                    child: Icon(Icons.shopping_cart_outlined,
-                        size: 24), // 장바구니 아이콘
+                    padding: EdgeInsets.symmetric(horizontal: interval1X),
+                    child: Consumer(
+                      builder: (context, ref, _) {
+                        final cartItemCount =
+                            ref.watch(cartItemCountProvider).value ?? 0;
+
+                        return Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
+                          children: [
+                            Icon(
+                              Icons.shopping_cart_outlined,
+                              size: bottomNavigationIconSize,
+                            ),
+                            if (cartItemCount > 0)
+                              Positioned(
+                                right: -badgeOffsetX, // 아이콘의 우측 상단으로 위치 설정
+                                top: -badgeOffsetY, // 아이콘의 상단 위로 위치 설정
+                                child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  // 뱃지 내부 여백
+                                  decoration: BoxDecoration(
+                                    color: BLUE49_COLOR, // 뱃지 배경색 (주황색)
+                                    shape: BoxShape.circle, // 뱃지 모양 (원형)
+                                  ),
+                                  // child: Container(
+                                  //   width: badgeSize,
+                                  //   height: badgeSize,
+                                  //   padding: EdgeInsets.all(1), // 뱃지 내부 여백
+                                  //   alignment: Alignment.center,
+                                  //   decoration: BoxDecoration(
+                                  //   color: BLUE49_COLOR, // 뱃지 배경색 (주황색)
+                                  //   shape: BoxShape.circle, // 뱃지 모양 (원형)
+                                  //   // decoration: BoxDecoration(
+                                  //   //   color: Colors.transparent, // 배경색을 투명으로 설정
+                                  //   //   shape: BoxShape.circle, // 배지 모양을 원형으로 설정
+                                  //   //   border: Border.all( // 테두리 설정
+                                  //   //     color: BLUE49_COLOR, // 테두리 색상 흰색
+                                  //   //     width: 2.0, // 테두리 두께
+                                  //   //   ),
+                                  //   // ),
+                                  //   ),
+                                  child: Text(
+                                    cartItemCount >= 100
+                                        ? '99+'
+                                        : '$cartItemCount',
+                                    // 100개 이상은 '99+'로 표시
+                                    style: TextStyle(
+                                      color: WHITE_COLOR, // 텍스트 색상
+                                      fontSize: badgeTextFontSize, // 텍스트 크기
+                                      fontWeight: FontWeight.bold, // 텍스트 두께
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                  label: '장바구니', // 장바구니 라벨
+                  label: '장바구니',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
+                    padding: EdgeInsets.symmetric(horizontal: interval1X),
                     child: Icon(Icons.receipt_long_outlined,
-                        size: 24), // 발주 내역 아이콘
+                        size: bottomNavigationIconSize), // 발주 내역 아이콘
                   ),
                   label: '발주내역', // 발주 내역 라벨
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.5),
-                    child: Icon(Icons.person_outlined, size: 24), // 마이페이지 아이콘
+                    padding: EdgeInsets.symmetric(horizontal: interval1X),
+                    child: Icon(Icons.person_outlined,
+                        size: bottomNavigationIconSize), // 마이페이지 아이콘
                   ),
                   label: '마이페이지', // 마이페이지 라벨
                 ),
               ],
               selectedItemColor: selectedColor,
               unselectedItemColor: unselectedColor,
-              selectedFontSize: 10,
+              selectedFontSize: bottomNavigationIconTextFontSize,
               // 선택된 아이템의 폰트 크기
-              unselectedFontSize: 10,
+              unselectedFontSize: bottomNavigationIconTextFontSize,
               // 선택되지 않은 아이템의 폰트 크기
               selectedLabelStyle: TextStyle(
                 fontFamily: 'NanumGothic', // 폰트 패밀리 설정
                 fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
-                fontSize: 10, // 텍스트 크기를 10으로 설정
+                fontSize: bottomNavigationIconTextFontSize, // 텍스트 크기를 10으로 설정
               ),
               unselectedLabelStyle: TextStyle(
                 fontFamily: 'NanumGothic', // 폰트 패밀리 설정
                 fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
-                fontSize: 10, // 텍스트 크기를 10으로 설정
+                fontSize: bottomNavigationIconTextFontSize, // 텍스트 크기를 10으로 설정
               ),
             ),
           ),
@@ -674,27 +812,30 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     child: ElevatedButton(
                       onPressed: totalPaymentPrice >= 30000
                           ? () async {
-                        // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
-                        ref
-                            .read(orderItemsProvider.notifier)
-                            .setOrderItems([orderProduct]); // 주문 아이템 상태 업데이트
-                        // OrderMainScreen으로 화면 전환
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => OrderMainScreen(
-                                    totalProductPrice:
-                                        totalProductPrice.toDouble(),
-                                    // 총 제품 가격 전달
-                                    productDiscountPrice:
-                                        productDiscountPrice.toDouble(),
-                                    // 할인된 금액 전달
-                                  )),
-                        );
-                      }
+                              // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
+                              ref
+                                  .read(orderItemsProvider.notifier)
+                                  .setOrderItems(
+                                      [orderProduct]); // 주문 아이템 상태 업데이트
+                              // OrderMainScreen으로 화면 전환
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => OrderMainScreen(
+                                          totalProductPrice:
+                                              totalProductPrice.toDouble(),
+                                          // 총 제품 가격 전달
+                                          productDiscountPrice:
+                                              productDiscountPrice.toDouble(),
+                                          // 할인된 금액 전달
+                                        )),
+                              );
+                            }
                           : () {
-                        // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
-                        showCustomSnackBar(context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
-                      }, // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+                              // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
+                              showCustomSnackBar(
+                                  context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                            },
+                      // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
                       style: ElevatedButton.styleFrom(
                         foregroundColor: WHITE_COLOR, // 텍스트 색상
                         backgroundColor: ORANGE56_COLOR, // 배경 색상
@@ -893,31 +1034,35 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     child: ElevatedButton(
                       // 버튼 클릭 시 호출되는 함수
                       onPressed: totalPaymentPrice >= 30000
-                          ? () async  {
-                        // 선택된 아이템이 있는지 확인
-                        if (orderProducts.isEmpty) {
-                          // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
-                          showCustomSnackBar(context, '발주요청할 상품을 선택해주세요.');
-                        } else {
-                          // 체크된 상품이 있는 경우 발주 화면으로 이동
-                          ref
-                              .read(orderItemsProvider.notifier)
-                              .setOrderItems(orderProducts); // 주문 아이템 상태 업데이트
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => OrderMainScreen(
-                                      totalProductPrice:
-                                          totalProductPrice.toDouble(),
-                                      productDiscountPrice:
-                                          totalDiscountPrice.toDouble(),
-                                    )),
-                          );
-                        }
-                      }
+                          ? () async {
+                              // 선택된 아이템이 있는지 확인
+                              if (orderProducts.isEmpty) {
+                                // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
+                                showCustomSnackBar(
+                                    context, '발주요청할 상품을 선택해주세요.');
+                              } else {
+                                // 체크된 상품이 있는 경우 발주 화면으로 이동
+                                ref
+                                    .read(orderItemsProvider.notifier)
+                                    .setOrderItems(
+                                        orderProducts); // 주문 아이템 상태 업데이트
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (_) => OrderMainScreen(
+                                            totalProductPrice:
+                                                totalProductPrice.toDouble(),
+                                            productDiscountPrice:
+                                                totalDiscountPrice.toDouble(),
+                                          )),
+                                );
+                              }
+                            }
                           : () {
-                        // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
-                        showCustomSnackBar(context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
-                      }, // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+                              // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
+                              showCustomSnackBar(
+                                  context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                            },
+                      // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
                       // 버튼 스타일 설정
                       style: ElevatedButton.styleFrom(
                         foregroundColor: WHITE_COLOR,
@@ -980,8 +1125,8 @@ void navigateToScreenAndRemoveUntil(
   );
 }
 
-TextStyle topBarTextStyle(int currentIndex, int buttonIndex, BuildContext context) {
-
+TextStyle topBarTextStyle(
+    int currentIndex, int buttonIndex, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -989,8 +1134,7 @@ TextStyle topBarTextStyle(int currentIndex, int buttonIndex, BuildContext contex
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  final double topBarTextFontSize =
-      screenSize.height * (16 / referenceHeight);
+  final double topBarTextFontSize = screenSize.height * (16 / referenceHeight);
 
   return TextStyle(
     fontSize: topBarTextFontSize, // Figma에서 확인한 텍스트 크기
@@ -1070,8 +1214,8 @@ Widget buildTopBarList(
                 height: topBarBtnHeight,
                 padding: EdgeInsets.symmetric(horizontal: topBarListPaddingX),
                 // 좌우로 패딩 적용
-                child:
-                    Text(category, style: topBarTextStyle(currentIndex, index, context)),
+                child: Text(category,
+                    style: topBarTextStyle(currentIndex, index, context)),
               ),
             );
           },
@@ -1268,7 +1412,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     '쪽지 관리',
                     () => onMessageManagementClick(
                         context, ref), // 클릭 시 실행될 함수 전달
-                      'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
+                    'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
                   ),
                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
                   _buildAdminListTile(
@@ -1324,8 +1468,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
 
-Widget _buildAdminListTile(
-    BuildContext context, String title, void Function()? onTap, String leadingImage) {
+Widget _buildAdminListTile(BuildContext context, String title,
+    void Function()? onTap, String leadingImage) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -1636,7 +1780,6 @@ Future<void> createFirestoreDocuments_2() async {
   int batchCounter = 0;
   WriteBatch batch = firestore.batch();
 
-
   final Map<int, String> briefIntroductionMap = {
     1: '해당 상품은 티셔츠입니다.',
     2: '해당 상품은 블라우스입니다.',
@@ -1711,7 +1854,8 @@ Future<void> createFirestoreDocuments_2() async {
 
   for (int i = 1; i <= 12; i++) {
     String docId = 'product_$i';
-    DocumentReference wearcanoDocRef = firestore.collection('products').doc('wearcano');
+    DocumentReference wearcanoDocRef =
+        firestore.collection('products').doc('wearcano');
     CollectionReference productCollectionRef = wearcanoDocRef.collection(docId);
 
     // 'aa', 'ab', ..., 'al' 생성
@@ -1747,46 +1891,44 @@ Future<void> createFirestoreDocuments_2() async {
           String thumbnailUrl =
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
 
-          batch.set(
-              subDocRef,
-              {
-                'brief_introduction': briefIntroduction,
-                'clothes_color1':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=37afbb86-6b75-470d-b00c-98e03e23f3e4',
-                'clothes_color2':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=5925c7d9-2966-4273-b1bb-3207475200cd',
-                'clothes_color3':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Flavender.png?alt=media&token=45ee6a67-62bf-4aa7-a5f3-a12b13684bd1',
-                'clothes_size1': 'Free',
-                'color1_text': 'black',
-                'color2_text': 'brown',
-                'color3_text': 'lavender',
-                'detail_page_image1':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
-                'detail_page_image2':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
-                'detail_page_image3':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
-                'detail_page_image4':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
-                'detail_page_image5':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
-                'detail_intro_image1':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d1.png?alt=media',
-                'detail_intro_image2':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d2.png?alt=media',
-                'detail_intro_image3':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d3.png?alt=media',
-                'detail_intro_image4':
-                    'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d4.png?alt=media',
-                'discount_percent': discountPercent,
-                'discount_price': discountPrice,
-                'original_price': originalPrice,
-                'thumbnails': thumbnailUrl,
-                'category': categoryText,
-                'product_number': productNumber,
-                'boolExistence': false
-              });
+          batch.set(subDocRef, {
+            'brief_introduction': briefIntroduction,
+            'clothes_color1':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fblack.png?alt=media&token=37afbb86-6b75-470d-b00c-98e03e23f3e4',
+            'clothes_color2':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Fbrown.png?alt=media&token=5925c7d9-2966-4273-b1bb-3207475200cd',
+            'clothes_color3':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/clothes_color%2Flavender.png?alt=media&token=45ee6a67-62bf-4aa7-a5f3-a12b13684bd1',
+            'clothes_size1': 'Free',
+            'color1_text': 'black',
+            'color2_text': 'brown',
+            'color3_text': 'lavender',
+            'detail_page_image1':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}1.png?alt=media',
+            'detail_page_image2':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}2.png?alt=media',
+            'detail_page_image3':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}3.png?alt=media',
+            'detail_page_image4':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}4.png?alt=media',
+            'detail_page_image5':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2F$detailImagePath%2F${detailImagePath}5.png?alt=media',
+            'detail_intro_image1':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d1.png?alt=media',
+            'detail_intro_image2':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d2.png?alt=media',
+            'detail_intro_image3':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d3.png?alt=media',
+            'detail_intro_image4':
+                'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/detail_image%2Fprod_info%2Fintro_info%2FHG3314-d4.png?alt=media',
+            'discount_percent': discountPercent,
+            'discount_price': discountPrice,
+            'original_price': originalPrice,
+            'thumbnails': thumbnailUrl,
+            'category': categoryText,
+            'product_number': productNumber,
+            'boolExistence': false
+          });
 
           batchCounter++;
 
@@ -1817,11 +1959,13 @@ Future<void> createFirestoreDocuments_3() async {
   int batchCounter = 0;
   WriteBatch batch = firestore.batch();
 
-  DocumentReference wearcanoDocRef = firestore.collection('banners').doc('wearcano');
+  DocumentReference wearcanoDocRef =
+      firestore.collection('banners').doc('wearcano');
 
   for (int i = 1; i <= 12; i++) {
     // 'banner_1' ~ 'banner_12' 컬렉션 참조 생성
-    CollectionReference bannerCollectionRef = wearcanoDocRef.collection('banner_$i');
+    CollectionReference bannerCollectionRef =
+        wearcanoDocRef.collection('banner_$i');
 
     final int baseChar = 'a'.codeUnitAt(0); // 소문자 'a' 시작 문자
 
@@ -1835,18 +1979,35 @@ Future<void> createFirestoreDocuments_3() async {
     String docId2 = '${collectionId1}B1';
     String docId3 = '${docId2}_1';
 
-    String productId = 'products/wearcano/$docId1/$collectionId1/$docId2/wearcano/wearcano_items/$docId3';
+    String productId =
+        'products/wearcano/$docId1/$collectionId1/$docId2/wearcano/wearcano_items/$docId3';
 
     // 각 배너 타입에 맞춰 하위 문서 생성
     List<String> bannerTypes = [
-      'large_banner', 'home_small_banner_1', 'home_small_banner_2', 'home_small_banner_3',
-      'shirt_main_small_banner_1', 'blouse_main_small_banner_1', 'mtm_main_small_banner_1',
-      'cardigan_main_small_banner_1', 'coat_main_small_banner_1', 'jean_main_small_banner_1',
-      'neat_main_small_banner_1', 'onepiece_main_small_banner_1', 'paeding_main_small_banner_1',
-      'pants_main_small_banner_1', 'pola_main_small_banner_1', 'skirt_main_small_banner_1',
-      'profile_main_small_banner_1', 'new_sub_main_small_banner_1', 'best_sub_main_small_banner_1',
-      'sale_sub_main_small_banner_1', 'spring_sub_main_small_banner_1', 'summer_sub_main_small_banner_1',
-      'autumn_sub_main_small_banner_1', 'winter_sub_main_small_banner_1'
+      'large_banner',
+      'home_small_banner_1',
+      'home_small_banner_2',
+      'home_small_banner_3',
+      'shirt_main_small_banner_1',
+      'blouse_main_small_banner_1',
+      'mtm_main_small_banner_1',
+      'cardigan_main_small_banner_1',
+      'coat_main_small_banner_1',
+      'jean_main_small_banner_1',
+      'neat_main_small_banner_1',
+      'onepiece_main_small_banner_1',
+      'paeding_main_small_banner_1',
+      'pants_main_small_banner_1',
+      'pola_main_small_banner_1',
+      'skirt_main_small_banner_1',
+      'profile_main_small_banner_1',
+      'new_sub_main_small_banner_1',
+      'best_sub_main_small_banner_1',
+      'sale_sub_main_small_banner_1',
+      'spring_sub_main_small_banner_1',
+      'summer_sub_main_small_banner_1',
+      'autumn_sub_main_small_banner_1',
+      'winter_sub_main_small_banner_1'
     ];
 
     int homeImgCounter = 1; // 홈 배너 이미지 순서 관리를 위한 카운터
@@ -1857,11 +2018,16 @@ Future<void> createFirestoreDocuments_3() async {
       // 필드 설정
       if (bannerType == 'large_banner') {
         batch.set(bannerDocRef, {
-          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon1.png?alt=media',
-          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon2.png?alt=media',
-          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon3.png?alt=media',
-          'ad_img_4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_4.png?alt=media',
-          'ad_img_5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_5.png?alt=media',
+          'ad_img_1':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon1.png?alt=media',
+          'ad_img_2':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon2.png?alt=media',
+          'ad_img_3':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon3.png?alt=media',
+          'ad_img_4':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_4.png?alt=media',
+          'ad_img_5':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_5.png?alt=media',
           'ad_url_1': 'https://www.naver.com',
           'ad_url_2': 'https://ko.aliexpress.com/',
           'ad_url_3': 'https://www.temu.com/kr',
@@ -1869,30 +2035,43 @@ Future<void> createFirestoreDocuments_3() async {
           'product_id': productId,
           'sub_category': '신상',
         });
-      } else if (['home_small_banner_1', 'home_small_banner_2', 'home_small_banner_3'].contains(bannerType)) {
+      } else if ([
+        'home_small_banner_1',
+        'home_small_banner_2',
+        'home_small_banner_3'
+      ].contains(bannerType)) {
         // home_small_banner는 ad_image1 ~ ad_image9
         batch.set(bannerDocRef, {
-          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
-          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
-          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'ad_img_1':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'ad_img_2':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'ad_img_3':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
           'category': '아우터',
           'product_id': productId,
         });
       } else if (bannerType == 'profile_main_small_banner_1') {
         // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
         batch.set(bannerDocRef, {
-          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
-          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
-          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
+          'ad_img_1':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
+          'ad_img_2':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
+          'ad_img_3':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
           'category': '아우터',
           'product_id': productId,
         });
       } else {
         // 나머지 배너 타입들은 mb1 ~ mb57로 설정
         batch.set(bannerDocRef, {
-          'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
-          'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
-          'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'ad_img_1':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'ad_img_2':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'ad_img_3':
+              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
           'category': '아우터',
           'product_id': productId,
         });

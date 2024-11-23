@@ -249,3 +249,30 @@ class CartItemRepository {
   }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝
+
+// ------- 장바구니 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 CartIconRepository 클래스 시작
+class CartIconRepository {
+  final FirebaseFirestore firestore;
+
+  CartIconRepository({required this.firestore});
+
+  // 장바구니 문서 갯수를 구독하는 함수
+  Stream<int> watchCartItemCount() {
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email;
+
+    if (userEmail == null) {
+      // 사용자 인증 정보가 없으면 빈 스트림 반환
+      return Stream.value(0);
+    }
+
+    // Firestore 경로에서 문서 개수를 실시간으로 반환
+    return firestore
+        .collection('wearcano_cart_item')
+        .doc(userEmail)
+        .collection('items')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+}
+// ------- 장바구니 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 CartIconRepository 클래스 끝

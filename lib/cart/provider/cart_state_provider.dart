@@ -257,3 +257,13 @@ StateNotifierProvider<CartItemsNotifier, List<Map<String, dynamic>>>((ref) {
   final cartItemRepository = ref.read(cartItemRepositoryProvider); // CartItemRepository 인스턴스를 가져옴
   return CartItemsNotifier(cartItemRepository, ref); // CartItemsNotifier 인스턴스를 생성하여 반환함
 });
+
+// 장바구니 문서 갯수 상태를 구독하는 StreamProvider
+final cartItemCountProvider = StreamProvider<int>((ref) {
+  // CartRepository를 가져와 watchCartItemCount 호출
+  final cartRepository = ref.read(cartIconRepositoryProvider);
+  return cartRepository.watchCartItemCount();
+});
+
+
+
