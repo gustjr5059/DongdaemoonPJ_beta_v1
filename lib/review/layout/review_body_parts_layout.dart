@@ -1190,7 +1190,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     context,
                     ref,
                     PrivateReviewMainScreen(
-                        email: widget.userEmail, navigateToListTab: true),
+                        navigateToListTab: true),
                     // 리뷰 메인 화면으로 이동함
                     4, // 하단 탭바의 인덱스를 초기화함 (필요시 변경)
                   );

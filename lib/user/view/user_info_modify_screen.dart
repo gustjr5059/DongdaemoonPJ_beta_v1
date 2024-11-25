@@ -38,36 +38,33 @@ import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴�
 // 홈 화면의 레이아웃을 구성하는 파일을 임포트합니다.
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../common/provider/common_state_provider.dart';
-
-// 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
-// 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../cart/provider/cart_state_provider.dart';
-import '../provider/inquiry_state_provider.dart';
+import '../provider/user_info_modify_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// InquiryMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class InquiryMainScreen extends ConsumerStatefulWidget {
-  const InquiryMainScreen({Key? key}) : super(key: key);
+// UserInfoModifyScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class UserInfoModifyScreen extends ConsumerStatefulWidget {
+  const UserInfoModifyScreen({Key? key}) : super(key: key);
 
   @override
-  _InquiryMainScreenState createState() => _InquiryMainScreenState();
+  _UserInfoModifyScreenState createState() => _UserInfoModifyScreenState();
 }
 
-// _InquiryMainScreenState 클래스 시작
-// _InquiryMainScreenState 클래스는 InquiryMainScreen 위젯의 상태를 관리함.
+// _UserInfoModifyScreenState 클래스 시작
+// _UserInfoModifyScreenState 클래스는 UserInfoModifyScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
+class _UserInfoModifyScreenState extends ConsumerState<UserInfoModifyScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  // inquiryScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
-  // ref.read(inquiryScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
+  // userInfoModifyScrollControllerProvider에서 ScrollController를 읽어와서 scrollController에 할당
+  // ref.read(userInfoModifyScrollControllerProvider)는 provider를 이용해 상태를 읽는 방식.
   // ScrollController는 스크롤 가능한 위젯의 스크롤 동작을 제어하기 위해 사용됨.
   // 1.상단 탭바 버튼 클릭 시 해당 섹션으로 스크롤 이동하는 기능,
   // 2.하단 탭바의 버튼 클릭 시  화면 초기 위치로 스크롤 이동하는 기능,
@@ -76,13 +73,13 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
   // 5. 'top' 버튼 클릭 시 홈 화면 초기 위치로 스크롤 이동하는 기능,
   // => 5개의 기능인 전체 화면의 스크롤을 제어하는 컨트롤러-화면 내의 여러 섹션으로의 이동 역할
 
-  // inquiryScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
+  //  userInfoModifyScrollControllerProvider : 여러 위젯에서 동일한 ScrollController를 공유하고,
   // 상태를 유지하기 위해 Riverpod의 Provider를 사용하여 관리함.
   // 이를 통해 앱의 다른 부분에서도 동일한 ScrollController에 접근할 수 있으며, 상태를 일관성 있게 유지함.
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController inquiryScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController userInfoModifyScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -92,26 +89,25 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
   void initState() {
     super.initState();
     // ScrollController를 초기화
-    inquiryScreenPointScrollController = ScrollController();
+    userInfoModifyScreenPointScrollController = ScrollController();
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 스크롤 컨트롤러가 활성 스크롤 뷰를 가지고 있는지 확인함.
-      if (inquiryScreenPointScrollController.hasClients) {
+      if (userInfoModifyScreenPointScrollController.hasClients) {
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(inquiryScrollPositionProvider);
+        double savedScrollPosition = ref.read(userInfoModifyScrollPositionProvider);
         // inquiryScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        inquiryScreenPointScrollController.jumpTo(savedScrollPosition);
+        userInfoModifyScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 문의하기 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
@@ -120,10 +116,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(inquiryScrollPositionProvider.notifier).state = 0;
+        ref.read(userInfoModifyScrollPositionProvider.notifier).state = 0;
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
-
-      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // WidgetsBindingObserver를 추가하여 앱의 생명주기 변화 감지
@@ -160,7 +155,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    inquiryScreenPointScrollController.dispose(); // ScrollController 해제
+    userInfoModifyScreenPointScrollController.dispose(); // ScrollController 해제
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
@@ -184,16 +179,26 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double inquiryAppBarTitleWidth =
+    final double userInfoModifyAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double inquiryAppBarTitleHeight =
+    final double userInfoModifyAppBarTitleHeight =
         screenSize.height * (22 / referenceHeight);
-    final double inquiryAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double inquiryAppBarTitleY =
+    final double userInfoModifyAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    final double userInfoModifyAppBarTitleY =
         screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double inquiryPaddingX = screenSize.width * (8 / referenceWidth);
+    final double userInfoModifyPaddingX = screenSize.width * (8 / referenceWidth);
+
+    // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    final double userInfoModifyChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
+    final double userInfoModifyChevronIconHeight =
+        screenSize.height * (24 / referenceHeight);
+    final double userInfoModifyChevronIconX =
+        screenSize.width * (10 / referenceWidth);
+    final double userInfoModifyChevronIconY =
+        screenSize.height * (9 / referenceHeight);
 
     // 컨텐츠 사이의 간격 계산
     final double interval1Y =
@@ -207,34 +212,12 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double interval2X =
         screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
-    // 텍스트 폰트 크기 수치
-    final double inquiryGuideTextWidth1 =
-        screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double inquiryGuideTextWidth2 =
-        screenSize.width * (310 / referenceWidth); // 가로 비율
-    final double inquiryGuidFontSize1 =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double inquiryGuidFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-
-    // 문의하기로 이동 버튼 수치
-    final double inquiryBtnWidth =
-        screenSize.width * (250 / referenceWidth); // 문의하기로 이동 버튼 가로 비율 계산
-    final double inquiryBtnHeight =
-        screenSize.height * (45 / referenceHeight); // 문의하기로 이동 버튼 세로 비율 계산
-    final double inquiryBtnPaddingX =
-        screenSize.width * (20 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
-    final double inquiryBtnPaddingY =
-        screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
-    final double inquiryBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 문의하기로 이동 버튼 텍스트 크기 비율 계산
-    final double inquiryBtnX = screenSize.width * (120 / referenceWidth);
 
     return Scaffold(
       body: Stack(
         children: [
           CustomScrollView(
-            controller: inquiryScreenPointScrollController,
+            controller: userInfoModifyScreenPointScrollController,
             slivers: <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
@@ -256,14 +239,18 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                     child: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '문의하기',
+                      title: '회원정보 수정 및 탈퇴',
                       fontFamily: 'NanumGothic',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
-                      appBarTitleWidth: inquiryAppBarTitleWidth,
-                      appBarTitleHeight: inquiryAppBarTitleHeight,
-                      appBarTitleX: inquiryAppBarTitleX,
-                      appBarTitleY: inquiryAppBarTitleY,
+                      appBarTitleWidth: userInfoModifyAppBarTitleWidth,
+                      appBarTitleHeight: userInfoModifyAppBarTitleHeight,
+                      appBarTitleX: userInfoModifyAppBarTitleX,
+                      appBarTitleY: userInfoModifyAppBarTitleY,
+                      chevronIconWidth: userInfoModifyChevronIconWidth,
+                      chevronIconHeight: userInfoModifyChevronIconHeight,
+                      chevronIconX: userInfoModifyChevronIconX,
+                      chevronIconY: userInfoModifyChevronIconY,
                     ),
                   ),
                 ),
@@ -277,100 +264,15 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                        (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
                         padding:
-                            EdgeInsets.symmetric(horizontal: inquiryPaddingX),
+                        EdgeInsets.symmetric(horizontal: userInfoModifyPaddingX),
                         child: Column(
                           // 자식 위젯들을 왼쪽 정렬.
                           // crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: interval1Y),
-                            Container(
-                              width: inquiryGuideTextWidth1,
-                              alignment: Alignment.center,
-                              child: Text(
-                                '* 문의는 아래 절차에 따라 진행해주세요.',
-                                style: TextStyle(
-                                  fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
-                                  fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                  fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: BLACK_COLOR, // 텍스트 색상 설정
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: interval2Y),
-                            Container(
-                              width: inquiryGuideTextWidth2,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                '1. [문의하기로 이동] 버튼을 클릭해주세요.',
-                                style: TextStyle(
-                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
-                                  fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                                  fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: BLACK_COLOR, // 텍스트 색상 설정
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: inquiryGuideTextWidth2,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                '2. 이동한 웹 페이지에서 내용 작성 후, 제출해주세요.',
-                                style: TextStyle(
-                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
-                                  fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                                  fontFamily: 'NanumGothic', // 글꼴 설정
-                                  color: BLACK_COLOR, // 텍스트 색상 설정
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: interval3Y),
-                            Container(
-                              width: inquiryBtnWidth,
-                              height: inquiryBtnHeight,
-                              alignment: Alignment.center,
-                              // 패딩 설정
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  // 버튼이 눌렸을 때 해당 링크로 이동함
-                                  final Uri url =
-                                      Uri.parse('http://pf.kakao.com/_ceKEn');
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(
-                                        url); // url_launcher 패키지를 사용하여 링크를 엶
-                                  } else {
-                                    throw '$url 해당 url를 열 수 없습니다.'; // 링크를 열 수 없는 경우 예외를 발생시킴
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  // 버튼의 스타일을 설정함
-                                  foregroundColor: ORANGE56_COLOR,
-                                  // 버튼의 글자 색상을 설정함
-                                  backgroundColor: ORANGE56_COLOR,
-                                  // 버튼의 배경 색상을 설정함
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: inquiryBtnPaddingY,
-                                      horizontal: inquiryBtnPaddingX),
-                                  // 패딩 설정
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(45), // 모서리 둥글게 설정
-                                  ),
-                                ),
-                                child: Text(
-                                  '문의하기', // 버튼에 표시될 텍스트
-                                  style: TextStyle(
-                                    fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
-                                    fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                    fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: WHITE_COLOR, // 텍스트 색상 설정
-                                  ), // 텍스트 스타일
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       );
@@ -381,13 +283,13 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
               ),
             ],
           ),
-          buildTopButton(context, inquiryScreenPointScrollController),
+          buildTopButton(context, userInfoModifyScreenPointScrollController),
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
           ref.watch(tabIndexProvider), ref, context, 5, 1,
-          scrollController: inquiryScreenPointScrollController),
+          scrollController: userInfoModifyScreenPointScrollController),
     );
   }
 }
-// _InquiryScreenState 클래스 끝
+// _UserInfoModifyScreenState 클래스 끝

@@ -580,6 +580,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 장바구니 화면에서 단순 화면 스크롤 초기화
   ref.read(cartScrollPositionProvider.notifier).state = 0.0;
   ref.invalidate(cartItemsProvider); // 장바구니 데이터 초기화
+  ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
   // 장바구니 화면 관련 초기화 부분 끝
 
   // 발주 내역 화면 관련 초기화 부분 시작
@@ -625,6 +626,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
   ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록  데이터 로드 초기화
   ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
+  ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
   // 찜 목록 화면 관련 초기화 부분 끝
 
   // 마이페이지 화면 관련 초기화 부분 시작

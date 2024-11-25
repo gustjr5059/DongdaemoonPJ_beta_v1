@@ -33,6 +33,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
@@ -332,6 +333,9 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         // currentIndex가 1 이하일 경우 ('전체' 또는 '신상' 섹션이 선택된 경우)
         homeTopBarPointAutoScrollController.jumpTo(0.0); // 스크롤을 맨 처음 위치로 즉시 이동함
       }
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
@@ -413,6 +417,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
             false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 

@@ -40,8 +40,11 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일 임포트
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함함
+import '../../cart/provider/cart_state_provider.dart';
 import '../../message/provider/message_all_provider.dart';
 import '../../order/provider/order_all_providers.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../layout/review_body_parts_layout.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
@@ -53,12 +56,11 @@ import '../provider/review_state_provider.dart';
 // GlobalKey 대신 local context 사용 방법 설명 클래스
 // PrivateReviewMainScreen 클래스는 ConsumerStatefulWidget을 상속받으며, Riverpod를 통한 상태 관리 기능을 지원함
 class PrivateReviewMainScreen extends ConsumerStatefulWidget {
-  final String email; // 이메일 정보를 저장하는 변수
   final bool navigateToListTab; // 리뷰 목록 탭으로 이동할지 여부를 결정하는 플래그
 
-  // ReviewMainScreen 생성자, email, navigateToListTab 매개변수를 필수로 받음
+  // ReviewMainScreen 생성자, navigateToListTab 매개변수를 필수로 받음
   const PrivateReviewMainScreen(
-      {Key? key, required this.email, this.navigateToListTab = false})
+      {Key? key, this.navigateToListTab = false})
       : super(key: key);
 
   @override
@@ -108,7 +110,9 @@ class _PrivateReviewMainScreenState
       if (privateReviewScreenPointScrollController.position.pixels ==
           privateReviewScreenPointScrollController.position.maxScrollExtent) {
         // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
-        ref.read(privateReviewItmesListNotifierProvider.notifier).loadMoreReviews();
+        ref
+            .read(privateReviewItmesListNotifierProvider.notifier)
+            .loadMoreReviews();
       }
     });
 
@@ -134,7 +138,10 @@ class _PrivateReviewMainScreenState
 
       // 리뷰 목록 초기화
       ref.read(privateReviewItmesListNotifierProvider.notifier).resetReviews();
-      ref.read(privateReviewItmesListNotifierProvider.notifier).loadMoreReviews();
+      ref
+          .read(privateReviewItmesListNotifierProvider.notifier)
+          .loadMoreReviews();
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함
@@ -145,8 +152,13 @@ class _PrivateReviewMainScreenState
         ref.read(privateReviewScrollPositionProvider.notifier).state = 0;
 
         // 리뷰 목록 초기화
-        ref.read(privateReviewItmesListNotifierProvider.notifier).resetReviews();
-        ref.read(privateReviewItmesListNotifierProvider.notifier).loadMoreReviews();
+        ref
+            .read(privateReviewItmesListNotifierProvider.notifier)
+            .resetReviews();
+        ref
+            .read(privateReviewItmesListNotifierProvider.notifier)
+            .loadMoreReviews();
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -246,6 +258,23 @@ class _PrivateReviewMainScreenState
     final double reviewEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -298,8 +327,28 @@ class _PrivateReviewMainScreenState
                 // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
                     // reviewsNotifierProvider의 상태를 가져옴
-                    final reviewItems = ref.watch(privateReviewItmesListNotifierProvider);
+                    final reviewItems =
+                        ref.watch(privateReviewItmesListNotifierProvider);
                     // 리뷰 내역이 비어 있을 경우 '현재 리뷰 목록 내 리뷰가 없습니다.' 텍스트를 중앙에 표시
                     // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
                     // loading: (), error: (err, stack)를 구분해서 구현 못함
@@ -307,39 +356,40 @@ class _PrivateReviewMainScreenState
                     // 그대신 로딩 표시를 못 넣음...
                     return reviewItems.isEmpty
                         ? SliverToBoxAdapter(
-                      child: Container(
-                        width: reviewEmptyTextWidth,
-                        height: reviewEmptyTextHeight,
-                        margin: EdgeInsets.only(top: reviewEmptyTextY),
-                        // 텍스트를 중앙에 위치하도록 설정함.
-                        alignment: Alignment.center,
-                        child: Text('현재 리뷰 목록 내 리뷰가 없습니다.',
-                          style: TextStyle(
-                            fontSize: reviewEmptyTextFontSize,
-                            fontFamily: 'NanumGothic',
-                            fontWeight: FontWeight.bold,
-                            color: BLACK_COLOR,
-                          ),
-                        ),
-                      ),
-                    )
-                    // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                            child: Container(
+                              width: reviewEmptyTextWidth,
+                              height: reviewEmptyTextHeight,
+                              margin: EdgeInsets.only(top: reviewEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                              child: Text(
+                                '현재 리뷰 목록 내 리뷰가 없습니다.',
+                                style: TextStyle(
+                                  fontSize: reviewEmptyTextFontSize,
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.bold,
+                                  color: BLACK_COLOR,
+                                ),
+                              ),
+                            ),
+                          )
+                        // 리뷰 관리 화면에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
-                      // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          return Column(
-                            // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                            children: [
-                              // PrivateReviewItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
-                              PrivateReviewItemsList(),
-                            ],
+                            // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Column(
+                                  // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                                  children: [
+                                    // PrivateReviewItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
+                                    PrivateReviewItemsList(),
+                                  ],
+                                );
+                              },
+                              // 아이템 개수를 1로 설정
+                              childCount: 1,
+                            ),
                           );
-                        },
-                        // 아이템 개수를 1로 설정
-                        childCount: 1,
-                      ),
-                    );
                   },
                 ),
               ),

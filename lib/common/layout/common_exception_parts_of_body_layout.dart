@@ -35,12 +35,15 @@ import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../../product/provider/product_state_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../../user/view/login_screen.dart';
 
 // 사용자 프로필 화면을 구현한 파일을 임포트합니다.
 import '../../user/view/profile_screen.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../../wishlist/view/wishlist_screen.dart';
 import '../const/colors.dart';
 
@@ -126,10 +129,14 @@ AppBar buildCommonAppBar({
   // ----- 앱 바 부분 수치 시작 부분
   final double appBarHeight =
       screenSize.height * (44 / referenceHeight); // 세로 비율
-  final double appBarCartItemCountTextFontSize =
-      screenSize.height * (10 / referenceHeight); // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
-  final double interval1X = screenSize.width * (1 / referenceWidth); // 가로 비율
-  final double interval1Y = screenSize.height * (1 / referenceHeight); // 세로 비율
+  final double appBarCartItemCountTextFontSize = screenSize.height *
+      (12 / referenceHeight); // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
+  final double appBarWishlistItemCountTextFontSize = screenSize.height *
+      (12 / referenceHeight); // 앱 바 찜 목록 아이콘의 찜 목록 아이템 갯수 부분 텍스트 수치
+  final double interval1X = screenSize.width * (3 / referenceWidth); // 장바구니 아이콘 위치 X좌표
+  final double interval1Y = screenSize.height * (4 / referenceHeight); // 장바구니 아이콘 위치 Y좌표
+  final double interval2X = screenSize.width * (1 / referenceWidth); // 찜 목록 아이콘 위치 X좌표
+  final double interval2Y = screenSize.height * (4 / referenceHeight); // 찜 목록 아이콘 위치 Y좌표
 
   // `boolEventImg` 값에 따라 이벤트 이미지를 가져옴
   final eventImage = ref.watch(eventImageProvider).whenOrNull(
@@ -247,20 +254,58 @@ AppBar buildCommonAppBar({
           wishlistBtnX != null &&
           wishlistBtnY != null) {
         actions.add(
-          Container(
-            width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
-            height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
-            margin: EdgeInsets.only(
-                right: wishlistBtnX, top: wishlistBtnY), // 찜 목록 버튼의 위치 설정
-            child: IconButton(
-              icon: Icon(Icons.favorite_border, color: BLACK_COLOR),
-              // 찜 목록 아이콘을 사용함.
-              // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
-              // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
-              // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
-              onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
-            ),
+          Consumer(
+            builder: (context, ref, _) {
+              // wishlistItemCountProvider를 구독하여 장바구니 아이템 수를 실시간으로 확인
+              final wishlistItemCount =
+                  ref.watch(wishlistItemCountProvider).value ?? 0;
+              return Container(
+                width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
+                height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
+                margin: EdgeInsets.only(
+                    right: wishlistBtnX, top: wishlistBtnY), // 찜 목록 버튼의 위치 설정
+                child: Stack(
+                  alignment: Alignment.center, // 아이콘과 뱃지를 겹쳐 정렬
+                  clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite_border, color: BLACK_COLOR),
+                      // 찜 목록 아이콘을 사용함.
+                      // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
+                      // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
+                      // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
+                      onPressed: () => navigateToScreenAndRemoveUntil(context,
+                          ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+                    ),
+                    if (wishlistItemCount > 0)
+                      Positioned(
+                        top: -interval2Y, // 뱃지의 Y축 위치
+                        right: interval2X, // 뱃지의 X축 위치
+                        child: Container(
+                          padding: EdgeInsets.all(2), // 뱃지 내부 여백
+                          decoration: BoxDecoration(
+                            color: ORANGE56_COLOR, // 뱃지 배경색 (주황색)
+                            shape: BoxShape.circle, // 뱃지 모양 (원형)
+                          ),
+                          child: Text(
+                            wishlistItemCount >= 100
+                                ? '99+'
+                                : '$wishlistItemCount',
+                            // 100개 이상은 '99+', 그렇지 않으면 실제 갯수 표시
+                            style: TextStyle(
+                              color: WHITE_COLOR,
+                              // 뱃지 텍스트 색상
+                              fontSize: appBarWishlistItemCountTextFontSize,
+                              // 텍스트 크기
+                              fontWeight: FontWeight.bold, // 텍스트 두께
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
           ),
         );
       }
@@ -277,18 +322,58 @@ AppBar buildCommonAppBar({
           homeBtnY != null) {
         actions.addAll([
           // 찜 목록 버튼
-          Container(
-            width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
-            height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
-            margin: EdgeInsets.only(
-              right: wishlistBtnX,
-              top: wishlistBtnY,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.favorite_border, color: BLACK_COLOR), // 찜 목록 아이콘
-              onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
-            ),
+          Consumer(
+            builder: (context, ref, _) {
+              // wishlistItemCountProvider를 구독하여 장바구니 아이템 수를 실시간으로 확인
+              final wishlistItemCount =
+                  ref.watch(wishlistItemCountProvider).value ?? 0;
+              return Container(
+                width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
+                height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
+                margin: EdgeInsets.only(
+                    right: wishlistBtnX, top: wishlistBtnY), // 찜 목록 버튼의 위치 설정
+                child: Stack(
+                  alignment: Alignment.center, // 아이콘과 뱃지를 겹쳐 정렬
+                  clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite_border, color: BLACK_COLOR),
+                      // 찜 목록 아이콘을 사용함.
+                      // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
+                      // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
+                      // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
+                      onPressed: () => navigateToScreenAndRemoveUntil(context,
+                          ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+                    ),
+                    if (wishlistItemCount > 0)
+                      Positioned(
+                        top: -interval2Y, // 뱃지의 Y축 위치
+                        right: interval2X, // 뱃지의 X축 위치
+                        child: Container(
+                          padding: EdgeInsets.all(2), // 뱃지 내부 여백
+                          decoration: BoxDecoration(
+                            color: ORANGE56_COLOR, // 뱃지 배경색 (주황색)
+                            shape: BoxShape.circle, // 뱃지 모양 (원형)
+                          ),
+                          child: Text(
+                            wishlistItemCount >= 100
+                                ? '99+'
+                                : '$wishlistItemCount',
+                            // 100개 이상은 '99+', 그렇지 않으면 실제 갯수 표시
+                            style: TextStyle(
+                              color: WHITE_COLOR,
+                              // 뱃지 텍스트 색상
+                              fontSize: appBarWishlistItemCountTextFontSize,
+                              // 텍스트 크기
+                              fontWeight: FontWeight.bold, // 텍스트 두께
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
           ),
           // 홈 버튼
           Container(
@@ -323,18 +408,58 @@ AppBar buildCommonAppBar({
           cartlistBtnY != null) {
         actions.addAll([
           // 찜 목록 버튼
-          Container(
-            width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
-            height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
-            margin: EdgeInsets.only(
-              right: wishlistBtnX,
-              top: wishlistBtnY,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.favorite_border, color: BLACK_COLOR), // 찜 목록 아이콘
-              onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
-            ),
+          Consumer(
+            builder: (context, ref, _) {
+              // wishlistItemCountProvider를 구독하여 장바구니 아이템 수를 실시간으로 확인
+              final wishlistItemCount =
+                  ref.watch(wishlistItemCountProvider).value ?? 0;
+              return Container(
+                width: wishlistBtnWidth, // 찜 목록 버튼 너비 설정
+                height: wishlistBtnHeight, // 찜 목록 버튼 높이 설정
+                margin: EdgeInsets.only(
+                    right: wishlistBtnX, top: wishlistBtnY), // 찜 목록 버튼의 위치 설정
+                child: Stack(
+                  alignment: Alignment.center, // 아이콘과 뱃지를 겹쳐 정렬
+                  clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite_border, color: BLACK_COLOR),
+                      // 찜 목록 아이콘을 사용함.
+                      // WishlistMainScreen()을 tabIndex=4로 한 것은 BottomNavigationBar에는 해당 버튼을 생성하지는 않았으므로
+                      // 단순히 찜 목록 화면으로 이동할 때의 고유한 식별자 역할을 하는 인덱스 값이며, 상태 관리 로직에서는 다른 화면과 구분되기 위해 사용함.
+                      // 그래서, 홈:0, 장바구니:1, 발주내역:2, 마이페이지:3의 숫자를 피해서 적용
+                      onPressed: () => navigateToScreenAndRemoveUntil(context,
+                          ref, WishlistMainScreen(), 4), // 찜 목록 화면으로 이동
+                    ),
+                    if (wishlistItemCount > 0)
+                      Positioned(
+                        top: -interval2Y, // 뱃지의 Y축 위치
+                        right: interval2X, // 뱃지의 X축 위치
+                        child: Container(
+                          padding: EdgeInsets.all(2), // 뱃지 내부 여백
+                          decoration: BoxDecoration(
+                            color: ORANGE56_COLOR, // 뱃지 배경색 (주황색)
+                            shape: BoxShape.circle, // 뱃지 모양 (원형)
+                          ),
+                          child: Text(
+                            wishlistItemCount >= 100
+                                ? '99+'
+                                : '$wishlistItemCount',
+                            // 100개 이상은 '99+', 그렇지 않으면 실제 갯수 표시
+                            style: TextStyle(
+                              color: WHITE_COLOR,
+                              // 뱃지 텍스트 색상
+                              fontSize: appBarWishlistItemCountTextFontSize,
+                              // 텍스트 크기
+                              fontWeight: FontWeight.bold, // 텍스트 두께
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
           ),
           // 홈 버튼
           Container(
@@ -365,6 +490,7 @@ AppBar buildCommonAppBar({
                 ),
                 child: Stack(
                   alignment: Alignment.center, // 아이콘과 뱃지를 겹쳐 정렬
+                  clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
                   children: [
                     IconButton(
                       icon: Icon(
@@ -380,10 +506,10 @@ AppBar buildCommonAppBar({
                     ),
                     if (cartItemCount > 0)
                       Positioned(
-                        top: interval1Y, // 뱃지의 Y축 위치
+                        top: -interval1Y, // 뱃지의 Y축 위치
                         right: interval1X, // 뱃지의 X축 위치
                         child: Container(
-                          padding: EdgeInsets.all(1), // 뱃지 내부 여백
+                          padding: EdgeInsets.all(2), // 뱃지 내부 여백
                           decoration: BoxDecoration(
                             color: ORANGE56_COLOR, // 뱃지 배경색 (주황색)
                             shape: BoxShape.circle, // 뱃지 모양 (원형)
@@ -470,6 +596,9 @@ AppBar buildCommonAppBar({
 Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
     BuildContext context, int colorCase, int navigationCase,
     {ProductContent? product, required ScrollController scrollController}) {
+  // FirebaseAuth로 현재 사용자 정보를 가져옴
+  final user = FirebaseAuth.instance.currentUser;
+
   // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
   final numberFormat = NumberFormat('###,###'); // 천 단위일때마다 쉼표 표시
 
@@ -488,14 +617,13 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
   final double interval1X = screenSize.width * (25.5 / referenceWidth); // 세로 비율
   final double badgeSize = screenSize.width * (20 / referenceWidth); // 배지 크기
   final double badgeTextFontSize =
-      screenSize.height * (11 / referenceHeight); // 배지 텍스트 크기
+      screenSize.height * (12 / referenceHeight); // 배지 텍스트 크기
   final double badgeOffsetX =
       screenSize.width * (20 / referenceWidth); // 배지의 X축 오프셋
   final double badgeOffsetY =
       screenSize.height * (5 / referenceHeight); // 배지의 Y축 오프셋
   final double bottomNavigationIconTextFontSize =
       screenSize.height * (10 / referenceHeight); // 아이콘 하단 텍스트 수치
-
 
   switch (navigationCase) {
     // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
@@ -609,7 +737,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                 right: -badgeOffsetX, // 아이콘의 우측 상단으로 위치 설정
                                 top: -badgeOffsetY, // 아이콘의 상단 위로 위치 설정
                                 child: Container(
-                                  padding: EdgeInsets.all(2),
+                                  padding: EdgeInsets.all(3),
                                   // 뱃지 내부 여백
                                   decoration: BoxDecoration(
                                     color: BLUE49_COLOR, // 뱃지 배경색 (주황색)
@@ -787,8 +915,33 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     width: bottomBtnC2Width,
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
-                      onPressed: () =>
-                          onCartButtonPressed(context, ref, product),
+                      onPressed: () {
+                        if (user == null) {
+                          // 사용자 정보가 없으면 로그인 안내 알림창 표시
+                          showSubmitAlertDialog(
+                            context,
+                            title: '[로그인 상태]',
+                            content: '로그인 후 이용해주세요.',
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  '확인',
+                                  style: TextStyle(
+                                    color: ORANGE56_COLOR,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'NanumGothic',
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
+                          onCartButtonPressed(context, ref, product);
+                        }
+                      },
                       // 요청품목 버튼 클릭 시 실행될 함수 지정
                       style: ElevatedButton.styleFrom(
                         foregroundColor: WHITE_COLOR, // 텍스트 색상
@@ -807,48 +960,90 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                   ),
                   SizedBox(width: interval1X), // 버튼들 사이에 10픽셀 너비의 여백 추가
                   Container(
+                    // 버튼의 가로 크기
                     width: bottomBtnC2Width,
+                    // 버튼의 세로 크기
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
-                      onPressed: totalPaymentPrice >= 30000
-                          ? () async {
-                              // 선택된 아이템을 상태로 설정하여 데이터 가져올 수 있게 설정
-                              ref
-                                  .read(orderItemsProvider.notifier)
-                                  .setOrderItems(
-                                      [orderProduct]); // 주문 아이템 상태 업데이트
-                              // OrderMainScreen으로 화면 전환
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => OrderMainScreen(
-                                          totalProductPrice:
-                                              totalProductPrice.toDouble(),
-                                          // 총 제품 가격 전달
-                                          productDiscountPrice:
-                                              productDiscountPrice.toDouble(),
-                                          // 할인된 금액 전달
-                                        )),
-                              );
-                            }
-                          : () {
-                              // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
-                              showCustomSnackBar(
-                                  context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
-                            },
-                      // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+                      // 버튼이 눌렸을 때 실행되는 동작 정의
+                      onPressed: () {
+                        if (user == null) {
+                          // 사용자 정보가 없는 경우 로그인 안내 알림창 표시
+                          showSubmitAlertDialog(
+                            context,
+                            // 알림창 제목
+                            title: '[로그인 상태]',
+                            // 알림창 내용
+                            content: '로그인 후 이용해주세요.',
+                            // 알림창의 동작 버튼 정의
+                            actions: [
+                              TextButton(
+                                // 버튼 텍스트 정의
+                                child: Text(
+                                  '확인',
+                                  style: TextStyle(
+                                    // 텍스트 색상
+                                    color: ORANGE56_COLOR,
+                                    // 텍스트 두께
+                                    fontWeight: FontWeight.bold,
+                                    // 텍스트 폰트
+                                    fontFamily: 'NanumGothic',
+                                  ),
+                                ),
+                                // 확인 버튼 눌렀을 때 실행되는 동작
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // 알림창 닫기
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
+                          // 사용자 정보가 있는 경우 추가 조건 확인
+                          if (totalPaymentPrice >= 30000) {
+                            // 결제 금액이 30,000원 이상일 때 실행
+                            ref
+                                .read(orderItemsProvider.notifier)
+                                .setOrderItems([orderProduct]);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => OrderMainScreen(
+                                  // 총 상품 가격 전달
+                                  totalProductPrice:
+                                      totalProductPrice.toDouble(),
+                                  // 할인 금액 전달
+                                  productDiscountPrice:
+                                      productDiscountPrice.toDouble(),
+                                ),
+                              ),
+                            );
+                          } else {
+                            // 결제 금액이 30,000원 미만일 때 경고 메시지 표시
+                            showCustomSnackBar(
+                                context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                          }
+                        }
+                      },
+                      // ElevatedButton의 스타일 설정
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: WHITE_COLOR, // 텍스트 색상
-                        backgroundColor: ORANGE56_COLOR, // 배경 색상
+                        // 버튼 텍스트 색상
+                        foregroundColor: WHITE_COLOR,
+                        // 버튼 배경 색상
+                        backgroundColor: ORANGE56_COLOR,
                       ),
+                      // 버튼 내부 텍스트 정의
                       child: Text(
                         '바로 발주',
                         style: TextStyle(
+                          // 텍스트 폰트
                           fontFamily: 'NanumGothic',
+                          // 텍스트 크기
                           fontSize: bottomBtnFontSize,
+                          // 텍스트 두께
                           fontWeight: FontWeight.bold,
+                          // 텍스트 색상
                           color: WHITE_COLOR,
                         ),
-                      ), // 텍스트를 굵게 설정 // 버튼 텍스트 설정
+                      ), // 버튼 텍스트 정의 끝
                     ),
                   ),
                 ],
@@ -1026,54 +1221,95 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                       ),
                     ),
                   ),
-
                   // 오른쪽에 "발주하기" 버튼을 배치
                   Container(
+                    // 버튼의 가로 크기
                     width: bottomBtnC2Width,
+                    // 버튼의 세로 크기
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
-                      // 버튼 클릭 시 호출되는 함수
-                      onPressed: totalPaymentPrice >= 30000
-                          ? () async {
-                              // 선택된 아이템이 있는지 확인
-                              if (orderProducts.isEmpty) {
-                                // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
-                                showCustomSnackBar(
-                                    context, '발주요청할 상품을 선택해주세요.');
-                              } else {
-                                // 체크된 상품이 있는 경우 발주 화면으로 이동
-                                ref
-                                    .read(orderItemsProvider.notifier)
-                                    .setOrderItems(
-                                        orderProducts); // 주문 아이템 상태 업데이트
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (_) => OrderMainScreen(
-                                            totalProductPrice:
-                                                totalProductPrice.toDouble(),
-                                            productDiscountPrice:
-                                                totalDiscountPrice.toDouble(),
-                                          )),
-                                );
-                              }
-                            }
-                          : () {
-                              // 결제금액이 30,000원 미만일 경우 경고 메시지 표시
+                      // 버튼 클릭 시 동작 정의
+                      onPressed: () {
+                        if (user == null) {
+                          // 사용자 정보가 없으면 로그인 안내 알림창 표시
+                          showSubmitAlertDialog(
+                            context,
+                            // 알림창 제목
+                            title: '[로그인 상태]',
+                            // 알림창 내용
+                            content: '로그인 후 이용해주세요.',
+                            // 알림창의 버튼 동작 정의
+                            actions: [
+                              TextButton(
+                                // 알림창 확인 버튼 텍스트 정의
+                                child: Text(
+                                  '확인',
+                                  style: TextStyle(
+                                    // 텍스트 색상
+                                    color: ORANGE56_COLOR,
+                                    // 텍스트 두께
+                                    fontWeight: FontWeight.bold,
+                                    // 폰트 패밀리
+                                    fontFamily: 'NanumGothic',
+                                  ),
+                                ),
+                                // 버튼 클릭 시 알림창 닫기 동작 정의
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
+                          // 사용자 정보가 있는 경우 추가 조건 확인
+                          if (orderProducts.isEmpty) {
+                            // 선택된 상품이 없는 경우 경고 메시지 표시
+                            showCustomSnackBar(context, '발주 요청할 상품을 선택해주세요.');
+                          } else {
+                            // 선택된 상품이 있는 경우 추가 금액 조건 확인
+                            if (totalPaymentPrice >= 30000) {
+                              // 결제 금액이 30,000원 이상일 때 실행
+                              ref
+                                  .read(orderItemsProvider.notifier)
+                                  .setOrderItems(orderProducts);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => OrderMainScreen(
+                                    // 총 상품 금액 전달
+                                    totalProductPrice:
+                                        totalProductPrice.toDouble(),
+                                    // 할인 금액 전달
+                                    productDiscountPrice:
+                                        totalDiscountPrice.toDouble(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // 결제 금액이 30,000원 미만일 경우 경고 메시지 표시
                               showCustomSnackBar(
                                   context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
-                            },
-                      // 결제금액이 30,000원 이상일 경우에만 onPressed 동작 설정, 미만일 경우 메시지 표시
+                            }
+                          }
+                        }
+                      },
                       // 버튼 스타일 설정
                       style: ElevatedButton.styleFrom(
+                        // 버튼 텍스트 색상
                         foregroundColor: WHITE_COLOR,
+                        // 버튼 배경 색상
                         backgroundColor: ORANGE56_COLOR,
                       ),
+                      // 버튼 텍스트 정의
                       child: Text(
                         '발주하기',
                         style: TextStyle(
+                          // 폰트 패밀리
                           fontFamily: 'NanumGothic',
+                          // 텍스트 크기
                           fontSize: bottomBtnFontSize,
+                          // 텍스트 두께
                           fontWeight: FontWeight.bold,
+                          // 텍스트 색상
                           color: WHITE_COLOR,
                         ),
                       ),
@@ -1230,10 +1466,12 @@ Widget buildTopBarList(
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
-  // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 '에러 발생'이라는 기본 문자열을 표시함.
-  final userEmail = FirebaseAuth.instance.currentUser?.email ?? '에러 발생';
+  // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 '로그인 후 이용해주세요.'이라는 기본 문자열을 표시함.
+  final userEmail = FirebaseAuth.instance.currentUser?.email ?? '로그인 후 이용해주세요.';
   // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
   final bool isAdmin = userEmail == 'gshe.couture@gmail.com';
+  // 사용자 로그인 상태 확인
+  final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -1424,15 +1662,46 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                 ],
                 SizedBox(height: isAdmin ? interval3Y : interval2Y),
                 // 관리자 여부에 따라 간격 조정
-                // 로그아웃 버튼 항목
+                // 로그아웃 또는 로그인 버튼 항목
                 GestureDetector(
                   onTap: () async {
-                    // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
-                    // 홈 화면 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화 / 화면 자체의 스크롤 위치 초기화 관련 함수 호출
-                    await logoutAndLoginAfterProviderReset(ref);
-                    // 로그인 화면으로 이동
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => LoginScreen()));
+                    if (isLoggedIn) {
+                      // 로그아웃 로직
+                      await logoutAndLoginAfterProviderReset(ref);
+                      // 화면 이동 없이 버튼 텍스트와 아이콘만 변경되도록 상태를 갱신해야 함
+                      // 상태를 변경하고 UI를 업데이트하기 위해 setState를 호출해야 하지만,
+                      // 현재 이 함수는 StatelessWidget 또는 함수 내에 있으므로 setState를 사용할 수 없음
+                      // 따라서 화면 전체를 다시 빌드하도록 강제하기 위해 Navigator.pop을 사용하여 드로어를 닫고,
+                      // setState가 호출된 효과를 내도록 함
+                      // Navigator.of(context).pop();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => HomeMainScreen()),
+                            (Route<dynamic> route) => false,
+                      );
+                      showCustomSnackBar(context, '로그아웃이 되었습니다.');
+                    } else {
+                      // 로그인 로직
+                      await logoutAndLoginAfterProviderReset(ref);
+                      // 해당 간편 로그인 화면으로 이동하는 로직은 간편 로그인 화면 내 '닫기' 버튼을 클릭 시,
+                      // 드로워 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
+                      // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
+                      // IOS 플랫폼은 IOS 화면으로 이동
+                      if (Platform.isIOS) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
+                        );
+                      } else if (Platform.isAndroid) {
+                        // AOS 플랫폼은 AOS 화면으로 이동
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+                        );
+                      } else {
+                        // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+                        );
+                      }
+                    }
                   },
                   child: Center(
                     // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
@@ -1440,18 +1709,20 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                       mainAxisSize: MainAxisSize.min, // Row 안의 요소들에 맞게 크기 조정
                       children: [
                         Text(
-                          'Logout',
+                          isLoggedIn ? 'Logout' : 'Login',
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             color: GRAY47_COLOR,
                             fontSize: logoutTextFontSize,
                             fontWeight: FontWeight.bold,
                           ),
-                        ), // 로그아웃 텍스트
+                        ), // 로그아웃 또는 로그인 텍스트
                         SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
-                        Icon(Icons.logout,
-                            color: GRAY47_COLOR,
-                            size: logoutBtnSize), // 로그아웃 아이콘
+                        Icon(
+                          isLoggedIn ? Icons.logout : Icons.login,
+                          color: GRAY47_COLOR,
+                          size: logoutBtnSize,
+                        ), // 로그아웃 또는 로그인 아이콘
                       ],
                     ),
                   ),

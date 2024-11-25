@@ -1,6 +1,7 @@
 // Flutter에서 제공하는 Material 디자인 요소를 사용하기 위한 패키지입니다.
 // 이 패키지는 버튼, 카드, 타이포그래피 등의 디자인 요소를 포함하고 있으며,
 // 앱의 기본적인 UI 구성에 필수적입니다.
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Dart의 비동기 프로그래밍을 지원하는 'dart:async' 라이브러리를 가져옵니다.
@@ -88,32 +89,41 @@ class _SplashScreenState extends State<SplashScreen1>
     // 'autoLogin' 키에 저장된 값을 불러오며, 값이 없을 경우 기본값으로 false를 사용.
     bool autoLogin = prefs.getBool('autoLogin') ?? false;
 
+    // autoLogin이 false인 경우 로그아웃 처리
+    if (!autoLogin) {
+      await FirebaseAuth.instance.signOut();
+    }
+
     // 2초 후에 다음 동작을 수행.
     Timer(Duration(milliseconds: 2000), () {
-      if (autoLogin) {
-        // autoLogin이 true인 경우 HomeMainScreen으로 이동.
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => HomeMainScreen()),
-        );
-      } else {
-        // autoLogin이 false인 경우 플랫폼에 따라 분기
-        // IOS 플랫폼은 IOS 화면으로 이동
-        if (Platform.isIOS) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
-          );
-          // AOS 플랫폼은 AOS 화면으로 이동
-        } else if (Platform.isAndroid) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
-          );
-        } else {
-          // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
-          );
-        }
-      }
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeMainScreen()),
+      ); // 홈 화면으로 이동
+
+      // if (autoLogin) {
+      //   // autoLogin이 true인 경우 HomeMainScreen으로 이동.
+      //   Navigator.of(context).pushReplacement(
+      //       MaterialPageRoute(builder: (_) => HomeMainScreen()),
+      //   );
+      // } else {
+      //   // autoLogin이 false인 경우 플랫폼에 따라 분기
+      //   // IOS 플랫폼은 IOS 화면으로 이동
+      //   if (Platform.isIOS) {
+      //     Navigator.of(context).pushReplacement(
+      //       MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
+      //     );
+      //     // AOS 플랫폼은 AOS 화면으로 이동
+      //   } else if (Platform.isAndroid) {
+      //     Navigator.of(context).pushReplacement(
+      //       MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+      //     );
+      //   } else {
+      //     // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
+      //     Navigator.of(context).pushReplacement(
+      //       MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+      //     );
+      //   }
+      // }
     });
   }
 

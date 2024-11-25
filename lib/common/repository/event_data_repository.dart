@@ -56,9 +56,9 @@ class EventRepository {
   // 이벤트 포스터 상품 데이터를 가져오는 함수
   Future<List<Map<String, dynamic>>> getPagedEventPosterImgItems(
       {DocumentSnapshot? lastDocument, required int limit}) async {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('사용자가 로그인하지 않았습니다'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    // final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    // final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    // if (userEmail == null) throw Exception('사용자가 로그인하지 않았습니다'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
 

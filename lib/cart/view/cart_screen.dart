@@ -41,6 +41,9 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 장바구니 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/cart_body_parts_layout.dart';
 import '../provider/cart_all_proviers.dart';
 import '../provider/cart_state_provider.dart';
@@ -125,6 +128,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
       ref.read(cartItemsProvider.notifier).resetCartItems();
       ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -135,6 +139,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(cartScrollPositionProvider.notifier).state =
             0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
@@ -229,12 +234,31 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         screenSize.width * (393 / referenceWidth); // 가로 비율
     final double cartlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double cartlistEmptyTextX =
-        screenSize.width * (115 / referenceWidth); // 가로 비율
     final double cartlistEmptyTextY =
-        screenSize.height * (300 / referenceHeight); // 세로 비율
+        screenSize.height * (300 / referenceHeight);
     final double cartlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
+
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y =
+        screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX =
+        screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY =
+        screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -310,6 +334,26 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
+                    // 사용자가 로그인되어 있을 경우 기존 장바구니 UI를 표시
                     // cartItemsProvider의 상태를 가져옴
                     final cartItems = ref.watch(cartItemsProvider);
                     // 장바구니가 비어 있을 경우 '현재 장바구니 상품이 없습니다.' 텍스트를 중앙에 표시

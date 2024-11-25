@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../cart/provider/cart_state_provider.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
@@ -114,20 +115,21 @@ class _JeanDetailProductScreenState
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         jeanDetailProductScreenPointScrollController
             .jumpTo(savedScrollPosition);
-
-        ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
-        // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
-        ref.read(colorSelectionIndexProvider.notifier).state = 0;
-        ref.read(colorSelectionTextProvider.notifier).state = null;
-        ref.read(colorSelectionUrlProvider.notifier).state = null;
-        ref.read(sizeSelectionIndexProvider.notifier).state = null;
-        // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
-        ref.read(showFullImageProvider.notifier).state = false;
-        ref
-            .read(imagesProvider(widget.fullPath).notifier)
-            .resetButtonState(); // '접기' 버튼 상태 초기화
-        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
       }
+      ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+      // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
+      ref.read(colorSelectionIndexProvider.notifier).state = 0;
+      ref.read(colorSelectionTextProvider.notifier).state = null;
+      ref.read(colorSelectionUrlProvider.notifier).state = null;
+      ref.read(sizeSelectionIndexProvider.notifier).state = null;
+      // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
+      ref.read(showFullImageProvider.notifier).state = false;
+      ref
+          .read(imagesProvider(widget.fullPath).notifier)
+          .resetButtonState(); // '접기' 버튼 상태 초기화
+      ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -143,6 +145,8 @@ class _JeanDetailProductScreenState
         ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
 
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
@@ -246,7 +250,7 @@ class _JeanDetailProductScreenState
 
     //  업데이트 요청 목록 버튼 수치 (Case 4)
     final double productDtCartlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
+        screenSize.width * (50 / referenceWidth);
     final double productDtCartlistBtnHeight =
         screenSize.height * (40 / referenceHeight);
     final double productDtCartlistBtnX =
@@ -256,7 +260,7 @@ class _JeanDetailProductScreenState
 
     // 홈 버튼 수치 (Case 4)
     final double productDtHomeBtnWidth =
-        screenSize.width * (40 / referenceWidth);
+        screenSize.width * (30 / referenceWidth);
     final double productDtHomeBtnHeight =
         screenSize.height * (40 / referenceHeight);
     final double productDtHomeBtnX = screenSize.width * (1 / referenceWidth);

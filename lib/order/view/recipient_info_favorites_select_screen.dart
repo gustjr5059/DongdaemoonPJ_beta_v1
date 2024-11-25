@@ -27,6 +27,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
@@ -54,19 +55,22 @@ class RecipientInfoFavoritesSelectScreen extends ConsumerStatefulWidget {
   const RecipientInfoFavoritesSelectScreen({Key? key}) : super(key: key);
 
   @override
-  _RecipientInfoFavoritesSelectScreenState createState() => _RecipientInfoFavoritesSelectScreenState();
+  _RecipientInfoFavoritesSelectScreenState createState() =>
+      _RecipientInfoFavoritesSelectScreenState();
 }
 
 // _RecipientInfoFavoritesSelectScreenState 클래스 시작
 // _RecipientInfoFavoritesSelectScreenState 클래스는 RecipientInfoFavoritesSelectScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientInfoFavoritesSelectScreen>
+class _RecipientInfoFavoritesSelectScreenState
+    extends ConsumerState<RecipientInfoFavoritesSelectScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
 
-  late ScrollController recipientInfoFavoritesSelectScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController
+      recipientInfoFavoritesSelectScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -76,14 +80,19 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
   void initState() {
     super.initState();
     // ScrollController를 초기화
-    recipientInfoFavoritesSelectScreenPointScrollController = ScrollController();
+    recipientInfoFavoritesSelectScreenPointScrollController =
+        ScrollController();
 
     // 스크롤이 끝에 도달했을 때 추가 데이터를 로드하도록 구현
     recipientInfoFavoritesSelectScreenPointScrollController.addListener(() {
-      if (recipientInfoFavoritesSelectScreenPointScrollController.position.pixels ==
-          recipientInfoFavoritesSelectScreenPointScrollController.position.maxScrollExtent) {
+      if (recipientInfoFavoritesSelectScreenPointScrollController
+              .position.pixels ==
+          recipientInfoFavoritesSelectScreenPointScrollController
+              .position.maxScrollExtent) {
         // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
-        ref.read(recipientInfoItemsProvider.notifier).loadMoreRecipientInfoItems();
+        ref
+            .read(recipientInfoItemsProvider.notifier)
+            .loadMoreRecipientInfoItems();
       }
     });
 
@@ -96,10 +105,12 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(recipientInfoFavoritesSelectScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(recipientInfoFavoritesSelectScrollPositionProvider);
         // recipientInfoFavoritesSelectScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        recipientInfoFavoritesSelectScreenPointScrollController.jumpTo(savedScrollPosition);
+        recipientInfoFavoritesSelectScreenPointScrollController
+            .jumpTo(savedScrollPosition);
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
@@ -107,7 +118,11 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
       ref.read(tabIndexProvider.notifier).state = -1;
       // 수령자 정보 즐겨찾기 선택 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
       ref.read(recipientInfoItemsProvider.notifier).resetRecipientInfoItems();
-      ref.read(recipientInfoItemsProvider.notifier).loadMoreRecipientInfoItems();
+      ref
+          .read(recipientInfoItemsProvider.notifier)
+          .loadMoreRecipientInfoItems();
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -116,8 +131,10 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 수령자 정보 즐겨찾기 선택 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 수령자 정보 즐겨찾기 선택 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
-        ref.read(recipientInfoFavoritesSelectScrollPositionProvider.notifier).state =
-        0.0; // 수령자 정보 즐겨찾기 선택 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref
+            .read(recipientInfoFavoritesSelectScrollPositionProvider.notifier)
+            .state = 0.0; // 수령자 정보 즐겨찾기 선택 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -157,7 +174,8 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    recipientInfoFavoritesSelectScreenPointScrollController.dispose(); // ScrollController 해제
+    recipientInfoFavoritesSelectScreenPointScrollController
+        .dispose(); // ScrollController 해제
 
     // 네트워크 체크 해제
     _networkChecker?.dispose();
@@ -181,16 +199,24 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double recipientInfoAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double recipientInfoAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double recipientInfoAppBarTitleX = screenSize.height * (5 / referenceHeight);
-    final double recipientInfoAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double recipientInfoAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double recipientInfoAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double recipientInfoAppBarTitleX =
+        screenSize.height * (5 / referenceHeight);
+    final double recipientInfoAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double recipientInfoChevronIconWidth = screenSize.width * (24 / referenceWidth);
-    final double recipientInfoChevronIconHeight = screenSize.height * (24 / referenceHeight);
-    final double recipientInfoChevronIconX = screenSize.width * (12 / referenceWidth);
-    final double recipientInfoChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double recipientInfoChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
+    final double recipientInfoChevronIconHeight =
+        screenSize.height * (24 / referenceHeight);
+    final double recipientInfoChevronIconX =
+        screenSize.width * (12 / referenceWidth);
+    final double recipientInfoChevronIconY =
+        screenSize.height * (8 / referenceHeight);
 
     // 수령자 정보 즐겨찾기 목록 비어있는 경우의 알림 부분 수치
     final double recipientInfoEmptyTextWidth =
@@ -204,6 +230,23 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
     final double recipientInfoEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -212,7 +255,8 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
       body: Stack(
         children: [
           CustomScrollView(
-            controller: recipientInfoFavoritesSelectScreenPointScrollController, // 스크롤 컨트롤러 연결
+            controller: recipientInfoFavoritesSelectScreenPointScrollController,
+            // 스크롤 컨트롤러 연결
             slivers: <Widget>[
               // SliverAppBar를 사용하여 기존 AppBar 기능을 재사용
               SliverAppBar(
@@ -229,27 +273,35 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    // 공통 AppBar 빌드
-                    context: context,
-                    // 현재 context 전달
-                    ref: ref,
-                    // 참조(ref) 전달
-                    title: '즐겨찾기 목록',
-                    fontFamily: 'NanumGothic',
-                    // AppBar의 제목을 '즐겨찾기 목록'으로 설정
-                    leadingType: LeadingType.back,
-                    // 버튼 없음.
-                    buttonCase: 1,
-                    // 1번 케이스 (버튼 없음)
-                    appBarTitleWidth: recipientInfoAppBarTitleWidth,
-                    appBarTitleHeight: recipientInfoAppBarTitleHeight,
-                    appBarTitleX: recipientInfoAppBarTitleX,
-                    appBarTitleY: recipientInfoAppBarTitleY,
-                    chevronIconWidth: recipientInfoChevronIconWidth,
-                    chevronIconHeight: recipientInfoChevronIconHeight,
-                    chevronIconX: recipientInfoChevronIconX,
-                    chevronIconY: recipientInfoChevronIconY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      // 공통 AppBar 빌드
+                      context: context,
+                      // 현재 context 전달
+                      ref: ref,
+                      // 참조(ref) 전달
+                      title: '즐겨찾기 목록',
+                      fontFamily: 'NanumGothic',
+                      // AppBar의 제목을 '즐겨찾기 목록'으로 설정
+                      leadingType: LeadingType.back,
+                      // 버튼 없음.
+                      buttonCase: 1,
+                      // 1번 케이스 (버튼 없음)
+                      appBarTitleWidth: recipientInfoAppBarTitleWidth,
+                      appBarTitleHeight: recipientInfoAppBarTitleHeight,
+                      appBarTitleX: recipientInfoAppBarTitleX,
+                      appBarTitleY: recipientInfoAppBarTitleY,
+                      chevronIconWidth: recipientInfoChevronIconWidth,
+                      chevronIconHeight: recipientInfoChevronIconHeight,
+                      chevronIconX: recipientInfoChevronIconX,
+                      chevronIconY: recipientInfoChevronIconY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -266,6 +318,25 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                 // Consumer 위젯을 사용하여 recipientInfoProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
                     // recipientInfoProvider의 상태를 가져옴
                     final recipientInfo = ref.watch(recipientInfoItemsProvider);
                     // 저장된 수령자 정보가 없을 경우 '저장된 수령자 정보가 없습니다.' 텍스트를 중앙에 표시
@@ -274,10 +345,12 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                             child: Container(
                               width: recipientInfoEmptyTextWidth,
                               height: recipientInfoEmptyTextHeight,
-                              margin: EdgeInsets.only(top: recipientInfoEmptyTextY),
+                              margin:
+                                  EdgeInsets.only(top: recipientInfoEmptyTextY),
                               // 텍스트를 중앙에 위치하도록 설정함.
                               alignment: Alignment.center,
-                              child: Text('현재 수령자 정보가 없습니다.',
+                              child: Text(
+                                '현재 수령자 정보가 없습니다.',
                                 style: TextStyle(
                                   fontSize: recipientInfoEmptyTextFontSize,
                                   fontFamily: 'NanumGothic',
@@ -286,43 +359,48 @@ class _RecipientInfoFavoritesSelectScreenState extends ConsumerState<RecipientIn
                                 ),
                               ),
                             ),
-                        )
+                          )
                         // 저장된 수령자 정보가 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
-                          // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                          delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                              return Column(
-                                // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Column(
+                                  // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: BLACK_COLOR,
+                                              width: 1.0), // 하단 테두리 색상을 설정함
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
-                                  RecipientInfoItemsList(),
-                                ],
-                              );
-                            },
-                            // 아이템 개수를 1로 설정
-                            childCount: 1,
-                          ),
-                    );
+                                    // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
+                                    RecipientInfoItemsList(),
+                                  ],
+                                );
+                              },
+                              // 아이템 개수를 1로 설정
+                              childCount: 1,
+                            ),
+                          );
                   },
                 ),
               ),
             ],
           ),
           // 상단 버튼을 빌드하는 함수 호출
-          buildTopButton(context, recipientInfoFavoritesSelectScreenPointScrollController),
+          buildTopButton(
+              context, recipientInfoFavoritesSelectScreenPointScrollController),
         ],
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
-      bottomNavigationBar:
-      buildCommonBottomNavigationBar(ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: recipientInfoFavoritesSelectScreenPointScrollController),
+      bottomNavigationBar: buildCommonBottomNavigationBar(
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController:
+              recipientInfoFavoritesSelectScreenPointScrollController),
     );
   }
 }

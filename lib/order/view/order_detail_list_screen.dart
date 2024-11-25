@@ -17,8 +17,12 @@ import 'package:flutter/services.dart';
 
 // 애플리케이션의 여러 부분에서 재사용될 수 있는 공통 UI 컴포넌트 파일을 임포트합니다.
 // 이 파일은 통일된 디자인과 구조를 제공하여 UI 개발을 효율적으로 할 수 있도록 돕습니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../message/provider/message_all_provider.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart'; // 공통 UI 컴포넌트 파일
@@ -109,6 +113,9 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
       // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
       ref.invalidate(buttonInfoProvider);
       ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -122,6 +129,8 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
         // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
         ref.invalidate(buttonInfoProvider);
         ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
@@ -227,6 +236,26 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
     final double orderlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y =
+        screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX =
+        screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY =
+        screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
     // Tuple2로 이메일과 orderNumber 전달
     final orderlistDetailItem = ref.watch(
         orderlistDetailItemProvider(Tuple2(userEmail, widget.orderNumber)));
@@ -305,6 +334,25 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: Consumer(
                   builder: (context, ref, chlid) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
                     // 발주 상세 내역이 비어 있을 경우, '발주 데이터를 불러올 수 없습니다.' 메시지를 표시함.
                     return orderlistDetailItem.isEmpty
                         ? SliverToBoxAdapter(

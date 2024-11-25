@@ -16,6 +16,7 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
 import '../../home/view/home_screen.dart';
+import '../../product/layout/product_body_parts_layout.dart';
 import '../provider/user_me_provider.dart';
 
 // ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 시작
@@ -158,9 +159,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
           // 탭 인덱스를 0으로 설정
           ref.read(tabIndexProvider.notifier).state = 0;
-          // 홈 화면으로 이동 및 현재 화면을 대체
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => HomeMainScreen()),
+
+          // 이전 화면 스택을 모두 제거하고 홈 화면으로 이동
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => HomeMainScreen()),
+                (Route<dynamic> route) => false,
           );
         });
       }
@@ -255,13 +258,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     // 화면 이름 부분 수치
     final double screenNameTop =
-        screenSize.height * (54 / referenceHeight); // 위쪽 여백 비율
+        screenSize.height * (60 / referenceHeight); // 위쪽 여백 비율
+    final double backBtnTop =
+        screenSize.height * (48 / referenceHeight);
+    final double backBtnLeft =
+        screenSize.width * (10 / referenceWidth);
 
     // 화면 제목 부분 수치
     final double screenTitleTop =
         screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
     final double screenLoginText1FontSize =
-        screenSize.height * (24 / referenceHeight);
+        screenSize.height * (20 / referenceHeight);
     final double screenTitleTextFontSize =
         screenSize.height * (22 / referenceHeight);
 
@@ -384,7 +391,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Padding(
               padding: EdgeInsets.only(top: screenNameTop),
               child: Text(
-                'Login',
+                '관리자 로그인',
                 style: TextStyle(
                   fontSize: screenLoginText1FontSize,
                   fontWeight: FontWeight.w600,
@@ -393,6 +400,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
           ),
+          // 닫기 아이콘 (스택이 있을 때만 표시)
+          if (Navigator.canPop(context))
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: backBtnLeft, top: backBtnTop),
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back), // 이전화면으로 이동 아이콘 설정
+                  color: BLACK_COLOR, // 색상 설정
+                  onPressed: () {
+                    Navigator.pop(context); // 누르면 이전 화면으로 돌아가기
+                  },
+                ),
+              ),
+            ),
           // 동그라미 이미지 (Positioned 위젯 사용)
           Positioned(
             left: circleImageLeft,
@@ -624,6 +646,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
+                    // await logoutAndLoginAfterProviderReset(ref); // 로그아웃 시, 로그인했을 때의 정보 초기화하는 로직 구현
                     // 포커스를 해제하는 부분
                     // (이를 통해서 이메일 또는 비밀번호 입력 필드에 포커스가 생길 시, 오류 메세지 초기화되는 로직이 정상적으로 구현됨)
                     FocusScope.of(context).unfocus();
@@ -685,89 +708,89 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-          Row(
-            children: [
-              // 회원가입 및 아이디/비밀번호 찾기 버튼
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: joinAndFindBtnLeft, top: joinAndFindBtnTop),
-                  // Figma에서 지정한 위치를 Padding으로 적용
-                  child: Container(
-                    width: joinAndFindBtnWidth, // Figma에서 지정한 전체 너비
-                    height: joinAndFindBtnHeight, // Figma에서 지정한 전체 높이
-                    child: Row(
-                      children: [
-                        // 회원가입 텍스트 버튼
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
-                              const url = 'https://cafe.naver.com/ottbayo';
-                              try {
-                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                                if (!launched) {
-                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                                }
-                              } catch (e) {
-                                // 예외 발생 시 스낵바로 에러 메시지 출력
-                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                              }
-                            },
-                            child: Text(
-                              '회원가입',
-                              style: TextStyle(
-                                fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
-                                fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                color: GRAY36_COLOR, // 피그마에서 지정된 텍스트 색상
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero, // 여백 제거
-                              alignment: Alignment.centerLeft, // 텍스트 정렬
-                            ),
-                          ),
-                        ),
-                        // 아이디/비밀번호 찾기 텍스트 버튼
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
-                              const url = 'https://pf.kakao.com/_xjVrbG';
-                              try {
-                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                                if (!launched) {
-                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                                }
-                              } catch (e) {
-                                // 예외 발생 시 스낵바로 에러 메시지 출력
-                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                              }
-                            },
-                            child: Text(
-                              '아이디/비밀번호 찾기',
-                              style: TextStyle(
-                                fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
-                                fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                color: GRAY36_COLOR, // 피그마에서 지정된 텍스트 색상
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero, // 여백 제거
-                              alignment: Alignment.centerRight, // 텍스트 정렬
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     // 회원가입 및 아이디/비밀번호 찾기 버튼
+          //     Align(
+          //       alignment: Alignment.topCenter,
+          //       child: Padding(
+          //         padding: EdgeInsets.only(
+          //             left: joinAndFindBtnLeft, top: joinAndFindBtnTop),
+          //         // Figma에서 지정한 위치를 Padding으로 적용
+          //         child: Container(
+          //           width: joinAndFindBtnWidth, // Figma에서 지정한 전체 너비
+          //           height: joinAndFindBtnHeight, // Figma에서 지정한 전체 높이
+          //           child: Row(
+          //             children: [
+          //               // 회원가입 텍스트 버튼
+          //               Expanded(
+          //                 child: TextButton(
+          //                   onPressed: () async {
+          //                     const url = 'https://cafe.naver.com/ottbayo';
+          //                     try {
+          //                       final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+          //                       if (!launched) {
+          //                         // 웹 페이지를 열지 못할 경우 스낵바로 알림
+          //                         showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+          //                       }
+          //                     } catch (e) {
+          //                       // 예외 발생 시 스낵바로 에러 메시지 출력
+          //                       showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+          //                     }
+          //                   },
+          //                   child: Text(
+          //                     '회원가입',
+          //                     style: TextStyle(
+          //                       fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+          //                       fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
+          //                       fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
+          //                       color: GRAY36_COLOR, // 피그마에서 지정된 텍스트 색상
+          //                     ),
+          //                   ),
+          //                   style: TextButton.styleFrom(
+          //                     padding: EdgeInsets.zero, // 여백 제거
+          //                     alignment: Alignment.centerLeft, // 텍스트 정렬
+          //                   ),
+          //                 ),
+          //               ),
+          //               // 아이디/비밀번호 찾기 텍스트 버튼
+          //               Expanded(
+          //                 child: TextButton(
+          //                   onPressed: () async {
+          //                     const url = 'https://pf.kakao.com/_xjVrbG';
+          //                     try {
+          //                       final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+          //                       if (!launched) {
+          //                         // 웹 페이지를 열지 못할 경우 스낵바로 알림
+          //                         showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+          //                       }
+          //                     } catch (e) {
+          //                       // 예외 발생 시 스낵바로 에러 메시지 출력
+          //                       showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+          //                     }
+          //                   },
+          //                   child: Text(
+          //                     '아이디/비밀번호 찾기',
+          //                     style: TextStyle(
+          //                       fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+          //                       fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
+          //                       fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
+          //                       color: GRAY36_COLOR, // 피그마에서 지정된 텍스트 색상
+          //                     ),
+          //                   ),
+          //                   style: TextButton.styleFrom(
+          //                     padding: EdgeInsets.zero, // 여백 제거
+          //                     alignment: Alignment.centerRight, // 텍스트 정렬
+          //                   ),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           // 개인정보 처리방침 안내 텍스트1
           Align(
             alignment: Alignment.topCenter,

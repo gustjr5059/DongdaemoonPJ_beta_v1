@@ -55,13 +55,17 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
 
     // 화면 이름 부분 수치
     final double screenNameTop =
-        screenSize.height * (54 / referenceHeight); // 위쪽 여백 비율
+        screenSize.height * (60 / referenceHeight); // 위쪽 여백 비율
+    final double backBtnTop =
+        screenSize.height * (48 / referenceHeight);
+    final double backBtnLeft =
+        screenSize.width * (10 / referenceWidth);
 
     // 화면 제목 부분 수치
     final double screenTitleTop =
         screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
     final double screenLoginText1FontSize =
-        screenSize.height * (24 / referenceHeight);
+        screenSize.height * (20 / referenceHeight);
     final double screenTitleTextFontSize =
         screenSize.height * (20 / referenceHeight);
 
@@ -123,7 +127,7 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
             child: Padding(
               padding: EdgeInsets.only(top: screenNameTop),
               child: Text(
-                'Login',
+                '로그인',
                 style: TextStyle(
                   fontSize: screenLoginText1FontSize,
                   fontWeight: FontWeight.w600,
@@ -132,6 +136,21 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
               ),
             ),
           ),
+          // 닫기 아이콘 (스택이 있을 때만 표시)
+          if (Navigator.canPop(context))
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: backBtnLeft, top: backBtnTop),
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back), // 이전화면으로 이동 아이콘 설정
+                  color: BLACK_COLOR, // 색상 설정
+                  onPressed: () {
+                    Navigator.pop(context); // 누르면 이전 화면으로 돌아가기
+                  },
+                ),
+              ),
+            ),
           // 타이틀 텍스트
           Align(
             alignment: Alignment.topCenter,
@@ -170,7 +189,7 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
             child: Padding(
               padding: EdgeInsets.only(top: guideTextTop),
               child: Text(
-                '해당 SNS 버튼 클릭 후, 간편 로그인을 하세요.',
+                'SNS 버튼 클릭 후, 간편하게 로그인 및 회원가입을 하세요.',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
@@ -225,56 +244,56 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
               ),
             ),
           ),
-          // 개인정보 처리방침 안내 텍스트1
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: guidelineText1Top),
-              child: Text(
-                '로그인함으로써 개인정보 처리방침에 동의합니다.',
-                style: TextStyle(
-                  fontFamily: 'NanumGothic',
-                  fontWeight: FontWeight.normal,
-                  fontSize: guidelineText1FontSize,
-                  color: WHITE_COLOR,
-                ),
-              ),
-            ),
-          ),
-          // 개인정보 처리방침 안내 텍스트2
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: guidelineText2Top),
-              child: GestureDetector(
-                // GestureDetector 사용하여 탭 이벤트 처리
-                onTap: () async {
-                  const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
-                  try {
-                    final bool launched = await launchUrl(Uri.parse(url),
-                        mode:
-                        LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                    if (!launched) {
-                      // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                      showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                    }
-                  } catch (e) {
-                    // 예외 발생 시 스낵바로 에러 메시지 출력
-                    showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                  }
-                },
-                child: Text(
-                  '개인정보 처리방침 보기',
-                  style: TextStyle(
-                    fontFamily: 'NanumGothic',
-                    fontWeight: FontWeight.bold,
-                    fontSize: guidelineText2FontSize,
-                    color: BLUE49_COLOR, // 파란색 텍스트
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // // 개인정보 처리방침 안내 텍스트1
+          // Align(
+          //   alignment: Alignment.topCenter,
+          //   child: Padding(
+          //     padding: EdgeInsets.only(top: guidelineText1Top),
+          //     child: Text(
+          //       '로그인함으로써 개인정보 처리방침에 동의합니다.',
+          //       style: TextStyle(
+          //         fontFamily: 'NanumGothic',
+          //         fontWeight: FontWeight.normal,
+          //         fontSize: guidelineText1FontSize,
+          //         color: WHITE_COLOR,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // // 개인정보 처리방침 안내 텍스트2
+          // Align(
+          //   alignment: Alignment.topCenter,
+          //   child: Padding(
+          //     padding: EdgeInsets.only(top: guidelineText2Top),
+          //     child: GestureDetector(
+          //       // GestureDetector 사용하여 탭 이벤트 처리
+          //       onTap: () async {
+          //         const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
+          //         try {
+          //           final bool launched = await launchUrl(Uri.parse(url),
+          //               mode:
+          //               LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+          //           if (!launched) {
+          //             // 웹 페이지를 열지 못할 경우 스낵바로 알림
+          //             showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+          //           }
+          //         } catch (e) {
+          //           // 예외 발생 시 스낵바로 에러 메시지 출력
+          //           showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+          //         }
+          //       },
+          //       child: Text(
+          //         '개인정보 처리방침 보기',
+          //         style: TextStyle(
+          //           fontFamily: 'NanumGothic',
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: guidelineText2FontSize,
+          //           color: BLUE49_COLOR, // 파란색 텍스트
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           // 관리자 로그인 화면으로 이동 버튼
           Align(
             alignment: Alignment.topCenter,
@@ -284,7 +303,7 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
                 // GestureDetector 사용하여 탭 이벤트 처리
                 onTap: () async {
                   // 로그인 화면으로 이동
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => LoginScreen()));
                 },
                 child: Text(

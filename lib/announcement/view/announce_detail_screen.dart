@@ -40,6 +40,9 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../cart/provider/cart_state_provider.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../layout/announce_body_parts_layout.dart';
 import '../provider/announce_all_provider.dart';
 import '../provider/announce_state_provider.dart';
@@ -125,6 +128,8 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
       ref
           .read(announceDetailItemProvider(widget.documentId).notifier)
           .loadMoreAnnounceDetailItem(widget.documentId);
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -141,6 +146,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
         ref
             .read(announceDetailItemProvider(widget.documentId).notifier)
             .loadMoreAnnounceDetailItem(widget.documentId);
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -236,6 +242,27 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
         screenSize.height * (300 / referenceHeight); // 세로 비율임
     final double announcementDetailEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y =
+        screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX =
+        screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY =
+        screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
 
     return Scaffold(
       body: Stack(

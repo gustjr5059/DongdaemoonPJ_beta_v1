@@ -44,7 +44,10 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../product/model/product_model.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../layout/complete_body_parts_layout.dart';
 import '../provider/complete_payment_provider.dart';
 import '../provider/order_all_providers.dart';
@@ -64,7 +67,8 @@ class CompletePaymentScreen extends ConsumerStatefulWidget {
   }) : super(key: key); // 상위 클래스의 생성자를 호출하여 key를 전달
 
   @override
-  _CompletePaymentScreenState createState() => _CompletePaymentScreenState(); // 상태 관리 클래스 생성
+  _CompletePaymentScreenState createState() =>
+      _CompletePaymentScreenState(); // 상태 관리 클래스 생성
 }
 
 // _CompletePaymentScreenState 클래스 시작
@@ -72,7 +76,6 @@ class CompletePaymentScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     with WidgetsBindingObserver {
-
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -80,7 +83,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController completePaymentScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController
+      completePaymentScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -100,7 +104,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(completePaymentScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(completePaymentScrollPositionProvider);
         // completePaymentScrollPositionProvider.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         completePaymentScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -109,6 +114,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -119,8 +126,9 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
         // (해당 부분은 logoutSecDataAndHomeScrollPointReset에서 구현한 것과 중복되서 필요없음 - 이후에 없애기!!)
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(completePaymentScrollPositionProvider.notifier).state =
-        0.0; // 로그아웃 시 completePaymentScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
+            0.0; // 로그아웃 시 completePaymentScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -201,7 +209,6 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
   // 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -212,18 +219,41 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double completePaymentAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double completePaymentAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double completePaymentAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double completePaymentAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double completePaymentAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double completePaymentAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double completePaymentAppBarTitleX =
+        screenSize.width * (5 / referenceHeight);
+    final double completePaymentAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 =
+        screenSize.height * (14 / referenceHeight);
+    final double errorTextFontSize2 =
+        screenSize.height * (12 / referenceHeight);
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
     final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
+
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
 
     // 주문 데이터의 상태에 따라 다른 UI를 표시
     return orderDataFuture.when(
@@ -236,7 +266,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
         final orderNumber = numberInfo['order_number'] ?? '';
         // 주문 날짜를 원하는 형식으로 포맷
         final orderDate = numberInfo['order_date'] != null
-            ? DateFormat('yyyy년 MM월 dd일 HH시 mm분').format(numberInfo['order_date'].toDate())
+            ? DateFormat('yyyy년 MM월 dd일 HH시 mm분')
+                .format(numberInfo['order_date'].toDate())
             : '';
         final orderItems = data['orderItems'] ?? []; // null일 경우 빈 리스트로 대체
 
@@ -244,30 +275,46 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           body: Stack(
             children: [
               CustomScrollView(
-                controller: completePaymentScreenPointScrollController, // 스크롤 컨트롤러 연결
+                controller: completePaymentScreenPointScrollController,
+                // 스크롤 컨트롤러 연결
                 slivers: <Widget>[
                   SliverAppBar(
-                    automaticallyImplyLeading: false, // 기본 뒤로 가기 버튼 비활성화
-                    floating: true, // 스크롤 시 앱바 고정
-                    pinned: true, // 앱바를 상단에 고정
-                    expandedHeight: 0.0, // 확장되지 않도록 설정
+                    automaticallyImplyLeading: false,
+                    // 기본 뒤로 가기 버튼 비활성화
+                    floating: true,
+                    // 스크롤 시 앱바 고정
+                    pinned: true,
+                    // 앱바를 상단에 고정
+                    expandedHeight: 0.0,
+                    // 확장되지 않도록 설정
                     // 확장된 높이를 0으로 설정하여 확장 기능 제거
                     // 확장 높이 설정
                     // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
                       // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                      background: buildCommonAppBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                          ),
+                        ),
+                        child: buildCommonAppBar(
                         context: context,
                         ref: ref,
-                        title: '발주 완료', // 앱바 제목 설정
+                        title: '발주 완료',
+                        // 앱바 제목 설정
                         fontFamily: 'NanumGothic',
-                        leadingType: LeadingType.none, // 리딩 아이콘 없음
-                        buttonCase: 1, // 버튼 타입 설정
+                        leadingType: LeadingType.none,
+                        // 리딩 아이콘 없음
+                        buttonCase: 1,
+                        // 버튼 타입 설정
                         appBarTitleWidth: completePaymentAppBarTitleWidth,
                         appBarTitleHeight: completePaymentAppBarTitleHeight,
                         appBarTitleX: completePaymentAppBarTitleX,
                         appBarTitleY: completePaymentAppBarTitleY,
+                      ),
                       ),
                     ),
                     leading: null,
@@ -275,36 +322,64 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                   ),
                   SliverPadding(
                     padding: EdgeInsets.only(top: 0), // 패딩 설정
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                    ),
-                                  ),
-                                ),
-                                CompletePaymentInfoWidget(
-                                  orderNumber: orderNumber,
-                                  orderDate: orderDate,
-                                  totalPayment: amountInfo['total_payment_price_included_delivery_fee'],
-                                  customerName: ordererInfo['name'],
-                                  recipientInfo: recipientInfo,
-                                  orderItems: orderItems.map<ProductContent>((item) {
-                                    return ProductContent.fromMap(item);
-                                  }).toList(), // 데이터가 null일 경우에도 안전하게 처리
-                                ),
-                              ],
+                    sliver: Consumer(
+                      builder: (context, ref, child) {
+                        // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                        final user = FirebaseAuth.instance.currentUser;
+
+                        // 사용자가 로그인되어 있지 않은 경우
+                        if (user == null) {
+                          return SliverToBoxAdapter(
+                            child: LoginRequiredWidget(
+                              textWidth: loginGuideTextWidth,
+                              textHeight: loginGuideTextHeight,
+                              textFontSize: loginGuideTextFontSize,
+                              buttonWidth: loginGuideTextWidth,
+                              buttonPaddingX: loginBtnPaddingX,
+                              buttonPaddingY: loginBtnPaddingY,
+                              buttonFontSize: loginBtnTextFontSize,
+                              marginTop: loginGuideText1Y,
+                              interval: TextAndBtnInterval,
                             ),
                           );
-                        },
-                        childCount: 1,
-                      ),
+                        }
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: BLACK_COLOR,
+                                              width: 1.0), // 하단 테두리 색상을 설정함
+                                        ),
+                                      ),
+                                    ),
+                                    CompletePaymentInfoWidget(
+                                      orderNumber: orderNumber,
+                                      orderDate: orderDate,
+                                      totalPayment: amountInfo[
+                                          'total_payment_price_included_delivery_fee'],
+                                      customerName: ordererInfo['name'],
+                                      recipientInfo: recipientInfo,
+                                      orderItems: orderItems
+                                          .map<ProductContent>((item) {
+                                        return ProductContent.fromMap(item);
+                                      }).toList(), // 데이터가 null일 경우에도 안전하게 처리
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            childCount: 1,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -316,20 +391,26 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
           ),
           // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
           bottomNavigationBar: buildCommonBottomNavigationBar(
-              ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: completePaymentScreenPointScrollController
-          ),
+              ref.watch(tabIndexProvider), ref, context, 5, 1,
+              scrollController: completePaymentScreenPointScrollController),
         );
       },
       loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
-      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+      error: (error, stack) => Container(
+        // 에러 상태에서 중앙 배치
         height: errorTextHeight, // 전체 화면 높이 설정
         alignment: Alignment.center, // 중앙 정렬
         child: buildCommonErrorIndicator(
-          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 첫 번째 메시지 설정
-          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.', // 두 번째 메시지 설정
-          fontSize1: errorTextFontSize1, // 폰트1 크기 설정
-          fontSize2: errorTextFontSize2, // 폰트2 크기 설정
-          color: BLACK_COLOR, // 색상 설정
+          message: '에러가 발생했으니, 앱을 재실행해주세요.',
+          // 첫 번째 메시지 설정
+          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+          // 두 번째 메시지 설정
+          fontSize1: errorTextFontSize1,
+          // 폰트1 크기 설정
+          fontSize2: errorTextFontSize2,
+          // 폰트2 크기 설정
+          color: BLACK_COLOR,
+          // 색상 설정
           showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
         ),
       ),

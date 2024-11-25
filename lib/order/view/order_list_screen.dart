@@ -27,6 +27,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
@@ -41,6 +42,9 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 주문 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart';
@@ -106,6 +110,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
           ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
         }
       }
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
@@ -129,6 +135,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       ref.read(orderlistItemsProvider.notifier).resetOrderItems();
       // 추가 데이터를 로드하는 함수를 호출
       ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -139,6 +148,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
@@ -247,6 +258,23 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     final double interval2Y =
         screenSize.height * (6 / referenceHeight); // 세로 비율
     final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 비율
+
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (200 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
 
     // orderlistItemsProvider를 통해 발주 데이터를 구독.
     final orderlistItems = ref.watch(orderlistItemsProvider);
@@ -420,50 +448,81 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                   ),
                 ),
               ),
-              // 발주 내역이 비어 있을 경우 '현재 발주 내역이 없습니다.' 텍스트를 중앙에 표시
-              // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
-              // loading: (), error: (err, stack)를 구분해서 구현 못함
-              // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-              // 그대신 로딩 표시를 못 넣음...
-              orderlistItems.isEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                        width: orderlistEmptyTextWidth,
-                        height: orderlistEmptyTextHeight,
-                        margin: EdgeInsets.only(top: orderlistEmptyTextY),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '현재 발주 내역이 없습니다.',
-                          style: TextStyle(
-                            fontSize: orderlistEmptyTextFontSize,
-                            fontFamily: 'NanumGothic',
-                            fontWeight: FontWeight.bold,
-                            color: BLACK_COLOR,
-                          ),
+              // 실제 컨텐츠를 나타내는 슬리버 리스트
+              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+              // 상단에 여백을 주는 SliverPadding 위젯
+              SliverPadding(
+                padding: EdgeInsets.only(top: 0),
+                // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
+                sliver: Consumer(
+                  builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
                         ),
-                      ),
-                    )
-                  : SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              OrderListItemWidget(order: orderlistItems[index]),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                        color: BLACK_COLOR, width: 1.0),
-                                  ),
+                      );
+                    }
+                    // 발주 내역이 비어 있을 경우 '현재 발주 내역이 없습니다.' 텍스트를 중앙에 표시
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 그대신 로딩 표시를 못 넣음...
+                    return orderlistItems.isEmpty
+                        ? SliverToBoxAdapter(
+                            child: Container(
+                              width: orderlistEmptyTextWidth,
+                              height: orderlistEmptyTextHeight,
+                              margin: EdgeInsets.only(top: orderlistEmptyTextY),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '현재 발주 내역이 없습니다.',
+                                style: TextStyle(
+                                  fontSize: orderlistEmptyTextFontSize,
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.bold,
+                                  color: BLACK_COLOR,
                                 ),
                               ),
-                            ],
+                            ),
+                          )
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    OrderListItemWidget(
+                                        order: orderlistItems[index]),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: BLACK_COLOR, width: 1.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              // 리스트 항목의 개수를 설정함. 발주 항목의 개수만큼 childCount를 설정.
+                              childCount: orderlistItems.length,
+                            ),
                           );
-                        },
-                        // 리스트 항목의 개수를 설정함. 발주 항목의 개수만큼 childCount를 설정.
-                        childCount: orderlistItems.length,
-                      ),
-                    ),
+                  },
+                ),
+              ),
             ],
           ),
           // buildTopButton 함수는 주어진 context와 orderListScreenPointScrollController를 사용하여

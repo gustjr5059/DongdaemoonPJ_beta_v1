@@ -2185,7 +2185,7 @@ class OrderListItemWidget extends ConsumerWidget {
                 ),
                 // 여백을 추가.
                 SizedBox(height: interval2Y),
-                // 회원정보 수정 및 로그아웃 버튼을 행(Row)으로 배치함
+                // 발주내역 상세보기 및 삭제 버튼을 행(Row)으로 배치함
                 Row(
                   children: [
                     Container(

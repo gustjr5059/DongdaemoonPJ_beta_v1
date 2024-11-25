@@ -28,6 +28,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
@@ -141,6 +142,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 마이페이지 버튼 인덱스인 3과 매핑
       // -> 마이페이지 화면 초기화 시, 하단 탭 바 내 마이페이지 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 3;
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -168,6 +170,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         ref.read(profileMainSmall1BannerPageProvider.notifier).state = 0;
         ref.read(profileMainScrollPositionProvider.notifier).state =
             0.0; // 마이페이지 화면 자체의 스크롤 위치 인덱스를 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -352,8 +355,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                             //   ),
                             // ),
                             // SizedBox(height: profilePadding1Y), // 높이 profilePadding1Y로 간격 설정
-                            if (user != null)
-                              UserProfileInfo(email: user.email!),
+                              UserProfileInfo(), // 항상 UserProfileInfo를 호출
                             SizedBox(height: profilePadding2Y),
                             // 첫 번째 작은 배너 섹션
                             CommonCardView(
@@ -423,11 +425,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                 ),
                               ),
                             ),
-                            // 높이 profilePadding1Y로 간격 설정
-                            // user 객체가 null이 아닌 경우 실행됨
-                            if (user != null)
-                              // UserProfileOptions 위젯을 생성하고, user 객체의 email 속성을 전달함
-                              UserProfileOptions(email: user.email!),
+                            UserProfileOptions(),
+                            // UserProfileOptions 위젯을 생성
                             SizedBox(height: profilePadding1Y),
                             // 높이 profilePadding1Y로 간격 설정
                             RichText(

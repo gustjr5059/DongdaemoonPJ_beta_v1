@@ -21,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
 // 이 레이아웃은 에러 발생 시 사용자에게 보여질 UI 컴포넌트를 정의합니다.
+import '../../../cart/provider/cart_state_provider.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 
@@ -146,6 +147,8 @@ class _SummerSubMainScreenState extends ConsumerState<SummerSubMainScreen>
       // -> 여름 섹션 더보기 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 summerSubMainScreenPointScrollController에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -193,6 +196,8 @@ class _SummerSubMainScreenState extends ConsumerState<SummerSubMainScreen>
         ref.read(summerSubMainSortButtonProvider.notifier).state =
             ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 

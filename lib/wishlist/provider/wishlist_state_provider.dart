@@ -123,3 +123,10 @@ final wishlistItemProvider = StateNotifierProvider.family<WishlistItemNotifier, 
   // WishlistItemNotifier를 생성하고 반환함.
   return WishlistItemNotifier(wishlistRepository, userEmail);
 });
+
+// 찜 목록 문서 갯수 상태를 구독하는 StreamProvider
+final wishlistItemCountProvider = StreamProvider<int>((ref) {
+  // WishlistRepository를 가져와 watchCartItemCount 호출
+  final WishlistRepository = ref.read(wishlistIconRepositoryProvider);
+  return WishlistRepository.watchWishlistItemCount();
+});

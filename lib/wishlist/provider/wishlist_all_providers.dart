@@ -93,3 +93,8 @@ final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Ma
     }).toList();  // 변환된 데이터를 리스트로 반환함.
   });
 });
+
+// wishlistIconRepositoryProvider를 정의 - WishlistIconRepository 인스턴스를 제공하는 Provider를 생성
+final wishlistIconRepositoryProvider = Provider<WishlistIconRepository>((ref) {
+  return WishlistIconRepository(firestore: FirebaseFirestore.instance);
+});

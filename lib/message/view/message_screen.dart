@@ -40,10 +40,12 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../cart/provider/cart_state_provider.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../layout/message_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
 import '../provider/message_state_provider.dart';
-
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -55,13 +57,15 @@ class PrivateMessageMainScreen extends ConsumerStatefulWidget {
   const PrivateMessageMainScreen({Key? key}) : super(key: key);
 
   @override
-  _PrivateMessageMainScreenState createState() => _PrivateMessageMainScreenState();
+  _PrivateMessageMainScreenState createState() =>
+      _PrivateMessageMainScreenState();
 }
 
 // _PrivateMessageMainScreenState 클래스 시작
 // _PrivateMessageMainScreenState 클래스는 PrivateMessageMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScreen>
+class _PrivateMessageMainScreenState
+    extends ConsumerState<PrivateMessageMainScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -83,7 +87,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController privateMessageScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController
+      privateMessageScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -103,7 +108,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(privateMessageScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(privateMessageScrollPositionProvider);
         // privateMessageScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         privateMessageScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -114,6 +120,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
       ref.read(tabIndexProvider.notifier).state = -1;
       // 초기화된 상태로 모든 메시지 데이터 불러오기
       _resetMessageProviders();
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -122,6 +130,7 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
       if (user == null) {
         // 초기화된 상태로 모든 메시지 데이터 불러오기
         _resetMessageProviders();
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       } else {
         // 재로그인 시 상태를 다시 초기화
         _resetMessageProviders();
@@ -138,16 +147,18 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
   }
+
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
 // 상태 초기화 함수
   void _resetMessageProviders() {
     // 쪽지 관리 화면 관련 초기화 부분 시작
     ref.read(privateMessageScrollPositionProvider.notifier).state =
-    0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+        0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
     ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
     // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-    ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
+    ref.invalidate(
+        fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
     ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
     ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
     ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
@@ -161,9 +172,12 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(
+          fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(
+          fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      ref.invalidate(
+          fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
       updateStatusBar();
     }
   }
@@ -194,7 +208,6 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -205,17 +218,37 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double messageAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double messageAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double messageAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double messageAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
     final double messageAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double messageAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double messageAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double messagePaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    final double interval1Y =
+        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
 
     return Scaffold(
       body: Stack(
@@ -234,17 +267,25 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '쪽지 관리',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: messageAppBarTitleWidth,
-                    appBarTitleHeight: messageAppBarTitleHeight,
-                    appBarTitleX: messageAppBarTitleX,
-                    appBarTitleY: messageAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '쪽지 관리',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: messageAppBarTitleWidth,
+                      appBarTitleHeight: messageAppBarTitleHeight,
+                      appBarTitleX: messageAppBarTitleX,
+                      appBarTitleY: messageAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -255,24 +296,51 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
               SliverPadding(
                 padding: EdgeInsets.only(top: 5),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 messagePaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: messagePaddingX),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
-                          children: [
-                            SizedBox(height: interval1Y),
-                            PrivateMessageBodyPartsContents(), // 불러온 쪽지 내용을 표시
-                            SizedBox(height: interval1Y),
-                          ],
+                sliver: Consumer(
+                  builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
                         ),
                       );
+                    }
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return Padding(
+                            // 각 항목의 좌우 간격을 messagePaddingX로 설정함.
+                            padding: EdgeInsets.symmetric(
+                                horizontal: messagePaddingX),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // 왼쪽 정렬 설정
+                              children: [
+                                SizedBox(height: interval1Y),
+                                PrivateMessageBodyPartsContents(),
+                                // 불러온 쪽지 내용을 표시
+                                SizedBox(height: interval1Y),
+                              ],
+                            ),
+                          );
                         },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
+                        childCount:
+                            1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -281,10 +349,8 @@ class _PrivateMessageMainScreenState extends ConsumerState<PrivateMessageMainScr
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: privateMessageScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: privateMessageScreenPointScrollController),
     );
   }
 }
