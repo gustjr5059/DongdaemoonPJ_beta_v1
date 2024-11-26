@@ -255,6 +255,15 @@ class _ReviewCreateDetailScreenState
     final double interval1Y =
         screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
+    // 리뷰작성 화면 내 리뷰 내용 부분이 비어있는 경우의 알림 부분 수치
+    final double reviewEmptyTextWidth =
+        screenSize.width * (250 / referenceWidth);
+    final double reviewEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double reviewEmptyTextY = screenSize.height * (300 / referenceHeight);
+    final double reviewEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -320,35 +329,81 @@ class _ReviewCreateDetailScreenState
                         ),
                       );
                     }
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return Padding(
-                            // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                            padding: EdgeInsets.symmetric(
-                                horizontal: reviewPaddingX),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: interval1Y),
-                                // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
-                                // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
-                                // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
-                                PrivateReviewCreateDetailFormScreen(
-                                  productInfo: widget.productInfo,
-                                  // 각 상품 정보를 전달
-                                  numberInfo: widget.numberInfo,
-                                  // 발주 번호와 관련 정보 전달
-                                  userEmail: widget.userEmail, // 사용자 이메일 전달
+
+                    final isLoading = ref.watch(isLoadingProvider);
+                    // 리뷰 작성 내역이 비어 있을 경우 '에러가 발생했으니, 앱을 재실행해주세요.' 텍스트를 중앙에 표시
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 로딩 표시는 아래의 (reviewItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 로딩 중일 때 로딩 인디케이터 표시
+                    if (isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
+                    return widget.productInfo.isEmpty ||
+                            widget.numberInfo.isEmpty ||
+                            widget.userEmail.isEmpty
+                        ? SliverToBoxAdapter(
+                            child: Container(
+                              width: reviewEmptyTextWidth,
+                              height: reviewEmptyTextHeight,
+                              margin: EdgeInsets.only(top: reviewEmptyTextY),
+                              // 텍스트를 중앙에 위치하도록 설정함.
+                              alignment: Alignment.center,
+                              child: Text(
+                                '에러가 발생했으니, 앱을 재실행해주세요.',
+                                style: TextStyle(
+                                  fontSize: reviewEmptyTextFontSize,
+                                  fontFamily: 'NanumGothic',
+                                  fontWeight: FontWeight.bold,
+                                  color: BLACK_COLOR,
                                 ),
-                              ],
+                              ),
+                            ),
+                          )
+                        // 리뷰 작성 화면에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return Padding(
+                                  // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: reviewPaddingX),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: interval1Y),
+                                      // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
+                                      // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
+                                      // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
+                                      PrivateReviewCreateDetailFormScreen(
+                                        productInfo: widget.productInfo,
+                                        // 각 상품 정보를 전달
+                                        numberInfo: widget.numberInfo,
+                                        // 발주 번호와 관련 정보 전달
+                                        userEmail:
+                                            widget.userEmail, // 사용자 이메일 전달
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              childCount:
+                                  1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                             ),
                           );
-                        },
-                        childCount:
-                            1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                      ),
-                    );
                   },
                 ),
               ),

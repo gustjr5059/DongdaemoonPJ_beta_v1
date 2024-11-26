@@ -89,13 +89,16 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   DocumentSnapshot? lastDocument;
   bool isLoadingMore = false;
 
+  // // 생성자에서 OrderlistRepository와 Ref를 받아 초기 상태를 빈 리스트로 설정함.
+  // OrderlistItemsNotifier(this.orderlistRepository, this.ref) : super([]) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     print("초기 데이터 로드를 시작합니다."); // 초기 로드 시작 메시지
+  //     loadMoreOrderItems();  // 첫 데이터 로드를 수행함.
+  //   });
+  // }
+
   // 생성자에서 OrderlistRepository와 Ref를 받아 초기 상태를 빈 리스트로 설정함.
-  OrderlistItemsNotifier(this.orderlistRepository, this.ref) : super([]) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("초기 데이터 로드를 시작합니다."); // 초기 로드 시작 메시지
-      loadMoreOrderItems();  // 첫 데이터 로드를 수행함.
-    });
-  }
+  OrderlistItemsNotifier(this.orderlistRepository, this.ref) : super([]);
 
   // ------ Firestore에서 발주 아이템을 페이징 처리해서 불러오는 함수 시작 부분
   Future<void> loadMoreOrderItems() async {
@@ -116,6 +119,7 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       print("사용자가 로그인되어 있지 않습니다. 빈 상태로 설정합니다."); // 사용자 미로그인 시 메시지
       state = [];  // 사용자가 없으면 상태를 빈 리스트로 설정.
       isLoadingMore = false;  // 로딩 상태 해제.
+      ref.read(isLoadingProvider.notifier).state = false;
       return;
     }
 
@@ -135,13 +139,24 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     } else {
       print("더 이상 불러올 데이터가 없습니다."); // 추가 데이터 없음 메시지
     }
-    // 로딩 상태를 false로 설정함.
-    ref.read(isLoadingProvider.notifier).state = false;
     // 로딩 상태를 해제함.
     isLoadingMore = false;
+    // 로딩 상태를 false로 설정함.
+    ref.read(isLoadingProvider.notifier).state = false;
     print("데이터 로드를 완료했습니다."); // 데이터 로드 완료 메시지
   }
   // ------ Firestore에서 발주 아이템을 페이징 처리해서 불러오는 함수 끝 부분
+
+  // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 시작 부분
+  void resetAndReloadOrderItems() async {
+    print("발주 아이템 데이터를 초기화합니다."); // 데이터 초기화 시작 메시지
+    isLoadingMore = false;  // 로딩 상태 플래그 초기화
+    state = [];  // 불러온 데이터를 초기화함
+    lastDocument = null;  // 마지막 문서 스냅샷 초기화
+    print("발주 아이템 데이터 초기화 완료."); // 데이터 초기화 완료 메시지
+    await loadMoreOrderItems(); // 데이터 로드
+  }
+  // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 끝 부분
 
   // ------ 발주 아이템을 Firestore에서 삭제하는 함수 시작 부분
   Future<void> deleteOrderItems(String orderNumber) async {
@@ -149,37 +164,32 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
     // 현재 로그인한 사용자를 확인함.
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    final userEmail = user?.email; // 사용자 이메일 추출
+    if (userEmail == null) {
+      print("사용자 인증 실패: 로그인 필요."); // 사용자 인증 실패 메시지
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 인증 실패 예외 발생
+    }
       // 발주 아이템을 Firestore에서 삭제함.
-      await orderlistRepository.fetchDeleteOrders(user.email!, orderNumber);
+      await orderlistRepository.fetchDeleteOrders(
+          userEmail: userEmail,
+          orderNumber: orderNumber,
+      );
 
       // 삭제된 발주 아이템을 상태에서 제거함.
       state = state.where((item) => item['numberInfo']['order_number'] != orderNumber).toList();
       print("발주 아이템 삭제 완료 - 주문 번호: $orderNumber"); // 발주 아이템 삭제 완료 메시지
-    } else {
-      print("삭제 실패 - 사용자 정보 없음"); // 사용자 미로그인 시 삭제 실패 메시지
+      resetAndReloadOrderItems();
     }
-  }
   // ------ 발주 아이템을 Firestore에서 삭제하는 함수 끝 부분
 
-  // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 시작 부분
-  void resetOrderItems() {
-    print("발주 아이템 데이터를 초기화합니다."); // 데이터 초기화 시작 메시지
-    isLoadingMore = false;  // 로딩 상태 플래그 초기화
-    state = [];  // 불러온 데이터를 초기화함
-    lastDocument = null;  // 마지막 문서 스냅샷 초기화
-    print("발주 아이템 데이터 초기화 완료."); // 데이터 초기화 완료 메시지
-  }
-  // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 끝 부분
-
-  // ------ Notifier가 dispose될 때 호출되는 함수 시작 부분
-  @override
-  void dispose() {
-    print("OrderlistItemsNotifier dispose 호출됨"); // dispose 호출 메시지
-    resetOrderItems();  // dispose 시 데이터 초기화 수행
-    super.dispose();  // 부모 클래스의 dispose 함수 호출함.
-  }
-// ------ Notifier가 dispose될 때 호출되는 함수 끝 부분
+//   // ------ Notifier가 dispose될 때 호출되는 함수 시작 부분
+//   @override
+//   void dispose() {
+//     print("OrderlistItemsNotifier dispose 호출됨"); // dispose 호출 메시지
+//     resetAndReloadOrderItems();  // dispose 시 데이터 초기화 수행
+//     super.dispose();  // 부모 클래스의 dispose 함수 호출함.
+//   }
+// // ------ Notifier가 dispose될 때 호출되는 함수 끝 부분
 }
 // ------- Firestore에서 발주 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 끝 부분
 

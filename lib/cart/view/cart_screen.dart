@@ -126,8 +126,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 1;
       // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
-      ref.read(cartItemsProvider.notifier).resetCartItems();
-      ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+      ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
@@ -139,6 +138,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(cartScrollPositionProvider.notifier).state =
             0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
+        // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
+        ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
@@ -356,11 +357,27 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 사용자가 로그인되어 있을 경우 기존 장바구니 UI를 표시
                     // cartItemsProvider의 상태를 가져옴
                     final cartItems = ref.watch(cartItemsProvider);
+                    final isLoading = ref.watch(isLoadingProvider);
                     // 장바구니가 비어 있을 경우 '현재 장바구니 상품이 없습니다.' 텍스트를 중앙에 표시
                     // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
                     // loading: (), error: (err, stack)를 구분해서 구현 못함
                     // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-                    // 그대신 로딩 표시를 못 넣음...
+                    // 로딩 표시는 아래의 (cartItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (cartItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
                             child: Container(

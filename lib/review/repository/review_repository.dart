@@ -200,7 +200,6 @@ class PrivateReviewRepository {
           .doc(userEmail) // 사용자별 문서 지정
           .collection('reviews') // 리뷰 하위 컬렉션
           .where('private_review_closed_button', isEqualTo: false) // 공개 상태 조건
-          .orderBy('product_id', descending: false) // 제품 ID 오름차순 정렬
           .orderBy('review_write_time', descending: true) // 리뷰 작성 시간 내림차순 정렬
           .limit(limit); // 가져올 데이터 수 제한
 

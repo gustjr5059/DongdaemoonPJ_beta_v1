@@ -173,6 +173,19 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     });
   }
 
+  // 데이터 상태 초기화 및 리셋 함수
+  // ('삭제' 버튼 로직에서 해당 함수를 불러와서 삭제하면 화면에 있는 상태에서도 데이터를 다시 로드해서 기존의 불러온 페이징 데이터 안에서만 삭제되서 칸이 비어지는 이슈 해결 방법)
+  void resetAndReloadCartItems() async {
+    isLoadingMore = false; // 로딩 플래그 초기화
+    state = []; // 불러온 데이터를 초기화함
+    lastDocument = null; // 마지막 문서 스냅샷 초기화
+    print("장바구니 목록 초기화 및 다시 로드 시작, 모든 데이터와 구독 해제.");
+
+    // 모든 아이템에 대한 실시간 구독을 해제함
+    _unsubscribeFromAllItems();
+    await loadMoreCartItems(); // 데이터 로드
+  }
+
   // 장바구니에서 아이템을 제거하고 상태를 갱신하는 함수
   Future<void> removeItem(String id) async {
     print("Firestore에서 itemId: $id 제거 요청.");
@@ -188,17 +201,8 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateAllCheckedState(state);
     });
-  }
-
-  // 장바구니 데이터를 초기화하고 상태를 재설정하는 함수
-  void resetCartItems() {
-    isLoadingMore = false; // 로딩 플래그 초기화
-    state = []; // 불러온 데이터를 초기화함
-    lastDocument = null; // 마지막 문서 스냅샷 초기화
-    print("장바구니 초기화: 모든 데이터와 구독 해제.");
-
-    // 모든 아이템에 대한 실시간 구독을 해제함
-    _unsubscribeFromAllItems();
+    // 상태를 초기화하고 데이터를 다시 로드
+    resetAndReloadCartItems();
   }
 
   // 모든 실시간 구독을 해제하는 함수

@@ -78,6 +78,16 @@ class PrivateReviewItemsListNotifier extends StateNotifier<List<Map<String, dyna
     print("데이터 로드 완료."); // 데이터 로드 완료 메시지
   }
 
+  // 데이터 상태 초기화 및 리셋 함수
+  // ('삭제' 버튼 로직에서 해당 함수를 불러와서 삭제하면 화면에 있는 상태에서도 데이터를 다시 로드해서 기존의 불러온 페이징 데이터 안에서만 삭제되서 칸이 비어지는 이슈 해결 방법)
+  void resetAndReloadReviews() async {
+    isLoadingMore = false; // 로드 상태 초기화
+    state = []; // 상태 초기화
+    lastDocument = null; // 마지막 문서 초기화
+    print("리뷰 목록 초기화."); // 상태 초기화 메시지
+    await loadMoreReviews(); // 데이터 로드
+  }
+
   // ——— 특정 리뷰 데이터를 삭제 처리하는 함수
   Future<void> deleteReview(String separatorKey) async {
     final user = FirebaseAuth.instance.currentUser; // FirebaseAuth에서 현재 사용자 정보 가져옴
@@ -96,14 +106,7 @@ class PrivateReviewItemsListNotifier extends StateNotifier<List<Map<String, dyna
     // 삭제한 리뷰를 상태에서 제거
     state = state.where((review) => review['separator_key'] != separatorKey).toList();
     print("separatorKey: $separatorKey 상태에서 제거됨."); // 삭제된 데이터 메시지
-  }
-
-  // ——— 리뷰 데이터 상태를 초기화하는 함수
-  void resetReviews() {
-    isLoadingMore = false; // 로드 상태 초기화
-    state = []; // 상태 초기화
-    lastDocument = null; // 마지막 문서 초기화
-    print("리뷰 목록 초기화."); // 상태 초기화 메시지
+    resetAndReloadReviews(); // 상태를 초기화하고 데이터를 다시 로드
   }
 }
 // ------ 사용자 리뷰 목록 데이터를 관리하는 StateNotifier인 PrivateReviewItemsListNotifier 끝 부분

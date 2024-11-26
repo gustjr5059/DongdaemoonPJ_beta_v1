@@ -99,6 +99,18 @@ class _PrivateMessageMainScreenState
     super.initState();
     // ScrollController를 초기화
     privateMessageScreenPointScrollController = ScrollController();
+
+    privateMessageScreenPointScrollController.addListener(() {
+      // 현재 스크롤 위치가 최대 스크롤 위치와 동일한 경우
+      if (privateMessageScreenPointScrollController.position.pixels ==
+          privateMessageScreenPointScrollController.position.maxScrollExtent) {
+        // 더 많은 메시지를 가져오는 함수 호출
+        ref
+            .read(privateMessageItemsListNotifierProvider.notifier) // Notifier 프로바이더 읽기
+            .loadMoreMessages(timeFrame: 30); // 30일 시간 프레임으로 호출
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -118,9 +130,12 @@ class _PrivateMessageMainScreenState
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-      // 초기화된 상태로 모든 메시지 데이터 불러오기
-      _resetMessageProviders();
 
+      ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
+      ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+      ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
+      // 쪽지 목록 초기화
+      ref.read(privateMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
@@ -128,12 +143,15 @@ class _PrivateMessageMainScreenState
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
-        // 초기화된 상태로 모든 메시지 데이터 불러오기
-        _resetMessageProviders();
+        // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
+        ref.read(privateMessageScrollPositionProvider.notifier).state = 0;
+
+        ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
+        ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
+        ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
+        // 쪽지 목록 초기화
+        ref.read(privateMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
-      } else {
-        // 재로그인 시 상태를 다시 초기화
-        _resetMessageProviders();
       }
     });
 
@@ -150,21 +168,6 @@ class _PrivateMessageMainScreenState
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
-// 상태 초기화 함수
-  void _resetMessageProviders() {
-    // 쪽지 관리 화면 관련 초기화 부분 시작
-    ref.read(privateMessageScrollPositionProvider.notifier).state =
-        0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-    ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
-    // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-    ref.invalidate(
-        fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-    ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-    ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
-    ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
-    ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
-    // 필요한 경우 다른 상태들도 초기화
-  }
 
   // didChangeAppLifecycleState 함수 관련 구현 내용 시작
   @override
@@ -172,12 +175,8 @@ class _PrivateMessageMainScreenState
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(
-          fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(
-          fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-      ref.invalidate(
-          fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+      // // 쪽지 목록 초기화
+      // ref.read(privateMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
       updateStatusBar();
     }
   }
@@ -232,6 +231,16 @@ class _PrivateMessageMainScreenState
     // 컨텐츠 사이의 간격 계산
     final double interval1Y =
         screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+
+    // 쪽지함 화면 내 쪽지내역 부분이 비어있는 경우의 알림 부분 수치
+    final double messageEmptyTextWidth =
+        screenSize.width * (250 / referenceWidth);
+    final double messageEmptyTextHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double messageEmptyTextY =
+        screenSize.height * (300 / referenceHeight);
+    final double messageEmptyTextFontSize =
+        screenSize.height * (16 / referenceHeight);
 
     // 텍스트 폰트 크기 수치
     final double loginGuideTextFontSize =
@@ -294,7 +303,7 @@ class _PrivateMessageMainScreenState
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: Consumer(
                   builder: (context, ref, child) {
@@ -317,7 +326,48 @@ class _PrivateMessageMainScreenState
                         ),
                       );
                     }
-                    return SliverList(
+                    // privateMessageItemsListNotifierProvider의 상태를 가져옴
+                    final messageItems = ref.watch(privateMessageItemsListNotifierProvider);
+                    final isLoading = ref.watch(isLoadingProvider);
+                    // 쪽지 내역이 비어 있을 경우 '현재 쪽지 목록 내 쪽지가 없습니다.' 텍스트를 중앙에 표시
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 로딩 표시는 아래의 (messageItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (messageItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
+                    return messageItems.isEmpty
+                      ? SliverToBoxAdapter(
+                      child: Container(
+                        width: messageEmptyTextWidth,
+                        height: messageEmptyTextHeight,
+                        margin: EdgeInsets.only(top: messageEmptyTextY),
+                        // 텍스트를 중앙에 위치하도록 설정함.
+                        alignment: Alignment.center,
+                        child: Text('현재 쪽지 목록 내 쪽지가 없습니다.',
+                          style: TextStyle(
+                            fontSize: messageEmptyTextFontSize,
+                            fontFamily: 'NanumGothic',
+                            fontWeight: FontWeight.bold,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                    )
+                    : SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return Padding(
@@ -329,7 +379,7 @@ class _PrivateMessageMainScreenState
                               // 왼쪽 정렬 설정
                               children: [
                                 SizedBox(height: interval1Y),
-                                PrivateMessageBodyPartsContents(),
+                            PrivateMessageBodyPartsContents(timeFrame: 30),
                                 // 불러온 쪽지 내용을 표시
                                 SizedBox(height: interval1Y),
                               ],

@@ -304,7 +304,10 @@ class OrderlistRepository {
   }
 
   // 특정 발주 번호에 해당하는 발주를 삭제하는 함수.
-  Future<void> fetchDeleteOrders(String userEmail, String orderNumber) async {
+  Future<void> fetchDeleteOrders({
+    required String userEmail,
+    required String orderNumber,
+  }) async {
     try {
       print('Firestore에서 발주 삭제 요청: 사용자 이메일 - $userEmail, 발주 번호 - $orderNumber');
 
@@ -334,9 +337,15 @@ class OrderlistRepository {
         await orderDocRef.update({
           'private_orderList_closed_button': true,  // 삭제 처리.
         });
+      } else {
+        // 문서가 존재하지 않는 경우 예외 처리
+        print("orderNumber: $orderNumber에 해당하는 문서를 찾을 수 없음");
+        throw Exception('orderNumber: $orderNumber에 해당하는 문서를 찾을 수 없음');
       }
     } catch (e) {
-      print('Firestore에서 발주 삭제 도중 오류 발생: $e');
+      // 발주내역 숨김 처리 실패 시 예외 처리
+      print('orderNumber: $orderNumber 발주내역 숨김 처리 실패: $e');
+      throw Exception('발주내역 숨김 처리 실패: $e');
     }
   }
 

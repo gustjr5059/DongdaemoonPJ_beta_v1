@@ -662,9 +662,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
   // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(fetchMinutesMessagesProvider); // 1분 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(fetchDaysMessagesProvider); // 30일 이내 타임의 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(fetchYearMessagesProvider); // 1년 이내 타임의 메시지 데이터 불러오는 로직 초기화
+  ref.invalidate(privateMessageItemsListNotifierProvider);
   ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
   ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
   // 쪽지 관리 화면 관련 초기화 부분 끝
@@ -680,7 +678,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
   // ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
   // ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
-  ref.read(privateReviewItmesListNotifierProvider.notifier).resetReviews();
+  ref.invalidate(privateReviewItmesListNotifierProvider); // 리뷰 데이터를 초기화
   // 리뷰 관리 화면 관련 초기화 부분 끝
 
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
@@ -1246,7 +1244,8 @@ class ProductInfoDetailScreenNavigation {
 
     final double interval1Y = screenSize.height * (4 / referenceHeight);
     final double interval1X = screenSize.width * (6 / referenceWidth);
-    final double interval2Y = screenSize.height * (135 / referenceHeight);
+    final double interval2X = screenSize.width * (100 / referenceWidth);
+    final double interval2Y = screenSize.height * (110 / referenceHeight);
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
@@ -1302,13 +1301,13 @@ class ProductInfoDetailScreenNavigation {
                                   Icon(
                                 Icons.image_not_supported,
                                 color: GRAY88_COLOR,
-                                size: interval2Y,
+                                size: interval2X,
                               ),
                             )
                           : Icon(
                               Icons.image_not_supported,
                               color: GRAY88_COLOR,
-                              size: interval2Y,
+                              size: interval2X,
                             ), // 썸네일이 없을 때 아이콘을 표시
                       // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
                       Positioned(

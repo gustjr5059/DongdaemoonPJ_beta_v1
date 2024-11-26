@@ -103,12 +103,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // 스크롤이 끝에 도달했는지 확인함.
       if (orderListScreenPointScrollController.position.pixels ==
           orderListScreenPointScrollController.position.maxScrollExtent) {
-        // 현재 로그인한 사용자의 이메일을 가져옴.
-        final userEmail = FirebaseAuth.instance.currentUser?.email;
-        // 사용자 이메일이 존재할 경우, 추가 데이터를 로드하는 함수를 호출함.
-        if (userEmail != null) {
+          // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
           ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
-        }
       }
 
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
@@ -132,9 +128,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
       // 데이터 로드를 초기화하는 함수 호출
-      ref.read(orderlistItemsProvider.notifier).resetOrderItems();
-      // 추가 데이터를 로드하는 함수를 호출
-      ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
+      ref.read(orderlistItemsProvider.notifier).resetAndReloadOrderItems();
 
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
@@ -148,6 +142,8 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+        // 데이터 로드를 초기화하는 함수 호출
+        ref.read(orderlistItemsProvider.notifier).resetAndReloadOrderItems();
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
@@ -275,10 +271,6 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         screenSize.height * (14 / referenceHeight);
     final double TextAndBtnInterval =
         screenSize.height * (16 / referenceHeight);
-
-    // orderlistItemsProvider를 통해 발주 데이터를 구독.
-    final orderlistItems = ref.watch(orderlistItemsProvider);
-    final Orders = orderlistItems.toList();
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -475,11 +467,29 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         ),
                       );
                     }
+                    // orderlistItemsProvider를 통해 발주 데이터를 구독.
+                    final orderlistItems = ref.watch(orderlistItemsProvider);
+                    final isLoading = ref.watch(isLoadingProvider);
                     // 발주 내역이 비어 있을 경우 '현재 발주 내역이 없습니다.' 텍스트를 중앙에 표시
                     // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
                     // loading: (), error: (err, stack)를 구분해서 구현 못함
                     // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-                    // 그대신 로딩 표시를 못 넣음...
+                    // 로딩 표시는 아래의 (orderlistItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (orderlistItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.6, // 화면 높이의 60%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
                     return orderlistItems.isEmpty
                         ? SliverToBoxAdapter(
                             child: Container(

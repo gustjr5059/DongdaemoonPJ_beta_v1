@@ -6,33 +6,6 @@ import '../repository/message_repository.dart';
 // PrivateMessageRepository를 사용하기 위한 인스턴스를 불러오는 프로바이더를 정의.
 final privateMessageRepositoryProvider = Provider((ref) => PrivateMessageRepository(firestore: FirebaseFirestore.instance));
 
-// 1분 이내에 발송된 쪽지들만 가져오는 프로바이더 fetchMinutesMessagesProvider를 정의.
-// 사용자 이메일을 매개변수로 받아 해당 사용자의 1분 이내에 발송된 쪽지를 리스트 형태로 반환.
-final fetchMinutesMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, email) {
-  // privateMessageRepositoryProvider를 통해 PrivateMessageRepository 인스턴스를 읽어옴.
-  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
-  // PrivateMessageRepository의 fetchMinutesMessages 메서드를 호출하여 1분 이내에 발송된 메시지를 가져옴.
-  return privateMessageRepository.fetchMinutesMessages(email, 1);
-});
-
-// 30일 이내에 발송된 쪽지들만 가져오는 프로바이더 fetchDaysMessagesProvider를 정의.
-// 사용자 이메일을 매개변수로 받아 해당 사용자의 30일 이내에 발송된 쪽지를 리스트 형태로 반환.
-final fetchDaysMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, email) {
-  // privateMessageRepositoryProvider를 통해 PrivateMessageRepository 인스턴스를 읽어옴.
-  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
-  // PrivateMessageRepository의 fetchDaysMessages 메서드를 호출하여 30일 이내에 발송된 메시지를 가져옴.
-  return privateMessageRepository.fetchDaysMessages(email, 30);
-});
-
-// 1년 이내에 발송된 쪽지들만 가져오는 프로바이더 fetchYearMessagesProvider를 정의.
-// 사용자 이메일을 매개변수로 받아 해당 사용자의 1년 이내에 발송된 쪽지를 리스트 형태로 반환.
-final fetchYearMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String>((ref, email) {
-  // privateMessageRepositoryProvider를 통해 PrivateMessageRepository 인스턴스를 읽어옴.
-  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
-  // PrivateMessageRepository의 fetchYearMessages 메서드를 호출하여 1년 이내에 발송된 메시지를 가져옴.
-  return privateMessageRepository.fetchYearMessages(email, 365);
-});
-
 // 로그인한 사용자의 이메일 계정을 가져오는 프로바이더 currentUserEmailProvider를 정의.
 // FirebaseAuth의 현재 사용자 스트림을 통해 이메일을 반환.
 final currentUserEmailProvider = StreamProvider<String?>((ref) async* {
@@ -40,19 +13,6 @@ final currentUserEmailProvider = StreamProvider<String?>((ref) async* {
   final user = FirebaseAuth.instance.currentUser;
   // 현재 사용자의 이메일을 반환.
   yield user?.email;
-});
-
-// 'private_email_closed_button' 필드를 'true'로 변경하는 기능을 위한 프로바이더.
-final fetchDeleteMessagesProvider = FutureProvider.family<void, String>((ref, messageId) async {
-  // 현재 로그인된 사용자의 이메일을 가져오기 위해 currentUserEmailProvider를 호출하고, 그 결과를 기다림.
-  final email = await ref.watch(currentUserEmailProvider.future);
-  if (email == null) return;
-
-  // privateMessageRepository 인스턴스를 읽어옴.
-  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
-
-  // 'private_email_closed_button' 필드를 'true'로 업데이트하는 fetchDeleteMessages 함수를 호출.
-  await privateMessageRepository.fetchDeleteMessages(email, messageId);
 });
 
 // 특정 발주번호에 해당하는 결제완료일을 가져오는 함수를 불러와서 사용 가능하도록 하는 paymentCompleteDateProvider

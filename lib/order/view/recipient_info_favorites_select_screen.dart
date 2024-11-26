@@ -339,6 +339,27 @@ class _RecipientInfoFavoritesSelectScreenState
                     }
                     // recipientInfoProvider의 상태를 가져옴
                     final recipientInfo = ref.watch(recipientInfoItemsProvider);
+                    final isLoading = ref.watch(isLoadingProvider);
+                    // 즐겨찾기 목록이 비어있으면 '현재 수령자 정보가 없습니다.'라는 텍스트를 출력함.
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 로딩 표시는 아래의 (recipientInfo.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (recipientInfo.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
                     // 저장된 수령자 정보가 없을 경우 '저장된 수령자 정보가 없습니다.' 텍스트를 중앙에 표시
                     return recipientInfo.isEmpty
                         ? SliverToBoxAdapter(

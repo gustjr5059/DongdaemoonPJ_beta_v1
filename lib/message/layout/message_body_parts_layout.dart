@@ -1,30 +1,27 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
+import '../provider/message_state_provider.dart';
 
 // ------ 마이페이지용 쪽지 관리 화면 내 계정별 관련 쪽지 목록 불러와서 UI 구현하는 PrivateMessageBodyPartsContents 클래스 내용 시작
 class PrivateMessageBodyPartsContents extends ConsumerWidget {
+  final int timeFrame; // 쪽지 발송 시간
+
+  PrivateMessageBodyPartsContents({required this.timeFrame});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 로그인한 사용자의 이메일 계정을 가져옴.
-    final currentUserEmail = ref.watch(currentUserEmailProvider).asData?.value;
+    final userEmail = FirebaseAuth.instance.currentUser?.email;
 
     // 만약 이메일이 없다면, 로딩 스피너를 표시.
-    if (currentUserEmail == null) {
+    if (userEmail == null) {
       return Center(child: CircularProgressIndicator());
     }
-
-    // // 현재 사용자의 이메일로 1분 이내에 발송된 쪽지 목록을 실시간으로 가져옴.
-    // final messages = ref.watch(fetchMinutesMessagesProvider(currentUserEmail));
-
-    // 현재 사용자의 이메일로 30일 이내에 발송된 쪽지 목록을 실시간으로 가져옴.
-    final messages = ref.watch(fetchDaysMessagesProvider(currentUserEmail));
-
-    // // 현재 사용자의 이메일로 1년 이내에 발송된 쪽지 목록을 실시간으로 가져옴.
-    // final messages = ref.watch(fetchYearMessagesProvider(currentUserEmail));
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -93,19 +90,16 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
     final double messageEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
+    final messageItems = ref.watch(privateMessageItemsListNotifierProvider);
 
-    // 가져온 쪽지 데이터의 상태에 따라 UI를 구성.
-    return messages.when(
-      // 데이터가 성공적으로 로드된 경우
-      data: (messagesList) {
         // 쪽지 목록이 비어 있는 경우
-        if (messagesList.isEmpty) {
+        if (messageItems.isEmpty) {
           // 쪽지 목록이 비어있을 경우 "쪽지가 없습니다" 메시지 표시
           return Container(
             width: messageEmptyTextWidth,
             height: messageEmptyTextHeight,
             margin: EdgeInsets.only(left: messageEmptyTextX, top: messageEmptyTextY),
-            child: Text('쪽지 목록 내 쪽지가 없습니다.',
+            child: Text('현재 쪽지 목록 내 쪽지가 없습니다.',
               style: TextStyle(
                 fontSize: messageEmptyTextFontSize,
                 fontFamily: 'NanumGothic',
@@ -116,13 +110,10 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
           );
         }
 
-        // 최신 쪽지가 위로 오도록 리스트를 역순으로 정렬.
-        final reversedMessages = messagesList.reversed.toList();
-
         // 쪽지 목록을 열의 형태로 표시.
         return Column(
           // 각 쪽지를 맵핑하여 위젯을 생성.
-          children: reversedMessages.map((message) {
+          children: messageItems.map((message) {
             // 수신자와 주문 번호 텍스트를 구성.
             String recipientText = '${message['recipient']}';
             String orderNumberText = '[발주번호: ${message['order_number']}]';
@@ -319,7 +310,9 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                           ),
                                           onYesPressed: () async {
                                             try{
-                                              await ref.read(fetchDeleteMessagesProvider(message['id']));
+                                              final messageId = message['id'];
+                                              await ref.read(privateMessageItemsListNotifierProvider.notifier)
+                                                  .deleteMessage(messageId, timeFrame);
                                               Navigator.of(context).pop(); // 다이얼로그 닫기
                                               // ScaffoldMessenger.of(context).showSnackBar(
                                               //   SnackBar(content: Text('쪽지가 삭제되었습니다.')), // 리뷰 삭제 완료 메시지 표시
@@ -362,10 +355,10 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
             );
           }).toList(),
         );
-      },
-      loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
-      error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
-    );
+    //   },
+    //   loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
+    //   error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
+    // );
   }
 }
 // ------ 마이페이지용 쪽지 관리 화면 내 계정별 관련 쪽지 목록 불러와서 UI 구현하는 PrivateMessageBodyPartsContents 클래스 내용 끝
