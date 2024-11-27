@@ -139,9 +139,12 @@ class _MtmDetailProductScreenState extends ConsumerState<MtmDetailProductScreen>
             0; // mtmDetailScrollPositionProvider의 상태를 0으로 설정
         ref.read(getImagePageProvider(widget.fullPath).notifier).state =
             0; // getImagePageProvider의 상태를 0으로 설정
-        pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
-        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+        // pageController가 ScrollView에 연결되어 있는지 확인 후 jumpToPage 호출
+        if (pageController.hasClients) {
+          pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
+        }
 
+        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
@@ -382,46 +385,15 @@ class _MtmDetailProductScreenState extends ConsumerState<MtmDetailProductScreen>
                                 children: [
                                   buildProdDetailScreenContents(
                                       context, ref, product, pageController),
-                                  // ProductDetailScreenTabs를 사용하여 탭을 생성하고 리뷰 데이터를 전달
-                                  productReviews.when(
-                                    data: (reviewsContent) {
-                                      print(
-                                          "MtmDetailProductScreen: ${reviewsContent.length} reviews가 로드됨"); // 디버깅 메시지 추가
-                                      return ProductDetailScreenTabs(
-                                        productInfoContent: ProductInfoContents(
-                                          fullPath: widget.fullPath,
-                                        ),
-                                        reviewsContent: reviewsContent,
-                                        // Firestore에서 가져온 리뷰 데이터를 전달
-                                        inquiryContent:
-                                            ProductInquiryContents(),
-                                      );
-                                    },
-                                    loading: () =>
-                                        buildCommonLoadingIndicator(),
-                                    // 공통 로딩 인디케이터 호출
-                                    error: (error, stack) => Container(
-                                      // 에러 상태에서 중앙 배치
-                                      height: errorTextHeight,
-                                      // 전체 화면 높이 설정
-                                      alignment: Alignment.center,
-                                      // 중앙 정렬
-                                      child: buildCommonErrorIndicator(
-                                        message: '에러가 발생했으니, 앱을 재실행해주세요.',
-                                        // 첫 번째 메시지 설정
-                                        secondMessage:
-                                            '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
-                                        // 두 번째 메시지 설정
-                                        fontSize1: errorTextFontSize1,
-                                        // 폰트1 크기 설정
-                                        fontSize2: errorTextFontSize2,
-                                        // 폰트2 크기 설정
-                                        color: BLACK_COLOR,
-                                        // 색상 설정
-                                        showSecondMessage:
-                                            true, // 두 번째 메시지를 표시하도록 설정
-                                      ),
+                                  // ProductDetailScreenTabs를 사용하여 탭을 생성
+                                  ProductDetailScreenTabs(
+                                    productInfoContent: ProductInfoContents(
+                                      fullPath: widget.fullPath,
                                     ),
+                                    reviewsContent: productReviews.value ?? [],
+                                    // Firestore에서 가져온 리뷰 데이터를 전달
+                                    inquiryContent:
+                                    ProductInquiryContents(),
                                   ),
                                   // 로딩 인디케이터를 표시 (로그아웃 후 재로그인 시, 로딩 표시가 안나오도록 추가 설정)
                                   if (ref

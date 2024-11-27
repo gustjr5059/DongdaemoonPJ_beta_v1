@@ -425,22 +425,6 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                         );
                       }
 
-                      final isLoading = ref.watch(isLoadingProvider);
-                      // 로딩 표시는 아래의 (isLoading) 경우로 표시함
-
-                      // 데이터가 로딩 중일 때 로딩 인디케이터 표시
-                      if (isLoading) {
-                        // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
-                        return SliverToBoxAdapter(
-                          // 전체 컨테이너를 설정
-                          child: Container(
-                            height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
-                            alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
-                            child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
-                          ),
-                        );
-                      }
-
                       return SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
