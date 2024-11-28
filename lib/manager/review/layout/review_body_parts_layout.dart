@@ -178,7 +178,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
         ),
         SizedBox(height: interval1Y), // 드롭다운 버튼과 리뷰 목록 사이의 간격을 설정하는 코드
             if (reviews.isEmpty)
-              // 리뷰 목록이 비어있을 경우 "리뷰 목록 내 리뷰가 없습니다." 메시지 표시
+              // 리뷰 목록이 비어있을 경우 "현재 리뷰 목록 내 리뷰가 없습니다." 메시지 표시
               Container(
                 width: reviewEmptyTextWidth,
                 height: reviewEmptyTextHeight,

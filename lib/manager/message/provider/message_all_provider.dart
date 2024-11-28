@@ -65,38 +65,3 @@ final sendMessageProvider = FutureProvider.family<void, Map<String, String?>>((r
     selectedSeparatorKey: data['selected_separator_key'], // 선택된 separator_key 포함
   );
 });
-
-// 선택된 수신자의 1분 이내 발송된 쪽지 목록을 가져오는 프로바이더
-final fetchMinutesAllMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String?>((ref, email) {
-  if (email == null) return Stream.value([]); // 선택된 수신자가 없으면 빈 리스트 반환
-  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
-  final adminMessageRepository = ref.read(adminMessageRepositoryProvider);
-  // 1분 이내의 메시지를 가져옴
-  return adminMessageRepository.fetchMinutesAllMessages(email, 1);
-});
-
-// 선택된 수신자의 30일 이내 발송된 쪽지 목록을 가져오는 프로바이더
-final fetchDaysAllMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String?>((ref, email) {
-  if (email == null) return Stream.value([]); // 선택된 수신자가 없으면 빈 리스트 반환
-  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
-  final adminMessageRepository = ref.read(adminMessageRepositoryProvider);
-  // 30일 이내의 메시지를 가져옴
-  return adminMessageRepository.fetchDaysAllMessages(email, 30);
-});
-
-// 선택된 수신자의 1년 이내 발송된 쪽지 목록을 가져오는 프로바이더
-final fetchYearsAllMessagesProvider = StreamProvider.family<List<Map<String, dynamic>>, String?>((ref, email) {
-  if (email == null) return Stream.value([]); // 선택된 수신자가 없으면 빈 리스트 반환
-  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
-  final adminMessageRepository = ref.read(adminMessageRepositoryProvider);
-  // 1년(365일) 이내의 메시지를 가져옴
-  return adminMessageRepository.fetchYearsAllMessages(email, 365);
-});
-
-// 메시지 삭제를 위한 프로바이더 deleteMessageProvider를 정의.
-final fetchDeleteAllMessageProvider = FutureProvider.family<void, Map<String, String>>((ref, data) async {
-  // adminMessageRepositoryProvider를 통해 AdminMessageRepository 인스턴스를 읽어옴.
-  final adminMessageRepository = ref.read(adminMessageRepositoryProvider);
-  // AdminMessageRepository의 deleteMessage 메서드를 호출하여 메시지를 삭제.
-  await adminMessageRepository.fetchDeleteAllMessage(data['messageId']!, data['recipient']!);
-});

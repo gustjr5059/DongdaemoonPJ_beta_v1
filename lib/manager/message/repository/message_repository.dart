@@ -218,81 +218,96 @@ class AdminMessageRepository {
   // 이러면 최신순으로 정렬됨 (message_sendingTime : 오름차순)
   // 여기선, 관리자용 쪽지 관리 화면이라서 'x' 버튼을 클릭하면 fetchDeleteAllMessage 함수를 활용해서 파이어베이스 내 데이터까지 삭제함!!
 
-  // 특정 이메일 계정의 1분 이내 발송된 쪽지 목록을 실시간으로 가져오는 함수
-  Stream<List<Map<String, dynamic>>> fetchMinutesAllMessages(String email, int minutes) {
-    print('수신자 $email 의 최근 $minutes 분 내 발송된 쪽지 목록을 가져오는 중...');
-    // 1분 전의 날짜와 시간을 계산
-    final oneMinuteAgo = DateTime.now().subtract(Duration(minutes: minutes));
+  // ------- 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 페이징 처리해서 가져오는 함수인 getPagedMessageItemsList 시작 부분
+  Future<List<Map<String, dynamic>>> getPagedMessageItemsList({
+    required String userEmail, // 특정 사용자 이메일 주소
+    DocumentSnapshot? lastDocument, // 이전 페이지의 마지막 문서 스냅샷
+    required int limit, // 한 페이지에 가져올 문서 수 제한
+    required int timeFrame, // 시간 프레임: 10분, 30일, 1년 단위
+  }) async {
+    try {
+      // 디버깅: 사용자 이메일과 쪽지 개수 출력
+      print("수신자 $userEmail에 대한 쪽지 $limit개 가져오는 중");
 
-    return firestore
-        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
-        .doc(email) // 주어진 이메일에 해당하는 문서에 접근
-        .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
-        .where('message_sendingTime', isGreaterThanOrEqualTo: oneMinuteAgo) // 'message_sendingTime' 필드가 1분 전보다 늦은(즉, 최근) 문서들만 필터링
-        .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
-        .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
-        .map((snapshot) {
-      print('수신자 $email 의 쪽지 ${snapshot.docs.length} 건을 실시간으로 가져왔습니다.');
-      return snapshot.docs.map((doc) => {
-      'id': doc.id, // 문서 ID를 'id'로 저장
-      ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
-    }).toList(); // 각 문서를 맵으로 변환한 후 리스트로 변환
-  });
-}
+      // 현재 시간에서 시간 프레임을 뺀 날짜를 계산함
+      final dateLimit = DateTime.now().subtract(Duration(
+        minutes: timeFrame == 10 ? 10 : 0, // 10분 전
+        days: timeFrame == 30 ? 30 : (timeFrame == 365 ? 365 : 0), // 30일 또는 365일 전
+      ));
 
-  // 특정 이메일 계정의 30일 이내 발송된 쪽지 목록을 실시간으로 가져오는 함수
-  Stream<List<Map<String, dynamic>>> fetchDaysAllMessages(String email, int days) {
-    // 30일 전의 날짜와 시간을 계산
-    final thirtyDaysAgo = DateTime.now().subtract(Duration(days: days));
+      // Firestore에서 쿼리를 생성함
+      Query query = firestore
+          .collection('wearcano_message_list') // 최상위 컬렉션
+          .doc(userEmail) // 사용자 이메일 문서 참조
+          .collection('message') // 쪽지 하위 컬렉션
+          .where('message_sendingTime', isGreaterThanOrEqualTo: dateLimit) // 메시지 전송 시간이 기준 날짜 이상인 문서 필터링
+          .orderBy('message_sendingTime', descending: true) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
+          .limit(limit); // 제한된 개수만큼 가져옴
 
-    return firestore
-        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
-        .doc(email) // 주어진 이메일에 해당하는 문서에 접근
-        .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
-        .where('message_sendingTime', isGreaterThanOrEqualTo: thirtyDaysAgo) // 'message_sendingTime' 필드가 30일 전보다 늦은(즉, 최근) 문서들만 필터링
-        .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
-        .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
-        .map((snapshot) {
-      print('수신자 $email 의 쪽지 ${snapshot.docs.length} 건을 실시간으로 가져왔습니다.');
-      return snapshot.docs.map((doc) => {
-        'id': doc.id, // 문서 ID를 'id'로 저장
-        ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
-      }).toList(); // 각 문서를 맵으로 변환한 후 리스트로 변환
-    });
+      // 마지막 문서가 있는 경우 페이징 처리 시작점 설정
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument);
+      }
+
+      // Firestore에서 쿼리를 실행하고 결과를 가져옴
+      final querySnapshot = await query.get();
+
+      // 디버깅: 가져온 쪽지 개수 출력
+      print("수신자 $userEmail의 쪽지 ${querySnapshot.docs.length}개를 성공적으로 가져옴");
+
+      // 가져온 문서를 매핑하여 데이터와 ID를 포함한 목록으로 반환함
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>; // 문서 데이터를 Map 형태로 변환함
+        data['id'] = doc.id; // 문서 ID를 추가함
+        data['snapshot'] = doc; // 문서 스냅샷을 추가함
+        return data; // 결과 데이터 반환
+      }).toList();
+    } catch (e) {
+      // 디버깅: 에러 발생 시 메시지 출력
+      print('수신자 $userEmail의 쪽지 데이터를 가져오는 데 실패: $e');
+      // 예외 발생
+      throw Exception('쪽지 데이터를 가져오는 데 실패: $e');
+    }
   }
-
-  // 특정 이메일 계정의 1년 이내 발송된 쪽지 목록을 실시간으로 가져오는 함수
-  Stream<List<Map<String, dynamic>>> fetchYearsAllMessages(String email, int days) {
-    // 1년(365일) 전의 날짜와 시간을 계산
-    final oneYearAgo = DateTime.now().subtract(Duration(days: days));
-
-    return firestore
-        .collection('wearcano_message_list') // 'message_list' 컬렉션에 접근
-        .doc(email) // 주어진 이메일에 해당하는 문서에 접근
-        .collection('message') // 해당 문서 내의 'message' 서브컬렉션에 접근
-        .where('message_sendingTime', isGreaterThanOrEqualTo: oneYearAgo) // 'message_sendingTime' 필드가 1년 전보다 늦은(즉, 최근) 문서들만 필터링
-        .orderBy('message_sendingTime', descending: false) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
-        .snapshots() // 실시간으로 데이터 변경을 감지하고 스트림으로 반환
-        .map((snapshot) {
-      print('수신자 $email 의 쪽지 ${snapshot.docs.length} 건을 실시간으로 가져왔습니다.');
-      return snapshot.docs.map((doc) => {
-        'id': doc.id, // 문서 ID를 'id'로 저장
-        ...doc.data() as Map<String, dynamic> // 문서의 나머지 데이터를 맵 형식으로 저장
-      }).toList(); // 각 문서를 맵으로 변환한 후 리스트로 변환
-    });
-  }
+// ------- 특정 이메일 계정의 특정 조건에 맞는 쪽지 목록을 페이징 처리해서 가져오는 함수인 getPagedMessageItemsList 끝 부분
   // ------ 모든 이메일 계정의 특정 조건에 맞는 쪽지 목록을 실시간으로 가져오는 함수 모음 내용 끝
 
-  // Firestore에서 특정 메시지를 삭제하는 함수.
-  Future<void> fetchDeleteAllMessage(String messageId, String recipient) async {
-    print('메시지 삭제 중 (ID: $messageId, 수신자: $recipient)...');
-    // Firestore에서 해당 메시지를 삭제.
-    await firestore.collection('wearcano_message_list')
-        .doc(recipient)
-        .collection('message')
-        .doc(messageId)
-        .delete();
-    print('메시지 삭제 완료 (ID: $messageId, 수신자: $recipient)');
+  // ------- 특정 이메일 계정의 특정 메시지를 삭제하는 함수인 deleteMessage 시작 부분
+  Future<void> deleteMessage({
+    required String userEmail, // 특정 사용자 이메일 주소
+    required String messageId, // 삭제할 쪽지의 ID
+  }) async {
+    try {
+      // 디버깅: 삭제할 메시지 ID와 사용자 이메일 출력
+      print('수신자 $userEmail의 쪽지 $messageId 삭제 중');
+
+      // Firestore에서 해당 문서 참조를 가져옴
+      final messageDoc = firestore
+          .collection('wearcano_message_list') // 최상위 컬렉션
+          .doc(userEmail) // 사용자 이메일 문서 참조
+          .collection('message') // 쪽지 하위 컬렉션
+          .doc(messageId); // 특정 메시지 문서 참조
+
+      // 문서의 현재 상태를 가져옴
+      final docSnapshot = await messageDoc.get();
+
+      // 문서가 존재하는 경우 삭제 처리
+      if (docSnapshot.exists) {
+        await messageDoc.delete(); // 문서가 존재하면 삭제를 수행함
+        // 디버깅: 삭제 성공 메시지 출력
+        print('수신자 $userEmail의 쪽지 $messageId를 삭제 처리함');
+      } else {
+        // 문서를 찾을 수 없는 경우 에러 처리
+        print("쪽지 $messageId에 해당하는 문서를 찾을 수 없음");
+        throw Exception('쪽지 $messageId에 해당하는 문서를 찾을 수 없음');
+      }
+    } catch (e) {
+      // 디버깅: 에러 발생 시 메시지 출력
+      print('쪽지 $messageId 삭제 처리 실패: $e');
+      // 예외 발생
+      throw Exception('쪽지 삭제 처리 실패: $e');
+    }
   }
+// ------- 특정 이메일 계정의 특정 메시지를 삭제하는 함수인 deleteMessage 끝 부분
 }
 // ------- 관리자용 쪽지 관리 화면에서 데이터를 파이어베이스에서 불러오고, 저장하는 로직 관련 AdminMessageRepository 클래스 내용 끝

@@ -102,7 +102,7 @@ class AdminMessageScreenTabs extends ConsumerWidget {
       case MessageScreenTab.create:
         return AdminMessageCreateFormScreen(); // '쪽지 작성' 화면을 반환.
       case MessageScreenTab.list:
-        return AdminMessageListScreen(); // '쪽지 목록' 화면을 반환.
+        return AdminMessageListScreen(timeFrame: 30); // '쪽지 목록' 화면을 반환. (30일 시간 timeFrame 쪽지 데이터)
       default:
         return Container(); // 기본적으로 빈 컨테이너를 반환.
     }
@@ -745,6 +745,11 @@ class _AdminMessageCreateFormScreenState extends ConsumerState<AdminMessageCreat
 
 // ------ 관리자용 쪽지 관리 화면 내 모든 계정의 쪽지 목록 불러와서 UI 구현하는 AdminMessageListScreen 클래스 내용 시작
 class AdminMessageListScreen extends ConsumerStatefulWidget {
+  final int timeFrame; // 쪽지 발송 시간
+
+  // 생성자에서 timeFrame을 필수 인자로 받도록 설정
+  AdminMessageListScreen({required this.timeFrame});
+
   @override
   _AdminMessageListScreenState createState() => _AdminMessageListScreenState();
 }
@@ -753,24 +758,6 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
   @override
   void initState() {
     super.initState();
-    // 초기화 함수를 지연 호출하여 위젯이 완전히 초기화된 후 실행되도록 함.
-    Future.microtask(() => _resetForm());
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // 종속성이 변경될 때 초기화 함수를 지연 호출하여 변경된 종속성에 따라
-    // 상태를 초기화함.
-    Future.microtask(() => _resetForm());
-  }
-
-  void _resetForm() {
-    // 화면의 상태를 초기화하는 로직
-    setState(() {
-      // 선택된 수신자 상태를 초기화 (null로 설정)
-      ref.read(selectedReceiverProvider.notifier).state = null;
-    });
   }
 
 // message_delete_time 필드의 데이터 타입이 Timestamp로 되어 있어, 이를 DateTime으로 변환한 후, 문자열로 포맷팅하는 함수
@@ -785,21 +772,9 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
 
   @override
   Widget build(BuildContext context) {
-
-    // 선택된 수신자 이메일을 관리하는 상태를 가져옴
-    final selectedReceiver = ref.watch(selectedReceiverProvider);
-
-    // 드롭다운 메뉴에 사용할 수신자 이메일 목록을 가져옴
-    final receivers = ref.watch(receiversProvider);
-
-    // // 선택된 수신자의 1분 이내 발송된 쪽지 목록을 가져옴
-    // final messages = ref.watch(fetchMinutesAllMessagesProvider(selectedReceiver));
-
-    // 선택된 수신자의 30일 이내 발송된 쪽지 목록을 가져옴
-    final messages = ref.watch(fetchDaysAllMessagesProvider(selectedReceiver));
-
-    // // 선택된 수신자의 1년(365일) 이내 발송된 쪽지 목록을 가져옴
-    // final messages = ref.watch(fetchYearsAllMessagesProvider(selectedReceiver));
+    final selectedReceiver = ref.watch(selectedReceiverProvider); // 선택된 수신자 이메일을 구독하는 코드
+    final receivers = ref.watch(receiversProvider); // 드롭다운 메뉴에 사용할 수신자 이메일 목록을 가져옴
+    final messages = ref.watch(adminMessageItemsListNotifierProvider); // 선택된 수신자의 쪽지 목록을 구독하는 코드
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -912,15 +887,13 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
         ),
         SizedBox(height: interval1Y), // 드롭다운 메뉴와 메시지 목록 사이에 간격을 둠
         // 선택된 수신자의 쪽지 목록을 표시하는 부분
-        messages.when(
-          data: (messagesList) {
-            if (messagesList.isEmpty) {
-              // 쪽지 목록이 비어있을 경우 "쪽지가 없습니다" 메시지 표시
-              return Container(
+        if (messages.isEmpty)
+        // 쪽지 목록이 비어있을 경우 "현재 쪽지 목록 내 쪽지가 없습니다." 메시지 표시
+          Container(
                 width: messageEmptyTextWidth,
                 height: messageEmptyTextHeight,
                 margin: EdgeInsets.only(left: messageEmptyTextX, top: messageEmptyTextY),
-                child: Text('쪽지 목록 내 쪽지가 없습니다.',
+                child: Text('현재 쪽지 목록 내 쪽지가 없습니다.',
                   style: TextStyle(
                     fontSize: messageEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
@@ -928,15 +901,11 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                     color: Colors.black,
                   ),
                 ),
-              );
-            }
-
-            // 최신 쪽지가 위로 오도록 리스트를 역순으로 정렬.
-            final reversedMessages = messagesList.reversed.toList(); // 쪽지 목록을 최신 순으로 정렬
-
+              )
+            else
             // 쪽지 목록을 열의 형태로 표시.
-            return Column(
-              children: reversedMessages.map((message) {
+            Column(
+              children: messages.map((message) {
                 // private_email_closed_button 필드값에 따라 '[O]' 또는 '[X]' 표시
                 String statusIcon = message['private_email_closed_button'] == true ? '[삭제 O]  ' : '[삭제 X]  '; // private_email_closed_button 값에 따라 상태 아이콘 설정
                 String recipientText = '${message['recipient']}'; // 수신자 이메일 텍스트 설정
@@ -1176,10 +1145,13 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                                                     ),
                                                     onYesPressed: () async {
                                                       try{
-                                                        await ref.read(fetchDeleteAllMessageProvider({
-                                                          'messageId': message['id'],
-                                                          'recipient': message['recipient'],
-                                                          }).future); // '삭제' 버튼 클릭 시 쪽지를 삭제하는 함수 호출함
+                                                        final messageId = message['id'];
+                                                        // 쪽지 삭제 처리
+                                                        await ref
+                                                            .read(
+                                                            adminMessageItemsListNotifierProvider
+                                                                .notifier)
+                                                            .deleteMessage(messageId, widget.timeFrame);
                                                           Navigator.of(context).pop(); // 다이얼로그 닫기
                                                           showCustomSnackBar(context, '쪽지가 삭제되었습니다.');
                                                        } catch (e) {
@@ -1215,11 +1187,7 @@ class _AdminMessageListScreenState extends ConsumerState<AdminMessageListScreen>
                   ),
                  );
                 }).toList(),
-               );
-              },
-              loading: () => Center(child: CircularProgressIndicator()), // 데이터 로딩 중에는 로딩 애니메이션 표시함
-              error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 발생 시 오류 메시지를 표시함
-              ),
+               ),
             ],
           );
         }

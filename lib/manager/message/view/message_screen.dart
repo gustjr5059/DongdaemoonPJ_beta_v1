@@ -95,6 +95,25 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
     super.initState();
     // ScrollController를 초기화
     adminMessageScreenPointScrollController = ScrollController();
+
+    // 스크롤 컨트롤러를 사용하여 화면의 스크롤 위치를 감지하고 페이지 끝에 도달 시 추가 데이터를 로드함
+    adminMessageScreenPointScrollController.addListener(() {
+      // 현재 스크롤 위치가 최대 스크롤 위치와 동일한지 확인함
+      if (adminMessageScreenPointScrollController.position.pixels ==
+          adminMessageScreenPointScrollController.position.maxScrollExtent) {
+        // 데이터 로드 요청
+        final selectedReceiver =
+            ref.read(selectedReceiverProvider.notifier).state; // 선택된 수신자 이메일을 읽음
+        if (selectedReceiver != null && selectedReceiver.isNotEmpty) {
+          // 선택된 수신자 이메일이 유효하면 쪽지 데이터를 더 로드함
+          ref
+              .read(adminMessageItemsListNotifierProvider
+              .notifier) // 쪽지 리스트를 관리하는 StateNotifier를 참조함
+              .loadMoreMessages(timeFrame: 30); // 추가 쪽지 데이터를 요청함
+        }
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -113,7 +132,7 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
-      // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
+      // 쪽지 관리 화면 초기화 시, 내용 선택 관리 드롭다운 메뉴 선택 상태 초기화
       ref.read(adminMessageContentProvider.notifier).state = null;
       // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
       ref.read(adminCustomMessageProvider.notifier).state = null;
@@ -121,10 +140,10 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
       ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
       // 선택된 수신자 이메일 상태 초기화
       ref.read(selectedReceiverProvider.notifier).state = null;
-      // 쪽지 관리 화면 초기화 시, 모든 계정의 쪽지 목록 상태 초기화
-      ref.invalidate(fetchMinutesAllMessagesProvider); // 1분 이내 타임의 쪽지 목록 불러옴
-      ref.invalidate(fetchDaysAllMessagesProvider); // 30일 이내 타임의 쪽지 목록 불러옴
-      ref.invalidate(fetchYearsAllMessagesProvider); // 1년(365일) 이내 타임의 쪽지 목록 불러옴
+      // 수신자 이메일 목록 초기화
+      ref.invalidate(receiversProvider);
+      // 쪽지 목록 초기화 (프로바이더를 무효화)
+      ref.read(adminMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -141,10 +160,10 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
         ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
         // 선택된 수신자 이메일 상태 초기화
         ref.read(selectedReceiverProvider.notifier).state = null;
-        // 쪽지 관리 화면 초기화 시, 모든 계정의 쪽지 목록 상태 초기화
-        ref.invalidate(fetchMinutesAllMessagesProvider); // 1분 이내 타임의 쪽지 목록 불러옴
-        ref.invalidate(fetchDaysAllMessagesProvider); // 30일 이내 타임의 쪽지 목록 불러옴
-        ref.invalidate(fetchYearsAllMessagesProvider); // 1년(365일) 이내 타임의 쪽지 목록 불러옴
+        // 수신자 이메일 목록 초기화
+        ref.invalidate(receiversProvider);
+        // 쪽지 목록 초기화 (프로바이더를 무효화)
+        ref.read(adminMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
       }
     });
 

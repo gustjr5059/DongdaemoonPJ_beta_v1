@@ -708,11 +708,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(adminMessageScreenTabProvider.notifier).state =
       MessageScreenTab.create;
   // 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 화면에서 선택된 수신자 이메일 상태 초기화
+  // 선택된 수신자 이메일 상태 초기화
   ref.read(selectedReceiverProvider.notifier).state = null;
-  // 쪽지 관리 화면 초기화 시, 모든 계정의 쪽지 목록 상태 초기화
-  ref.invalidate(fetchMinutesAllMessagesProvider); // 1분 이내 타임의 쪽지 목록 불러옴
-  ref.invalidate(fetchDaysAllMessagesProvider); // 30일 이내 타임의 쪽지 목록 불러옴
-  ref.invalidate(fetchYearsAllMessagesProvider); // 1년(365일) 이내 타임의 쪽지 목록 불러옴
+  // 수신자 이메일 목록 초기화
+  ref.invalidate(receiversProvider);
+  // 쪽지 목록 초기화 (프로바이더를 무효화)
+  ref.read(adminMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
 
   // 쪽지 관리 화면 초기화 끝
 
