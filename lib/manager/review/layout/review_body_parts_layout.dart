@@ -23,22 +23,6 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _resetForm()); // 초기화 작업을 비동기로 수행하는 코드
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Future.microtask(() => _resetForm()); // 의존성 변경 시 초기화 작업을 비동기로 수행하는 코드
-  }
-
-  void _resetForm() {
-    setState(() {
-      // 데이터를 실시간으로 반영하는 화면에서는 데이터를 불러오는 provider 초기화 로직이 화면마다의 initState()에는 필요없음!!
-      // - 이게 다른 화면으로 이동 후 사용하는 로직이므로..
-      ref.read(adminSelectedUserEmailProvider.notifier).state = null; // 선택된 사용자 이메일 초기화
-      ref.invalidate(adminDeleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
-    });
   }
 
   // review_delete_time 필드의 데이터 타입이 Timestamp로 되어 있어, 이를 DateTime으로 변환한 후, 문자열로 포맷팅하는 함수
@@ -55,7 +39,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
   Widget build(BuildContext context) {
     final selectedUserEmail = ref.watch(adminSelectedUserEmailProvider); // 선택된 사용자 이메일을 구독하는 코드
     final usersEmail = ref.watch(adminUsersEmailProvider); // 모든 사용자 이메일 목록을 구독하는 코드
-    final reviews = ref.watch(adminReviewListProvider(selectedUserEmail)); // 선택된 사용자의 리뷰 목록을 구독하는 코드
+    final reviews = ref.watch(adminReviewItemsListNotifierProvider); // 선택된 사용자의 리뷰 목록을 구독하는 코드
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -193,15 +177,13 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
           ),
         ),
         SizedBox(height: interval1Y), // 드롭다운 버튼과 리뷰 목록 사이의 간격을 설정하는 코드
-        reviews.when(
-          data: (reviewList) {
-            if (reviewList.isEmpty) {
+            if (reviews.isEmpty)
               // 리뷰 목록이 비어있을 경우 "리뷰 목록 내 리뷰가 없습니다." 메시지 표시
-              return Container(
+              Container(
                 width: reviewEmptyTextWidth,
                 height: reviewEmptyTextHeight,
                 margin: EdgeInsets.only(left: reviewEmptyTextX, top: reviewEmptyTextY),
-                child: Text('리뷰 목록 내 리뷰가 없습니다.',
+                child: Text('현재 리뷰 목록 내 리뷰가 없습니다.',
                   style: TextStyle(
                     fontSize: reviewEmptyTextFontSize,
                     fontFamily: 'NanumGothic',
@@ -209,13 +191,12 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                     color: Colors.black,
                   ),
                 ),
-              );
-            }
-
-            return SingleChildScrollView(
+              )
+            else
+            SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: reviewList.asMap().entries.map((entry) {
+                children: reviews.asMap().entries.map((entry) {
                   final index = entry.key; // 현재 리뷰 항목의 인덱스
                   final review = entry.value; // 현재 리뷰 항목의 데이터
                   final reviewImages = [
@@ -484,10 +465,12 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                             ),
                                             onYesPressed: () async {
                                               try {
-                                                await ref.read(adminDeleteReviewProvider({
-                                                  'userEmail': selectedUserEmail!, // 선택된 사용자 이메일 전달
-                                                  'separatorKey': review['separator_key'], // 리뷰의 고유 키 전달
-                                                }).future);
+                                                // 리뷰 삭제 처리
+                                                await ref
+                                                    .read(
+                                                    adminReviewItemsListNotifierProvider
+                                                        .notifier)
+                                                    .deleteReview(review['separator_key']);
                                                 Navigator.of(context).pop(); // 다이얼로그 닫기
                                                  // 리뷰 삭제 완료 메시지 표시
                                                 showCustomSnackBar(context, '리뷰가 삭제되었습니다.');
@@ -519,11 +502,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                     );
                     }).toList(),
                   ),
-                );
-              },
-              loading: () => Center(child: CircularProgressIndicator()), // 리뷰 로딩 중에 표시할 로딩 스피너
-              error: (error, stack) => Center(child: Text('리뷰를 불러오는 중 오류가 발생했습니다.')), // 리뷰 로딩 중 오류 발생 시 표시할 텍스트
-            ),
+                ),
           ],
         );
       }

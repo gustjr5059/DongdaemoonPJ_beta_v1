@@ -684,11 +684,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
   // 리뷰 관리 화면 초기화 시작
   ref.read(adminReviewScrollPositionProvider.notifier).state = 0.0;
-  ref.invalidate(adminUsersEmailProvider); // 사용자 이메일 목록 초기화
-  ref.invalidate(adminReviewListProvider); // 리뷰 목록 초기화
-  ref.invalidate(adminDeleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
-  ref.read(adminSelectedUserEmailProvider.notifier).state =
-      null; // 선택된 사용자 이메일 초기화
+  // 선택된 사용자 이메일 초기화
+  ref.read(adminSelectedUserEmailProvider.notifier).state = null;
+  // 사용자 이메일 목록 초기화
+  ref.invalidate(adminUsersEmailProvider);
+  // 리뷰 목록 초기화 (프로바이더를 무효화)
+  ref.invalidate(adminReviewItemsListNotifierProvider);
   // 리뷰 관리 화면 초기화 끝
 
   // 쪽지 관리 화면 초기화 시작

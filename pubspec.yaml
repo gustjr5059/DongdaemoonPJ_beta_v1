@@ -94,10 +94,10 @@ dev_dependencies:
 
   # ios도 true로 하고, flutter clean -> flutter pub get -> flutter pub run flutter_launcher_icons:main 명령어 입력 시,
   # 필요 해상도별 아이콘 이미지 생성됨 (기본 이미지는 1024x1024로 설정)
-#  flutter_icons:
-#    android: false  # 안드로이드 아이콘 생성 활성화
-#    ios: false  # iOS 아이콘 생성 활성화
-#    image_path: "asset/img/misc/app_icon_img/common_img_1024x1024.png"  # 앱 아이콘 경로
+flutter_icons:
+    android: true  # 안드로이드 아이콘 생성 활성화
+    ios: true  # iOS 아이콘 생성 활성화
+    image_path: "asset/img/misc/app_icon_img/common_img_1024x1024.png"  # 앱 아이콘 경로
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
