@@ -50,6 +50,10 @@ class _PrivateReviewCreateDetailFormScreenState
   final ImagePicker _picker =
       ImagePicker(); // 갤러리에서 이미지를 선택하기 위한 ImagePicker 객체
 
+  FocusNode _reviewTitleFocusNode = FocusNode();
+  FocusNode _reviewPhotoFocusNode = FocusNode();
+  FocusNode _reviewContentsFocusNode = FocusNode();
+
   // ----- 리뷰 사진 업로드 관련 함수 시작 부분
   // 권한 요청 함수
   // _requestPermission: 갤러리 접근을 위한 권한을 요청하는 함수
@@ -136,7 +140,11 @@ class _PrivateReviewCreateDetailFormScreenState
   Widget build(BuildContext context) {
     // 화면의 UI를 그리기 위한 build 메소드
 
-    final numberFormat = NumberFormat('###,###'); // 숫자 형식을 지정하기 위한 formatter
+    // 날짜 형식을 'yyyy.MM.dd'로 지정함
+    final dateFormat = DateFormat('yyyy.MM.dd');
+
+    // 숫자 형식을 '###,###'로 지정함
+    final numberFormat = NumberFormat('###,###');
 
     // 결제 완료 날짜를 비동기로 가져오기 위해 AsyncValue로 저장
     final paymentCompleteDateAsyncValue = ref
@@ -181,13 +189,13 @@ class _PrivateReviewCreateDetailFormScreenState
 
     // 텍스트 크기 계산
     final double reviewDtInfoTitleFontSize =
-        screenSize.height * (20 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
     final double reviewDtInfoOrderDateDataFontSize =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
     final double reviewDtInfoOrderNumberDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double reviewDtInfoBriefIntroDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double reviewDtInfoProdNumberDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double reviewDtInfoOriginalPriceDataFontSize =
@@ -229,319 +237,361 @@ class _PrivateReviewCreateDetailFormScreenState
     final double interval3Y =
         screenSize.height * (20 / referenceHeight); // 세로 간격 3 계산
     final double interval4Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 3 계산
+        screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
     final double interval1X =
         screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
     final double interval2X =
         screenSize.width * (19 / referenceWidth); // 가로 간격 2 계산
     final double interval3X =
-        screenSize.width * (8 / referenceWidth); // 가로 간격 2 계산
+        screenSize.width * (8 / referenceWidth); // 가로 간격 3 계산
+    final double interval4X =
+        screenSize.width * (10 / referenceWidth); // 가로 간격 4 계산
+    final double interval5X =
+        screenSize.width * (50 / referenceWidth); // 가로 간격 4 계산
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '[리뷰 상품 내용]',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
-            fontSize: reviewDtInfoTitleFontSize,
-            color: BLACK_COLOR,
+        SizedBox(height: interval4Y),
+        Container(
+          padding: EdgeInsets.only(left: interval4X),
+          child: Text(
+            '리뷰 상품 내용',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: 'NanumGothic',
+              fontSize: reviewDtInfoTitleFontSize,
+              color: BLACK_COLOR,
+            ),
           ),
         ),
-        SizedBox(height: interval4Y), // 요소 간의 간격을 추가
-        // 상품 정보 표시 UI
-        // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-          child: Container(
-            color: Color(0xFFF3F3F3), // 배경색 설정
-            child: CommonCardView(
-              backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
-              elevation: 0, // 그림자 깊이 설정
-              content: Padding(
-                padding: EdgeInsets.zero, // 패딩을 없앰
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 발주번호를 표시하는 행을 빌드함
-                    _buildProductInfoRow(
-                        context, '발주번호: ', widget.numberInfo['order_number'],
-                        bold: true,
-                        fontSize: reviewDtInfoOrderNumberDataFontSize),
-                    // 상품번호를 표시하는 행을 빌드함
-                    _buildProductInfoRow(
-                        context,
-                        '상품번호: ',
-                        widget.productInfo['product_number']
-                                    ?.toString()
-                                    .isNotEmpty ==
-                                true
-                            ? widget.productInfo['product_number']
-                            : '에러 발생',
-                        bold: true,
-                        fontSize: reviewDtInfoProdNumberDataFontSize),
-                    SizedBox(height: interval2Y), // 요소 간의 간격을 추가
-                    // 상품 간단 소개를 표시하는 행을 빌드함
-                    _buildProductInfoRow(
-                        context,
-                        widget.productInfo['brief_introduction']
-                                    ?.toString()
-                                    .isNotEmpty ==
-                                true
-                            ? widget.productInfo['brief_introduction']
-                            : '에러 발생',
-                        '',
-                        bold: true,
-                        fontSize: reviewDtInfoBriefIntroDataFontSize),
-                    SizedBox(height: interval1Y), // 요소 간의 간격을 추가
-                    // 상품 이미지를 클릭했을 때 상품 상세 화면으로 이동하는 기능을 추가함
-                    GestureDetector(
-                      onTap: () {
-                        final product = ProductContent(
-                          docId: widget.productInfo['product_id'] ?? '',
-                          category:
-                              widget.productInfo['category']?.toString() ??
-                                  '에러 발생',
-                          productNumber: widget.productInfo['product_number']
-                                  ?.toString() ??
-                              '에러 발생',
-                          thumbnail:
-                              widget.productInfo['thumbnails']?.toString() ??
-                                  '',
-                          briefIntroduction: widget
-                                  .productInfo['brief_introduction']
-                                  ?.toString() ??
-                              '에러 발생',
-                          originalPrice:
-                              widget.productInfo['original_price'] ?? 0,
-                          discountPrice:
-                              widget.productInfo['discount_price'] ?? 0,
-                          discountPercent:
-                              widget.productInfo['discount_percent'] ?? 0,
-                        );
-                        // 상품 상세 화면으로 이동
-                        navigatorProductDetailScreen.navigateToDetailScreen(
-                            context, product);
-                      },
-                      // 상품 정보를 표시하는 카드뷰 생성
-                      child: Container(
-                        width: reviewDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
-                        height: reviewDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
-                        // color: Color(0xFFF3F3F3), // 배경색 설정
-                        child: CommonCardView(
-                          // backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
-                          backgroundColor: Color(0xFFF3F3F3),
-                          elevation: 0, // 그림자 깊이 설정
-                          // padding: EdgeInsets.zero, // 패딩을 없앰
-                          content: Padding(
-                            padding: EdgeInsets.zero, // 패딩을 없앰
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom:
+                  BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
+            ),
+          ),
+          child: CommonCardView(
+            backgroundColor:
+                Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+            elevation: 0, // 그림자 깊이 설정
+            content: Padding(
+              padding: EdgeInsets.zero, // 패딩을 없앰
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 발주번호를 표시하는 행을 빌드함
+                  _buildProductInfoRow(
+                      context,
+                      '발주번호: ',
+                      widget.numberInfo['order_number']
+                                  ?.toString()
+                                  .isNotEmpty ==
+                              true
+                          ? widget.numberInfo['order_number']
+                          : '',
+                      bold: true,
+                      fontSize: reviewDtInfoOrderNumberDataFontSize),
+                  // 상품번호를 표시하는 행을 빌드함
+                  _buildProductInfoRow(
+                      context,
+                      '상품번호: ',
+                      widget.productInfo['product_number']
+                                  ?.toString()
+                                  .isNotEmpty ==
+                              true
+                          ? widget.productInfo['product_number']
+                          : '',
+                      bold: true,
+                      fontSize: reviewDtInfoProdNumberDataFontSize),
+                  SizedBox(height: interval2Y), // 요소 간의 간격을 추가
+                  // 상품 간단 소개를 표시하는 행을 빌드함
+                  _buildProductInfoRow(
+                      context,
+                      widget.productInfo['brief_introduction']
+                                  ?.toString()
+                                  .isNotEmpty ==
+                              true
+                          ? widget.productInfo['brief_introduction']
+                          : '',
+                      '',
+                      bold: true,
+                      fontSize: reviewDtInfoBriefIntroDataFontSize),
+                  SizedBox(height: interval1Y), // 요소 간의 간격을 추가
+                  // 상품 이미지를 클릭했을 때 상품 상세 화면으로 이동하는 기능을 추가함
+                  GestureDetector(
+                    onTap: () {
+                      final product = ProductContent(
+                        docId: widget.productInfo['product_id'] ?? '',
+                        category:
+                            widget.productInfo['category']?.toString() ?? '',
+                        productNumber:
+                            widget.productInfo['product_number']?.toString() ??
+                                '',
+                        thumbnail:
+                            widget.productInfo['thumbnails']?.toString() ?? '',
+                        briefIntroduction: widget
+                                .productInfo['brief_introduction']
+                                ?.toString() ??
+                            '',
+                        originalPrice:
+                            widget.productInfo['original_price'] ?? 0,
+                        discountPrice:
+                            widget.productInfo['discount_price'] ?? 0,
+                        discountPercent:
+                            widget.productInfo['discount_percent'] ?? 0,
+                      );
+                      // 상품 상세 화면으로 이동
+                      navigatorProductDetailScreen.navigateToDetailScreen(
+                          context, product);
+                    },
+                    // 상품 정보를 표시하는 카드뷰 생성
+                    child: CommonCardView(
+                      backgroundColor: Theme.of(context)
+                          .scaffoldBackgroundColor, // 앱 기본 배경색,
+                      elevation: 0, // 그림자 깊이 설정
+                      // padding: EdgeInsets.zero, // 패딩을 없앰
+                      content: Padding(
+                        padding: EdgeInsets.zero, // 패딩을 없앰
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      // 상품 썸네일 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
-                                      child: widget.productInfo['thumbnails']
-                                                  ?.toString()
-                                                  .isNotEmpty ==
-                                              true
-                                          ? Image.network(
-                                              widget.productInfo['thumbnails'],
-                                              fit: BoxFit.cover)
-                                          : Icon(Icons.image_not_supported),
-                                    ),
-                                    SizedBox(width: interval1X), // 요소 간의 간격을 추가
-                                    Expanded(
-                                      flex: 7,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                Expanded(
+                                  flex: 3,
+                                  // 상품 썸네일 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
+                                  child: widget.productInfo['thumbnails']
+                                              ?.toString()
+                                              .isNotEmpty ==
+                                          true
+                                      ? Image.network(
+                                          widget.productInfo['thumbnails'],
+                                          fit: BoxFit.cover,
+                                          // 이미지 로드 실패 시 아이콘 표시
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Icon(
+                                            Icons.image_not_supported,
+                                            color: GRAY88_COLOR,
+                                            size: interval5X,
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.image_not_supported,
+                                          color: GRAY88_COLOR,
+                                          size: interval5X,
+                                        ),
+                                ),
+                                SizedBox(width: interval1X), // 요소 간의 간격을 추가
+                                Expanded(
+                                  flex: 7,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // 원래 가격을 표시하는 텍스트
+                                      Text(
+                                        '${numberFormat.format(widget.productInfo['original_price']?.toString().isNotEmpty == true ? widget.productInfo['original_price'] : '')} 원',
+                                        style: TextStyle(
+                                          color: GRAY60_COLOR,
+                                          // 텍스트 색상 설정
+                                          fontSize:
+                                              reviewDtInfoOriginalPriceDataFontSize,
+                                          fontFamily: 'NanumGothic',
+                                          decoration: TextDecoration
+                                              .lineThrough, // 취소선 추가
+                                        ),
+                                      ),
+                                      // 할인된 가격과 할인율을 표시하는 행을 빌드함
+                                      Row(
                                         children: [
-                                          // 원래 가격을 표시하는 텍스트
                                           Text(
-                                            '${numberFormat.format(widget.productInfo['original_price'] ?? 0)} 원',
+                                            '${numberFormat.format(widget.productInfo['discount_price']?.toString().isNotEmpty == true ? widget.productInfo['discount_price'] : '')} 원',
                                             style: TextStyle(
-                                              color: Color(0xFF999999),
+                                              fontWeight: FontWeight.bold,
+                                              color: BLACK_COLOR,
                                               // 텍스트 색상 설정
                                               fontSize:
-                                                  reviewDtInfoOriginalPriceDataFontSize,
+                                                  reviewDtInfoDiscountPriceDataFontSize,
                                               fontFamily: 'NanumGothic',
-                                              decoration: TextDecoration
-                                                  .lineThrough, // 취소선 추가
                                             ),
                                           ),
-                                          // 할인된 가격과 할인율을 표시하는 행을 빌드함
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '${numberFormat.format(widget.productInfo['discount_price'] ?? 0)} 원',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                  // 텍스트 색상 설정
-                                                  fontSize:
-                                                      reviewDtInfoDiscountPriceDataFontSize,
-                                                  fontFamily: 'NanumGothic',
-                                                ),
-                                              ),
-                                              SizedBox(width: interval2X),
-                                              // 요소 간의 간격을 추가
-                                              Text(
-                                                '${(widget.productInfo['discount_percent'] ?? 0).toInt()}%',
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize:
-                                                      reviewDtInfoDiscountPercentDataFontSize,
-                                                  fontFamily: 'NanumGothic',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          // 선택한 색상 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
-                                          Row(
-                                            children: [
-                                              widget.productInfo[
-                                                              'selected_color_image']
-                                                          ?.toString()
-                                                          .isNotEmpty ==
-                                                      true
-                                                  ? Image.network(
-                                                      widget.productInfo[
-                                                          'selected_color_image'],
-                                                      height:
-                                                          reviewDtInfoColorImageDataWidth,
-                                                      width:
-                                                          reviewDtInfoColorImageDataHeight,
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Icon(
-                                                      Icons.image_not_supported,
-                                                      size: 20),
-                                              SizedBox(width: interval3X),
-                                              // 요소 간의 간격을 추가
-                                              // 선택한 색상 텍스트를 표시함
-                                              Text(
-                                                widget.productInfo[
-                                                            'selected_color_text']
-                                                        ?.toString() ??
-                                                    '에러 발생',
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      reviewDtInfoColorTextDataFontSize,
-                                                  fontFamily: 'NanumGothic',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          // 선택한 사이즈와 수량을 표시하는 텍스트
+                                          SizedBox(width: interval2X),
+                                          // 요소 간의 간격을 추가
                                           Text(
-                                            '사이즈: ${widget.productInfo['selected_size']?.toString() ?? '에러 발생'}',
+                                            '${numberFormat.format(widget.productInfo['discount_percent']?.toString().isNotEmpty == true ? widget.productInfo['discount_percent'] : '')}%',
                                             style: TextStyle(
-                                              fontSize:
-                                                  reviewDtInfoSizeTextDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              color: RED46_COLOR,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          Text(
-                                            '수량: ${widget.productInfo['selected_count']?.toString() ?? '0 개'}',
-                                            style: TextStyle(
                                               fontSize:
-                                                  reviewDtInfoCountTextDataFontSize,
+                                                  reviewDtInfoDiscountPercentDataFontSize,
                                               fontFamily: 'NanumGothic',
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                      // 선택한 색상 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
+                                      Row(
+                                        children: [
+                                          widget.productInfo[
+                                                          'selected_color_image']
+                                                      ?.toString()
+                                                      .isNotEmpty ==
+                                                  true
+                                              ? Image.network(
+                                                  widget.productInfo[
+                                                      'selected_color_image'],
+                                                  height:
+                                                      reviewDtInfoColorImageDataWidth,
+                                                  width:
+                                                      reviewDtInfoColorImageDataHeight,
+                                                  fit: BoxFit.cover,
+                                                  // 이미지 로드 실패 시 아이콘 표시
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Icon(
+                                                    Icons.image_not_supported,
+                                                    color: GRAY88_COLOR,
+                                                    size:
+                                                        reviewDtInfoColorImageDataHeight,
+                                                  ),
+                                                )
+                                              : Icon(
+                                                  Icons.image_not_supported,
+                                                  color: GRAY88_COLOR,
+                                                  size:
+                                                      reviewDtInfoColorImageDataHeight,
+                                                ),
+                                          SizedBox(width: interval3X),
+                                          // 요소 간의 간격을 추가
+                                          // 선택한 색상 텍스트를 표시함
+                                          Text(
+                                            widget.productInfo[
+                                                            'selected_color_text']
+                                                        ?.toString()
+                                                        .isNotEmpty ==
+                                                    true
+                                                ? widget.productInfo[
+                                                    'selected_color_text']
+                                                : '',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize:
+                                                  reviewDtInfoColorTextDataFontSize,
+                                              fontFamily: 'NanumGothic',
+                                              fontWeight: FontWeight.bold,
+                                              color: BLACK_COLOR,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // 선택한 사이즈와 수량을 표시하는 텍스트
+                                      Text(
+                                        '${widget.productInfo['selected_size']?.toString().isNotEmpty == true ? widget.productInfo['selected_size'] : ''}',
+                                        style: TextStyle(
+                                          fontSize:
+                                              reviewDtInfoSizeTextDataFontSize,
+                                          fontFamily: 'NanumGothic',
+                                          fontWeight: FontWeight.bold,
+                                          color: BLACK_COLOR,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.productInfo['selected_count']?.toString().isNotEmpty == true ? widget.productInfo['selected_count'] : ''}개',
+                                        style: TextStyle(
+                                          fontSize:
+                                              reviewDtInfoCountTextDataFontSize,
+                                          fontFamily: 'NanumGothic',
+                                          fontWeight: FontWeight.bold,
+                                          color: BLACK_COLOR,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
-                    SizedBox(height: interval4Y), // 요소 간의 간격을 추가
-                    // 발주 일자를 표시하는 행을 빌드함
-                    _buildProductInfoRow(
-                        context,
-                        '발주일자: ',
-                        orderDate != null
-                            ? DateFormat('yyyy-MM-dd').format(orderDate)
-                            : '에러 발생',
-                        bold: true,
-                        fontSize: reviewDtInfoDateTextDataFontSize),
-                    // 결제 완료 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
-                    paymentCompleteDateAsyncValue.when(
-                      data: (date) {
-                        if (date != null) {
-                          return Text(
-                            '결제완료일: ${DateFormat('yyyy-MM-dd').format(date)}',
-                            style: TextStyle(
-                              fontSize: reviewDtInfoDateTextDataFontSize,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
-                              color: Colors.black,
-                            ),
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      },
-                      loading: () => CircularProgressIndicator(),
-                      error: (error, stack) => Text('오류 발생'),
-                    ),
-                    // 배송 시작 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
-                    deliveryStartDateAsyncValue.when(
-                      data: (date) {
-                        if (date != null) {
-                          return Text(
-                            '배송시작일: ${DateFormat('yyyy-MM-dd').format(date)}',
-                            style: TextStyle(
-                              fontSize: reviewDtInfoDateTextDataFontSize,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
-                              color: Colors.black,
-                            ),
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      },
-                      loading: () => CircularProgressIndicator(),
-                      error: (error, stack) => Text('오류 발생'),
-                    ),
-                    // 추가적인 상품 정보 표시 또는 기타 UI 요소
-                  ],
-                ),
+                  ),
+                  SizedBox(height: interval4Y), // 요소 간의 간격을 추가
+                  // 발주 일자를 표시하는 행을 빌드함
+                  _buildProductInfoRow(context, '발주일자: ',
+                      orderDate != null ? dateFormat.format(orderDate) : '',
+                      bold: true, fontSize: reviewDtInfoDateTextDataFontSize),
+                  // 결제 완료 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
+                  paymentCompleteDateAsyncValue.when(
+                    data: (date) {
+                      if (date != null) {
+                        return Text(
+                          '결제완료일: ${date != null ? dateFormat.format(date) : ''}',
+                          style: TextStyle(
+                            fontSize: reviewDtInfoDateTextDataFontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'NanumGothic',
+                            color: BLACK_COLOR,
+                          ),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
+                    // 데이터가 로딩 중인 경우
+                    loading: () => buildCommonLoadingIndicator(),
+                    // 에러가 발생한 경우
+                    error: (e, stack) =>
+                        const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
+                  ),
+                  // 배송 시작 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
+                  deliveryStartDateAsyncValue.when(
+                    data: (date) {
+                      if (date != null) {
+                        return Text(
+                          '배송시작일: ${date != null ? dateFormat.format(date) : ''}',
+                          style: TextStyle(
+                            fontSize: reviewDtInfoDateTextDataFontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'NanumGothic',
+                            color: BLACK_COLOR,
+                          ),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
+                    // 데이터가 로딩 중인 경우
+                    loading: () => buildCommonLoadingIndicator(),
+                    // 에러가 발생한 경우
+                    error: (e, stack) =>
+                        const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
+                  ),
+                  // 추가적인 상품 정보 표시 또는 기타 UI 요소
+                ],
               ),
             ),
           ),
         ),
         SizedBox(height: interval3Y), // 요소 간의 간격을 추가
-        Text(
-          '[리뷰 작성 상세 내용]',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
-            fontSize: reviewDtInfoTitleFontSize,
-            color: Colors.black,
+        Container(
+          padding: EdgeInsets.only(left: interval4X),
+          child: Text(
+            '리뷰 작성 내용',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: 'NanumGothic',
+              fontSize: reviewDtInfoTitleFontSize,
+              color: BLACK_COLOR,
+            ),
           ),
         ),
         SizedBox(height: interval4Y), // 요소 간의 간격을 추가
         // 리뷰 제목을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
-        _buildTitleRow('리뷰 제목', widget.titleController, '50자 이내로 작성 가능합니다.'),
+        _buildTitleRow(context, '리뷰 제목', widget.titleController,
+            _reviewTitleFocusNode, '50자 이내로 작성 가능합니다.'),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         // 작성자 정보를 표시하는 행을 빌드하는 함수 호출
         _buildUserRow(ref, '작성자', widget.userEmail),
@@ -550,8 +600,8 @@ class _PrivateReviewCreateDetailFormScreenState
         _buildPhotoUploadRow('리뷰 사진', context),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         // 리뷰 내용을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
-        _buildContentsRow(
-            '리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'),
+        _buildContentsRow(context, '리뷰 내용', widget.contentController,
+            _reviewContentsFocusNode, '300자 이내로 작성 가능합니다.'),
         SizedBox(height: interval4Y), // 제출 버튼과의 간격을 위해 여백 추가
         // 제출 버튼을 빌드하는 함수 호출
         _buildSubmitButton(context),
@@ -574,9 +624,6 @@ class _PrivateReviewCreateDetailFormScreenState
     final double interval1X = screenSize.width * (4 / referenceWidth);
     final double interval1Y = screenSize.height * (2 / referenceHeight);
 
-    // return Padding(
-    //   padding: EdgeInsets.symmetric(vertical: interval1Y),
-    //   child: Row(
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -594,12 +641,12 @@ class _PrivateReviewCreateDetailFormScreenState
         // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
         Expanded(
           child: Text(
-            value,
+            value ?? '',
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
               fontFamily: 'NanumGothic',
-              color: Colors.black,
+              color: BLACK_COLOR,
             ),
             textAlign: TextAlign.start, // 텍스트를 시작 부분에 맞춤
             softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정
@@ -611,9 +658,10 @@ class _PrivateReviewCreateDetailFormScreenState
     );
   }
 
-// 제목 행을 생성하는 함수
-  Widget _buildTitleRow(
-      String label, TextEditingController controller, String hintText) {
+  // 제목 행을 생성하는 함수
+  Widget _buildTitleRow(BuildContext context, String label,
+      TextEditingController controller, FocusNode focusNode, String hintText,
+      {bool isEnabled = true}) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -625,94 +673,154 @@ class _PrivateReviewCreateDetailFormScreenState
     final double interval1X = screenSize.width * (4 / referenceWidth);
     final double interval1Y = screenSize.height * (2 / referenceHeight);
     final double interval2Y = screenSize.height * (4 / referenceHeight);
+    final double interval2X = screenSize.width * (8 / referenceWidth);
+    final double interval3X = screenSize.width * (10 / referenceWidth);
     final double reviewInfoRowTextFontSize =
         screenSize.height * (14 / referenceHeight);
     final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
     final double reviewInfoRowHeight =
-        screenSize.width * (50 / referenceHeight);
+        screenSize.width * (90 / referenceHeight);
 
-    return Padding(
-      // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: EdgeInsets.symmetric(vertical: interval1Y),
-      // 행의 상하단에 2.0 픽셀의 여백 추가
-      child: Column(
-        // 요소들을 세로로 배치하기 위해 Column 사용
-        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
-        children: [
-          IntrinsicHeight(
-            // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
-            child: Row(
-              // 요소들을 가로로 배치하기 위해 Row 사용
-              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
-              children: [
-                Container(
-                  // 제목 라벨을 위한 컨테이너 생성
-                  width: reviewInfoRowWidth,
-                  height: reviewInfoRowHeight,
-                  // 왼쪽 라벨 부분의 너비 설정
-                  color: Color(0xFFF2F2F2),
-                  // // 셀 배경색 설정
-                  // padding: const EdgeInsets.all(8.0),
-                  // 셀 내부 여백 설정
-                  alignment: Alignment.center,
-                  // 텍스트를 왼쪽 정렬
-                  child: Text(
-                    label, // 셀에 표시될 텍스트
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
-                      fontSize: reviewInfoRowTextFontSize,
-                      color: Colors.black,
-                    ), // 텍스트를 굵게 설정
-                  ),
-                ),
-                SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
-                Expanded(
-                  // 오른쪽 TextField가 남은 공간을 채우도록 설정
-                  child: TextField(
-                    // 사용자로부터 텍스트를 입력받기 위한 필드
-                    controller: controller, // 텍스트 필드 컨트롤러 설정
-                    maxLength: 50, // 최대 글자 수 설정
-                    maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
-                    decoration: InputDecoration(
-                      // 텍스트 필드의 외관을 설정
-                      hintText: hintText, // 힌트 텍스트 설정
-                      border: OutlineInputBorder(), // 입력 경계선 설정
-                      focusedBorder: OutlineInputBorder(
-                        // 활성화 상태의 테두리 설정
-                        borderSide: BorderSide(
-                            color: Color(0xFF6FAD96),
-                            width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+    // FocusNode의 상태 변화 감지 리스너 추가
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // FocusNode의 상태 변화 감지 리스너
+        focusNode.addListener(() {
+          // FocusNode 상태 변경 시 UI 업데이트
+          setState(() {});
+        });
+
+        return Padding(
+          // 패딩을 추가하여 요소 주위에 여백을 줌
+          padding: EdgeInsets.symmetric(
+              horizontal: interval3X, vertical: interval1Y),
+          // 행의 상하단에 2.0 픽셀의 여백 추가
+          child: Column(
+            // 요소들을 세로로 배치하기 위해 Column 사용
+            crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+            children: [
+              IntrinsicHeight(
+                // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+                child: Row(
+                  // 요소들을 가로로 배치하기 위해 Row 사용
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // 자식 위젯들을 위아래로 늘림
+                  children: [
+                    Container(
+                      // 제목 라벨을 위한 컨테이너 생성
+                      width: reviewInfoRowWidth,
+                      height: reviewInfoRowHeight,
+                      // 왼쪽 라벨 부분의 너비 설정
+                      decoration: BoxDecoration(
+                        // color: GRAY96_COLOR,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        // 앱 기본 배경색
+                        border: Border.all(color: GRAY83_COLOR, width: 1),
+                        // 윤곽선
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
+                      alignment: Alignment.center,
+                      // 텍스트를 왼쪽 정렬
+                      child: Text(
+                        label, // 셀에 표시될 텍스트
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumGothic',
+                          fontSize: reviewInfoRowTextFontSize,
+                          color: BLACK_COLOR,
+                        ), // 텍스트를 굵게 설정
+                      ),
                     ),
-                  ),
+                    SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
+                    Expanded(
+                      // 오른쪽 TextField가 남은 공간을 채우도록 설정
+                      child: Container(
+                        // 데이터 셀의 너비 설정
+                        decoration: BoxDecoration(
+                          // color: GRAY96_COLOR,
+                          color: Theme.of(context)
+                              .scaffoldBackgroundColor, // 앱 기본 배경색
+                          border: Border.all(
+                            color: focusNode.hasFocus
+                                ? ORANGE56_COLOR
+                                : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
+                            width: 1.0,
+                          ), // 윤곽선
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: interval2X),
+                        alignment: Alignment.centerLeft, // 텍스트 정
+                        child: GestureDetector(
+                          onTap: isEnabled
+                              ? () {
+                                  FocusScope.of(context).requestFocus(
+                                      focusNode); // 행을 탭할 때 포커스를 설정
+                                }
+                              : null,
+                          child: AbsorbPointer(
+                            absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
+                            child: TextField(
+                              controller: controller,
+                              // 텍스트 필드 컨트롤러 설정
+                              focusNode: focusNode,
+                              // 텍스트 필드 포커스 노드 설정
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic',
+                                fontSize: reviewInfoRowTextFontSize,
+                                color: BLACK_COLOR,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              // 텍스트 필드 스타일 설정
+                              decoration: InputDecoration(
+                                hintText: hintText,
+                                // 힌트 텍스트 설정
+                                hintStyle: TextStyle(color: GRAY74_COLOR),
+                                // 힌트 텍스트 색상 설정
+                                hintMaxLines: 2,
+                                // 힌트 텍스트 최대 줄 수 설정
+                                border: InputBorder.none,
+                                // 입력 경계선 제거
+                                isDense: true,
+                                // 간격 설정
+                                contentPadding: EdgeInsets.zero,
+                                // 내용 여백 제거
+                                counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
+                              ),
+                              maxLines: null,
+                              // 최대 줄 수 설정
+                              maxLength: 50, // 최대 글자 수 설정
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
+              Align(
+                // 글자 수 표시를 오른쪽에 맞춤
+                alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
+                child: ValueListenableBuilder<TextEditingValue>(
+                  // 텍스트 입력 시마다 변경사항을 반영
+                  valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
+                  builder: (context, value, child) {
+                    return Text(
+                      // 입력된 글자 수를 표시
+                      '${value.text.length}/50', // 글자 수를 반영
+                      style: TextStyle(
+                        color: GRAY83_COLOR,
+                        fontFamily: 'NanumGothic',
+                        fontSize: reviewInfoRowTextFontSize,
+                      ), // 글자 수 표시 스타일
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
-          Align(
-            // 글자 수 표시를 오른쪽에 맞춤
-            alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
-            child: ValueListenableBuilder<TextEditingValue>(
-              // 텍스트 입력 시마다 변경사항을 반영
-              valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
-              builder: (context, value, child) {
-                return Text(
-                  // 입력된 글자 수를 표시
-                  '${value.text.length}/50', // 글자 수를 반영
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontFamily: 'NanumGothic',
-                    fontSize: reviewInfoRowTextFontSize,
-                  ), // 글자 수 표시 스타일
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -729,113 +837,10 @@ class _PrivateReviewCreateDetailFormScreenState
             '*' * (userName.length - 1); // 사용자 이름을 첫 글자만 남기고 나머지는 *로 표시
         return _buildFixedValueRow(label, obscuredName); // 이름을 표시하는 행을 생성
       },
-      loading: () => CircularProgressIndicator(), // 로딩 중인 경우 로딩 인디케이터를 표시
-      error: (error, stack) => Text('알 수 없음'), // 에러가 발생한 경우 '알 수 없음'을 표시
-    );
-  }
-
-  // 내용 입력 필드를 생성하는 함수
-  Widget _buildContentsRow(
-      String label, TextEditingController controller, String hintText) {
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 컨텐츠 사이의 간격 수치
-    final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
-    final double reviewInfoRowTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
-    final double reviewInfoRowHeight =
-        screenSize.width * (50 / referenceHeight);
-
-    return Padding(
-      // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: EdgeInsets.symmetric(vertical: interval1Y),
-      // 행의 상하단에 2.0 픽셀의 여백 추가
-      child: Column(
-        // 요소들을 세로로 배치하기 위해 Column 사용
-        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
-        children: [
-          IntrinsicHeight(
-            // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
-            child: Row(
-              // 요소들을 가로로 배치하기 위해 Row 사용
-              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
-              children: [
-                Container(
-                  // 제목 라벨을 위한 컨테이너 생성
-                  width: reviewInfoRowWidth,
-                  height: reviewInfoRowHeight,
-                  // 왼쪽 라벨 부분의 너비 설정
-                  color: Color(0xFFF2F2F2),
-                  // // 셀 배경색 설정
-                  // padding: const EdgeInsets.all(8.0),
-                  // 셀 내부 여백 설정
-                  alignment: Alignment.center,
-                  // 텍스트를 왼쪽 정렬
-                  child: Text(
-                    label, // 셀에 표시될 텍스트
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
-                      fontSize: reviewInfoRowTextFontSize,
-                      color: Colors.black,
-                    ), // 텍스트를 굵게 설정
-                  ),
-                ),
-                SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
-                Expanded(
-                  // 오른쪽 TextField가 남은 공간을 채우도록 설정
-                  child: TextField(
-                    // 사용자로부터 텍스트를 입력받기 위한 필드
-                    controller: controller, // 텍스트 필드 컨트롤러 설정
-                    maxLength: 300, // 최대 글자 수 설정
-                    maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
-                    decoration: InputDecoration(
-                      // 텍스트 필드의 외관을 설정
-                      hintText: hintText, // 힌트 텍스트 설정
-                      border: OutlineInputBorder(), // 입력 경계선 설정
-                      focusedBorder: OutlineInputBorder(
-                        // 활성화 상태의 테두리 설정
-                        borderSide: BorderSide(
-                            color: Color(0xFF6FAD96),
-                            width: 2.0), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
-                      ),
-                      counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
-          Align(
-            // 글자 수 표시를 오른쪽에 맞춤
-            alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
-            child: ValueListenableBuilder<TextEditingValue>(
-              // 텍스트 입력 시마다 변경사항을 반영
-              valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
-              builder: (context, value, child) {
-                return Text(
-                  // 입력된 글자 수를 표시
-                  '${value.text.length}/300', // 글자 수를 반영
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontFamily: 'NanumGothic',
-                    fontSize: reviewInfoRowTextFontSize,
-                  ), // 글자 수 표시 스타일
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      // 데이터가 로딩 중인 경우
+      loading: () => buildCommonLoadingIndicator(),
+      // 에러가 발생한 경우
+      error: (e, stack) => const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
     );
   }
 
@@ -852,15 +857,18 @@ class _PrivateReviewCreateDetailFormScreenState
     final double interval1X = screenSize.width * (4 / referenceWidth);
     final double interval1Y = screenSize.height * (2 / referenceHeight);
     final double interval2Y = screenSize.height * (4 / referenceHeight);
+    final double interval2X = screenSize.width * (8 / referenceWidth);
+    final double interval3X = screenSize.width * (10 / referenceWidth);
     final double reviewInfoRowTextFontSize =
         screenSize.height * (14 / referenceHeight);
     final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
     final double reviewInfoRowHeight =
-        screenSize.width * (40 / referenceHeight);
+        screenSize.width * (90 / referenceHeight);
 
     return Padding(
       // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: EdgeInsets.symmetric(vertical: interval1Y),
+      padding:
+          EdgeInsets.symmetric(horizontal: interval3X, vertical: interval1Y),
       // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column(
         // 요소들을 세로로 배치하기 위해 Column 사용
@@ -877,9 +885,13 @@ class _PrivateReviewCreateDetailFormScreenState
                   width: reviewInfoRowWidth,
                   height: reviewInfoRowHeight,
                   // 왼쪽 라벨 부분의 너비 설정
-                  color: Color(0xFFF2F2F2),
-                  // // 셀 배경색 설정
-                  // padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    // color: GRAY96_COLOR,
+                    color:
+                        Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                    border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                   // 셀 내부 여백 설정
                   alignment: Alignment.center,
                   // 텍스트를 왼쪽 정렬
@@ -889,7 +901,7 @@ class _PrivateReviewCreateDetailFormScreenState
                       fontWeight: FontWeight.bold,
                       fontFamily: 'NanumGothic',
                       fontSize: reviewInfoRowTextFontSize,
-                      color: Colors.black,
+                      color: BLACK_COLOR,
                     ), // 텍스트를 굵게 설정
                   ),
                 ),
@@ -897,17 +909,23 @@ class _PrivateReviewCreateDetailFormScreenState
                 Expanded(
                   // 오른쪽 Container가 남은 공간을 채우도록 설정
                   child: Container(
+                    // 데이터 셀의 너비 설정
+                    decoration: BoxDecoration(
+                      // color: GRAY96_COLOR,
+                      color:
+                          Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                      border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                     // 고정된 값을 표시하기 위한 컨테이너
-                    padding: EdgeInsets.symmetric(
-                        vertical: interval2Y, horizontal: interval1X),
+                    padding: EdgeInsets.symmetric(horizontal: interval2X),
                     // 컨테이너 내부 여백 설정
-                    color: Color(0xFFF2F2F2),
-                    // 컨테이너 배경색 설정
+                    alignment: Alignment.centerLeft, // 텍스트 정렬
                     child: Text(
-                      value,
+                      value ?? '',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        color: BLACK_COLOR,
                         fontFamily: 'NanumGothic',
                         fontSize: reviewInfoRowTextFontSize,
                       ),
@@ -922,7 +940,174 @@ class _PrivateReviewCreateDetailFormScreenState
     );
   }
 
-// 사진 업로드 버튼을 생성하는 함수
+  // 내용 입력 필드를 생성하는 함수
+  Widget _buildContentsRow(BuildContext context, String label,
+      TextEditingController controller, FocusNode focusNode, String hintText,
+      {bool isEnabled = true}) {
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 컨텐츠 사이의 간격 수치
+    final double interval1X = screenSize.width * (4 / referenceWidth);
+    final double interval1Y = screenSize.height * (2 / referenceHeight);
+    final double interval2Y = screenSize.height * (4 / referenceHeight);
+    final double interval2X = screenSize.width * (8 / referenceWidth);
+    final double interval3X = screenSize.width * (10 / referenceWidth);
+    final double reviewInfoRowTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
+    final double reviewInfoRowHeight =
+        screenSize.width * (90 / referenceHeight);
+
+    // FocusNode의 상태 변화 감지 리스너 추가
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // FocusNode의 상태 변화 감지 리스너
+        focusNode.addListener(() {
+          // FocusNode 상태 변경 시 UI 업데이트
+          setState(() {});
+        });
+
+        return Padding(
+          // 패딩을 추가하여 요소 주위에 여백을 줌
+          padding: EdgeInsets.symmetric(
+              horizontal: interval3X, vertical: interval1Y),
+          // 행의 상하단에 2.0 픽셀의 여백 추가
+          child: Column(
+            // 요소들을 세로로 배치하기 위해 Column 사용
+            crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+            children: [
+              IntrinsicHeight(
+                // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+                child: Row(
+                  // 요소들을 가로로 배치하기 위해 Row 사용
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // 자식 위젯들을 위아래로 늘림
+                  children: [
+                    Container(
+                      // 제목 라벨을 위한 컨테이너 생성
+                      width: reviewInfoRowWidth,
+                      height: reviewInfoRowHeight,
+                      // 왼쪽 라벨 부분의 너비 설정
+                      decoration: BoxDecoration(
+                        // color: GRAY96_COLOR,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        // 앱 기본 배경색
+                        border: Border.all(color: GRAY83_COLOR, width: 1),
+                        // 윤곽선
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      // 셀 내부 여백 설정
+                      alignment: Alignment.center,
+                      // 텍스트를 왼쪽 정렬
+                      child: Text(
+                        label, // 셀에 표시될 텍스트
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NanumGothic',
+                          fontSize: reviewInfoRowTextFontSize,
+                          color: BLACK_COLOR,
+                        ), // 텍스트를 굵게 설정
+                      ),
+                    ),
+                    SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
+                    Expanded(
+                      // 오른쪽 TextField가 남은 공간을 채우도록 설정
+                      child: Container(
+                        // 데이터 셀의 너비 설정
+                        decoration: BoxDecoration(
+                          // color: GRAY96_COLOR,
+                          color: Theme.of(context)
+                              .scaffoldBackgroundColor, // 앱 기본 배경색
+                          border: Border.all(
+                            color: focusNode.hasFocus
+                                ? ORANGE56_COLOR
+                                : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
+                            width: 1.0,
+                          ), // 윤곽선
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: interval2X),
+                        alignment: Alignment.centerLeft, // 텍스트 정
+                        child: GestureDetector(
+                          onTap: isEnabled
+                              ? () {
+                                  FocusScope.of(context).requestFocus(
+                                      focusNode); // 행을 탭할 때 포커스를 설정
+                                }
+                              : null,
+                          child: AbsorbPointer(
+                            absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
+                            child: TextField(
+                              controller: controller,
+                              // 텍스트 필드 컨트롤러 설정
+                              focusNode: focusNode,
+                              // 텍스트 필드 포커스 노드 설정
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic',
+                                fontSize: reviewInfoRowTextFontSize,
+                                color: BLACK_COLOR,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              // 텍스트 필드 스타일 설정
+                              decoration: InputDecoration(
+                                hintText: hintText,
+                                // 힌트 텍스트 설정
+                                hintStyle: TextStyle(color: GRAY74_COLOR),
+                                // 힌트 텍스트 색상 설정
+                                hintMaxLines: 2,
+                                // 힌트 텍스트 최대 줄 수 설정
+                                border: InputBorder.none,
+                                // 입력 경계선 제거
+                                isDense: true,
+                                // 간격 설정
+                                contentPadding: EdgeInsets.zero,
+                                // 내용 여백 제거
+                                counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
+                              ),
+                              maxLines: null,
+                              // 최대 줄 수 설정
+                              maxLength: 300, // 최대 글자 수 설정
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
+              Align(
+                // 글자 수 표시를 오른쪽에 맞춤
+                alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
+                child: ValueListenableBuilder<TextEditingValue>(
+                  // 텍스트 입력 시마다 변경사항을 반영
+                  valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
+                  builder: (context, value, child) {
+                    return Text(
+                      // 입력된 글자 수를 표시
+                      '${value.text.length}/300', // 글자 수를 반영
+                      style: TextStyle(
+                        color: GRAY83_COLOR,
+                        fontFamily: 'NanumGothic',
+                        fontSize: reviewInfoRowTextFontSize,
+                      ), // 글자 수 표시 스타일
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // 사진 업로드 버튼을 생성하는 함수
   Widget _buildPhotoUploadRow(String label, BuildContext context) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -934,16 +1119,23 @@ class _PrivateReviewCreateDetailFormScreenState
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
     final double interval2X = screenSize.width * (8 / referenceWidth);
-    final double interval3X = screenSize.width * (20 / referenceWidth);
+    final double interval3X = screenSize.width * (2 / referenceWidth);
+    final double interval4X = screenSize.width * (10 / referenceWidth);
     final double interval1Y = screenSize.height * (2 / referenceHeight);
     final double interval2Y = screenSize.height * (10 / referenceHeight);
     final double interval3Y = screenSize.height * (30 / referenceHeight);
-    final double interval4Y = screenSize.height * (8 / referenceHeight);
+    final double interval4Y = screenSize.height * (4 / referenceHeight);
     final double reviewInfoRowTextFontSize =
         screenSize.height * (14 / referenceHeight);
-    final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
-    final double reviewInfoRowHeight =
-        screenSize.width * (40 / referenceHeight);
+    final double reviewInfoGuideTextFontSize =
+        screenSize.height * (11 / referenceHeight);
+    final double reviewInfoRowBtnImageSize =
+        screenSize.height * (25 / referenceHeight);
+    final double reviewPhotoRowWidth =
+        screenSize.width * (210 / referenceWidth);
+    final double reviewPhotoBtnWidth = screenSize.width * (60 / referenceWidth);
+    final double reviewPhotoRowHeight =
+        screenSize.height * (30 / referenceHeight);
     final double reviewInfoImageWidth =
         screenSize.width * (60 / referenceWidth);
     final double reviewInfoImageHeight =
@@ -951,162 +1143,164 @@ class _PrivateReviewCreateDetailFormScreenState
     final double reviewInfoImageX = screenSize.width * (10 / referenceWidth);
     final double reviewInfoImageY = screenSize.width * (10 / referenceHeight);
 
+    final double dynamicContainerWidth =
+        screenSize.width * (373 / referenceWidth); // 새 컨테이너 너비
+    final double dynamicContainerHeight = dynamicContainerWidth / 4; // 높이 설정
+
     return Padding(
-      // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: EdgeInsets.symmetric(vertical: interval1Y),
-      // 행의 상하단에 2.0 픽셀의 여백 추가
+      padding:
+          EdgeInsets.symmetric(horizontal: interval4X, vertical: interval1Y),
       child: Column(
-        // 요소들을 세로로 배치하기 위해 Column 사용
-        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        crossAxisAlignment: CrossAxisAlignment.start, // 수평 방향에서 왼쪽 정렬
         children: [
-          IntrinsicHeight(
-            // 왼쪽 Container와 오른쪽 버튼의 높이를 동일하게 맞추기 위해 사용
-            child: Row(
-              // 요소들을 가로로 배치하기 위해 Row 사용
-              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
-              children: [
-                Container(
-                  // 제목 라벨을 위한 컨테이너 생성
-                  width: reviewInfoRowWidth,
-                  height: reviewInfoRowHeight,
-                  // 왼쪽 라벨 부분의 너비 설정
-                  color: Color(0xFFF2F2F2),
-                  // // 셀 배경색 설정
-                  // padding: const EdgeInsets.all(8.0),
-                  // 셀 내부 여백 설정
-                  alignment: Alignment.center,
-                  // 텍스트를 왼쪽 정렬
-                  child: Text(
-                    label, // 셀에 표시될 텍스트
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
-                      fontSize: reviewInfoRowTextFontSize,
-                      color: Colors.black,
-                    ), // 텍스트를 굵게 설정
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center, // 세로 방향 중앙 정렬
+            children: [
+              Container(
+                width: reviewPhotoRowWidth,
+                // '리뷰 사진' 컨테이너 너비
+                height: reviewPhotoRowHeight,
+                // '리뷰 사진' 컨테이너 높이
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  borderRadius: BorderRadius.circular(6), // 모서리 둥글게
+                ),
+                alignment: Alignment.center,
+                // 텍스트 중앙 정렬
+                child: Text(
+                  label, // '리뷰 사진' 텍스트
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                    fontSize: reviewInfoRowTextFontSize,
+                    color: BLACK_COLOR,
                   ),
                 ),
-                SizedBox(width: interval1X), // 라벨과 버튼 사이의 간격
-                Expanded(
-                  // 오른쪽 영역이 남은 공간을 채우도록 설정
-                  child: SingleChildScrollView(
-                    // 사진 목록을 스크롤 가능하게 설정
-                    scrollDirection: Axis.horizontal, // 가로 스크롤 설정
-                    child: Row(
-                      // 사진을 가로로 나열하기 위해 Row 사용
-                      children: [
-                        Row(
-                          // 이미지를 담고 있는 Row 생성
-                          children: _images.asMap().entries.map((entry) {
-                            // 이미지 리스트를 순회하며 각각의 항목을 추가
-                            int index = entry.key; // 이미지의 인덱스
-                            File image = entry.value; // 이미지 파일
-                            return Padding(
-                              padding: EdgeInsets.only(right: interval2X),
-                              // 사진 간의 간격 추가
-                              child: Stack(
-                                // 이미지와 삭제 버튼을 겹치기 위해 Stack 사용
-                                children: [
-                                  Image.file(
-                                    image, // 파일 이미지 표시
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover, // 이미지 크기 조정
-                                  ),
-                                  Positioned(
-                                    right: -10,
-                                    top: -10,
-                                    child: IconButton(
-                                      icon: Icon(Icons.cancel,
-                                          color: Colors.white),
-                                      // 삭제 버튼 아이콘 설정
-                                      onPressed: () => _removeImage(
-                                          index), // 삭제 버튼 클릭 시 이미지 삭제 함수 호출
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        SizedBox(width: interval1X),
-                        // 톱니바퀴 버튼과 업로드 버튼 사이의 간격 추가
-                        ElevatedButton(
-                          // 이미지 업로드 버튼 생성
-                          onPressed: () async {
-                            await _pickImage(context); // 버튼 클릭 시 이미지 선택 함수 호출
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Theme.of(context)
-                                .scaffoldBackgroundColor, // 버튼 텍스트 색상 설정
-                            backgroundColor: Color(0xFF6FAD96), // 버튼 배경색 설정
-                            padding: EdgeInsets.symmetric(
-                                vertical: interval2Y,
-                                horizontal: interval3X), // 버튼 내부 여백 설정
-                          ),
-                          child: Icon(Icons.camera_alt,
-                              size: interval3Y), // 카메라 아이콘 추가
-                        ),
-                        SizedBox(width: interval1X),
-                        // 마지막 사진과 버튼들 사이의 간격 추가
-                        ElevatedButton(
-                          // 톱니바퀴 아이콘 버튼 생성
-                          onPressed: () async {
-                            await _requestPermission(
-                                context); // 버튼 클릭 시 권한 요청 함수 호출
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Theme.of(context)
-                                .scaffoldBackgroundColor, // 버튼 텍스트 색상 설정
-                            backgroundColor: Color(0xFF6FAD96), // 버튼 배경색 설정
-                            padding: EdgeInsets.symmetric(
-                                vertical: interval2Y,
-                                horizontal: interval3X), // 버튼 내부 여백 설정
-                          ),
-                          child: Icon(Icons.settings,
-                              size: interval3Y), // 톱니바퀴 아이콘 추가
-                        ),
-                      ],
+              ),
+              SizedBox(width: interval2X), // 컨테이너와 버튼 사이 간격
+              Container(
+                width: reviewPhotoBtnWidth, // 버튼 너비 고정
+                height: reviewPhotoRowHeight, // 버튼 높이를 컨테이너 높이에 맞춤
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _pickImage(context); // 이미지 업로드 함수 호출
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    backgroundColor: ORANGE56_COLOR,
+                    padding: EdgeInsets.symmetric(
+                      vertical: interval1Y,
+                      horizontal: interval3X,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
+                  child:
+                      Icon(Icons.camera_alt, size: reviewInfoRowBtnImageSize),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(width: interval2X), // 컨테이너와 버튼 사이 간격
+              Container(
+                width: reviewPhotoBtnWidth, // 버튼 너비 고정
+                height: reviewPhotoRowHeight, // 버튼 높이를 컨테이너 높이에 맞춤
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _requestPermission(context); // 권한 요청 함수 호출
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    backgroundColor: ORANGE56_COLOR,
+                    padding: EdgeInsets.symmetric(
+                      vertical: interval1Y,
+                      horizontal: interval3X,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  child: Icon(Icons.settings, size: reviewInfoRowBtnImageSize),
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: interval4Y), // 행과 경고 메시지 사이의 간격 추가
+          SizedBox(height: interval4Y), // 행과 경고 메시지 사이 간격 추가
           RichText(
             // 다양한 스타일을 조합하기 위해 RichText 사용
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "[필수] ", // 빨간색으로 강조된 부분
+                  text: "초기 설정 후 사진 업로드 해주세요.", // 빨간색으로 강조된 부분
                   style: TextStyle(
-                    color: Colors.red, // 텍스트 색상 빨간색
+                    color: BLACK_COLOR, // 텍스트 색상 검은색
                     fontWeight: FontWeight.bold, // 굵은 글씨
-                    fontSize: reviewInfoRowTextFontSize,
+                    fontSize: reviewInfoGuideTextFontSize,
                     fontFamily: 'NanumGothic',
                   ),
                 ),
                 TextSpan(
-                  text: "설정 버튼을 클릭한 후, 사진 앱 권한 허용해야만 사진 업로드가 가능합니다.",
+                  text: "  ( [설정] 버튼 클릭 -> 사진 앱 권한 허용 )",
                   // 검은색으로 강조된 부분
                   style: TextStyle(
-                    color: Colors.black, // 텍스트 색상 검은색
+                    color: RED46_COLOR, // 텍스트 색상 빨간색
                     fontWeight: FontWeight.bold, // 굵은 글씨
-                    fontSize: reviewInfoRowTextFontSize,
+                    fontSize: reviewInfoGuideTextFontSize,
                     fontFamily: 'NanumGothic',
                   ),
                 ),
               ],
             ),
           ),
+          if (_images.isNotEmpty) // 이미지가 있을 때만 컨테이너 표시
+            Padding(
+              padding: EdgeInsets.only(top: interval4Y),
+              child: Container(
+                width: dynamicContainerWidth, // 동적 너비
+                height: dynamicContainerHeight, // 높이: 너비의 1/4
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  // border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                  // borderRadius: BorderRadius.circular(6), // 모서리 둥글게
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start, // 왼쪽 정렬
+                  children: _images.asMap().entries.map((entry) {
+                    int index = entry.key; // 이미지 인덱스
+                    File image = entry.value; // 이미지 파일
+                    final double imageSize = dynamicContainerWidth / 4; // 이미지 크기
+                    return Padding(
+                      padding: EdgeInsets.only(right: interval2X),
+                      child: Stack(
+                        children: [
+                          Image.file(
+                            image,
+                            width: imageSize,
+                            height: imageSize, // 너비와 동일
+                            fit: BoxFit.cover, // 이미지 맞춤
+                          ),
+                          Positioned(
+                            right: -interval4X,
+                            top: -interval2Y,
+                            child: IconButton(
+                              icon: Icon(Icons.cancel, color: Colors.white),
+                              onPressed: () => _removeImage(index), // 이미지 삭제
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
         ],
       ),
     );
   }
 
-// '리뷰 작성 완료' 버튼을 생성하는 함수
-// _buildSubmitButton: 리뷰 작성 완료 버튼을 생성하는 함수
+  // '리뷰 작성 완료' 버튼을 생성하는 함수
+  // _buildSubmitButton: 리뷰 작성 완료 버튼을 생성하는 함수
   Widget _buildSubmitButton(BuildContext context) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -1129,6 +1323,12 @@ class _PrivateReviewCreateDetailFormScreenState
         // ElevatedButton을 사용하여 '리뷰 작성 완료' 버튼을 생성함
         onPressed: () async {
           // 버튼 클릭 시 실행되는 비동기 함수
+          // 필수 항목 검증 (리뷰 제목, 리뷰 내용을 작성해야만 저장되도록 설정)
+          if (widget.titleController.text.isEmpty ||
+              widget.contentController.text.isEmpty) {
+            showCustomSnackBar(context, '리뷰 제목과 리뷰 내용을 기입한 후 등록해주세요.');
+            return;
+          }
           await showSubmitAlertDialog(
             context,
             title: '[리뷰 등록]',
@@ -1143,12 +1343,12 @@ class _PrivateReviewCreateDetailFormScreenState
               // '예' 버튼의 텍스트를 설정함
               noTextStyle: TextStyle(
                 // '아니요' 버튼의 스타일을 검은색 Bold로 설정함
-                color: Colors.black,
+                color: BLACK_COLOR,
                 fontWeight: FontWeight.bold,
               ),
               yesTextStyle: TextStyle(
                 // '예' 버튼의 스타일을 빨간색 Bold로 설정함
-                color: Colors.red,
+                color: RED46_COLOR,
                 fontWeight: FontWeight.bold,
               ),
               onYesPressed: () async {
@@ -1189,22 +1389,15 @@ class _PrivateReviewCreateDetailFormScreenState
                   navigateToScreenAndRemoveUntil(
                     context,
                     ref,
-                    PrivateReviewMainScreen(
-                        navigateToListTab: true),
+                    PrivateReviewMainScreen(navigateToListTab: true),
                     // 리뷰 메인 화면으로 이동함
                     4, // 하단 탭바의 인덱스를 초기화함 (필요시 변경)
                   );
 
                   // 리뷰 작성 완료 메시지를 표시함
-                  // ScaffoldMessenger.of(context).showSnackBar(
-                  //   SnackBar(content: Text('리뷰가 작성되었습니다.')),
-                  // );
                   showCustomSnackBar(context, '리뷰가 작성되었습니다.');
                 } catch (e) {
                   // 리뷰 작성 중 오류가 발생한 경우 오류 메시지를 표시함
-                  // ScaffoldMessenger.of(context).showSnackBar(
-                  //   SnackBar(content: Text('리뷰 작성 중 오류가 발생했습니다: $e')),
-                  // );
                   showCustomSnackBar(context, '리뷰 작성 중 오류가 발생했습니다: $e');
                 }
               },
@@ -1215,7 +1408,7 @@ class _PrivateReviewCreateDetailFormScreenState
           // ElevatedButton의 스타일을 설정함
           foregroundColor:
               Theme.of(context).scaffoldBackgroundColor, // 버튼 텍스트 색상을 흰색으로 설정함
-          backgroundColor: Color(0xFF6FAD96), // 버튼 배경색을 BUTTON_COLOR로 설정함
+          backgroundColor: ORANGE56_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정함
           padding: EdgeInsets.symmetric(
               vertical: interval1Y, horizontal: interval1X), // 버튼의 패딩을 설정함
         ),
@@ -1236,7 +1429,7 @@ class _PrivateReviewCreateDetailFormScreenState
 }
 // ------ 리뷰 작성 상세 화면 관련 UI 내용인 PrivateReviewCreateDetailFormScreen 클래스 내용 끝 부분
 
-// ------ 리뷰 목록 탭 화면 관련 UI 내용인 PrivateReviewListScreen 클래스 내용 시작 부분
+// ------ 리뷰 목록 화면 관련 UI 내용인 PrivateReviewListScreen 클래스 내용 시작 부분
 class PrivateReviewItemsList extends ConsumerStatefulWidget {
   @override
   _PrivateReviewItemsListState createState() => _PrivateReviewItemsListState();
@@ -1255,36 +1448,46 @@ class _PrivateReviewItemsListState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    final double reviewTitleFontSize =
+        screenSize.height * (18 / referenceHeight); //  크기 설정함
     final double reviewOriginalPriceFontSize =
-        screenSize.height * (13 / referenceHeight); // 원래 가격 글꼴 크기 설정함
+        screenSize.height * (12 / referenceHeight); // 원래 가격 글꼴 크기 설정함
     final double reviewDiscountPercentFontSize =
         screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
     final double reviewDiscountPriceFontSize =
-        screenSize.height * (15 / referenceHeight); // 할인 가격 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 할인 가격 글꼴 크기 설정함
     final double reviewSelectedColorTextFontSize =
         screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
     final double reviewSelectedSizeTextFontSize =
         screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
     final double reviewSelectedCountTextFontSize =
         screenSize.height * (14 / referenceHeight); // 선택된 수량 텍스트 글꼴 크기 설정함
+    final double reviewOrderNumberDataFontSize =
+        screenSize.height * (14 / referenceHeight); //  크기 설정함
     final double reviewProdNumberDataFontSize =
-        screenSize.height * (16 / referenceHeight); //  크기 설정함
+        screenSize.height * (14 / referenceHeight); //  크기 설정함
     final double reviewBriefIntroductionDataFontSize =
-        screenSize.height * (16 / referenceHeight); //  크기 설정함
+        screenSize.height * (14 / referenceHeight); //  크기 설정함
 
     // 상품 색상 이미지 크기 설정
     final double reviewSelctedColorImageDataWidth =
         screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
     final double reviewSelctedColorImageDataHeight =
         screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+
+    // 리뷰 제목 등의 텍스트 데이터 크기 설정
     final double reviewTitleTextFontSize =
         screenSize.height * (14 / referenceHeight); // 리뷰 제목 텍스트 글꼴 크기 설정함
     final double reviewContentsTextFontSize =
         screenSize.height * (14 / referenceHeight); // 리뷰 내용 텍스트 글꼴 크기 설정함
     final double reviewWriteDateTextFontSize =
         screenSize.height * (14 / referenceHeight); // 리뷰 작성일자 텍스트 글꼴 크기 설정함
+
+    // 펼치기 및 닫기 버튼 수치
     final double reviewExpandedBtnFontSize =
-        screenSize.height * (18 / referenceHeight); // 펼치기 및 닫기 버튼 크기
+        screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
+    final double reviewExpandedBtnHeight =
+        screenSize.height * (30 / referenceHeight);
 
     // 삭제 버튼 수치
     final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
@@ -1303,6 +1506,7 @@ class _PrivateReviewItemsListState
     final double interval1X = screenSize.width * (8 / referenceWidth);
     final double interval2X = screenSize.width * (19 / referenceWidth);
     final double interval3X = screenSize.width * (20 / referenceWidth);
+    final double interval4X = screenSize.width * (70 / referenceWidth);
 
     // 리뷰 목록 부분이 비어있는 경우의 알림 부분 수치
     final double reviewEmptyTextWidth =
@@ -1315,6 +1519,12 @@ class _PrivateReviewItemsListState
         screenSize.height * (200 / referenceHeight); // 세로 비율
     final double reviewEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
+
+    // 숫자 형식을 '###,###'로 지정함
+    final numberFormat = NumberFormat('###,###');
+
+    // 날짜 형식을 'yyyy.MM.dd'로 지정함
+    final dateFormat = DateFormat('yyyy.MM.dd');
 
     final reviewItems = ref.watch(privateReviewItmesListNotifierProvider);
 
@@ -1334,7 +1544,7 @@ class _PrivateReviewItemsListState
             fontSize: reviewEmptyTextFontSize, // 텍스트의 폰트 크기
             fontFamily: 'NanumGothic', // 텍스트의 폰트 패밀리
             fontWeight: FontWeight.bold, // 텍스트의 굵기
-            color: Colors.black, // 텍스트의 색상
+            color: BLACK_COLOR, // 텍스트의 색상
           ),
         ),
       );
@@ -1353,7 +1563,7 @@ class _PrivateReviewItemsListState
             review['review_image3'], // 세 번째 리뷰 이미지
           ]
               .where((image) => image != null) // 이미지가 null이 아닌 경우 필터링
-              .map((image) => image.toString()) // 이미지 URL을 문자열로 변환
+              .map((image) => image.toString() ?? '') // 이미지 URL을 문자열로 변환
               .toList(); // 리스트로 변환
 
           // 각 리뷰에 첨부된 이미지를 리스트로 저장함.
@@ -1383,262 +1593,25 @@ class _PrivateReviewItemsListState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (review['product_number'] != null)
-                      _buildReviewInfoRow('상품번호: ', review['product_number'],
-                          bold: true, fontSize: reviewProdNumberDataFontSize),
-                    // 상품 번호가 존재할 경우, 이를 표시하는 행(Row)을 생성하여
-                    // 화면에 출력함. '상품번호:'라는 라벨과 함께 bold로 표시함.
-
-                    SizedBox(height: interval2Y),
-                    if (review['brief_introduction'] != null)
-                      _buildReviewInfoRow(review['brief_introduction'], '',
-                          bold: true,
-                          fontSize: reviewBriefIntroductionDataFontSize),
-                    // 리뷰에 간단한 소개가 있을 경우, 이를 표시하는 행(Row)을 생성하여
-                    // 화면에 출력함. 텍스트는 굵게(bold) 표시함.
-
-                    SizedBox(height: interval2Y),
-                    GestureDetector(
-                      onTap: () {
-                        final product = ProductContent(
-                          docId: review['product_id'] ?? '',
-                          category: review['category']?.toString() ?? '에러 발생',
-                          productNumber:
-                              review['product_number']?.toString() ?? '에러 발생',
-                          thumbnail: review['thumbnails']?.toString() ?? '',
-                          briefIntroduction:
-                              review['brief_introduction']?.toString() ??
-                                  '에러 발생',
-                          originalPrice: review['original_price'] ?? 0,
-                          discountPrice: review['discount_price'] ?? 0,
-                          discountPercent: review['discount_percent'] ?? 0,
-                        );
-                        final navigatorProductDetailScreen =
-                            ProductInfoDetailScreenNavigation(ref);
-                        navigatorProductDetailScreen.navigateToDetailScreen(
-                            context, product);
-                        // 사용자가 리뷰 항목을 클릭했을 때 제품 상세 화면으로 이동함.
-                        // 리뷰에 포함된 제품 정보를 기반으로 ProductContent 객체를 생성하여,
-                        // 상세 화면으로 해당 데이터를 전달함.
-                      },
-                      child: CommonCardView(
-                        backgroundColor: Theme.of(context)
-                            .scaffoldBackgroundColor, // 앱 기본 배경색
-                        elevation: 0, // 그림자 깊이 설정
-                        content: Padding(
-                          padding: EdgeInsets.zero, // 패딩을 없앰
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: review['thumbnails']
-                                                ?.toString()
-                                                .isNotEmpty ==
-                                            true
-                                        ? Image.network(review['thumbnails'],
-                                            fit: BoxFit.cover)
-                                        : Icon(Icons.image_not_supported),
-                                  ),
-                                  // 리뷰에 썸네일 이미지가 존재하면 이를 네트워크에서 불러와 표시함.
-                                  // 썸네일 이미지가 없을 경우 대체 아이콘(이미지 미지원)을 표시함.
-                                  SizedBox(width: interval3X),
-                                  Expanded(
-                                    flex: 6,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (review['original_price'] != null)
-                                          Text(
-                                            '${NumberFormat('###,###').format(review['original_price'])} 원',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  reviewOriginalPriceFontSize,
-                                              fontFamily: 'NanumGothic',
-                                              color: Color(0xFF999999),
-                                              // 텍스트 색상 설정
-                                              decoration: TextDecoration
-                                                  .lineThrough, // 텍스트에 취소선 추가
-                                            ),
-                                          ),
-                                        // 원래 가격이 존재할 경우 이를 취소선과 함께 표시함.
-                                        // 가격은 세 자리마다 쉼표로 구분하여 표시하며,
-                                        // 회색 텍스트로 렌더링함.
-
-                                        if (review['discount_price'] != null)
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '${NumberFormat('###,###').format(review['discount_price'])} 원',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        reviewDiscountPriceFontSize,
-                                                    fontFamily: 'NanumGothic',
-                                                    color: Colors.black,
-                                                    // 텍스트 색상 설정
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              SizedBox(width: interval2X),
-                                              if (review['discount_percent'] !=
-                                                  null)
-                                                Text(
-                                                  '${(review['discount_percent']).toInt()}%',
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        reviewDiscountPercentFontSize,
-                                                    fontFamily: 'NanumGothic',
-                                                    color: Colors.red,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        // 할인 가격과 할인율이 존재할 경우 이를 표시함.
-                                        // 할인 가격은 굵은 글씨로, 할인율은 빨간색 굵은 글씨로 표시함.
-                                        SizedBox(height: interval4Y),
-                                        if (review['selected_color_text'] !=
-                                            null)
-                                          Row(
-                                            children: [
-                                              review['selected_color_image']
-                                                          ?.toString()
-                                                          .isNotEmpty ==
-                                                      true
-                                                  ? Image.network(
-                                                      review['selected_color_image'] ??
-                                                          '에러 발생',
-                                                      height:
-                                                          reviewSelctedColorImageDataHeight,
-                                                      width:
-                                                          reviewSelctedColorImageDataWidth,
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Icon(
-                                                      Icons.image_not_supported,
-                                                      size: 20),
-                                              SizedBox(width: interval1X),
-                                              Text(
-                                                review['selected_color_text'] ??
-                                                    '에러 발생',
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      reviewSelectedColorTextFontSize,
-                                                  fontFamily: 'NanumGothic',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        // 선택된 색상 텍스트와 색상 이미지를 표시함.
-                                        // 색상 이미지는 네트워크에서 불러오며, 이미지가 없을 경우 대체 아이콘을 표시함.
-                                        // 색상 텍스트는 줄임말로 표시하여 공간을 절약함.
-                                        SizedBox(height: interval4Y),
-                                        if (review['selected_size'] != null)
-                                          Text(
-                                            '사이즈: ${review['selected_size']}',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  reviewSelectedSizeTextFontSize,
-                                              fontFamily: 'NanumGothic',
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        // 선택된 사이즈 정보를 표시함.
-                                        // "사이즈: "라는 라벨과 함께 텍스트로 표시함.
-                                        SizedBox(height: interval4Y),
-                                        if (review['selected_count'] != null)
-                                          Text(
-                                            '수량: ${review['selected_count']} 개',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  reviewSelectedCountTextFontSize,
-                                              fontFamily: 'NanumGothic',
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        // 선택된 수량 정보를 표시함.
-                                        // "수량: "라는 라벨과 함께 텍스트로 표시함.
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: interval5Y),
-                    if (_expandedReviews[index] == true) ...[
-                      if (review['review_title'] != null)
-                        _buildReviewInfoRow('제목: ', review['review_title'],
-                            bold: true, fontSize: reviewTitleTextFontSize),
-                      // 리뷰 제목이 있을 경우 이를 표시함.
-                      // '제목:' 라벨과 함께 굵은 텍스트로 제목을 표시함.
-
-                      SizedBox(height: interval2Y),
-                      if (review['review_contents'] != null)
-                        _buildReviewInfoRow('내용: ', review['review_contents'],
-                            bold: true, fontSize: reviewContentsTextFontSize),
-                      // 리뷰 내용이 있을 경우 이를 표시함.
-                      // '내용:' 라벨과 함께 굵은 텍스트로 내용을 표시함.
-
-                      SizedBox(height: interval2Y),
-                      if (reviewImages.isNotEmpty)
-                        _buildReviewImagesRow(reviewImages, context),
-                      // 리뷰에 첨부된 이미지가 있을 경우, 이미지를 표시하는 행(Row)을 추가함.
-                      // 이미지가 존재하지 않을 경우 해당 부분은 렌더링되지 않음.
-
-                      SizedBox(height: interval3Y),
-                      if (review['review_write_time'] != null)
-                        _buildReviewInfoRow(
-                          '작성일자: ',
-                          DateFormat('yyyy-MM-dd').format(
-                            (review['review_write_time'] as Timestamp).toDate(),
-                          ),
-                          bold: true,
-                          fontSize:
-                              reviewWriteDateTextFontSize, // 리뷰 내용 텍스트 글꼴 크기 설정함
-                        ),
-                      // 리뷰 작성일자가 존재할 경우 이를 표시함.
-                      // 작성일자는 'yyyy-MM-dd' 형식으로 변환하여 표시되며, 굵은 텍스트로 렌더링됨.
-
-                      SizedBox(height: interval2Y),
-                    ],
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Spacer(), // 자식 위젯들 간에 빈 공간을 추가함
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _expandedReviews[index] =
-                                  !(_expandedReviews[index] ??
-                                      false); // 펼치기/닫기 상태 변경
-                            });
-                          },
-                          child: Text(
-                            // 리뷰가 확장되었는지 여부에 따라 '[닫기]' 또는 '[펼치기]' 텍스트를 표시함
-                            _expandedReviews[index] == true ? '[닫기]' : '[펼치기]',
-                            style: TextStyle(
-                              fontFamily: 'NanumGothic',
-                              fontSize: reviewExpandedBtnFontSize,
-                              // 버튼 텍스트 크기 설정
-                              fontWeight: FontWeight.bold,
-                              // 버튼 텍스트 굵기 설정
-                              color: Colors.blue, // 버튼 텍스트 색상 설정
-                            ),
+                        Text(
+                          '상품 내용',
+                          style: TextStyle(
+                            fontSize: reviewTitleFontSize,
+                            // 텍스트 크기 설정
+                            fontWeight: FontWeight.bold,
+                            // 텍스트 굵기 설정
+                            fontFamily: 'NanumGothic',
+                            // 글꼴 설정
+                            color: BLACK_COLOR, // 텍스트 색상 설정
                           ),
                         ),
-                        Spacer(), // 자식 위젯들 간에 빈 공간을 추가함
+                        // 상품 내용 제목과 삭제 버튼 사이의 공간을 차지하여 삭제 버튼이 오른쪽 끝에 위치하도록 함
+                        Expanded(
+                          child: Container(),
+                        ),
+                        // 삭제 버튼을 오른쪽 끝에 배치함
                         Container(
                           width: deleteBtnWidth,
                           height: deleteBtnHeight,
@@ -1646,12 +1619,12 @@ class _PrivateReviewItemsListState
                           // 오른쪽 여백 설정
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Color(0xFF6FAD96),
+                              foregroundColor: GRAY44_COLOR,
                               // 텍스트 색상 설정
                               backgroundColor:
                                   Theme.of(context).scaffoldBackgroundColor,
                               // 버튼 배경색을 앱 배경색으로 설정
-                              side: BorderSide(color: Color(0xFF6FAD96)),
+                              side: BorderSide(color: GRAY44_COLOR),
                               // 버튼 테두리 색상 설정
                               padding: EdgeInsets.symmetric(
                                   vertical: deleteBtnPaddingY,
@@ -1675,12 +1648,12 @@ class _PrivateReviewItemsListState
                                   yesText: '예',
                                   // '아니요' 버튼 텍스트 스타일을 설정함
                                   noTextStyle: TextStyle(
-                                    color: Colors.black,
+                                    color: BLACK_COLOR,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   // '예' 버튼 텍스트 스타일을 설정함
                                   yesTextStyle: TextStyle(
-                                    color: Colors.red,
+                                    color: RED46_COLOR,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   // '예' 버튼이 눌렸을 때 실행되는 비동기 함수
@@ -1711,12 +1684,352 @@ class _PrivateReviewItemsListState
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'NanumGothic',
                                 fontSize: deleteBtnFontSize,
-                                color: Color(0xFF6FAD96),
+                                color: BLACK_COLOR,
                               ),
                             ),
                           ),
                         ),
                       ],
+                    ),
+
+                    SizedBox(height: interval2Y),
+
+                    _buildReviewInfoRow(
+                        '발주번호: ',
+                        review['order_number']?.toString().isNotEmpty == true
+                            ? review['order_number']
+                            : '',
+                        bold: true,
+                        fontSize: reviewOrderNumberDataFontSize),
+                    // 발주 번호가 존재할 경우, 이를 표시하는 행(Row)을 생성하여
+                    // 화면에 출력함. '발주번호:'라는 라벨과 함께 bold로 표시함.
+
+                    _buildReviewInfoRow(
+                        '상품번호: ',
+                        review['product_number']?.toString().isNotEmpty == true
+                            ? review['product_number']
+                            : '',
+                        bold: true,
+                        fontSize: reviewProdNumberDataFontSize),
+                    // 상품 번호가 존재할 경우, 이를 표시하는 행(Row)을 생성하여
+                    // 화면에 출력함. '상품번호:'라는 라벨과 함께 bold로 표시함.
+
+                    SizedBox(height: interval2Y),
+
+                    _buildReviewInfoRow(
+                        review['brief_introduction']?.toString().isNotEmpty ==
+                                true
+                            ? review['brief_introduction']
+                            : '',
+                        '',
+                        bold: true,
+                        fontSize: reviewBriefIntroductionDataFontSize),
+                    // 리뷰에 간단한 소개가 있을 경우, 이를 표시하는 행(Row)을 생성하여
+                    // 화면에 출력함. 텍스트는 굵게(bold) 표시함.
+
+                    SizedBox(height: interval2Y),
+                    GestureDetector(
+                      onTap: () {
+                        final product = ProductContent(
+                          docId: review['product_id'] ?? '',
+                          category: review['category']?.toString() ?? '',
+                          productNumber:
+                              review['product_number']?.toString() ?? '',
+                          thumbnail: review['thumbnails']?.toString() ?? '',
+                          briefIntroduction:
+                              review['brief_introduction']?.toString() ?? '',
+                          originalPrice: review['original_price'] ?? 0,
+                          discountPrice: review['discount_price'] ?? 0,
+                          discountPercent: review['discount_percent'] ?? 0,
+                        );
+                        final navigatorProductDetailScreen =
+                            ProductInfoDetailScreenNavigation(ref);
+                        navigatorProductDetailScreen.navigateToDetailScreen(
+                            context, product);
+                        // 사용자가 리뷰 항목을 클릭했을 때 제품 상세 화면으로 이동함.
+                        // 리뷰에 포함된 제품 정보를 기반으로 ProductContent 객체를 생성하여,
+                        // 상세 화면으로 해당 데이터를 전달함.
+                      },
+                      child: CommonCardView(
+                        backgroundColor: Theme.of(context)
+                            .scaffoldBackgroundColor, // 앱 기본 배경색
+                        elevation: 0, // 그림자 깊이 설정
+                        content: Padding(
+                          padding: EdgeInsets.zero, // 패딩을 없앰
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 4,
+                                    child: review['thumbnails']
+                                                ?.toString()
+                                                .isNotEmpty ==
+                                            true
+                                        ? Image.network(
+                                            review['thumbnails'],
+                                            fit: BoxFit.cover,
+                                            // 이미지 로드 실패 시 아이콘 표시
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Icon(
+                                              Icons.image_not_supported,
+                                              color: GRAY88_COLOR,
+                                              size: interval4X,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.image_not_supported,
+                                            color: GRAY88_COLOR,
+                                            size: interval4X,
+                                          ),
+                                  ),
+                                  // 리뷰에 썸네일 이미지가 존재하면 이를 네트워크에서 불러와 표시함.
+                                  // 썸네일 이미지가 없을 경우 대체 아이콘(이미지 미지원)을 표시함.
+                                  SizedBox(width: interval3X),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${numberFormat.format(review['original_price']?.toString().isNotEmpty == true ? review['original_price'] as num : '')} 원',
+                                          style: TextStyle(
+                                            fontSize:
+                                                reviewOriginalPriceFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            color: GRAY60_COLOR,
+                                            // 텍스트 색상 설정
+                                            decoration: TextDecoration
+                                                .lineThrough, // 텍스트에 취소선 추가
+                                          ),
+                                        ),
+                                        // 원래 가격이 존재할 경우 이를 취소선과 함께 표시함.
+                                        // 가격은 세 자리마다 쉼표로 구분하여 표시하며,
+                                        // 회색 텍스트로 렌더링함.
+
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${numberFormat.format(review['discount_price']?.toString().isNotEmpty == true ? review['discount_price'] as num : '')} 원',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      reviewDiscountPriceFontSize,
+                                                  fontFamily: 'NanumGothic',
+                                                  color: BLACK_COLOR,
+                                                  // 텍스트 색상 설정
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(width: interval2X),
+                                            Text(
+                                              '${numberFormat.format(review['discount_percent']?.toString().isNotEmpty == true ? review['discount_percent'] as num : '')}%',
+                                              style: TextStyle(
+                                                fontSize:
+                                                    reviewDiscountPercentFontSize,
+                                                fontFamily: 'NanumGothic',
+                                                color: RED46_COLOR,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // 할인 가격과 할인율이 존재할 경우 이를 표시함.
+                                        // 할인 가격은 굵은 글씨로, 할인율은 빨간색 굵은 글씨로 표시함.
+                                        Row(
+                                          children: [
+                                            // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                            review['selected_color_image']
+                                                        ?.toString()
+                                                        .isNotEmpty ==
+                                                    true
+                                                ? Image.network(
+                                                    review[
+                                                        'selected_color_image'],
+                                                    height:
+                                                        reviewSelctedColorImageDataHeight,
+                                                    width:
+                                                        reviewSelctedColorImageDataWidth,
+                                                    fit: BoxFit.cover,
+                                                    // 이미지 로드 실패 시 아이콘 표시
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Icon(
+                                                      Icons.image_not_supported,
+                                                      color: GRAY88_COLOR,
+                                                      size:
+                                                          reviewSelctedColorImageDataHeight,
+                                                    ),
+                                                  )
+                                                : Icon(
+                                                    Icons.image_not_supported,
+                                                    color: GRAY88_COLOR,
+                                                    size:
+                                                        reviewSelctedColorImageDataHeight,
+                                                  ),
+                                            SizedBox(width: interval1X),
+                                            // 선택된 색상 텍스트를 표시
+                                            Text(
+                                              review['selected_color_text']
+                                                          ?.toString()
+                                                          .isNotEmpty ==
+                                                      true
+                                                  ? review[
+                                                      'selected_color_text']
+                                                  : '',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontSize:
+                                                    reviewSelectedColorTextFontSize,
+                                                fontFamily: 'NanumGothic',
+                                                fontWeight: FontWeight.bold,
+                                                color: BLACK_COLOR,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // 선택된 색상 텍스트와 색상 이미지를 표시함.
+                                        // 색상 이미지는 네트워크에서 불러오며, 이미지가 없을 경우 대체 아이콘을 표시함.
+                                        // 색상 텍스트는 줄임말로 표시하여 공간을 절약함.
+                                        SizedBox(height: interval4Y),
+                                        // 선택된 사이즈와 수량을 표시
+                                        // 선택된 사이즈 정보를 표시함.
+                                        Text(
+                                          '${review['selected_size']?.toString().isNotEmpty == true ? review['selected_size'] : ''}',
+                                          style: TextStyle(
+                                            fontSize:
+                                                reviewSelectedSizeTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.bold,
+                                            color: BLACK_COLOR,
+                                          ),
+                                        ),
+                                        SizedBox(height: interval4Y),
+                                        // 선택된 수량 정보를 표시함.
+                                        Text(
+                                          '${review['selected_count']?.toString().isNotEmpty == true ? review['selected_count'] : ''}개',
+                                          style: TextStyle(
+                                            fontSize:
+                                                reviewSelectedCountTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.bold,
+                                            color: BLACK_COLOR,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: interval5Y),
+                    Text(
+                      '리뷰 내용',
+                      style: TextStyle(
+                        fontSize: reviewTitleFontSize,
+                        // 텍스트 크기 설정
+                        fontWeight: FontWeight.bold,
+                        // 텍스트 굵기 설정
+                        fontFamily: 'NanumGothic',
+                        // 글꼴 설정
+                        color: BLACK_COLOR, // 텍스트 색상 설정
+                      ),
+                    ),
+                    SizedBox(height: interval2Y),
+                    if (_expandedReviews[index] == true) ...[
+                      _buildReviewInfoRow(
+                        '작성일자: ',
+                        review['review_write_time'] != null &&
+                                review['review_write_time'] is Timestamp
+                            ? dateFormat.format(
+                                (review['review_write_time'] as Timestamp)
+                                    .toDate())
+                            : '',
+                        bold: true,
+                        fontSize:
+                            reviewWriteDateTextFontSize, // 리뷰 내용 텍스트 글꼴 크기 설정함
+                      ),
+                      // 리뷰 작성일자가 존재할 경우 이를 표시함.
+                      // 작성일자는 'yyyy.MM.dd' 형식으로 변환하여 표시되며, 굵은 텍스트로 렌더링됨.
+
+                      SizedBox(height: interval2Y),
+
+                      _buildReviewInfoRow(
+                          '제목: ',
+                          review['review_title']?.toString().isNotEmpty == true
+                              ? review['review_title']
+                              : '',
+                          bold: true,
+                          fontSize: reviewTitleTextFontSize),
+                      // 리뷰 제목이 있을 경우 이를 표시함.
+                      // '제목:' 라벨과 함께 굵은 텍스트로 제목을 표시함.
+
+                      SizedBox(height: interval2Y),
+                      _buildReviewInfoRow(
+                          '내용: ',
+                          review['review_contents']?.toString().isNotEmpty ==
+                                  true
+                              ? review['review_contents']
+                              : '',
+                          bold: true,
+                          fontSize: reviewContentsTextFontSize),
+                      // 리뷰 내용이 있을 경우 이를 표시함.
+                      // '내용:' 라벨과 함께 굵은 텍스트로 내용을 표시함.
+
+                      SizedBox(height: interval2Y),
+                      if (reviewImages.isNotEmpty)
+                        _buildReviewImagesRow(reviewImages, context),
+                      // 리뷰에 첨부된 이미지가 있을 경우, 이미지를 표시하는 행(Row)을 추가함.
+                      // 이미지가 존재하지 않을 경우 해당 부분은 렌더링되지 않음.
+
+                      SizedBox(height: interval2Y),
+                    ],
+                    Container(
+                      height: reviewExpandedBtnHeight,
+                      // 버튼 높이 설정
+                      width: double.infinity,
+                      // 버튼 너비를 화면 전체 너비로 설정
+                      margin: EdgeInsets.symmetric(vertical: interval3Y),
+                      // 위아래 여백 설정
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _expandedReviews[index] =
+                                !(_expandedReviews[index] ??
+                                    false); // 펼치기/닫기 상태 변경
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: GRAY44_COLOR, // 아이콘 및 텍스트 색상 설정
+                          backgroundColor: Theme.of(context)
+                              .scaffoldBackgroundColor, // 앱 기본 배경색
+                          side: BorderSide(color: GRAY44_COLOR), // 버튼 테두리 색상 설정
+                          padding: EdgeInsets.zero, // 버튼 내부 여백 제거
+                        ),
+                        icon: Icon(
+                          _expandedReviews[index] == true
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward, // 화살표 아이콘 설정
+                          size: reviewExpandedBtnFontSize, // 아이콘 크기
+                          color: BLACK_COLOR,
+                        ),
+                        label: Text(
+                          _expandedReviews[index] == true ? '접기' : '펼쳐보기',
+                          // 확장 여부에 따라 텍스트 변경
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: reviewExpandedBtnFontSize, // 텍스트 크기 설정
+                            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                            color: BLACK_COLOR, // 텍스트 색상 설정
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -1755,7 +2068,7 @@ class _PrivateReviewItemsListState
                 fontSize: fontSize,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 fontFamily: 'NanumGothic',
-                color: Colors.black,
+                color: BLACK_COLOR,
               ),
             ),
             // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
@@ -1763,11 +2076,11 @@ class _PrivateReviewItemsListState
             SizedBox(width: interval1X),
             Expanded(
               child: Text(
-                value,
+                value ?? '',
                 style: TextStyle(
                   fontSize: fontSize,
                   fontFamily: 'NanumGothic',
-                  color: Colors.black,
+                  color: BLACK_COLOR,
                   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 ),
                 textAlign: TextAlign.start,
@@ -1790,7 +2103,7 @@ class _PrivateReviewItemsListState
               label,
               style: TextStyle(
                 fontSize: fontSize,
-                color: Colors.black,
+                color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 fontFamily: 'NanumGothic',
               ),
@@ -1799,10 +2112,10 @@ class _PrivateReviewItemsListState
 
             SizedBox(height: interval1Y),
             Text(
-              value,
+              value ?? '',
               style: TextStyle(
                 fontSize: fontSize,
-                color: Colors.black,
+                color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 fontFamily: 'NanumGothic',
               ),
@@ -1860,9 +2173,17 @@ class _PrivateReviewItemsListState
             height: imageWidth,
             margin: EdgeInsets.only(right: interval1X),
             child: AspectRatio(
-              aspectRatio: 1,
-              child: Image.network(image, fit: BoxFit.cover),
-            ),
+                aspectRatio: 1,
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  // 이미지 로드 실패 시 아이콘 표시
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.image_not_supported,
+                    color: GRAY88_COLOR,
+                    size: imageWidth,
+                  ),
+                )),
             // 네트워크에서 이미지를 불러와 표시함.
             // 이미지는 컨테이너에 맞춰서 표시되며,
             // 이미지를 완전히 채우도록 설정됨.

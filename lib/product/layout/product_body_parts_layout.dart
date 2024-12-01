@@ -2482,7 +2482,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
         return productInfoContent; // '상품정보' 내용을 반환
       case ProdDetailScreenTabSection.reviews: // '리뷰' 섹션이면
         return reviewsContent.isEmpty
-            ? Center(child: Text('현재 리뷰가 없습니다.')) // 리뷰 데이터가 없을 때 표시
+            ? Center(child: Text('현재 해당 상품 관련 리뷰가 없습니다.')) // 리뷰 데이터가 없을 때 표시
             : Column(children: reviewsContent); // '리뷰' 내용을 반환
       case ProdDetailScreenTabSection.inquiry: // '문의' 섹션이면
         return ProductInquiryContents(); // '문의' 내용을 반환

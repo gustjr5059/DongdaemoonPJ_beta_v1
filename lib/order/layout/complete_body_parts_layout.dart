@@ -281,7 +281,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                   borderRadius:
                   BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.only(left: updateRequireCompleteInfoDataPartX),
+                padding: EdgeInsets.symmetric(horizontal: updateRequireCompleteInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
                   value ?? '', // value가 null일 경우 빈 문자열로 처리

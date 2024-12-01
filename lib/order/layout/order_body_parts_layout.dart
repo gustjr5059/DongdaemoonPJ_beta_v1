@@ -42,8 +42,10 @@ class UserInfoWidget extends ConsumerWidget {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequirePadding1 = screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 = screenSize.height * (32 / referenceHeight);
+    final double orderRequirePadding1 =
+        screenSize.width * (32 / referenceWidth);
+    final double orderRequirePadding2 =
+        screenSize.height * (32 / referenceHeight);
     final double ordererInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double orderRequireNoticeFontSize1 =
@@ -189,8 +191,8 @@ class UserInfoWidget extends ConsumerWidget {
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                 borderRadius:
-                // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
-                BorderRadius.circular(6),
+                    // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
+                    BorderRadius.circular(6),
               ),
               // 배경 색상 설정
               alignment: Alignment.center,
@@ -220,7 +222,7 @@ class UserInfoWidget extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 // color: Colors.red, // 배경 색상 설정
-                padding: EdgeInsets.only(left: ordererInfoDataPartX),
+                padding: EdgeInsets.symmetric(horizontal: ordererInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
                   value ?? '',
@@ -445,7 +447,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   '상세주소',
                   _detailAddressController,
                   _detailAddressFocusNode,
-                  "우편번호 및 주소를 선택 후 기입해주세요.",
+                  "우편번호와 주소 선택 후 기입해주세요.",
                   isEnabled: _addressController.text != '없음' &&
                       _postalCodeController.text !=
                           '없음', // 우편번호와 주소가 없을 때는 비활성화
@@ -498,102 +500,118 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double recipientInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: recipientInfo4Y),
-      // 행의 상하단에 2.0 픽셀의 여백 추가
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
-          children: [
-            Container(
-              width: recipientInfoTextPartWidth,
-              // 셀의 너비 설정
-              height: recipientInfoTextPartHeight,
-              // 셀의 높이 설정
-              // 라벨 셀의 너비 설정
-              decoration: BoxDecoration(
-                // color: GRAY96_COLOR,
-                color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                borderRadius:
-                BorderRadius.circular(6),
-              ),
-              alignment: Alignment.center,
-              // 텍스트를 중앙 정렬
-              child: Text(
-                label, // 셀에 표시될 텍스트
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
-                  fontSize: recipientInfoTextFontSize,
-                  color: BLACK_COLOR,
-                ),
-              ),
-            ),
-            SizedBox(width: recipientInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
-            Expanded(
-              child: Container(
-                // 데이터 셀의 너비 설정
-                decoration: BoxDecoration(
-                  // color: GRAY96_COLOR,
-                  color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                  border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                  borderRadius:
-                  BorderRadius.circular(6),
-                ),
-                padding: EdgeInsets.only(left: recipientInfoDataPartX),
-                alignment: Alignment.centerLeft, // 텍스트 정렬
-                child: GestureDetector(
-                  onTap: isEnabled
-                      ? () {
-                          FocusScope.of(context)
-                              .requestFocus(focusNode); // 행을 탭할 때 포커스를 설정
-                        }
-                      : null,
-                  child: AbsorbPointer(
-                    absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
-                    child: TextField(
-                      controller: controller,
-                      // 텍스트 필드 컨트롤러 설정
-                      focusNode: focusNode,
-                      // 텍스트 필드 포커스 노드 설정
-                      style: TextStyle(
-                        fontFamily: 'NanumGothic',
-                        fontSize: recipientInfoDataFontSize,
-                        color: BLACK_COLOR,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      // 텍스트 필드 스타일 설정
-                      decoration: InputDecoration(
-                        hintText: hintText,
-                        // 힌트 텍스트 설정
-                        hintStyle: TextStyle(color: GRAY74_COLOR),
-                        // 힌트 텍스트 색상 설정
-                        hintMaxLines: 2,
-                        // 힌트 텍스트 최대 줄 수 설정
-                        border: InputBorder.none,
-                        // 입력 경계선 제거
-                        isDense: true,
-                        // 간격 설정
-                        contentPadding: EdgeInsets.zero, // 내용 여백 제거
-                      ),
-                      maxLines: null,
-                      // 최대 줄 수 설정
-                      onChanged: (value) {
-                        print('텍스트 필드 $label 변경됨: $value'); // 디버깅 메시지 추가
-                        if (label == '배송메모') {
-                          widget.onMemoChanged(_isCustomMemo, value,
-                              _selectedMemo); // 배송메모 변경 시 콜백 호출
-                        }
-                      },
+    // FocusNode의 상태 변화 감지 리스너 추가
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // FocusNode의 상태 변화 감지 리스너
+        focusNode.addListener(() {
+          // FocusNode 상태 변경 시 UI 업데이트
+          setState(() {});
+        });
+
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: recipientInfo4Y),
+          // 행의 상하단에 2.0 픽셀의 여백 추가
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container(
+                  width: recipientInfoTextPartWidth,
+                  // 셀의 너비 설정
+                  height: recipientInfoTextPartHeight,
+                  // 셀의 높이 설정
+                  // 라벨 셀의 너비 설정
+                  decoration: BoxDecoration(
+                    // color: GRAY96_COLOR,
+                    color:
+                        Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                    border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  alignment: Alignment.center,
+                  // 텍스트를 중앙 정렬
+                  child: Text(
+                    label, // 셀에 표시될 텍스트
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NanumGothic',
+                      fontSize: recipientInfoTextFontSize,
+                      color: BLACK_COLOR,
                     ),
                   ),
                 ),
-              ),
+                SizedBox(width: recipientInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
+                Expanded(
+                  child: Container(
+                    // 데이터 셀의 너비 설정
+                    decoration: BoxDecoration(
+                      // color: GRAY96_COLOR,
+                      color:
+                          Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                      border: Border.all(
+                        color: focusNode.hasFocus
+                            ? ORANGE56_COLOR
+                            : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
+                        width: 1.0,
+                      ), // 윤곽선
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
+                    alignment: Alignment.centerLeft, // 텍스트 정렬
+                    child: GestureDetector(
+                      onTap: isEnabled
+                          ? () {
+                              FocusScope.of(context)
+                                  .requestFocus(focusNode); // 행을 탭할 때 포커스를 설정
+                            }
+                          : null,
+                      child: AbsorbPointer(
+                        absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
+                        child: TextField(
+                          controller: controller,
+                          // 텍스트 필드 컨트롤러 설정
+                          focusNode: focusNode,
+                          // 텍스트 필드 포커스 노드 설정
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: recipientInfoDataFontSize,
+                            color: BLACK_COLOR,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          // 텍스트 필드 스타일 설정
+                          decoration: InputDecoration(
+                            hintText: hintText,
+                            // 힌트 텍스트 설정
+                            hintStyle: TextStyle(color: GRAY74_COLOR),
+                            // 힌트 텍스트 색상 설정
+                            hintMaxLines: 2,
+                            // 힌트 텍스트 최대 줄 수 설정
+                            border: InputBorder.none,
+                            // 입력 경계선 제거
+                            isDense: true,
+                            // 간격 설정
+                            contentPadding: EdgeInsets.zero, // 내용 여백 제거
+                          ),
+                          maxLines: null,
+                          // 최대 줄 수 설정
+                          onChanged: (value) {
+                            print('텍스트 필드 $label 변경됨: $value'); // 디버깅 메시지 추가
+                            if (label == '배송메모') {
+                              widget.onMemoChanged(_isCustomMemo, value,
+                                  _selectedMemo); // 배송메모 변경 시 콜백 호출
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -640,8 +658,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 // color: GRAY96_COLOR,
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                borderRadius:
-                BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6),
               ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -663,10 +680,9 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   // color: GRAY96_COLOR,
                   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                  borderRadius:
-                  BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Text(
                   controller.text,
@@ -740,8 +756,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 // color: GRAY96_COLOR,
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                borderRadius:
-                BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6),
               ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -763,10 +778,9 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   // color: GRAY96_COLOR,
                   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                  borderRadius:
-                  BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Row(
                   children: [
@@ -862,8 +876,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 // color: GRAY96_COLOR,
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                borderRadius:
-                BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6),
               ),
               alignment: Alignment.center,
               // 텍스트를 중앙 정렬
@@ -885,10 +898,9 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   // color: GRAY96_COLOR,
                   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                  borderRadius:
-                  BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.only(left: recipientInfoDataPartX),
+                padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.center, // 텍스트 정렬
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -1500,7 +1512,9 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
 
   // ——— 개별 수령방식 버튼을 생성하는 함수
   Widget _buildDeliveryMethodSelectButton(BuildContext context, WidgetRef ref,
-      {required String label, required String price, required bool isSelected}) {
+      {required String label,
+      required String price,
+      required bool isSelected}) {
     return GestureDetector(
       // ——— 버튼 클릭 시 Provider를 사용하여 선택된 수령방식을 업데이트함
       onTap: () {
@@ -1511,10 +1525,10 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         margin: EdgeInsets.symmetric(vertical: 4), // ——— 버튼 간의 간격을 설정함
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .scaffoldBackgroundColor, // ——— 버튼 배경 색상을 설정함
+          color: Theme.of(context).scaffoldBackgroundColor, // ——— 버튼 배경 색상을 설정함
           border: Border.all(
-            color: isSelected ? ORANGE56_COLOR : GRAY83_COLOR, // ——— 선택 여부에 따라 테두리 색상을 변경함
+            color: isSelected ? ORANGE56_COLOR : GRAY83_COLOR,
+            // ——— 선택 여부에 따라 테두리 색상을 변경함
             width: 1.0, // ——— 테두리 두께를 설정함
           ),
           borderRadius: BorderRadius.circular(6), // ——— 버튼의 모서리를 둥글게 설정함
@@ -1529,7 +1543,9 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold, // ——— 텍스트 굵게 표시
-                color: isSelected ? BLACK_COLOR : GRAY83_COLOR, // ——— 선택 여부에 따라 색상을 변경함
+                color: isSelected
+                    ? BLACK_COLOR
+                    : GRAY83_COLOR, // ——— 선택 여부에 따라 색상을 변경함
               ),
             ),
             // ——— 버튼에 표시되는 비용 텍스트
@@ -1538,7 +1554,9 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold, // ——— 텍스트 굵게 표시
-                color: isSelected ? BLACK_COLOR : GRAY83_COLOR, // ——— 선택 여부에 따라 색상을 변경함
+                color: isSelected
+                    ? BLACK_COLOR
+                    : GRAY83_COLOR, // ——— 선택 여부에 따라 색상을 변경함
               ),
             ),
           ],
@@ -1562,7 +1580,6 @@ class TotalPaymentWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // 선택된 배송방식
     final String selectedMethod = ref.watch(deliveryMethodSelectProvider);
 
@@ -1570,11 +1587,11 @@ class TotalPaymentWidget extends ConsumerWidget {
     final double deliveryFee = selectedMethod == '택배수령' ? 4000.0 : 0.0;
 
     // 총 결제금액 계산
-    final double totalPaymentPrice =
-        totalProductPrice - productDiscountPrice;
+    final double totalPaymentPrice = totalProductPrice - productDiscountPrice;
 
     // 배송비 포함한 총 결제금액 계산
-    final double totalPaymentPriceIncludedDeliveryFee = totalPaymentPrice + deliveryFee;
+    final double totalPaymentPriceIncludedDeliveryFee =
+        totalPaymentPrice + deliveryFee;
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -1672,8 +1689,7 @@ class TotalPaymentWidget extends ConsumerWidget {
                 // color: GRAY96_COLOR,
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                borderRadius:
-                BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6),
               ),
               alignment: Alignment.center,
               // 텍스트 정렬
@@ -1695,10 +1711,10 @@ class TotalPaymentWidget extends ConsumerWidget {
                   // color: GRAY96_COLOR,
                   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-                  borderRadius:
-                  BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.only(left: ordererInfoDataPartX, right: ordererInfoDataPartX),
+                padding: EdgeInsets.only(
+                    left: ordererInfoDataPartX, right: ordererInfoDataPartX),
                 alignment: Alignment.centerRight, // 텍스트 정렬
                 child: Text(
                   value ?? '',
@@ -1974,12 +1990,17 @@ class CompleteOrderButton extends ConsumerWidget {
 
                       // 결제 금액 정보 맵 생성
                       final amountInfo = {
-                        'total_product_price': totalProductPrice, // 총 상품금액
-                        'product_discount_price':
-                            productDiscountPrice, // 상품 할인금액
-                        'delivery_fee' : deliveryFee, // 배송비용
-                        'total_payment_price': totalPaymentPrice, // 총 결제금액
-                        'total_payment_price_included_delivery_fee': totalPaymentPriceIncludedDeliveryFee, // 배송비 포함 총 결제금액
+                        'total_product_price': totalProductPrice,
+                        // 총 상품금액
+                        'product_discount_price': productDiscountPrice,
+                        // 상품 할인금액
+                        'delivery_fee': deliveryFee,
+                        // 배송비용
+                        'total_payment_price': totalPaymentPrice,
+                        // 총 결제금액
+                        'total_payment_price_included_delivery_fee':
+                            totalPaymentPriceIncludedDeliveryFee,
+                        // 배송비 포함 총 결제금액
                       };
 
                       // 발주 요청을 보내고 결과로 발주 ID를 받아옴
@@ -2120,222 +2141,223 @@ class OrderListItemWidget extends ConsumerWidget {
     // return ClipRRect(
     //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
     //   child: Container(
-      return Container(
-        width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
-        height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
-        color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-        child: CommonCardView(
-          // 공통 카드뷰 위젯 사용
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-          elevation: 0, // 그림자 깊이 설정
-          content: Padding(
-            // 패딩 설정
-            padding: EdgeInsets.symmetric(
-                vertical: orderlistInfoCardViewPadding1Y,
-                horizontal: orderlistInfoCardViewPaddingX), // 상하 좌우 패딩 설정
-            child: Column(
-              // 컬럼 위젯으로 구성함
-              // 자식 위젯들을 왼쪽 정렬.
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 행(Row) 위젯을 사용하여 발주일자와 발주상태를 배치.
-                Row(
-                  // 자식 위젯들을 양쪽 끝에 배치.
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // 발주번호를 텍스트로 표시.
-                    Text(
-                      '발주번호:  ${orderNumber ?? ''}',
-                      style: TextStyle(
-                        fontSize: orderlistInfoOrderNumberDataFontSize, // 텍스트 크기 설정
-                        fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic', // 글꼴 설정
-                        color: BLACK_COLOR, // 텍스트 색상 설정
-                      ),
+    return Container(
+      width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
+      height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
+      color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+      child: CommonCardView(
+        // 공통 카드뷰 위젯 사용
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+        elevation: 0, // 그림자 깊이 설정
+        content: Padding(
+          // 패딩 설정
+          padding: EdgeInsets.symmetric(
+              vertical: orderlistInfoCardViewPadding1Y,
+              horizontal: orderlistInfoCardViewPaddingX), // 상하 좌우 패딩 설정
+          child: Column(
+            // 컬럼 위젯으로 구성함
+            // 자식 위젯들을 왼쪽 정렬.
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 행(Row) 위젯을 사용하여 발주일자와 발주상태를 배치.
+              Row(
+                // 자식 위젯들을 양쪽 끝에 배치.
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 발주번호를 텍스트로 표시.
+                  Text(
+                    '발주번호:  ${orderNumber ?? ''}',
+                    style: TextStyle(
+                      fontSize: orderlistInfoOrderNumberDataFontSize,
+                      // 텍스트 크기 설정
+                      fontWeight: FontWeight.bold,
+                      // 텍스트 굵기 설정
+                      fontFamily: 'NanumGothic',
+                      // 글꼴 설정
+                      color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
-                    // 발주상태를 텍스트로 표시.
-                    Text(
-                      orderStatus,
-                      style: TextStyle(
-                        fontSize: orderlistInfoOrderStatusDataFontSize,
-                        // 텍스트 크기 설정
-                        fontWeight: FontWeight.bold,
-                        // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic',
-                        // 글꼴 설정
-                        color: RED46_COLOR, // 텍스트 색상 설정
-                      ),
-                    ),
-                  ],
-                ),
-                // 여백을 추가.
-                SizedBox(height: interval1Y),
-                // 발주일자를 텍스트로 표시.
-                Text(
-                  '발주일자:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
-                  style: TextStyle(
-                    fontSize: orderlistInfoOrderDateDataFontSize,
-                    // 텍스트 크기 설정
-                    fontWeight: FontWeight.bold,
-                    // 텍스트 굵기 설정
-                    fontFamily: 'NanumGothic',
-                    // 글꼴 설정
-                    color: GRAY41_COLOR, // 텍스트 색상 설정
                   ),
+                  // 발주상태를 텍스트로 표시.
+                  Text(
+                    orderStatus,
+                    style: TextStyle(
+                      fontSize: orderlistInfoOrderStatusDataFontSize,
+                      // 텍스트 크기 설정
+                      fontWeight: FontWeight.bold,
+                      // 텍스트 굵기 설정
+                      fontFamily: 'NanumGothic',
+                      // 글꼴 설정
+                      color: RED46_COLOR, // 텍스트 색상 설정
+                    ),
+                  ),
+                ],
+              ),
+              // 여백을 추가.
+              SizedBox(height: interval1Y),
+              // 발주일자를 텍스트로 표시.
+              Text(
+                '발주일자:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                style: TextStyle(
+                  fontSize: orderlistInfoOrderDateDataFontSize,
+                  // 텍스트 크기 설정
+                  fontWeight: FontWeight.bold,
+                  // 텍스트 굵기 설정
+                  fontFamily: 'NanumGothic',
+                  // 글꼴 설정
+                  color: GRAY41_COLOR, // 텍스트 색상 설정
                 ),
-                // 여백을 추가.
-                SizedBox(height: interval2Y),
-                // 발주내역 상세보기 및 삭제 버튼을 행(Row)으로 배치함
-                Row(
-                  children: [
-                    Container(
-                      width: orderlistInfoDetailViewBtn1X,
-                      // 발주내역 상세보기 버튼 가로 설정
-                      height: orderlistInfoDetailViewBtn1Y,
-                      // 발주내역 상세보기 버튼 세로 설정
-                      margin: EdgeInsets.only(left: interval1X),
-                      // 왼쪽 여백 설정
-                      child: ElevatedButton(
-                        // ElevatedButton 위젯을 사용하여 버튼을 생성함
-                        onPressed: () {
-                          // 버튼이 눌렸을 때 실행될 함수를 정의함
-                          Navigator.push(
-                            // 새 화면으로 전환하기 위해 Navigator.push를 호출함
-                            context, // 현재 화면의 컨텍스트를 전달함
-                            MaterialPageRoute(
-                              // 새로운 화면으로 전환하기 위한 MaterialPageRoute를 생성함
-                              builder: (context) => // 새 화면을 빌드할 함수를 전달함
-                                  OrderListDetailScreen(
-                                      orderNumber:
-                                          orderNumber), // OrderListDetailScreen을 생성하고, orderNumber를 전달함
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          // 버튼의 스타일을 설정함
-                          foregroundColor: ORANGE56_COLOR,
-                          // 버튼의 글자 색상을 설정함
-                          backgroundColor: ORANGE56_COLOR,
-                          // 버튼의 배경 색상을 설정함
-                          padding: EdgeInsets.symmetric(
-                              vertical: orderlistInfoDetailViewBtnPaddingY,
-                              horizontal: orderlistInfoDetailViewBtnPaddingX),
-                          // 패딩 설정
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(45), // 모서리 둥글게 설정
+              ),
+              // 여백을 추가.
+              SizedBox(height: interval2Y),
+              // 발주내역 상세보기 및 삭제 버튼을 행(Row)으로 배치함
+              Row(
+                children: [
+                  Container(
+                    width: orderlistInfoDetailViewBtn1X,
+                    // 발주내역 상세보기 버튼 가로 설정
+                    height: orderlistInfoDetailViewBtn1Y,
+                    // 발주내역 상세보기 버튼 세로 설정
+                    margin: EdgeInsets.only(left: interval1X),
+                    // 왼쪽 여백 설정
+                    child: ElevatedButton(
+                      // ElevatedButton 위젯을 사용하여 버튼을 생성함
+                      onPressed: () {
+                        // 버튼이 눌렸을 때 실행될 함수를 정의함
+                        Navigator.push(
+                          // 새 화면으로 전환하기 위해 Navigator.push를 호출함
+                          context, // 현재 화면의 컨텍스트를 전달함
+                          MaterialPageRoute(
+                            // 새로운 화면으로 전환하기 위한 MaterialPageRoute를 생성함
+                            builder: (context) => // 새 화면을 빌드할 함수를 전달함
+                                OrderListDetailScreen(
+                                    orderNumber:
+                                        orderNumber), // OrderListDetailScreen을 생성하고, orderNumber를 전달함
                           ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        // 버튼의 스타일을 설정함
+                        foregroundColor: ORANGE56_COLOR,
+                        // 버튼의 글자 색상을 설정함
+                        backgroundColor: ORANGE56_COLOR,
+                        // 버튼의 배경 색상을 설정함
+                        padding: EdgeInsets.symmetric(
+                            vertical: orderlistInfoDetailViewBtnPaddingY,
+                            horizontal: orderlistInfoDetailViewBtnPaddingX),
+                        // 패딩 설정
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
                         ),
-                        child: Text(
-                          // 버튼에 표시될 텍스트를 정의함
-                          '발주 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
-                          style: TextStyle(
-                            fontSize: orderlistInfoDetailViewBtnFontSize,
-                            // 텍스트 크기 설정
-                            fontWeight: FontWeight.bold,
-                            // 텍스트 굵기 설정
-                            fontFamily: 'NanumGothic',
-                            // 글꼴 설정
-                            color: WHITE_COLOR, // 텍스트 색상 설정
-                          ),
+                      ),
+                      child: Text(
+                        // 버튼에 표시될 텍스트를 정의함
+                        '발주 내역 상세보기', // 텍스트 내용으로 '발주 내역 상세보기'를 설정함
+                        style: TextStyle(
+                          fontSize: orderlistInfoDetailViewBtnFontSize,
+                          // 텍스트 크기 설정
+                          fontWeight: FontWeight.bold,
+                          // 텍스트 굵기 설정
+                          fontFamily: 'NanumGothic',
+                          // 글꼴 설정
+                          color: WHITE_COLOR, // 텍스트 색상 설정
                         ),
                       ),
                     ),
-                    Container(
-                      width: deleteBtn1X, // 삭제 버튼 가로 설정
-                      height: deleteBtn1Y, // 삭제 버튼 세로 설정
-                      margin: EdgeInsets.only(left: interval2X), // 왼쪽 여백 설정
-                      child: ElevatedButton(
-                        // 두 번째 ElevatedButton 위젯을 생성함
-                        onPressed: () async {
-                          // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
-                          await showSubmitAlertDialog(
-                            // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
+                  ),
+                  Container(
+                    width: deleteBtn1X, // 삭제 버튼 가로 설정
+                    height: deleteBtn1Y, // 삭제 버튼 세로 설정
+                    margin: EdgeInsets.only(left: interval2X), // 왼쪽 여백 설정
+                    child: ElevatedButton(
+                      // 두 번째 ElevatedButton 위젯을 생성함
+                      onPressed: () async {
+                        // 비동기 함수로 버튼이 눌렸을 때 실행될 함수를 정의함
+                        await showSubmitAlertDialog(
+                          // 알림 대화상자를 표시하기 위해 showSubmitAlertDialog를 호출함
+                          context, // 현재 화면의 컨텍스트를 전달함
+                          title: '[발주 내역 삭제]',
+                          // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
+                          content:
+                              '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?',
+                          // 대화상자의 내용으로 경고 메시지를 설정함
+                          actions: buildAlertActions(
+                            // 대화상자에 표시될 액션 버튼들을 설정함
                             context, // 현재 화면의 컨텍스트를 전달함
-                            title: '[발주 내역 삭제]',
-                            // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
-                            content:
-                                '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?',
-                            // 대화상자의 내용으로 경고 메시지를 설정함
-                            actions: buildAlertActions(
-                              // 대화상자에 표시될 액션 버튼들을 설정함
-                              context, // 현재 화면의 컨텍스트를 전달함
-                              noText: '아니요',
-                              // '아니요' 버튼의 텍스트를 설정함
-                              yesText: '예',
-                              // '예' 버튼의 텍스트를 설정함
-                              noTextStyle: TextStyle(
-                                // '아니요' 버튼의 텍스트 스타일을 설정함
-                                color: BLACK_COLOR,
-                                // '아니요' 버튼의 글자 색상을 검정색으로 설정함
-                                fontWeight:
-                                    FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
-                              ),
-                              yesTextStyle: TextStyle(
-                                // '예' 버튼의 텍스트 스타일을 설정함
-                                color: RED46_COLOR, // '예' 버튼의 글자 색상을 빨간색으로 설정함
-                                fontWeight:
-                                    FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
-                              ),
-                              onYesPressed: () async {
-                                // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
-                                try {
-                                  // orderlistItemsProvider에서 OrderlistItemsNotifier를 읽어와 호출함.
-                                  await ref
-                                      .read(orderlistItemsProvider.notifier)
-                                      // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
-                                      .deleteOrderItems(orderNumber);
-                                  Navigator.of(context)
-                                      .pop(); // 성공적으로 삭제된 후 대화상자를 닫음
-                                  showCustomSnackBar(context,
-                                      '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
-                                } catch (e) {
-                                  // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
-                                  showCustomSnackBar(context,
-                                      '발주 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
-                                }
-                              },
+                            noText: '아니요',
+                            // '아니요' 버튼의 텍스트를 설정함
+                            yesText: '예',
+                            // '예' 버튼의 텍스트를 설정함
+                            noTextStyle: TextStyle(
+                              // '아니요' 버튼의 텍스트 스타일을 설정함
+                              color: BLACK_COLOR,
+                              // '아니요' 버튼의 글자 색상을 검정색으로 설정함
+                              fontWeight:
+                                  FontWeight.bold, // '아니요' 버튼의 글자 굵기를 굵게 설정함
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          // 두 번째 버튼의 스타일을 설정함
-                          foregroundColor: ORANGE56_COLOR,
-                          // 두 번째 버튼의 글자 색상을 설정함
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                          // 버튼 배경색을 앱 배경색으로 설정
-                          side: BorderSide(
-                            color: ORANGE56_COLOR,
+                            yesTextStyle: TextStyle(
+                              // '예' 버튼의 텍스트 스타일을 설정함
+                              color: RED46_COLOR, // '예' 버튼의 글자 색상을 빨간색으로 설정함
+                              fontWeight:
+                                  FontWeight.bold, // '예' 버튼의 글자 굵기를 굵게 설정함
+                            ),
+                            onYesPressed: () async {
+                              // '예' 버튼이 눌렸을 때 실행될 비동기 함수를 정의함
+                              try {
+                                // orderlistItemsProvider에서 OrderlistItemsNotifier를 읽어와 호출함.
+                                await ref
+                                    .read(orderlistItemsProvider.notifier)
+                                    // deleteOrderItem 함수에 발주 번호를 매개변수로 전달하여 발주 항목 삭제 요청을 보냄.
+                                    .deleteOrderItems(orderNumber);
+                                Navigator.of(context)
+                                    .pop(); // 성공적으로 삭제된 후 대화상자를 닫음
+                                showCustomSnackBar(context,
+                                    '발주 내역이 삭제되었습니다.'); // 삭제 성공 메시지를 스낵바로 표시함(성공 메시지 텍스트를 설정함)
+                              } catch (e) {
+                                // 삭제 중 오류가 발생했을 때의 예외 처리를 정의함
+                                showCustomSnackBar(context,
+                                    '발주 내역 삭제 중 오류가 발생했습니다: $e'); // 오류 메시지를 스낵바로 표시함
+                              }
+                            },
                           ),
-                          // 버튼 테두리 색상 설정
-                          padding: EdgeInsets.symmetric(
-                              vertical: deleteBtnPaddingY,
-                              horizontal: deleteBtnPaddingX),
-                          // 패딩 설정
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(45), // 모서리 둥글게 설정
-                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        // 두 번째 버튼의 스타일을 설정함
+                        foregroundColor: ORANGE56_COLOR,
+                        // 두 번째 버튼의 글자 색상을 설정함
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        // 버튼 배경색을 앱 배경색으로 설정
+                        side: BorderSide(
+                          color: ORANGE56_COLOR,
                         ),
-                        child: Text(
-                          // 두 번째 버튼에 표시될 텍스트를 정의함
-                          '삭제', // 텍스트 내용으로 '삭제'를 설정함
-                          style: TextStyle(
-                            fontSize: deleteBtnFontSize, // 텍스트 크기 설정
-                            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                            fontFamily: 'NanumGothic', // 글꼴 설정
-                            color: ORANGE56_COLOR, // 텍스트 색상 설정
-                          ),
+                        // 버튼 테두리 색상 설정
+                        padding: EdgeInsets.symmetric(
+                            vertical: deleteBtnPaddingY,
+                            horizontal: deleteBtnPaddingX),
+                        // 패딩 설정
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
+                        ),
+                      ),
+                      child: Text(
+                        // 두 번째 버튼에 표시될 텍스트를 정의함
+                        '삭제', // 텍스트 내용으로 '삭제'를 설정함
+                        style: TextStyle(
+                          fontSize: deleteBtnFontSize, // 텍스트 크기 설정
+                          fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                          fontFamily: 'NanumGothic', // 글꼴 설정
+                          color: ORANGE56_COLOR, // 텍스트 색상 설정
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
+      ),
       // ),
     );
   }
@@ -2472,7 +2494,7 @@ class _OrderListDetailItemWidgetState
             ? (widget.order!['numberInfo']['order_date'] as Timestamp).toDate()
             : null;
 
-    // order 정보에서 발주 번호를 가져오고, 값이 유효하지 않으면 '에러 발생'을 반환함
+    // order 정보에서 발주 번호를 가져오고, 값이 유효하지 않으면 ''을 반환함
     final orderNumber =
         widget.order!['numberInfo']['order_number']?.toString().isNotEmpty ==
                 true
@@ -2485,7 +2507,7 @@ class _OrderListDetailItemWidgetState
 
     // 배송 시작 날짜를 비동기로 가져오는 provider를 호출하고 결과를 deliveryStartDateAsyncValue에 저장함
     final deliveryStartDateAsyncValue =
-    ref.watch(deliveryStartDateProvider(orderNumber));
+        ref.watch(deliveryStartDateProvider(orderNumber));
 
     // 버튼 활성화 정보를 비동기로 가져오는 provider를 호출하고 결과를 buttonInfoAsyncValue에 저장함
     final buttonInfoAsyncValue = ref.watch(buttonInfoProvider(orderNumber));
@@ -2508,19 +2530,19 @@ class _OrderListDetailItemWidgetState
         ? (widget.order!['amountInfo']['product_discount_price'] as num)
             .toDouble()
         : 0;
-    final deliveryFee = widget.order!['amountInfo']
-    ['delivery_fee']
-        ?.toString()
-        .isNotEmpty ==
-        true
-        ? (widget.order!['amountInfo']['delivery_fee'] as num)
-        .toDouble()
-        : 0;
-    final totalPaymentPriceIncludedDeliveryFee = widget.order!['amountInfo']['total_payment_price_included_delivery_fee']
+    final deliveryFee =
+        widget.order!['amountInfo']['delivery_fee']?.toString().isNotEmpty ==
+                true
+            ? (widget.order!['amountInfo']['delivery_fee'] as num).toDouble()
+            : 0;
+    final totalPaymentPriceIncludedDeliveryFee = widget.order!['amountInfo']
+                    ['total_payment_price_included_delivery_fee']
                 ?.toString()
                 .isNotEmpty ==
             true
-        ? (widget.order!['amountInfo']['total_payment_price_included_delivery_fee'] as num).toDouble()
+        ? (widget.order!['amountInfo']
+                ['total_payment_price_included_delivery_fee'] as num)
+            .toDouble()
         : 0;
 
     // 수령자 정보가 null인지 확인하고 각 필드를 안전하게 접근함
@@ -2674,7 +2696,8 @@ class _OrderListDetailItemWidgetState
                         return Text(
                           '배송시작일: ${date != null ? DateFormat('yyyy.MM.dd').format(date) : ''}',
                           style: TextStyle(
-                            fontSize: orderlistDtInfodeliveryStartDateDataFontSize,
+                            fontSize:
+                                orderlistDtInfodeliveryStartDateDataFontSize,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'NanumGothic',
                             color: GRAY41_COLOR,
@@ -2763,7 +2786,8 @@ class _OrderListDetailItemWidgetState
                   _buildAmountRow(context, '상품 할인금액',
                       '-${numberFormat.format(productDiscountPrice)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
-                  _buildAmountRow(context, '배송비', '+${numberFormat.format(deliveryFee)}원',
+                  _buildAmountRow(
+                      context, '배송비', '+${numberFormat.format(deliveryFee)}원',
                       fontSize: orderlistDtInfoPaymentInfoDataFontSize2),
                   Divider(color: GRAY62_COLOR),
                   _buildAmountRow(context, '총 결제금액',
@@ -2836,7 +2860,8 @@ class _OrderListDetailItemWidgetState
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                   _buildRecipientInfoRow(context, '배송메모', '',
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, deliveryMemo, '', isLongText: true,
+                  _buildRecipientInfoRow(context, deliveryMemo, '',
+                      isLongText: true,
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                 ],
               ),
@@ -2851,443 +2876,444 @@ class _OrderListDetailItemWidgetState
           // ClipRRect(
           //   borderRadius: BorderRadius.circular(20), // 모서리 반경 설정
           //   child: Container(
-            Container(
-              // width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
-              // height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
-              // color: Color(0xFFF3F3F3), // 배경색 설정
-              // color: Theme.of(context).scaffoldBackgroundColor,
-              // decoration: BoxDecoration(
-              //   border: Border(
-              //   bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
-              //   ),
-              // ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                      color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                ),
+          Container(
+            // width: orderlistDtInfo2CardViewWidth, // 카드뷰 가로 크기 설정
+            // height: orderlistDtInfo2CardViewHeight, // 카드뷰 세로 크기 설정
+            // color: Color(0xFFF3F3F3), // 배경색 설정
+            // color: Theme.of(context).scaffoldBackgroundColor,
+            // decoration: BoxDecoration(
+            //   border: Border(
+            //   bottom: BorderSide(color: Colors.black, width: 1.0), // 하단 테두리 색상을 지정함
+            //   ),
+            // ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                    color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
               ),
-              padding: EdgeInsets.only(
-                  left: interval2X,
-                  right: interval2X,
-                  top: interval6Y,
-                  bottom: interval5Y),
-              child: CommonCardView(
-                // backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                // backgroundColor: GRAY97_COLOR,
-                elevation: 0, // 그림자 깊이 설정
-                content: Padding(
-                  padding: EdgeInsets.zero, // 패딩을 없앰
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 환불 완료 상태인 경우 '환불 완료' 텍스트를 표시함.
-                      if (productInfo['boolRefundCompleteBtn'] == true)
-                        Padding(
-                          padding: EdgeInsets.only(bottom: interval2Y),
-                          // 하단에 8.0의 패딩을 추가함.
-                          child: Text(
-                            '환불 완료', // '환불 완료' 텍스트를 표시함.
-                            style: TextStyle(
-                              color: RED46_COLOR,
-                              // 텍스트 색상을 빨간색으로 설정함.
-                              fontWeight: FontWeight.bold,
-                              // 텍스트를 굵게 표시함.
-                              fontSize:
-                                  orderlistDtInfoRefundCompletionDateDataFontSize,
-                              // 텍스트 크기를 16으로 설정함.
-                              fontFamily: 'NanumGothic', // 글꼴 설정
-                            ),
-                          ),
+            ),
+            child: CommonCardView(
+              // backgroundColor: Color(0xFFF3F3F3), // 배경색 설정
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              // backgroundColor: GRAY97_COLOR,
+              elevation: 0, // 그림자 깊이 설정
+              content: Padding(
+                padding: EdgeInsets.zero, // 패딩을 없앰
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 환불 완료 상태인 경우 '환불 완료' 텍스트를 표시함.
+                    if (productInfo['boolRefundCompleteBtn'] == true)
+                      Text(
+                        '  환불 완료', // '환불 완료' 텍스트를 표시함.(앞에 두 칸을 띄워서 작성)
+                        style: TextStyle(
+                          color: RED46_COLOR,
+                          // 텍스트 색상을 빨간색으로 설정함.
+                          fontWeight: FontWeight.bold,
+                          // 텍스트를 굵게 표시함.
+                          fontSize:
+                              orderlistDtInfoRefundCompletionDateDataFontSize,
+                          // 텍스트 크기를 16으로 설정함.
+                          fontFamily: 'NanumGothic', // 글꼴 설정
                         ),
-                      SizedBox(height: interval2Y),
-                      // 새로운 흰색 카드뷰 섹션을 추가함
-                      GestureDetector(
-                        onTap: () {
-                          // 상품 상세 화면으로 이동함
-                          final product = ProductContent(
-                            docId: productInfo['product_id'] ?? '',
-                            category: productInfo['category']?.toString() ?? '',
-                            productNumber:
-                                productInfo['product_number']?.toString() ?? '',
-                            thumbnail:
-                                productInfo['thumbnails']?.toString() ?? '',
-                            briefIntroduction:
-                                productInfo['brief_introduction']?.toString() ??
+                      ),
+                    SizedBox(height: interval1Y),
+                    // 새로운 흰색 카드뷰 섹션을 추가함
+                    GestureDetector(
+                      onTap: () {
+                        // 상품 상세 화면으로 이동함
+                        final product = ProductContent(
+                          docId: productInfo['product_id'] ?? '',
+                          category: productInfo['category']?.toString() ?? '',
+                          productNumber:
+                              productInfo['product_number']?.toString() ?? '',
+                          thumbnail:
+                              productInfo['thumbnails']?.toString() ?? '',
+                          briefIntroduction:
+                              productInfo['brief_introduction']?.toString() ??
+                                  '',
+                          originalPrice: productInfo['original_price'] ?? 0,
+                          discountPrice: productInfo['discount_price'] ?? 0,
+                          discountPercent: productInfo['discount_percent'] ?? 0,
+                        );
+                        navigatorProductDetailScreen.navigateToDetailScreen(
+                            context, product);
+                      },
+                      child: Container(
+                        width: orderlistDtInfo3CardViewWidth,
+                        // 카드뷰 가로 크기 설정
+                        height: orderlistDtInfo3CardViewHeight,
+                        // 카드뷰 세로 크기 설정
+                        color:
+                            Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                        // color: GRAY97_COLOR,
+                        child: CommonCardView(
+                          backgroundColor: Theme.of(context)
+                              .scaffoldBackgroundColor, // 배경색 설정
+                          // backgroundColor: GRAY97_COLOR,
+                          elevation: 0, // 그림자 깊이 설정
+                          content: Padding(
+                            padding: EdgeInsets.zero, // 패딩을 없앰
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 상품 번호와 간략 소개를 표시하는 _buildProductInfoRow 함수 호출
+                                _buildProductInfoRow(
+                                    context,
+                                    productInfo['brief_introduction']
+                                                ?.toString()
+                                                .isNotEmpty ==
+                                            true
+                                        ? productInfo['brief_introduction']
+                                        : '',
                                     '',
-                            originalPrice: productInfo['original_price'] ?? 0,
-                            discountPrice: productInfo['discount_price'] ?? 0,
-                            discountPercent:
-                                productInfo['discount_percent'] ?? 0,
-                          );
-                          navigatorProductDetailScreen.navigateToDetailScreen(
-                              context, product);
-                        },
-                        child: Container(
-                          width: orderlistDtInfo3CardViewWidth,
-                          // 카드뷰 가로 크기 설정
-                          height: orderlistDtInfo3CardViewHeight,
-                          // 카드뷰 세로 크기 설정
-                          color: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-                          // color: GRAY97_COLOR,
-                          child: CommonCardView(
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
-                            // backgroundColor: GRAY97_COLOR,
-                            elevation: 0, // 그림자 깊이 설정
-                            content: Padding(
-                              padding: EdgeInsets.zero, // 패딩을 없앰
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // 상품 번호와 간략 소개를 표시하는 _buildProductInfoRow 함수 호출
-                                  _buildProductInfoRow(
-                                      context,
-                                      productInfo['brief_introduction']
+                                    bold: true,
+                                    fontSize:
+                                        orderlistDtInfoBriefIntroDataFontSize),
+                                SizedBox(height: interval1Y),
+                                _buildProductInfoRow(
+                                    context,
+                                    productInfo['product_number']
+                                                ?.toString()
+                                                .isNotEmpty ==
+                                            true
+                                        ? '상품번호: ${productInfo['product_number']}'
+                                        : '',
+                                    '',
+                                    bold: true,
+                                    fontSize:
+                                        orderlistDtInfoProdNumberDataFontSize),
+                                SizedBox(height: interval1Y),
+                                // 상품의 썸네일 이미지와 가격 정보를 표시하는 행
+                                Row(
+                                  children: [
+                                    // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                    Expanded(
+                                      flex: 4,
+                                      child: productInfo['thumbnails']
                                                   ?.toString()
                                                   .isNotEmpty ==
                                               true
-                                          ? productInfo['brief_introduction']
-                                          : '',
-                                      '',
-                                      bold: true,
-                                      fontSize:
-                                          orderlistDtInfoBriefIntroDataFontSize),
-                                  SizedBox(height: interval1Y),
-                                  _buildProductInfoRow(
-                                      context,
-                                      productInfo['product_number']
-                                                  ?.toString()
-                                                  .isNotEmpty ==
-                                              true
-                                          ? '상품번호: ${productInfo['product_number']}'
-                                          : '',
-                                      '',
-                                      bold: true,
-                                      fontSize:
-                                          orderlistDtInfoProdNumberDataFontSize),
-                                  SizedBox(height: interval1Y),
-                                  // 상품의 썸네일 이미지와 가격 정보를 표시하는 행
-                                  Row(
-                                    children: [
-                                      // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
-                                      Expanded(
-                                        flex: 4,
-                                        child: productInfo['thumbnails']
-                                                    ?.toString()
-                                                    .isNotEmpty ==
-                                                true
-                                            ? Image.network(
-                                                productInfo['thumbnails'],
-                                                fit: BoxFit.cover,
-                                                // 이미지 로드 실패 시 아이콘 표시
-                                                errorBuilder: (context, error,
-                                                        stackTrace) =>
-                                                    Icon(
-                                                  Icons.image_not_supported,
-                                                  color: GRAY88_COLOR,
-                                                  size: interval4X,
-                                                ),
-                                              )
-                                            : Icon(
+                                          ? Image.network(
+                                              productInfo['thumbnails'],
+                                              fit: BoxFit.cover,
+                                              // 이미지 로드 실패 시 아이콘 표시
+                                              errorBuilder: (context, error,
+                                                      stackTrace) =>
+                                                  Icon(
                                                 Icons.image_not_supported,
                                                 color: GRAY88_COLOR,
                                                 size: interval4X,
                                               ),
-                                      ), // 썸네일이 없을 때 아이콘을 표시
-                                      SizedBox(width: interval1X),
-                                      // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
-                                      Expanded(
-                                        flex: 6,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : '')}원',
-                                              style: TextStyle(
-                                                fontSize:
-                                                    orderlistDtInfoOriginalPriceDataFontSize,
-                                                fontFamily: 'NanumGothic',
-                                                color: GRAY60_COLOR,
-                                                decoration:
-                                                    TextDecoration.lineThrough,
+                                            )
+                                          : Icon(
+                                              Icons.image_not_supported,
+                                              color: GRAY88_COLOR,
+                                              size: interval4X,
+                                            ),
+                                    ), // 썸네일이 없을 때 아이콘을 표시
+                                    SizedBox(width: interval1X),
+                                    // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
+                                    Expanded(
+                                      flex: 6,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${numberFormat.format(productInfo['original_price']?.toString().isNotEmpty == true ? productInfo['original_price'] as num : '')}원',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  orderlistDtInfoOriginalPriceDataFontSize,
+                                              fontFamily: 'NanumGothic',
+                                              color: GRAY60_COLOR,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : '')}원',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      orderlistDtInfoDiscountPriceDataFontSize,
+                                                  fontFamily: 'NanumGothic',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: BLACK_COLOR,
+                                                ),
                                               ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  '${numberFormat.format(productInfo['discount_price']?.toString().isNotEmpty == true ? productInfo['discount_price'] as num : '')}원',
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        orderlistDtInfoDiscountPriceDataFontSize,
-                                                    fontFamily: 'NanumGothic',
-                                                    fontWeight: FontWeight.bold,
-                                                    color: BLACK_COLOR,
-                                                  ),
+                                              SizedBox(width: interval2X),
+                                              Text(
+                                                '${numberFormat.format(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : '')}%',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      orderlistDtInfoDiscountPercentDataFontSize,
+                                                  fontFamily: 'NanumGothic',
+                                                  color: RED46_COLOR,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                SizedBox(width: interval2X),
-                                                Text(
-                                                  '${numberFormat.format(productInfo['discount_percent']?.toString().isNotEmpty == true ? productInfo['discount_percent'] as num : '')}%',
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        orderlistDtInfoDiscountPercentDataFontSize,
-                                                    fontFamily: 'NanumGothic',
-                                                    color: RED46_COLOR,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
-                                                productInfo['selected_color_image']
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                              productInfo['selected_color_image']
+                                                          ?.toString()
+                                                          .isNotEmpty ==
+                                                      true
+                                                  ? Image.network(
+                                                      productInfo[
+                                                          'selected_color_image'],
+                                                      height:
+                                                          orderlistDtInfoColorImageDataHeight,
+                                                      width:
+                                                          orderlistDtInfoColorImageDataWidth,
+                                                      fit: BoxFit.cover,
+                                                      // 이미지 로드 실패 시 아이콘 표시
+                                                      errorBuilder: (context,
+                                                              error,
+                                                              stackTrace) =>
+                                                          Icon(
+                                                        Icons
+                                                            .image_not_supported,
+                                                        color: GRAY88_COLOR,
+                                                        size:
+                                                            orderlistDtInfoColorImageDataHeight,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.image_not_supported,
+                                                      color: GRAY88_COLOR,
+                                                      size:
+                                                          orderlistDtInfoColorImageDataHeight,
+                                                    ),
+                                              SizedBox(width: interval2X),
+                                              // 선택된 색상 텍스트를 표시
+                                              Text(
+                                                productInfo['selected_color_text']
                                                             ?.toString()
                                                             .isNotEmpty ==
                                                         true
-                                                    ? Image.network(
-                                                        productInfo[
-                                                            'selected_color_image'],
-                                                        height:
-                                                            orderlistDtInfoColorImageDataHeight,
-                                                        width:
-                                                            orderlistDtInfoColorImageDataWidth,
-                                                        fit: BoxFit.cover,
-                                                  // 이미지 로드 실패 시 아이콘 표시
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) =>
-                                                      Icon(
-                                                        Icons.image_not_supported,
-                                                        color: GRAY88_COLOR,
-                                                        size: orderlistDtInfoColorImageDataHeight,
-                                                      ),
-                                                )
-                                                    : Icon(
-                                                  Icons.image_not_supported,
-                                                  color: GRAY88_COLOR,
-                                                  size: orderlistDtInfoColorImageDataHeight,
+                                                    ? productInfo[
+                                                        'selected_color_text']
+                                                    : '',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      orderlistDtInfoColorTextDataFontSize,
+                                                  fontFamily: 'NanumGothic',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: BLACK_COLOR,
                                                 ),
-                                                SizedBox(width: interval2X),
-                                                // 선택된 색상 텍스트를 표시
-                                                Text(
-                                                  productInfo['selected_color_text']
-                                                              ?.toString()
-                                                              .isNotEmpty ==
-                                                          true
-                                                      ? productInfo[
-                                                          'selected_color_text']
-                                                      : '',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        orderlistDtInfoColorTextDataFontSize,
-                                                    fontFamily: 'NanumGothic',
-                                                    fontWeight: FontWeight.bold,
-                                                    color: BLACK_COLOR,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: interval1Y),
-                                            // 선택된 사이즈와 수량을 표시
-                                            Text(
-                                              '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
-                                              style: TextStyle(
-                                                fontSize:
-                                                    orderlistDtInfoSizeTextDataFontSize,
-                                                fontFamily: 'NanumGothic',
-                                                fontWeight: FontWeight.bold,
-                                                color: BLACK_COLOR,
                                               ),
+                                            ],
+                                          ),
+                                          SizedBox(height: interval1Y),
+                                          // 선택된 사이즈와 수량을 표시
+                                          Text(
+                                            '${productInfo['selected_size']?.toString().isNotEmpty == true ? productInfo['selected_size'] : ''}',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  orderlistDtInfoSizeTextDataFontSize,
+                                              fontFamily: 'NanumGothic',
+                                              fontWeight: FontWeight.bold,
+                                              color: BLACK_COLOR,
                                             ),
-                                            SizedBox(height: interval1Y),
-                                            Text(
-                                              '${productInfo['selected_count']?.toString().isNotEmpty == true ? '${productInfo['selected_count']} 개' : '0 개'}',
-                                              style: TextStyle(
-                                                fontSize:
-                                                    orderlistDtInfoCountTextDataFontSize,
-                                                fontFamily: 'NanumGothic',
-                                                fontWeight: FontWeight.bold,
-                                                color: BLACK_COLOR,
-                                              ),
+                                          ),
+                                          SizedBox(height: interval1Y),
+                                          Text(
+                                            '${productInfo['selected_count']?.toString().isNotEmpty == true ? productInfo['selected_count'] : ''}개',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  orderlistDtInfoCountTextDataFontSize,
+                                              fontFamily: 'NanumGothic',
+                                              fontWeight: FontWeight.bold,
+                                              color: BLACK_COLOR,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: interval4Y),
-                      // 환불 및 리뷰 버튼을 표시하고, 버튼 활성화 상태에 따라 UI를 제어하는 로직을 추가함
-                      buttonInfoAsyncValue.when(
-                        data: (buttonInfo) {
-                          final boolRefundBtn =
-                              buttonInfo['boolRefundBtn'] ?? false;
-                          final boolReviewWriteBtn =
-                              buttonInfo['boolReviewWriteBtn'] ?? false;
+                    ),
+                    SizedBox(height: interval4Y),
+                    // 환불 및 리뷰 버튼을 표시하고, 버튼 활성화 상태에 따라 UI를 제어하는 로직을 추가함
+                    buttonInfoAsyncValue.when(
+                      data: (buttonInfo) {
+                        final boolRefundBtn =
+                            buttonInfo['boolRefundBtn'] ?? false;
+                        final boolReviewWriteBtn =
+                            buttonInfo['boolReviewWriteBtn'] ?? false;
 
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                onPressed: boolRefundBtn &&
-                                        !(productInfo[
-                                                'boolRefundCompleteBtn'] ??
-                                            false)
-                                    ? () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                RefundPolicyGuideScreen(
-                                                    orderNumber: widget.order?[
-                                                            'numberInfo']
-                                                        ['order_number']),
-                                          ),
-                                        );
-                                      }
-                                    : null, // 환불 버튼 활성화 여부에 따라 동작함
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: boolRefundBtn
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: boolRefundBtn &&
+                                      !(productInfo['boolRefundCompleteBtn'] ??
+                                          false)
+                                  ? () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RefundPolicyGuideScreen(
+                                                  orderNumber: widget
+                                                          .order?['numberInfo']
+                                                      ['order_number']),
+                                        ),
+                                      );
+                                    }
+                                  : null, // 환불 버튼 활성화 여부에 따라 동작함
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: boolRefundBtn
+                                    ? ORANGE56_COLOR
+                                    : GRAY62_COLOR,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                side: BorderSide(
+                                    color: boolRefundBtn
+                                        ? ORANGE56_COLOR
+                                        : GRAY62_COLOR),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: interval4Y,
+                                    horizontal: interval3X),
+                              ),
+                              child: Text(
+                                '환불',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'NanumGothic',
+                                  fontSize:
+                                      orderlistDtInfoBottomBtnDataFontSize,
+                                  color: boolRefundBtn
                                       ? ORANGE56_COLOR
-                                      : GRAY62_COLOR,
-                                  backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  side: BorderSide(
-                                      color: boolRefundBtn
-                                          ? ORANGE56_COLOR
-                                          : GRAY62_COLOR),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: interval4Y,
-                                      horizontal: interval3X),
-                                ),
-                                child: Text(
-                                  '환불',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
-                                    fontSize:
-                                        orderlistDtInfoBottomBtnDataFontSize,
-                                    color: ORANGE56_COLOR,
-                                  ),
+                                      : GRAY40_COLOR,
                                 ),
                               ),
-                              ElevatedButton(
-                                // 'boolReviewWriteBtn' 필드값과 'boolReviewCompleteBtn' 필드값을 조건으로 활성화 / 비활성화를 동작
-                                // 'boolReviewWriteBtn' 필드값이 'true'가 되면 활성화되자만, 이 중 'boolReviewCompleteBtn' 필드값이 'ture'가 되면 비활성화로 변경
-                                onPressed: boolReviewWriteBtn &&
+                            ),
+                            ElevatedButton(
+                              // 'boolReviewWriteBtn' 필드값과 'boolReviewCompleteBtn' 필드값을 조건으로 활성화 / 비활성화를 동작
+                              // 'boolReviewWriteBtn' 필드값이 'true'가 되면 활성화되자만, 이 중 'boolReviewCompleteBtn' 필드값이 'ture'가 되면 비활성화로 변경
+                              onPressed: boolReviewWriteBtn &&
+                                      !(productInfo['boolReviewCompleteBtn'] ??
+                                          false)
+                                  ? () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ReviewCreateDetailScreen(
+                                            productInfo: productInfo,
+                                            // 개별 상품 데이터를 전달함
+                                            numberInfo:
+                                                widget.order!['numberInfo'],
+                                            // 개별 상품 발주번호 및 발주일자 전달함
+                                            userEmail: FirebaseAuth
+                                                .instance.currentUser!.email!,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작함
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: boolReviewWriteBtn &&
                                         !(productInfo[
                                                 'boolReviewCompleteBtn'] ??
                                             false)
-                                    ? () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ReviewCreateDetailScreen(
-                                              productInfo: productInfo,
-                                              // 개별 상품 데이터를 전달함
-                                              numberInfo:
-                                                  widget.order!['numberInfo'],
-                                              // 개별 상품 발주번호 및 발주일자 전달함
-                                              userEmail: FirebaseAuth
-                                                  .instance.currentUser!.email!,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    : null, // 리뷰 작성 버튼 활성화 여부에 따라 동작함
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: boolRefundBtn
+                                    ? ORANGE56_COLOR
+                                    : GRAY62_COLOR,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                side: BorderSide(
+                                    color: boolReviewWriteBtn &&
+                                            !(productInfo[
+                                                    'boolReviewCompleteBtn'] ??
+                                                false)
+                                        ? ORANGE56_COLOR
+                                        : GRAY62_COLOR),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: interval4Y,
+                                    horizontal: interval3X),
+                              ),
+                              child: Text(
+                                '리뷰 작성',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'NanumGothic',
+                                  fontSize:
+                                      orderlistDtInfoBottomBtnDataFontSize,
+                                  color: boolReviewWriteBtn &&
+                                          !(productInfo[
+                                                  'boolReviewCompleteBtn'] ??
+                                              false)
                                       ? ORANGE56_COLOR
-                                      : GRAY62_COLOR,
-                                  backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  side: BorderSide(
-                                      color: boolRefundBtn
-                                          ? ORANGE56_COLOR
-                                          : GRAY62_COLOR),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: interval4Y,
-                                      horizontal: interval3X),
-                                ),
-                                child: Text(
-                                  '리뷰 작성',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
-                                    fontSize:
-                                        orderlistDtInfoBottomBtnDataFontSize,
-                                    color: ORANGE56_COLOR,
-                                  ),
+                                      : GRAY40_COLOR,
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  onOrderAddToCartButtonPressed(
-                                      context, ref, productInfo);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: boolRefundBtn
-                                      ? ORANGE56_COLOR
-                                      : GRAY62_COLOR,
-                                  backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  side: BorderSide(
-                                      color: boolRefundBtn
-                                          ? ORANGE56_COLOR
-                                          : GRAY62_COLOR),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: interval4Y,
-                                      horizontal: interval3X),
-                                ),
-                                child: Text(
-                                  '장바구니 담기',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
-                                    fontSize:
-                                        orderlistDtInfoBottomBtnDataFontSize,
-                                    color: ORANGE56_COLOR,
-                                  ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                onOrderAddToCartButtonPressed(
+                                    context, ref, productInfo);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: ORANGE56_COLOR,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                side: BorderSide(color: ORANGE56_COLOR),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: interval4Y,
+                                    horizontal: interval3X),
+                              ),
+                              child: Text(
+                                '장바구니 담기',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'NanumGothic',
+                                  fontSize:
+                                      orderlistDtInfoBottomBtnDataFontSize,
+                                  color: ORANGE56_COLOR,
                                 ),
                               ),
-                            ],
-                          );
-                        },
-                        loading: () => buildCommonLoadingIndicator(),
-                        // 공통 로딩 인디케이터 호출
-                        error: (error, stack) => Container(
-                          // 에러 상태에서 중앙 배치
-                          height: errorTextHeight, // 전체 화면 높이 설정
-                          alignment: Alignment.center, // 중앙 정렬
-                          child: buildCommonErrorIndicator(
-                            message: '에러가 발생했으니, 앱을 재실행해주세요.',
-                            // 첫 번째 메시지 설정
-                            secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
-                            // 두 번째 메시지 설정
-                            fontSize1: errorTextFontSize1,
-                            // 폰트1 크기 설정
-                            fontSize2: errorTextFontSize2,
-                            // 폰트2 크기 설정
-                            color: BLACK_COLOR,
-                            // 색상 설정
-                            showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
-                          ),
+                            ),
+                          ],
+                        );
+                      },
+                      loading: () => buildCommonLoadingIndicator(),
+                      // 공통 로딩 인디케이터 호출
+                      error: (error, stack) => Container(
+                        // 에러 상태에서 중앙 배치
+                        height: errorTextHeight, // 전체 화면 높이 설정
+                        alignment: Alignment.center, // 중앙 정렬
+                        child: buildCommonErrorIndicator(
+                          message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                          // 첫 번째 메시지 설정
+                          secondMessage: '에러가 반복될 시, \'문의하기\'에서 문의해주세요.',
+                          // 두 번째 메시지 설정
+                          fontSize1: errorTextFontSize1,
+                          // 폰트1 크기 설정
+                          fontSize2: errorTextFontSize2,
+                          // 폰트2 크기 설정
+                          color: BLACK_COLOR,
+                          // 색상 설정
+                          showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
           // ),
         ],
       ],

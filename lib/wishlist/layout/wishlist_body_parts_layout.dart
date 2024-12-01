@@ -137,7 +137,7 @@ class WishlistIconButton extends ConsumerWidget {
         );
       },
       // 데이터가 로딩 중인 경우
-      loading: () => CircularProgressIndicator(),
+      loading: () => buildCommonLoadingIndicator(),
       // 에러가 발생한 경우
       error: (e, stack) => Icon(Icons.error),
     );
@@ -155,7 +155,7 @@ class WishlistItemsList extends ConsumerWidget {
     // user가 null인 경우 (로그인되지 않은 경우)
     if (user == null) {
       // 빈 위젯 반환
-      return Center(child: Text('로그인이 필요합니다.'));
+      return const Center(child: Text('로그인이 필요합니다.'));
     }
 
     // 현재 로그인한 사용자 이메일 가져옴

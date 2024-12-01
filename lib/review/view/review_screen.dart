@@ -297,7 +297,7 @@ class _PrivateReviewMainScreenState
                     child: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '리뷰 관리',
+                      title: '리뷰 목록',
                       // 앱 바의 제목 설정
                       leadingType: LeadingType.none,
                       // 앱 바의 leading 버튼 설정

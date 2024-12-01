@@ -99,10 +99,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
 
 // ----- 수령자 정보 관련 컨트롤러 및 설정값 시작 부분
 // 이름을 입력받는 컨트롤러 생성
-  TextEditingController nameController = TextEditingController();
+  TextEditingController nameController = TextEditingController(text: '');
 
 // 휴대폰 번호를 입력받는 컨트롤러 생성
-  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController(text: '');
 
 // 주소를 입력받는 컨트롤러 생성, 초기값은 '없음'으로 설정
   TextEditingController addressController = TextEditingController(text: '');
@@ -111,10 +111,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
   TextEditingController postalCodeController = TextEditingController(text: '');
 
 // 상세 주소를 입력받는 컨트롤러 생성
-  TextEditingController detailAddressController = TextEditingController();
+  TextEditingController detailAddressController = TextEditingController(text: '');
 
 // 사용자 지정 메모를 입력받는 컨트롤러 생성
-  TextEditingController customMemoController = TextEditingController();
+  TextEditingController customMemoController = TextEditingController(text: '');
 
 // 드롭다운에서 선택된 메모를 저장하는 변수, 초기값 설정
   String selectedMemo = "기사님께 보여지는 메모입니다.";
@@ -187,10 +187,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
 
 // ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 시작 부분
 // 이름을 입력받는 컨트롤러를 생성
-    nameController = TextEditingController();
+    nameController = TextEditingController(text: '');
 
 // 휴대폰 번호를 입력받는 컨트롤러를 생성
-    phoneNumberController = TextEditingController();
+    phoneNumberController = TextEditingController(text: '');
 
 // 주소를 입력받는 컨트롤러를 생성, 초기값은 '없음'으로 설정
     addressController = TextEditingController(text: '');
@@ -199,10 +199,10 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     postalCodeController = TextEditingController(text: '');
 
 // 상세 주소를 입력받는 컨트롤러를 생성
-    detailAddressController = TextEditingController();
+    detailAddressController = TextEditingController(text: '');
 
 // 사용자 지정 메모를 입력받는 컨트롤러를 생성
-    customMemoController = TextEditingController();
+    customMemoController = TextEditingController(text: '');
 // ----- 수령자 정보 관련 컨트롤러 초기 구동 설정 끝 부분
   }
 

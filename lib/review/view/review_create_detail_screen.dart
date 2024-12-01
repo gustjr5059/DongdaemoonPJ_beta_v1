@@ -264,7 +264,12 @@ class _ReviewCreateDetailScreenState
     final double reviewEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
-    return Scaffold(
+    return GestureDetector(
+        onTap: () {
+          // 화면의 다른 부분을 클릭했을 때 포커스 해제
+          FocusScope.of(context).unfocus();
+        },
+    child: Scaffold(
       body: Stack(
         children: [
           CustomScrollView(
@@ -281,20 +286,28 @@ class _ReviewCreateDetailScreenState
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '리뷰 작성 상세',
-                    leadingType: LeadingType.back,
-                    buttonCase: 2,
-                    appBarTitleWidth: reviewDtAppBarTitleWidth,
-                    appBarTitleHeight: reviewDtAppBarTitleHeight,
-                    appBarTitleX: reviewDtAppBarTitleX,
-                    appBarTitleY: reviewDtAppBarTitleY,
-                    chevronIconWidth: reviewChevronIconWidth,
-                    chevronIconHeight: reviewChevronIconHeight,
-                    chevronIconX: reviewChevronIconX,
-                    chevronIconY: reviewChevronIconY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '리뷰 작성',
+                      leadingType: LeadingType.back,
+                      buttonCase: 2,
+                      appBarTitleWidth: reviewDtAppBarTitleWidth,
+                      appBarTitleHeight: reviewDtAppBarTitleHeight,
+                      appBarTitleX: reviewDtAppBarTitleX,
+                      appBarTitleY: reviewDtAppBarTitleY,
+                      chevronIconWidth: reviewChevronIconWidth,
+                      chevronIconHeight: reviewChevronIconHeight,
+                      chevronIconX: reviewChevronIconX,
+                      chevronIconY: reviewChevronIconY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -378,13 +391,12 @@ class _ReviewCreateDetailScreenState
                               (BuildContext context, int index) {
                                 return Padding(
                                   // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: reviewPaddingX),
+                                  padding: EdgeInsets.symmetric(horizontal: 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: interval1Y),
+                                      // SizedBox(height: interval1Y),
                                       // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
                                       // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
                                       // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
@@ -418,6 +430,7 @@ class _ReviewCreateDetailScreenState
           ref.watch(tabIndexProvider), ref, context, 5, 1,
           scrollController:
               reviewCreateDetailScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
+    ),
     );
     // ------ 화면구성 끝
   }
