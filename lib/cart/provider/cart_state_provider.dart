@@ -83,11 +83,11 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       return;
     }
 
-    print("Firestore에서 새로운 장바구니 아이템 3개를 요청합니다.");
-    // Firestore에서 데이터를 3개씩 페이징 처리로 가져옴
+    print("Firestore에서 새로운 장바구니 아이템 4개를 요청합니다.");
+    // Firestore에서 데이터를 4개씩 페이징 처리로 가져옴
     final newItems = await cartItemRepository.getPagedCartItems(
       lastDocument: lastDocument,
-      limit: 3,
+      limit: 4,
     );
 
     if (newItems.isNotEmpty) {

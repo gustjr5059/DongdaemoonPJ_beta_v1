@@ -84,10 +84,11 @@ class AnnounceItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       return;
     }
 
-    // Firestore에서 데이터를 9개씩 페이징 처리로 불러옴
+    print("Firestore에서 새로운 공지사항 아이템 10개를 요청합니다.");
+    // Firestore에서 데이터를 10개씩 페이징 처리로 불러옴
     final newItems = await announceItemRepository.getPagedAnnounceItems(
       lastDocument: lastDocument,
-      limit: 9,
+      limit: 10,
     );
 
     if (newItems.isNotEmpty) {

@@ -2097,9 +2097,9 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
     final double orderlistInfoDetailViewBtn1X =
-        screenSize.width * (150 / referenceWidth); // 발주내역 상세보기 버튼 가로 비율 계산
+        screenSize.width * (220 / referenceWidth); // 발주내역 상세보기 버튼 가로 비율 계산
     final double orderlistInfoDetailViewBtn1Y =
-        screenSize.height * (45 / referenceHeight); // 발주내역 상세보기 버튼 세로 비율 계산
+        screenSize.height * (40 / referenceHeight); // 발주내역 상세보기 버튼 세로 비율 계산
     final double orderlistInfoDetailViewBtnFontSize =
         screenSize.height * (14 / referenceHeight); // 발주내역 상세보기 버튼 텍스트 크기 비율 계산
     final double orderlistInfoDetailViewBtnPaddingX =
@@ -2109,7 +2109,7 @@ class OrderListItemWidget extends ConsumerWidget {
     final double deleteBtn1X =
         screenSize.width * (80 / referenceWidth); // 삭제 버튼 가로 비율 계산
     final double deleteBtn1Y =
-        screenSize.height * (45 / referenceHeight); // 삭제 버튼 세로 비율 계산
+        screenSize.height * (40 / referenceHeight); // 삭제 버튼 세로 비율 계산
     final double deleteBtnFontSize =
         screenSize.height * (14 / referenceHeight); // 삭제 버튼 텍스트 크기 비율 계산
     final double deleteBtnPaddingX =
@@ -2122,13 +2122,15 @@ class OrderListItemWidget extends ConsumerWidget {
         screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y =
         screenSize.height * (12 / referenceHeight); // 세로 간격 2 계산
+    final double interval3Y =
+        screenSize.height * (4 / referenceHeight); // 세로 간격 3 계산
     final double interval1X =
         screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
     final double interval2X =
         screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
     // 날짜 포맷을 지정.
-    final dateFormat = DateFormat('yyyy.MM.dd');
+    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
     // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
     final orderDate =
         (order!['numberInfo']['order_date'] as Timestamp).toDate();
@@ -2196,7 +2198,7 @@ class OrderListItemWidget extends ConsumerWidget {
               SizedBox(height: interval1Y),
               // 발주일자를 텍스트로 표시.
               Text(
-                '발주일자:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                '발주일시:  ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                 style: TextStyle(
                   fontSize: orderlistInfoOrderDateDataFontSize,
                   // 텍스트 크기 설정
@@ -2211,13 +2213,14 @@ class OrderListItemWidget extends ConsumerWidget {
               SizedBox(height: interval2Y),
               // 발주내역 상세보기 및 삭제 버튼을 행(Row)으로 배치함
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: orderlistInfoDetailViewBtn1X,
                     // 발주내역 상세보기 버튼 가로 설정
                     height: orderlistInfoDetailViewBtn1Y,
                     // 발주내역 상세보기 버튼 세로 설정
-                    margin: EdgeInsets.only(left: interval1X),
+                    margin: EdgeInsets.symmetric(vertical: interval3Y),
                     // 왼쪽 여백 설정
                     child: ElevatedButton(
                       // ElevatedButton 위젯을 사용하여 버튼을 생성함
@@ -2241,9 +2244,10 @@ class OrderListItemWidget extends ConsumerWidget {
                         // 버튼의 글자 색상을 설정함
                         backgroundColor: ORANGE56_COLOR,
                         // 버튼의 배경 색상을 설정함
-                        padding: EdgeInsets.symmetric(
-                            vertical: orderlistInfoDetailViewBtnPaddingY,
-                            horizontal: orderlistInfoDetailViewBtnPaddingX),
+                        // padding: EdgeInsets.symmetric(
+                        //     vertical: orderlistInfoDetailViewBtnPaddingY,
+                        //     horizontal: orderlistInfoDetailViewBtnPaddingX),
+                        padding: EdgeInsets.zero, // 버튼 내부 여백 제거
                         // 패딩 설정
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -2267,7 +2271,7 @@ class OrderListItemWidget extends ConsumerWidget {
                   Container(
                     width: deleteBtn1X, // 삭제 버튼 가로 설정
                     height: deleteBtn1Y, // 삭제 버튼 세로 설정
-                    margin: EdgeInsets.only(left: interval2X), // 왼쪽 여백 설정
+                    margin: EdgeInsets.only(left: interval2X, right: interval2X), // 왼쪽, 오른쪽 여백 설정
                     child: ElevatedButton(
                       // 두 번째 ElevatedButton 위젯을 생성함
                       onPressed: () async {
@@ -2278,7 +2282,7 @@ class OrderListItemWidget extends ConsumerWidget {
                           title: '[발주 내역 삭제]',
                           // 대화상자의 제목으로 '발주 내역 삭제'를 설정함
                           content:
-                              '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n작성하신 발주 내역을 삭제하시겠습니까?',
+                              '삭제 시, 해당 내역은 영구적으로 삭제됩니다.\n해당 발주 내역을 삭제하시겠습니까?',
                           // 대화상자의 내용으로 경고 메시지를 설정함
                           actions: buildAlertActions(
                             // 대화상자에 표시될 액션 버튼들을 설정함
@@ -2332,9 +2336,10 @@ class OrderListItemWidget extends ConsumerWidget {
                           color: ORANGE56_COLOR,
                         ),
                         // 버튼 테두리 색상 설정
-                        padding: EdgeInsets.symmetric(
-                            vertical: deleteBtnPaddingY,
-                            horizontal: deleteBtnPaddingX),
+                        // padding: EdgeInsets.symmetric(
+                        //     vertical: deleteBtnPaddingY,
+                        //     horizontal: deleteBtnPaddingX),
+                        padding: EdgeInsets.zero, // 버튼 내부 여백 제거
                         // 패딩 설정
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -2485,8 +2490,8 @@ class _OrderListDetailItemWidgetState
         screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
-    // 날짜 형식을 'yyyy-MM-dd'로 지정함
-    final dateFormat = DateFormat('yyyy.MM.dd');
+    // 날짜 형식을 'yyyy.MM.dd HH:MM'로 지정함
+    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
 
     // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환함
     final orderDate =
@@ -2634,7 +2639,7 @@ class _OrderListDetailItemWidgetState
                   SizedBox(height: interval2Y),
                   // 발주 일자를 표시
                   Text(
-                    '발주일자: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
+                    '발주일시: ${orderDate != null ? dateFormat.format(orderDate) : ''}',
                     style: TextStyle(
                       fontSize: orderlistDtInfoOrderDateDataFontSize,
                       // 텍스트 크기 설정
@@ -2651,7 +2656,7 @@ class _OrderListDetailItemWidgetState
                     data: (date) {
                       if (date != null) {
                         return Text(
-                          '결제완료일: ${date != null ? DateFormat('yyyy.MM.dd').format(date) : ''}',
+                          '결제완료일시: ${date != null ? dateFormat.format(date) : ''}',
                           style: TextStyle(
                             fontSize:
                                 orderlistDtInfoPaymentCompletionDateDataFontSize,
@@ -2694,7 +2699,7 @@ class _OrderListDetailItemWidgetState
                     data: (date) {
                       if (date != null) {
                         return Text(
-                          '배송시작일: ${date != null ? DateFormat('yyyy.MM.dd').format(date) : ''}',
+                          '배송시작일시: ${date != null ? dateFormat.format(date) : ''}',
                           style: TextStyle(
                             fontSize:
                                 orderlistDtInfodeliveryStartDateDataFontSize,

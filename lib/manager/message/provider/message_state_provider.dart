@@ -72,12 +72,12 @@ class AdminMessageItemsListNotifier extends StateNotifier<List<Map<String, dynam
       return;
     }
 
-    print("Firestore에서 새로운 쪽지 아이템 6개를 요청합니다."); // 쪽지 데이터 요청 메시지
-    // Firestore에서 데이터를 6개씩 페이징 처리로 가져옴
+    print("Firestore에서 새로운 쪽지 아이템 9개를 요청합니다."); // 쪽지 데이터 요청 메시지
+    // Firestore에서 데이터를 9개씩 페이징 처리로 가져옴
     final newMessages = await messageRepository.getPagedMessageItemsList(
       userEmail: userEmail,
       lastDocument: lastDocument,
-      limit: 6,
+      limit: 9,
       timeFrame: timeFrame, // 시간 프레임
     );
 

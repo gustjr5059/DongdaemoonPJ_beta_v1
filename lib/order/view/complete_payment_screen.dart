@@ -351,15 +351,6 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                                     const EdgeInsets.symmetric(horizontal: 0.0),
                                 child: Column(
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                              color: BLACK_COLOR,
-                                              width: 1.0), // 하단 테두리 색상을 설정함
-                                        ),
-                                      ),
-                                    ),
                                     CompletePaymentInfoWidget(
                                       orderNumber: orderNumber,
                                       orderDate: orderDate,

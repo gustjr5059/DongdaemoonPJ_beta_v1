@@ -134,7 +134,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               // 각 정보 행을 표시하기 위한 함수 호출
               _buildInfoRow(context, '입금계좌안내', accountNumber),
               _buildInfoRow(context, '발주 번호', orderNumber),
-              _buildInfoRow(context, '발주 일자', orderDate),
+              _buildInfoRow(context, '발주 일시', orderDate),
               _buildInfoRow(context, '총 결제 금액', '${numberFormat.format(totalPayment)}원'),
               _buildInfoRow(context, '발주자 성함', customerName),
               _buildInfoRow(context, '우편번호', recipientInfo['postal_code']),

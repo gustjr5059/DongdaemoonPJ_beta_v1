@@ -286,7 +286,7 @@ class _PrivateMessageMainScreenState
                     child: buildCommonAppBar(
                       context: context,
                       ref: ref,
-                      title: '쪽지 관리',
+                      title: '쪽지 목록',
                       fontFamily: 'NanumGothic',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
@@ -370,20 +370,14 @@ class _PrivateMessageMainScreenState
                     : SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          return Padding(
-                            // 각 항목의 좌우 간격을 messagePaddingX로 설정함.
-                            padding: EdgeInsets.symmetric(
-                                horizontal: messagePaddingX),
-                            child: Column(
+                          return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               // 왼쪽 정렬 설정
                               children: [
-                                SizedBox(height: interval1Y),
                             PrivateMessageBodyPartsContents(timeFrame: 30),
                                 // 불러온 쪽지 내용을 표시
                                 SizedBox(height: interval1Y),
                               ],
-                            ),
                           );
                         },
                         childCount:

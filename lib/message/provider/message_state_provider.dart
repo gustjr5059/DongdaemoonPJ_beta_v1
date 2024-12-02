@@ -55,11 +55,11 @@ class PrivateMessageItemsListNotifier extends StateNotifier<List<Map<String, dyn
     }
 
     // Firestore에서 쪽지 데이터를 요청
-    print("Firestore에서 새로운 쪽지 데이터 7개를 요청 중입니다."); // 데이터 요청 메시지
+    print("Firestore에서 새로운 쪽지 데이터 9개를 요청 중입니다."); // 데이터 요청 메시지
     final newMessages = await messageRepository.getPagedMessageItemsList(
       userEmail: userEmail, // 사용자 이메일
       lastDocument: lastDocument, // 이전 마지막 문서
-      limit: 7, // 가져올 데이터 개수
+      limit: 9, // 가져올 데이터 개수
       timeFrame: timeFrame, // 시간 프레임
     );
 

@@ -140,8 +140,8 @@ class _PrivateReviewCreateDetailFormScreenState
   Widget build(BuildContext context) {
     // 화면의 UI를 그리기 위한 build 메소드
 
-    // 날짜 형식을 'yyyy.MM.dd'로 지정함
-    final dateFormat = DateFormat('yyyy.MM.dd');
+    // 날짜 형식을 'yyyy.MM.dd HH:MM'로 지정함
+    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
 
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
@@ -216,6 +216,8 @@ class _PrivateReviewCreateDetailFormScreenState
         screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
     final double reviewDtInfoDateTextDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double reviewDtInfoGuideTextFontSize =
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 리뷰 작성 버튼 수치
     final double reviewWriteBtnHeight =
@@ -520,7 +522,7 @@ class _PrivateReviewCreateDetailFormScreenState
                   ),
                   SizedBox(height: interval4Y), // 요소 간의 간격을 추가
                   // 발주 일자를 표시하는 행을 빌드함
-                  _buildProductInfoRow(context, '발주일자: ',
+                  _buildProductInfoRow(context, '발주일시: ',
                       orderDate != null ? dateFormat.format(orderDate) : '',
                       bold: true, fontSize: reviewDtInfoDateTextDataFontSize),
                   // 결제 완료 일자를 표시하거나 로딩 중 표시 또는 오류 메시지를 표시함
@@ -528,7 +530,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     data: (date) {
                       if (date != null) {
                         return Text(
-                          '결제완료일: ${date != null ? dateFormat.format(date) : ''}',
+                          '결제완료일시: ${date != null ? dateFormat.format(date) : ''}',
                           style: TextStyle(
                             fontSize: reviewDtInfoDateTextDataFontSize,
                             fontWeight: FontWeight.bold,
@@ -551,7 +553,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     data: (date) {
                       if (date != null) {
                         return Text(
-                          '배송시작일: ${date != null ? dateFormat.format(date) : ''}',
+                          '배송시작일시: ${date != null ? dateFormat.format(date) : ''}',
                           style: TextStyle(
                             fontSize: reviewDtInfoDateTextDataFontSize,
                             fontWeight: FontWeight.bold,
@@ -602,6 +604,23 @@ class _PrivateReviewCreateDetailFormScreenState
         // 리뷰 내용을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
         _buildContentsRow(context, '리뷰 내용', widget.contentController,
             _reviewContentsFocusNode, '300자 이내로 작성 가능합니다.'),
+        SizedBox(height: interval2Y), // 요소 간의 간격을 추가
+        Container(
+          // 패딩을 추가하여 요소 주위에 여백을 줌
+          padding: EdgeInsets.symmetric(
+              horizontal: interval4X, vertical: interval1Y),
+          child: Center(
+            child: Text(
+              '리뷰 등록 시, 해당 발주 상품 관련 리뷰는 재작성이 불가능합니다.',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontFamily: 'NanumGothic',
+                fontSize: reviewDtInfoGuideTextFontSize,
+                color: GRAY35_COLOR,
+              ),
+            ),
+          ),
+        ),
         SizedBox(height: interval4Y), // 제출 버튼과의 간격을 위해 여백 추가
         // 제출 버튼을 빌드하는 함수 호출
         _buildSubmitButton(context),
@@ -1268,7 +1287,8 @@ class _PrivateReviewCreateDetailFormScreenState
                   children: _images.asMap().entries.map((entry) {
                     int index = entry.key; // 이미지 인덱스
                     File image = entry.value; // 이미지 파일
-                    final double imageSize = dynamicContainerWidth / 4; // 이미지 크기
+                    final double imageSize =
+                        dynamicContainerWidth / 4; // 이미지 크기
                     return Padding(
                       padding: EdgeInsets.only(right: interval2X),
                       child: Stack(
@@ -1333,7 +1353,7 @@ class _PrivateReviewCreateDetailFormScreenState
             context,
             title: '[리뷰 등록]',
             // 팝업의 제목을 '리뷰 등록'으로 설정함
-            content: '리뷰를 등록하시면 수정하실 수 없습니다.\n작성하신 리뷰를 등록하시겠습니까?',
+            content: '리뷰를 등록하면 수정하실 수 없습니다.\n작성하신 리뷰를 등록하시겠습니까?',
             // 팝업의 내용을 설정함
             actions: buildAlertActions(
               context,
@@ -1406,9 +1426,10 @@ class _PrivateReviewCreateDetailFormScreenState
         },
         style: ElevatedButton.styleFrom(
           // ElevatedButton의 스타일을 설정함
-          foregroundColor:
-              Theme.of(context).scaffoldBackgroundColor, // 버튼 텍스트 색상을 흰색으로 설정함
-          backgroundColor: ORANGE56_COLOR, // 버튼 배경색을 BUTTON_COLOR로 설정함
+          foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
+          side: BorderSide(color: ORANGE56_COLOR,
+          ), // 버튼 테두리 색상 설정
           padding: EdgeInsets.symmetric(
               vertical: interval1Y, horizontal: interval1X), // 버튼의 패딩을 설정함
         ),
@@ -1418,7 +1439,7 @@ class _PrivateReviewCreateDetailFormScreenState
           style: TextStyle(
             fontFamily: 'NanumGothic',
             color:
-                Theme.of(context).scaffoldBackgroundColor, // 텍스트 색상을 파란색으로 설정함
+            ORANGE56_COLOR, // 텍스트 색상 설정
             fontWeight: FontWeight.bold, // 텍스트를 Bold로 설정함
             fontSize: reviewWriteBtnTextFontSize, // 텍스트 크기를 16으로 설정함
           ),
@@ -1523,8 +1544,8 @@ class _PrivateReviewItemsListState
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
 
-    // 날짜 형식을 'yyyy.MM.dd'로 지정함
-    final dateFormat = DateFormat('yyyy.MM.dd');
+    // 날짜 형식을 'yyyy.MM.dd HH:MM'로 지정함
+    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
 
     final reviewItems = ref.watch(privateReviewItmesListNotifierProvider);
 
@@ -1638,7 +1659,7 @@ class _PrivateReviewItemsListState
                                 title: '[리뷰 삭제]',
                                 // 다이얼로그의 내용을 설정함
                                 content:
-                                    '리뷰를 삭제하시면 해당 발주 상품에 대해 리뷰를 재작성하실 수 없습니다.\n작성하신 리뷰를 삭제하시겠습니까?',
+                                    '삭제 시, 해당 리뷰는 영구적으로 삭제됩니다.\n해당 리뷰를 삭제하시겠습니까?',
                                 // 다이얼로그에 표시할 버튼들을 생성함
                                 actions: buildAlertActions(
                                   context,
@@ -1944,7 +1965,7 @@ class _PrivateReviewItemsListState
                     SizedBox(height: interval2Y),
                     if (_expandedReviews[index] == true) ...[
                       _buildReviewInfoRow(
-                        '작성일자: ',
+                        '작성일시: ',
                         review['review_write_time'] != null &&
                                 review['review_write_time'] is Timestamp
                             ? dateFormat.format(

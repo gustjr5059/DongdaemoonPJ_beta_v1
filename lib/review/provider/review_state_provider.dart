@@ -57,12 +57,12 @@ class PrivateReviewItemsListNotifier extends StateNotifier<List<Map<String, dyna
       return;
     }
 
-    print("Firestore에서 새로운 리뷰 아이템 3개를 요청합니다."); // 리뷰 데이터 요청 메시지
-    // Firestore에서 데이터를 3개씩 페이징 처리로 가져옴
+    print("Firestore에서 새로운 리뷰 아이템 4개를 요청합니다."); // 리뷰 데이터 요청 메시지
+    // Firestore에서 데이터를 4개씩 페이징 처리로 가져옴
     final newReviews = await reviewRepository.getPagedReviewItemsList(
       userEmail: userEmail,
       lastDocument: lastDocument,
-      limit: 3,
+      limit: 4,
     );
 
     if (newReviews.isNotEmpty) {

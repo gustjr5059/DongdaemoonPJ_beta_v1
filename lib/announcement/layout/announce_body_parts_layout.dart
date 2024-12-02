@@ -73,7 +73,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
               final timestamp = announceItem['time'] as Timestamp?;
               // 시간 정보를 문자열로 변환함
               final timeString = timestamp != null
-                  ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
+                  ? "${timestamp.toDate().year}.${timestamp.toDate().month.toString().padLeft(2, '0')}.${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
                   : '';
 
               // 공지사항 항목을 터치할 수 있도록 GestureDetector 사용함
@@ -220,7 +220,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
         announceDetailItem['time'] as Timestamp?; // 공지사항의 시간 정보를 가져옴
     // 시간 정보를 문자열로 변환함
     final timeString = timestamp != null
-        ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
+        ? "${timestamp.toDate().year}.${timestamp.toDate().month.toString().padLeft(2, '0')}.${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
         : ''; // 시간 정보를 포맷팅함
 
     // URL을 통해 가져오는 텍스트 데이터임

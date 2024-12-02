@@ -1,7 +1,9 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
@@ -60,8 +62,6 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
         screenSize.height * (30 / referenceHeight);
     final double deleteBtnWidth =
         screenSize.width * (60 / referenceWidth);
-    final double intervalX =
-        screenSize.width * (8 / referenceWidth);
     final double deleteBtnPaddingY =
         screenSize.height * (2 / referenceHeight);
     final double deleteBtnPaddingX =
@@ -69,14 +69,25 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
     final double deleteBtnFontSize =
         screenSize.height * (12 / referenceHeight);
 
+    // 전체보기 버튼 수치
+    final double allViewBtnHeight =
+        screenSize.height * (30 / referenceHeight);
+    final double allViewBtnWidth =
+        screenSize.width * (250 / referenceWidth);
+    final double allViewBtnPaddingY =
+        screenSize.height * (2 / referenceHeight);
+    final double allViewBtnPaddingX =
+        screenSize.width * (4 / referenceWidth);
+    final double allViewBtnFontSize =
+        screenSize.height * (14 / referenceHeight);
+
     // 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (20 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (60 / referenceHeight);
-    final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval2X = screenSize.width * (10 / referenceWidth);
-    final double interval3X = screenSize.width * (12 / referenceWidth);
-    final double interval4X = screenSize.width * (39 / referenceWidth);
+    final double intervalX =
+        screenSize.width * (8 / referenceWidth);
+    final double interva2X =
+        screenSize.width * (10 / referenceWidth);
+    final double interval1Y = screenSize.height * (4 / referenceHeight);
+
 
     // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
     final double messageEmptyTextWidth =
@@ -90,11 +101,14 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
     final double messageEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
+    // 날짜 형식을 'yyyy.MM.dd HH:MM'로 지정함
+    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
+
     final messageItems = ref.watch(privateMessageItemsListNotifierProvider);
 
         // 쪽지 목록이 비어 있는 경우
         if (messageItems.isEmpty) {
-          // 쪽지 목록이 비어있을 경우 "쪽지가 없습니다" 메시지 표시
+          // 쪽지 목록이 비어있을 경우 "'현재 쪽지 목록 내 쪽지가 없습니다." 메시지 표시
           return Container(
             width: messageEmptyTextWidth,
             height: messageEmptyTextHeight,
@@ -104,7 +118,7 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                 fontSize: messageEmptyTextFontSize,
                 fontFamily: 'NanumGothic',
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: BLACK_COLOR,
               ),
             ),
           );
@@ -115,10 +129,13 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
           // 각 쪽지를 맵핑하여 위젯을 생성.
           children: messageItems.map((message) {
             // 수신자와 주문 번호 텍스트를 구성.
-            String recipientText = '${message['recipient']}';
-            String orderNumberText = '[발주번호: ${message['order_number']}]';
+            final recipientText = '${message['recipient'] ?.toString().isNotEmpty == true ? message['recipient'] : ''}';
+            final orderNumberText = '[발주번호: ${message['order_number'] ?.toString().isNotEmpty == true ? message['order_number'] : ''}]';
+            final contentsText = ' 건 관련 ${message['contents'] ?.toString().isNotEmpty == true ? message['contents'] : ''}';
+            final messageReceptionTime = (message['message_sendingTime'] as Timestamp).toDate();
 
-            // '[자세히]' 버튼을 클릭했을 때 팝업을 띄우는 함수
+
+            // '전체보기' 버튼을 클릭했을 때 팝업을 띄우는 함수
             // showMessageDetailDialog: 쪽지의 자세한 내용을 팝업으로 표시하는 함수
             void showMessageDetailDialog(BuildContext context) async {
               // showSubmitAlertDialog 함수를 호출하여 팝업을 띄움
@@ -134,14 +151,14 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                         text: recipientText,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                          color: RED46_COLOR,
                         ),
                       ),
                       // '님께서 발주 완료한 ' 부분을 검정색으로 설정함
                       TextSpan(
                         text: '님께서 발주 완료한 ',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: BLACK_COLOR,
                         ),
                       ),
                       // $orderNumberText 부분을 빨간색으로 설정하고 Bold로 표시함
@@ -149,14 +166,14 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                         text: orderNumberText,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                          color: RED46_COLOR,
                         ),
                       ),
                       // 기본 텍스트 색상으로 나머지 문구를 표시함
                       TextSpan(
-                        text: ' 건 관련 ${message['contents']}',
+                        text: contentsText,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: BLACK_COLOR,
                         ),
                       ),
                     ],
@@ -166,38 +183,23 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                   context,
                   noText: '닫기', // '닫기' 버튼 텍스트 설정
                   noTextStyle: TextStyle( // '닫기' 버튼 텍스트 스타일을 검정색 Bold로 설정함
-                    color: Colors.black,
+                    color: BLACK_COLOR,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               );
             }
-
-            // 쪽지 목록 카드 뷰를 구성.
-            // return Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 1.0), // 화면의 가로 길이에 맞게 패딩 조정
-            //   child: Column(
-                // children: [
-                //   Row(
-                //     children: [
-                //       Expanded(
-                //         // Expanded 위젯을 사용하여 가로로 공간을 최대한 차지하도록 설정
-                //         child: CommonCardView(
-                //           // CommonCardView 위젯을 사용하여 카드 뷰를 구성
-                //           backgroundColor: BEIGE_COLOR, // 카드 뷰의 배경색을 BEIGE_COLOR로 설정
-                //           content: Column(
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-            // 클립 위젯을 사용하여 모서리를 둥글게 설정함
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-              child: Container(
-                width: messageInfoCardViewWidth, // 카드뷰 가로 크기 설정
-                height: messageInfoCardViewHeight, // 카드뷰 세로 크기 설정
-                padding: EdgeInsets.symmetric(horizontal: interval1X),
+            // // 클립 위젯을 사용하여 모서리를 둥글게 설정함
+            // return ClipRRect(
+            //   borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
+            //   child: Container(
+                // width: messageInfoCardViewWidth, // 카드뷰 가로 크기 설정
+                // height: messageInfoCardViewHeight, // 카드뷰 세로 크기 설정
+            return Container(
+                padding: EdgeInsets.zero, // 패딩을 없앰
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Color(0xFFCECECE), width: 2.0), // 하단 테두리 색상을 지정함
+                    bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
                   ),
                 ),
                 child: CommonCardView( // 공통 카드뷰 위젯 사용
@@ -207,7 +209,19 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                     padding: EdgeInsets.zero, // 패딩을 없앰
                     // Column 위젯을 사용하여 여러 위젯을 수직으로 배치함
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                             children: [
+                              Text('수신일시: ${messageReceptionTime != null ? dateFormat.format(messageReceptionTime) : ''}',
+                                style: TextStyle(
+                                  fontSize: messageDataTextSize1,
+                                  // 텍스트 크기 설정
+                                  fontWeight: FontWeight.bold,
+                                  // 텍스트 굵기 설정
+                                  fontFamily: 'NanumGothic',
+                                  // 글꼴 설정
+                                  color: GRAY41_COLOR, // 텍스트 색상 설정
+                                ),
+                              ),
                               RichText(
                                 // RichText 위젯을 사용하여 다양한 스타일의 텍스트를 포함
                                 maxLines: 2, // 최대 두 줄까지만 텍스트를 표시
@@ -222,7 +236,7 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                         fontFamily: 'NanumGothic',
                                         fontSize: messageDataTextSize1,
                                         fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                        color: RED46_COLOR, // 텍스트 색상을 빨간색으로 설정
                                       ),
                                     ),
                                     TextSpan(
@@ -232,7 +246,7 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                         fontFamily: 'NanumGothic',
                                         fontSize: messageDataTextSize1,
                                         fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                        color: BLACK_COLOR, // 텍스트 색상을 검은색으로 설정
                                       ),
                                     ),
                                     TextSpan(
@@ -242,52 +256,67 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                         fontFamily: 'NanumGothic',
                                         fontSize: messageDataTextSize1,
                                         fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.red, // 텍스트 색상을 빨간색으로 설정
+                                        color: RED46_COLOR, // 텍스트 색상을 빨간색으로 설정
                                       ),
                                     ),
                                     TextSpan(
                                       // 네 번째 텍스트 스팬
-                                      text: ' 건 관련 ${message['contents']}', // 메시지 내용을 설정
+                                      text: contentsText, // 메시지 내용을 설정
                                       style: TextStyle(
                                         fontFamily: 'NanumGothic',
                                         fontSize: messageDataTextSize1,
                                         fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        color: Colors.black, // 텍스트 색상을 검은색으로 설정
+                                        color: BLACK_COLOR, // 텍스트 색상을 검은색으로 설정
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              // [자세히] 버튼을 중앙에 위치시키고, '삭제' 버튼을 오른쪽 끝에 배치
+                              // '전체보기' 버튼과 '삭제' 버튼을 중앙에 배치
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Spacer(), // 왼쪽을 비우기 위해 Spacer 추가
-                                  TextButton(
-                                    onPressed: () {
-                                      showMessageDetailDialog(context); // '[자세히]' 버튼을 클릭했을 때 showMessageDetailDialog 함수를 호출함
-                                    },
-                                    child: Text(
-                                      '[자세히]', // [자세히] 텍스트를 표시
-                                      style: TextStyle(
-                                        fontFamily: 'NanumGothic',
-                                        color: Colors.blue, // 텍스트 색상을 파란색으로 설정
-                                        fontWeight: FontWeight.bold, // 텍스트를 볼드체로 설정
-                                        fontSize: messageDataTextSize2, // 텍스트 크기 설정
+                                  Container(
+                                    height: allViewBtnHeight,
+                                    width: allViewBtnWidth,
+                                    margin: EdgeInsets.symmetric(vertical: interval1Y), // 위아래 여백 설정
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          showMessageDetailDialog(context); // '전체보기' 버튼을 클릭했을 때 showMessageDetailDialog 함수를 호출함
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor: GRAY44_COLOR, // 아이콘 및 텍스트 색상 설정
+                                          backgroundColor: Theme.of(context)
+                                              .scaffoldBackgroundColor, // 앱 기본 배경색
+                                          side: BorderSide(color: GRAY44_COLOR), // 버튼 테두리 색상 설정
+                                          padding: EdgeInsets.zero, // 버튼 내부 여백 제거
+                                        ),
+                                        icon: Icon(
+                                              Icons.all_out_outlined, // 전체보기 아이콘 설정
+                                          size: allViewBtnFontSize, // 아이콘 크기
+                                          color: BLACK_COLOR,
+                                        ),
+                                        label: Text(
+                                          '전체보기',
+                                          style: TextStyle(
+                                            fontFamily: 'NanumGothic',
+                                            fontSize: allViewBtnFontSize, // 텍스트 크기 설정
+                                            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                                            color: BLACK_COLOR, // 텍스트 색상 설정
+                                          ),
+                                        ),
                                       ),
-                                    ),
                                   ),
-                                  Spacer(), // 중앙에 위치시키기 위해 Spacer 추가
                                   // 카드뷰 내부 오른쪽 끝에 위치하는 삭제 버튼
                                   Container(
                                     width: deleteBtnWidth,
                                     height: deleteBtnHeight,
-                                    margin: EdgeInsets.only(right: intervalX), // 오른쪽 여백 설정
+                                    margin: EdgeInsets.only(left: intervalX, right: intervalX), // 오른쪽 여백 설정
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        foregroundColor: Color(0xFF6FAD96), // 텍스트 색상 설정
+                                        foregroundColor: GRAY44_COLOR, // 텍스트 색상 설정
                                         backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                                        side: BorderSide(color: Color(0xFF6FAD96)), // 버튼 테두리 색상 설정
+                                        side: BorderSide(color: GRAY44_COLOR), // 버튼 테두리 색상 설정
                                         padding: EdgeInsets.symmetric(vertical: deleteBtnPaddingY, horizontal: deleteBtnPaddingX), // 버튼 패딩
                                       ),
                                     onPressed: () async {
@@ -295,17 +324,17 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                       await showSubmitAlertDialog(
                                         context,
                                         title: '[쪽지 삭제]', // 다이얼로그 제목 설정
-                                        content: '쪽지를 삭제하시면 더이상 해당 쪽지를 확인하실 수 없습니다.\n해당 쪽지를 삭제하시겠습니까?', // 다이얼로그 내용 설정
+                                        content: '삭제 시, 해당 쪽지는 영구적으로 삭제됩니다.\n해당 쪽지를 삭제하시겠습니까?', // 다이얼로그 내용 설정
                                         actions: buildAlertActions(
                                           context,
                                           noText: '아니요', // 아니요 버튼 텍스트 설정
                                           yesText: '예', // 예 버튼 텍스트 설정
                                           noTextStyle: TextStyle(
-                                            color: Colors.black, // 아니요 버튼 텍스트 색상 설정
+                                            color: BLACK_COLOR, // 아니요 버튼 텍스트 색상 설정
                                             fontWeight: FontWeight.bold, // 아니요 버튼 텍스트 굵기 설정
                                           ),
                                           yesTextStyle: TextStyle(
-                                            color: Colors.red, // 예 버튼 텍스트 색상 설정
+                                            color: RED46_COLOR, // 예 버튼 텍스트 색상 설정
                                             fontWeight: FontWeight.bold, // 예 버튼 텍스트 굵기 설정
                                           ),
                                           onYesPressed: () async {
@@ -314,14 +343,8 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                               await ref.read(privateMessageItemsListNotifierProvider.notifier)
                                                   .deleteMessage(messageId, timeFrame);
                                               Navigator.of(context).pop(); // 다이얼로그 닫기
-                                              // ScaffoldMessenger.of(context).showSnackBar(
-                                              //   SnackBar(content: Text('쪽지가 삭제되었습니다.')), // 리뷰 삭제 완료 메시지 표시
-                                              // );
                                               showCustomSnackBar(context, '쪽지가 삭제되었습니다.');
                                             } catch (e) {
-                                              // ScaffoldMessenger.of(context).showSnackBar(
-                                              //   SnackBar(content: Text('쪽지 삭제 중 오류가 발생했습니다: $e')), // 오류 메시지 표시
-                                              // );
                                               showCustomSnackBar(context, '쪽지 삭제 중 오류가 발생했습니다: $e');
                                             }
                                           },
@@ -334,7 +357,7 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'NanumGothic',
                                         fontSize: deleteBtnFontSize,
-                                        color: Color(0xFF6FAD96),
+                                        color: BLACK_COLOR,
                                       ),
                                     ),
                                     ),
@@ -342,23 +365,12 @@ class PrivateMessageBodyPartsContents extends ConsumerWidget {
                                 ],
                               ),
                             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ],
                     ),
                   ),
                 ),
-              ),
             );
           }).toList(),
         );
-    //   },
-    //   loading: () => Center(child: CircularProgressIndicator()), // 로딩 상태에서 로딩 인디케이터를 중앙에 표시
-    //   error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')), // 오류 상태에서 오류 메시지를 중앙에 표시
-    // );
   }
 }
 // ------ 마이페이지용 쪽지 관리 화면 내 계정별 관련 쪽지 목록 불러와서 UI 구현하는 PrivateMessageBodyPartsContents 클래스 내용 끝
