@@ -50,10 +50,6 @@ class _PrivateReviewCreateDetailFormScreenState
   final ImagePicker _picker =
       ImagePicker(); // 갤러리에서 이미지를 선택하기 위한 ImagePicker 객체
 
-  FocusNode _reviewTitleFocusNode = FocusNode();
-  FocusNode _reviewPhotoFocusNode = FocusNode();
-  FocusNode _reviewContentsFocusNode = FocusNode();
-
   // ----- 리뷰 사진 업로드 관련 함수 시작 부분
   // 권한 요청 함수
   // _requestPermission: 갤러리 접근을 위한 권한을 요청하는 함수
@@ -140,8 +136,8 @@ class _PrivateReviewCreateDetailFormScreenState
   Widget build(BuildContext context) {
     // 화면의 UI를 그리기 위한 build 메소드
 
-    // 날짜 형식을 'yyyy.MM.dd HH:MM'로 지정함
-    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
+    // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
+    final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
 
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
@@ -592,8 +588,8 @@ class _PrivateReviewCreateDetailFormScreenState
         ),
         SizedBox(height: interval4Y), // 요소 간의 간격을 추가
         // 리뷰 제목을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
-        _buildTitleRow(context, '리뷰 제목', widget.titleController,
-            _reviewTitleFocusNode, '50자 이내로 작성 가능합니다.'),
+        _buildTitleRow(
+            context, '리뷰 제목', widget.titleController, '50자 이내로 작성 가능합니다.'),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         // 작성자 정보를 표시하는 행을 빌드하는 함수 호출
         _buildUserRow(ref, '작성자', widget.userEmail),
@@ -602,8 +598,8 @@ class _PrivateReviewCreateDetailFormScreenState
         _buildPhotoUploadRow('리뷰 사진', context),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         // 리뷰 내용을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
-        _buildContentsRow(context, '리뷰 내용', widget.contentController,
-            _reviewContentsFocusNode, '300자 이내로 작성 가능합니다.'),
+        _buildContentsRow(
+            context, '리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         Container(
           // 패딩을 추가하여 요소 주위에 여백을 줌
@@ -678,9 +674,12 @@ class _PrivateReviewCreateDetailFormScreenState
   }
 
   // 제목 행을 생성하는 함수
-  Widget _buildTitleRow(BuildContext context, String label,
-      TextEditingController controller, FocusNode focusNode, String hintText,
-      {bool isEnabled = true}) {
+  Widget _buildTitleRow(
+    BuildContext context,
+    String label,
+    TextEditingController controller,
+    String hintText,
+  ) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -700,146 +699,101 @@ class _PrivateReviewCreateDetailFormScreenState
     final double reviewInfoRowHeight =
         screenSize.width * (90 / referenceHeight);
 
-    // FocusNode의 상태 변화 감지 리스너 추가
-    return StatefulBuilder(
-      builder: (context, setState) {
-        // FocusNode의 상태 변화 감지 리스너
-        focusNode.addListener(() {
-          // FocusNode 상태 변경 시 UI 업데이트
-          setState(() {});
-        });
-
-        return Padding(
-          // 패딩을 추가하여 요소 주위에 여백을 줌
-          padding: EdgeInsets.symmetric(
-              horizontal: interval3X, vertical: interval1Y),
-          // 행의 상하단에 2.0 픽셀의 여백 추가
-          child: Column(
-            // 요소들을 세로로 배치하기 위해 Column 사용
-            crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
-            children: [
-              IntrinsicHeight(
-                // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
-                child: Row(
-                  // 요소들을 가로로 배치하기 위해 Row 사용
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  // 자식 위젯들을 위아래로 늘림
-                  children: [
-                    Container(
-                      // 제목 라벨을 위한 컨테이너 생성
-                      width: reviewInfoRowWidth,
-                      height: reviewInfoRowHeight,
-                      // 왼쪽 라벨 부분의 너비 설정
-                      decoration: BoxDecoration(
-                        // color: GRAY96_COLOR,
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        // 앱 기본 배경색
-                        border: Border.all(color: GRAY83_COLOR, width: 1),
-                        // 윤곽선
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      alignment: Alignment.center,
-                      // 텍스트를 왼쪽 정렬
-                      child: Text(
-                        label, // 셀에 표시될 텍스트
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'NanumGothic',
-                          fontSize: reviewInfoRowTextFontSize,
-                          color: BLACK_COLOR,
-                        ), // 텍스트를 굵게 설정
-                      ),
-                    ),
-                    SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
-                    Expanded(
-                      // 오른쪽 TextField가 남은 공간을 채우도록 설정
-                      child: Container(
-                        // 데이터 셀의 너비 설정
-                        decoration: BoxDecoration(
-                          // color: GRAY96_COLOR,
-                          color: Theme.of(context)
-                              .scaffoldBackgroundColor, // 앱 기본 배경색
-                          border: Border.all(
-                            color: focusNode.hasFocus
-                                ? ORANGE56_COLOR
-                                : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
-                            width: 1.0,
-                          ), // 윤곽선
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: interval2X),
-                        alignment: Alignment.centerLeft, // 텍스트 정
-                        child: GestureDetector(
-                          onTap: isEnabled
-                              ? () {
-                                  FocusScope.of(context).requestFocus(
-                                      focusNode); // 행을 탭할 때 포커스를 설정
-                                }
-                              : null,
-                          child: AbsorbPointer(
-                            absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
-                            child: TextField(
-                              controller: controller,
-                              // 텍스트 필드 컨트롤러 설정
-                              focusNode: focusNode,
-                              // 텍스트 필드 포커스 노드 설정
-                              style: TextStyle(
-                                fontFamily: 'NanumGothic',
-                                fontSize: reviewInfoRowTextFontSize,
-                                color: BLACK_COLOR,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              // 텍스트 필드 스타일 설정
-                              decoration: InputDecoration(
-                                hintText: hintText,
-                                // 힌트 텍스트 설정
-                                hintStyle: TextStyle(color: GRAY74_COLOR),
-                                // 힌트 텍스트 색상 설정
-                                hintMaxLines: 2,
-                                // 힌트 텍스트 최대 줄 수 설정
-                                border: InputBorder.none,
-                                // 입력 경계선 제거
-                                isDense: true,
-                                // 간격 설정
-                                contentPadding: EdgeInsets.zero,
-                                // 내용 여백 제거
-                                counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
-                              ),
-                              maxLines: null,
-                              // 최대 줄 수 설정
-                              maxLength: 50, // 최대 글자 수 설정
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+    return Padding(
+      // 패딩을 추가하여 요소 주위에 여백을 줌
+      padding: EdgeInsets.symmetric(horizontal: interval3X, vertical: interval1Y),
+      // 행의 상하단에 2.0 픽셀의 여백 추가
+      child: Column(
+        // 요소들을 세로로 배치하기 위해 Column 사용
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        children: [
+          IntrinsicHeight(
+            // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+            child: Row(
+              // 요소들을 가로로 배치하기 위해 Row 사용
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container(
+                  // 제목 라벨을 위한 컨테이너 생성
+                  width: reviewInfoRowWidth,
+                  height: reviewInfoRowHeight,
+                  // 왼쪽 라벨 부분의 너비 설정
+                  decoration: BoxDecoration(
+                    // color: GRAY96_COLOR,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    // 앱 기본 배경색
+                    border: Border.all(color: GRAY83_COLOR, width: 1),
+                    // 윤곽선
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  alignment: Alignment.center,
+                  // 텍스트를 왼쪽 정렬
+                  child: Text(
+                    label, // 셀에 표시될 텍스트
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NanumGothic',
+                      fontSize: reviewInfoRowTextFontSize,
+                      color: BLACK_COLOR,
+                    ), // 텍스트를 굵게 설정
+                  ),
                 ),
-              ),
-              SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
-              Align(
-                // 글자 수 표시를 오른쪽에 맞춤
-                alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
-                child: ValueListenableBuilder<TextEditingValue>(
-                  // 텍스트 입력 시마다 변경사항을 반영
-                  valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
-                  builder: (context, value, child) {
-                    return Text(
-                      // 입력된 글자 수를 표시
-                      '${value.text.length}/50', // 글자 수를 반영
-                      style: TextStyle(
-                        color: GRAY83_COLOR,
-                        fontFamily: 'NanumGothic',
-                        fontSize: reviewInfoRowTextFontSize,
-                      ), // 글자 수 표시 스타일
-                    );
-                  },
+                SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
+                Expanded(
+                  // 오른쪽 TextField가 남은 공간을 채우도록 설정
+                  child: TextField(
+                    // 사용자로부터 텍스트를 입력받기 위한 필드
+                    controller: controller, // 텍스트 필드 컨트롤러 설정
+                    maxLength: 50, // 최대 글자 수 설정
+                    maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
+                    decoration: InputDecoration(
+                      // 텍스트 필드의 외관을 설정
+                      hintText: hintText, // 힌트 텍스트 설정
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
+                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                      ), // 입력 경계선 설정
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0), // 비활성 상태의 테두리 설정
+                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        // 활성화 상태의 테두리 설정
+                        borderSide: BorderSide(
+                          color: ORANGE56_COLOR,
+                          width: 1.0,
+                        ), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                      ),
+                      counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        );
-      },
+          SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
+          Align(
+            // 글자 수 표시를 오른쪽에 맞춤
+            alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
+            child: ValueListenableBuilder<TextEditingValue>(
+              // 텍스트 입력 시마다 변경사항을 반영
+              valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
+              builder: (context, value, child) {
+                return Text(
+                  // 입력된 글자 수를 표시
+                  '${value.text.length}/50', // 글자 수를 반영
+                  style: TextStyle(
+                    color: GRAY62_COLOR,
+                    fontFamily: 'NanumGothic',
+                    fontSize: reviewInfoRowTextFontSize,
+                  ), // 글자 수 표시 스타일
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -960,9 +914,12 @@ class _PrivateReviewCreateDetailFormScreenState
   }
 
   // 내용 입력 필드를 생성하는 함수
-  Widget _buildContentsRow(BuildContext context, String label,
-      TextEditingController controller, FocusNode focusNode, String hintText,
-      {bool isEnabled = true}) {
+  Widget _buildContentsRow(
+    BuildContext context,
+    String label,
+    TextEditingController controller,
+    String hintText,
+  ) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -982,147 +939,104 @@ class _PrivateReviewCreateDetailFormScreenState
     final double reviewInfoRowHeight =
         screenSize.width * (90 / referenceHeight);
 
-    // FocusNode의 상태 변화 감지 리스너 추가
-    return StatefulBuilder(
-      builder: (context, setState) {
-        // FocusNode의 상태 변화 감지 리스너
-        focusNode.addListener(() {
-          // FocusNode 상태 변경 시 UI 업데이트
-          setState(() {});
-        });
-
-        return Padding(
-          // 패딩을 추가하여 요소 주위에 여백을 줌
-          padding: EdgeInsets.symmetric(
-              horizontal: interval3X, vertical: interval1Y),
-          // 행의 상하단에 2.0 픽셀의 여백 추가
-          child: Column(
-            // 요소들을 세로로 배치하기 위해 Column 사용
-            crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
-            children: [
-              IntrinsicHeight(
-                // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
-                child: Row(
-                  // 요소들을 가로로 배치하기 위해 Row 사용
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  // 자식 위젯들을 위아래로 늘림
-                  children: [
-                    Container(
-                      // 제목 라벨을 위한 컨테이너 생성
-                      width: reviewInfoRowWidth,
-                      height: reviewInfoRowHeight,
-                      // 왼쪽 라벨 부분의 너비 설정
-                      decoration: BoxDecoration(
-                        // color: GRAY96_COLOR,
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        // 앱 기본 배경색
-                        border: Border.all(color: GRAY83_COLOR, width: 1),
-                        // 윤곽선
-                        borderRadius: BorderRadius.circular(6),
+    return Padding(
+      // 패딩을 추가하여 요소 주위에 여백을 줌
+      padding:
+          EdgeInsets.symmetric(horizontal: interval3X, vertical: interval1Y),
+      // 행의 상하단에 2.0 픽셀의 여백 추가
+      child: Column(
+        // 요소들을 세로로 배치하기 위해 Column 사용
+        crossAxisAlignment: CrossAxisAlignment.start, // 자식 요소들을 왼쪽 정렬
+        children: [
+          IntrinsicHeight(
+            // 왼쪽 Container와 오른쪽 TextField의 높이를 동일하게 맞추기 위해 사용
+            child: Row(
+              // 요소들을 가로로 배치하기 위해 Row 사용
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container(
+                  // 제목 라벨을 위한 컨테이너 생성
+                  width: reviewInfoRowWidth,
+                  height: reviewInfoRowHeight,
+                  // 왼쪽 라벨 부분의 너비 설정
+                  decoration: BoxDecoration(
+                    // color: GRAY96_COLOR,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    // 앱 기본 배경색
+                    border: Border.all(color: GRAY83_COLOR, width: 1),
+                    // 윤곽선
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  // 셀 내부 여백 설정
+                  alignment: Alignment.center,
+                  // 텍스트를 왼쪽 정렬
+                  child: Text(
+                    label, // 셀에 표시될 텍스트
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NanumGothic',
+                      fontSize: reviewInfoRowTextFontSize,
+                      color: BLACK_COLOR,
+                    ), // 텍스트를 굵게 설정
+                  ),
+                ),
+                SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
+                Expanded(
+                  // 오른쪽 TextField가 남은 공간을 채우도록 설정
+                  child: TextField(
+                    // 사용자로부터 텍스트를 입력받기 위한 필드
+                    controller: controller, // 텍스트 필드 컨트롤러 설정
+                    maxLength: 300, // 최대 글자 수 설정
+                    maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
+                    decoration: InputDecoration(
+                      // 텍스트 필드의 외관을 설정
+                      hintText: hintText, // 힌트 텍스트 설정
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
+                          borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                      ), // 입력 경계선 설정
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0), // 비활성 상태의 테두리 설정
+                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
                       ),
-                      // 셀 내부 여백 설정
-                      alignment: Alignment.center,
-                      // 텍스트를 왼쪽 정렬
-                      child: Text(
-                        label, // 셀에 표시될 텍스트
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'NanumGothic',
-                          fontSize: reviewInfoRowTextFontSize,
-                          color: BLACK_COLOR,
-                        ), // 텍스트를 굵게 설정
-                      ),
-                    ),
-                    SizedBox(width: interval1X), // 라벨과 텍스트 필드 사이의 간격
-                    Expanded(
-                      // 오른쪽 TextField가 남은 공간을 채우도록 설정
-                      child: Container(
-                        // 데이터 셀의 너비 설정
-                        decoration: BoxDecoration(
-                          // color: GRAY96_COLOR,
-                          color: Theme.of(context)
-                              .scaffoldBackgroundColor, // 앱 기본 배경색
-                          border: Border.all(
-                            color: focusNode.hasFocus
-                                ? ORANGE56_COLOR
-                                : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
+                      focusedBorder: OutlineInputBorder(
+                        // 활성화 상태의 테두리 설정
+                        borderSide: BorderSide(
+                            color: ORANGE56_COLOR,
                             width: 1.0,
-                          ), // 윤곽선
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: interval2X),
-                        alignment: Alignment.centerLeft, // 텍스트 정
-                        child: GestureDetector(
-                          onTap: isEnabled
-                              ? () {
-                                  FocusScope.of(context).requestFocus(
-                                      focusNode); // 행을 탭할 때 포커스를 설정
-                                }
-                              : null,
-                          child: AbsorbPointer(
-                            absorbing: !isEnabled, // isEnabled가 false일 때 입력 차단
-                            child: TextField(
-                              controller: controller,
-                              // 텍스트 필드 컨트롤러 설정
-                              focusNode: focusNode,
-                              // 텍스트 필드 포커스 노드 설정
-                              style: TextStyle(
-                                fontFamily: 'NanumGothic',
-                                fontSize: reviewInfoRowTextFontSize,
-                                color: BLACK_COLOR,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              // 텍스트 필드 스타일 설정
-                              decoration: InputDecoration(
-                                hintText: hintText,
-                                // 힌트 텍스트 설정
-                                hintStyle: TextStyle(color: GRAY74_COLOR),
-                                // 힌트 텍스트 색상 설정
-                                hintMaxLines: 2,
-                                // 힌트 텍스트 최대 줄 수 설정
-                                border: InputBorder.none,
-                                // 입력 경계선 제거
-                                isDense: true,
-                                // 간격 설정
-                                contentPadding: EdgeInsets.zero,
-                                // 내용 여백 제거
-                                counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
-                              ),
-                              maxLines: null,
-                              // 최대 줄 수 설정
-                              maxLength: 300, // 최대 글자 수 설정
-                            ),
-                          ),
-                        ),
+                        ), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
+                          borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
                       ),
+                      counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
-              Align(
-                // 글자 수 표시를 오른쪽에 맞춤
-                alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
-                child: ValueListenableBuilder<TextEditingValue>(
-                  // 텍스트 입력 시마다 변경사항을 반영
-                  valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
-                  builder: (context, value, child) {
-                    return Text(
-                      // 입력된 글자 수를 표시
-                      '${value.text.length}/300', // 글자 수를 반영
-                      style: TextStyle(
-                        color: GRAY83_COLOR,
-                        fontFamily: 'NanumGothic',
-                        fontSize: reviewInfoRowTextFontSize,
-                      ), // 글자 수 표시 스타일
-                    );
-                  },
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        );
-      },
+          SizedBox(height: interval2Y), // TextField와 글자 수 표시 사이의 여백
+          Align(
+            // 글자 수 표시를 오른쪽에 맞춤
+            alignment: Alignment.centerRight, // 오른쪽에 글자 수 표시
+            child: ValueListenableBuilder<TextEditingValue>(
+              // 텍스트 입력 시마다 변경사항을 반영
+              valueListenable: controller, // 텍스트 필드의 변경사항을 모니터링
+              builder: (context, value, child) {
+                return Text(
+                  // 입력된 글자 수를 표시
+                  '${value.text.length}/300', // 글자 수를 반영
+                  style: TextStyle(
+                    color: GRAY62_COLOR,
+                    fontFamily: 'NanumGothic',
+                    fontSize: reviewInfoRowTextFontSize,
+                  ), // 글자 수 표시 스타일
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1427,8 +1341,10 @@ class _PrivateReviewCreateDetailFormScreenState
         style: ElevatedButton.styleFrom(
           // ElevatedButton의 스타일을 설정함
           foregroundColor: ORANGE56_COLOR, // 텍스트 색상 설정
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-          side: BorderSide(color: ORANGE56_COLOR,
+          backgroundColor:
+              Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
+          side: BorderSide(
+            color: ORANGE56_COLOR,
           ), // 버튼 테두리 색상 설정
           padding: EdgeInsets.symmetric(
               vertical: interval1Y, horizontal: interval1X), // 버튼의 패딩을 설정함
@@ -1438,8 +1354,7 @@ class _PrivateReviewCreateDetailFormScreenState
           '리뷰 등록',
           style: TextStyle(
             fontFamily: 'NanumGothic',
-            color:
-            ORANGE56_COLOR, // 텍스트 색상 설정
+            color: ORANGE56_COLOR, // 텍스트 색상 설정
             fontWeight: FontWeight.bold, // 텍스트를 Bold로 설정함
             fontSize: reviewWriteBtnTextFontSize, // 텍스트 크기를 16으로 설정함
           ),
@@ -1544,8 +1459,8 @@ class _PrivateReviewItemsListState
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
 
-    // 날짜 형식을 'yyyy.MM.dd HH:MM'로 지정함
-    final dateFormat = DateFormat('yyyy.MM.dd HH:MM');
+    // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
+    final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
 
     final reviewItems = ref.watch(privateReviewItmesListNotifierProvider);
 
@@ -1557,7 +1472,9 @@ class _PrivateReviewItemsListState
         // "리뷰 없음" 메시지의 가로 길이
         height: reviewEmptyTextHeight,
         // "리뷰 없음" 메시지의 세로 길이
-        margin: EdgeInsets.only(left: reviewEmptyTextX, top: reviewEmptyTextY),
+        margin: EdgeInsets.only(top: reviewEmptyTextY),
+        // 텍스트를 중앙에 위치하도록 설정함.
+        alignment: Alignment.center,
         // "리뷰 없음" 메시지의 위치 설정
         child: Text(
           '현재 리뷰 목록 내 리뷰가 없습니다.', // 리뷰가 없을 때 표시할 메시지

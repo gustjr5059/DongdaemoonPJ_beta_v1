@@ -264,173 +264,169 @@ class _ReviewCreateDetailScreenState
     final double reviewEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
-    return GestureDetector(
-        onTap: () {
-          // 화면의 다른 부분을 클릭했을 때 포커스 해제
-          FocusScope.of(context).unfocus();
-        },
-    child: Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: reviewCreateDetailScreenPointScrollController,
-            slivers: <Widget>[
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                floating: true,
-                pinned: true,
-                expandedHeight: 0.0,
-                // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                // 확장 높이 설정
-                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+      return Scaffold(
+        body: Stack(
+          children: [
+            CustomScrollView(
+              controller: reviewCreateDetailScreenPointScrollController,
+              slivers: <Widget>[
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  floating: true,
+                  pinned: true,
+                  expandedHeight: 0.0,
+                  // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                  // 확장 높이 설정
+                  // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                    background: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                        ),
+                      ),
+                      child: buildCommonAppBar(
+                        context: context,
+                        ref: ref,
+                        title: '리뷰 작성',
+                        leadingType: LeadingType.back,
+                        buttonCase: 2,
+                        appBarTitleWidth: reviewDtAppBarTitleWidth,
+                        appBarTitleHeight: reviewDtAppBarTitleHeight,
+                        appBarTitleX: reviewDtAppBarTitleX,
+                        appBarTitleY: reviewDtAppBarTitleY,
+                        chevronIconWidth: reviewChevronIconWidth,
+                        chevronIconHeight: reviewChevronIconHeight,
+                        chevronIconX: reviewChevronIconX,
+                        chevronIconY: reviewChevronIconY,
                       ),
                     ),
-                    child: buildCommonAppBar(
-                      context: context,
-                      ref: ref,
-                      title: '리뷰 작성',
-                      leadingType: LeadingType.back,
-                      buttonCase: 2,
-                      appBarTitleWidth: reviewDtAppBarTitleWidth,
-                      appBarTitleHeight: reviewDtAppBarTitleHeight,
-                      appBarTitleX: reviewDtAppBarTitleX,
-                      appBarTitleY: reviewDtAppBarTitleY,
-                      chevronIconWidth: reviewChevronIconWidth,
-                      chevronIconHeight: reviewChevronIconHeight,
-                      chevronIconX: reviewChevronIconX,
-                      chevronIconY: reviewChevronIconY,
-                    ),
                   ),
+                  leading: null,
+                  // 좌측 상단의 메뉴 버튼 등을 제거함.
+                  // iOS에서는 AppBar의 배경색을 사용
+                  // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
+                  // backgroundColor: BUTTON_COLOR,
                 ),
-                leading: null,
-                // 좌측 상단의 메뉴 버튼 등을 제거함.
-                // iOS에서는 AppBar의 배경색을 사용
-                // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
-                // backgroundColor: BUTTON_COLOR,
-              ),
-              // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: Consumer(
-                  builder: (context, ref, child) {
-                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
-                    final user = FirebaseAuth.instance.currentUser;
+                // 실제 컨텐츠를 나타내는 슬리버 리스트
+                // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+                SliverPadding(
+                  padding: EdgeInsets.only(top: 5),
+                  // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                  sliver: Consumer(
+                    builder: (context, ref, child) {
+                      // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                      final user = FirebaseAuth.instance.currentUser;
 
-                    // 사용자가 로그인되어 있지 않은 경우
-                    if (user == null) {
-                      return SliverToBoxAdapter(
-                        child: LoginRequiredWidget(
-                          textWidth: loginGuideTextWidth,
-                          textHeight: loginGuideTextHeight,
-                          textFontSize: loginGuideTextFontSize,
-                          buttonWidth: loginGuideTextWidth,
-                          buttonPaddingX: loginBtnPaddingX,
-                          buttonPaddingY: loginBtnPaddingY,
-                          buttonFontSize: loginBtnTextFontSize,
-                          marginTop: loginGuideText1Y,
-                          interval: TextAndBtnInterval,
-                        ),
-                      );
-                    }
+                      // 사용자가 로그인되어 있지 않은 경우
+                      if (user == null) {
+                        return SliverToBoxAdapter(
+                          child: LoginRequiredWidget(
+                            textWidth: loginGuideTextWidth,
+                            textHeight: loginGuideTextHeight,
+                            textFontSize: loginGuideTextFontSize,
+                            buttonWidth: loginGuideTextWidth,
+                            buttonPaddingX: loginBtnPaddingX,
+                            buttonPaddingY: loginBtnPaddingY,
+                            buttonFontSize: loginBtnTextFontSize,
+                            marginTop: loginGuideText1Y,
+                            interval: TextAndBtnInterval,
+                          ),
+                        );
+                      }
 
-                    final isLoading = ref.watch(isLoadingProvider);
-                    // 리뷰 작성 내역이 비어 있을 경우 '에러가 발생했으니, 앱을 재실행해주세요.' 텍스트를 중앙에 표시
-                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
-                    // loading: (), error: (err, stack)를 구분해서 구현 못함
-                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-                    // 로딩 표시는 아래의 (reviewItems.isEmpty && isLoading) 경우로 표시함
+                      final isLoading = ref.watch(isLoadingProvider);
+                      // 리뷰 작성 내역이 비어 있을 경우 '에러가 발생했으니, 앱을 재실행해주세요.' 텍스트를 중앙에 표시
+                      // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                      // loading: (), error: (err, stack)를 구분해서 구현 못함
+                      // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                      // 로딩 표시는 아래의 (reviewItems.isEmpty && isLoading) 경우로 표시함
 
-                    // 데이터가 로딩 중일 때 로딩 인디케이터 표시
-                    if (isLoading) {
-                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
-                      return SliverToBoxAdapter(
-                        // 전체 컨테이너를 설정
-                        child: Container(
-                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
-                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
-                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
-                        ),
-                      );
-                    }
+                      // 데이터가 로딩 중일 때 로딩 인디케이터 표시
+                      if (isLoading) {
+                        // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                        return SliverToBoxAdapter(
+                          // 전체 컨테이너를 설정
+                          child: Container(
+                            height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                            alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                            child:
+                                buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                          ),
+                        );
+                      }
 
-                    // 데이터가 비어 있는 경우
-                    return widget.productInfo.isEmpty ||
-                            widget.numberInfo.isEmpty ||
-                            widget.userEmail.isEmpty
-                        ? SliverToBoxAdapter(
-                            child: Container(
-                              width: reviewEmptyTextWidth,
-                              height: reviewEmptyTextHeight,
-                              margin: EdgeInsets.only(top: reviewEmptyTextY),
-                              // 텍스트를 중앙에 위치하도록 설정함.
-                              alignment: Alignment.center,
-                              child: Text(
-                                '에러가 발생했으니, 앱을 재실행해주세요.',
-                                style: TextStyle(
-                                  fontSize: reviewEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
-                                  fontWeight: FontWeight.bold,
-                                  color: BLACK_COLOR,
+                      // 데이터가 비어 있는 경우
+                      return widget.productInfo.isEmpty ||
+                              widget.numberInfo.isEmpty ||
+                              widget.userEmail.isEmpty
+                          ? SliverToBoxAdapter(
+                              child: Container(
+                                width: reviewEmptyTextWidth,
+                                height: reviewEmptyTextHeight,
+                                margin: EdgeInsets.only(top: reviewEmptyTextY),
+                                // 텍스트를 중앙에 위치하도록 설정함.
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '에러가 발생했으니, 앱을 재실행해주세요.',
+                                  style: TextStyle(
+                                    fontSize: reviewEmptyTextFontSize,
+                                    fontFamily: 'NanumGothic',
+                                    fontWeight: FontWeight.bold,
+                                    color: BLACK_COLOR,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        // 리뷰 작성 화면에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
-                        : SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return Padding(
-                                  // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                                  padding: EdgeInsets.symmetric(horizontal: 0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // SizedBox(height: interval1Y),
-                                      // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
-                                      // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
-                                      // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
-                                      PrivateReviewCreateDetailFormScreen(
-                                        productInfo: widget.productInfo,
-                                        // 각 상품 정보를 전달
-                                        numberInfo: widget.numberInfo,
-                                        // 발주 번호와 관련 정보 전달
-                                        userEmail:
-                                            widget.userEmail, // 사용자 이메일 전달
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              childCount:
-                                  1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                            ),
-                          );
-                  },
+                            )
+                          // 리뷰 작성 화면에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                          : SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                                  return Padding(
+                                    // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // SizedBox(height: interval1Y),
+                                        // PrivateReviewCreateDetailFormScreen을 추가하여 재사용
+                                        // 여기서 order 데이터를 전달하여 PrivateReviewCreateDetailFormScreen 생성
+                                        // PrivateReviewCreateDetailFormScreen에 개별 상품 정보를 전달
+                                        PrivateReviewCreateDetailFormScreen(
+                                          productInfo: widget.productInfo,
+                                          // 각 상품 정보를 전달
+                                          numberInfo: widget.numberInfo,
+                                          // 발주 번호와 관련 정보 전달
+                                          userEmail:
+                                              widget.userEmail, // 사용자 이메일 전달
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                childCount:
+                                    1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                              ),
+                            );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          buildTopButton(
-              context, reviewCreateDetailScreenPointScrollController),
-        ],
-      ),
-      // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1,
-          scrollController:
-              reviewCreateDetailScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
-    ),
+              ],
+            ),
+            buildTopButton(
+                context, reviewCreateDetailScreenPointScrollController),
+          ],
+        ),
+        // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
+        bottomNavigationBar: buildCommonBottomNavigationBar(
+            ref.watch(tabIndexProvider), ref, context, 5, 1,
+            scrollController:
+                reviewCreateDetailScreenPointScrollController), // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
     );
     // ------ 화면구성 끝
   }

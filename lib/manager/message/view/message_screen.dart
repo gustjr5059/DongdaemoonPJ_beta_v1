@@ -45,7 +45,6 @@ import '../layout/message_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
 import '../provider/message_state_provider.dart';
 
-
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
@@ -102,13 +101,14 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
       if (adminMessageScreenPointScrollController.position.pixels ==
           adminMessageScreenPointScrollController.position.maxScrollExtent) {
         // 데이터 로드 요청
-        final selectedReceiver =
-            ref.read(selectedReceiverProvider.notifier).state; // 선택된 수신자 이메일을 읽음
+        final selectedReceiver = ref
+            .read(selectedReceiverProvider.notifier)
+            .state; // 선택된 수신자 이메일을 읽음
         if (selectedReceiver != null && selectedReceiver.isNotEmpty) {
           // 선택된 수신자 이메일이 유효하면 쪽지 데이터를 더 로드함
           ref
               .read(adminMessageItemsListNotifierProvider
-              .notifier) // 쪽지 리스트를 관리하는 StateNotifier를 참조함
+                  .notifier) // 쪽지 리스트를 관리하는 StateNotifier를 참조함
               .loadMoreMessages(timeFrame: 30); // 추가 쪽지 데이터를 요청함
         }
       }
@@ -123,7 +123,8 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(adminMessageScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(adminMessageScrollPositionProvider);
         // adminMessageScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         adminMessageScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -137,13 +138,16 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
       // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
       ref.read(adminCustomMessageProvider.notifier).state = null;
       // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
-      ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
+      ref.read(adminMessageScreenTabProvider.notifier).state =
+          MessageScreenTab.create;
       // 선택된 수신자 이메일 상태 초기화
       ref.read(selectedReceiverProvider.notifier).state = null;
       // 수신자 이메일 목록 초기화
       ref.invalidate(receiversProvider);
       // 쪽지 목록 초기화 (프로바이더를 무효화)
-      ref.read(adminMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
+      ref
+          .read(adminMessageItemsListNotifierProvider.notifier)
+          .resetAndReloadMessages(timeFrame: 30);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -157,13 +161,16 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
         // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
         ref.read(adminCustomMessageProvider.notifier).state = null;
         // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
-        ref.read(adminMessageScreenTabProvider.notifier).state = MessageScreenTab.create;
+        ref.read(adminMessageScreenTabProvider.notifier).state =
+            MessageScreenTab.create;
         // 선택된 수신자 이메일 상태 초기화
         ref.read(selectedReceiverProvider.notifier).state = null;
         // 수신자 이메일 목록 초기화
         ref.invalidate(receiversProvider);
         // 쪽지 목록 초기화 (프로바이더를 무효화)
-        ref.read(adminMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
+        ref
+            .read(adminMessageItemsListNotifierProvider.notifier)
+            .resetAndReloadMessages(timeFrame: 30);
       }
     });
 
@@ -222,11 +229,9 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
 
-
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -237,16 +242,20 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double messageAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double messageAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double messageAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double messageAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
     final double messageAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double messageAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double messageAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double messagePaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    final double interval1Y =
+        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
     return Scaffold(
       body: Stack(
@@ -265,17 +274,25 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '쪽지 관리(관리자)',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: messageAppBarTitleWidth,
-                    appBarTitleHeight: messageAppBarTitleHeight,
-                    appBarTitleX: messageAppBarTitleX,
-                    appBarTitleY: messageAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '쪽지 관리(관리자)',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: messageAppBarTitleWidth,
+                      appBarTitleHeight: messageAppBarTitleHeight,
+                      appBarTitleX: messageAppBarTitleX,
+                      appBarTitleY: messageAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -288,17 +305,13 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 messagePaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: messagePaddingX),
-                        child: Column(
-                          children: [
-                            SizedBox(height: interval1Y),
-                            AdminMessageScreenTabs(), // '쪽지 작성', '쪽지 목록' 탭 내용 구현
-                            SizedBox(height: interval1Y),
-                          ],
-                        ),
+                    (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          SizedBox(height: interval1Y),
+                          AdminMessageScreenTabs(), // '쪽지 작성', '쪽지 목록' 탭 내용 구현
+                          SizedBox(height: interval1Y),
+                        ],
                       );
                     },
                     childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
@@ -311,10 +324,8 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: adminMessageScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: adminMessageScreenPointScrollController),
     );
   }
 }

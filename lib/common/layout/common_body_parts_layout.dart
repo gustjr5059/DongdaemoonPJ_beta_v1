@@ -759,7 +759,7 @@ class NetworkChecker {
     showSubmitAlertDialog(
       context,
       title: '[네트워크 에러]', // 알림창의 제목
-      content: '인터넷 연결 확인 후, 앱을 재실행 해주세요.', // 알림창의 내용
+      content: '네트워크 연결 확인 후, 앱을 재실행 해주세요.', // 알림창의 내용
       actions: [
         TextButton(
           // '확인' 버튼 정의

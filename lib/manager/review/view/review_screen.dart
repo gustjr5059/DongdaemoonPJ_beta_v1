@@ -44,7 +44,6 @@ import '../layout/review_body_parts_layout.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 
-
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
@@ -101,13 +100,14 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
       if (adminReviewScreenPointScrollController.position.pixels ==
           adminReviewScreenPointScrollController.position.maxScrollExtent) {
         // 데이터 로드 요청
-        final selectedUserEmail =
-            ref.read(adminSelectedUserEmailProvider.notifier).state; // 선택된 사용자 이메일을 읽음
+        final selectedUserEmail = ref
+            .read(adminSelectedUserEmailProvider.notifier)
+            .state; // 선택된 사용자 이메일을 읽음
         if (selectedUserEmail != null && selectedUserEmail.isNotEmpty) {
           // 선택된 사용자 이메일이 유효하면 리뷰 데이터를 더 로드함
           ref
               .read(adminReviewItemsListNotifierProvider
-              .notifier) // 리뷰 리스트를 관리하는 StateNotifier를 참조함
+                  .notifier) // 리뷰 리스트를 관리하는 StateNotifier를 참조함
               .loadMoreReviews(); // 추가 리뷰 데이터를 요청함
         }
       }
@@ -122,7 +122,8 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(adminReviewScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(adminReviewScrollPositionProvider);
         // adminReviewScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         adminReviewScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -202,7 +203,6 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -213,17 +213,20 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double reviewAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double reviewAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double reviewAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double reviewAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
     final double reviewAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double reviewAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double reviewAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
-
+    final double interval1Y =
+        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
     return Scaffold(
       body: Stack(
@@ -242,17 +245,25 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '리뷰 관리(관리자)',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: reviewAppBarTitleWidth,
-                    appBarTitleHeight: reviewAppBarTitleHeight,
-                    appBarTitleX: reviewAppBarTitleX,
-                    appBarTitleY: reviewAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '리뷰 목록(관리자)',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: reviewAppBarTitleWidth,
+                      appBarTitleHeight: reviewAppBarTitleHeight,
+                      appBarTitleX: reviewAppBarTitleX,
+                      appBarTitleY: reviewAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -261,25 +272,48 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: reviewPaddingX),
-                        child: Column(
-                          children: [
-                            SizedBox(height: interval1Y),
-                            AdminReviewListScreen(), // 리뷰 리스트 화면을 포함시킴
-                            SizedBox(height: interval1Y),
-                          ],
+                padding: EdgeInsets.only(top: 10),
+                sliver: Consumer(
+                  builder: (context, ref, child) {
+                    final reviews = ref.watch(
+                        adminReviewItemsListNotifierProvider); // 선택된 사용자의 리뷰 목록을 구독하는 코드
+                    final isLoading = ref.watch(isLoadingProvider);
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (reviews.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
                         ),
                       );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
+                    }
+
+                    // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return Padding(
+                            // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
+                            padding: EdgeInsets.symmetric(
+                                horizontal: reviewPaddingX),
+                            child: Column(
+                              children: [
+                                SizedBox(height: interval1Y),
+                                AdminReviewListScreen(), // 리뷰 리스트 화면을 포함시킴
+                                SizedBox(height: interval1Y),
+                              ],
+                            ),
+                          );
+                        },
+                        childCount:
+                            1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -288,10 +322,8 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: adminReviewScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: adminReviewScreenPointScrollController),
     );
   }
 }
