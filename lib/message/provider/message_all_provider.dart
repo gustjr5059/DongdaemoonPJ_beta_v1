@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 import '../repository/message_repository.dart';
 
 // PrivateMessageRepository를 사용하기 위한 인스턴스를 불러오는 프로바이더를 정의.
@@ -46,5 +47,43 @@ final deliveryStartDateProvider = FutureProvider.family<DateTime?, String>((ref,
   return privateMessageRepository.fetchDeliveryStartDate(email, orderNumber);
 });
 
+// ----- 발주 내역 상세(관리자) 화면 관련 결제완료일, 배송시작일 데이터를 불러오는 로직 시작 부분
+// 특정 발주번호에 해당하는 결제완료일을 선택한 이메일 계정 기준으로 가져오는 Provider
+// FutureProvider.family를 사용하여, 이메일과 발주번호를 tuple 형태로 받아 해당 결제완료일 데이터를 DateTime?로 반환
+final paymentCompleteDateForSelectedEmailProvider = FutureProvider.family<DateTime?, Tuple2<String, String>>((ref, tuple) async {
+  // tuple에 담긴 값들을 각각 선택된 발주자 이메일(selectedUserEmail), 발주번호(orderNumber)에 매핑
+  final String selectedUserEmail = tuple.item1;
+  final String orderNumber = tuple.item2;
 
+  // 선택한 이메일 계정이나 발주번호가 유효하지 않을 경우 null 처리
+  if (selectedUserEmail.isEmpty || orderNumber.isEmpty) {
+    return null;
+  }
 
+  // privateMessageRepository 인스턴스를 가져옴
+  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
+
+  // 선택한 이메일 계정과 해당 발주번호에 대한 결제완료일을 비동기로 조회
+  return privateMessageRepository.fetchPaymentCompleteDate(selectedUserEmail, orderNumber);
+});
+
+// 특정 발주번호에 해당하는 배송시작일을 선택한 이메일 계정 기준으로 가져오는 Provider
+// FutureProvider.family를 사용하여, 이메일과 발주번호를 tuple 형태로 받아 해당 배송시작일 데이터를 DateTime?로 반환
+final deliveryStartDateForSelectedEmailProvider = FutureProvider.family<DateTime?, Tuple2<String, String>>((ref, tuple) async {
+  // tuple에 담긴 값들을 각각 선택된 발주자 이메일(selectedUserEmail), 발주번호(orderNumber)에 매핑
+  final String selectedUserEmail = tuple.item1;
+  final String orderNumber = tuple.item2;
+
+  // 선택한 이메일 계정이나 발주번호가 유효하지 않을 경우 null 처리
+  if (selectedUserEmail.isEmpty || orderNumber.isEmpty) {
+    return null;
+  }
+
+  // privateMessageRepository 인스턴스를 가져옴
+  final privateMessageRepository = ref.read(privateMessageRepositoryProvider);
+
+  // 선택한 이메일 계정과 해당 발주번호에 대한 배송시작일을 비동기로 조회
+  return privateMessageRepository.fetchDeliveryStartDate(selectedUserEmail, orderNumber);
+});
+
+// ----- 발주 내역 상세(관리자) 화면 관련 결제완료일, 배송시작일 데이터를 불러오는 로직 끝 부분

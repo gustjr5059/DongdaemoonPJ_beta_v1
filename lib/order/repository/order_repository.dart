@@ -270,28 +270,12 @@ class OrderlistRepository {
 
         // 'number_info' 컬렉션에서 'info' 문서를 가져옴.
         final numberInfoDoc = await orderDoc.reference.collection('number_info').doc('info').get();
-
-        // 'orderer_info' 컬렉션에서 'info' 문서를 가져옴.
-        final ordererInfoDoc = await orderDoc.reference.collection('orderer_info').doc('info').get();
-
-        // 'amount_info' 컬렉션에서 'info' 문서를 가져옴.
-        final amountInfoDoc = await orderDoc.reference.collection('amount_info').doc('info').get();
-
         // 'order_status_info' 컬렉션에서 'info' 문서를 가져옴.
         final orderStatusDoc = await orderDoc.reference.collection('order_status_info').doc('info').get();
-
-        // 'product_info' 컬렉션에서 모든 문서를 가져옴.
-        final productInfoQuery = await orderDoc.reference.collection('product_info').get();
-
-        // 가져온 'product_info' 문서들을 리스트로 변환.
-        final productInfo = productInfoQuery.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 
           // 발주 데이터를 리스트에 추가
           allOrders.add({
             'numberInfo': numberInfoDoc.data() as Map<String, dynamic>? ?? {}, // 'number_info' 데이터.
-            'ordererInfo': ordererInfoDoc.data() as Map<String, dynamic>? ?? {}, // 'orderer_info' 데이터.
-            'amountInfo': amountInfoDoc.data() as Map<String, dynamic>? ?? {}, // 'amount_info' 데이터.
-            'productInfo': productInfo, // 'product_info' 리스트.
             'orderStatus': orderStatusDoc.data()?['order_status'] ?? '', // 'order_status_info' 데이터.
             'snapshot': orderDoc,  // 마지막 문서 스냅샷.
           });

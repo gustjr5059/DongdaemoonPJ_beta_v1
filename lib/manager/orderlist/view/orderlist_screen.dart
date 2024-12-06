@@ -40,9 +40,10 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../review/provider/review_all_provider.dart';
 import '../layout/orderlist_body_parts_layout.dart';
+import '../provider/orderlist_all_provider.dart';
 import '../provider/orderlist_state_provider.dart';
-
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -54,13 +55,15 @@ class AdminOrderlistMainScreen extends ConsumerStatefulWidget {
   const AdminOrderlistMainScreen({Key? key}) : super(key: key);
 
   @override
-  _AdminOrderlistMainScreenState createState() => _AdminOrderlistMainScreenState();
+  _AdminOrderlistMainScreenState createState() =>
+      _AdminOrderlistMainScreenState();
 }
 
 // _AdminOrderlistMainScreenState 클래스 시작
 // _AdminOrderlistMainScreenState 클래스는 AdminOrderlistMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScreen>
+class _AdminOrderlistMainScreenState
+    extends ConsumerState<AdminOrderlistMainScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -82,7 +85,8 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
   // ScrollController를 late 변수로 선언
   // ScrollController가 여러 ScrollView에 attach 되어서 ScrollController가 동시에 여러 ScrollView에서 사용될 때 발생한 문제를 해결한 방법
   // => late로 변수 선언 / 해당 변수를 초기화(initState()) / 해당 변수를 해제 (dispose())
-  late ScrollController adminOrderlistScreenPointScrollController; // 스크롤 컨트롤러 선언
+  late ScrollController
+      adminOrderlistScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -93,6 +97,26 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
     super.initState();
     // ScrollController를 초기화
     adminOrderlistScreenPointScrollController = ScrollController();
+
+    // 스크롤 컨트롤러를 사용하여 화면의 스크롤 위치를 감지하고 페이지 끝에 도달 시 추가 데이터를 로드함
+    adminOrderlistScreenPointScrollController.addListener(() {
+      // 현재 스크롤 위치가 최대 스크롤 위치와 동일한지 확인함
+      if (adminOrderlistScreenPointScrollController.position.pixels ==
+          adminOrderlistScreenPointScrollController.position.maxScrollExtent) {
+        // 데이터 로드 요청
+        final selectedUserEmail = ref
+            .read(adminSelectedOrdererEmailProvider.notifier)
+            .state; // 선택된 발주자 이메일을 읽음
+        if (selectedUserEmail != null && selectedUserEmail.isNotEmpty) {
+          // 선택된 발주자 이메일이 유효하면 리뷰 데이터를 더 로드함
+          ref
+              .read(adminOrderlistItemsListNotifierProvider
+                  .notifier) // 발주 내역을 관리하는 StateNotifier를 참조함
+              .loadMoreOrderItems(); // 추가 발주 데이터를 요청함
+        }
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -102,7 +126,8 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
         // savedScrollPosition 변수에 저장된 스크롤 위치를 읽어옴.
         // ref.read(scrollPositionProvider)는 Riverpod 상태 관리 라이브러리를 사용하여
         // scrollPositionProvider에서 마지막으로 저장된 스크롤 위치를 가져옴.
-        double savedScrollPosition = ref.read(adminOrderlistScrollPositionProvider);
+        double savedScrollPosition =
+            ref.read(adminOrderlistScrollPositionProvider);
         // adminOrderlistScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
         adminOrderlistScreenPointScrollController.jumpTo(savedScrollPosition);
@@ -112,11 +137,15 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
       // -> 발주내역 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
 
-      // 발주내역 관리 화면 초기화
-      ref.read(selectedUserEmailProvider.notifier).state = '';
+      // 선택된 발주자 이메일 초기화
+      ref.read(adminSelectedOrdererEmailProvider.notifier).state = null;
+      // 발주자 이메일 목록 초기화
+      ref.invalidate(adminOrdererEmailProvider);
+      // 발주 내역 초기화 (프로바이더를 무효화)
+      ref.invalidate(adminOrderlistItemsListNotifierProvider);
 
-      // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
-      ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
+      // // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
+      // ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -125,10 +154,14 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(adminOrderlistScrollPositionProvider.notifier).state = 0;
-        // 발주내역 관리 화면 초기화
-        ref.read(selectedUserEmailProvider.notifier).state = '';
-        // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
-        ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
+        // 선택된 발주자 이메일 초기화
+        ref.read(adminSelectedOrdererEmailProvider.notifier).state = null;
+        // 발주자 이메일 목록 초기화
+        ref.invalidate(adminOrdererEmailProvider);
+        // 발주 내역 초기화 (프로바이더를 무효화)
+        ref.invalidate(adminOrderlistItemsListNotifierProvider);
+        // // 발주내역 관리 화면 내 발주데이터에서 발주상태 드롭다운 메뉴 버튼 내 메뉴 선택 초기화
+        // ref.read(orderStatusStateProvider.notifier).state = '발주신청 완료';
       }
     });
 
@@ -180,7 +213,6 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -191,16 +223,21 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double orderlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double orderlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double orderlistAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double orderlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double orderlistAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double orderlistAppBarTitleHeight =
+        screenSize.height * (22 / referenceHeight);
+    final double orderlistAppBarTitleX =
+        screenSize.width * (5 / referenceHeight);
+    final double orderlistAppBarTitleY =
+        screenSize.height * (11 / referenceHeight);
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double orderlistPaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    final double interval1Y =
+        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
 
     return Scaffold(
       body: Stack(
@@ -219,17 +256,25 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: '발주내역 관리(관리자)',
-                    fontFamily: 'NanumGothic',
-                    leadingType: LeadingType.none,
-                    buttonCase: 1,
-                    appBarTitleWidth: orderlistAppBarTitleWidth,
-                    appBarTitleHeight: orderlistAppBarTitleHeight,
-                    appBarTitleX: orderlistAppBarTitleX,
-                    appBarTitleY: orderlistAppBarTitleY,
+                  background: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                      ),
+                    ),
+                    child: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '발주내역 관리(관리자)',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.none,
+                      buttonCase: 1,
+                      appBarTitleWidth: orderlistAppBarTitleWidth,
+                      appBarTitleHeight: orderlistAppBarTitleHeight,
+                      appBarTitleX: orderlistAppBarTitleX,
+                      appBarTitleY: orderlistAppBarTitleY,
+                    ),
                   ),
                 ),
                 leading: null,
@@ -239,24 +284,46 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
                 padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Padding(
-                        // 각 항목의 좌우 간격을 orderlistPaddingX로 설정함.
-                        padding: EdgeInsets.symmetric(horizontal: orderlistPaddingX),
-                        child: Column(
-                          children: [
-                            SizedBox(height: interval1Y),
-                            AdminOrderListContents(), // 발주내역을 불러와서 UI로 구현하는 로직 재사용하여 구현
-                            SizedBox(height: interval1Y),
-                          ],
+                sliver: Consumer(
+                  builder: (context, ref, child) {
+                    final orderlistItems = ref.watch(
+                        adminOrderlistItemsListNotifierProvider); // 선택된 발주자의 발주 내역을 구독하는 코드
+                    final isLoading = ref.watch(isLoadingProvider);
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (orderlistItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
                         ),
                       );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
+                    }
+
+                    // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return Padding(
+                            padding: EdgeInsets.zero, // 패딩을 없앰
+                            child: Column(
+                              children: [
+                                SizedBox(height: interval1Y),
+                                AdminOrderListItemWidget(),
+                                // 발주내역을 불러와서 UI로 구현하는 로직 재사용하여 구현
+                                SizedBox(height: interval1Y),
+                              ],
+                            ),
+                          );
+                        },
+                        childCount:
+                            1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -265,10 +332,8 @@ class _AdminOrderlistMainScreenState extends ConsumerState<AdminOrderlistMainScr
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: adminOrderlistScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: adminOrderlistScreenPointScrollController),
     );
   }
 }
