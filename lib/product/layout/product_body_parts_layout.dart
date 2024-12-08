@@ -713,7 +713,9 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 수신자 이메일 목록 초기화
   ref.invalidate(receiversProvider);
   // 쪽지 목록 초기화 (프로바이더를 무효화)
-  ref.read(adminMessageItemsListNotifierProvider.notifier).resetAndReloadMessages(timeFrame: 30);
+  ref
+      .read(adminMessageItemsListNotifierProvider.notifier)
+      .resetAndReloadMessages(timeFrame: 30);
 
   // 쪽지 관리 화면 초기화 끝
 
@@ -1036,7 +1038,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(detailQuantityIndexProvider.notifier).state = 1;
   // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
   ref.read(showFullImageProvider.notifier).state = false;
-  ref.invalidate(imagesProvider); // 이미지 데이터 초기화
+  ref.invalidate(imagesProvider); // 상품정보 탭 이미지 데이터 초기화
+  ref.invalidate(productReviewListNotifierProvider); // 리뷰 탭 리뷰 데이터 초기화
   // ------ 상품 상세 화면 관련 초기화 부분 끝
 }
 
@@ -2045,7 +2048,8 @@ Widget buildProductAllCountAndPriceSelection(
   // 할인된 가격을 가져오고, 없으면 0을 설정.
   double discountPrice = product.discountPrice ?? 0;
   // 총 가격을 계산.
-  double totalPrice = (discountPrice * quantity).isNaN ? 0 : discountPrice * quantity;
+  double totalPrice =
+      (discountPrice * quantity).isNaN ? 0 : discountPrice * quantity;
   // 상품 최대 수량
   final maxStockQuantity = 10001;
 
@@ -2224,7 +2228,11 @@ Widget buildProductAllCountAndPriceSelection(
                   width: width7X,
                   alignment: Alignment.center,
                   child: Text(
-                    quantity != null ? quantity!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : '',
+                    quantity != null
+                        ? quantity!
+                            .toStringAsFixed(0)
+                            .replaceAllMapped(reg, (match) => '${match[1]},')
+                        : '',
                     style: TextStyle(
                       fontSize: selectedCountTextSize,
                       fontWeight: FontWeight.bold,
@@ -2401,7 +2409,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
         SizedBox(height: section1Y),
         _buildTabButtons(context, ref, currentTabSection), // 탭 버튼들을 빌드
         SizedBox(height: section1Y), // 탭과 컨텐츠 사이에 간격을 추가
-        _buildSectionContent(currentTabSection), // 현재 선택된 탭의 내용을 빌드
+        _buildSectionContent(context, currentTabSection), // 현재 선택된 탭의 내용을 빌드
       ],
     );
   }
@@ -2476,14 +2484,24 @@ class ProductDetailScreenTabs extends ConsumerWidget {
   }
 
   // 선택된 탭 섹션의 내용을 빌드하는 위젯인 _buildSectionContent
-  Widget _buildSectionContent(ProdDetailScreenTabSection section) {
+  Widget _buildSectionContent(
+      BuildContext context, ProdDetailScreenTabSection section) {
     switch (section) {
       case ProdDetailScreenTabSection.productInfo: // '상품정보' 섹션이면
         return productInfoContent; // '상품정보' 내용을 반환
       case ProdDetailScreenTabSection.reviews: // '리뷰' 섹션이면
-        return reviewsContent.isEmpty
-            ? Center(child: Text('현재 해당 상품 관련 리뷰가 없습니다.')) // 리뷰 데이터가 없을 때 표시
-            : Column(children: reviewsContent); // '리뷰' 내용을 반환
+        if (reviewsContent.isEmpty) {
+          return Center(
+              child: Text('현재 해당 상품 관련 리뷰가 없습니다.')); // 리뷰 데이터가 없을 때 표시
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildSectionTitle(context, 'REVIEW INFO'),
+              ...reviewsContent, // '리뷰' 내용을 반환
+            ],
+          );
+        }
       case ProdDetailScreenTabSection.inquiry: // '문의' 섹션이면
         return ProductInquiryContents(); // '문의' 내용을 반환
       default:
@@ -2576,49 +2594,6 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
             color: GRAY88_COLOR,
             size: interval3X,
           ); // 이미지 URL이 없을 때 아이콘 표시
-  }
-
-  // 밑줄과 텍스트를 포함하는 UI 위젯을 생성하는 함수
-  // 제목을 텍스트와 구분선으로 구성함.
-  Widget buildSectionTitle(BuildContext context, String title) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final double referenceWidth = 393.0; // 기준 화면 너비
-    final double referenceHeight = 852.0; // 기준 화면 높이
-
-    final double buildSectionTitleFontSize =
-        screenSize.height * (16 / referenceHeight); // 폰트 크기 설정
-    final double buildSectionWidthX =
-        screenSize.width * (8 / referenceWidth); // 좌우 여백 설정
-    final double buildSectionLineY =
-        screenSize.height * (10 / referenceHeight); // 구분선 위 아래 간격 설정
-
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: Divider(thickness: 3, color: GRAY85_COLOR)),
-            // 왼쪽 구분선
-            Padding(
-              padding: EdgeInsets.only(
-                  left: buildSectionWidthX, right: buildSectionWidthX),
-              // 텍스트 양옆 여백 설정
-              child: Text(
-                title, // 전달받은 제목을 표시함.
-                style: TextStyle(
-                  fontFamily: 'NanumGothic',
-                  fontWeight: FontWeight.bold,
-                  fontSize: buildSectionTitleFontSize, // 텍스트 크기 설정
-                  color: GRAY85_COLOR, // 텍스트 색상 설정
-                ),
-              ),
-            ),
-            Expanded(child: Divider(thickness: 3, color: GRAY85_COLOR)),
-            // 오른쪽 구분선
-          ],
-        ),
-        SizedBox(height: buildSectionLineY), // 텍스트와 아래 여백 설정
-      ],
-    );
   }
 
   // 이미지 전체를 볼 수 있는 버튼을 생성하는 함수
@@ -2720,7 +2695,7 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildSectionTitle(context, 'DETAILS INFO'),
+        buildSectionTitle(context, 'PRODUCT INFO'),
         // 상세 정보 섹션 타이틀 표시
         // 이미지 리스트 표시
         Column(
@@ -2811,10 +2786,9 @@ class ProductReviewContents extends StatelessWidget {
       ),
       child: CommonCardView(
         // 배경색을 설정함
-        backgroundColor: GRAY97_COLOR,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색,
         content: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: buildSectionLineY, horizontal: buildSectionWidthX),
+          padding: EdgeInsets.zero,
           // 리뷰 내용 전체를 세로로 정렬된 컬럼 위젯으로 구성함
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2823,9 +2797,8 @@ class ProductReviewContents extends StatelessWidget {
               _buildReviewInfoRow(context, '작성자: ', maskedReviewerName,
                   bold: true),
               SizedBox(height: interval1Y),
-              // 리뷰 작성일자를 출력함
-              _buildReviewInfoRow(context, '리뷰 등록 일자: ', reviewDate,
-                  bold: true),
+              // 작성 일시를 출력함
+              _buildReviewInfoRow(context, '등록 일시: ', reviewDate, bold: true),
               SizedBox(height: interval1Y),
               // 선택된 색상 및 사이즈가 존재할 경우 이를 출력함
               if (reviewSelectedColor.isNotEmpty ||
@@ -2850,6 +2823,8 @@ class ProductReviewContents extends StatelessWidget {
             ],
           ),
         ),
+        elevation: 0,
+        // 카드뷰 그림자 깊이
       ),
     );
   }
@@ -2883,7 +2858,7 @@ class ProductReviewContents extends StatelessWidget {
           SizedBox(height: interval2Y),
           // 데이터 텍스트를 출력함
           Text(
-            value,
+            value ?? '',
             style: TextStyle(
               fontSize: fontSize,
               fontFamily: 'NanumGothic',
@@ -2930,7 +2905,7 @@ class ProductReviewContents extends StatelessWidget {
           // 데이터 텍스트를 확장 가능한 위젯으로 출력함
           Expanded(
             child: Text(
-              value,
+              value ?? '',
               style: TextStyle(
                 fontSize: fontSize,
                 fontFamily: 'NanumGothic',
@@ -3008,6 +2983,50 @@ class ProductReviewContents extends StatelessWidget {
   }
 }
 // ------ 상품 상세 화면 내 리뷰에서 UI로 구현되는 내용 관련 ProductReviewContents 클래스 끝
+
+// ------ 상품정보, 리뷰 탭 화면 내 밑줄과 텍스트를 포함하는 UI 위젯을 생성하는 함수 내용 시작 부분
+// 제목을 텍스트와 구분선으로 구성함.
+Widget buildSectionTitle(BuildContext context, String title) {
+  final Size screenSize = MediaQuery.of(context).size;
+  final double referenceWidth = 393.0; // 기준 화면 너비
+  final double referenceHeight = 852.0; // 기준 화면 높이
+
+  final double buildSectionTitleFontSize =
+      screenSize.height * (16 / referenceHeight); // 폰트 크기 설정
+  final double buildSectionWidthX =
+      screenSize.width * (8 / referenceWidth); // 좌우 여백 설정
+  final double buildSectionLineY =
+      screenSize.height * (10 / referenceHeight); // 구분선 위 아래 간격 설정
+
+  return Column(
+    children: [
+      Row(
+        children: [
+          Expanded(child: Divider(thickness: 3, color: GRAY85_COLOR)),
+          // 왼쪽 구분선
+          Padding(
+            padding: EdgeInsets.only(
+                left: buildSectionWidthX, right: buildSectionWidthX),
+            // 텍스트 양옆 여백 설정
+            child: Text(
+              title, // 전달받은 제목을 표시함.
+              style: TextStyle(
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.bold,
+                fontSize: buildSectionTitleFontSize, // 텍스트 크기 설정
+                color: GRAY85_COLOR, // 텍스트 색상 설정
+              ),
+            ),
+          ),
+          Expanded(child: Divider(thickness: 3, color: GRAY85_COLOR)),
+          // 오른쪽 구분선
+        ],
+      ),
+      SizedBox(height: buildSectionLineY), // 텍스트와 아래 여백 설정
+    ],
+  );
+}
+// ------ 상품정보, 리뷰 탭 화면 내 밑줄과 텍스트를 포함하는 UI 위젯을 생성하는 함수 내용 끝 부분
 
 // ------ 연결된 링크로 이동하는 '상품 문의하기' 버튼을 UI로 구현하는 ProductInquiryContents 클래스 내용 구현 시작
 // ProductInquiryContents 클래스는 StatelessWidget을 상속받아 정의됨

@@ -10,6 +10,7 @@ import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
 import '../../../review/provider/review_all_provider.dart';
+import '../../../review/provider/review_state_provider.dart';
 import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
@@ -101,6 +102,19 @@ class _CoatDetailProductScreenState
     // ScrollController를 초기화
     coatDetailProductScreenPointScrollController = ScrollController();
 
+    // 스크롤 리스너 추가: 리뷰 탭일 때만 다음 페이지 로드
+    coatDetailProductScreenPointScrollController.addListener(() {
+      // 현재 어떤 탭인지 확인
+      final currentTabSection = ref.read(prodDetailScreenTabSectionProvider);
+      if (currentTabSection == ProdDetailScreenTabSection.reviews) {
+        if (coatDetailProductScreenPointScrollController.position.pixels ==
+            coatDetailProductScreenPointScrollController.position.maxScrollExtent) {
+          // 리뷰 탭이고, 스크롤이 끝에 도달했을 때만 다음 페이지 로드
+          ref.read(productReviewListNotifierProvider(widget.fullPath).notifier).loadMoreReviews();
+        }
+      }
+    });
+
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
     // WidgetsBinding.instance.addPostFrameCallback 메서드를 사용하여 프레임이 렌더링 된 후 콜백을 등록함.
@@ -127,7 +141,7 @@ class _CoatDetailProductScreenState
       ref
           .read(imagesProvider(widget.fullPath).notifier)
           .resetButtonState(); // '접기' 버튼 상태 초기화
-      ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+      ref.read(productReviewListNotifierProvider(widget.fullPath).notifier).resetAndLoadFirstPage(); // 특정 상품에 대한 리뷰 데이터를 초기화
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
@@ -146,7 +160,7 @@ class _CoatDetailProductScreenState
           pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
         }
 
-        ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
+        ref.read(productReviewListNotifierProvider(widget.fullPath).notifier).resetAndLoadFirstPage(); // 특정 상품에 대한 리뷰 데이터를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
@@ -289,8 +303,7 @@ class _CoatDetailProductScreenState
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(coatDetailProdFirestoreDataProvider(widget.fullPath));
-    final productReviews =
-        ref.watch(productReviewProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
+    final productReviews = ref.watch(productReviewListNotifierProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
 
     print(
         "CoatDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
@@ -392,7 +405,7 @@ class _CoatDetailProductScreenState
                                     productInfoContent: ProductInfoContents(
                                       fullPath: widget.fullPath,
                                     ),
-                                    reviewsContent: productReviews.value ?? [],
+                                    reviewsContent: productReviews, // 페이징 처리된 리뷰 리스트
                                     // Firestore에서 가져온 리뷰 데이터를 전달
                                     inquiryContent:
                                     ProductInquiryContents(),

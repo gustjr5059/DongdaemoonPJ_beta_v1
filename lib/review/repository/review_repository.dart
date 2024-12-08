@@ -272,61 +272,48 @@ class PrivateReviewRepository {
     }
   }
 
-  // 특정 상품에 대한 리뷰 목록을 가져오는 비동기 함수
-  Future<List<ProductReviewContents>> fetchProductReviews(String productId) async {
-    print("Fetching reviews for product ID: $productId");
-
+  // 특정 상품에 대한 리뷰 데이터를 페이징 처리하여 가져오는 함수
+  Future<List<Map<String, dynamic>>> getPagedProductReviews({
+    required String productId,
+    DocumentSnapshot? lastDocument,
+    required int limit,
+  }) async {
     try {
-      // 'wearcano_review_list' 컬렉션에서 모든 리뷰를 조회함
-      final reviewsSnapshot = await firestore
+      print('리뷰 페이징 요청 시작: productId=$productId, lastDocument=${lastDocument?.id}, limit=$limit');
+
+      // productId가 일치하고, 공개 상태(private_review_closed_button=false)인 리뷰를
+      // 최근 작성 순(review_write_time 내림차순)으로 limit 개수만큼 가져오는 쿼리
+      Query query = firestore
           .collectionGroup('reviews')
           .where('private_review_closed_button', isEqualTo: false)
           .where('product_id', isEqualTo: productId)
           .orderBy('review_write_time', descending: true)
-          .get();
+          .limit(limit);
 
-      print("Fetched ${reviewsSnapshot.docs.length} reviews for product ID: $productId");
+      // lastDocument가 있다면 해당 문서 이후의 데이터를 불러오도록 설정
+      if (lastDocument != null) {
+        print('lastDocument 이후 데이터부터 시작합니다: ${lastDocument.id}');
+        query = query.startAfterDocument(lastDocument);
+      }
 
-      // 각 리뷰 문서를 ProductReviewContents 객체로 변환함
-      final allReviews = reviewsSnapshot.docs.map((doc) {
-        // 문서의 데이터를 가져옴
-        final data = doc.data();
+      // 쿼리 실행
+      final querySnapshot = await query.get();
+      print('쿼리 결과 문서 수: ${querySnapshot.docs.length}개');
 
-        // 리뷰 이미지 필드에서 값이 있는 이미지들만 리스트에 추가함
-        List<String> reviewImages = [];
-        if (data['review_image1'] != null && data['review_image1'].isNotEmpty) {
-          reviewImages.add(data['review_image1']);
-        }
-        if (data['review_image2'] != null && data['review_image2'].isNotEmpty) {
-          reviewImages.add(data['review_image2']);
-        }
-        if (data['review_image3'] != null && data['review_image3'].isNotEmpty) {
-          reviewImages.add(data['review_image3']);
-        }
-
-        // 디버깅 목적으로, 각 리뷰 데이터의 내용을 출력함
-        print("Review data: $data");
-
-        // ProductReviewContents 객체를 생성하여 반환함
-        return ProductReviewContents(
-          reviewerName: data['user_name'] ?? '', // 리뷰어 이름을 추출함
-          reviewDate: data['review_write_time'] != null
-              ? DateFormat('yyyy-MM-dd').format((data['review_write_time'] as Timestamp).toDate()) // 리뷰 작성 날짜를 포맷팅함
-              : '',
-          reviewContent: data['review_contents'] ?? '', // 리뷰 내용을 추출함
-          reviewTitle: data['review_title'] ?? '', // 리뷰 제목을 추출함
-          reviewImages: reviewImages, // 리뷰 이미지 리스트를 설정함
-          reviewSelectedColor: data['selected_color_text'] ?? '', // 선택된 색상을 추가함
-          reviewSelectedSize: data['selected_size'] ?? '', // 선택된 사이즈를 추가함
-        );
+      // 문서 데이터를 Map 형태로 변환, 마지막 문서 스냅샷도 데이터에 포함
+      final result = querySnapshot.docs.map((doc) {
+        final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id;
+        data['snapshot'] = doc;
+        print('리뷰 데이터 변환 완료: id=${doc.id}');
+        return data;
       }).toList();
 
-      // 모든 리뷰 리스트를 반환함
-      return allReviews;
+      print('리뷰 데이터 페이징 완료: 총 ${result.length}개 반환');
+      return result;
     } catch (e) {
-      print('Error fetching reviews for product ID $productId: $e');
-      // 예외를 다시 던져서 호출자가 처리할 수 있도록 함
-      throw e;
+      print('리뷰 페이징 데이터 불러오기 실패: $e');
+      throw Exception('리뷰 데이터를 가져오는 중 오류 발생: $e');
     }
   }
 }

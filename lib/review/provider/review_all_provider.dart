@@ -18,20 +18,3 @@ final submitPrivateReviewProvider = Provider((ref) {  // 리뷰 제출 기능을
   final repository = ref.read(privateReviewRepositoryProvider);  // 리뷰 저장소 프로바이더를 읽어옴
   return repository.submitReview;  // 저장소의 리뷰 제출 함수를 반환함
 });
-
-// 특정 상품에 대한 리뷰 데이터를 제공하는 Provider 정의
-final productReviewProvider = FutureProvider.family<List<ProductReviewContents>, String>((ref, productId) async {
-  // 디버깅 목적으로, 특정 상품 ID에 대한 리뷰를 가져오는 작업이 시작되었음을 출력함
-  print("Provider: Fetching reviews for product ID: $productId");
-
-  // 리뷰 저장소(repository)를 참조함
-  final repository = ref.read(privateReviewRepositoryProvider);
-  // 해당 저장소에서 특정 상품 ID에 대한 리뷰를 비동기로 가져옴
-  final reviews = await repository.fetchProductReviews(productId);
-
-  // 디버깅 목적으로, 가져온 리뷰의 개수를 출력함
-  print("Provider: Fetched ${reviews.length} reviews for product ID: $productId");
-
-  // 가져온 리뷰 리스트를 반환함
-  return reviews;
-});

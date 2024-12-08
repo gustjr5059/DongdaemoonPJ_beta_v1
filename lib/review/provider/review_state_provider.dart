@@ -4,7 +4,9 @@ import 'package:dongdaemoon_beta_v1/review/provider/review_all_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
+import '../../product/layout/product_body_parts_layout.dart';
 import '../repository/review_repository.dart';
 
 
@@ -118,3 +120,87 @@ StateNotifierProvider<PrivateReviewItemsListNotifier, List<Map<String, dynamic>>
   return PrivateReviewItemsListNotifier(reviewRepository, ref); // Notifier 생성 및 반환
 });
 
+// ------ 상품 상세 화면 내 리뷰 탭에서 각 상품 관련 리뷰 데이터를 불러오는 ProductReviewListNotifier 클래스 내용 시작 부분
+class ProductReviewListNotifier extends StateNotifier<List<ProductReviewContents>> {
+  final PrivateReviewRepository repository;
+  final String productId;
+  DocumentSnapshot? lastDocument;
+  bool isLoadingMore = false;
+
+  ProductReviewListNotifier({required this.repository, required this.productId}) : super([]);
+
+  // 더 많은 리뷰 불러오기
+  Future<void> loadMoreReviews() async {
+    if (isLoadingMore) {
+      print('이미 로딩 중이므로 추가 요청을 건너뜁니다.');
+      return;
+    }
+
+    print('리뷰 더 가져오기 시작: 현재까지 불러온 리뷰 수 = ${state.length}');
+    isLoadingMore = true;
+
+    final newReviews = await repository.getPagedProductReviews(
+      productId: productId,
+      lastDocument: lastDocument,
+      limit: 3, // 3개씩 페이징 처리
+    );
+
+    if (newReviews.isNotEmpty) {
+      // 새로운 데이터가 있을 경우 마지막 문서 스냅샷 업데이트
+      lastDocument = newReviews.last['snapshot'];
+      print('새로운 리뷰 ${newReviews.length}개 불러옴. 마지막 문서 ID: ${lastDocument?.id}');
+
+      // 불러온 데이터(Map 형태)를 ProductReviewContents 객체로 변환
+      final additionalReviews = newReviews.map((data) {
+        print('리뷰 변환 중: id=${data['id']}');
+
+        List<String> reviewImages = [];
+        if (data['review_image1'] != null && data['review_image1'].isNotEmpty) {
+          reviewImages.add(data['review_image1']);
+        }
+        if (data['review_image2'] != null && data['review_image2'].isNotEmpty) {
+          reviewImages.add(data['review_image2']);
+        }
+        if (data['review_image3'] != null && data['review_image3'].isNotEmpty) {
+          reviewImages.add(data['review_image3']);
+        }
+
+        return ProductReviewContents(
+          reviewerName: data['user_name'] ?? '',
+          reviewDate: data['review_write_time'] != null
+              ? DateFormat('yyyy년 MM월 dd일 HH시 mm분').format((data['review_write_time'] as Timestamp).toDate())
+              : '',
+          reviewContent: data['review_contents'] ?? '',
+          reviewTitle: data['review_title'] ?? '',
+          reviewImages: reviewImages,
+          reviewSelectedColor: data['selected_color_text'] ?? '',
+          reviewSelectedSize: data['selected_size'] ?? '',
+        );
+      }).toList();
+
+      // 기존 state에 추가
+      state = [...state, ...additionalReviews];
+      print('리뷰 상태 업데이트 완료: 총 ${state.length}개');
+    } else {
+      print('추가로 불러올 리뷰가 없습니다.');
+    }
+
+    isLoadingMore = false;
+  }
+
+  // 초기화 후 첫 페이지부터 다시 불러오기
+  Future<void> resetAndLoadFirstPage() async {
+    print('리뷰 리스트 초기화 후 첫 페이지 로딩 시작');
+    isLoadingMore = false;
+    state = [];
+    lastDocument = null;
+    await loadMoreReviews();
+  }
+}
+// ------ 상품 상세 화면 내 리뷰 탭에서 각 상품 관련 리뷰 데이터를 불러오는 ProductReviewListNotifier 클래스 내용 끝 부분
+
+// 특정 상품에 대한 리뷰 목록 관리 Provider
+final productReviewListNotifierProvider = StateNotifierProvider.family<ProductReviewListNotifier, List<ProductReviewContents>, String>((ref, productId) {
+  final repository = ref.read(privateReviewRepositoryProvider);
+  return ProductReviewListNotifier(repository: repository, productId: productId);
+});
