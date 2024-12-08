@@ -33,6 +33,10 @@ void onCartButtonPressed(
   final selectedCount = ref.read(
       detailQuantityIndexProvider); // detailQuantityIndexProvider를 사용하여 선택된 수량을 읽음
 
+  // Future.delayed(const Duration(milliseconds: 3000), () {
+  //   showCustomSnackBar(context, '해당 상품이 장바구니 목록에 담겼습니다.');
+  // });
+
   cartRepository
       .addToCartItem(context, product, selectedColorText, selectedColorUrl,
           selectedSize, selectedCount)
@@ -44,7 +48,7 @@ void onCartButtonPressed(
     }
   }).catchError((error) {
     // 에러가 발생할 경우
-    showCustomSnackBar(context, '장바구니에 상품을 담는 중 오류가 발생했습니다.'); // 오류 메시지를 화면에 표시
+    showCustomSnackBar(context, '장바구니에 상품을 담는 중 에러가 발생했습니다.'); // 오류 메시지를 화면에 표시
   });
 }
 

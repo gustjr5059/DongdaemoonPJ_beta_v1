@@ -131,11 +131,12 @@ class _JeanDetailProductScreenState
             .jumpTo(savedScrollPosition);
       }
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
-      // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
+      // 화면을 돌아왔을 때 선택된 색상과 사이즈, 수량의 상태를 초기화함
       ref.read(colorSelectionIndexProvider.notifier).state = 0;
       ref.read(colorSelectionTextProvider.notifier).state = null;
       ref.read(colorSelectionUrlProvider.notifier).state = null;
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
+      ref.invalidate(detailQuantityIndexProvider);
       // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
       ref.read(showFullImageProvider.notifier).state = false;
       ref

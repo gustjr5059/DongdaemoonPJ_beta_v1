@@ -1529,7 +1529,7 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
             content:
                 buildProductAllCountAndPriceSelection(context, ref, product),
             // 총 선택 내용이 나오는 섹션
-            backgroundColor: GRAY93_COLOR,
+            backgroundColor: ORANGE_BEIGE_COLOR,
             elevation: 0.0,
             margin: const EdgeInsets.symmetric(horizontal: 0.0),
             padding: const EdgeInsets.all(0.0),
@@ -2334,8 +2334,8 @@ Widget buildProductAllCountAndPriceSelection(
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: GRAY93_COLOR,
-                      backgroundColor: GRAY93_COLOR,
+                      foregroundColor: ORANGE_BEIGE_COLOR,
+                      backgroundColor: ORANGE_BEIGE_COLOR,
                       side: BorderSide(
                         color: GRAY65_COLOR,
                       ), // 버튼 테두리 색상 설정
