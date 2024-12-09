@@ -389,15 +389,6 @@ class _RecipientInfoFavoritesSelectScreenState
                                 return Column(
                                   // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                              color: BLACK_COLOR,
-                                              width: 1.0), // 하단 테두리 색상을 설정함
-                                        ),
-                                      ),
-                                    ),
                                     // RecipientInfoItemsList 위젯을 사용하여 수령자 정보 즐겨찾기 목록 내 아이템을 표시
                                     RecipientInfoItemsList(),
                                   ],

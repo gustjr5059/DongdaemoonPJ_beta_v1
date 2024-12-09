@@ -920,10 +920,10 @@ class _AdminOrderListDetailItemWidgetState
                             context, product);
                       },
                       child: Container(
-                        width: orderlistDtInfo3CardViewWidth,
-                        // 카드뷰 가로 크기 설정
-                        height: orderlistDtInfo3CardViewHeight,
-                        // 카드뷰 세로 크기 설정
+                        // width: orderlistDtInfo3CardViewWidth,
+                        // // 카드뷰 가로 크기 설정
+                        // height: orderlistDtInfo3CardViewHeight,
+                        // // 카드뷰 세로 크기 설정
                         color:
                             Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
                         // color: GRAY97_COLOR,

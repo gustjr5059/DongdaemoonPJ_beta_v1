@@ -297,9 +297,7 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return Padding(
-                            // 각 항목의 좌우 간격을 reviewPaddingX로 설정함.
-                            padding: EdgeInsets.symmetric(
-                                horizontal: reviewPaddingX),
+                            padding: EdgeInsets.zero, // 패딩을 없앰
                             child: Column(
                               children: [
                                 SizedBox(height: interval1Y),

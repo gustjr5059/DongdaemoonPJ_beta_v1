@@ -110,7 +110,7 @@ class CartItemsList extends ConsumerWidget {
         screenSize.height * (16 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
     // 삭제 버튼 글꼴 및 위치 설정
     final double cartlistDeleteBtnFontSize =
-        screenSize.height * (16 / referenceHeight); // 삭제 버튼 글꼴 크기 설정함
+        screenSize.height * (14 / referenceHeight); // 삭제 버튼 글꼴 크기 설정함
     final double cartlistDeleteBtn1X =
         screenSize.width * (10 / referenceWidth); // 삭제 버튼 가로 위치 설정함
     final double cartlistDeleteBtn1Y =
@@ -139,12 +139,8 @@ class CartItemsList extends ConsumerWidget {
     final double interval1X = screenSize.width * (70 / referenceWidth);
 
     // 직접입력 버튼 수치
-    final double directInsertBtnWidth =
-        screenSize.width * (100 / referenceWidth);
-    final double directInsertBtnHeight =
-        screenSize.height * (40 / referenceHeight);
     final double directInsertBtnFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
 
     // cartItemsProvider를 통해 장바구니 아이템 목록 상태를 가져옴
     final cartItems = ref.watch(cartItemsProvider);
@@ -202,7 +198,7 @@ class CartItemsList extends ConsumerWidget {
                 },
                 child: Container(
                   width: cartlistCardViewWidth, // CommonCardView의 너비를 설정함
-                  height: cartlistCardViewHeight, // CommonCardView의 높이를 설정함
+                  // height: cartlistCardViewHeight, // CommonCardView의 높이를 설정함
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -563,8 +559,8 @@ class CartItemsList extends ConsumerWidget {
                               SizedBox(width: cartlist3X), // 버튼 간격 조정
                               // ——— 수량을 직접 입력할 수 있는 버튼
                               Container(
-                                width: directInsertBtnWidth, // 버튼 넓이 설정
-                                height: directInsertBtnHeight, // 버튼 높이 설정
+                                // width: directInsertBtnWidth, // 버튼 넓이 설정
+                                // height: directInsertBtnHeight, // 버튼 높이 설정
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     final TextEditingController controller =
@@ -589,6 +585,7 @@ class CartItemsList extends ConsumerWidget {
                                             // 숫자만 입력 가능하도록 필터링
                                           ],
                                           autofocus: true,
+                                          cursorColor: ORANGE56_COLOR, // 커서 색상 설정
                                           // 자동 포커스 활성화
                                           onChanged: (value) {
                                             input =

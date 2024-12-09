@@ -1224,7 +1224,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                   // 오른쪽에 "발주하기" 버튼을 배치
                   Container(
                     // 버튼의 가로 크기
-                    width: bottomBtnC2Width,
+                    // width: bottomBtnC2Width,
                     // 버튼의 세로 크기
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
@@ -1581,7 +1581,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
               children: <Widget>[
                 _buildListTile(
                   context,
-                  '네이버 카페',
+                  '네이버 카페 채널',
                   'https://cafe.naver.com/ottbayo',
                   'asset/img/misc/drawer_img/naver_logo_v1.png',
                 ),
@@ -1589,7 +1589,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                 // 간격을 위한 SizedBox
                 _buildListTile(
                   context,
-                  '카카오톡',
+                  '카카오톡 채널',
                   'https://pf.kakao.com/_xjVrbG',
                   'asset/img/misc/drawer_img/kakao_logo_v1.png',
                 ),
@@ -1597,7 +1597,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                 // 간격을 위한 SizedBox
                 _buildListTile(
                   context,
-                  '유튜브',
+                  '유튜브 채널',
                   'https://www.youtube.com/@OTTBAYO',
                   'asset/img/misc/drawer_img/youtube_logo_v1.png',
                 ),
@@ -1605,7 +1605,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                 // 간격을 위한 SizedBox
                 _buildListTile(
                   context,
-                  '인스타그램',
+                  '인스타그램 채널',
                   'https://www.instagram.com/ottbayo',
                   'asset/img/misc/drawer_img/instagram_logo_v1.png',
                 ),
@@ -1829,8 +1829,8 @@ Widget _buildListTile(
     onTap: () async {
       // 탭 이벤트 핸들러
       try {
-        // URL을 파싱하여 웹 페이지 열기 시도
-        final bool launched = await launchUrl(Uri.parse(url));
+        // URL을 파싱하여 외부 브라우저로 웹 페이지 열기 시도
+        final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         if (!launched) {
           // 웹 페이지를 열지 못할 경우 스낵바로 알림
           showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');

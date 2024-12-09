@@ -303,6 +303,31 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
 
     _selectedMemo = widget.selectedMemo;
     _isCustomMemo = widget.isCustomMemo;
+
+    // 초기 값이 비어있으면 기본값으로 설정 (우편번호와 주소 기입창 내 기본값 관련 설정)
+    if (_addressController.text.isEmpty) {
+      _addressController.text = '';
+    }
+    if (_postalCodeController.text.isEmpty) {
+      _postalCodeController.text = '';
+    }
+
+    // 리스너 추가
+    _addressController.addListener(_updateDetailAddressState);
+    _postalCodeController.addListener(_updateDetailAddressState);
+  }
+
+  // 상세주소 활성화 여부 관련 매개변수
+  bool _isDetailAddressEnabled = false;
+
+  // 주소와 우편번호 상태에 따라 상세주소 활성화 여부 결정 관련 함수
+  void _updateDetailAddressState() {
+    // 주소와 우편번호 상태에 따라 상세주소 활성화 여부 결정
+    setState(() {
+      _isDetailAddressEnabled =
+          _addressController.text != '' && _postalCodeController.text != '';
+      print('상세주소 활성화 상태: $_isDetailAddressEnabled');
+    });
   }
 
   @override
@@ -313,6 +338,10 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     _postalCodeFocusNode.dispose();
     _detailAddressFocusNode.dispose();
     _customMemoFocusNode.dispose();
+
+    _addressController.removeListener(_updateDetailAddressState);
+    _postalCodeController.removeListener(_updateDetailAddressState);
+
     super.dispose();
   }
 
@@ -440,7 +469,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 _buildFixedValueRowWithButton(
                     context, '우편번호', _postalCodeController, '우편번호 찾기'),
                 // 우편번호 찾기 버튼이 포함된 행 생성
-                _buildFixedValueRow(context, '주소', _addressController),
+                _buildFixedValueRow(context, '주소', _addressController, "'우편번호 찾기' 버튼 클릭해주세요."),
                 // 고정된 값이 있는 주소 행 생성
                 _buildEditableRow(
                   context,
@@ -448,9 +477,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   _detailAddressController,
                   _detailAddressFocusNode,
                   "우편번호와 주소 선택 후 기입해주세요.",
-                  isEnabled: _addressController.text != '없음' &&
-                      _postalCodeController.text !=
-                          '없음', // 우편번호와 주소가 없을 때는 비활성화
+                  isEnabled: _isDetailAddressEnabled, // 우편번호와 주소가 없을 때는 비활성화
                 ),
                 _buildDropdownMemoRow(context),
                 // 드롭다운 메모 행 생성
@@ -573,6 +600,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           // 텍스트 필드 컨트롤러 설정
                           focusNode: focusNode,
                           // 텍스트 필드 포커스 노드 설정
+                          cursorColor: ORANGE56_COLOR, // 커서 색상 설정
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             fontSize: recipientInfoDataFontSize,
@@ -617,7 +645,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
 
   // 고정된 값을 가진 행을 생성하는 함수
   Widget _buildFixedValueRow(
-      BuildContext context, String label, TextEditingController controller) {
+      BuildContext context, String label, TextEditingController controller, String hintText) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -629,7 +657,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double recipientInfoTextFontSize =
         screenSize.height * (13 / referenceHeight);
     final double recipientInfoDataFontSize =
-        screenSize.height * (13 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double recipientInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
     final double recipientInfoTextPartHeight =
@@ -684,7 +712,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 ),
                 padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
-                child: Text(
+                child: controller.text.isNotEmpty
+                    ? Text(
                   controller.text,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
@@ -692,7 +721,17 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                     fontSize: recipientInfoDataFontSize,
                     color: BLACK_COLOR,
                   ),
-                ), // 고정된 값을 텍스트로 표시
+                ) // 입력된 텍스트를 표시
+                    : Text(
+                  hintText, // 전달받은 hintText 표시
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'NanumGothic',
+                    fontSize: recipientInfoDataFontSize,
+                    color: GRAY74_COLOR, // 힌트 텍스트 색상
+                  ),
+                ), // 힌트 텍스트 표시
+                // 고정된 값을 텍스트로 표시
               ),
             ),
           ],
@@ -1759,7 +1798,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
     final double paymentMethodInfoTitleFontSize =
         screenSize.height * (18 / referenceHeight);
     final double orderRequireNoticeFontSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (15 / referenceHeight);
     final double paymentMethodInfo1Y =
         screenSize.height * (16 / referenceHeight);
 
@@ -1881,7 +1920,7 @@ class CompleteOrderButton extends ConsumerWidget {
         Center(
           // '30,000원 이상 금액부터 결제가 가능합니다.' 텍스트를 중앙에 위치시킴
           child: Text(
-            '결제하기 버튼은 30,000원 이상일 시 진행 가능합니다.', // 알림 텍스트
+            '결제는 30,000원 이상일 시, 진행 가능합니다.', // 알림 텍스트
             style: TextStyle(
               fontFamily: 'NanumGothic',
               fontSize: orderRequireNoticeFontSize,
@@ -2945,10 +2984,10 @@ class _OrderListDetailItemWidgetState
                             context, product);
                       },
                       child: Container(
-                        width: orderlistDtInfo3CardViewWidth,
-                        // 카드뷰 가로 크기 설정
-                        height: orderlistDtInfo3CardViewHeight,
-                        // 카드뷰 세로 크기 설정
+                        // width: orderlistDtInfo3CardViewWidth,
+                        // // 카드뷰 가로 크기 설정
+                        // height: orderlistDtInfo3CardViewHeight,
+                        // // 카드뷰 세로 크기 설정
                         color:
                             Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
                         // color: GRAY97_COLOR,

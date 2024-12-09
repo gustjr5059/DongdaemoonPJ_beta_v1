@@ -26,8 +26,6 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
     // body 부분 전체 패딩 수치 계산
     final double announcelistPadding1Y =
         screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
-    final double announcelistPadding1X =
-        screenSize.width * (17 / referenceWidth); // 상하 패딩 계산
 
     // 텍스트 크기 계산
     final double announcelistTitleDataFontSize =
@@ -93,7 +91,6 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
                 // 공지사항 항목을 패딩으로 감싸서 간격을 줌
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: announcelistPadding1X,
                       vertical: announcelistPadding1Y),
                   // 상하 방향으로 announcelistPadding1Y의 패딩을 적용함
                   child: Column(
@@ -168,8 +165,6 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     // body 부분 전체 패딩 수치 계산
     final double announceDtlistPadding1Y =
         screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
-    final double announceDtlistPadding1X =
-        screenSize.width * (17 / referenceWidth); // 상하 패딩 계산
 
     // 텍스트 크기 계산
     final double announceDtlistTitleDataFontSize =
@@ -237,7 +232,6 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: announceDtlistPadding1X,
           vertical: announceDtlistPadding1Y),
       // 상하로 announceDtlistPadding1Y의 패딩을 적용함
       child: Column(

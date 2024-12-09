@@ -243,27 +243,6 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     final double announcementDetailEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
 
-    // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double loginGuideTextWidth =
-        screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y =
-        screenSize.height * (300 / referenceHeight);
-
-    // 로그인 하기 버튼 수치
-    final double loginBtnPaddingX =
-        screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY =
-        screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
-
-
     return Scaffold(
       body: Stack(
         children: [
@@ -376,22 +355,10 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 // 각 항목을 패딩으로 감싸 좌우 간격을 announceDtlistPaddingX로 설정함.
-                                // return Padding(
-                                //   padding: EdgeInsets.symmetric(
-                                //       horizontal: announceDtlistPaddingX),
                                 return Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 0),
+                                  padding: EdgeInsets.symmetric(horizontal: announceDtlistPaddingX),
                                   child: Column(
                                     children: [
-                                      // Container(
-                                      //   decoration: BoxDecoration(
-                                      //     border: Border(
-                                      //       bottom: BorderSide(
-                                      //           color: BLACK_COLOR,
-                                      //           width: 1.0), // 하단 테두리 색상을 설정함
-                                      //     ),
-                                      //   ),
-                                      // ),
                                       SizedBox(height: announceDtlistPaddingY),
                                       // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
                                       AnnounceDetailBodyPartsLayout(

@@ -2281,6 +2281,7 @@ Widget buildProductAllCountAndPriceSelection(
                               // 숫자만 입력되도록 필터링
                             ],
                             autofocus: true,
+                            cursorColor: ORANGE56_COLOR, // 커서 색상 설정
                             // 자동 포커스 설정
                             onChanged: (value) {
                               input = value; // 입력된 값 저장
@@ -3066,16 +3067,22 @@ class ProductInquiryContents extends StatelessWidget {
             ),
             // 버튼이 눌렸을 때의 동작 정의
             onPressed: () async {
-              // URL을 상수로 선언
-              const url = 'https://pf.kakao.com/_xjVrbG';
-              // URI를 파싱하여 생성
-              final uri = Uri.parse(url);
-              // URL을 열 수 있는지 확인하고 열 수 있으면 URL을 엶
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri);
-              } else {
-                // URL을 열 수 없으면 예외를 던짐
-                throw '해당 $url을 열 수 없습니다.';
+              // 열고자 하는 URL을 url 변수에 상수로 저장함
+              const url = 'http://pf.kakao.com/_xjVrbG';
+              try {
+                // URL을 Uri로 변환하여 외부 브라우저에서 실행함
+                final bool launched = await launchUrl(
+                  Uri.parse(url), // URL을 Uri 객체로 변환함
+                  mode: LaunchMode.externalApplication, // 외부 애플리케이션 실행 모드 설정함
+                );
+
+                // URL 실행에 실패한 경우 사용자에게 알림을 표시함
+                if (!launched) {
+                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                }
+              } catch (e) {
+                // URL 실행 중 예외가 발생한 경우 사용자에게 에러 메시지를 표시함
+                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
               }
             },
             // 버튼의 자식 위젯으로 텍스트를 설정
