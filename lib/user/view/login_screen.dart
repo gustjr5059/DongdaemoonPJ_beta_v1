@@ -15,7 +15,7 @@ import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/provider/common_state_provider.dart';
-import '../../home/view/home_screen.dart';
+import '../../home/view/main_home_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../provider/user_me_provider.dart';
 
@@ -162,7 +162,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
           // 이전 화면 스택을 모두 제거하고 홈 화면으로 이동
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => HomeMainScreen()),
+            MaterialPageRoute(builder: (context) => MainHomeScreen()),
                 (Route<dynamic> route) => false,
           );
         });

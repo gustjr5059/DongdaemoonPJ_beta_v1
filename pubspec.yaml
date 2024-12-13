@@ -190,6 +190,14 @@ flutter:
     - asset/img/misc/drawer_img/review_management_logo_v1.png
     - asset/img/misc/icon_img/reviewlist_icon.png
     - asset/img/misc/icon_img/messagelist_icon.png
+    - asset/img/misc/button_img/market_button_0.png
+    - asset/img/misc/button_img/market_button_1.png
+    - asset/img/misc/button_img/market_button_2.png
+    - asset/img/misc/button_img/market_button_3.png
+    - asset/img/misc/button_img/market_button_4.png
+    - asset/img/misc/button_img/market_button_5.png
+    - asset/img/misc/button_img/market_button_6.png
+    - asset/img/misc/icon_img/user_info_icon.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

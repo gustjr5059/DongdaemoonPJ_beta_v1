@@ -3,7 +3,6 @@ import 'dart:io' show Platform;
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 // Android 및 기본 플랫폼 스타일의 인터페이스 요소를 사용하기 위해 Material 디자인 패키지를 임포트합니다.
@@ -14,59 +13,26 @@ import 'package:flutter/services.dart';
 // Riverpod는 애플리케이션의 다양한 상태를 관리하는 데 도움을 주는 강력한 도구입니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 사용할 색상 상수들을 정의한 파일을 임포트합니다.
-import '../../announcement/provider/announce_all_provider.dart';
-import '../../announcement/provider/announce_state_provider.dart';
-import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
 import '../../common/layout/common_body_parts_layout.dart';
-import '../../common/provider/common_state_provider.dart';
 import '../../home/provider/home_state_provider.dart';
-import '../../inquiry/provider/inquiry_state_provider.dart';
-import '../../manager/message/provider/message_all_provider.dart';
-import '../../manager/message/provider/message_state_provider.dart';
-import '../../manager/orderlist/provider/orderlist_all_provider.dart';
-import '../../manager/orderlist/provider/orderlist_state_provider.dart';
-import '../../manager/review/provider/review_all_provider.dart';
-import '../../manager/review/provider/review_state_provider.dart';
-import '../../message/provider/message_all_provider.dart';
-import '../../message/provider/message_state_provider.dart';
-import '../../order/provider/complete_payment_provider.dart';
-import '../../order/provider/order_all_providers.dart';
-import '../../order/provider/order_state_provider.dart';
-import '../../review/provider/review_all_provider.dart';
-import '../../review/provider/review_state_provider.dart';
-import '../../user/provider/profile_state_provider.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_shirt_detail_screen.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
-import '../../wishlist/provider/wishlist_all_providers.dart';
-import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../model/product_model.dart';
 
 // 제품 상태 관리를 위한 StateProvider 파일을 임포트합니다.
-import '../provider/product_all_providers.dart';
 import '../provider/product_state_provider.dart';
 
 // 각 의류 카테고리에 대한 상세 화면 구현 파일들을 임포트합니다.
 // 이 파일들은 각 카테고리별 제품의 상세 정보를 표시하는 화면을 정의합니다.
-import '../view/detail_screen/blouse_detail_screen.dart'; // 블라우스 상세 화면
-import '../view/detail_screen/cardigan_detail_screen.dart'; // 가디건 상세 화면
-import '../view/detail_screen/coat_detail_screen.dart'; // 코트 상세 화면
-import '../view/detail_screen/jean_detail_screen.dart'; // 청바지 상세 화면
-import '../view/detail_screen/mtm_detail_screen.dart'; // 맨투맨 상세 화면
-import '../view/detail_screen/neat_detail_screen.dart'; // 니트 상세 화면
-import '../view/detail_screen/onepiece_detail_screen.dart'; // 원피스 상세 화면
-import '../view/detail_screen/paeding_detail_screen.dart'; // 패딩 상세 화면
-import '../view/detail_screen/pants_detail_screen.dart'; // 바지 상세 화면
-import '../view/detail_screen/pola_detail_screen.dart'; // 폴라(터틀넥) 상세 화면
-import '../view/detail_screen/product_detail_original_image_screen.dart';
-import '../view/detail_screen/shirt_detail_screen.dart'; // 셔츠 상세 화면
-import '../view/detail_screen/skirt_detail_screen.dart'; // 스커트 상세 화면
+import '../view/product_detail_original_image_screen.dart';
+
 
 // ------ pageViewWithArrows 위젯 내용 구현 시작
 // PageView와 화살표 버튼을 포함하는 위젯
@@ -138,116 +104,6 @@ Widget arrowButton(
   );
 }
 // ------ arrowButton 위젯 내용 구현 끝
-
-// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
-class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
-    extends ConsumerWidget {
-  // StateNotifierProvider와 StateProvider를 필드로 선언
-  final StateNotifierProvider<T, List<ProductContent>> productListProvider;
-  final StateProvider<String> sortButtonProvider;
-
-  // 생성자: 필수 인자 productListProvider와 sortButtonProvider를 받아서 초기화
-  PriceAndDiscountPercentSortButtons({
-    required this.productListProvider,
-    required this.sortButtonProvider,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 비율을 기반으로 동적으로 크기와 위치 설정
-    // sortBtn 관련 수치 동적 적용
-    final double sortBtnX = screenSize.width * (8 / referenceWidth);
-    final double sortBtneY = screenSize.height * (4 / referenceHeight);
-
-    // 현재 선택된 정렬 타입을 감시
-    final selectedSortType = ref.watch(sortButtonProvider);
-    // print("현재 정렬 상태: $selectedSortType");
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: sortBtnX, vertical: sortBtneY),
-      // 좌우 및 상하 패딩 설정
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        // 자식 위젯 사이의 공간을 고르게 분배
-        children: [
-          _buildExpandedSortButton(context, '가격 높은 순', ref, selectedSortType),
-          // 가격 높은 순 버튼 생성
-          _buildExpandedSortButton(context, '가격 낮은 순', ref, selectedSortType),
-          // 가격 낮은 순 버튼 생성
-          _buildExpandedSortButton(context, '할인율 높은 순', ref, selectedSortType),
-          // 할인율 높은 순 버튼 생성
-          _buildExpandedSortButton(context, '할인율 낮은 순', ref, selectedSortType),
-          // 할인율 낮은 순 버튼 생성
-        ],
-      ),
-    );
-  }
-
-  // 버튼 세부 내용인 _buildExpandedSortButton 위젯
-  Widget _buildExpandedSortButton(BuildContext context, String title,
-      WidgetRef ref, String selectedSortType) {
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    // 비율을 기반으로 동적으로 크기와 위치 설정
-    // sortBtn 관련 수치 동적 적용
-    final double sortBtn1X = screenSize.width * (4 / referenceWidth);
-    final double sortBtn2X = screenSize.width * (8 / referenceWidth);
-    final double sortBtnTextFontSize =
-        screenSize.height * (12 / referenceHeight);
-
-    // 현재 버튼이 선택된 상태인지 여부를 결정
-    final bool isSelected = selectedSortType == title;
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sortBtn1X), // 좌우 패딩 설정
-        child: ElevatedButton(
-          onPressed: () {
-            ref.read(sortButtonProvider.notifier).state =
-                title; // 버튼 클릭 시 정렬 상태 업데이트
-            ref.read(productListProvider.notifier).sortType =
-                title; // 상품 데이터 정렬 상태 업데이트
-            // print("정렬 버튼 클릭: $title");
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected ? ORANGE56_COLOR : GRAY79_COLOR,
-            // 선택된 버튼 배경 색상 설정
-            minimumSize: Size(0, 40),
-            // 최소 버튼 크기 설정
-            padding: EdgeInsets.symmetric(horizontal: sortBtn2X), // 버튼 내 패딩 설정
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(67),
-            ),
-          ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown, // 텍스트 크기를 버튼 크기에 맞게 조절
-            child: Text(
-              title,
-              textAlign: TextAlign.center, // 텍스트 가운데 정렬
-              style: TextStyle(
-                fontSize: sortBtnTextFontSize,
-                color: WHITE_COLOR,
-                fontFamily: 'NanumGothic',
-                fontWeight: FontWeight.w800, // ExtraBold
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 PriceAndDiscountPercentSortButtons 클래스 내용 구현 끝
 
 // ------- ProductsSectionList 클래스 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
@@ -394,655 +250,6 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 }
 // ------- ProductsSectionList 클래스 내용 구현 끝
 
-// ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
-// GeneralProductList 클래스 내용 구현 시작
-// 1차 카테고리 관련 메인 화면과 섹션 더보기 화면에서 데이터를 불러올 때 사용하는 UI 구현 부분
-class GeneralProductList<T extends BaseProductListNotifier>
-    extends ConsumerStatefulWidget {
-  final ScrollController scrollController; // 스크롤 컨트롤러 선언
-  final StateNotifierProvider<T, List<ProductContent>>
-      productListProvider; // 제품 목록 provider 선언
-  final String category; // 카테고리 선언
-
-  GeneralProductList({
-    required this.scrollController,
-    required this.productListProvider,
-    required this.category,
-  }); // 생성자 정의
-
-  @override
-  _ProductListState createState() => _ProductListState(); // 상태 생성 메소드 정의
-}
-
-class _ProductListState extends ConsumerState<GeneralProductList> {
-  @override
-  void initState() {
-    super.initState(); // 부모 클래스의 initState 호출
-    widget.scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
-    // 위젯이 완전히 빌드된 후에 초기 데이터 로드 작업을 수행하기 위해 Future.delayed(Duration.zero)를 사용
-    Future.delayed(Duration.zero, () {
-      if (ref.read(widget.productListProvider).isEmpty) {
-        // 제품 목록이 비어있다면
-        ref
-            .read(widget.productListProvider.notifier)
-            .fetchInitialProducts(widget.category); // 초기 제품 가져오기 호출
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    widget.scrollController.removeListener(_scrollListener); // 스크롤 리스너 제거
-    super.dispose(); // 부모 클래스의 dispose 호출
-  }
-
-  // 스크롤 리스너 함수
-  void _scrollListener() {
-    if (widget.scrollController.position.pixels >=
-        widget.scrollController.position.maxScrollExtent - 200) {
-      // 스크롤이 끝에 가까워지면
-      ref
-          .read(widget.productListProvider.notifier)
-          .fetchMoreProducts(widget.category); // 더 많은 제품 가져오기 호출
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final products = ref.watch(widget.productListProvider); // 제품 목록 상태 감시
-    final isFetching = ref.watch(widget.productListProvider.notifier
-        .select((notifier) => notifier.isFetching)); // 가져오는 중인지 상태 감시
-
-    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-    final Size screenSize = MediaQuery.of(context).size;
-
-    // 기준 화면 크기: 가로 393, 세로 852
-    final double referenceWidth = 393.0;
-    final double referenceHeight = 852.0;
-
-    final double interval1X = screenSize.width * (8 / referenceWidth);
-    final double interval1Y = screenSize.height * (8 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-
-    return Column(
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          // 높이 제한
-          physics: NeverScrollableScrollPhysics(),
-          // 스크롤 비활성화
-          padding: EdgeInsets.symmetric(vertical: interval2Y),
-          // 상하 패딩 설정
-          itemCount: (products.length / 3).ceil(),
-          // 행의 개수 계산
-          itemBuilder: (context, index) {
-            int startIndex = index * 3; // 시작 인덱스 계산
-            int endIndex = startIndex + 3; // 끝 인덱스 계산
-            if (endIndex > products.length) {
-              // 끝 인덱스가 제품 개수보다 많으면
-              endIndex = products.length; // 끝 인덱스를 제품 개수로 조정
-            }
-            List<ProductContent> productRow =
-                products.sublist(startIndex, endIndex); // 행에 들어갈 제품들 추출
-            return buildGeneralProductRow(
-                ref, productRow, context); // 행 빌드 함수 호출
-          },
-        ),
-        if (isFetching) // 가져오는 중이라면
-          Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: interval1Y, horizontal: interval1X),
-              child: buildCommonLoadingIndicator() // 로딩 표시
-              ),
-      ],
-    );
-  }
-}
-// ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
-// GeneralProductList 클래스 내용 구현 끝
-
-// ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 시작
-Widget buildGeneralProductRow(
-    WidgetRef ref, List<ProductContent> products, BuildContext context) {
-  final productInfo =
-      ProductInfoDetailScreenNavigation(ref); // 제품 정보 상세 화면 내비게이션 객체 생성
-
-  // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
-  final Size screenSize = MediaQuery.of(context).size;
-
-  // 기준 화면 크기: 가로 393, 세로 852
-  final double referenceWidth = 393.0;
-  final double referenceHeight = 852.0;
-
-  final double interval1X = screenSize.width * (2 / referenceWidth);
-  final double interval1Y = screenSize.height * (2 / referenceHeight);
-
-  final itemWidth =
-      (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
-
-  return Row(
-    // mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 수평 중앙 정렬
-    children: products.map((product) {
-      return SizedBox(
-        width: itemWidth, // 아이템의 너비를 설정
-        // 각 제품을 확장된 위젯으로 변환
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: interval1Y), // 패딩 설정
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 설정
-            children: [
-              productInfo.buildProdFirestoreDetailDocument(
-                  context, product, ref),
-              // 제품 정보 상세 화면 빌드 함수 호출
-            ],
-          ),
-        ),
-      );
-    }).toList(), // 리스트로 변환
-  );
-}
-// ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 끝
-
-// 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
-// 홈 내 섹션의 데이터 초기화 / 홈 화면 내 섹션의 스크롤 위치 초기화
-// / 홈,장바구니,발주내역,마이페이지,2차 메인 화면 등 모든 화면화면 자체의 스크롤 위치 초기화 관련 함수
-Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
-  // 로그아웃 기능 수행
-  await FirebaseAuth.instance.signOut(); // Firebase 인증 로그아웃
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  // 자동 로그인 정보 삭제 및 비활성화
-  prefs.setBool('autoLogin', false); // 자동 로그인 체크박스 비활성화
-  // prefs.remove('autoLogin'); // 자동 로그인 정보 삭제
-  prefs.remove('username'); // 저장된 사용자명 삭제
-  prefs.remove('password'); // 저장된 비밀번호 삭제
-
-  // 로그아웃했다가 재로그인 시, 초가화하려면 여기에 적용시켜야 반영이 됨
-  // 모든 화면에서 로그아웃 버튼을 클릭했을 때 모든 화면의 상태를 초기화하는 로직-앱 종료 후 재실행할 때인 경우에도 여기 포함됨
-  // 각 화면마다의 FirebaseAuth.instance.authStateChanges().listen((user) 여기에도 provider 구현하고, 여기에도 구현하는 두 곳 다 구현해야함.
-  // 홈 화면 관련 초기화 부분 시작
-  // 스크롤 위치 및 현재 탭 인덱스 초기화
-  ref.read(homeScrollPositionProvider.notifier).state =
-      0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(homeCurrentTabProvider.notifier).state =
-      0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(homeSectionScrollPositionsProvider.notifier).state =
-      {}; // 홈 화면 내 섹션의 스크롤 위치 초기화
-  ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
-      false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
-  ref.read(homeLargeBannerPageProvider.notifier).state = 0; // 홈 대배너 페이지뷰 초기화
-  ref.read(homeSmall1BannerPageProvider.notifier).state = 0; // 홈 소배너1 페이지뷰 초기화
-  ref.read(homeSmall2BannerPageProvider.notifier).state = 0; // 홈 소배너2 페이지뷰 초기화
-  ref.read(homeSmall3BannerPageProvider.notifier).state = 0; // 홈 소배너3 페이지뷰 초기화
-  // 홈 화면 관련 초기화 부분 끝
-
-  // 장바구니 화면 관련 초기화 부분 시작
-  // 장바구니 화면에서 단순 화면 스크롤 초기화
-  ref.read(cartScrollPositionProvider.notifier).state = 0.0;
-  ref.invalidate(cartItemsProvider); // 장바구니 데이터 초기화
-  ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
-  // 장바구니 화면 관련 초기화 부분 끝
-
-  // 발주 내역 화면 관련 초기화 부분 시작
-  // 발주 내역 화면에서 단순 화면 스크롤 초기화
-  ref.read(orderListScrollPositionProvider.notifier).state = 0.0;
-  // 발주 목록 내 데이터를 불러오는 orderlistItemsProvider 초기화
-  ref.invalidate(orderlistItemsProvider);
-  // 발주 내역 화면 관련 초기화 부분 끝
-
-  // 발주 내역 상세 화면 관련 초기화 부분 시작
-  // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
-  ref.read(orderListDetailScrollPositionProvider.notifier).state =
-      0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
-  // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
-  ref.invalidate(orderlistDetailItemProvider);
-  // 발주 목록 상세 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-  ref.invalidate(buttonInfoProvider);
-  // 발주 내역 상세 화면 관련 초기화 부분 끝
-
-  // ----- 발주 화면 관련 초기화 부분 시작
-  // 발주 화면에서 단순 화면 스크롤 초기화
-  ref.read(orderMainScrollPositionProvider.notifier).state = 0.0;
-  // ref.invalidate(orderItemsProvider); // 발주 상품 정보를 불러오는 프로바이더 초기화
-  ref.invalidate(deliveryMethodSelectProvider); // 수령방식 선택 정보를 불러오는 프로바이더 초기화
-  // 발주 화면 내 수령자 정보 관련 초기화 부분 시작
-  ref.invalidate(recipientInfoItemsProvider); // 수령자 정보 목록 초기화
-  ref.invalidate(saveRecipientInfoProvider); // 수령자 정보 저장 관련 상태 초기화
-  ref.invalidate(recipientInfoItemRepositoryProvider); // 수령자 정보 Repository 초기화
-  // 수령자 정보 즐겨찾기 선택 화면 스크롤 위치 초기화
-  ref.read(recipientInfoFavoritesSelectScrollPositionProvider.notifier).state =
-      0.0; // 스크롤 위치 초기화
-  // 발주 화면 내 수령자 정보 관련 초기화 부분 끝
-  // ----- 발주 화면 관련 초기화 부분 끝
-
-  // 발주 완료 화면 관련 초기화 부분 시작
-  // 발주 완료 화면에서 단순 화면 스크롤 초기화
-  ref.read(completePaymentScrollPositionProvider.notifier).state = 0.0;
-  // 발주 완료 화면 관련 초기화 부분 끝
-
-  // 찜 목록 화면 관련 초기화 부분 시작
-  // 찜 목록 화면에서 단순 화면 스크롤 초기화
-  ref.read(wishlistScrollPositionProvider.notifier).state = 0.0;
-  ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
-  ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록  데이터 로드 초기화
-  ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
-  ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
-  // 찜 목록 화면 관련 초기화 부분 끝
-
-  // 마이페이지 화면 관련 초기화 부분 시작
-  ref.read(profileMainScrollPositionProvider.notifier).state =
-      0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(profileMainSmall1BannerPageProvider.notifier).state =
-      0; // 마이페이지 소배너 페이지뷰 초기화
-  // 머아패아자 화면 관련 초기화 부분 끝
-
-  // 공지사항 화면 관련 초기화 부분 시작
-  ref.read(announceScrollPositionProvider.notifier).state =
-      0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(announceDetailScrollPositionProvider.notifier).state =
-      0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  // 공지사항 화면 내 데이터를 불러오는 announceItemsProvider 초기화
-  ref.invalidate(announceItemsProvider);
-  // 공지사항 상세 화면 내 데이터를 불러오는 announceDetailItemProvider 초기화
-  ref.invalidate(announceDetailItemProvider);
-  // 공지사항 화면 관련 초기화 부분 끝
-
-  // 문의하기 화면 관련 초기화 부분 시작
-  ref.read(inquiryScrollPositionProvider.notifier).state =
-      0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  // 문의하기 화면 관련 초기화 부분 끝
-
-  // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 시작
-  ref.invalidate(mainProductRepositoryProvider);
-  ref.invalidate(sectionProductRepositoryProvider);
-  // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 끝
-
-  // 쪽지 관리 화면 관련 초기화 부분 시작
-  ref.read(privateMessageScrollPositionProvider.notifier).state =
-      0.0; // 쪽지 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.invalidate(currentUserEmailProvider); // 현재 사용자 이메일 데이터 초기화
-  // 계정별로 불러오는 마이페이지용 쪽지함 내 메시지 데이터 불러오는 로직 초기화
-  ref.invalidate(privateMessageItemsListNotifierProvider);
-  ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
-  ref.invalidate(deliveryStartDateProvider); // 배송시작일 데이터 초기화
-  // 쪽지 관리 화면 관련 초기화 부분 끝
-
-  // 리뷰 관리 화면 관련 초기화 부분 시작
-  ref.read(privateReviewScrollPositionProvider.notifier).state =
-      0.0; // 리뷰 관리 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  // ref.invalidate(reviewUserOrdersProvider); // 리뷰 작성 데이터를 초기화
-  // ref.read(privateReviewScreenTabProvider.notifier).state =
-  //     ReviewScreenTab.create; // 리뷰 작성/목록 탭 초기화
-  // // 리뷰 관리 화면 중 리뷰 작성 탭 화면 내 '환불' 버튼과 '리뷰 작성' 버튼 활성도 관련 데이터를 불러오는 로직 초기화
-  // ref.invalidate(buttonInfoProvider);
-  // ref.invalidate(reviewListProvider); // 리뷰 목록 초기화
-  // ref.invalidate(deleteReviewProvider); // 리뷰 삭제 관련 데이터 초기화
-  // ref.invalidate(productReviewProvider); // 특정 상품에 대한 리뷰 데이터를 초기화
-  ref.invalidate(privateReviewItmesListNotifierProvider); // 리뷰 데이터를 초기화
-  // 리뷰 관리 화면 관련 초기화 부분 끝
-
-  // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 시작
-  // 리뷰 관리 화면 초기화 시작
-  ref.read(adminReviewScrollPositionProvider.notifier).state = 0.0;
-  // 선택된 사용자 이메일 초기화
-  ref.read(adminSelectedUserEmailProvider.notifier).state = null;
-  // 사용자 이메일 목록 초기화
-  ref.invalidate(adminUsersEmailProvider);
-  // 리뷰 목록 초기화 (프로바이더를 무효화)
-  ref.invalidate(adminReviewItemsListNotifierProvider);
-  // 리뷰 관리 화면 초기화 끝
-
-  // 쪽지 관리 화면 초기화 시작
-  ref.read(adminMessageScrollPositionProvider.notifier).state = 0.0;
-  // 쪽지 관리 화면 내 발신자 관련 로그인한 이메일 계정 데이터 불러오는 로직 초기화
-  ref.invalidate(currentUserProvider);
-  // 쪽지 관리 화면 내 users에 있는 이메일 계정 데이터 불러오는 로직 초기화
-  ref.invalidate(receiversProvider);
-  // 쪽지 관리 화면 내 선택된 이메일 계정 관련 발주번호 데이터 불러오는 로직 초기화
-  ref.invalidate(orderNumbersProvider);
-  // 쪽지 관리 화면 초기화 시, 내용 선택 관려 드롭다운 메뉴 선택 상태 초기화
-  ref.read(adminMessageContentProvider.notifier).state = null;
-  // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
-  ref.read(adminCustomMessageProvider.notifier).state = null;
-  // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
-  ref.read(adminMessageScreenTabProvider.notifier).state =
-      MessageScreenTab.create;
-  // 관리자용 쪽지 관리 화면 내 '쪽지 목록' 탭 화면에서 선택된 수신자 이메일 상태 초기화
-  // 선택된 수신자 이메일 상태 초기화
-  ref.read(selectedReceiverProvider.notifier).state = null;
-  // 수신자 이메일 목록 초기화
-  ref.invalidate(receiversProvider);
-  // 쪽지 목록 초기화 (프로바이더를 무효화)
-  ref
-      .read(adminMessageItemsListNotifierProvider.notifier)
-      .resetAndReloadMessages(timeFrame: 30);
-
-  // 쪽지 관리 화면 초기화 끝
-
-  // 발주내역 관리 화면 초기화 시작
-  // 발주내역 관리 화면 자체의 스크롤 초기화
-  ref.read(adminOrderlistScrollPositionProvider.notifier).state = 0.0;
-  // 발주내역 상세 관리 화면 자체의 스크롤 초기화
-  ref.read(adminOrderListDetailScrollPositionProvider.notifier).state = 0.0;
-  // 선택된 발주자 이메일 초기화
-  ref.read(adminSelectedOrdererEmailProvider.notifier).state = null;
-  // 발주자 이메일 목록 초기화
-  ref.invalidate(adminOrdererEmailProvider);
-  // 발주 내역 초기화 (프로바이더를 무효화)
-  ref.invalidate(adminOrderlistItemsListNotifierProvider);
-  // 발주내역 관리 화면 초기화 끝
-
-  // ------ 관리자용 화면인 리뷰관리, 쪽지관리, 발주내역 관리, 찜 목록 괸리, 공지사항 관리 관련 초기화 부분 끝
-
-  // ------ 2차 메인 화면 관련 부분 시작
-  // 블라우스 메인 화면 관련 초기화 부분 시작
-  ref.read(blouseMainScrollPositionProvider.notifier).state =
-      0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(blouseCurrentTabProvider.notifier).state =
-      0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(blouseMainLargeBannerPageProvider.notifier).state =
-      0; // 블라우스 대배너 페이지뷰 초기화
-  ref.read(blouseMainSmall1BannerPageProvider.notifier).state =
-      0; // 블라우스 소배너 페이지뷰 초기화
-  ref
-      .read(blouseMainProductListProvider.notifier)
-      .reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(blouseMainSortButtonProvider.notifier).state =
-      ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 블라우스 메인 화면 관련 초기화 부분 끝
-
-  // 가디건 메인 화면 관련 초기화 부분 시작
-  ref.read(cardiganMainScrollPositionProvider.notifier).state =
-      0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(cardiganCurrentTabProvider.notifier).state =
-      0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(cardiganMainLargeBannerPageProvider.notifier).state =
-      0; // 가디건 대배너 페이지뷰 초기화
-  ref.read(cardiganMainSmall1BannerPageProvider.notifier).state =
-      0; // 가디건 소배너 페이지뷰 초기화
-  ref
-      .read(cardiganMainProductListProvider.notifier)
-      .reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(cardiganMainSortButtonProvider.notifier).state =
-      ''; // 가디건 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 가디건 메인 화면 관련 초기화 부분 끝
-
-  // 코트 메인 화면 관련 초기화 부분 시작
-  ref.read(coatMainScrollPositionProvider.notifier).state =
-      0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(coatCurrentTabProvider.notifier).state =
-      0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(coatMainLargeBannerPageProvider.notifier).state =
-      0; // 코트 대배너 페이지뷰 초기화
-  ref.read(coatMainSmall1BannerPageProvider.notifier).state =
-      0; // 코트 소배너 페이지뷰 초기화
-  ref
-      .read(coatMainProductListProvider.notifier)
-      .reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(coatMainSortButtonProvider.notifier).state =
-      ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 코트 메인 화면 관련 초기화 부분 끝
-
-  // 청바지 메인 화면 관련 초기화 부분 시작
-  ref.read(jeanMainScrollPositionProvider.notifier).state =
-      0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(jeanCurrentTabProvider.notifier).state =
-      0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(jeanMainLargeBannerPageProvider.notifier).state =
-      0; // 청바지 대배너 페이지뷰 초기화
-  ref.read(jeanMainSmall1BannerPageProvider.notifier).state =
-      0; // 청바지 소배너 페이지뷰 초기화
-  ref
-      .read(jeanMainProductListProvider.notifier)
-      .reset(); // 청바지 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(jeanMainSortButtonProvider.notifier).state =
-      ''; // 청바지 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 청바지 메인 화면 관련 초기화 부분 끝
-
-  // 맨투맨 메인 화면 관련 초기화 부분 시작
-  ref.read(mtmMainScrollPositionProvider.notifier).state =
-      0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(mtmCurrentTabProvider.notifier).state =
-      0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(mtmMainLargeBannerPageProvider.notifier).state =
-      0; // 맨투맨 대배너 페이지뷰 초기화
-  ref.read(mtmMainSmall1BannerPageProvider.notifier).state =
-      0; // 맨투맨 소배너 페이지뷰 초기화
-  ref
-      .read(mtmMainProductListProvider.notifier)
-      .reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(mtmMainSortButtonProvider.notifier).state =
-      ''; // 맨투맨 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 맨투맨 메인 화면 관련 초기화 부분 끝
-
-  // 니트 메인 화면 관련 초기화 부분 시작
-  ref.read(neatMainScrollPositionProvider.notifier).state =
-      0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(neatCurrentTabProvider.notifier).state =
-      0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(neatMainLargeBannerPageProvider.notifier).state =
-      0; // 니트 대배너 페이지뷰 초기화
-  ref.read(neatMainSmall1BannerPageProvider.notifier).state =
-      0; // 니트 소배너 페이지뷰 초기화
-  ref
-      .read(neatMainProductListProvider.notifier)
-      .reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(neatMainSortButtonProvider.notifier).state =
-      ''; // 니트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 니트 메인 화면 관련 초기화 부분 끝
-
-  // 원피스 메인 화면 관련 초기화 부분 시작
-  ref.read(onepieceMainScrollPositionProvider.notifier).state =
-      0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(onepieceCurrentTabProvider.notifier).state =
-      0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(onepieceMainLargeBannerPageProvider.notifier).state =
-      0; // 원피스 대배너 페이지뷰 초기화
-  ref.read(onepieceMainSmall1BannerPageProvider.notifier).state =
-      0; // 원피스 소배너 페이지뷰 초기화
-  ref
-      .read(onepieceMainProductListProvider.notifier)
-      .reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(onepieceMainSortButtonProvider.notifier).state =
-      ''; // 원피스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 원피스 메인 화면 관련 초기화 부분 끝
-
-  // 패딩 메인 화면 관련 초기화 부분 시작
-  ref.read(paedingMainScrollPositionProvider.notifier).state =
-      0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(paedingCurrentTabProvider.notifier).state =
-      0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(paedingMainLargeBannerPageProvider.notifier).state =
-      0; // 패딩 대배너 페이지뷰 초기화
-  ref.read(paedingMainSmall1BannerPageProvider.notifier).state =
-      0; // 패딩 소배너 페이지뷰 초기화
-  ref
-      .read(paedingMainProductListProvider.notifier)
-      .reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(paedingMainSortButtonProvider.notifier).state =
-      ''; // 패딩 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 패딩 메인 화면 관련 초기화 부분 끝
-
-  // 팬츠 메인 화면 관련 초기화 부분 시작
-  ref.read(pantsMainScrollPositionProvider.notifier).state =
-      0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(pantsCurrentTabProvider.notifier).state =
-      0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(pantsMainLargeBannerPageProvider.notifier).state =
-      0; // 팬츠 대배너 페이지뷰 초기화
-  ref.read(pantsMainSmall1BannerPageProvider.notifier).state =
-      0; // 팬츠 소배너 페이지뷰 초기화
-  ref
-      .read(pantsMainProductListProvider.notifier)
-      .reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(pantsMainSortButtonProvider.notifier).state =
-      ''; // 팬츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 팬츠 메인 화면 관련 초기화 부분 끝
-
-  // 폴라티 메인 화면 관련 초기화 부분 시작
-  ref.read(polaMainScrollPositionProvider.notifier).state =
-      0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(polaCurrentTabProvider.notifier).state =
-      0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(polaMainLargeBannerPageProvider.notifier).state =
-      0; // 폴라티 대배너 페이지뷰 초기화
-  ref.read(polaMainSmall1BannerPageProvider.notifier).state =
-      0; // 폴라티 소배너 페이지뷰 초기화
-  ref
-      .read(polaMainProductListProvider.notifier)
-      .reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(polaMainSortButtonProvider.notifier).state =
-      ''; // 폴라티 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 폴라티 메인 화면 관련 초기화 부분 끝
-
-  // 티셔츠 메인 화면 관련 초기화 부분 시작
-  ref.read(shirtMainScrollPositionProvider.notifier).state =
-      0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(shirtCurrentTabProvider.notifier).state =
-      0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(shirtMainLargeBannerPageProvider.notifier).state =
-      0; // 티셔츠 대배너 페이지뷰 초기화
-  ref.read(shirtMainSmall1BannerPageProvider.notifier).state =
-      0; // 티셔츠 소배너 페이지뷰 초기화
-  ref
-      .read(shirtMainProductListProvider.notifier)
-      .reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(shirtMainSortButtonProvider.notifier).state =
-      ''; // 티셔츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 티셔츠 메인 화면 관련 초기화 부분 끝
-
-  // 스커트 메인 화면 관련 초기화 부분 시작
-  ref.read(skirtMainScrollPositionProvider.notifier).state =
-      0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(skirtCurrentTabProvider.notifier).state =
-      0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(skirtMainLargeBannerPageProvider.notifier).state =
-      0; // 스커트 대배너 페이지뷰 초기화
-  ref.read(skirtMainSmall1BannerPageProvider.notifier).state =
-      0; // 스커트 소배너 페이지뷰 초기화
-  ref
-      .read(skirtMainProductListProvider.notifier)
-      .reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
-  ref.read(skirtMainSortButtonProvider.notifier).state =
-      ''; // 스커트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  // 스커트 메인 화면 관련 초기화 부분 끝
-  // ------ 2차 메인 화면 관련 부분 끝
-
-  // ------ 섹션 더보기 화면 관련 부분 시작
-  // 신상 더보기 화면 관련 초기화 부분 시작
-  ref.read(newSubMainScrollPositionProvider.notifier).state =
-      0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(newSubMainProductListProvider.notifier)
-      .reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
-  ref.read(newSubMainSortButtonProvider.notifier).state =
-      ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(newSubMainLargeBannerPageProvider.notifier).state =
-      0; // 신상 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(newSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 신상 더보기 화면 소배너 페이지뷰 초기화
-  // 신상 더보기 화면 관련 초기화 부분 끝
-
-  // 최고 더보기 화면 관련 초기화 부분 시작
-  ref.read(bestSubMainScrollPositionProvider.notifier).state =
-      0.0; // 최고 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(bestSubMainProductListProvider.notifier)
-      .reset(); // 최고 더보기 화면 내 상품 데이터를 초기화
-  ref.read(bestSubMainSortButtonProvider.notifier).state =
-      ''; // 최고 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(bestSubMainLargeBannerPageProvider.notifier).state =
-      0; // 최고 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(bestSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 최고 더보기 화면 소배너 페이지뷰 초기화
-  // 최고 더보기 화면 관련 초기화 부분 끝
-
-  // 할인 더보기 화면 관련 초기화 부분 시작
-  ref.read(saleSubMainScrollPositionProvider.notifier).state =
-      0.0; // 할인 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(saleSubMainProductListProvider.notifier)
-      .reset(); // 할인 더보기 화면 내 상품 데이터를 초기화
-  ref.read(saleSubMainSortButtonProvider.notifier).state =
-      ''; // 할인 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(saleSubMainLargeBannerPageProvider.notifier).state =
-      0; // 할인 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(saleSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 할인 더보기 화면 소배너 페이지뷰 초기화
-  // 할인 더보기 화면 관련 초기화 부분 끝
-
-  // 봄 더보기 화면 관련 초기화 부분 시작
-  ref.read(springSubMainScrollPositionProvider.notifier).state =
-      0.0; // 봄 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(springSubMainProductListProvider.notifier)
-      .reset(); // 봄 더보기 화면 내 상품 데이터를 초기화
-  ref.read(springSubMainSortButtonProvider.notifier).state =
-      ''; // 봄 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(springSubMainLargeBannerPageProvider.notifier).state =
-      0; // 봄 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(springSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 봄 더보기 화면 소배너 페이지뷰 초기화
-  // 봄 더보기 화면 관련 초기화 부분 끝
-
-  // 여름 더보기 화면 관련 초기화 부분 시작
-  ref.read(summerSubMainScrollPositionProvider.notifier).state =
-      0.0; // 여름 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(summerSubMainProductListProvider.notifier)
-      .reset(); // 여름 더보기 화면 내 상품 데이터를 초기화
-  ref.read(summerSubMainSortButtonProvider.notifier).state =
-      ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(summerSubMainLargeBannerPageProvider.notifier).state =
-      0; // 여름 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(summerSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 여름 더보기 화면 소배너 페이지뷰 초기화
-  // 여름 더보기 화면 관련 초기화 부분 끝
-
-  // 가을 더보기 화면 관련 초기화 부분 시작
-  ref.read(autumnSubMainScrollPositionProvider.notifier).state =
-      0.0; // 가을 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(autumnSubMainProductListProvider.notifier)
-      .reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
-  ref.read(autumnSubMainSortButtonProvider.notifier).state =
-      ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(autumnSubMainLargeBannerPageProvider.notifier).state =
-      0; // 가을 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(autumnSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 가을 더보기 화면 소배너 페이지뷰 초기화
-  // 가을 더보기 화면 관련 초기화 부분 끝
-
-  // 겨울 더보기 화면 관련 초기화 부분 시작
-  ref.read(winterSubMainScrollPositionProvider.notifier).state =
-      0.0; // 겨울 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref
-      .read(winterSubMainProductListProvider.notifier)
-      .reset(); // 겨울 더보기 화면 내 상품 데이터를 초기화
-  ref.read(winterSubMainSortButtonProvider.notifier).state =
-      ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(winterSubMainLargeBannerPageProvider.notifier).state =
-      0; // 겨울 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(winterSubMainSmall1BannerPageProvider.notifier).state =
-      0; // 겨울 더보기 화면 소배너 페이지뷰 초기화
-  // 겨울 더보기 화면 관련 초기화 부분 끝
-  // ------ 섹션 더보기 화면 관련 부분 끝
-
-  // ------ 상품 상세 화면 관련 초기화 부분 시작
-  // 화면을 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화함
-  ref.read(colorSelectionIndexProvider.notifier).state = 0;
-  ref.read(colorSelectionTextProvider.notifier).state = null;
-  ref.read(colorSelectionUrlProvider.notifier).state = null;
-  ref.read(sizeSelectionIndexProvider.notifier).state = null;
-  // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
-  ref.read(detailQuantityIndexProvider.notifier).state = 1;
-  // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
-  ref.read(showFullImageProvider.notifier).state = false;
-  ref.invalidate(imagesProvider); // 상품정보 탭 이미지 데이터 초기화
-  ref.invalidate(productReviewListNotifierProvider); // 리뷰 탭 리뷰 데이터 초기화
-  // ------ 상품 상세 화면 관련 초기화 부분 끝
-}
-
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직
 // buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
@@ -1083,130 +290,839 @@ Widget buildHorizontalDocumentsList(
 // 홈 화면과 2차 메인화면(1차 카테고리별 메인화면)에 주로 사용될 예정
 // 상품별 간단하게 데이터를 보여주는 UI 부분과 해당 상품 클릭 시, 상품 상세화면으로 이동하도록 하는 로직
 class ProductInfoDetailScreenNavigation {
-  final WidgetRef ref; // ref 변수는 상태 관리를 위해 사용.
+  final WidgetRef ref; // 상태 관리를 위해 사용되는 ref
 
-  // 생성자에서 ref와 category를 초기화함.
   ProductInfoDetailScreenNavigation(this.ref);
 
-  // 상세 화면으로 이동하고 화면을 뒤로 돌아왔을 때 선택된 색상과 사이즈의 상태를 초기화하는 함수.
   void navigateToDetailScreen(BuildContext context, ProductContent product) {
-    Widget detailScreen; // 상세 화면 위젯
-    String appBarTitle; // 앱바 타이틀
+    Widget detailScreen;
+    String appBarTitle;
 
-    // 상품의 카테고리에 따라 적절한 상세 화면 위젯과 타이틀을 선택.
+    String docIdPrefix = product.docId.substring(0, 3);
+
     switch (product.category) {
       case "티셔츠":
         appBarTitle = '티셔츠 상세';
-        detailScreen = ShirtDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aab') {
+        //   detailScreen = AabShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aac') {
+        //   detailScreen = AacShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aad') {
+        //   detailScreen = AadShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aae') {
+        //   detailScreen = AaeShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aaf') {
+        //   detailScreen = AafShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aag') {
+        //   detailScreen = AagShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aah') {
+        //   detailScreen = AahShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aai') {
+        //   detailScreen = AaiShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aaj') {
+        //   detailScreen = AajShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aak') {
+        //   detailScreen = AakShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aal') {
+        //   detailScreen = AalShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aam') {
+        //   detailScreen = AamShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aan') {
+        //   detailScreen = AanShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aao') {
+        //   detailScreen = AaoShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aap') {
+        //   detailScreen = AapShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aaq') {
+        //   detailScreen = AaqShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aar') {
+        //   detailScreen = AarShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aas') {
+        //   detailScreen = AasShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aat') {
+        //   detailScreen = AatShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aau') {
+        //   detailScreen = AauShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aav') {
+        //   detailScreen = AavShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aaw') {
+        //   detailScreen = AawShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aax') {
+        //   detailScreen = AaxShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aay') {
+        //   detailScreen = AayShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aaz') {
+        //   detailScreen = AazShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Aba') {
+        //   detailScreen = AbaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Abb') {
+        //   detailScreen = AbbShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Abc') {
+        //   detailScreen = AbcShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        // } else if (docIdPrefix == 'Abd') {
+        //   detailScreen = AbdShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
         break;
-      case "블라우스":
-        appBarTitle = '블라우스 상세';
-        detailScreen = BlouseDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "가디건":
-        appBarTitle = '가디건 상세';
-        detailScreen = CardiganDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "코트":
-        appBarTitle = '코트 상세';
-        detailScreen = CoatDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "청바지":
-        appBarTitle = '청바지 상세';
-        detailScreen = JeanDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "맨투맨":
-        appBarTitle = '맨투맨 상세';
-        detailScreen = MtmDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "니트":
-        appBarTitle = '니트 상세';
-        detailScreen = NeatDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "원피스":
-        appBarTitle = '원피스 상세';
-        detailScreen = OnepieceDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "아우터":
-        appBarTitle = '아우터 상세';
-        detailScreen = PaedingDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "팬츠":
-        appBarTitle = '팬츠 상세';
-        detailScreen = PantsDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "폴라티":
-        appBarTitle = '폴라티 상세';
-        detailScreen = PolaDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
-      case "스커트":
-        appBarTitle = '스커트 상세';
-        detailScreen = SkirtDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
-        break;
+
+      // case "블라우스":
+      //   appBarTitle = '블라우스 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "가디건":
+      //   appBarTitle = '가디건 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "코트":
+      //   appBarTitle = '코트 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "청바지":
+      //   appBarTitle = '청바지 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "맨투맨":
+      //   appBarTitle = '맨투맨 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "니트":
+      //   appBarTitle = '니트 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "원피스":
+      //   appBarTitle = '원피스 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "아우터":
+      //   appBarTitle = '아우터 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaePaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "팬츠":
+      //   appBarTitle = '팬츠 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaePantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "폴라티":
+      //   appBarTitle = '폴라티 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaePolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AayPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+      //
+      // case "스커트":
+      //   appBarTitle = '스커트 상세';
+      //   if (docIdPrefix == 'Aaa') {
+      //     detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aab') {
+      //     detailScreen = AabSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aac') {
+      //     detailScreen = AacSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aad') {
+      //     detailScreen = AadSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aae') {
+      //     detailScreen = AaeSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaf') {
+      //     detailScreen = AafSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aag') {
+      //     detailScreen = AagSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aah') {
+      //     detailScreen = AahSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aai') {
+      //     detailScreen = AaiSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaj') {
+      //     detailScreen = AajSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aak') {
+      //     detailScreen = AakSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aal') {
+      //     detailScreen = AalSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aam') {
+      //     detailScreen = AamSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aan') {
+      //     detailScreen = AanSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aao') {
+      //     detailScreen = AaoSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aap') {
+      //     detailScreen = AapSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaq') {
+      //     detailScreen = AaqSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aar') {
+      //     detailScreen = AarSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aas') {
+      //     detailScreen = AasSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aat') {
+      //     detailScreen = AatSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aau') {
+      //     detailScreen = AauSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aav') {
+      //     detailScreen = AavSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaw') {
+      //     detailScreen = AawSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aax') {
+      //     detailScreen = AaxSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aay') {
+      //     detailScreen = AaySkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aaz') {
+      //     detailScreen = AazSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Aba') {
+      //     detailScreen = AbaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abb') {
+      //     detailScreen = AbbSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abc') {
+      //     detailScreen = AbcSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else if (docIdPrefix == 'Abd') {
+      //     detailScreen = AbdSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   } else {
+      //     detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+      //   }
+      //   break;
+
       default:
         appBarTitle = '티셔츠 상세';
-        detailScreen = ShirtDetailProductScreen(
-          fullPath: product.docId,
-          title: appBarTitle,
-        );
+        detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
     }
 
-    // 디버그 출력으로 타이틀 확인
     debugPrint('문서: ${product.docId}에 대한 $appBarTitle 화면으로 이동 중입니다.');
 
-    // 네비게이션을 사용하여 상세 화면으로 이동함
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
+      // 화면 복귀 시 상태 초기화
       ref.read(colorSelectionIndexProvider.notifier).state = 0;
-      // 화면을 돌아왔을 때 선택된 색상 텍스트 인덱스의 상태를 초기화함
       ref.read(colorSelectionTextProvider.notifier).state = null;
-      // 화면을 돌아왔을 때 선택된 색상 이미지 Url의 상태를 초기화함
       ref.read(colorSelectionUrlProvider.notifier).state = null;
-      // 화면을 돌아왔을 때 선택된 사이즈의 상태를 초기화함
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
-      // 화면을 돌아왔을 때 수량과 총 가격의 상태를 초기화함
       ref.read(detailQuantityIndexProvider.notifier).state = 1;
-      // 화면을 돌아왔을 때 '상품정보', '리뷰', '문의'탭 상태를 초기화함
-      ref.read(prodDetailScreenTabSectionProvider.notifier).state =
-          ProdDetailScreenTabSection.productInfo;
+      ref.read(prodDetailScreenTabSectionProvider.notifier).state = ProdDetailScreenTabSection.productInfo;
     });
   }
 

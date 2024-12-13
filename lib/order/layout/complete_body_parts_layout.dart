@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리를 위
 import 'package:intl/intl.dart'; // 숫자 및 날짜 포맷을 위한 intl 라이브러리 임포트
 import '../../common/const/colors.dart'; // 공통 색상 상수 파일 임포트
 import '../../common/layout/common_body_parts_layout.dart';
-import '../../home/view/home_screen.dart'; // 홈 화면 관련 파일 임포트
+import '../../home/view/main_home_screen.dart';
 import '../../product/model/product_model.dart';
 import '../provider/order_all_providers.dart'; // 주문 관련 프로바이더 파일 임포트
 
@@ -170,7 +170,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => HomeMainScreen()), // 홈 화면으로 이동
+                        MaterialPageRoute(builder: (context) => MainHomeScreen()), // 홈 화면으로 이동
                       );
                     },
                     style: ElevatedButton.styleFrom(

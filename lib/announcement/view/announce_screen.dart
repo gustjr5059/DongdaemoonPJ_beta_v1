@@ -142,8 +142,6 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
         ref.read(announceScrollPositionProvider.notifier).state = 0;
         // 공지사항 데이터를 초기화하는 함수 호출
         ref.read(announceItemsProvider.notifier).resetAnnounceItems();
-        // 공지사항 데이터를 다시 로드하는 함수 호출
-        ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });

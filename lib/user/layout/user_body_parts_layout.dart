@@ -6,7 +6,6 @@ import '../../announcement/view/announce_screen.dart'; // 공지사항 화면을
 import '../../common/const/colors.dart'; // 공통 색상 상수를 가져옴
 import '../../common/layout/common_body_parts_layout.dart'; // 공통 레이아웃을 가져옴
 import '../../common/layout/common_exception_parts_of_body_layout.dart'; // 공통 예외 처리 레이아웃을 가져옴
-import '../../home/view/home_screen.dart';
 import '../../inquiry/view/inquiry_screen.dart'; // 문의 화면을 가져옴
 import '../../message/view/message_screen.dart'; // 메시지 화면을 가져옴
 import '../../order/provider/order_all_providers.dart'; // 주문 관련 프로바이더를 가져옴
@@ -20,7 +19,9 @@ import '../view/easy_login_ios_screen.dart';
 import '../view/login_screen.dart';
 import '../view/profile_screen.dart';
 import '../view/user_info_modify_screen.dart'; // 로그인 화면을 가져옴
-import 'dart:io'; // 플랫폼을 확인하기 위한 dart:io 라이브러리 추가
+import 'dart:io';
+
+import 'login_body_parts_layout.dart'; // 플랫폼을 확인하기 위한 dart:io 라이브러리 추가
 
 
 // ------- 마이페이지 화면 내 회원정보 관련 데이터를 파이어베이스에서 불러와서 UI로 구현하는 UserProfileInfo 클래스 내용 시작 부분
@@ -367,7 +368,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                 ),
                 _buildOptionTile( // 옵션 타일 생성
                   context,
-                  assetPath: 'asset/img/misc/icon_img/inquiry_icon.png', // 회원정보 수정 아이콘 설정
+                  assetPath: 'asset/img/misc/icon_img/user_info_icon.png', // 회원정보 수정 아이콘 설정
                   title: '회원정보 수정 및 탈퇴', // 회원정보 수정 타이틀 설정
                   onTap: () { // 클릭 시 실행될 함수 설정
                     onUserInfoModifyListClick(context, ref); // 회원정보 수정 클릭 시 호출되는 함수 실행

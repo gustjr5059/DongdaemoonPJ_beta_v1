@@ -18,11 +18,8 @@ import '../../cart/layout/cart_body_parts_layout.dart';
 import '../../cart/provider/cart_state_provider.dart';
 import '../../cart/view/cart_screen.dart';
 
-// 애플리케이션의 메인 홈 화면을 구성하는 파일을 임포트합니다.
-import '../../home/provider/home_state_provider.dart';
-import '../../home/view/home_screen.dart';
-
 // 주문 관련 화면을 구현한 파일을 임포트합니다.
+import '../../home/view/main_home_screen.dart';
 import '../../manager/message/view/message_screen.dart';
 import '../../manager/orderlist/view/orderlist_screen.dart';
 import '../../manager/review/view/review_screen.dart';
@@ -34,6 +31,7 @@ import '../../order/view/order_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../../product/provider/product_state_provider.dart';
+import '../../user/layout/login_body_parts_layout.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/view/easy_login_aos_screen.dart';
 import '../../user/view/easy_login_ios_screen.dart';
@@ -112,6 +110,8 @@ AppBar buildCommonAppBar({
   String? titleImagePath, // 이미지 경로를 설정하기 위한 선택적 매개변수
   bool boolEventImg = false, // 이벤트 이미지 표시 여부 설정
   bool boolTitleImg = false, // Firestore의 title_img 사용 여부 설정
+  // 추가된 콜백 파라미터
+  VoidCallback? onEventImageTap,
 }) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -133,10 +133,14 @@ AppBar buildCommonAppBar({
       (12 / referenceHeight); // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
   final double appBarWishlistItemCountTextFontSize = screenSize.height *
       (12 / referenceHeight); // 앱 바 찜 목록 아이콘의 찜 목록 아이템 갯수 부분 텍스트 수치
-  final double interval1X = screenSize.width * (3 / referenceWidth); // 장바구니 아이콘 위치 X좌표
-  final double interval1Y = screenSize.height * (4 / referenceHeight); // 장바구니 아이콘 위치 Y좌표
-  final double interval2X = screenSize.width * (1 / referenceWidth); // 찜 목록 아이콘 위치 X좌표
-  final double interval2Y = screenSize.height * (4 / referenceHeight); // 찜 목록 아이콘 위치 Y좌표
+  final double interval1X =
+      screenSize.width * (3 / referenceWidth); // 장바구니 아이콘 위치 X좌표
+  final double interval1Y =
+      screenSize.height * (4 / referenceHeight); // 장바구니 아이콘 위치 Y좌표
+  final double interval2X =
+      screenSize.width * (1 / referenceWidth); // 찜 목록 아이콘 위치 X좌표
+  final double interval2Y =
+      screenSize.height * (4 / referenceHeight); // 찜 목록 아이콘 위치 Y좌표
 
   // `boolEventImg` 값에 따라 이벤트 이미지를 가져옴
   final eventImage = ref.watch(eventImageProvider).whenOrNull(
@@ -156,16 +160,24 @@ AppBar buildCommonAppBar({
     // 이벤트 이미지가 있을 경우 조건문 실행
     eventImageWidget = GestureDetector(
       onTap: () {
-        // 이미지 클릭 시 실행할 함수 정의
-        // '겨울' 섹션으로 스크롤 이동 기능 구현
-        final sectionContext = sectionKey?.currentContext; // 해당 섹션의 컨텍스트 가져옴
-        if (sectionContext != null) {
-          // 섹션 컨텍스트가 null이 아닐 경우 실행
-          Scrollable.ensureVisible(
-            sectionContext, // 스크롤하려는 대상 섹션 컨텍스트 전달
-            duration: Duration(milliseconds: 500), // 스크롤 애니메이션 시간 설정
-            curve: Curves.easeInOut, // 스크롤 애니메이션 곡선 설정
-          );
+        // 여기서 MainHomeScreen 클래스에서의 케이스(onEventImageTap 콜백) 추가
+        // onEventImageTap 콜백이 존재한다면 콜백 실행(즉, MainHomeScreen에서 전달한 함수 사용)
+        // 콜백이 없다면 기존 로직(섹션 컨텍스트 찾아 스크롤) 유지
+        if (onEventImageTap != null) {
+          // MainHomeScreen에서 onEventImageTap을 전달했다면 해당 콜백을 실행
+          onEventImageTap();
+        } else {
+          // 이미지 클릭 시 실행할 함수 정의
+          // '겨울' 섹션으로 스크롤 이동 기능 구현
+          final sectionContext = sectionKey?.currentContext; // 해당 섹션의 컨텍스트 가져옴
+          if (sectionContext != null) {
+            // 섹션 컨텍스트가 null이 아닐 경우 실행
+            Scrollable.ensureVisible(
+              sectionContext, // 스크롤하려는 대상 섹션 컨텍스트 전달
+              duration: Duration(milliseconds: 500), // 스크롤 애니메이션 시간 설정
+              curve: Curves.easeInOut, // 스크롤 애니메이션 곡선 설정
+            );
+          }
         }
       },
       child: Align(
@@ -386,7 +398,7 @@ AppBar buildCommonAppBar({
             child: IconButton(
               icon: Icon(Icons.home_outlined, color: BLACK_COLOR), // 홈 아이콘
               onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
+                  context, ref, MainHomeScreen(), 0), // 홈 화면으로 이동
             ),
           ),
         ]);
@@ -472,7 +484,7 @@ AppBar buildCommonAppBar({
             child: IconButton(
               icon: Icon(Icons.home_outlined, color: BLACK_COLOR), // 홈 아이콘
               onPressed: () => navigateToScreenAndRemoveUntil(
-                  context, ref, HomeMainScreen(), 0), // 홈 화면으로 이동
+                  context, ref, MainHomeScreen(), 0), // 홈 화면으로 이동
             ),
           ),
           // 장바구니 버튼
@@ -673,13 +685,16 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                   // 선택된 인덱스를 상태로 업데이트
                   ref.read(tabIndexProvider.notifier).state = index;
 
+
+
                   // 화면 전환
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) {
+
                       // 선택된 인덱스에 따라 다른 화면을 반환
                       switch (index) {
                         case 0:
-                          return HomeMainScreen();
+                          return MainHomeScreen();
                         case 1:
                           return CartMainScreen();
                         case 2:
@@ -687,7 +702,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                         case 3:
                           return ProfileMainScreen();
                         default:
-                          return HomeMainScreen();
+                          return MainHomeScreen();
                       }
                     }),
                     (Route<dynamic> route) => false, // 모든 이전 라우트를 제거
@@ -1616,6 +1631,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                 //     // await createFirestoreDocuments_1();
                 //     // await createFirestoreDocuments_2();
                 //     await createFirestoreDocuments_3();
+                //     // await createFirestoreDocuments_4();
                 //     // 사용자에게 완료 메시지를 보여줌
                 //     ScaffoldMessenger.of(context).showSnackBar(
                 //       SnackBar(content: Text('DB 생성이 완료되었습니다.')),
@@ -1675,8 +1691,8 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                       // setState가 호출된 효과를 내도록 함
                       // Navigator.of(context).pop();
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (_) => HomeMainScreen()),
-                            (Route<dynamic> route) => false,
+                        MaterialPageRoute(builder: (_) => MainHomeScreen()),
+                        (Route<dynamic> route) => false,
                       );
                       showCustomSnackBar(context, '로그아웃이 되었습니다.');
                     } else {
@@ -1688,17 +1704,20 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                       // IOS 플랫폼은 IOS 화면으로 이동
                       if (Platform.isIOS) {
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
+                          MaterialPageRoute(
+                              builder: (_) => EasyLoginIosScreen()),
                         );
                       } else if (Platform.isAndroid) {
                         // AOS 플랫폼은 AOS 화면으로 이동
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+                          MaterialPageRoute(
+                              builder: (_) => EasyLoginAosScreen()),
                         );
                       } else {
                         // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+                          MaterialPageRoute(
+                              builder: (_) => EasyLoginAosScreen()),
                         );
                       }
                     }
@@ -1830,7 +1849,8 @@ Widget _buildListTile(
       // 탭 이벤트 핸들러
       try {
         // URL을 파싱하여 외부 브라우저로 웹 페이지 열기 시도
-        final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        final bool launched = await launchUrl(Uri.parse(url),
+            mode: LaunchMode.externalApplication);
         if (!launched) {
           // 웹 페이지를 열지 못할 경우 스낵바로 알림
           showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
@@ -2123,15 +2143,24 @@ Future<void> createFirestoreDocuments_2() async {
 
   final int baseChar = 'a'.codeUnitAt(0); // 소문자 'a' 시작 문자
 
-  for (int i = 1; i <= 12; i++) {
+  for (int i = 1; i <= 30; i++) {
     String docId = 'product_$i';
     DocumentReference wearcanoDocRef =
         firestore.collection('products').doc('wearcano');
     CollectionReference productCollectionRef = wearcanoDocRef.collection(docId);
 
-    // 'aa', 'ab', ..., 'al' 생성
-    String secondChar = String.fromCharCode(baseChar + ((i - 1) ~/ 12));
-    String thirdChar = String.fromCharCode(baseChar + ((i - 1) % 12));
+    // 기존에는 i를 12로 나눈 몫과 나머지를 이용해 'aa'~'al'까지만 커버했지만,
+    // 확장성을 위해 26진법을 이용한다.
+    // 예) i=1 → index=0: (0/26)=0 → 'a', (0%26)=0 → 'a' => "aa"
+    //     i=12 → index=11: (11/26)=0 → 'a', (11%26)=11 → 'l' => "al"
+    //     i=13 → index=12: (12/26)=0 → 'a', (12%26)=12 → 'm' => "am"
+    //     ...
+    //     i=26 → index=25: (25/26)=0 → 'a', (25%26)=25 → 'z' => "az"
+    //     i=27 → index=26: (26/26)=1 → 'b', (26%26)=0 → 'a' => "ba"
+    //     i=30 → index=29: (29/26)=1 → 'b', (29%26)=3 → 'd' => "bd"
+    int index = i - 1;
+    String secondChar = String.fromCharCode(baseChar + (index ~/ 26));
+    String thirdChar = String.fromCharCode(baseChar + (index % 26));
 
     for (int j = 1; j <= 12; j++) {
       // 각 product에 맞춰 문서 ID를 생성 (예: Aaa1, Aaa2, ..., Aal12)
@@ -2145,19 +2174,17 @@ Future<void> createFirestoreDocuments_2() async {
       for (int k = 1; k <= 7; k++) {
         String subCollectionId = '${productDocId}B$k';
         DocumentReference subWearcanoDocRef =
-            productDocRef.collection(subCollectionId).doc('wearcano');
+        productDocRef.collection(subCollectionId).doc('wearcano');
         CollectionReference wearcanoItemsCollectionRef =
-            subWearcanoDocRef.collection('wearcano_items');
-        String type = typeMap[j] ?? '';
+        subWearcanoDocRef.collection('wearcano_items');
+        String type = typeMap[k] ?? '';
 
         for (int l = 1; l <= 15; l++) {
           int discountPercent = 10 + l;
-          int discountPrice =
-              originalPrice - (originalPrice * discountPercent ~/ 100);
+          int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
           String subDocId = '${subCollectionId}_$l';
           String productNumber = '${subDocId}_${l.toString().padLeft(3, '0')}';
-          DocumentReference subDocRef =
-              wearcanoItemsCollectionRef.doc(subDocId);
+          DocumentReference subDocRef = wearcanoItemsCollectionRef.doc(subDocId);
 
           String thumbnailUrl =
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
@@ -2233,20 +2260,29 @@ Future<void> createFirestoreDocuments_3() async {
   DocumentReference wearcanoDocRef =
       firestore.collection('banners').doc('wearcano');
 
-  for (int i = 1; i <= 12; i++) {
+  for (int i = 1; i <= 30; i++) {
     // 'banner_1' ~ 'banner_12' 컬렉션 참조 생성
     CollectionReference bannerCollectionRef =
         wearcanoDocRef.collection('banner_$i');
 
     final int baseChar = 'a'.codeUnitAt(0); // 소문자 'a' 시작 문자
 
-    // 'aa', 'ab', ..., 'al' 생성
-    String secondChar = String.fromCharCode(baseChar + ((i - 1) ~/ 12));
-    String thirdChar = String.fromCharCode(baseChar + ((i - 1) % 12));
+    // 기존에는 i를 12로 나눈 몫과 나머지를 이용해 'aa'~'al'까지만 커버했지만,
+    // 확장성을 위해 26진법을 이용한다.
+    // 예) i=1 → index=0: (0/26)=0 → 'a', (0%26)=0 → 'a' => "aa"
+    //     i=12 → index=11: (11/26)=0 → 'a', (11%26)=11 → 'l' => "al"
+    //     i=13 → index=12: (12/26)=0 → 'a', (12%26)=12 → 'm' => "am"
+    //     ...
+    //     i=26 → index=25: (25/26)=0 → 'a', (25%26)=25 → 'z' => "az"
+    //     i=27 → index=26: (26/26)=1 → 'b', (26%26)=0 → 'a' => "ba"
+    //     i=30 → index=29: (29/26)=1 → 'b', (29%26)=3 → 'd' => "bd"
+    int index = i - 1;
+    String secondChar = String.fromCharCode(baseChar + (index ~/ 26));
+    String thirdChar = String.fromCharCode(baseChar + (index % 26));
 
     // 각 product에 맞춰 문서 ID를 생성 (예: Aaa1, Aaa2, ..., Aal12)
     String docId1 = 'product_$i';
-    String collectionId1 = 'A${secondChar}${thirdChar}10';
+    String collectionId1 = 'A${secondChar}${thirdChar}1';
     String docId2 = '${collectionId1}B1';
     String docId3 = '${docId2}_1';
 
@@ -2271,7 +2307,6 @@ Future<void> createFirestoreDocuments_3() async {
       'pants_main_small_banner_1',
       'pola_main_small_banner_1',
       'skirt_main_small_banner_1',
-      'profile_main_small_banner_1',
       'new_sub_main_small_banner_1',
       'best_sub_main_small_banner_1',
       'sale_sub_main_small_banner_1',
@@ -2302,7 +2337,7 @@ Future<void> createFirestoreDocuments_3() async {
           'ad_url_1': 'https://www.naver.com',
           'ad_url_2': 'https://ko.aliexpress.com/',
           'ad_url_3': 'https://www.temu.com/kr',
-          'category': '아우터',
+          'category': '티셔츠',
           'product_id': productId,
           'sub_category': '신상',
         });
@@ -2319,21 +2354,21 @@ Future<void> createFirestoreDocuments_3() async {
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
           'ad_img_3':
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
-          'category': '아우터',
+          'category': '티셔츠',
           'product_id': productId,
         });
-      } else if (bannerType == 'profile_main_small_banner_1') {
-        // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
-        batch.set(bannerDocRef, {
-          'ad_img_1':
-              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
-          'ad_img_2':
-              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
-          'ad_img_3':
-              'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
-          'category': '아우터',
-          'product_id': productId,
-        });
+      // } else if (bannerType == 'profile_main_small_banner_1') {
+      //   // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
+      //   batch.set(bannerDocRef, {
+      //     'ad_img_1':
+      //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
+      //     'ad_img_2':
+      //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
+      //     'ad_img_3':
+      //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
+      //     'category': '아우터',
+      //     'product_id': productId,
+      //   });
       } else {
         // 나머지 배너 타입들은 mb1 ~ mb57로 설정
         batch.set(bannerDocRef, {
@@ -2343,7 +2378,7 @@ Future<void> createFirestoreDocuments_3() async {
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
           'ad_img_3':
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
-          'category': '아우터',
+          'category': '티셔츠',
           'product_id': productId,
         });
       }
@@ -2360,6 +2395,82 @@ Future<void> createFirestoreDocuments_3() async {
     }
   }
 
+  // -------------------------------------
+  // 메인 홈 관련 배너(main_home_banner) 추가 로직
+  // 기존 large_banner, home_small_banner_1 구성과 동일한 이미지/URL 패턴 사용
+  // 단, category, product_id, sub_category는 추가하지 않는다.
+  CollectionReference mainHomeBannerCollectionRef =
+  wearcanoDocRef.collection('main_home_banner');
+
+  // large_banner 문서
+  DocumentReference largeBannerDocRef = mainHomeBannerCollectionRef.doc('large_banner');
+  batch.set(largeBannerDocRef, {
+    'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon1.png?alt=media',
+    'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon2.png?alt=media',
+    'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon3.png?alt=media',
+    'ad_img_4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_4.png?alt=media',
+    'ad_img_5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_5.png?alt=media',
+    'ad_url_1': 'https://www.naver.com',
+    'ad_url_2': 'https://ko.aliexpress.com/',
+    'ad_url_3': 'https://www.temu.com/kr',
+    'ad_url_4': 'https://www.google.com',
+    'ad_url_5': 'https://www.yanolja.com/',
+    // category, product_id, sub_category 없음
+  });
+  batchCounter++;
+  if (batchCounter >= batchSize) {
+    await batch.commit();
+    batchCounter = 0;
+    batch = firestore.batch();
+    await Future.delayed(Duration(milliseconds: 100));
+  }
+
+  // home_small_banner_1 문서
+  // 기존 home_small_banner_1 ~ 3에서 사용한 ad_img_1 ~ ad_img_3 패턴 그대로 사용
+  // 예: ad_image1, ad_image2, ad_image3
+  DocumentReference homeSmallBanner1DocRef = mainHomeBannerCollectionRef.doc('home_small_banner_1');
+  batch.set(homeSmallBanner1DocRef, {
+    'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image1.jpeg?alt=media',
+    'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image2.jpeg?alt=media',
+    'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image3.jpeg?alt=media',
+    'ad_url_1': 'https://www.naver.com',
+    'ad_url_2': 'https://ko.aliexpress.com/',
+    'ad_url_3': 'https://www.temu.com/kr',
+    // category, product_id 없음
+  });
+  batchCounter++;
+  if (batchCounter >= batchSize) {
+    await batch.commit();
+    batchCounter = 0;
+    batch = firestore.batch();
+    await Future.delayed(Duration(milliseconds: 100));
+  }
+
+  // -------------------------------------
+  // 프로필 관련 배너(profile_banner) 추가 로직
+  CollectionReference profileBannerCollectionRef =
+  wearcanoDocRef.collection('profile_banner');
+
+  // profile_small_banner_1 문서
+  // home_small_banner_1 ~ 3 케이스처럼 ad_img_1 ~ 3와 ad_url_1 ~ 3 사용
+  DocumentReference profileSmallBanner1DocRef = profileBannerCollectionRef.doc('profile_small_banner_1');
+  batch.set(profileSmallBanner1DocRef, {
+    'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image1.jpeg?alt=media',
+    'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image2.jpeg?alt=media',
+    'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image3.jpeg?alt=media',
+    'ad_url_1': 'https://www.naver.com',
+    'ad_url_2': 'https://ko.aliexpress.com/',
+    'ad_url_3': 'https://www.temu.com/kr',
+    // category, product_id 없음
+  });
+  batchCounter++;
+  if (batchCounter >= batchSize) {
+    await batch.commit();
+    batchCounter = 0;
+    batch = firestore.batch();
+    await Future.delayed(Duration(milliseconds: 100));
+  }
+
   // 남은 데이터 커밋
   if (batchCounter > 0) {
     await batch.commit();
@@ -2367,3 +2478,73 @@ Future<void> createFirestoreDocuments_3() async {
   print("모든 배너 문서 생성이 완료되었습니다.");
 }
 // ------ banners 컬렉션 데이터 관련 Firestore 문서를 생성하는 함수 구현 끝
+
+// ------ 홈 화면 내 상점 버튼 데이터 관련 Firestore 문서를 생성하는 함수 구현 시작
+Future<void> createFirestoreDocuments_4() async {
+  final firestore = FirebaseFirestore.instance; // Firestore 인스턴스 생성
+  final batch = firestore.batch(); // Batch 작업 시작
+  final DocumentReference docRef =
+      firestore.collection('market_data').doc('wearcano');
+
+  const String screenToMoveValue = 'HomeMainScreen()';
+  const String stepValue = '0';
+
+  // 문서 ID 생성에 필요한 알파벳 리스트
+  const List<String> alphabet = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z'
+  ];
+
+  int sequence = 1; // sequence 및 name 값 관리
+
+  // 첫 번째 문자 'A'
+  for (final char2 in alphabet) {
+    for (final char3 in alphabet) {
+      final String docId = 'A$char2$char3'; // 문서 ID 생성 (세 자리수)
+
+      final DocumentReference subDocRef =
+          docRef.collection('market').doc(docId);
+
+      // Batch에 문서 생성 작업 추가
+      batch.set(subDocRef, {
+        'boolExistence': true, // Boolean 값
+        'id': docId, // 문서명
+        'step': stepValue, // step 값
+        'name': '상점 $sequence', // 상점 이름
+        'sequence': sequence, // 문서 순서
+      });
+
+      sequence++; // 순서를 증가
+      if (sequence > 36) break; // 총 36개의 문서까지만 생성
+    }
+    if (sequence > 36) break; // 중첩 루프 종료 조건
+  }
+
+  // Batch 작업 커밋
+  await batch.commit();
+}
+// ------ 홈 화면 내 상점 버튼 데이터 관련 Firestore 문서를 생성하는 함수 구현 끝

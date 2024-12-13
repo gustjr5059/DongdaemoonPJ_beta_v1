@@ -14,11 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 // 애플리케이션 전반에 걸쳐 사용될 색상의 상수를 정의한 파일을 가져옵니다.
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
-import '../../home/view/home_screen.dart';
-import '../../user/view/easy_login_aos_screen.dart';
-import '../../user/view/easy_login_ios_screen.dart';
+import '../../home/view/main_home_screen.dart';
 import '../const/colors.dart';
-import 'dart:io'; // 플랫폼을 확인하기 위한 dart:io 라이브러리 추가
 
 
 // ------ 스플레시1화면의 UI를 구현하는 SplashScreen1 클래스 시작 부분
@@ -97,7 +94,8 @@ class _SplashScreenState extends State<SplashScreen1>
     // 2초 후에 다음 동작을 수행.
     Timer(Duration(milliseconds: 2000), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => HomeMainScreen()),
+        // MaterialPageRoute(builder: (_) => HomeMainScreen()),
+        MaterialPageRoute(builder: (_) => MainHomeScreen()),
       ); // 홈 화면으로 이동
 
       // if (autoLogin) {

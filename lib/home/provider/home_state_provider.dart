@@ -2,18 +2,17 @@
 // 이 라이브러리를 통해 개발자는 애플리케이션의 상태를 보다 효율적으로 관리할 수 있습니다.
 // Riverpod는 기존의 Provider 패키지를 개선하여 더 유연하고, 테스트가 용이하며,
 // 강력한 타입 안정성을 제공하는 기능을 갖추고 있습니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../product/model/product_model.dart';
+import '../repository/home_repository.dart';
+import 'home_all_providers.dart';
 
 // 홈 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
 final homeLargeBannerPageProvider = StateProvider<int>((ref) => 0);
 // 홈 화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
 final homeSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
-// 홈 화면의 작은 배너2 페이지 인덱스를 관리하기 위한 StateProvider
-final homeSmall2BannerPageProvider = StateProvider<int>((ref) => 0);
-// 홈 화면의 작은 배너3 페이지 인덱스를 관리하기 위한 StateProvider
-final homeSmall3BannerPageProvider = StateProvider<int>((ref) => 0);
 // 다른 화면으로 이동했다가 다시 돌아오는 경우의
 // 홈 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
 final homeScrollPositionProvider = StateProvider<double>((ref) => 0);
@@ -23,9 +22,6 @@ final homeLoginAndLogoutScrollPositionProvider =
     StateProvider<double>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final homeCurrentTabProvider = StateProvider<int>((ref) => 0);
-// 홈 화면 내 카테고리 버튼 뷰 확장 유무 상태 관리를 위한 StateProvider
-final homeMidCategoryViewBoolExpandedProvider =
-    StateProvider<bool>((ref) => false);
 
 // ------ SectionStateNotifier 클래스 내용 구현 시작
 // SectionDataStateNotifier 클래스는 홈 화면 내 섹션의 불러온 데이터 상태를 관리하는 기능을 함
@@ -92,4 +88,35 @@ final homeScrollControllerProvider = Provider<ScrollController>((ref) {
   ref.onDispose(scrollController.dispose);
   // 생성된 ScrollController 객체를 반환함.
   return scrollController;
+});
+
+// ------ 메인 홈 화면 내 마켓 버튼 부분의 데이터 및 상태관리 관련 로직인 MarketBtnNotifier 클래스 내용 시작
+class MarketBtnNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+  final MarketBtnRepository repository;
+
+  MarketBtnNotifier(this.repository) : super([]);
+
+  // Firestore에서 모든 데이터를 불러옴
+  Future<void> loadAllMarketButtons() async {
+    try {
+      final allItems = await repository.fetchAllMarketButtons();
+      state = allItems;
+      print("불러온 버튼 상태: ${state.length}개");
+    } catch (e) {
+      print("데이터 로드 중 오류 발생: $e");
+    }
+  }
+
+  // 데이터 초기화
+  void resetMarketButtons() {
+    state = [];
+    print("중간 카테고리 버튼 데이터를 초기화했습니다.");
+  }
+}
+// ------ 메인 홈 화면 내 마켓 버튼 부분의 데이터 및 상태관리 관련 로직인 MarketBtnNotifier 클래스 내용 끝
+
+// MarketBtnNotifier 클래스 인스턴스 생성하는 StateNotifierProvider
+final marketBtnProvider = StateNotifierProvider<MarketBtnNotifier, List<Map<String, dynamic>>>((ref) {
+  final repository = ref.watch(marketBtnRepositoryProvider);
+  return MarketBtnNotifier(repository);
 });

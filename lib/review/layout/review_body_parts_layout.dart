@@ -12,7 +12,7 @@ import '../../message/provider/message_all_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
-import '../../product/view/detail_screen/product_detail_original_image_screen.dart';
+import '../../product/view/product_detail_original_image_screen.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 import '../view/review_create_detail_screen.dart';

@@ -6,7 +6,7 @@ import '../../../common/const/colors.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 import '../../../product/layout/product_body_parts_layout.dart';
 import '../../../product/model/product_model.dart';
-import '../../../product/view/detail_screen/product_detail_original_image_screen.dart';
+import '../../../product/view/product_detail_original_image_screen.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 

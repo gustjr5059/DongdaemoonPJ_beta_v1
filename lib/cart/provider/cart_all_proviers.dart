@@ -14,3 +14,9 @@ final cartItemRepositoryProvider = Provider((ref) => CartItemRepository(
 final cartIconRepositoryProvider = Provider<CartIconRepository>((ref) {
   return CartIconRepository(firestore: FirebaseFirestore.instance);
 });
+
+// bool_checked 필드를 전체 false로 변경하기 위한 FutureProvider 추가
+final resetAllCartItemsCheckedProvider = FutureProvider<void>((ref) async {
+  final cartItemRepository = ref.read(cartItemRepositoryProvider);
+  await cartItemRepository.resetAllCartItemsChecked();
+});

@@ -183,6 +183,9 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
     // 모든 아이템에 대한 실시간 구독을 해제함
     _unsubscribeFromAllItems();
+
+    await cartItemRepository.resetAllCartItemsChecked(); // 모든 bool_checked를 false로 초기화
+
     await loadMoreCartItems(); // 데이터 로드
   }
 
