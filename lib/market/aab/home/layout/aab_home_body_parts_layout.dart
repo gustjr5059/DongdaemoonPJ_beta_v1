@@ -13,39 +13,39 @@ import '../../../../../common/layout/common_body_parts_layout.dart';
 import '../../../../../product/layout/product_body_parts_layout.dart';
 import '../../../../home/provider/home_state_provider.dart';
 import '../../../../product/view/product_detail_original_image_screen.dart';
-import '../../product/layout/aaa_product_body_parts_layout.dart';
-import '../../product/provider/aaa_product_all_providers.dart';
-import '../../product/view/main_screen/aaa_blouse_main_screen.dart';
-import '../../product/view/main_screen/aaa_cardigan_main_screen.dart';
-import '../../product/view/main_screen/aaa_coat_main_screen.dart';
-import '../../product/view/main_screen/aaa_jean_main_screen.dart';
-import '../../product/view/main_screen/aaa_mtm_main_screen.dart';
-import '../../product/view/main_screen/aaa_neat_main_screen.dart';
-import '../../product/view/main_screen/aaa_onepiece_main_screen.dart';
-import '../../product/view/main_screen/aaa_paeding_main_screen.dart';
-import '../../product/view/main_screen/aaa_pants_main_screen.dart';
-import '../../product/view/main_screen/aaa_pola_main_screen.dart';
-import '../../product/view/main_screen/aaa_shirt_main_screen.dart';
-import '../../product/view/main_screen/aaa_skirt_main_screen.dart';
-import '../provider/aaa_home_state_provider.dart';
+import '../../product/layout/aab_product_body_parts_layout.dart';
+import '../../product/provider/aab_product_all_providers.dart';
+import '../../product/view/main_screen/aab_blouse_main_screen.dart';
+import '../../product/view/main_screen/aab_cardigan_main_screen.dart';
+import '../../product/view/main_screen/aab_coat_main_screen.dart';
+import '../../product/view/main_screen/aab_jean_main_screen.dart';
+import '../../product/view/main_screen/aab_mtm_main_screen.dart';
+import '../../product/view/main_screen/aab_neat_main_screen.dart';
+import '../../product/view/main_screen/aab_onepiece_main_screen.dart';
+import '../../product/view/main_screen/aab_paeding_main_screen.dart';
+import '../../product/view/main_screen/aab_pants_main_screen.dart';
+import '../../product/view/main_screen/aab_pola_main_screen.dart';
+import '../../product/view/main_screen/aab_shirt_main_screen.dart';
+import '../../product/view/main_screen/aab_skirt_main_screen.dart';
+import '../provider/aab_home_state_provider.dart';
 
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
-void aaaOnMidCategoryTap(BuildContext context, WidgetRef ref, int index) {
+void aabOnMidCategoryTap(BuildContext context, WidgetRef ref, int index) {
   final List<Widget> midcategoryPages = [
     // 각 카테고리에 해당하는 페이지 위젯들을 리스트로 정의함.
-    AaaShirtMainScreen(),
-    AaaBlouseMainScreen(),
-    AaaMtmMainScreen(),
-    AaaNeatMainScreen(),
-    AaaPolaMainScreen(),
-    AaaOnepieceMainScreen(),
-    AaaPantsMainScreen(),
-    AaaJeanMainScreen(),
-    AaaSkirtMainScreen(),
-    AaaPaedingMainScreen(),
-    AaaCoatMainScreen(),
-    AaaCardiganMainScreen(),
+    AabShirtMainScreen(),
+    AabBlouseMainScreen(),
+    AabMtmMainScreen(),
+    AabNeatMainScreen(),
+    AabPolaMainScreen(),
+    AabOnepieceMainScreen(),
+    AabPantsMainScreen(),
+    AabJeanMainScreen(),
+    AabSkirtMainScreen(),
+    AabPaedingMainScreen(),
+    AabCoatMainScreen(),
+    AabCardiganMainScreen(),
   ];
   // 네비게이터를 사용하여, 사용자가 선택한 카테고리에 해당하는 페이지로 화면을 전환함.
   // 여기서는 MaterialApp의 Navigator 기능을 사용하여 새로운 페이지로 이동함.
@@ -63,7 +63,7 @@ void aaaOnMidCategoryTap(BuildContext context, WidgetRef ref, int index) {
 // 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 시작
 // 신상 섹션을 위젯으로 구현한 부분
 // 신상 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildNewProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildNewProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -104,12 +104,12 @@ Widget aaaBuildNewProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '신상', // '신상' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 신상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaNewProductRepositoryProvider); // aaaNewProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabNewProductRepositoryProvider); // aabNewProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchNewProductContents(
                     limit: limit); // 레포지토리에서 신상품 데이터를 가져옴
               },
@@ -123,7 +123,7 @@ Widget aaaBuildNewProductsSection(WidgetRef ref, BuildContext context) {
 
 // 최고 섹션을 위젯으로 구현한 부분
 // 최고 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildBestProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildBestProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -164,12 +164,12 @@ Widget aaaBuildBestProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '스테디 셀러', // '스테디 셀러' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 스테디 셀러 상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaBestProductRepositoryProvider); // aaaBestProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabBestProductRepositoryProvider); // aabBestProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchBestProductContents(
                     limit: limit); // 레포지토리에서 최고 상품 데이터를 가져옴
               },
@@ -183,7 +183,7 @@ Widget aaaBuildBestProductsSection(WidgetRef ref, BuildContext context) {
 
 // 특가 상품 섹션을 위젯으로 구현한 부분
 // 특가 상품 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildSaleProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildSaleProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -224,12 +224,12 @@ Widget aaaBuildSaleProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '특가 상품', // '특가 상품' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 할인 상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaSaleProductRepositoryProvider); // aaaSaleProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabSaleProductRepositoryProvider); // aabSaleProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchSaleProductContents(
                     limit: limit); // 레포지토리에서 할인 상품 데이터를 가져옴
               },
@@ -243,7 +243,7 @@ Widget aaaBuildSaleProductsSection(WidgetRef ref, BuildContext context) {
 
 // 봄 섹션을 위젯으로 구현한 부분
 // 봄 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildSpringProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildSpringProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -284,12 +284,12 @@ Widget aaaBuildSpringProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '봄', // '봄' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 봄 상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaSpringProductRepositoryProvider); // aaaSpringProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabSpringProductRepositoryProvider); // aabSpringProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchSpringProductContents(
                     limit: limit); // 레포지토리에서 봄 상품 데이터를 가져옴
               },
@@ -303,7 +303,7 @@ Widget aaaBuildSpringProductsSection(WidgetRef ref, BuildContext context) {
 
 // 여름 섹션을 위젯으로 구현한 부분
 // 여름 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildSummerProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildSummerProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -344,12 +344,12 @@ Widget aaaBuildSummerProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '여름', // '여름' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 여름 상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaSummerProductRepositoryProvider); // aaaSummerProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabSummerProductRepositoryProvider); // aabSummerProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchSummerProductContents(
                     limit: limit); // 레포지토리에서 여름 상품 데이터를 가져옴
               },
@@ -363,7 +363,7 @@ Widget aaaBuildSummerProductsSection(WidgetRef ref, BuildContext context) {
 
 // 가을 섹션을 위젯으로 구현한 부분
 // 가을 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildAutumnProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildAutumnProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -404,12 +404,12 @@ Widget aaaBuildAutumnProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '가을', // '가을' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 가을 상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaAutumnProductRepositoryProvider); // aaaAutumnProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabAutumnProductRepositoryProvider); // aabAutumnProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchAutumnProductContents(
                     limit: limit); // 레포지토리에서 가을 상품 데이터를 가져옴
               },
@@ -423,7 +423,7 @@ Widget aaaBuildAutumnProductsSection(WidgetRef ref, BuildContext context) {
 
 // 겨울 섹션을 위젯으로 구현한 부분
 // 겨울 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
-Widget aaaBuildWinterProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildWinterProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -464,12 +464,12 @@ Widget aaaBuildWinterProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaProductsSectionList(
+            child: AabProductsSectionList(
               category: '겨을', // '겨을' 카테고리를 설정
               fetchProducts: (limit, startAfter) async {
                 // 겨을 상품 데이터를 가져오는 비동기 함수를 설정
                 final repository = ref.watch(
-                    aaaWinterProductRepositoryProvider); // aaaWinterProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                    aabWinterProductRepositoryProvider); // aabWinterProductRepositoryProvider를 사용하여 레포지토리를 가져옴
                 return await repository.fetchWinterProductContents(
                     limit: limit); // 레포지토리에서 겨을 상품 데이터를 가져옴
               },
@@ -482,19 +482,19 @@ Widget aaaBuildWinterProductsSection(WidgetRef ref, BuildContext context) {
 }
 // 상단 탭 바 버튼 관련 섹션을 구현한 위젯 내용 끝
 
-// ------- AaaEventPosterImgSectionList 클래스 내용 구현 시작
+// ------- AabEventPosterImgSectionList 클래스 내용 구현 시작
 // 홈 화면 내 이벤트 포스터 이미지 섹션에서 데이터를 4개 단위로 표시하며 스크롤 가능한 UI 구현 관련 클래스
-class AaaEventPosterImgSectionList extends ConsumerStatefulWidget {
+class AabEventPosterImgSectionList extends ConsumerStatefulWidget {
   // 생성자 선언
-  AaaEventPosterImgSectionList();
+  AabEventPosterImgSectionList();
 
   @override
-  _AaaEventPosterImgSectionListState createState() =>
-      _AaaEventPosterImgSectionListState(); // 상태 객체 생성 함수 호출
+  _AabEventPosterImgSectionListState createState() =>
+      _AabEventPosterImgSectionListState(); // 상태 객체 생성 함수 호출
 }
 
-class _AaaEventPosterImgSectionListState
-    extends ConsumerState<AaaEventPosterImgSectionList> {
+class _AabEventPosterImgSectionListState
+    extends ConsumerState<AabEventPosterImgSectionList> {
   final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
 
   @override
@@ -503,7 +503,7 @@ class _AaaEventPosterImgSectionListState
 
     // [변경사항 추가]: 이벤트 섹션 가로 스크롤 위치 복원
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final savedOffset = ref.read(aaaEventPosterScrollPositionProvider);
+      final savedOffset = ref.read(aabEventPosterScrollPositionProvider);
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(savedOffset);
       }
@@ -511,7 +511,7 @@ class _AaaEventPosterImgSectionListState
 
     _scrollController.addListener(() {
       // 이벤트 섹션 가로 스크롤 offset 저장
-      ref.read(aaaEventPosterScrollPositionProvider.notifier).state =
+      ref.read(aabEventPosterScrollPositionProvider.notifier).state =
           _scrollController.offset;
 
       // 스크롤 위치가 스크롤 끝에 가까워지고, 추가 데이터를 로드 중이 아니며 더 로드할 데이터가 남아 있을 때
@@ -660,7 +660,7 @@ class _AaaEventPosterImgSectionListState
 
 // ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 시작
 // 이벤트 섹션에서 ProductsSectionList 위젯을 사용하여 데이터 UI를 구현하는 함수
-Widget aaaBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
+Widget aabBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -698,7 +698,7 @@ Widget aaaBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: AaaEventPosterImgSectionList(), // AaaEventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
+            child: AabEventPosterImgSectionList(), // AabEventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
           ),
         ),
       ),

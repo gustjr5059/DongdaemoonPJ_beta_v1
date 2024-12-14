@@ -5,6 +5,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../common/provider/common_all_providers.dart';
+import '../../common/provider/common_state_provider.dart';
+import '../../common/repository/event_data_repository.dart';
 import '../../product/model/product_model.dart';
 import '../repository/home_repository.dart';
 import 'home_all_providers.dart';
@@ -22,60 +25,8 @@ final homeLoginAndLogoutScrollPositionProvider =
     StateProvider<double>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
 final homeCurrentTabProvider = StateProvider<int>((ref) => 0);
-
-// ------ SectionStateNotifier 클래스 내용 구현 시작
-// SectionDataStateNotifier 클래스는 홈 화면 내 섹션의 불러온 데이터 상태를 관리하는 기능을 함
-class SectionDataStateNotifier
-    extends StateNotifier<Map<String, List<ProductContent>>> {
-  SectionDataStateNotifier() : super({});
-
-  // 카테고리에 해당하는 섹션을 업데이트하는 함수
-  void updateSection(String category, List<ProductContent> products) {
-    print("섹션 업데이트 시작 - 카테고리: $category, 제품 수: ${products.length}"); // 섹션 업데이트 시작 로그
-
-    // 현재 상태를 복사한 후 새로운 데이터를 추가하여 상태를 업데이트
-    state = {
-      ...state,
-      category: products
-    };
-
-    print("섹션 업데이트 완료 - 현재 상태: ${state.keys.toList()}"); // 상태 업데이트 완료 후 상태 로그
-  }
-
-  // 카테고리에 해당하는 섹션을 초기화하는 함수
-  void resetSection(String category) {
-
-    print("섹션 초기화 시작 - 카테고리: $category"); // 섹션 초기화 시작 로그
-
-    // 현재 상태를 복사한 후 해당 카테고리의 리스트를 빈 리스트로 초기화
-    state = {
-      ...state,
-      category: []
-    };
-
-    print("섹션 초기화 완료 - 카테고리 $category가 초기화됨, 현재 상태: ${state.keys.toList()}"); // 초기화 완료 후 상태 로그
-  }
-
-  // 카테고리에 해당하는 제품 리스트를 반환하는 함수
-  List<ProductContent> getSectionProducts(String category) {
-    print("제품 리스트 요청 - 카테고리: $category"); // 제품 리스트 요청 로그
-    final products = state[category] ?? []; // 해당 카테고리에 데이터가 없으면 빈 리스트를 반환
-
-    print("제품 리스트 반환 - 카테고리: $category, 제품 수: ${products.length}"); // 반환되는 제품 리스트 정보 로그
-    return products;
-  }
-}
-// ------ SectionStateNotifier 클래스 내용 구현 끝
-
-// 홈 화면 내 섹션의 불러온 데이터 저장을 위한 StateNotifierProvider
-final homeSectionDataStateProvider = StateNotifierProvider<
-    SectionDataStateNotifier, Map<String, List<ProductContent>>>((ref) {
-  return SectionDataStateNotifier();
-});
-
-// 홈 화면 내 섹션의 가로 스크롤 위치 저장을 위한 StateProvider
-final homeSectionScrollPositionsProvider =
-    StateProvider<Map<String, double>>((ref) => {});
+// 이벤트 섹션 내 가로 스크롤 상태 관리를 위한 StateProvider
+final eventPosterScrollPositionProvider = StateProvider<double>((ref) => 0.0);
 
 // ScrollController를 프로바이더로 추가하는 코드
 // 이 코드는 homeScrollControllerProvider라는 이름의 Provider를 정의함.
@@ -119,4 +70,99 @@ class MarketBtnNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 final marketBtnProvider = StateNotifierProvider<MarketBtnNotifier, List<Map<String, dynamic>>>((ref) {
   final repository = ref.watch(marketBtnRepositoryProvider);
   return MarketBtnNotifier(repository);
+});
+
+// ------ EventPosterImgItemsNotifier 클래스: Firestore와의 상호작용을 통해 이벤트 포스터 이미지 데이터 상태를 관리하는 StateNotifier 클래스 내용 시작
+class EventPosterImgItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+  // EventPosterImgRepository 인스턴스를 저장하는 변수임
+  final EventRepository eventPosterImgItemRepository;
+
+  // Riverpod의 Ref 객체를 저장하는 변수임
+  final Ref ref;
+
+  // 마지막으로 불러온 데이터의 스냅샷을 저장하는 변수임
+  DocumentSnapshot? lastDocument;
+
+  // 페이징 처리 중인지 여부를 나타내는 플래그임
+  bool isLoadingMore = false;
+
+  // 더 이상 데이터가 없을 때를 위한 플래그
+  bool hasMoreData = true;
+
+  // 생성자에서 EventPosterImgRepository와 Ref를 받아 초기 상태를 빈 리스트로 설정함
+  // 초기 데이터 로딩을 위해 loadMoreEventPosterImgItems 메서드를 호출함
+  EventPosterImgItemsNotifier(this.eventPosterImgItemRepository, this.ref) : super([]) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadMoreEventPosterImgItems();
+    });
+  }
+
+  // Firestore에서 이벤트 포스터 이미지 아이템을 페이징 처리하여 불러오는 함수임
+  Future<void> loadMoreEventPosterImgItems() async {
+    // 로딩 중이거나 더 이상 데이터가 없으면 반환
+    if (isLoadingMore || !hasMoreData) {
+      print("이미 로딩 중이거나 더 이상 불러올 데이터가 없습니다.");
+      return;
+    }
+
+    print("데이터 로드를 시작합니다.");
+    isLoadingMore = true; // 로딩 상태를 true로 설정함
+    ref.read(isLoadingProvider.notifier).state = true; // 로딩 상태를 관리하는 프로바이더의 상태를 true로 설정함
+
+    // Firestore에서 데이터를 4개씩 페이징 처리로 불러옴
+    final newItems = await eventPosterImgItemRepository.getPagedEventPosterImgItems(
+      lastDocument: lastDocument,
+      limit: 4,
+    );
+
+    // 불러온 데이터가 있을 경우
+    if (newItems.isNotEmpty) {
+      lastDocument = newItems.last['snapshot']; // 마지막 문서를 저장함
+      state = [...state, ...newItems]; // 기존 데이터에 새로 불러온 데이터를 추가함
+      print("새로 불러온 데이터: ${newItems.length}개");
+      print("현재 전체 데이터: ${state.length}개");
+    } else {
+      // 불러온 데이터가 없을 경우 더 이상 불러올 데이터가 없음을 표시
+      hasMoreData = false;
+      print("더 이상 불러올 데이터가 없습니다.");
+    }
+
+    // 로딩 상태를 false로 설정하여 로딩 종료를 알림
+    ref.read(isLoadingProvider.notifier).state = false; // 로딩 상태를 false로 설정함
+    isLoadingMore = false; // 로딩 플래그를 해제함
+    print("데이터 로드를 완료했습니다.");
+  }
+
+  // 이벤트 섹션 내 특정 문서의 모든 이벤트 이미지를 가져오는 함수
+  Future<List<String>> loadEventPosterOriginalImages(String documentId) async {
+    print("문서 ID ${documentId}의 이벤트 원본 이미지를 로드합니다."); // 이벤트 원본 이미지 로드 시작 로그 메시지
+    // eventPosterImgItemRepository를 통해 documentId에 해당하는 이벤트 원본 이미지를 가져옴
+    return await eventPosterImgItemRepository.getEventPosterOriginalImages(documentId);
+  }
+
+  // 이벤트 포스터 이미지 데이터를 초기화하고 상태를 재설정하는 함수임
+  void resetEventPosterImgItems() {
+    print("이벤트 포스터 이미지 데이터를 초기화합니다."); // 데이터 초기화 시작 로그 메시지
+    isLoadingMore = false; // 로딩 플래그를 초기화함
+    hasMoreData = true; // 데이터가 더 이상 없음 플래그 초기화
+    state = []; // 상태를 빈 리스트로 초기화함
+    lastDocument = null; // 마지막 문서 스냅샷을 초기화함
+    print("이벤트 포스터 이미지 데이터 초기화 완료."); // 데이터 초기화 완료 로그 메시지
+  }
+
+  // 구독을 취소하고 리소스를 해제하는 함수임
+  @override
+  void dispose() {
+    print("EventPosterImgItemsNotifier 구독을 취소하고 리소스를 해제합니다."); // dispose 시작 로그 메시지
+    super.dispose(); // 상위 클래스의 dispose 메서드를 호출함
+  }
+}
+// ------ EventPosterImgNotifier 클래스: Firestore와의 상호작용을 통해 이벤트 포스터 이미지 데이터 상태를 관리하는 StateNotifier 클래스 내용 끝
+
+// EventPosterImgItemsNotifier를 사용하는 StateNotifierProvider임
+final eventPosterImgItemsProvider =
+StateNotifierProvider<EventPosterImgItemsNotifier, List<Map<String, dynamic>>>((ref) {
+  final eventPosterImgItemRepository = ref.read(eventPosterImgItemRepositoryProvider); // announceItemRepository 인스턴스를 가져옴
+  print("EventPosterImgItemsProvider 초기화 중..."); // StateNotifierProvider 초기화 로그 메시지
+  return EventPosterImgItemsNotifier(eventPosterImgItemRepository, ref); // AnnounceItemsNotifier 인스턴스를 반환함
 });

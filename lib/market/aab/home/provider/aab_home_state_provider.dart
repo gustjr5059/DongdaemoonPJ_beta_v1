@@ -13,30 +13,30 @@ import '../../../../product/model/product_model.dart';
 
 
 // 홈 화면의 큰 배너 페이지 인덱스를 관리하기 위한 StateProvider
-final aaaHomeLargeBannerPageProvider = StateProvider<int>((ref) => 0);
+final aabHomeLargeBannerPageProvider = StateProvider<int>((ref) => 0);
 // 홈 화면의 작은 배너1 페이지 인덱스를 관리하기 위한 StateProvider
-final aaaHomeSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
+final aabHomeSmall1BannerPageProvider = StateProvider<int>((ref) => 0);
 // 홈 화면의 작은 배너2 페이지 인덱스를 관리하기 위한 StateProvider
-final aaaHomeSmall2BannerPageProvider = StateProvider<int>((ref) => 0);
+final aabHomeSmall2BannerPageProvider = StateProvider<int>((ref) => 0);
 // 홈 화면의 작은 배너3 페이지 인덱스를 관리하기 위한 StateProvider
-final aaaHomeSmall3BannerPageProvider = StateProvider<int>((ref) => 0);
+final aabHomeSmall3BannerPageProvider = StateProvider<int>((ref) => 0);
 // 다른 화면으로 이동했다가 다시 돌아오는 경우의
 // 홈 화면에서 각 상단 탭 바 관련 섹션의 스크롤 위치와 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
-final aaaHomeScrollPositionProvider = StateProvider<double>((ref) => 0);
+final aabHomeScrollPositionProvider = StateProvider<double>((ref) => 0);
 // 로그아웃했다가 다시 재로그인하는 경우의
 // 홈 화면에서 단순 화면 스크롤로 이동환 위치를 저장하는 StateProvider
-final aaaHomeLoginAndLogoutScrollPositionProvider =
+final aabHomeLoginAndLogoutScrollPositionProvider =
     StateProvider<double>((ref) => 0);
 // 현재 선택된 상단 탭 바 관련 탭의 인덱스 상태 관리를 위한 StateProvider
-final aaaHomeCurrentTabProvider = StateProvider<int>((ref) => 0);
+final aabHomeCurrentTabProvider = StateProvider<int>((ref) => 0);
 // 이벤트 섹션 내 가로 스크롤 상태 관리를 위한 StateProvider
-final aaaEventPosterScrollPositionProvider = StateProvider<double>((ref) => 0.0);
+final aabEventPosterScrollPositionProvider = StateProvider<double>((ref) => 0.0);
 
-// ------ AaaSectionDataStateNotifier 클래스 내용 구현 시작
-// AaaSectionDataStateNotifier 클래스는 홈 화면 내 섹션의 불러온 데이터 상태를 관리하는 기능을 함
-class AaaSectionDataStateNotifier
+// ------ AabSectionDataStateNotifier 클래스 내용 구현 시작
+// AabSectionDataStateNotifier 클래스는 홈 화면 내 섹션의 불러온 데이터 상태를 관리하는 기능을 함
+class AabSectionDataStateNotifier
     extends StateNotifier<Map<String, List<ProductContent>>> {
-  AaaSectionDataStateNotifier() : super({});
+  AabSectionDataStateNotifier() : super({});
 
   // 카테고리에 해당하는 섹션을 업데이트하는 함수
   void updateSection(String category, List<ProductContent> products) {
@@ -77,19 +77,19 @@ class AaaSectionDataStateNotifier
 // ------ SectionStateNotifier 클래스 내용 구현 끝
 
 // 홈 화면 내 섹션의 불러온 데이터 저장을 위한 StateNotifierProvider
-final aaaHomeSectionDataStateProvider = StateNotifierProvider<
-    AaaSectionDataStateNotifier, Map<String, List<ProductContent>>>((ref) {
-  return AaaSectionDataStateNotifier();
+final aabHomeSectionDataStateProvider = StateNotifierProvider<
+    AabSectionDataStateNotifier, Map<String, List<ProductContent>>>((ref) {
+  return AabSectionDataStateNotifier();
 });
 
 // 홈 화면 내 섹션의 가로 스크롤 위치 저장을 위한 StateProvider
-final aaaHomeSectionScrollPositionsProvider =
+final aabHomeSectionScrollPositionsProvider =
 StateProvider<Map<String, double>>((ref) => {});
 
 // ScrollController를 프로바이더로 추가하는 코드
-// 이 코드는 aaaHomeScrollControllerProvider라는 이름의 Provider를 정의함.
+// 이 코드는 aabHomeScrollControllerProvider라는 이름의 Provider를 정의함.
 // 하단 탭 바의 홈 버튼 관련 상태 관리 provider
-final aaaHomeScrollControllerProvider = Provider<ScrollController>((ref) {
+final aabHomeScrollControllerProvider = Provider<ScrollController>((ref) {
   // ScrollController 객체를 생성함.
   final scrollController = ScrollController();
   // ref.onDispose 메서드를 사용하여 프로바이더가 해제될 때 ScrollController의 dispose 메서드가 호출되도록 힘.

@@ -23,6 +23,7 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../home/provider/home_state_provider.dart';
 import '../../market/aaa/product/view/detail_screen/aaa_shirt_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_shirt_detail_screen.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../model/product_model.dart';
 
@@ -105,151 +106,6 @@ Widget arrowButton(
 }
 // ------ arrowButton 위젯 내용 구현 끝
 
-// ------- ProductsSectionList 클래스 내용 구현 시작
-// 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
-class ProductsSectionList extends ConsumerStatefulWidget {
-  final String category; // 카테고리 이름을 저장하는 필드
-  final Future<List<ProductContent>> Function(
-      int limit, DocumentSnapshot? startAfter) fetchProducts; // 제품을 가져오는 비동기 함수
-
-  // 생성자
-  ProductsSectionList({required this.category, required this.fetchProducts});
-
-  @override
-  _ProductsSectionListState createState() =>
-      _ProductsSectionListState(); // 상태 객체 생성
-}
-
-class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
-  final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
-  bool _isFetching = false; // 데이터 가져오는 중인지 확인하는 플래그
-  DocumentSnapshot? _lastDocument; // 마지막 문서 스냅샷 저장
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
-    // 이미 저장된 홈 화면 내 섹션 데이터를 로드
-    final savedProducts = ref
-        .read(homeSectionDataStateProvider.notifier)
-        .getSectionProducts(widget.category);
-    if (savedProducts.isNotEmpty) {
-      setState(() {
-        _lastDocument = savedProducts.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
-      });
-    } else {
-      _fetchInitialProducts(); // 초기 데이터를 가져오는 함수 호출
-    }
-
-    // 저장된 홈 화면 내 섹션 스크롤 위치를 설정
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        // _scrollController가 뷰에 attach되었는지 확인
-        final savedScrollPosition =
-            ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
-        _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_scrollListener); // 스크롤 리스너 제거
-    _scrollController.dispose(); // 스크롤 컨트롤러 해제
-    super.dispose();
-  }
-
-  // 스크롤 리스너 함수
-  void _scrollListener() {
-    // 스크롤이 끝에 도달하고 데이터를 가져오는 중이 아닐 때
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 200 &&
-        !_isFetching) {
-      _fetchMoreProducts(); // 추가 제품 데이터 가져오기 호출
-    }
-
-    // 현재 홈 화면 내 섹션 스크롤 위치를 저장
-    ref.read(homeSectionScrollPositionsProvider.notifier).state = {
-      ...ref.read(homeSectionScrollPositionsProvider),
-      widget.category: _scrollController.position.pixels,
-    };
-  }
-
-  // 초기 제품 데이터를 가져오는 함수
-  Future<void> _fetchInitialProducts() async {
-    setState(() {
-      _isFetching = true; // 데이터 가져오는 중 상태로 설정
-    });
-    try {
-      final products = await widget.fetchProducts(4, null); // 초기 4개 제품 데이터 가져오기
-      setState(() {
-        ref
-            .read(homeSectionDataStateProvider.notifier)
-            .updateSection(widget.category, products); // 섹션 내 제품 데이터 상태 업데이트
-        if (products.isNotEmpty) {
-          _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
-        }
-      });
-    } catch (e) {
-      debugPrint('초기 상품 데이터를 가져오는 중 오류 발생: $e'); // 에러 출력
-    } finally {
-      setState(() {
-        _isFetching = false; // 데이터 가져오기 완료 상태로 설정
-      });
-    }
-  }
-
-  // 추가 제품 데이터를 가져오는 함수
-  Future<void> _fetchMoreProducts() async {
-    if (_isFetching) return; // 이미 데이터를 가져오는 중이면 반환
-    setState(() {
-      _isFetching = true; // 데이터 가져오는 중 상태로 설정
-    });
-    try {
-      final products =
-          await widget.fetchProducts(4, _lastDocument); // 추가 4개 제품 데이터 가져오기
-      setState(() {
-        final currentProducts = ref
-            .read(homeSectionDataStateProvider.notifier)
-            .getSectionProducts(widget.category); // 현재 섹션 내 제품 리스트 가져오기
-        final updatedProducts =
-            currentProducts + products; // 새로운 섹션 내 제품 리스트와 병합
-        ref.read(homeSectionDataStateProvider.notifier).updateSection(
-            widget.category, updatedProducts); // 섹션 내 제품 데이터 상태 업데이트
-        if (products.isNotEmpty) {
-          _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
-        }
-      });
-    } catch (e) {
-      debugPrint('추가 상품 데이터를 가져오는 중 오류 발생: $e'); // 에러 출력
-    } finally {
-      setState(() {
-        _isFetching = false; // 데이터 가져오기 완료 상태로 설정
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final products = ref.watch(homeSectionDataStateProvider)[widget.category] ??
-        []; // 현재 카테고리의 제품 리스트 가져오기
-    return Column(
-      children: [
-        // 데이터를 불러옲 때 로딩되고 있는 경우
-        if (_isFetching) buildCommonLoadingIndicator(), // 로딩 중일 때 로딩 인디케이터 표시
-        // 데이터가 있어서 불러온 경우
-        if (products.isNotEmpty)
-          buildHorizontalDocumentsList(
-              ref, products, context, widget.category, _scrollController),
-        // 데이터가 없는 경우
-        if (products.isEmpty && !_isFetching)
-          SizedBox.shrink(), // 데이터가 없을 때 아무것도 표시하지 않음
-      ],
-    );
-  }
-}
-// ------- ProductsSectionList 클래스 내용 구현 끝
-
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 스크롤뷰로 UI 구현하는 부분 관련 로직
 // buildHorizontalDocumentsList 함수에서 Document 클릭 시 동작 추가
@@ -305,8 +161,8 @@ class ProductInfoDetailScreenNavigation {
         appBarTitle = '티셔츠 상세';
         if (docIdPrefix == 'Aaa') {
           detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aab') {
-        //   detailScreen = AabShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
         // } else if (docIdPrefix == 'Aac') {
         //   detailScreen = AacShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
         // } else if (docIdPrefix == 'Aad') {

@@ -8,26 +8,26 @@ import '../../../../common/const/colors.dart';
 import '../../../../common/layout/common_body_parts_layout.dart';
 import '../../../../product/layout/product_body_parts_layout.dart';
 import '../../../../product/model/product_model.dart';
-import '../../home/provider/aaa_home_state_provider.dart';
-import '../provider/aaa_product_state_provider.dart';
+import '../../home/provider/aab_home_state_provider.dart';
+import '../provider/aab_product_state_provider.dart';
 
 
-// ------- AaaProductsSectionList 클래스 내용 구현 시작
+// ------- AabProductsSectionList 클래스 내용 구현 시작
 // 주로, 홈 화면 내 2차 카테고리별 섹션 내 데이터를 4개 단위로 스크롤뷰로 UI 구현하는 부분 관련 로직
-class AaaProductsSectionList extends ConsumerStatefulWidget {
+class AabProductsSectionList extends ConsumerStatefulWidget {
   final String category; // 카테고리 이름을 저장하는 필드
   final Future<List<ProductContent>> Function(
       int limit, DocumentSnapshot? startAfter) fetchProducts; // 제품을 가져오는 비동기 함수
 
   // 생성자
-  AaaProductsSectionList({required this.category, required this.fetchProducts});
+  AabProductsSectionList({required this.category, required this.fetchProducts});
 
   @override
-  _AaaProductsSectionListState createState() =>
-      _AaaProductsSectionListState(); // 상태 객체 생성
+  _AabProductsSectionListState createState() =>
+      _AabProductsSectionListState(); // 상태 객체 생성
 }
 
-class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList> {
+class _AabProductsSectionListState extends ConsumerState<AabProductsSectionList> {
   final ScrollController _scrollController = ScrollController(); // 스크롤 컨트롤러 초기화
   bool _isFetching = false; // 데이터 가져오는 중인지 확인하는 플래그
   DocumentSnapshot? _lastDocument; // 마지막 문서 스냅샷 저장
@@ -38,7 +38,7 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
     _scrollController.addListener(_scrollListener); // 스크롤 리스너 추가
     // 이미 저장된 홈 화면 내 섹션 데이터를 로드
     final savedProducts = ref
-        .read(aaaHomeSectionDataStateProvider.notifier)
+        .read(aabHomeSectionDataStateProvider.notifier)
         .getSectionProducts(widget.category);
     if (savedProducts.isNotEmpty) {
       setState(() {
@@ -53,7 +53,7 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
       if (_scrollController.hasClients) {
         // _scrollController가 뷰에 attach되었는지 확인
         final savedScrollPosition =
-            ref.read(aaaHomeSectionScrollPositionsProvider)[widget.category] ?? 0;
+            ref.read(aabHomeSectionScrollPositionsProvider)[widget.category] ?? 0;
         _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
       }
     });
@@ -76,8 +76,8 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
     }
 
     // 현재 홈 화면 내 섹션 스크롤 위치를 저장
-    ref.read(aaaHomeSectionScrollPositionsProvider.notifier).state = {
-      ...ref.read(aaaHomeSectionScrollPositionsProvider),
+    ref.read(aabHomeSectionScrollPositionsProvider.notifier).state = {
+      ...ref.read(aabHomeSectionScrollPositionsProvider),
       widget.category: _scrollController.position.pixels,
     };
   }
@@ -91,7 +91,7 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
       final products = await widget.fetchProducts(4, null); // 초기 4개 제품 데이터 가져오기
       setState(() {
         ref
-            .read(aaaHomeSectionDataStateProvider.notifier)
+            .read(aabHomeSectionDataStateProvider.notifier)
             .updateSection(widget.category, products); // 섹션 내 제품 데이터 상태 업데이트
         if (products.isNotEmpty) {
           _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
@@ -117,11 +117,11 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
       await widget.fetchProducts(4, _lastDocument); // 추가 4개 제품 데이터 가져오기
       setState(() {
         final currentProducts = ref
-            .read(aaaHomeSectionDataStateProvider.notifier)
+            .read(aabHomeSectionDataStateProvider.notifier)
             .getSectionProducts(widget.category); // 현재 섹션 내 제품 리스트 가져오기
         final updatedProducts =
             currentProducts + products; // 새로운 섹션 내 제품 리스트와 병합
-        ref.read(aaaHomeSectionDataStateProvider.notifier).updateSection(
+        ref.read(aabHomeSectionDataStateProvider.notifier).updateSection(
             widget.category, updatedProducts); // 섹션 내 제품 데이터 상태 업데이트
         if (products.isNotEmpty) {
           _lastDocument = products.last.documentSnapshot; // 마지막 문서 스냅샷 업데이트
@@ -138,7 +138,7 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
 
   @override
   Widget build(BuildContext context) {
-    final products = ref.watch(aaaHomeSectionDataStateProvider)[widget.category] ??
+    final products = ref.watch(aabHomeSectionDataStateProvider)[widget.category] ??
         []; // 현재 카테고리의 제품 리스트 가져오기
     return Column(
       children: [
@@ -155,17 +155,17 @@ class _AaaProductsSectionListState extends ConsumerState<AaaProductsSectionList>
     );
   }
 }
-// ------- AaaProductsSectionList 클래스 내용 구현 끝
+// ------- AabProductsSectionList 클래스 내용 구현 끝
 
-// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 AaaPriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
-class AaaPriceAndDiscountPercentSortButtons<T extends AaaBaseProductListNotifier>
+// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 AabPriceAndDiscountPercentSortButtons 클래스 내용 구현 시작
+class AabPriceAndDiscountPercentSortButtons<T extends AabBaseProductListNotifier>
     extends ConsumerWidget {
   // StateNotifierProvider와 StateProvider를 필드로 선언
   final StateNotifierProvider<T, List<ProductContent>> productListProvider;
   final StateProvider<String> sortButtonProvider;
 
   // 생성자: 필수 인자 productListProvider와 sortButtonProvider를 받아서 초기화
-  AaaPriceAndDiscountPercentSortButtons({
+  AabPriceAndDiscountPercentSortButtons({
     required this.productListProvider,
     required this.sortButtonProvider,
   });
@@ -265,19 +265,19 @@ class AaaPriceAndDiscountPercentSortButtons<T extends AaaBaseProductListNotifier
     );
   }
 }
-// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 AaaPriceAndDiscountPercentSortButtons 클래스 내용 구현 끝
+// ------ 가격 순, 할인율 순 관련 분류가능하도록 하는 버튼인 AabPriceAndDiscountPercentSortButtons 클래스 내용 구현 끝
 
 // ------- provider로부터 데이터 받아와서 UI에 구현하는 3개씩 열로 데이터를 보여주는 UI 구현 관련
-// AaaGeneralProductList 클래스 내용 구현 시작
+// AabGeneralProductList 클래스 내용 구현 시작
 // 1차 카테고리 관련 메인 화면과 섹션 더보기 화면에서 데이터를 불러올 때 사용하는 UI 구현 부분
-class AaaGeneralProductList<T extends AaaBaseProductListNotifier>
+class AabGeneralProductList<T extends AabBaseProductListNotifier>
     extends ConsumerStatefulWidget {
   final ScrollController scrollController; // 스크롤 컨트롤러 선언
   final StateNotifierProvider<T, List<ProductContent>>
   productListProvider; // 제품 목록 provider 선언
   final String category; // 카테고리 선언
 
-  AaaGeneralProductList({
+  AabGeneralProductList({
     required this.scrollController,
     required this.productListProvider,
     required this.category,
@@ -287,7 +287,7 @@ class AaaGeneralProductList<T extends AaaBaseProductListNotifier>
   _ProductListState createState() => _ProductListState(); // 상태 생성 메소드 정의
 }
 
-class _ProductListState extends ConsumerState<AaaGeneralProductList> {
+class _ProductListState extends ConsumerState<AabGeneralProductList> {
   @override
   void initState() {
     super.initState(); // 부모 클래스의 initState 호출

@@ -29,43 +29,42 @@ import '../../../../../common/layout/common_exception_parts_of_body_layout.dart'
 import '../../../../../common/provider/common_state_provider.dart';
 import '../../../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../../../home/layout/home_body_parts_layout.dart';
-import '../../common/layout/aaa_common_body_parts_layout.dart';
-import '../../common/provider/aaa_common_all_provider.dart';
-import '../../product/provider/aaa_product_all_providers.dart';
-import '../../product/view/sub_main_screen/aaa_autumn_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/aaa_best_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/aaa_new_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/aaa_sale_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/aaa_spring_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
-import '../layout/aaa_home_body_parts_layout.dart';
+import '../../common/layout/aab_common_body_parts_layout.dart';
+import '../../common/provider/aab_common_all_provider.dart';
+import '../../product/view/sub_main_screen/aab_autumn_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aab_best_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aab_new_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aab_sale_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aab_spring_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aab_summer_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aab_winter_sub_main_screen.dart';
+import '../layout/aab_home_body_parts_layout.dart';
 
 // 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 aab_home_all_providers.dart 파일을 가져옵니다.
 // 이 파일은 홈 화면과 관련된 Future Provider 기능을 제공합니다.
 // 이를 통해 홈 화면에서 비동기 데이터를 호출하고 상태를 관리할 수 있습니다.
-import '../provider/aaa_home_all_providers.dart';
+import '../provider/aab_home_all_providers.dart';
 
 // 홈 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
-import '../provider/aaa_home_state_provider.dart';
+import '../provider/aab_home_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
 // GlobalKey 사용 시 여러 위젯에서 동작하지 않을 수 있음
 // GlobalKey 대신 local context 사용 방법 설명 클래스
-// AaaHomeMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
-class AaaHomeMainScreen extends ConsumerStatefulWidget {
-  const AaaHomeMainScreen({Key? key}) : super(key: key);
+// AabHomeMainScreen 클래스는 ConsumerWidget 상속, Riverpod를 통한 상태 관리 지원
+class AabHomeMainScreen extends ConsumerStatefulWidget {
+  const AabHomeMainScreen({Key? key}) : super(key: key);
 
   @override
-  _AaaHomeMainScreenState createState() => _AaaHomeMainScreenState();
+  _AabHomeMainScreenState createState() => _AabHomeMainScreenState();
 }
 
-// _AaaHomeMainScreenState 클래스 시작
-// _AaaHomeMainScreenState 클래스는 AaaHomeMainScreen 위젯의 상태를 관리함.
+// _AabHomeMainScreenState 클래스 시작
+// _AabHomeMainScreenState 클래스는 AabHomeMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
+class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     with WidgetsBindingObserver {
   // 큰 배너를 위한 페이지 컨트롤러
   late PageController _largeBannerPageController;
@@ -184,7 +183,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     if (newCurrentIndex != currentIndex) {
       // 현재 인덱스가 변경된 경우
       currentIndex = newCurrentIndex; // 현재 인덱스를 갱신함
-      ref.read(aaaHomeCurrentTabProvider.notifier).state = currentIndex; // 상태 업데이트
+      ref.read(aabHomeCurrentTabProvider.notifier).state = currentIndex; // 상태 업데이트
     }
 
     // '봄'이나 '여름' 탭이 활성화될 때 자동 스크롤
@@ -265,10 +264,10 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     // 'homeScreenPointScrollController'에서 현재의 스크롤 위치(offset)를 가져와서 'currentScrollPosition' 변수에 저장함.
     double currentScrollPosition = homeScreenPointScrollController.offset;
 
-    // 'ref'를 사용하여 'aaaHomeScrollPositionProvider'의 notifier를 읽어옴.
+    // 'ref'를 사용하여 'aabHomeScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(aaaHomeScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(aabHomeScrollPositionProvider.notifier).state = currentScrollPosition;
   }
 
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
@@ -297,8 +296,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       if (homeScreenPointScrollController.hasClients) {
         // 로그인 상태에 따라 다른 스크롤 위치로 설정
         double savedScrollPosition = FirebaseAuth.instance.currentUser != null
-            ? ref.read(aaaHomeScrollPositionProvider)
-            : ref.read(aaaHomeLoginAndLogoutScrollPositionProvider);
+            ? ref.read(aabHomeScrollPositionProvider)
+            : ref.read(aabHomeLoginAndLogoutScrollPositionProvider);
         // 저장된 위치로 스크롤 이동
         homeScreenPointScrollController.jumpTo(savedScrollPosition);
       }
@@ -310,7 +309,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       // 저장된 인덱스를 가져와 currentIndex 초기화
-      currentIndex = ref.read(aaaHomeCurrentTabProvider);
+      currentIndex = ref.read(aabHomeCurrentTabProvider);
 
       // 초기화 시 상단 탭 바 위치 복구를 위한 조건문
       if (currentIndex >= 4) {
@@ -340,48 +339,48 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     // 큰 배너에 대한 PageController 및 AutoScroll 초기화
     // 'homeLargeBannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _largeBannerPageController =
-        PageController(initialPage: ref.read(aaaHomeLargeBannerPageProvider));
+        PageController(initialPage: ref.read(aabHomeLargeBannerPageProvider));
 
     // 큰 배너를 자동으로 스크롤하는 기능 초기화
     _largeBannerAutoScroll = BannerAutoScrollClass(
       pageController: _largeBannerPageController,
-      currentPageProvider: aaaHomeLargeBannerPageProvider,
+      currentPageProvider: aabHomeLargeBannerPageProvider,
       itemCount: bannerImageCount1, // 총 배너 이미지 개수 전달
     );
 
     // 작은 배너1에 대한 PageController 및 AutoScroll 초기화
-    // 'aaaHomeSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
+    // 'aabHomeSmall1BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _small1BannerPageController =
-        PageController(initialPage: ref.read(aaaHomeSmall1BannerPageProvider));
+        PageController(initialPage: ref.read(aabHomeSmall1BannerPageProvider));
 
     // 작은 배너1을 자동으로 스크롤하는 기능 초기화
     _small1BannerAutoScroll = BannerAutoScrollClass(
       pageController: _small1BannerPageController,
-      currentPageProvider: aaaHomeSmall1BannerPageProvider,
+      currentPageProvider: aabHomeSmall1BannerPageProvider,
       itemCount: bannerImageCount2, // 총 배너 이미지 개수 전달
     );
 
     // 작은 배너2에 대한 PageController 및 AutoScroll 초기화
-    // 'aaaHomeSmall2BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
+    // 'aabHomeSmall2BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _small2BannerPageController =
-        PageController(initialPage: ref.read(aaaHomeSmall2BannerPageProvider));
+        PageController(initialPage: ref.read(aabHomeSmall2BannerPageProvider));
 
     // 작은 배너2를 자동으로 스크롤하는 기능 초기화
     _small2BannerAutoScroll = BannerAutoScrollClass(
       pageController: _small2BannerPageController,
-      currentPageProvider: aaaHomeSmall2BannerPageProvider,
+      currentPageProvider: aabHomeSmall2BannerPageProvider,
       itemCount: bannerImageCount2, // 총 배너 이미지 개수 전달
     );
 
     // 작은 배너3에 대한 PageController 및 AutoScroll 초기화
-    // 'aaaHomeSmall3BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
+    // 'aabHomeSmall3BannerPageProvider'에서 초기 페이지 인덱스를 읽어옴
     _small3BannerPageController =
-        PageController(initialPage: ref.read(aaaHomeSmall3BannerPageProvider));
+        PageController(initialPage: ref.read(aabHomeSmall3BannerPageProvider));
 
     // 작은 배너3을 자동으로 스크롤하는 기능 초기화
     _small3BannerAutoScroll = BannerAutoScrollClass(
       pageController: _small3BannerPageController,
-      currentPageProvider: aaaHomeSmall3BannerPageProvider,
+      currentPageProvider: aabHomeSmall3BannerPageProvider,
       itemCount: bannerImageCount2, // 총 배너 이미지 개수 전달
     );
 
@@ -396,13 +395,13 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // (해당 부분은 logoutSecDataAndHomeScrollPointReset에서 구현한 것과 중복되서 필요없음 - 이후에 없애기!!)
-        ref.read(aaaHomeLargeBannerPageProvider.notifier).state = 0;
-        ref.read(aaaHomeSmall1BannerPageProvider.notifier).state = 0;
-        ref.read(aaaHomeSmall2BannerPageProvider.notifier).state = 0;
-        ref.read(aaaHomeSmall3BannerPageProvider.notifier).state = 0;
-        ref.read(aaaHomeScrollPositionProvider.notifier).state =
+        ref.read(aabHomeLargeBannerPageProvider.notifier).state = 0;
+        ref.read(aabHomeSmall1BannerPageProvider.notifier).state = 0;
+        ref.read(aabHomeSmall2BannerPageProvider.notifier).state = 0;
+        ref.read(aabHomeSmall3BannerPageProvider.notifier).state = 0;
+        ref.read(aabHomeScrollPositionProvider.notifier).state =
         0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
-        ref.read(aaaHomeCurrentTabProvider.notifier).state =
+        ref.read(aabHomeCurrentTabProvider.notifier).state =
         0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
         ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
         false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
@@ -529,7 +528,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       }
       // 탭 선택 시, 선택된 인덱스를 상태에 저장함
       currentIndex = index; // 현재 인덱스를 업데이트함
-      ref.read(aaaHomeCurrentTabProvider.notifier).state =
+      ref.read(aabHomeCurrentTabProvider.notifier).state =
           index; // 상태에 현재 탭 인덱스를 저장함
     }
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
@@ -549,7 +548,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       }
       // 탭 선택 시, 선택된 인덱스를 상태에 저장함
       currentIndex = index; // 현재 인덱스를 업데이트함
-      ref.read(aaaHomeCurrentTabProvider.notifier).state =
+      ref.read(aabHomeCurrentTabProvider.notifier).state =
           index; // 상태에 현재 탭 인덱스를 저장함
     }
     // 이벤트 이미지 탭 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
@@ -557,7 +556,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     // 상단 탭 바를 구성하는 리스트 뷰를 가져오는 위젯
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
     Widget topBarList = buildTopBarList(context, onTopBarTap,
-        aaaHomeCurrentTabProvider, homeTopBarPointAutoScrollController);
+        aabHomeCurrentTabProvider, homeTopBarPointAutoScrollController);
     // ------ aab_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -662,7 +661,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                     wishlistBtnX: homeWishlistBtnX,
                     wishlistBtnY: homeWishlistBtnY,
                     scrollController: homeScreenPointScrollController,
-                    // sectionKey: sectionWinterKey,
+
                     // 여기서 이벤트 이미지 클릭 시 onEventImageTap(8) 호출
                     onEventImageTap: () => onEventImageTap(8),
                   ),
@@ -725,22 +724,22 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeLargeBannerPageProvider,
+                                  aabHomeLargeBannerPageProvider,
                                   // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
                                   pageController: _largeBannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _largeBannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaAllLargeBannerImagesProvider,
+                                  aabAllLargeBannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 대배너 클릭 시 호출할 함수 aaaOnLargeBannerTap 실행
-                                  aaaOnLargeBannerTap(
+                                  // 대배너 클릭 시 호출할 함수 aabOnLargeBannerTap 실행
+                                  aabOnLargeBannerTap(
                                       context, // 현재 화면의 컨텍스트를 전달함
                                       index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaAllLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaAllLargeBannerImagesProvider).value ?? [],
+                                      // aabAllLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(aabAllLargeBannerImagesProvider).value ?? [],
                                       ref // Provider의 참조를 전달함
                                   ),
                                   width: homeScreenLargeBannerWidth, // 원하는 너비
@@ -772,7 +771,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                 4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
                             content: Container(
                               child: MidCategoryButtonList(
-                                onCategoryTap: aaaOnMidCategoryTap,
+                                onCategoryTap: aabOnMidCategoryTap,
                               ),
                               decoration: BoxDecoration(
                                 border: Border(
@@ -801,22 +800,22 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeSmall1BannerPageProvider,
+                                  aabHomeSmall1BannerPageProvider,
                                   // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
                                   pageController: _small1BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small1BannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaHomeSmall1BannerImagesProvider,
+                                  aabHomeSmall1BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
-                                  aaaOnSmallBannerTap(
+                                  // 소배너 클릭 시 호출할 함수 aabOnSmallBannerTap 실행
+                                  aabOnSmallBannerTap(
                                       context, // 현재 화면의 컨텍스트를 전달함
                                       index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaHomeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaHomeSmall1BannerImagesProvider).value ?? [],
+                                      // aabHomeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(aabHomeSmall1BannerImagesProvider).value ?? [],
                                       ref // Provider의 참조를 전달함
                                   ),
                                   width: homeScreenSmallBannerWidth, // 원하는 너비
@@ -846,8 +845,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionNewKey,
                             child: buildSectionCard(
-                                context, ref, "신상", aaaBuildNewProductsSection,
-                                destinationScreen: AaaNewSubMainScreen(),
+                                context, ref, "신상", aabBuildNewProductsSection,
+                                destinationScreen: AabNewSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -863,8 +862,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionBestSellerKey,
                             child: buildSectionCard(context, ref, "스테디 셀러",
-                                aaaBuildBestProductsSection,
-                                destinationScreen: AaaBestSubMainScreen(),
+                                aabBuildBestProductsSection,
+                                destinationScreen: AabBestSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -880,8 +879,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionSaleKey,
                             child: buildSectionCard(
-                                context, ref, "특가 상품", aaaBuildSaleProductsSection,
-                                destinationScreen: AaaSaleSubMainScreen(),
+                                context, ref, "특가 상품", aabBuildSaleProductsSection,
+                                destinationScreen: AabSaleSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -912,22 +911,22 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeSmall2BannerPageProvider,
+                                  aabHomeSmall2BannerPageProvider,
                                   // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
                                   pageController: _small2BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small2BannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaHomeSmall2BannerImagesProvider,
+                                  aabHomeSmall2BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
-                                  aaaOnSmallBannerTap(
+                                  // 소배너 클릭 시 호출할 함수 aabOnSmallBannerTap 실행
+                                  aabOnSmallBannerTap(
                                       context, // 현재 화면의 컨텍스트를 전달함
                                       index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaHomeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaHomeSmall2BannerImagesProvider).value ?? [],
+                                      // aabHomeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(aabHomeSmall2BannerImagesProvider).value ?? [],
                                       ref // Provider의 참조를 전달함
                                   ),
                                   width: homeScreenSmallBannerWidth, // 원하는 너비
@@ -957,8 +956,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionSpringKey,
                             child: buildSectionCard(
-                                context, ref, "봄", aaaBuildSpringProductsSection,
-                                destinationScreen: AaaSpringSubMainScreen(),
+                                context, ref, "봄", aabBuildSpringProductsSection,
+                                destinationScreen: AabSpringSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -973,8 +972,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionSummerKey,
                             child: buildSectionCard(
-                                context, ref, "여름", aaaBuildSummerProductsSection,
-                                destinationScreen: AaaSummerSubMainScreen(),
+                                context, ref, "여름", aabBuildSummerProductsSection,
+                                destinationScreen: AabSummerSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -1005,22 +1004,22 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeSmall3BannerPageProvider,
+                                  aabHomeSmall3BannerPageProvider,
                                   // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
                                   pageController: _small3BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small3BannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaHomeSmall3BannerImagesProvider,
+                                  aabHomeSmall3BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
-                                  aaaOnSmallBannerTap(
+                                  // 소배너 클릭 시 호출할 함수 aabOnSmallBannerTap 실행
+                                  aabOnSmallBannerTap(
                                       context, // 현재 화면의 컨텍스트를 전달함
                                       index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaHomeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaHomeSmall3BannerImagesProvider).value ?? [],
+                                      // aabHomeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                      ref.watch(aabHomeSmall3BannerImagesProvider).value ?? [],
                                       ref // Provider의 참조를 전달함
                                   ),
                                   width: homeScreenSmallBannerWidth, // 원하는 너비
@@ -1049,8 +1048,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionAutumnKey,
                             child: buildSectionCard(
-                                context, ref, "가을", aaaBuildAutumnProductsSection,
-                                destinationScreen: AaaAutumnSubMainScreen(),
+                                context, ref, "가을", aabBuildAutumnProductsSection,
+                                destinationScreen: AabAutumnSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -1065,8 +1064,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionWinterKey,
                             child: buildSectionCard(
-                                context, ref, "겨울", aaaBuildWinterProductsSection,
-                                destinationScreen: AaaWinterSubMainScreen(),
+                                context, ref, "겨울", aabBuildWinterProductsSection,
+                                destinationScreen: AabWinterSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
@@ -1079,7 +1078,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             key: sectionEventKey,
                             child: buildSectionCard(context, ref, "이벤트",
-                                aaaBuildEventPosterImgProductsSection,
+                                aabBuildEventPosterImgProductsSection,
                                 showPlusButton: false),
                           ),
                           Container(
@@ -1117,4 +1116,4 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
-// _AaaHomeScreenState 클래스 끝
+// _AabHomeScreenState 클래스 끝

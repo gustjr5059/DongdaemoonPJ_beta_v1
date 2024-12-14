@@ -48,7 +48,7 @@ import '../../common/provider/common_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/home_body_parts_layout.dart';
 
-// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 aaa_home_all_providers.dart 파일을 가져옵니다.
+// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 aab_home_all_providers.dart 파일을 가져옵니다.
 // 이 파일은 홈 화면과 관련된 Future Provider 기능을 제공합니다.
 // 이를 통해 홈 화면에서 비동기 데이터를 호출하고 상태를 관리할 수 있습니다.
 import '../provider/home_all_providers.dart';
@@ -395,7 +395,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
       ref.read(homeCurrentTabProvider.notifier).state =
           index; // 상태에 현재 탭 인덱스를 저장함
     }
-    // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
+    // 이벤트 이미지 탭 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 끝
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -705,10 +705,10 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                           ),
                           SizedBox(height: interval2Y), // 높이 간격 설정
                           Container(
-                          key: sectionEventKey,
-                          child: buildSectionCard(context, ref, "이벤트",
-                              buildEventPosterImgProductsSection,
-                              showPlusButton: false),
+                            key: sectionEventKey,
+                            child: buildSectionCard(context, ref, "이벤트",
+                                buildEventPosterImgProductsSection,
+                                showPlusButton: false),
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -753,4 +753,4 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
-// _HomeScreenState 클래스 끝
+// _MainHomeScreenState 클래스 끝
