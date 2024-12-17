@@ -43,13 +43,15 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   // 초기 데이터 로딩 완료 여부를 나타내는 플래그
   bool _isInitialLoadComplete = false;
 
-  // 생성자에서 CartItemRepository와 Ref를 받아서 초기 상태를 빈 리스트로 설정함
-  // 초기 데이터 로딩을 위해 loadMoreCartItems 메서드를 호출함
-  CartItemsNotifier(this.cartItemRepository, this.ref) : super([]) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadMoreCartItems();
-    });
-  }
+  CartItemsNotifier(this.cartItemRepository, this.ref) : super([]);
+
+  // // 생성자에서 CartItemRepository와 Ref를 받아서 초기 상태를 빈 리스트로 설정함
+  // // 초기 데이터 로딩을 위해 loadMoreCartItems 메서드를 호출함
+  // CartItemsNotifier(this.cartItemRepository, this.ref) : super([]) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     loadMoreCartItems();
+  //   });
+  // }
 
   // 전체 체크박스 상태를 업데이트하는 함수
   void _updateAllCheckedState(List<Map<String, dynamic>> cartItems) {
@@ -83,11 +85,11 @@ class CartItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       return;
     }
 
-    print("Firestore에서 새로운 장바구니 아이템 4개를 요청합니다.");
-    // Firestore에서 데이터를 4개씩 페이징 처리로 가져옴
+    print("Firestore에서 새로운 장바구니 아이템 3개를 요청합니다.");
+    // Firestore에서 데이터를 3개씩 페이징 처리로 가져옴
     final newItems = await cartItemRepository.getPagedCartItems(
       lastDocument: lastDocument,
-      limit: 4,
+      limit: 3,
     );
 
     if (newItems.isNotEmpty) {

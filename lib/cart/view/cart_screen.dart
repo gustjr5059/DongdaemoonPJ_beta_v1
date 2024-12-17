@@ -247,19 +247,27 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         screenSize.width * (393 / referenceWidth); // 가로 비율
     final double loginGuideTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y =
-        screenSize.height * (300 / referenceHeight);
+    final double loginGuideText1Y = screenSize.height * (260 / referenceHeight);
 
     // 로그인 하기 버튼 수치
-    final double loginBtnPaddingX =
-        screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY =
-        screenSize.height * (5 / referenceHeight);
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
     final double loginBtnTextFontSize =
         screenSize.height * (14 / referenceHeight);
     final double TextAndBtnInterval =
         screenSize.height * (16 / referenceHeight);
 
+    // 장바구니 안내사항 텍스트 수치
+    final double cartlistGuideTextWidth =
+        screenSize.width * (250 / referenceWidth); // 가로 비율
+    final double cartlistGuideTextFontSize1 =
+        screenSize.height * (14 / referenceHeight); // 세로 비율
+    final double cartlistGuideTextFontSize2 =
+        screenSize.height * (10 / referenceHeight); // 세로 비율
+    final double interval1Y =
+        screenSize.height * (4 / referenceHeight); // 세로 비율
+    final double interval2Y =
+        screenSize.height * (6 / referenceHeight); // 세로 비율
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -326,6 +334,69 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 // iOS에서는 AppBar의 배경색을 사용
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 // backgroundColor: BUTTON_COLOR,
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: interval1Y),
+                      Container(
+                        width: cartlistGuideTextWidth,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "[안내사항]", // 설명 텍스트
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: cartlistGuideTextFontSize1,
+                            fontWeight: FontWeight.bold,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: interval2Y),
+                      Container(
+                        width: cartlistGuideTextWidth,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "상점 고유번호: 상품번호 중 앞 세 자리 부분 [예) 'Aaa']", // 설명 텍스트
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: cartlistGuideTextFontSize2,
+                            fontWeight: FontWeight.normal,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: interval1Y),
+                      Container(
+                        width: cartlistGuideTextWidth,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "상점 고유번호가 동일한 상품끼리만 발주 요청이 가능합니다.",
+                          // 설명 텍스트
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: cartlistGuideTextFontSize2,
+                            fontWeight: FontWeight.normal,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: interval2Y),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: BLACK_COLOR, width: 1.0),
+                    ),
+                  ),
+                ),
               ),
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.

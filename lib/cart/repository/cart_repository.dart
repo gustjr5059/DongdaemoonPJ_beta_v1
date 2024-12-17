@@ -253,12 +253,14 @@ class CartItemRepository {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       print('사용자가 로그인되어 있지 않습니다.');
-      throw Exception('사용자가 로그인되어 있지 않습니다.');
+      // throw Exception('사용자가 로그인되어 있지 않습니다.');
+      return; // 예외를 던지지 않고 함수 종료
     }
     final userEmail = user.email;
     if (userEmail == null) {
       print('사용자 이메일을 가져올 수 없습니다.');
-      throw Exception('사용자 이메일을 가져올 수 없습니다.');
+      // throw Exception('사용자 이메일을 가져올 수 없습니다.');
+      return; // 예외를 던지지 않고 함수 종료
     }
 
     print('사용자 $userEmail의 모든 장바구니 아이템의 bool_checked 필드를 false로 업데이트합니다.');

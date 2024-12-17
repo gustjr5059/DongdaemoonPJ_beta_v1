@@ -41,8 +41,8 @@ class AbaNewProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -137,8 +137,8 @@ class AbaBestProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -233,8 +233,8 @@ class AbaSaleProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -329,8 +329,8 @@ class AbaSpringProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -426,8 +426,8 @@ class AbaSummerProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -523,8 +523,8 @@ class AbaAutumnProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동
@@ -620,8 +620,8 @@ class AbaWinterProductRepository {
       collections[currentCollectionIndex]; // 현재 컬렉션 이름
       // 한 자리 숫자는 substring(2, 4), 두 자리 숫자는 substring(2, 5) 사용
       String mainCollection = currentCollection.length == 7
-          ? 'Aa' + currentCollection.substring(2, 5)
-          : 'Aa' + currentCollection.substring(2, 4);
+          ? 'Ab' + currentCollection.substring(2, 5)
+          : 'Ab' + currentCollection.substring(2, 4);
       final collectionKey = '$mainCollection/$currentCollection';
 
       // 해당 컬렉션이 데이터 없음 상태라면 다음 컬렉션으로 이동

@@ -1243,32 +1243,24 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     // 버튼의 세로 크기
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
-                      // 버튼 클릭 시 동작 정의
+                      // '발주하기' 버튼 클릭 시 동작
                       onPressed: () {
                         if (user == null) {
                           // 사용자 정보가 없으면 로그인 안내 알림창 표시
                           showSubmitAlertDialog(
                             context,
-                            // 알림창 제목
                             title: '[로그인 상태]',
-                            // 알림창 내용
                             content: '로그인 후 이용해주세요.',
-                            // 알림창의 버튼 동작 정의
                             actions: [
                               TextButton(
-                                // 알림창 확인 버튼 텍스트 정의
                                 child: Text(
                                   '확인',
                                   style: TextStyle(
-                                    // 텍스트 색상
                                     color: ORANGE56_COLOR,
-                                    // 텍스트 두께
                                     fontWeight: FontWeight.bold,
-                                    // 폰트 패밀리
                                     fontFamily: 'NanumGothic',
                                   ),
                                 ),
-                                // 버튼 클릭 시 알림창 닫기 동작 정의
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -1276,33 +1268,44 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                             ],
                           );
                         } else {
-                          // 사용자 정보가 있는 경우 추가 조건 확인
                           if (orderProducts.isEmpty) {
-                            // 선택된 상품이 없는 경우 경고 메시지 표시
+                            // 선택된 상품이 없으면 경고 메시지 표시
                             showCustomSnackBar(context, '발주 요청할 상품을 선택해주세요.');
                           } else {
-                            // 선택된 상품이 있는 경우 추가 금액 조건 확인
+                            // 상품번호 앞 세 자리 확인 로직
+                            final List<String> productPrefixes = orderProducts
+                                .map((item) => item.productNumber != null
+                                ? item.productNumber!.substring(0, 3)
+                                : '') // productNumber가 null이면 빈 문자열 반환
+                                .toList();
+
+                            // 모든 앞 세 자리가 동일한지 검사
+                            final bool allSamePrefix =
+                            productPrefixes.every((prefix) => prefix == productPrefixes.first);
+
+                            if (!allSamePrefix) {
+                              // 앞 세 자리가 다른 경우 경고 메시지 표시
+                              showCustomSnackBar(context, '동일한 상점 상품끼리만 묶음 발주가 가능합니다.',
+                                  duration: Duration(milliseconds: 2000), // 2초 동안 유지
+                              );
+                              return; // 버튼 동작 중단
+                            }
+
+                            // 앞 세 자리가 동일하고 결제 금액 조건 검사
                             if (totalPaymentPrice >= 30000) {
-                              // 결제 금액이 30,000원 이상일 때 실행
-                              ref
-                                  .read(orderItemsProvider.notifier)
-                                  .setOrderItems(orderProducts);
+                              // 정상 동작: 발주 화면으로 이동
+                              ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => OrderMainScreen(
-                                    // 총 상품 금액 전달
-                                    totalProductPrice:
-                                        totalProductPrice.toDouble(),
-                                    // 할인 금액 전달
-                                    productDiscountPrice:
-                                        totalDiscountPrice.toDouble(),
+                                    totalProductPrice: totalProductPrice.toDouble(),
+                                    productDiscountPrice: totalDiscountPrice.toDouble(),
                                   ),
                                 ),
                               );
                             } else {
-                              // 결제 금액이 30,000원 미만일 경우 경고 메시지 표시
-                              showCustomSnackBar(
-                                  context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                              // 결제 금액이 30,000원 미만인 경우 경고 메시지 표시
+                              showCustomSnackBar(context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
                             }
                           }
                         }

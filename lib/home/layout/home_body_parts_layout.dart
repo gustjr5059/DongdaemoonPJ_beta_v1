@@ -314,7 +314,7 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
 
 
     if (marketButtons.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return buildCommonLoadingIndicator();
     }
 
     return IntrinsicHeight(

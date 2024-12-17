@@ -896,7 +896,7 @@ List<Widget> buildAlertActions(
 
 // ------ 공통 SnackBar 함수 내용 시작
 // 공통 SnackBar 함수
-void showCustomSnackBar(BuildContext context, String message) {
+void showCustomSnackBar(BuildContext context, String message, {Duration duration = const Duration(milliseconds: 2000)}) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -938,6 +938,7 @@ void showCustomSnackBar(BuildContext context, String message) {
         horizontal: commonSnackBarX, // X축 패딩 설정
         vertical: commonSnackBarY, // Y축 패딩 설정
       ),
+      duration: duration, // 스낵바 유지 시간 설정 (동적으로 설정 가능)
     ),
   );
 }
