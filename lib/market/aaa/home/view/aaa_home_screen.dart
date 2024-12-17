@@ -37,8 +37,8 @@ import '../../product/view/sub_main_screen/aaa_best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aaa_new_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aaa_sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aaa_spring_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aaa_summer_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aaa_winter_sub_main_screen.dart';
 import '../layout/aaa_home_body_parts_layout.dart';
 
 // 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 aab_home_all_providers.dart 파일을 가져옵니다.

@@ -45,7 +45,7 @@ import '../../../home/provider/aaa_home_all_providers.dart';
 import '../../layout/aaa_product_body_parts_layout.dart';
 import '../../provider/aaa_product_state_provider.dart';
 
-// aaa_product_all_providers.dart 파일을 provider 디렉토리에서 가져옵니다.
+// aae_product_all_providers.dart 파일을 provider 디렉토리에서 가져옵니다.
 // 이 파일에는 상품과 관련된 Future Provider 기능이 정의되어 있습니다.
 // 이를 통해 비동기적으로 상품 데이터를 불러오고, 상태를 관리할 수 있습니다.
 import '../../provider/aaa_product_all_providers.dart';
@@ -348,7 +348,7 @@ class _AaaPantsMainScreenState extends ConsumerState<AaaPantsMainScreen>
   // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 시작
   @override
   Widget build(BuildContext context) {
-    // ------ aaa_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
+    // ------ aae_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 시작
     // 탭을 탭했을 때 호출될 함수
     // 상단 탭 바를 구성하고 탭 선택 시 동작을 정의하는 함수
     // (common_parts.dart의 onTopBarTap 함수를 불러와 생성자를 만든 후 사용하는 개념이라 void인 함수는 함수명을 그대로 사용해야 함)
@@ -368,7 +368,7 @@ class _AaaPantsMainScreenState extends ConsumerState<AaaPantsMainScreen>
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
     Widget topBarList = buildTopBarList(context, onTopBarTap,
         aaaPantsCurrentTabProvider, pantsMainTopBarPointAutoScrollController);
-    // ------ aaa_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
+    // ------ aae_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;

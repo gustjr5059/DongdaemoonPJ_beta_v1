@@ -21,9 +21,427 @@ import '../../common/const/colors.dart';
 // 제품 데이터 모델을 정의한 파일을 임포트합니다.
 // 이 모델은 제품의 속성을 정의하고, 애플리케이션에서 제품 데이터를 구조화하는 데 사용됩니다.
 import '../../common/layout/common_body_parts_layout.dart';
-import '../../home/provider/home_state_provider.dart';
+
+// aaa 파일
+import '../../market/aaa/product/view/detail_screen/aaa_blouse_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_cardigan_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_coat_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_jean_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_mtm_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_neat_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_onepiece_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_paeding_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_pants_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_pola_detail_screen.dart';
 import '../../market/aaa/product/view/detail_screen/aaa_shirt_detail_screen.dart';
+import '../../market/aaa/product/view/detail_screen/aaa_skirt_detail_screen.dart';
+
+// aab 파일
+import '../../market/aab/product/view/detail_screen/aab_blouse_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_cardigan_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_coat_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_jean_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_mtm_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_neat_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_onepiece_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_paeding_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_pants_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_pola_detail_screen.dart';
 import '../../market/aab/product/view/detail_screen/aab_shirt_detail_screen.dart';
+import '../../market/aab/product/view/detail_screen/aab_skirt_detail_screen.dart';
+
+// aac 파일
+import '../../market/aac/product/view/detail_screen/aac_blouse_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_cardigan_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_coat_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_jean_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_mtm_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_neat_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_onepiece_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_paeding_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_pants_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_pola_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_shirt_detail_screen.dart';
+import '../../market/aac/product/view/detail_screen/aac_skirt_detail_screen.dart';
+
+// aad 파일
+import '../../market/aad/product/view/detail_screen/aad_blouse_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_cardigan_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_coat_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_jean_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_mtm_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_neat_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_onepiece_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_paeding_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_pants_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_pola_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_shirt_detail_screen.dart';
+import '../../market/aad/product/view/detail_screen/aad_skirt_detail_screen.dart';
+
+// aae 파일
+import '../../market/aae/product/view/detail_screen/aae_blouse_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_cardigan_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_coat_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_jean_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_mtm_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_neat_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_onepiece_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_paeding_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_pants_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_pola_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_shirt_detail_screen.dart';
+import '../../market/aae/product/view/detail_screen/aae_skirt_detail_screen.dart';
+
+// aaf 파일
+import '../../market/aaf/product/view/detail_screen/aaf_blouse_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_cardigan_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_coat_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_jean_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_mtm_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_neat_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_onepiece_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_paeding_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_pants_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_pola_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_shirt_detail_screen.dart';
+import '../../market/aaf/product/view/detail_screen/aaf_skirt_detail_screen.dart';
+
+// aag 파일
+import '../../market/aag/product/view/detail_screen/aag_blouse_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_cardigan_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_coat_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_jean_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_mtm_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_neat_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_onepiece_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_paeding_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_pants_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_pola_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_shirt_detail_screen.dart';
+import '../../market/aag/product/view/detail_screen/aag_skirt_detail_screen.dart';
+
+// aah 파일
+import '../../market/aah/product/view/detail_screen/aah_blouse_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_cardigan_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_coat_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_jean_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_mtm_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_neat_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_onepiece_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_paeding_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_pants_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_pola_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_shirt_detail_screen.dart';
+import '../../market/aah/product/view/detail_screen/aah_skirt_detail_screen.dart';
+
+// aai 파일
+import '../../market/aai/product/view/detail_screen/aai_blouse_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_cardigan_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_coat_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_jean_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_mtm_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_neat_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_onepiece_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_paeding_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_pants_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_pola_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_shirt_detail_screen.dart';
+import '../../market/aai/product/view/detail_screen/aai_skirt_detail_screen.dart';
+
+// aaj 파일
+import '../../market/aaj/product/view/detail_screen/aaj_blouse_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_cardigan_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_coat_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_jean_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_mtm_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_neat_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_onepiece_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_paeding_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_pants_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_pola_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_shirt_detail_screen.dart';
+import '../../market/aaj/product/view/detail_screen/aaj_skirt_detail_screen.dart';
+
+// aak 파일
+import '../../market/aak/product/view/detail_screen/aak_blouse_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_cardigan_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_coat_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_jean_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_mtm_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_neat_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_onepiece_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_paeding_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_pants_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_pola_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_shirt_detail_screen.dart';
+import '../../market/aak/product/view/detail_screen/aak_skirt_detail_screen.dart';
+
+// aal 파일
+import '../../market/aal/product/view/detail_screen/aal_blouse_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_cardigan_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_coat_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_jean_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_mtm_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_neat_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_onepiece_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_paeding_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_pants_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_pola_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_shirt_detail_screen.dart';
+import '../../market/aal/product/view/detail_screen/aal_skirt_detail_screen.dart';
+
+// aam 파일
+import '../../market/aam/product/view/detail_screen/aam_blouse_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_cardigan_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_coat_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_jean_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_mtm_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_neat_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_onepiece_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_paeding_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_pants_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_pola_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_shirt_detail_screen.dart';
+import '../../market/aam/product/view/detail_screen/aam_skirt_detail_screen.dart';
+
+// aan 파일
+import '../../market/aan/product/view/detail_screen/aan_blouse_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_cardigan_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_coat_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_jean_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_mtm_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_neat_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_onepiece_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_paeding_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_pants_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_pola_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_shirt_detail_screen.dart';
+import '../../market/aan/product/view/detail_screen/aan_skirt_detail_screen.dart';
+
+// aao 파일
+import '../../market/aao/product/view/detail_screen/aao_blouse_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_cardigan_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_coat_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_jean_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_mtm_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_neat_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_onepiece_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_paeding_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_pants_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_pola_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_shirt_detail_screen.dart';
+import '../../market/aao/product/view/detail_screen/aao_skirt_detail_screen.dart';
+
+// aap 파일
+import '../../market/aap/product/view/detail_screen/aap_blouse_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_cardigan_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_coat_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_jean_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_mtm_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_neat_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_onepiece_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_paeding_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_pants_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_pola_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_shirt_detail_screen.dart';
+import '../../market/aap/product/view/detail_screen/aap_skirt_detail_screen.dart';
+
+// aaq 파일
+import '../../market/aaq/product/view/detail_screen/aaq_blouse_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_cardigan_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_coat_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_jean_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_mtm_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_neat_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_onepiece_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_paeding_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_pants_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_pola_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_shirt_detail_screen.dart';
+import '../../market/aaq/product/view/detail_screen/aaq_skirt_detail_screen.dart';
+
+// aar 파일
+import '../../market/aar/product/view/detail_screen/aar_blouse_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_cardigan_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_coat_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_jean_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_mtm_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_neat_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_onepiece_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_paeding_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_pants_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_pola_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_shirt_detail_screen.dart';
+import '../../market/aar/product/view/detail_screen/aar_skirt_detail_screen.dart';
+
+// aas 파일
+import '../../market/aas/product/view/detail_screen/aas_blouse_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_cardigan_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_coat_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_jean_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_mtm_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_neat_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_onepiece_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_paeding_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_pants_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_pola_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_shirt_detail_screen.dart';
+import '../../market/aas/product/view/detail_screen/aas_skirt_detail_screen.dart';
+
+// aat 파일
+import '../../market/aat/product/view/detail_screen/aat_blouse_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_cardigan_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_coat_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_jean_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_mtm_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_neat_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_onepiece_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_paeding_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_pants_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_pola_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_shirt_detail_screen.dart';
+import '../../market/aat/product/view/detail_screen/aat_skirt_detail_screen.dart';
+
+// aau 파일
+import '../../market/aau/product/view/detail_screen/aau_blouse_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_cardigan_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_coat_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_jean_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_mtm_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_neat_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_onepiece_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_paeding_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_pants_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_pola_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_shirt_detail_screen.dart';
+import '../../market/aau/product/view/detail_screen/aau_skirt_detail_screen.dart';
+
+// aav 파일
+import '../../market/aav/product/view/detail_screen/aav_blouse_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_cardigan_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_coat_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_jean_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_mtm_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_neat_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_onepiece_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_paeding_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_pants_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_pola_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_shirt_detail_screen.dart';
+import '../../market/aav/product/view/detail_screen/aav_skirt_detail_screen.dart';
+
+// aaw 파일
+import '../../market/aaw/product/view/detail_screen/aaw_blouse_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_cardigan_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_coat_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_jean_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_mtm_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_neat_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_onepiece_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_paeding_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_pants_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_pola_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_shirt_detail_screen.dart';
+import '../../market/aaw/product/view/detail_screen/aaw_skirt_detail_screen.dart';
+
+// aax 파일
+import '../../market/aax/product/view/detail_screen/aax_blouse_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_cardigan_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_coat_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_jean_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_mtm_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_neat_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_onepiece_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_paeding_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_pants_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_pola_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_shirt_detail_screen.dart';
+import '../../market/aax/product/view/detail_screen/aax_skirt_detail_screen.dart';
+
+// aay 파일
+import '../../market/aay/product/view/detail_screen/aay_blouse_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_cardigan_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_coat_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_jean_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_mtm_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_neat_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_onepiece_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_paeding_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_pants_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_pola_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_shirt_detail_screen.dart';
+import '../../market/aay/product/view/detail_screen/aay_skirt_detail_screen.dart';
+
+// aaz 파일
+import '../../market/aaz/product/view/detail_screen/aaz_blouse_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_cardigan_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_coat_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_jean_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_mtm_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_neat_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_onepiece_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_paeding_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_pants_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_pola_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_shirt_detail_screen.dart';
+import '../../market/aaz/product/view/detail_screen/aaz_skirt_detail_screen.dart';
+
+// aba 파일
+import '../../market/aba/product/view/detail_screen/aba_blouse_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_cardigan_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_coat_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_jean_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_mtm_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_neat_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_onepiece_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_paeding_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_pants_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_pola_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_shirt_detail_screen.dart';
+import '../../market/aba/product/view/detail_screen/aba_skirt_detail_screen.dart';
+
+// abb 파일
+import '../../market/abb/product/view/detail_screen/abb_blouse_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_cardigan_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_coat_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_jean_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_mtm_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_neat_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_onepiece_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_paeding_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_pants_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_pola_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_shirt_detail_screen.dart';
+import '../../market/abb/product/view/detail_screen/abb_skirt_detail_screen.dart';
+
+// abc 파일
+import '../../market/abc/product/view/detail_screen/abc_blouse_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_cardigan_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_coat_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_jean_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_mtm_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_neat_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_onepiece_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_paeding_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_pants_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_pola_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_shirt_detail_screen.dart';
+import '../../market/abc/product/view/detail_screen/abc_skirt_detail_screen.dart';
+
+// abd 파일
+import '../../market/abd/product/view/detail_screen/abd_blouse_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_cardigan_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_coat_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_jean_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_mtm_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_neat_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_onepiece_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_paeding_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_pants_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_pola_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_shirt_detail_screen.dart';
+import '../../market/abd/product/view/detail_screen/abd_skirt_detail_screen.dart';
+
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../model/product_model.dart';
 
@@ -163,803 +581,803 @@ class ProductInfoDetailScreenNavigation {
           detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
           detailScreen = AabShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aac') {
-        //   detailScreen = AacShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aad') {
-        //   detailScreen = AadShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aae') {
-        //   detailScreen = AaeShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aaf') {
-        //   detailScreen = AafShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aag') {
-        //   detailScreen = AagShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aah') {
-        //   detailScreen = AahShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aai') {
-        //   detailScreen = AaiShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aaj') {
-        //   detailScreen = AajShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aak') {
-        //   detailScreen = AakShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aal') {
-        //   detailScreen = AalShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aam') {
-        //   detailScreen = AamShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aan') {
-        //   detailScreen = AanShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aao') {
-        //   detailScreen = AaoShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aap') {
-        //   detailScreen = AapShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aaq') {
-        //   detailScreen = AaqShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aar') {
-        //   detailScreen = AarShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aas') {
-        //   detailScreen = AasShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aat') {
-        //   detailScreen = AatShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aau') {
-        //   detailScreen = AauShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aav') {
-        //   detailScreen = AavShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aaw') {
-        //   detailScreen = AawShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aax') {
-        //   detailScreen = AaxShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aay') {
-        //   detailScreen = AayShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aaz') {
-        //   detailScreen = AazShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Aba') {
-        //   detailScreen = AbaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Abb') {
-        //   detailScreen = AbbShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Abc') {
-        //   detailScreen = AbcShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-        // } else if (docIdPrefix == 'Abd') {
-        //   detailScreen = AbdShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
         } else {
           detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
         }
         break;
 
-      // case "블라우스":
-      //   appBarTitle = '블라우스 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "가디건":
-      //   appBarTitle = '가디건 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "코트":
-      //   appBarTitle = '코트 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "청바지":
-      //   appBarTitle = '청바지 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "맨투맨":
-      //   appBarTitle = '맨투맨 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "니트":
-      //   appBarTitle = '니트 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "원피스":
-      //   appBarTitle = '원피스 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "아우터":
-      //   appBarTitle = '아우터 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaePaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "팬츠":
-      //   appBarTitle = '팬츠 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaePantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "폴라티":
-      //   appBarTitle = '폴라티 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaePolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AayPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
-      //
-      // case "스커트":
-      //   appBarTitle = '스커트 상세';
-      //   if (docIdPrefix == 'Aaa') {
-      //     detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aab') {
-      //     detailScreen = AabSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aac') {
-      //     detailScreen = AacSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aad') {
-      //     detailScreen = AadSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aae') {
-      //     detailScreen = AaeSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaf') {
-      //     detailScreen = AafSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aag') {
-      //     detailScreen = AagSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aah') {
-      //     detailScreen = AahSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aai') {
-      //     detailScreen = AaiSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaj') {
-      //     detailScreen = AajSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aak') {
-      //     detailScreen = AakSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aal') {
-      //     detailScreen = AalSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aam') {
-      //     detailScreen = AamSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aan') {
-      //     detailScreen = AanSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aao') {
-      //     detailScreen = AaoSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aap') {
-      //     detailScreen = AapSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaq') {
-      //     detailScreen = AaqSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aar') {
-      //     detailScreen = AarSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aas') {
-      //     detailScreen = AasSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aat') {
-      //     detailScreen = AatSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aau') {
-      //     detailScreen = AauSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aav') {
-      //     detailScreen = AavSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaw') {
-      //     detailScreen = AawSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aax') {
-      //     detailScreen = AaxSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aay') {
-      //     detailScreen = AaySkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aaz') {
-      //     detailScreen = AazSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Aba') {
-      //     detailScreen = AbaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abb') {
-      //     detailScreen = AbbSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abc') {
-      //     detailScreen = AbcSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else if (docIdPrefix == 'Abd') {
-      //     detailScreen = AbdSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   } else {
-      //     detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
-      //   }
-      //   break;
+      case "블라우스":
+        appBarTitle = '블라우스 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "가디건":
+        appBarTitle = '가디건 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "코트":
+        appBarTitle = '코트 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "청바지":
+        appBarTitle = '청바지 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "맨투맨":
+        appBarTitle = '맨투맨 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "니트":
+        appBarTitle = '니트 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "원피스":
+        appBarTitle = '원피스 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "아우터":
+        appBarTitle = '아우터 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaePaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "팬츠":
+        appBarTitle = '팬츠 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaePantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "폴라티":
+        appBarTitle = '폴라티 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaePolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AayPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
+
+      case "스커트":
+        appBarTitle = '스커트 상세';
+        if (docIdPrefix == 'Aaa') {
+          detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aab') {
+          detailScreen = AabSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aac') {
+          detailScreen = AacSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aad') {
+          detailScreen = AadSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aae') {
+          detailScreen = AaeSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaf') {
+          detailScreen = AafSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aag') {
+          detailScreen = AagSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aah') {
+          detailScreen = AahSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aai') {
+          detailScreen = AaiSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaj') {
+          detailScreen = AajSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aak') {
+          detailScreen = AakSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aal') {
+          detailScreen = AalSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aam') {
+          detailScreen = AamSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aan') {
+          detailScreen = AanSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aao') {
+          detailScreen = AaoSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aap') {
+          detailScreen = AapSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaq') {
+          detailScreen = AaqSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aar') {
+          detailScreen = AarSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aas') {
+          detailScreen = AasSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aat') {
+          detailScreen = AatSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aau') {
+          detailScreen = AauSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aav') {
+          detailScreen = AavSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaw') {
+          detailScreen = AawSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aax') {
+          detailScreen = AaxSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aay') {
+          detailScreen = AaySkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aaz') {
+          detailScreen = AazSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Aba') {
+          detailScreen = AbaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abb') {
+          detailScreen = AbbSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abc') {
+          detailScreen = AbcSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else if (docIdPrefix == 'Abd') {
+          detailScreen = AbdSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        } else {
+          detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        }
+        break;
 
       default:
         appBarTitle = '티셔츠 상세';

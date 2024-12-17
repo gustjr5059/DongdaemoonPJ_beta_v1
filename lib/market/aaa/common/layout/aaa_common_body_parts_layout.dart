@@ -20,8 +20,8 @@ import '../../product/view/sub_main_screen/aaa_best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aaa_new_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aaa_sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aaa_spring_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
-import '../../product/view/sub_main_screen/winter_sub_main_screen.dart'; // Riverpod 상태 관리 라이브러리
+import '../../product/view/sub_main_screen/aaa_summer_sub_main_screen.dart';
+import '../../product/view/sub_main_screen/aaa_winter_sub_main_screen.dart'; // Riverpod 상태 관리 라이브러리
 
 
 // ------ 대배너 클릭 시 URL 이동 로직 관련 함수 내용 시작
