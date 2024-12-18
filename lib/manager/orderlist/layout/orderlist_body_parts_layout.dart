@@ -52,7 +52,7 @@ class _AdminOrderListItemWidgetState
     final double referenceHeight = 852.0; // 기준 화면 세로 크기임
 
     final double ordererDropdownBtnWidth =
-        screenSize.width * (230 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
+        screenSize.width * (280 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
     final double ordererDropdownBtnHeight =
         screenSize.height * (50 / referenceHeight); // 드롭다운 버튼의 세로 비율 크기임
     final double ordererSelectDataTextSize =

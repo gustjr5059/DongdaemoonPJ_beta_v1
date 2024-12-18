@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 관련 데이터 불러오는 AdminOrderlistRepository 클래스 내용 시작 부분
 class AdminOrderlistRepository {
@@ -7,34 +8,53 @@ class AdminOrderlistRepository {
   // AdminOrderlistRepository 클래스의 생성자, FirebaseFirestore 인스턴스를 받아옴
   AdminOrderlistRepository({required this.firestore});
 
+  // 현재 로그인한 이메일을 가져오는 헬퍼 함수
+  Future<String?> _getCurrentUserEmail() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    return currentUser?.email;
+  }
+
+  // 현재 로그인한 이메일로부터 market_code 값을 가져오는 헬퍼 함수
+  Future<String?> _getMarketCodeForCurrentUserEmail() async {
+    final currentUserEmail = await _getCurrentUserEmail();
+    if (currentUserEmail == null) return null;
+
+    // 'users' 컬렉션에서 현재 로그인한 이메일과 동일한 문서를 찾는다.
+    final querySnapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: currentUserEmail)
+        .limit(1) // 해당 이메일은 유일하다고 가정
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final doc = querySnapshot.docs.first;
+      final marketCode = doc.data()['market_code']?.toString();
+      return marketCode;
+    }
+    return null;
+  }
+
   // ——— 모든 사용자 이메일을 가져오는 함수 시작 부분
   // Firestore의 'users' 컬렉션에서 모든 사용자 이메일을 가져오고 특정 이메일을 필터링하여 반환함
   Future<List<String>> fetchAllUserEmails() async {
     try {
-      print(
-          'Firestore에서 모든 사용자 이메일을 가져오는 중...'); // Firestore에서 사용자 이메일 가져오기 시도 중임을 디버깅 로그로 출력
-      final querySnapshot = await firestore
-          .collection('users')
-          .get(); // Firestore의 'users' 컬렉션에서 모든 문서를 가져오는 코드
+      print('Firestore에서 모든 사용자 이메일을 가져오는 중...');
+      final currentUserEmail = await _getCurrentUserEmail(); // 현재 로그인한 이메일
+      final querySnapshot = await firestore.collection('users').get();
 
-      print(
-          'Firestore에서 ${querySnapshot.docs.length}명의 사용자를 가져옴.'); // Firestore에서 몇 명의 사용자를 가져왔는지 디버깅 로그로 출력
+      print('Firestore에서 ${querySnapshot.docs.length}명의 사용자를 가져옴.');
 
-      final emailList = querySnapshot.docs // 가져온 문서들에서
-          .map((doc) =>
-      doc.data()['email'] as String) // 각 문서 데이터의 'email' 필드를 추출함
-          .where((email) =>
-      email.isNotEmpty &&
-          email !=
-              'gshe.couture@gmail.com') // 이메일이 비어 있지 않고 특정 이메일이 아닌 경우에만 필터링함
-          .toList(); // 필터링된 이메일을 리스트로 변환함
+      // 변경된 부분: 현재 로그인한 이메일을 제외한 나머지 이메일 리스트를 추출
+      final emailList = querySnapshot.docs
+          .map((doc) => doc.data()['email'] as String)
+          .where((email) => email.isNotEmpty && email != currentUserEmail) // 변경된 부분
+          .toList();
 
-      print(
-          '유효한 이메일 ${emailList.length}개를 필터링함.'); // 필터링된 이메일 수를 디버깅 로그로 출력
-      return emailList; // 필터링된 이메일 리스트를 반환함
+      print('유효한 이메일 ${emailList.length}개를 필터링함.');
+      return emailList;
     } catch (e) {
-      print('사용자 이메일 가져오기 중 오류 발생: $e'); // 이메일 가져오는 중 발생한 오류를 디버깅 로그로 출력
-      throw Exception('사용자 이메일을 가져오는 데 실패: $e'); // 예외를 발생시켜 외부로 오류를 전달함
+      print('사용자 이메일 가져오기 중 오류 발생: $e');
+      throw Exception('사용자 이메일을 가져오는 데 실패: $e');
     }
   }
   // ——— 모든 사용자 이메일을 가져오는 함수 끝 부분
@@ -51,13 +71,28 @@ class AdminOrderlistRepository {
         print('마지막 문서 이후의 데이터를 가져옵니다.');
       }
 
+      // market_code 값을 가져옴
+      final currentMarketCode = await _getMarketCodeForCurrentUserEmail();
+
       // 'wearcano_order_list' 컬렉션에서 해당 사용자 이메일의 문서를 참조
       final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
 
       // 'orders' 컬렉션에서 'private_orderList_closed_button' 값이 false인 문서들만 조회하며, 최신순으로 정렬하고 제한된 개수만큼 가져옴
-      Query query = userDocRef.collection('orders')
-          .orderBy('numberInfo.order_number', descending: true)
-          .limit(limit);
+      // market_code가 master인지 아닌지에 따라 쿼리 분기
+      Query query;
+      if (currentMarketCode == 'master') {
+        // market_code가 master일 경우 기존 로직 유지
+        query = userDocRef.collection('orders')
+            .orderBy('numberInfo.order_number', descending: true)
+            .limit(limit);
+      } else {
+        // market_code가 master가 아닐 경우, numberInfo.market_code가 currentMarketCode와 일치하는 데이터만 필터링
+        // 변경된 부분
+        query = userDocRef.collection('orders')
+            .where('numberInfo.market_code', isEqualTo: currentMarketCode)
+            .orderBy('numberInfo.order_number', descending: true)
+            .limit(limit);
+      }
 
       // 마지막 문서가 있으면, 그 이후의 데이터를 가져옴
       if (lastDocument != null) {

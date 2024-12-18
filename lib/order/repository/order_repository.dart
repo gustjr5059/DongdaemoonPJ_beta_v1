@@ -96,16 +96,25 @@ class OrderRepository {
     });
     print('버튼 정보 저장됨.');
 
+    String marketCode = ''; // 상점 코드 변수 지정
+
     // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var i = 0; i < productInfo.length; i++) {
       final item = productInfo[i]; // item 변수 정의
       final productDocId = '${orderNumber}_${i + 1}'; // 'order_number_1', 'order_number_2' 형식의 문서 ID 생성
+
+      // 상품 번호의 앞 세 자리 텍스트를 추출하여 market_code 필드로 저장
+      if (item.productNumber != null && item.productNumber!.length >= 3) {
+        marketCode = item.productNumber!.substring(0, 3); // 상품 번호의 앞 세 자리 추출
+      }
+
       await orderDoc.collection('product_info').doc(productDocId).set({
         'separator_key': productDocId, // separator_key 필드에 생성된 문서 ID 저장
         'product_id': item.docId, // 상품 상세 화면의 문서 id를 저장
         'category': item.category, // 상품의 카테고리 저장
         'brief_introduction': item.briefIntroduction, // 상품 간략 소개
         'product_number': item.productNumber, // 상품 번호
+        'market_code': marketCode, // 상품 번호의 앞 세 자리 저장
         'thumbnails': item.thumbnail, // 썸네일 이미지 URL
         'original_price': item.originalPrice, // 원래 가격
         'discount_price': item.discountPrice, // 할인 가격
@@ -117,7 +126,7 @@ class OrderRepository {
         'boolReviewCompleteBtn': false, // 초기값은 false로 설정
         'boolRefundCompleteBtn': false, // 초기값은 false로 설정
       });
-      print('상품 정보 저장됨 - 상품 ID: ${item.docId}');
+      print('상품 정보 저장됨 - 상품 ID: ${item.docId}, market_code: $marketCode');
     }
 
     // 발주 상태 정보를 Firestore에 저장
@@ -131,6 +140,7 @@ class OrderRepository {
     await orderDoc.collection('number_info').doc('info').set({
       'order_number': orderNumber, // 주문 번호 저장
       'order_date': now, // 주문 날짜 저장
+      'market_code': marketCode, // number_info 컬렉션에 market_code 추가
     });
     print('숫자 정보 저장됨.');
 
@@ -147,6 +157,7 @@ class OrderRepository {
       'numberInfo': {
         'order_number': orderNumber, // 주문 번호
         'order_date': now, // 주문 날짜
+        'market_code': marketCode, // number_info 컬렉션에 market_code 추가
       },
       'private_orderList_closed_button': false, // 발주내역 화면에서 발주내역을 삭제 시, UI에서 안 보이도록 하기 위한 로직
     });

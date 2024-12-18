@@ -1487,7 +1487,15 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 '로그인 후 이용해주세요.'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? '로그인 후 이용해주세요.';
   // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
-  final bool isAdmin = userEmail == 'gshe.couture@gmail.com';
+  final List<String> adminEmails = [
+    'gshe.couture@gmail.com',
+    'wearcano.md.aaa@gmail.com',
+    'wearcano.md.aab@gmail.com',
+    'wearcano.md.aac@gmail.com',
+  ];
+
+// 사용자 이메일이 관리자 이메일 목록에 포함되어 있는지 확인
+  final bool isAdmin = adminEmails.contains(userEmail);
   // 사용자 로그인 상태 확인
   final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 

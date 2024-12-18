@@ -186,21 +186,23 @@ class WishlistItemsList extends ConsumerWidget {
     // 텍스트 데이터 부분 수치
     final double wishlistTextDataPartHeight =
         screenSize.height * (126 / referenceHeight); // 세로 비율
+    final double wishlistProductNumberFontSize =
+        screenSize.height * (11 / referenceHeight);
     final double wishlistBriefIntroductionFontSize =
-        screenSize.height * (14 / referenceHeight);
+        screenSize.height * (11 / referenceHeight);
     final double wishlistOriginalPriceFontSize =
-        screenSize.height * (13 / referenceHeight);
+        screenSize.height * (11 / referenceHeight);
     final double wishlistDiscountPercentFontSize =
-        screenSize.height * (15 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double wishlistDiscountPriceFontSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (13 / referenceHeight);
     // 삭제 버튼 부분 수치
     final double wishlistDeleteBtn1X =
-        screenSize.width * (22 / referenceWidth); // 가로 비율
+        screenSize.width * (14 / referenceWidth); // 가로 비율
     final double wishlistDeleteBtn1Y =
-        screenSize.height * (3 / referenceHeight); // 세로 비율
+        screenSize.height * (1 / referenceHeight); // 세로 비율
     final double wishlistDeleteBtnFontSize =
-        screenSize.height * (13 / referenceHeight);
+        screenSize.height * (14 / referenceHeight);
     // 텍스트 데이터 간 너비, 높이
     final double wishlist1X =
         screenSize.width * (12 / referenceWidth); // 가로 비율
@@ -281,6 +283,7 @@ class WishlistItemsList extends ConsumerWidget {
                 final product = ProductContent(
                   docId: wishlistItem['product_id'],
                   category: wishlistItem['category'],
+                  productNumber: wishlistItem['product_number'],
                   thumbnail: wishlistItem['thumbnails'],
                   briefIntroduction: wishlistItem['brief_introduction'],
                   originalPrice: wishlistItem['original_price'],
@@ -343,6 +346,17 @@ class WishlistItemsList extends ConsumerWidget {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬함
                                       children: [
+                                        // 상품의 상품번호 텍스트를 표시함
+                                        Text(
+                                          '상품번호: ${wishlistItem['product_number'] ?? ''}',
+                                          style: TextStyle(
+                                            fontSize: wishlistProductNumberFontSize,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'NanumGothic',
+                                            color: BLACK_COLOR,
+                                          ),
+                                        ),
+                                        SizedBox(height: wishlist1Y),
                                         // 상품의 짧은 소개 텍스트를 표시함
                                         Text(
                                           '${wishlistItem['brief_introduction'] ?? ''}',

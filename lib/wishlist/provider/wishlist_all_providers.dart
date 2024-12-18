@@ -44,6 +44,7 @@ final wishlistItemsLoadFutureProvider = FutureProvider.autoDispose.family<List<M
     return {
       'product_id': doc['product_id'],
       'thumbnails': doc['thumbnails'],
+      'product_number': doc['product_number'],
       'brief_introduction': doc['brief_introduction'],
       'original_price': doc['original_price'],
       'discount_price': doc['discount_price'],
@@ -85,6 +86,7 @@ final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Ma
       return {
         'product_id': doc['product_id'],
         'thumbnails': doc['thumbnails'],
+        'product_number': doc['product_number'],
         'brief_introduction': doc['brief_introduction'],
         'original_price': doc['original_price'],
         'discount_price': doc['discount_price'],
