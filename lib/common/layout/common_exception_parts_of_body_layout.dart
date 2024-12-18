@@ -112,6 +112,7 @@ AppBar buildCommonAppBar({
   bool boolTitleImg = false, // Firestore의 title_img 사용 여부 설정
   // 추가된 콜백 파라미터
   VoidCallback? onEventImageTap,
+  String titleImageFieldName = 'title_img', // 타이틀 이미지 설정
 }) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -149,10 +150,10 @@ AppBar buildCommonAppBar({
       );
 
   // Firestore에서 제목 이미지를 가져옴
-  final titleImage = ref.watch(titleImageProvider).whenOrNull(
-        data: (data) =>
-            boolTitleImg && data != null && data.isNotEmpty ? data : null,
-      );
+  // titleImageFieldName으로 Firestore에서 지정된 필드명의 이미지 가져오기
+  final titleImage = ref.watch(titleImageFieldProvider(titleImageFieldName)).whenOrNull(
+    data: (data) => boolTitleImg && data != null && data.isNotEmpty ? data : null,
+  );
 
   // 이벤트 이미지를 클릭 가능하게 만드는 위젯 선언
   Widget? eventImageWidget;
@@ -571,7 +572,7 @@ AppBar buildCommonAppBar({
             child: titleImage != null
                 ? Image.network(
                     titleImage, // 네트워크에서 제목 이미지를 불러옴
-                    fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
+                    fit: BoxFit.cover, // 이미지 크기를 조정하여 영역 내에 맞춤
                   )
                 : (titleImagePath != null
                     ? Image.asset(

@@ -32,23 +32,18 @@ class EventRepository {
 
   // ------ title 이미지 URL을 가져오는 함수 시작 부분
   // title 이미지 URL을 가져오는 함수
-  Future<String?> fetchTitleImage() async {
+  // 필드명을 인자로 받아 해당 필드 값을 반환하는 함수
+  Future<String?> fetchTitleImageByFieldName(String fieldName) async {
     try {
-      // Firestore에서 'event_data' 컬렉션의 'appbar' 문서를 가져옴
-      DocumentSnapshot doc = await firestore
-          .collection('event_data')
-          .doc('appbar')
-          .get();
+      DocumentSnapshot doc = await firestore.collection('event_data').doc('appbar').get();
 
-      // title_img 필드 값을 콘솔에 출력하여 확인함
-      print('가져온 title_img: ${doc['title_img']}');
+      // doc[fieldName] 값을 콘솔에 출력해 확인
+      print('가져온 $fieldName: ${doc[fieldName]}');
 
-      // title_img 필드 값을 String으로 변환하여 반환함
-      return doc['title_img'] as String?;
+      return doc[fieldName] as String?;
     } catch (e) {
-      // 에러 발생 시, 에러 메시지를 콘솔에 출력함
-      print('title 이미지 가져오는 중 오류 발생: $e');
-      return null; // 에러가 발생하면 null을 반환함
+      print('$fieldName 이미지 가져오는 중 오류 발생: $e');
+      return null;
     }
   }
 

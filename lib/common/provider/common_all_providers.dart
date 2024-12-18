@@ -43,9 +43,9 @@ final eventImageProvider = FutureProvider<String?>((ref) async {
 });
 
 // 앱 바에 나올 타이틀 이미지 관련 데이터를 불러오는 EventRepository 인스턴스 provider
-final titleImageProvider = FutureProvider<String?>((ref) async {
+final titleImageFieldProvider = FutureProvider.family<String?, String>((ref, fieldName) async {
   final repository = EventRepository(firestore: FirebaseFirestore.instance);
-  return repository.fetchTitleImage();
+  return repository.fetchTitleImageByFieldName(fieldName);
 });
 
 // eventPosterImgItemRepositoryProvider 클래스를 제공하기 위한 Provider 정의
