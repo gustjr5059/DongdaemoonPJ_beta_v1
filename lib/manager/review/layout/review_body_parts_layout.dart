@@ -77,14 +77,16 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
     final double reviewBtnFontSize = screenSize.height * (16 / referenceHeight);
     final double paddingX = screenSize.width * (2 / referenceWidth);
     final double reviewRecipientDropdownBtnWidth =
-        screenSize.width * (230 / referenceWidth);
+        screenSize.width * (250 / referenceWidth);
     final double reviewRecipientDropdownBtnHeight =
         screenSize.height * (50 / referenceHeight);
 
     final double reviewTitleFontSize =
         screenSize.height * (18 / referenceHeight); //  크기 설정함
-    final double reviewWriterSelectDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+    final double reviewWriterSelectDataTextSize1 =
+        screenSize.height * (12 / referenceHeight);
+    final double reviewWriterSelectDataTextSize2 =
+        screenSize.height * (12 / referenceHeight);
     final double reviewDataTextSize1 =
         screenSize.height * (14 / referenceHeight);
     final double reviewDataTextSize2 =
@@ -150,7 +152,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
 
     // 리뷰 목록 부분이 비어있는 경우의 알림 부분 수치
     final double reviewEmptyTextWidth =
-        screenSize.width * (250 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double reviewEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double reviewEmptyTextX =
@@ -193,7 +195,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                         '리뷰 작성자 선택',
                         style: TextStyle(
                           fontFamily: 'NanumGothic',
-                          fontSize: reviewWriterSelectDataTextSize,
+                          fontSize: reviewWriterSelectDataTextSize1,
                         ),
                       ),
                     ),
@@ -216,7 +218,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontFamily: 'NanumGothic',
-                            fontSize: reviewWriterSelectDataTextSize,
+                            fontSize: reviewWriterSelectDataTextSize2,
                             color: BLACK_COLOR,
                           ),
                         ), // 드롭다운 항목에 표시할 텍스트 설정

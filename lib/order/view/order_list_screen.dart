@@ -244,7 +244,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
 
     // 발주 내역 안내사항 텍스트 수치
     final double orderlistGuideTextWidth =
-        screenSize.width * (320 / referenceWidth); // 가로 비율
+        screenSize.width * (340 / referenceWidth); // 가로 비율
     final double orderlistGuideTextFontSize1 =
         screenSize.height * (14 / referenceHeight); // 세로 비율
     final double orderlistGuideTextFontSize2 =

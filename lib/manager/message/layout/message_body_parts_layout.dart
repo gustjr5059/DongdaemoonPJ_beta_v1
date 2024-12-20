@@ -200,18 +200,20 @@ class _AdminMessageCreateFormScreenState
     final double paddingX = screenSize.width * (16 / referenceWidth);
     final double paddingY = screenSize.height * (16 / referenceHeight);
 
+    final double ordererDataTitleTextSize =
+        screenSize.height * (14 / referenceHeight);
     final double ordererDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double RecipientDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double OrderNumberDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double ContentDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double RefundDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
     final double messageContentDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
 
     // 컨텐츠 사이의 간격 수치
     final double interval1Y = screenSize.height * (15 / referenceHeight);
@@ -268,7 +270,7 @@ class _AdminMessageCreateFormScreenState
               Text(
                 '발신자:',
                 style: TextStyle(
-                  fontSize: ordererDataTextSize,
+                  fontSize: ordererDataTitleTextSize,
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
@@ -297,7 +299,7 @@ class _AdminMessageCreateFormScreenState
               Text(
                 '수신자:',
                 style: TextStyle(
-                  fontSize: RecipientDataTextSize,
+                  fontSize: ordererDataTitleTextSize,
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
@@ -368,7 +370,7 @@ class _AdminMessageCreateFormScreenState
               Text(
                 '발주번호:',
                 style: TextStyle(
-                  fontSize: OrderNumberDataTextSize,
+                  fontSize: ordererDataTitleTextSize,
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
@@ -442,7 +444,7 @@ class _AdminMessageCreateFormScreenState
               Text(
                 '내용:',
                 style: TextStyle(
-                  fontSize: ContentDataTextSize,
+                  fontSize: ordererDataTitleTextSize,
                   fontFamily: 'NanumGothic',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
@@ -665,7 +667,7 @@ class _AdminMessageCreateFormScreenState
                     Text(
                       '환불 신청 상품:',
                       style: TextStyle(
-                        fontSize: RefundDataTextSize,
+                        fontSize: ordererDataTitleTextSize,
                         fontFamily: 'NanumGothic',
                         fontWeight: FontWeight.normal,
                         color: BLACK_COLOR,
@@ -795,7 +797,7 @@ class _AdminMessageCreateFormScreenState
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
     final double selectDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (12 / referenceHeight);
 
     // 컨텐츠 사이의 간격 수치
     final double interval1Y = screenSize.height * (10 / referenceHeight);
@@ -941,8 +943,10 @@ class _AdminMessageListScreenState
     final double messageStatusIconTextSize =
         screenSize.height * (13 / referenceHeight);
 
-    final double messageRecipientSelectDataTextSize =
-        screenSize.height * (16 / referenceHeight);
+    final double messageRecipientSelectDataTextSize1 =
+        screenSize.height * (12 / referenceHeight);
+    final double messageRecipientSelectDataTextSize2 =
+        screenSize.height * (12 / referenceHeight);
     final double messageDataTextSize1 =
         screenSize.height * (14 / referenceHeight);
     final double messageDataTextSize2 =
@@ -967,7 +971,7 @@ class _AdminMessageListScreenState
 
     // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
     final double messageEmptyTextWidth =
-        screenSize.width * (250 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
     final double messageEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double messageEmptyTextX =
@@ -1009,7 +1013,7 @@ class _AdminMessageListScreenState
                         '쪽지 수신자 선택',
                         style: TextStyle(
                           fontFamily: 'NanumGothic',
-                          fontSize: messageRecipientSelectDataTextSize,
+                          fontSize: messageRecipientSelectDataTextSize1,
                         ),
                       ),
                     ), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
@@ -1026,7 +1030,7 @@ class _AdminMessageListScreenState
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontFamily: 'NanumGothic',
-                            fontSize: messageRecipientSelectDataTextSize,
+                            fontSize: messageRecipientSelectDataTextSize2,
                             color: BLACK_COLOR,
                           ),
                         ), // 드롭다운 메뉴에 표시될 이메일 텍스트 설정

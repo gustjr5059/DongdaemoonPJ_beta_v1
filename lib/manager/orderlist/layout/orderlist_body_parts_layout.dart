@@ -52,11 +52,13 @@ class _AdminOrderListItemWidgetState
     final double referenceHeight = 852.0; // 기준 화면 세로 크기임
 
     final double ordererDropdownBtnWidth =
-        screenSize.width * (280 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
+        screenSize.width * (250 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
     final double ordererDropdownBtnHeight =
         screenSize.height * (50 / referenceHeight); // 드롭다운 버튼의 세로 비율 크기임
-    final double ordererSelectDataTextSize =
-        screenSize.height * (16 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
+    final double ordererSelectDataTextSize1 =
+        screenSize.height * (12 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
+    final double ordererSelectDataTextSize2 =
+        screenSize.height * (12 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
 
     // 컨텐츠 사이 간격 수치임
     final double interval1Y =
@@ -69,7 +71,7 @@ class _AdminOrderListItemWidgetState
 
     // 발주 내역이 없을 경우 표시할 메시지 관련 사이즈 비율 계산용임
     final double orderlistEmptyTextWidth =
-        screenSize.width * (250 / referenceWidth); // 발주 내역 없음 텍스트 가로 비율임
+        screenSize.width * (393 / referenceWidth); // 발주 내역 없음 텍스트 가로 비율임
     final double orderlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 발주 내역 없음 텍스트 세로 비율임
     final double orderlistEmptyTextX =
@@ -126,7 +128,7 @@ class _AdminOrderListItemWidgetState
                         '발주자 선택', // 드롭다운에 표시될 힌트 텍스트임
                         style: TextStyle(
                           fontFamily: 'NanumGothic',
-                          fontSize: ordererSelectDataTextSize, // 텍스트 크기 설정임
+                          fontSize: ordererSelectDataTextSize1, // 텍스트 크기 설정임
                         ),
                       ),
                     ),
@@ -145,7 +147,7 @@ class _AdminOrderListItemWidgetState
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontFamily: 'NanumGothic',
-                            fontSize: ordererSelectDataTextSize, // 텍스트 크기 설정임
+                            fontSize: ordererSelectDataTextSize2, // 텍스트 크기 설정임
                             color: BLACK_COLOR, // 텍스트 색상 설정임
                           ),
                         ),

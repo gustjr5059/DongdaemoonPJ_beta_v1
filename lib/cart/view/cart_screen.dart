@@ -236,7 +236,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     final double cartlistEmptyTextHeight =
         screenSize.height * (22 / referenceHeight); // 세로 비율
     final double cartlistEmptyTextY =
-        screenSize.height * (300 / referenceHeight);
+        screenSize.height * (250 / referenceHeight);
     final double cartlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
@@ -259,7 +259,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
 
     // 장바구니 안내사항 텍스트 수치
     final double cartlistGuideTextWidth =
-        screenSize.width * (250 / referenceWidth); // 가로 비율
+        screenSize.width * (300 / referenceWidth); // 가로 비율
     final double cartlistGuideTextFontSize1 =
         screenSize.height * (14 / referenceHeight); // 세로 비율
     final double cartlistGuideTextFontSize2 =

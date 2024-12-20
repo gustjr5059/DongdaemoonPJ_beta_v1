@@ -469,7 +469,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 _buildFixedValueRowWithButton(
                     context, '우편번호', _postalCodeController, '우편번호 찾기'),
                 // 우편번호 찾기 버튼이 포함된 행 생성
-                _buildFixedValueRow(context, '주소', _addressController, "'우편번호 찾기' 버튼 클릭해주세요."),
+                _buildFixedValueRow(
+                    context, '주소', _addressController, "'우편번호 찾기' 버튼 클릭해주세요."),
                 // 고정된 값이 있는 주소 행 생성
                 _buildEditableRow(
                   context,
@@ -584,7 +585,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                       ), // 윤곽선
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: recipientInfoDataPartX),
                     alignment: Alignment.centerLeft, // 텍스트 정렬
                     child: GestureDetector(
                       onTap: isEnabled
@@ -600,7 +602,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           // 텍스트 필드 컨트롤러 설정
                           focusNode: focusNode,
                           // 텍스트 필드 포커스 노드 설정
-                          cursorColor: ORANGE56_COLOR, // 커서 색상 설정
+                          cursorColor: ORANGE56_COLOR,
+                          // 커서 색상 설정
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
                             fontSize: recipientInfoDataFontSize,
@@ -644,8 +647,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
   }
 
   // 고정된 값을 가진 행을 생성하는 함수
-  Widget _buildFixedValueRow(
-      BuildContext context, String label, TextEditingController controller, String hintText) {
+  Widget _buildFixedValueRow(BuildContext context, String label,
+      TextEditingController controller, String hintText) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -710,27 +713,28 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                   borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
+                padding:
+                    EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: controller.text.isNotEmpty
                     ? Text(
-                  controller.text,
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'NanumGothic',
-                    fontSize: recipientInfoDataFontSize,
-                    color: BLACK_COLOR,
-                  ),
-                ) // 입력된 텍스트를 표시
+                        controller.text,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'NanumGothic',
+                          fontSize: recipientInfoDataFontSize,
+                          color: BLACK_COLOR,
+                        ),
+                      ) // 입력된 텍스트를 표시
                     : Text(
-                  hintText, // 전달받은 hintText 표시
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'NanumGothic',
-                    fontSize: recipientInfoDataFontSize,
-                    color: GRAY74_COLOR, // 힌트 텍스트 색상
-                  ),
-                ), // 힌트 텍스트 표시
+                        hintText, // 전달받은 hintText 표시
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'NanumGothic',
+                          fontSize: recipientInfoDataFontSize,
+                          color: GRAY74_COLOR, // 힌트 텍스트 색상
+                        ),
+                      ), // 힌트 텍스트 표시
                 // 고정된 값을 텍스트로 표시
               ),
             ),
@@ -819,7 +823,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                   borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
+                padding:
+                    EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.centerLeft, // 텍스트 정렬
                 child: Row(
                   children: [
@@ -939,7 +944,8 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                   borderRadius: BorderRadius.circular(6),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
+                padding:
+                    EdgeInsets.symmetric(horizontal: recipientInfoDataPartX),
                 alignment: Alignment.center, // 텍스트 정렬
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -2128,11 +2134,11 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 텍스트 크기 계산
     final double orderlistInfoOrderStatusDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistInfoOrderNumberDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistInfoOrderDateDataFontSize =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderNumberDataFontSize =
+        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderDateDataFontSize =
+        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
     final double orderlistInfoDetailViewBtn1X =
@@ -2167,6 +2173,8 @@ class OrderListItemWidget extends ConsumerWidget {
         screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
     final double interval2X =
         screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval3X =
+        screenSize.width * (2 / referenceWidth); // 가로 간격 3 계산
 
     // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
@@ -2218,6 +2226,7 @@ class OrderListItemWidget extends ConsumerWidget {
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
                   ),
+                  SizedBox(width: interval3X),
                   // 발주상태를 텍스트로 표시.
                   Text(
                     orderStatus,
@@ -2310,7 +2319,8 @@ class OrderListItemWidget extends ConsumerWidget {
                   Container(
                     width: deleteBtn1X, // 삭제 버튼 가로 설정
                     height: deleteBtn1Y, // 삭제 버튼 세로 설정
-                    margin: EdgeInsets.only(left: interval2X, right: interval2X), // 왼쪽, 오른쪽 여백 설정
+                    margin: EdgeInsets.only(
+                        left: interval2X, right: interval2X), // 왼쪽, 오른쪽 여백 설정
                     child: ElevatedButton(
                       // 두 번째 ElevatedButton 위젯을 생성함
                       onPressed: () async {
@@ -2378,7 +2388,8 @@ class OrderListItemWidget extends ConsumerWidget {
                         // padding: EdgeInsets.symmetric(
                         //     vertical: deleteBtnPaddingY,
                         //     horizontal: deleteBtnPaddingX),
-                        padding: EdgeInsets.zero, // 버튼 내부 여백 제거
+                        padding: EdgeInsets.zero,
+                        // 버튼 내부 여백 제거
                         // 패딩 설정
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -2894,19 +2905,20 @@ class _OrderListDetailItemWidgetState
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                   _buildRecipientInfoRow(context, '휴대폰 번호', recipientPhone,
                       fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, '주소 (상세주소) (우편번호)', '',
-                      fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
                   _buildRecipientInfoRow(
-                      context,
-                      '$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)',
-                      '',
-                      isLongText: true,
-                      fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, '배송메모', '',
-                      fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
-                  _buildRecipientInfoRow(context, deliveryMemo, '',
-                      isLongText: true,
-                      fontSize: orderlistDtInfoRecipientInfoDataFontSize2),
+                    context,
+                    '주소 (상세주소) (우편번호)',
+                    '$recipientAddress ($recipientDetailAddress) ($recipientPostalCode)',
+                    isLongText: true,
+                    fontSize: orderlistDtInfoRecipientInfoDataFontSize2,
+                  ),
+                  _buildRecipientInfoRow(
+                    context,
+                    '배송메모',
+                    deliveryMemo,
+                    isLongText: true,
+                    fontSize: orderlistDtInfoRecipientInfoDataFontSize2,
+                  ),
                 ],
               ),
             ),
@@ -3404,35 +3416,61 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
     {bool isLongText = false, double fontSize = 16}) {
   return Padding(
     padding: EdgeInsets.zero, // 패딩을 없앰
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // 라벨을 표시하는 텍스트
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
-            color: isLongText ? BLACK_COLOR : GRAY41_COLOR,
+    child: isLongText
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
+            children: [
+              Text(
+                label, // 라벨을 표시
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  color: GRAY41_COLOR,
+                ),
+              ),
+              Text(
+                value ?? '', // 값 텍스트를 표시
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  color: BLACK_COLOR,
+                ),
+                softWrap: true, // 줄바꿈 허용
+                overflow: TextOverflow.visible, // 텍스트 넘칠 경우 표시
+              ),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // 라벨을 표시하는 텍스트
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  color: isLongText ? BLACK_COLOR : GRAY41_COLOR,
+                ),
+              ),
+              // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
+              Expanded(
+                child: Text(
+                  value ?? '',
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                    color: BLACK_COLOR,
+                  ),
+                  textAlign: TextAlign.end,
+                  softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정함
+                ),
+              ),
+            ],
           ),
-        ),
-        // 값을 표시하는 텍스트 (말줄임 표시와 줄바꿈 가능)
-        Expanded(
-          child: Text(
-            value ?? '',
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
-              color: BLACK_COLOR,
-            ),
-            textAlign: TextAlign.end,
-            softWrap: true, // 텍스트가 한 줄을 넘길 때 자동으로 줄바꿈이 되도록 설정함
-          ),
-        ),
-      ],
-    ),
   );
 }
 

@@ -215,7 +215,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double inquiryGuidFontSize1 =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
     final double inquiryGuidFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 문의하기로 이동 버튼 수치
     final double inquiryBtnWidth =

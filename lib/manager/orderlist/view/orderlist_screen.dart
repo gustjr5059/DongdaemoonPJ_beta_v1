@@ -286,22 +286,22 @@ class _AdminOrderlistMainScreenState
                 padding: EdgeInsets.only(top: 5),
                 sliver: Consumer(
                   builder: (context, ref, child) {
-                    final orderlistItems = ref.watch(
-                        adminOrderlistItemsListNotifierProvider); // 선택된 발주자의 발주 내역을 구독하는 코드
-                    final isLoading = ref.watch(isLoadingProvider);
+                    // final orderlistItems = ref.watch(
+                    //     adminOrderlistItemsListNotifierProvider); // 선택된 발주자의 발주 내역을 구독하는 코드
+                    // final isLoading = ref.watch(isLoadingProvider);
 
-                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
-                    if (orderlistItems.isEmpty && isLoading) {
-                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
-                      return SliverToBoxAdapter(
-                        // 전체 컨테이너를 설정
-                        child: Container(
-                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
-                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
-                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
-                        ),
-                      );
-                    }
+                    // // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    // if (orderlistItems.isEmpty && isLoading) {
+                    //   // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                    //   return SliverToBoxAdapter(
+                    //     // 전체 컨테이너를 설정
+                    //     child: Container(
+                    //       height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                    //       alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                    //       child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                    //     ),
+                    //   );
+                    // }
 
                     // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                     return SliverList(
