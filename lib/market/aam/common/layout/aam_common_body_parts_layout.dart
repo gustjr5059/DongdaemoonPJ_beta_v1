@@ -15,6 +15,9 @@ import '../../../../product/model/product_model.dart';
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../home/provider/aam_home_state_provider.dart';
+import '../../product/provider/aam_product_all_providers.dart';
+import '../../product/provider/aam_product_state_provider.dart';
 import '../../product/view/sub_main_screen/aam_autumn_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aam_best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aam_new_sub_main_screen.dart';
@@ -125,3 +128,332 @@ void aamOnSmallBannerTap(BuildContext context, int index,
   }
 }
 // ------ 소배너 클릭 시 URL 이동 로직 관련 함수 내용 끝
+
+// ------ 상점 내 각 화면별 초기화 로직 내용 시작
+class AamStoreInitializer {
+  final WidgetRef ref;
+
+  AamStoreInitializer(this.ref);
+
+  void reset() {
+    // ------ Aam 상점 초기화 부분 시작
+    // 홈 화면 관련 초기화 부분 시작
+    // 스크롤 위치 및 현재 탭 인덱스 초기화
+    ref.read(aamHomeScrollPositionProvider.notifier).state =
+    0.0; // 홈 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamHomeCurrentTabProvider.notifier).state =
+    0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamHomeLargeBannerPageProvider.notifier).state = 0; // 홈 대배너 페이지뷰 초기화
+    ref.read(aamHomeSmall1BannerPageProvider.notifier).state =
+    0; // 홈 소배너1 페이지뷰 초기화
+    ref.read(aamHomeSmall2BannerPageProvider.notifier).state =
+    0; // 홈 소배너2 페이지뷰 초기화
+    ref.read(aamHomeSmall3BannerPageProvider.notifier).state =
+    0; // 홈 소배너3 페이지뷰 초기화
+    ref.read(aamHomeSectionScrollPositionsProvider.notifier).state =
+    {}; // 홈 화면 내 섹션의 스크롤 위치 초기화
+    // 홈 화면 관련 초기화 부분 끝
+
+    // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 시작
+    ref.invalidate(aamMainProductRepositoryProvider);
+    ref.invalidate(aamSectionProductRepositoryProvider);
+    // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 끝
+
+    // ------ 2차 메인 화면 관련 부분 시작
+    // 블라우스 메인 화면 관련 초기화 부분 시작
+    ref.read(aamBlouseMainScrollPositionProvider.notifier).state =
+    0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamBlouseCurrentTabProvider.notifier).state =
+    0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamBlouseMainLargeBannerPageProvider.notifier).state =
+    0; // 블라우스 대배너 페이지뷰 초기화
+    ref.read(aamBlouseMainSmall1BannerPageProvider.notifier).state =
+    0; // 블라우스 소배너 페이지뷰 초기화
+    ref
+        .read(aamBlouseMainProductListProvider.notifier)
+        .reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamBlouseMainSortButtonProvider.notifier).state =
+    ''; // 블라우스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 블라우스 메인 화면 관련 초기화 부분 끝
+
+    // 가디건 메인 화면 관련 초기화 부분 시작
+    ref.read(aamCardiganMainScrollPositionProvider.notifier).state =
+    0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamCardiganCurrentTabProvider.notifier).state =
+    0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamCardiganMainLargeBannerPageProvider.notifier).state =
+    0; // 가디건 대배너 페이지뷰 초기화
+    ref.read(aamCardiganMainSmall1BannerPageProvider.notifier).state =
+    0; // 가디건 소배너 페이지뷰 초기화
+    ref
+        .read(aamCardiganMainProductListProvider.notifier)
+        .reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamCardiganMainSortButtonProvider.notifier).state =
+    ''; // 가디건 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 가디건 메인 화면 관련 초기화 부분 끝
+
+    // 코트 메인 화면 관련 초기화 부분 시작
+    ref.read(aamCoatMainScrollPositionProvider.notifier).state =
+    0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamCoatCurrentTabProvider.notifier).state =
+    0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamCoatMainLargeBannerPageProvider.notifier).state =
+    0; // 코트 대배너 페이지뷰 초기화
+    ref.read(aamCoatMainSmall1BannerPageProvider.notifier).state =
+    0; // 코트 소배너 페이지뷰 초기화
+    ref
+        .read(aamCoatMainProductListProvider.notifier)
+        .reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamCoatMainSortButtonProvider.notifier).state =
+    ''; // 코트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 코트 메인 화면 관련 초기화 부분 끝
+
+    // 청바지 메인 화면 관련 초기화 부분 시작
+    ref.read(aamJeanMainScrollPositionProvider.notifier).state =
+    0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamJeanCurrentTabProvider.notifier).state =
+    0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamJeanMainLargeBannerPageProvider.notifier).state =
+    0; // 청바지 대배너 페이지뷰 초기화
+    ref.read(aamJeanMainSmall1BannerPageProvider.notifier).state =
+    0; // 청바지 소배너 페이지뷰 초기화
+    ref
+        .read(aamJeanMainProductListProvider.notifier)
+        .reset(); // 청바지 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamJeanMainSortButtonProvider.notifier).state =
+    ''; // 청바지 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 청바지 메인 화면 관련 초기화 부분 끝
+
+    // 맨투맨 메인 화면 관련 초기화 부분 시작
+    ref.read(aamMtmMainScrollPositionProvider.notifier).state =
+    0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamMtmCurrentTabProvider.notifier).state =
+    0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamMtmMainLargeBannerPageProvider.notifier).state =
+    0; // 맨투맨 대배너 페이지뷰 초기화
+    ref.read(aamMtmMainSmall1BannerPageProvider.notifier).state =
+    0; // 맨투맨 소배너 페이지뷰 초기화
+    ref
+        .read(aamMtmMainProductListProvider.notifier)
+        .reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamMtmMainSortButtonProvider.notifier).state =
+    ''; // 맨투맨 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 맨투맨 메인 화면 관련 초기화 부분 끝
+
+    // 니트 메인 화면 관련 초기화 부분 시작
+    ref.read(aamNeatMainScrollPositionProvider.notifier).state =
+    0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamNeatCurrentTabProvider.notifier).state =
+    0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamNeatMainLargeBannerPageProvider.notifier).state =
+    0; // 니트 대배너 페이지뷰 초기화
+    ref.read(aamNeatMainSmall1BannerPageProvider.notifier).state =
+    0; // 니트 소배너 페이지뷰 초기화
+    ref
+        .read(aamNeatMainProductListProvider.notifier)
+        .reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamNeatMainSortButtonProvider.notifier).state =
+    ''; // 니트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 니트 메인 화면 관련 초기화 부분 끝
+
+    // 원피스 메인 화면 관련 초기화 부분 시작
+    ref.read(aamOnepieceMainScrollPositionProvider.notifier).state =
+    0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamOnepieceCurrentTabProvider.notifier).state =
+    0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamOnepieceMainLargeBannerPageProvider.notifier).state =
+    0; // 원피스 대배너 페이지뷰 초기화
+    ref.read(aamOnepieceMainSmall1BannerPageProvider.notifier).state =
+    0; // 원피스 소배너 페이지뷰 초기화
+    ref
+        .read(aamOnepieceMainProductListProvider.notifier)
+        .reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamOnepieceMainSortButtonProvider.notifier).state =
+    ''; // 원피스 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 원피스 메인 화면 관련 초기화 부분 끝
+
+    // 패딩 메인 화면 관련 초기화 부분 시작
+    ref.read(aamPaedingMainScrollPositionProvider.notifier).state =
+    0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamPaedingCurrentTabProvider.notifier).state =
+    0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamPaedingMainLargeBannerPageProvider.notifier).state =
+    0; // 패딩 대배너 페이지뷰 초기화
+    ref.read(aamPaedingMainSmall1BannerPageProvider.notifier).state =
+    0; // 패딩 소배너 페이지뷰 초기화
+    ref
+        .read(aamPaedingMainProductListProvider.notifier)
+        .reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamPaedingMainSortButtonProvider.notifier).state =
+    ''; // 패딩 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 패딩 메인 화면 관련 초기화 부분 끝
+
+    // 팬츠 메인 화면 관련 초기화 부분 시작
+    ref.read(aamPantsMainScrollPositionProvider.notifier).state =
+    0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamPantsCurrentTabProvider.notifier).state =
+    0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamPantsMainLargeBannerPageProvider.notifier).state =
+    0; // 팬츠 대배너 페이지뷰 초기화
+    ref.read(aamPantsMainSmall1BannerPageProvider.notifier).state =
+    0; // 팬츠 소배너 페이지뷰 초기화
+    ref
+        .read(aamPantsMainProductListProvider.notifier)
+        .reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamPantsMainSortButtonProvider.notifier).state =
+    ''; // 팬츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 팬츠 메인 화면 관련 초기화 부분 끝
+
+    // 폴라티 메인 화면 관련 초기화 부분 시작
+    ref.read(aamPolaMainScrollPositionProvider.notifier).state =
+    0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamPolaCurrentTabProvider.notifier).state =
+    0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamPolaMainLargeBannerPageProvider.notifier).state =
+    0; // 폴라티 대배너 페이지뷰 초기화
+    ref.read(aamPolaMainSmall1BannerPageProvider.notifier).state =
+    0; // 폴라티 소배너 페이지뷰 초기화
+    ref
+        .read(aamPolaMainProductListProvider.notifier)
+        .reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamPolaMainSortButtonProvider.notifier).state =
+    ''; // 폴라티 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 폴라티 메인 화면 관련 초기화 부분 끝
+
+    // 티셔츠 메인 화면 관련 초기화 부분 시작
+    ref.read(aamShirtMainScrollPositionProvider.notifier).state =
+    0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamShirtCurrentTabProvider.notifier).state =
+    0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamShirtMainLargeBannerPageProvider.notifier).state =
+    0; // 티셔츠 대배너 페이지뷰 초기화
+    ref.read(aamShirtMainSmall1BannerPageProvider.notifier).state =
+    0; // 티셔츠 소배너 페이지뷰 초기화
+    ref
+        .read(aamShirtMainProductListProvider.notifier)
+        .reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamShirtMainSortButtonProvider.notifier).state =
+    ''; // 티셔츠 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 티셔츠 메인 화면 관련 초기화 부분 끝
+
+    // 스커트 메인 화면 관련 초기화 부분 시작
+    ref.read(aamSkirtMainScrollPositionProvider.notifier).state =
+    0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref.read(aamSkirtCurrentTabProvider.notifier).state =
+    0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+    ref.read(aamSkirtMainLargeBannerPageProvider.notifier).state =
+    0; // 스커트 대배너 페이지뷰 초기화
+    ref.read(aamSkirtMainSmall1BannerPageProvider.notifier).state =
+    0; // 스커트 소배너 페이지뷰 초기화
+    ref
+        .read(aamSkirtMainProductListProvider.notifier)
+        .reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
+    ref.read(aamSkirtMainSortButtonProvider.notifier).state =
+    ''; // 스커트 메인 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    // 스커트 메인 화면 관련 초기화 부분 끝
+    // ------ 2차 메인 화면 관련 부분 끝
+
+    // ------ 섹션 더보기 화면 관련 부분 시작
+    // 신상 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamNewSubMainScrollPositionProvider.notifier).state =
+    0.0; // 신상 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamNewSubMainProductListProvider.notifier)
+        .reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamNewSubMainSortButtonProvider.notifier).state =
+    ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamNewSubMainLargeBannerPageProvider.notifier).state =
+    0; // 신상 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamNewSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 신상 더보기 화면 소배너 페이지뷰 초기화
+    // 신상 더보기 화면 관련 초기화 부분 끝
+
+    // 최고 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamBestSubMainScrollPositionProvider.notifier).state =
+    0.0; // 최고 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamBestSubMainProductListProvider.notifier)
+        .reset(); // 최고 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamBestSubMainSortButtonProvider.notifier).state =
+    ''; // 최고 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamBestSubMainLargeBannerPageProvider.notifier).state =
+    0; // 최고 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamBestSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 최고 더보기 화면 소배너 페이지뷰 초기화
+    // 최고 더보기 화면 관련 초기화 부분 끝
+
+    // 할인 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamSaleSubMainScrollPositionProvider.notifier).state =
+    0.0; // 할인 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamSaleSubMainProductListProvider.notifier)
+        .reset(); // 할인 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamSaleSubMainSortButtonProvider.notifier).state =
+    ''; // 할인 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamSaleSubMainLargeBannerPageProvider.notifier).state =
+    0; // 할인 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamSaleSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 할인 더보기 화면 소배너 페이지뷰 초기화
+    // 할인 더보기 화면 관련 초기화 부분 끝
+
+    // 봄 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamSpringSubMainScrollPositionProvider.notifier).state =
+    0.0; // 봄 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamSpringSubMainProductListProvider.notifier)
+        .reset(); // 봄 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamSpringSubMainSortButtonProvider.notifier).state =
+    ''; // 봄 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamSpringSubMainLargeBannerPageProvider.notifier).state =
+    0; // 봄 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamSpringSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 봄 더보기 화면 소배너 페이지뷰 초기화
+    // 봄 더보기 화면 관련 초기화 부분 끝
+
+    // 여름 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamSummerSubMainScrollPositionProvider.notifier).state =
+    0.0; // 여름 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamSummerSubMainProductListProvider.notifier)
+        .reset(); // 여름 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamSummerSubMainSortButtonProvider.notifier).state =
+    ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamSummerSubMainLargeBannerPageProvider.notifier).state =
+    0; // 여름 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamSummerSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 여름 더보기 화면 소배너 페이지뷰 초기화
+    // 여름 더보기 화면 관련 초기화 부분 끝
+
+    // 가을 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamAutumnSubMainScrollPositionProvider.notifier).state =
+    0.0; // 가을 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamAutumnSubMainProductListProvider.notifier)
+        .reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamAutumnSubMainSortButtonProvider.notifier).state =
+    ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamAutumnSubMainLargeBannerPageProvider.notifier).state =
+    0; // 가을 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamAutumnSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 가을 더보기 화면 소배너 페이지뷰 초기화
+    // 가을 더보기 화면 관련 초기화 부분 끝
+
+    // 겨울 더보기 화면 관련 초기화 부분 시작
+    ref.read(aamWinterSubMainScrollPositionProvider.notifier).state =
+    0.0; // 겨울 더보기 화면 자체의 스크롤 위치 인덱스를 초기화
+    ref
+        .read(aamWinterSubMainProductListProvider.notifier)
+        .reset(); // 겨울 더보기 화면 내 상품 데이터를 초기화
+    ref.read(aamWinterSubMainSortButtonProvider.notifier).state =
+    ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
+    ref.read(aamWinterSubMainLargeBannerPageProvider.notifier).state =
+    0; // 겨울 더보기 화면 대배너 페이지뷰 초기화
+    ref.read(aamWinterSubMainSmall1BannerPageProvider.notifier).state =
+    0; // 겨울 더보기 화면 소배너 페이지뷰 초기화
+    // 겨울 더보기 화면 관련 초기화 부분 끝
+    // ------ 섹션 더보기 화면 관련 부분 끝
+
+    // ------ Aam 상점 초기화 부분 끝
+  }
+}
+// ------ 상점 내 각 화면별 초기화 로직 내용 끝

@@ -104,7 +104,7 @@ class _PrivateMessageBodyPartsContentsState
         screenSize.height * (16 / referenceHeight);
 
     // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
-    final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
+    final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 mm분');
 
     final messageItems = ref.watch(privateMessageItemsListNotifierProvider);
 

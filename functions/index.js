@@ -149,23 +149,23 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
 
 // ------ FCM 알림 전송 기능 구현 내용 시작 ------
 
-// Firestore에서 읽지 않은 메시지의 개수 계산
-async function getUnreadMessagesCount(recipientId) {
-  try {
-    const unreadMessagesSnapshot = await firestore
-      .collection('message_list')
-      .doc(recipientId)
-      .collection('message')
-      .where('read', '==', false)  // 읽지 않은 메시지만 필터링
-      .get();
-
-    console.log(`읽지 않은 메시지 개수 계산 성공: ${unreadMessagesSnapshot.size}`);
-    return unreadMessagesSnapshot.size;
-  } catch (error) {
-    console.error('읽지 않은 메시지 개수 계산 중 오류 발생:', error);
-    return 0;
-  }
-}
+//// Firestore에서 읽지 않은 메시지의 개수 계산
+//async function getUnreadMessagesCount(recipientId) {
+//  try {
+//    const unreadMessagesSnapshot = await firestore
+//      .collection('message_list')
+//      .doc(recipientId)
+//      .collection('message')
+//      .where('read', '==', false)  // 읽지 않은 메시지만 필터링
+//      .get();
+//
+//    console.log(`읽지 않은 메시지 개수 계산 성공: ${unreadMessagesSnapshot.size}`);
+//    return unreadMessagesSnapshot.size;
+//  } catch (error) {
+//    console.error('읽지 않은 메시지 개수 계산 중 오류 발생:', error);
+//    return 0;
+//  }
+//}
 
 //// 새로운 Firestore 문서가 생성되면 알림을 수신자에게 전송하는 함수
 //exports.sendMessageWithNotification = functions.firestore
@@ -262,68 +262,68 @@ async function getUnreadMessagesCount(recipientId) {
 //    }
 //  });
 
-exports.sendMessageWithNotification = functions.region('asia-northeast3').firestore
-  .document('message_list/{recipientId}/message/{messageId}')
-  .onCreate(async (snap, context) => {
-    const messageData = snap.data();
-    const recipientId = context.params.recipientId;
-
-    console.log('FCM 알림 전송 시작'); // 디버그 메시지
-    console.log(`수신자 ID: ${recipientId}`);
-    console.log(`메시지 데이터: ${JSON.stringify(messageData)}`);
-
-    // 수신자의 FCM 토큰 획득
-    const recipientSnapshot = await admin.firestore().collection('users').doc(recipientId).get();
-    const recipientData = recipientSnapshot.data();
-    const recipientFcmTokens = recipientData.fcmTokens;
-
-    if (!recipientFcmTokens || recipientFcmTokens.length === 0) {
-      console.log('수신자에게 FCM 토큰이 없습니다.');
-      return;
-    }
-
-    console.log(`수신자 FCM 토큰 수: ${recipientFcmTokens.length}`);
-
-    // FCM 메시지 생성
-    const message = {
-      tokens: recipientFcmTokens,
-      notification: {
-        title: '새로운 쪽지가 도착했습니다',
-        body: messageData.contents,
-      },
-      data: {
-        screen: 'PrivateMessageMainScreen',
-        messageId: context.params.messageId,
-        recipientId: recipientId,
-      },
-    };
-
-    console.log('FCM 메시지 생성 완료');
-
-    // FCM 알림 발송
-    try {
-      const response = await fcm.sendMulticast(message);
-      console.log(`FCM 메시지 전송 성공: ${response.successCount}개, 실패: ${response.failureCount}개`);
-      if (response.failureCount > 0) {
-        await Promise.all(
-          response.responses.map(async (resp, idx) => {
-            if (!resp.success) {
-              console.error(`토큰(${recipientFcmTokens[idx]})으로 메시지 전송 실패: ${resp.error}`);
-              // 유효하지 않은 토큰은 Firestore에서 제거
-              if (resp.error.code === 'messaging/registration-token-not-registered') {
-                await firestore.collection('users').doc(recipientId).update({
-                  fcmTokens: admin.firestore.FieldValue.arrayRemove(recipientFcmTokens[idx])
-                });
-                console.log(`유효하지 않은 토큰 삭제: ${recipientFcmTokens[idx]}`);
-              }
-            }
-          })
-        );
-      }
-    } catch (error) {
-      console.error('FCM 메시지 전송 중 오류 발생:', error);
-    }
-  });
+//exports.sendMessageWithNotification = functions.region('asia-northeast3').firestore
+//  .document('message_list/{recipientId}/message/{messageId}')
+//  .onCreate(async (snap, context) => {
+//    const messageData = snap.data();
+//    const recipientId = context.params.recipientId;
+//
+//    console.log('FCM 알림 전송 시작'); // 디버그 메시지
+//    console.log(`수신자 ID: ${recipientId}`);
+//    console.log(`메시지 데이터: ${JSON.stringify(messageData)}`);
+//
+//    // 수신자의 FCM 토큰 획득
+//    const recipientSnapshot = await admin.firestore().collection('users').doc(recipientId).get();
+//    const recipientData = recipientSnapshot.data();
+//    const recipientFcmTokens = recipientData.fcmTokens;
+//
+//    if (!recipientFcmTokens || recipientFcmTokens.length === 0) {
+//      console.log('수신자에게 FCM 토큰이 없습니다.');
+//      return;
+//    }
+//
+//    console.log(`수신자 FCM 토큰 수: ${recipientFcmTokens.length}`);
+//
+//    // FCM 메시지 생성
+//    const message = {
+//      tokens: recipientFcmTokens,
+//      notification: {
+//        title: '새로운 쪽지가 도착했습니다',
+//        body: messageData.contents,
+//      },
+//      data: {
+//        screen: 'PrivateMessageMainScreen',
+//        messageId: context.params.messageId,
+//        recipientId: recipientId,
+//      },
+//    };
+//
+//    console.log('FCM 메시지 생성 완료');
+//
+//    // FCM 알림 발송
+//    try {
+//      const response = await fcm.sendMulticast(message);
+//      console.log(`FCM 메시지 전송 성공: ${response.successCount}개, 실패: ${response.failureCount}개`);
+//      if (response.failureCount > 0) {
+//        await Promise.all(
+//          response.responses.map(async (resp, idx) => {
+//            if (!resp.success) {
+//              console.error(`토큰(${recipientFcmTokens[idx]})으로 메시지 전송 실패: ${resp.error}`);
+//              // 유효하지 않은 토큰은 Firestore에서 제거
+//              if (resp.error.code === 'messaging/registration-token-not-registered') {
+//                await firestore.collection('users').doc(recipientId).update({
+//                  fcmTokens: admin.firestore.FieldValue.arrayRemove(recipientFcmTokens[idx])
+//                });
+//                console.log(`유효하지 않은 토큰 삭제: ${recipientFcmTokens[idx]}`);
+//              }
+//            }
+//          })
+//        );
+//      }
+//    } catch (error) {
+//      console.error('FCM 메시지 전송 중 오류 발생:', error);
+//    }
+//  });
 
 
 
@@ -733,3 +733,109 @@ exports.updateButtonStatusOnRefundMessage_V2 = functions.region('asia-northeast3
         }
     });
 // ------ Firestore에서 '환불 메세지' 메시지가 생성될 때 버튼 상태를 업데이트하는 함수 내용 끝 부분
+
+
+// ------ FCM 알림 전송 기능 구현 내용 시작 ------
+
+// Firestore에서 읽지 않은 메시지의 개수 계산
+async function getUnreadMessagesCount(recipientId) {
+  try {
+    const unreadMessagesSnapshot = await firestore
+      .collection('wearcano_message_list')
+      .doc(recipientId)
+      .collection('message')
+      .where('read', '==', false)  // 읽지 않은 메시지만 필터링
+      .get();
+
+    console.log(`읽지 않은 메시지 개수 계산 성공: ${unreadMessagesSnapshot.size}`);
+    return unreadMessagesSnapshot.size;
+  } catch (error) {
+    console.error('읽지 않은 메시지 개수 계산 중 오류 발생:', error);
+    return 0;
+  }
+}
+
+exports.sendMessageWithNotification_V2 = functions.region('asia-northeast3').firestore
+  .document('wearcano_message_list/{recipientId}/message/{messageId}')
+  .onCreate(async (snap, context) => {
+    const messageData = snap.data();
+    const recipientId = context.params.recipientId;
+
+    console.log('FCM 알림 전송 시작'); // 디버그 메시지
+    console.log(`수신자 ID: ${recipientId}`);
+    console.log(`메시지 데이터: ${JSON.stringify(messageData)}`);
+
+    // 수신자의 FCM 토큰 획득
+    const recipientSnapshot = await admin.firestore().collection('users').doc(recipientId).get();
+    const recipientData = recipientSnapshot.data();
+    const recipientFcmTokens = recipientData.fcmTokens;
+
+    if (!recipientFcmTokens || recipientFcmTokens.length === 0) {
+      console.log('수신자에게 FCM 토큰이 없습니다.');
+      return;
+    }
+
+    console.log(`수신자 FCM 토큰 수: ${recipientFcmTokens.length}`);
+
+    // FCM 메시지 생성
+    const message = {
+      tokens: recipientFcmTokens,
+      notification: {
+        title: '새로운 쪽지가 도착했습니다',
+        body: messageData.contents,
+      },
+      data: {
+        screen: 'PrivateMessageMainScreen',
+        messageId: context.params.messageId,
+        recipientId: recipientId,
+      },
+      apns: {
+        headers: {
+          'apns-push-type': 'alert',
+          'apns-priority': '10',
+          // 'apns-topic': '여기에_실제_BundleID를_정확히_기재',
+          // (예: 'com.yourcompany.myapp') - 실제 값으로 수정 필요
+          'apns-topic': 'com.gshe.wearcano',
+        },
+        payload: {
+          aps: {
+            sound: 'default',
+          },
+        },
+      },
+      android: {
+        priority: 'high',
+        notification: {
+          sound: 'default',
+        },
+      },
+    };
+
+    console.log('FCM 메시지 생성 완료');
+
+
+    // FCM 알림 발송
+    try {
+      const response = await fcm.sendMulticast(message);
+      console.log(`FCM 메시지 전송 성공: ${response.successCount}개, 실패: ${response.failureCount}개`);
+      if (response.failureCount > 0) {
+        await Promise.all(
+          response.responses.map(async (resp, idx) => {
+            if (!resp.success) {
+              console.error(`토큰(${recipientFcmTokens[idx]})으로 메시지 전송 실패: ${resp.error}`);
+              // 유효하지 않은 토큰은 Firestore에서 제거
+              if (resp.error.code === 'messaging/registration-token-not-registered') {
+                await firestore.collection('users').doc(recipientId).update({
+                  fcmTokens: admin.firestore.FieldValue.arrayRemove(recipientFcmTokens[idx])
+                });
+                console.log(`유효하지 않은 토큰 삭제: ${recipientFcmTokens[idx]}`);
+              }
+            }
+          })
+        );
+      }
+    } catch (error) {
+      console.error('FCM 메시지 전송 중 오류 발생:', error);
+    }
+  });
+  // ------ FCM 알림 전송 기능 구현 내용 끝 ------
