@@ -1488,15 +1488,49 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 '로그인 후 이용해주세요.'이라는 기본 문자열을 표시함.
   final userEmail = FirebaseAuth.instance.currentUser?.email ?? '로그인 후 이용해주세요.';
   // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
-  final List<String> adminEmails = [
-    'gshe.couture@gmail.com',
+
+  // 관리자 이메일
+  final List<String> adminEmail = ['gshe.couture@gmail.com'];
+
+  // 상점주 이메일 (30개의 계정 포함)
+  final List<String> subAdminEmails = [
     'wearcano.md.aaa@gmail.com',
     'wearcano.md.aab@gmail.com',
     'wearcano.md.aac@gmail.com',
+    'wearcano.md.aad@gmail.com',
+    'wearcano.md.aae@gmail.com',
+    'wearcano.md.aaf@gmail.com',
+    'wearcano.md.aag@gmail.com',
+    'wearcano.md.aah@gmail.com',
+    'wearcano.md.aai@gmail.com',
+    'wearcano.md.aaj@gmail.com',
+    'wearcano.md.aak@gmail.com',
+    'wearcano.md.aal@gmail.com',
+    'wearcano.md.aam@gmail.com',
+    'wearcano.md.aan@gmail.com',
+    'wearcano.md.aao@gmail.com',
+    'wearcano.md.aap@gmail.com',
+    'wearcano.md.aaq@gmail.com',
+    'wearcano.md.aar@gmail.com',
+    'wearcano.md.aas@gmail.com',
+    'wearcano.md.aat@gmail.com',
+    'wearcano.md.aau@gmail.com',
+    'wearcano.md.aav@gmail.com',
+    'wearcano.md.aaw@gmail.com',
+    'wearcano.md.aax@gmail.com',
+    'wearcano.md.aay@gmail.com',
+    'wearcano.md.aaz@gmail.com',
+    'wearcano.md.aba@gmail.com',
+    'wearcano.md.abb@gmail.com',
+    'wearcano.md.abc@gmail.com',
+    'wearcano.md.abd@gmail.com',
   ];
 
 // 사용자 이메일이 관리자 이메일 목록에 포함되어 있는지 확인
-  final bool isAdmin = adminEmails.contains(userEmail);
+  // 관리자 여부 확인
+  final bool isAdmin = adminEmail.contains(userEmail);
+  // 상점주 여부 확인
+  final bool isSubAdmin = subAdminEmails.contains(userEmail);
   // 사용자 로그인 상태 확인
   final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
@@ -1686,6 +1720,14 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     '발주내역 관리',
                     () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
                     'asset/img/misc/drawer_img/message_management_logo_v1.png',
+                  ),
+                ] else if (isSubAdmin) ...[
+                  SizedBox(height: interval1Y),
+                  _buildAdminListTile(
+                    context,
+                    '발주내역 관리',
+                        () => onOrderListClick(context, ref),
+                    'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
                   ),
                 ],
                 SizedBox(height: isAdmin ? interval3Y : interval2Y),
