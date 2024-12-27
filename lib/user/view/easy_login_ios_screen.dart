@@ -1,6 +1,11 @@
 // Flutter에서 제공하는 Material 디자인 위젯을 사용하기 위해 필수적인 패키지입니다.
 // 이 패키지는 애플리케이션의 시각적 구성 요소들을 제공하며, UI 구축의 기본이 됩니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dongdaemoon_beta_v1/user/view/sns_sing_up_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Dart에서 비동기 프로그래밍을 위한 기본 라이브러리인 'dart:async'를 임포트합니다.
@@ -11,11 +16,13 @@ import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리 �
 // 이 파일은 사용자가 로그인할 수 있는 인터페이스를 제공하며, 사용자의 인증 정보를 처리합니다.
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
-import '../../user/view/login_screen.dart'; // 로그인 화면으로 이동하기 위한 LoginScreen 임포트
+import '../../home/view/main_home_screen.dart';
+import '../../user/view/login_screen.dart';
+import '../provider/sns_login_state_provider.dart'; // 로그인 화면으로 이동하기 위한 LoginScreen 임포트
 
 
 // ------ IOS용 간편 로그인 화면 UI 구현 관련 EasyLoginIosScreen 시작 부분
-class EasyLoginIosScreen extends StatefulWidget {
+class EasyLoginIosScreen extends ConsumerStatefulWidget {
   // 라우트 이름 정의
   static String get routeName => 'login';
 
@@ -23,8 +30,12 @@ class EasyLoginIosScreen extends StatefulWidget {
   _EasyLoginIosScreenState createState() => _EasyLoginIosScreenState();
 }
 
-class _EasyLoginIosScreenState extends State<EasyLoginIosScreen> {
+class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
+  bool isLoading = false; // 로딩 상태를 관리하는 변수
+
+  bool isNavigatedToSignUp = false; // 화면 전환 상태를 관리할 변수 추가
 
   @override
   void initState() {
@@ -42,8 +53,59 @@ class _EasyLoginIosScreenState extends State<EasyLoginIosScreen> {
     _networkChecker?.dispose();
   }
 
+  // appleLoginState(로그인 진행 상황)에 따라 UI에서 네비게이션/알림 처리
+  void _listenAppleLoginState(BuildContext context, AppleSignInState state) {
+    // 로딩 상태 표시
+    setState(() {
+      isLoading = state.isLoading;
+    });
+
+    // 로그인 실패 시 스낵바
+    if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.errorMessage!)),
+      );
+    }
+
+    // 기존 회원일 경우: MainHomeScreen으로 이동
+    if (state.isLoginSuccess) {
+      // 상태 초기화 후 화면 이동
+      ref.read(appleSignInNotifierProvider.notifier).state = AppleSignInState();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => MainHomeScreen()),
+      );
+    }
+
+    // 신규 회원일 경우: 회원가입 화면(SignUpScreen)으로 이동
+    // SignUpScreen으로 이메일/이름 전달
+    if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
+      isNavigatedToSignUp = true; // 중복 호출 방지
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => SignUpScreen(
+            email: state.signUpEmail ?? '',
+            fullName: state.signUpFullName ?? '',
+          ),
+        ),
+      ).then((_) {
+        isNavigatedToSignUp = false; // 화면이 닫히면 상태 초기화
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Provider에서 Apple 로그인 상태를 감시
+    final appleLoginState = ref.watch(appleSignInNotifierProvider);
+
+    // appleLoginState가 변경될 때만 처리
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _listenAppleLoginState(context, appleLoginState);
+      }
+    });
+
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -210,6 +272,7 @@ class _EasyLoginIosScreenState extends State<EasyLoginIosScreen> {
                   // 카카오 로그인 버튼
                   GestureDetector(
                     onTap: () {
+                      // TODO: 카카오 로그인 로직 (Provider/Repository) 연동
                       // 카카오 로그인 화면으로 이동
                       // Navigator.of(context).push(
                       //     MaterialPageRoute(builder: (_) => KakaoLoginScreen()),
@@ -226,10 +289,14 @@ class _EasyLoginIosScreenState extends State<EasyLoginIosScreen> {
                   SizedBox(width: interval1X),
                   // 애플 로그인 버튼
                   GestureDetector(
-                    onTap: () {
-                      // 애플 로그인 화면으로 이동
-                      // Navigator.of(context).push(
-                      //     MaterialPageRoute(builder: (_) => AppleLoginScreen()),
+                    // onTap: () {
+                    //   // 애플 로그인 화면으로 이동
+                    //   // Navigator.of(context).push(
+                    //   //     MaterialPageRoute(builder: (_) => AppleLoginScreen()),
+                    // },
+                    onTap: () async {
+                      // Provider에 있는 애플 로그인 로직 호출
+                      ref.read(appleSignInNotifierProvider.notifier).signInWithApple();
                     },
                     child: Container(
                       child: Image.asset(

@@ -52,6 +52,7 @@ dependencies:
   pdfx: ^2.0.2
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^6.0.5
+  sign_in_with_apple: ^6.1.4
   win32: ^5.5.4
   remedi_kopo: ^0.0.2
   firebase_messaging: ^14.2.5
