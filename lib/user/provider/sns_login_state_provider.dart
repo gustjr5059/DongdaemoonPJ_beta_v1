@@ -68,10 +68,9 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
         return;
       }
 
-      // userCredential, isExistingUser, fullName을 반환받았다고 가정
+      // userCredential, isExistingUser를 반환받았다고 가정
       final userCredential = signInResult.userCredential;
       final isExistingUser = signInResult.isExistingUser;
-      final fullName = signInResult.fullName;
 
       final User? user = userCredential.user;
       if (user == null) {
@@ -91,7 +90,6 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
           isLoading: false,
           isSignUpNeeded: true,
           signUpEmail: user.email ?? '',
-          signUpFullName: fullName,
         );
       }
     } catch (e) {

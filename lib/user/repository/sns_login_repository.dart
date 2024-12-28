@@ -48,17 +48,11 @@ class SNSLoginRepository {
 
       bool isExistingUser = userDoc.exists;
 
-      // 애플에서 가져온 fullName
-      final fullName = [
-        credential.familyName ?? '',
-        credential.givenName ?? ''
-      ].where((namePart) => namePart.isNotEmpty).join(' ');
-
       // 5. 결과 객체 리턴
       return AppleSignInResult(
         userCredential: userCredential,
         isExistingUser: isExistingUser,
-        fullName: fullName,
+        fullName: '',
       );
     } catch (e) {
       rethrow; // 상위(catch)에서 처리
@@ -71,16 +65,21 @@ class AuthRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // 회원가입 처리
-  Future<void> signUpUser(String name, String email, String phoneNumber) async {
+  Future<void> signUpUser({
+    required String appleId,
+    required String name,
+    required String email,
+    required String phoneNumber,
+  }) async {
     try {
-      // 이미 로그인한 상태(Apple 등 SNS 로그인)가 전제라면 currentUser는 null이 아님
       final user = _firebaseAuth.currentUser;
       if (user == null) {
         throw Exception('사용자 인증 정보가 없습니다.');
       }
-      // Firestore 'users' 컬렉션에 {email}.doc 생성/업데이트
-      final docRef = _firestore.collection('users').doc(email);
+      // Firestore 'users' 컬렉션에 문서 생성/업데이트
+      final docRef = _firestore.collection('users').doc(appleId);
       await docRef.set({
+        'apple_id': appleId,
         'name': name,
         'email': email,
         'phone_number': phoneNumber,

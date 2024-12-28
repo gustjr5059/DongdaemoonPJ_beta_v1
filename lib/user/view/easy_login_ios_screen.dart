@@ -80,12 +80,10 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     // SignUpScreen으로 이메일/이름 전달
     if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
       isNavigatedToSignUp = true; // 중복 호출 방지
-      Navigator.push(
-        context,
+      Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => SignUpScreen(
-            email: state.signUpEmail ?? '',
-            fullName: state.signUpFullName ?? '',
+          builder: (context) => SignUpScreen(
+            appleId: state.signUpEmail ?? '',
           ),
         ),
       ).then((_) {
