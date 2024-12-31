@@ -9,9 +9,15 @@ import '../repository/sns_login_repository.dart';
 
 // ------ 회원가입 화면 클래스 시작 ------
 class SignUpScreen extends ConsumerStatefulWidget {
-  final String appleId; // 애플 계정에서 불러온 애플 ID
+  final String snsType; // 'apple' 또는 'google'
+  final String snsId;   // SNS 계정 ID (Apple ID 또는 Google ID)
 
-  const SignUpScreen({required this.appleId, Key? key}) : super(key: key);
+  const SignUpScreen({
+    required this.snsType,
+    required this.snsId,
+    Key? key,
+  }) : super(key: key);
+
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -19,7 +25,7 @@ class SignUpScreen extends ConsumerStatefulWidget {
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen>
     with WidgetsBindingObserver {
-  late final TextEditingController _appleIdController;
+  late final TextEditingController _snsIdController;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -45,7 +51,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     // ScrollController를 초기화
     signUpScreenPointScrollController = ScrollController();
 
-    _appleIdController = TextEditingController(text: widget.appleId);
+    _snsIdController = TextEditingController(text: widget.snsId);
 
     // WidgetsBindingObserver를 추가하여 앱의 생명주기 변화 감지
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
@@ -78,7 +84,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     // 앱 생명주기 이벤트를 더 이상 수신하지 않겠다는 의도임.
     WidgetsBinding.instance.removeObserver(this);
 
-    _appleIdController.dispose();
+    _snsIdController.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
@@ -100,7 +106,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
 
   @override
   Widget build(BuildContext context) {
-    final authRepository = ref.watch(authRepositoryProvider);
+    final signUpInfoRepository = ref.watch(signUpInfoRepositoryProvider);
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -195,7 +201,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                     children: [
                       SizedBox(height: interval2Y),
                       _buildFixedValueRow(
-                          context, '애플 ID', _appleIdController.text),
+                        context,
+                        // widget.snsType == 'apple' ? '애플 ID' : '구글 ID',
+                        'SNS 계정',
+                        _snsIdController.text,
+                      ),
                       SizedBox(height: interval1Y),
                       _buildEditableRow(context, '이름', _nameController,
                           _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
@@ -275,12 +285,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                               ),
                             ),
                             onPressed: _isSignUpEnabled()
-                                ? () => _signUp(authRepository)
+                                ? () => _signUp(signUpInfoRepository)
                                 : null,
                             child: isLoading
-                                ? CircularProgressIndicator(color: Colors.white)
+                                ? buildCommonLoadingIndicator()
                                 : Text(
-                                    '결제하기',
+                                    '가입하기',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: signUpBtnFontSize,
@@ -305,21 +315,24 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
   }
 
   // Firestore에 회원 정보 저장
-  Future<void> _signUp(AuthRepository authRepository) async {
+  Future<void> _signUp(SignUpInfoRepository signUpInfoRepository) async {
     setState(() {
       isLoading = true;
     });
     try {
-      await authRepository.signUpUser(
-        appleId: _appleIdController.text,
+      await signUpInfoRepository.signUpUser(
+        snsType: widget.snsType, // SNS 타입 전달
+        snsId: _snsIdController.text,
         name: _nameController.text,
         email: _emailController.text,
         phoneNumber: _phoneController.text,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('회원가입이 완료되었습니다!')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('회원가입이 완료되었습니다!')),
+      // );
+
+      showCustomSnackBar(context, '회원가입이 완료되었습니다!');
 
       // 회원가입 후 홈 화면 이동
       Future.microtask(() {
@@ -330,9 +343,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
         );
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('회원가입 중 문제가 발생했습니다: $e')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('회원가입 중 문제가 발생했습니다: $e')),
+      // );
+
+      showCustomSnackBar(context, '회원가입 중 문제가 발생했습니다: $e');
+
     } finally {
       setState(() {
         isLoading = false;

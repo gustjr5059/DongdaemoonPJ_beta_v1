@@ -62,9 +62,10 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
 
     // 로그인 실패 시 스낵바
     if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.errorMessage!)),
-      );
+      showCustomSnackBar(context, state.errorMessage!);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text(state.errorMessage!)),
+      // );
     }
 
     // 기존 회원일 경우: MainHomeScreen으로 이동
@@ -83,7 +84,8 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SignUpScreen(
-            appleId: state.signUpEmail ?? '',
+            snsType: 'apple', // SNS 타입 전달
+            snsId: state.signUpEmail ?? '',
           ),
         ),
       ).then((_) {
@@ -287,11 +289,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                   SizedBox(width: interval1X),
                   // 애플 로그인 버튼
                   GestureDetector(
-                    // onTap: () {
-                    //   // 애플 로그인 화면으로 이동
-                    //   // Navigator.of(context).push(
-                    //   //     MaterialPageRoute(builder: (_) => AppleLoginScreen()),
-                    // },
+                    // 애플 로그인 화면으로 이동
                     onTap: () async {
                       // Provider에 있는 애플 로그인 로직 호출
                       ref.read(appleSignInNotifierProvider.notifier).signInWithApple();

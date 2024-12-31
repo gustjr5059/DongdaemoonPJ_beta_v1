@@ -1,6 +1,8 @@
 // Flutter에서 제공하는 Material 디자인 위젯을 사용하기 위해 필수적인 패키지입니다.
 // 이 패키지는 애플리케이션의 시각적 구성 요소들을 제공하며, UI 구축의 기본이 됩니다.
+import 'package:dongdaemoon_beta_v1/user/view/sns_sing_up_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Dart에서 비동기 프로그래밍을 위한 기본 라이브러리인 'dart:async'를 임포트합니다.
@@ -11,11 +13,13 @@ import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리 �
 // 이 파일은 사용자가 로그인할 수 있는 인터페이스를 제공하며, 사용자의 인증 정보를 처리합니다.
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
-import '../../user/view/login_screen.dart'; // 로그인 화면으로 이동하기 위한 LoginScreen 임포트
+import '../../home/view/main_home_screen.dart';
+import '../../user/view/login_screen.dart';
+import '../provider/sns_login_state_provider.dart'; // 로그인 화면으로 이동하기 위한 LoginScreen 임포트
 
 
 // ------ AOS용 간편 로그인 화면 UI 구현 관련 EasyLoginAosScreen 시작 부분
-class EasyLoginAosScreen extends StatefulWidget {
+class EasyLoginAosScreen extends ConsumerStatefulWidget {
   // 라우트 이름 정의
   static String get routeName => 'login';
 
@@ -23,8 +27,12 @@ class EasyLoginAosScreen extends StatefulWidget {
   _EasyLoginAosScreenState createState() => _EasyLoginAosScreenState();
 }
 
-class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
+class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+
+  bool isLoading = false; // 로딩 상태 관리
+
+  bool isNavigatedToSignUp = false; // 화면 전환 상태를 관리할 변수 추가
 
   @override
   void initState() {
@@ -42,8 +50,59 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
     _networkChecker?.dispose();
   }
 
+  // 구글 로그인 상태 감지 후 UI 동작
+  void _listenGoogleLoginState(BuildContext context, GoogleSignInState state) {
+    setState(() {
+      isLoading = state.isLoading;
+    });
+
+    // 로그인 실패 시
+    if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+      showCustomSnackBar(context, state.errorMessage!);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text(state.errorMessage!)),
+      // );
+    }
+
+    // 기존 회원이면 -> 메인 화면으로 이동
+    if (state.isLoginSuccess) {
+      // 상태 초기화 후 화면 이동
+      ref.read(googleSignInNotifierProvider.notifier).state = GoogleSignInState();
+      // MaterialPageRoute를 사용해 화면 이동
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => MainHomeScreen()),
+      );
+    }
+
+    // 신규 회원이면 -> 회원가입 화면으로 이동 (이메일, 이름 등을 전달)
+    // 신규 회원일 경우
+    if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
+      isNavigatedToSignUp = true;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SignUpScreen(
+            snsType: 'google', // SNS 타입 전달
+            snsId: state.signUpEmail ?? '',
+          ),
+        ),
+      ).then((_) {
+        isNavigatedToSignUp = false; // 상태 초기화
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Provider에서 구글 로그인 상태를 감시
+    final googleLoginState = ref.watch(googleSignInNotifierProvider);
+
+    // 상태 변경 시 후처리
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _listenGoogleLoginState(context, googleLoginState);
+      }
+    });
+
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -226,10 +285,9 @@ class _EasyLoginAosScreenState extends State<EasyLoginAosScreen> {
                   SizedBox(width: interval1X),
                   // 구글 로그인 버튼
                   GestureDetector(
-                    onTap: () {
-                      // 구글 로그인 화면으로 이동
-                      // Navigator.of(context).push(
-                      //     MaterialPageRoute(builder: (_) => AppleLoginScreen()),
+                    onTap: () async {
+                      // 구글 로그인 로직 호출
+                      ref.read(googleSignInNotifierProvider.notifier).signInWithGoogle();
                     },
                     child: Container(
                       child: Image.asset(
