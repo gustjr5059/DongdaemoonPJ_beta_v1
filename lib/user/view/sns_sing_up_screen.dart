@@ -11,10 +11,12 @@ import '../repository/sns_login_repository.dart';
 class SignUpScreen extends ConsumerStatefulWidget {
   final String snsType; // 'apple' 또는 'google'
   final String snsId;   // SNS 계정 ID (Apple ID 또는 Google ID)
+  // final String platformType; // 'ios' 또는 'aos' (이전 화면 구분)
 
   const SignUpScreen({
     required this.snsType,
     required this.snsId,
+    // required this.platformType,
     Key? key,
   }) : super(key: key);
 
@@ -157,7 +159,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
               controller: signUpScreenPointScrollController,
               slivers: <Widget>[
                 SliverAppBar(
-                  automaticallyImplyLeading: true,
+                  automaticallyImplyLeading: false,
                   floating: true,
                   pinned: true,
                   expandedHeight: 0.0,
@@ -178,7 +180,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                         ref: ref,
                         title: '회원가입',
                         fontFamily: 'NanumGothic',
-                        leadingType: LeadingType.none,
+                        leadingType: LeadingType.back,
                         buttonCase: 1,
                         appBarTitleWidth: signUpAppBarTitleWidth,
                         appBarTitleHeight: signUpAppBarTitleHeight,
@@ -188,6 +190,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                         chevronIconHeight: signUpChevronIconHeight,
                         chevronIconX: signUpChevronIconX,
                         chevronIconY: signUpChevronIconY,
+                        // platformType: widget.platformType, // platformType 전달
                       ),
                     ),
                   ),

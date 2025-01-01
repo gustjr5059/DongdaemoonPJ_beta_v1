@@ -34,12 +34,24 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
 
   bool isNavigatedToSignUp = false; // 화면 전환 상태를 관리할 변수 추가
 
+  bool isGoogleLoginReset = false;  // 구글 로그인 상태 초기화 플래그
+
   @override
   void initState() {
     super.initState();
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+    // 위젯이 렌더링된 후 Google 로그인 상태를 확인하는 콜백 함수
+    // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 화면이 활성 상태이고 회원가입 화면으로 이동하지 않았다면
+      if (mounted && !isNavigatedToSignUp) {
+        // Google 로그인 상태를 확인하고 처리
+        _listenGoogleLoginState(context, ref.watch(googleSignInNotifierProvider));
+      }
+    });
   }
 
   @override
@@ -83,10 +95,15 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
           builder: (context) => SignUpScreen(
             snsType: 'google', // SNS 타입 전달
             snsId: state.signUpEmail ?? '',
+            // platformType: 'aos', // 플랫폼 정보 전달
           ),
         ),
       ).then((_) {
         isNavigatedToSignUp = false; // 상태 초기화
+        // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
+        if (mounted && !isGoogleLoginReset) {
+          ref.read(googleSignInNotifierProvider.notifier).resetState();
+        }
       });
     }
   }
@@ -97,6 +114,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
     final googleLoginState = ref.watch(googleSignInNotifierProvider);
 
     // 상태 변경 시 후처리
+    // (간편 로그인 화면에서 회원가입 화면으로 이동하도록 하는 로직)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _listenGoogleLoginState(context, googleLoginState);

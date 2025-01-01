@@ -80,6 +80,7 @@ AppBar buildCommonAppBar({
   required double appBarTitleHeight, // 앱 바 제목의 높이 설정
   required double appBarTitleX, // 앱 바 제목의 X축 위치 설정
   required double appBarTitleY, // 앱 바 제목의 Y축 위치 설정
+  // String? platformType, // 플랫폼 정보 추가
   // 이벤트 이미지 버튼 클릭 시 이벤트 섹션으로 이동시키기 위한 변수
   ScrollController? scrollController, // 스크롤 컨트롤러 설정 변수
   GlobalKey? sectionKey, // 동적 위치 지정 키
@@ -213,6 +214,14 @@ AppBar buildCommonAppBar({
             onPressed: () {
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
+              // } else if (platformType == 'ios') {
+              //   Navigator.of(context).pushReplacement(
+              //     MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
+              //   );
+              // } else if (platformType == 'aos') {
+              //   Navigator.of(context).pushReplacement(
+              //     MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+              //   );
               } else {
                 showCustomSnackBar(
                     context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 돌아갈 수 없다는 메시지 표시

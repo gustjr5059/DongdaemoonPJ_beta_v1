@@ -145,6 +145,12 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
       );
     }
   }
+
+  // 초기화 로직
+  void resetState() {
+    print('애플 로그인 상태 초기화.');
+    state = AppleSignInState();
+  }
 }
 // ------ AppleSignInNotifier: 실제 Apple 로그인을 수행하고 상태를 업데이트하는 로직 끝 부분
 
@@ -223,6 +229,7 @@ class GoogleSignInNotifier extends StateNotifier<GoogleSignInState> {
     }
   }
 
+  // 초기화 로직
   void resetState() {
     print('Google 로그인 상태 초기화.');
     state = GoogleSignInState();

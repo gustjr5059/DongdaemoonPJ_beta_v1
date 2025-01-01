@@ -37,20 +37,30 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
 
   bool isNavigatedToSignUp = false; // 화면 전환 상태를 관리할 변수 추가
 
+  bool isAppleLoginReset = false;  // Apple 로그인 상태 초기화 플래그
+
   @override
   void initState() {
     super.initState();
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+    // 위젯이 렌더링된 후 애플 로그인 상태를 확인하는 콜백 함수
+    // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !isNavigatedToSignUp) {
+          _listenAppleLoginState(context, ref.watch(appleSignInNotifierProvider));
+      }
+    });
   }
 
   @override
   void dispose() {
-    super.dispose();
-
     // 네트워크 체크 해제
     _networkChecker?.dispose();
+
+    super.dispose();
   }
 
   // appleLoginState(로그인 진행 상황)에 따라 UI에서 네비게이션/알림 처리
@@ -86,10 +96,15 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
           builder: (context) => SignUpScreen(
             snsType: 'apple', // SNS 타입 전달
             snsId: state.signUpEmail ?? '',
+            // platformType: 'ios', // 플랫폼 정보 전달
           ),
         ),
       ).then((_) {
         isNavigatedToSignUp = false; // 화면이 닫히면 상태 초기화
+        // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
+        if (mounted && !isAppleLoginReset) {
+          ref.read(appleSignInNotifierProvider.notifier).resetState();
+        }
       });
     }
   }
@@ -100,6 +115,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     final appleLoginState = ref.watch(appleSignInNotifierProvider);
 
     // appleLoginState가 변경될 때만 처리
+    // (간편 로그인 화면에서 회원가입 화면으로 이동하도록 하는 로직)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _listenAppleLoginState(context, appleLoginState);
