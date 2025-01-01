@@ -308,6 +308,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                     // 애플 로그인 화면으로 이동
                     onTap: () async {
                       // Provider에 있는 애플 로그인 로직 호출
+                      print('애플 로그인 버튼 클릭됨.');
                       ref.read(appleSignInNotifierProvider.notifier).signInWithApple();
                     },
                     child: Container(

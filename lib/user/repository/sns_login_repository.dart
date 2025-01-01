@@ -78,6 +78,10 @@ class SNSLoginRepository {
       // 1. Google 로그인 객체를 생성함
       final googleSignIn = GoogleSignIn();
 
+      // 기존 세션 로그아웃 (구글 로그인 버튼 클릭할 때마다 구글 계정 선택 화면이 나오도록 로그아웃하도록 함)
+      await googleSignIn.signOut();
+      print('기존 Google 로그인 세션 초기화 완료.');
+
       // 2. Google 로그인 프로세스를 실행하여 계정을 얻음
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {

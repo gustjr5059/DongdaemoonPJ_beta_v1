@@ -305,6 +305,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
                   GestureDetector(
                     onTap: () async {
                       // 구글 로그인 로직 호출
+                      print('Google 로그인 버튼 클릭됨.');
                       ref.read(googleSignInNotifierProvider.notifier).signInWithGoogle();
                     },
                     child: Container(
