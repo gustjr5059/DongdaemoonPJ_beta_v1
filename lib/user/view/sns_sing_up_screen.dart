@@ -407,6 +407,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
             child: Text(
               '보기',
               style: TextStyle(
+                fontFamily: 'NanumGothic',
                 color: GRAY83_COLOR,
                 decoration: TextDecoration.underline,
                 decorationColor: GRAY83_COLOR,

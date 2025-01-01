@@ -156,7 +156,7 @@ class SignUpInfoRepository {
       final docRef = _firestore.collection('users').doc(snsId);
       await docRef.set({
         'sns_type': snsType, // SNS 유형 ('apple' 또는 'google')
-        'sns_id': snsId, // SNS 사용자 ID
+        'registration_id': snsId, // SNS 사용자 ID
         'name': name, // 사용자 이름
         'email': email, // 사용자 이메일
         'phone_number': phoneNumber, // 사용자 전화번호

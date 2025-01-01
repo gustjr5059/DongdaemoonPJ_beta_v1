@@ -210,6 +210,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                   fontSize: screenLoginText1FontSize,
                   fontWeight: FontWeight.w600,
                   color: BLACK_COLOR,
+                  fontFamily: 'NanumGothic',
                 ),
               ),
             ),

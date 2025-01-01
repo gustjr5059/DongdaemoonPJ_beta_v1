@@ -61,7 +61,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double logoutBtnY =
         screenSize.height * (45 / referenceHeight); // 로그아웃 버튼 세로 비율 계산
     final double loginAndJoinBtnX =
-        screenSize.width * (160 / referenceWidth); // 로그인 및 회원가입 버튼 가로 비율 계산
+        screenSize.width * (180 / referenceWidth); // 로그인 및 회원가입 버튼 가로 비율 계산
     final double loginAndJoinBtnY =
         screenSize.height * (45 / referenceHeight); // 로그인 및 회원가입 버튼 세로 비율 계산
 

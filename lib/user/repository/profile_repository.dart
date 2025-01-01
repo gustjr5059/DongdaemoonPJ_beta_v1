@@ -13,7 +13,7 @@ class ProfileRepository {
 
       QuerySnapshot querySnapshot = await firestore // Firestore에 쿼리를 보내기 위해 QuerySnapshot 객체를 선언.
           .collection('users') // 'users' 컬렉션을 참조.
-          .where('email', isEqualTo: email) // 이메일 필드가 주어진 이메일과 일치하는 문서를 찾음.
+          .where('registration_id', isEqualTo: email) // registration_id 필드값과 주어진 이메일과 일치하는 문서를 찾음.
           .get(); // 쿼리를 실행하여 결과를 가져옴.
 
       print('검색된 문서 수: ${querySnapshot.docs.length}'); // 검색된 문서의 수를 출력.

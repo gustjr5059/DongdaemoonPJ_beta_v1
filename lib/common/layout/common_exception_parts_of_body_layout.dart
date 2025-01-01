@@ -28,14 +28,12 @@ import '../../order/view/order_list_screen.dart';
 
 // 사용자 로그인 화면을 구현한 파일을 임포트합니다.
 import '../../order/view/order_screen.dart';
-import '../../product/layout/product_body_parts_layout.dart';
 import '../../product/model/product_model.dart';
 import '../../product/provider/product_state_provider.dart';
 import '../../user/layout/login_body_parts_layout.dart';
-import '../../user/provider/profile_state_provider.dart';
+import '../../user/provider/drawer_user_provider.dart';
 import '../../user/view/easy_login_aos_screen.dart';
 import '../../user/view/easy_login_ios_screen.dart';
-import '../../user/view/login_screen.dart';
 
 // 사용자 프로필 화면을 구현한 파일을 임포트합니다.
 import '../../user/view/profile_screen.dart';
@@ -1494,10 +1492,10 @@ Widget buildTopBarList(
 // 드로워 생성 함수
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
-  // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴. 로그인하지 않았다면 '로그인 후 이용해주세요.'이라는 기본 문자열을 표시함.
-  final userEmail = FirebaseAuth.instance.currentUser?.email ?? '로그인 후 이용해주세요.';
-  // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
+  // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴.
+  final String? userEmail = FirebaseAuth.instance.currentUser?.email;
 
+  // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
   // 관리자 이메일
   final List<String> adminEmail = ['gshe.couture@gmail.com'];
 
@@ -1566,7 +1564,12 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   final double flowImageHeight = screenSize.height * (20 / referenceHeight);
 
   // 이메일 부분 수치
-  final double emailTextFontSize = screenSize.height * (17 / referenceHeight);
+  final double emailTextFontSize = screenSize.height * (20 / referenceHeight);
+
+  // 에러 관련 텍스트 수치
+  final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+  final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+  final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
   // 로그아웃 버튼 부분 수치
   final double logoutTextFontSize = screenSize.height * (20 / referenceHeight);
@@ -1610,17 +1613,82 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                       // fit: BoxFit.contain, // 이미지의 fit 속성 설정
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.zero, // 이메일의 패딩 제거
-                    child: Text(
-                      userEmail,
-                      style: TextStyle(
-                        fontSize: emailTextFontSize,
-                        color: BLACK_COLOR, // 텍스트 색상
-                        fontFamily: 'NanumGothic',
-                        fontWeight: FontWeight.bold,
+                  Consumer(builder: (context, ref, child) {
+                    // 이메일 확인 및 FutureProvider 호출
+                    // 사용자의 이메일 정보를 확인함
+                    if (userEmail == null) {
+                      // 이메일이 없는 경우 로그인 요청 메시지 출력
+                      return Text(
+                        '로그인 후 이용해주세요.', // 메시지 텍스트 설정
+                        style: TextStyle(
+                          fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                          color: BLACK_COLOR, // 텍스트 색상 설정
+                          fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                          fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+                        ),
+                      );
+                    }
+
+                    // 사용자 이름을 가져오기 위한 FutureProvider 호출
+                    final userNameAsyncValue = ref.watch(drawerUserNameProvider(userEmail));
+
+                    // 사용자 이름 데이터를 기반으로 위젯 생성
+                    return userNameAsyncValue.when(
+                      data: (userName) {
+                        // userName 값이 없거나 비어 있는 경우 기본 메시지 출력
+                        if (userName == null || userName.isEmpty) {
+                          // 사용자 이름 정보를 불러올 수 없을 때 기본 메시지 출력
+                          return Text(
+                            '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
+                            style: TextStyle(
+                              fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                              color: BLACK_COLOR, // 텍스트 색상 설정
+                              fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                              fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+                            ),
+                          );
+                        }
+
+                        // RichText를 사용하여 사용자 이름과 환영 메시지를 표시함
+                        return RichText(
+                          text: TextSpan(
+                            text: '$userName님', // 첫 번째 텍스트 (사용자 이름)
+                            style: TextStyle(
+                              fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                              color: BLACK_COLOR, // 텍스트 색상 설정
+                              fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                              fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' 반가워요.', // 두 번째 텍스트 (환영 메시지)
+                                style: TextStyle(
+                                  fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
+                                  fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                                  fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      // 실시간 데이터 로드 중일 때 로딩 인디케이터 표시
+                      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+                      // 실시간 데이터 로드 중 오류가 발생했을 때 처리
+                      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+                        height: errorTextHeight, // 컨테이너 높이 설정
+                        alignment: Alignment.center, // 컨테이너 중앙 정렬 설정
+                        child: buildCommonErrorIndicator(
+                          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 에러 메시지 텍스트 설정
+                          fontSize1: errorTextFontSize1, // 첫 번째 폰트 크기 설정
+                          fontSize2: errorTextFontSize2, // 두 번째 폰트 크기 설정
+                          color: BLACK_COLOR, // 텍스트 색상 설정
+                          showSecondMessage: false, // 두 번째 메시지 표시 여부 설정
+                        ),
                       ),
-                    ),
+                    );
+                  },
                   ),
                 ],
               ),

@@ -46,6 +46,7 @@ import '../../common/provider/common_all_providers.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../product/provider/product_all_providers.dart';
 import '../layout/user_body_parts_layout.dart';
+import '../provider/profile_all_providers.dart';
 import '../provider/profile_state_provider.dart';
 import 'login_screen.dart';
 
@@ -143,6 +144,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       // -> 마이페이지 화면 초기화 시, 하단 탭 바 내 마이페이지 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 3;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(profileUserInfoProvider); // 마이페이지 회원정보 데이터 초기화
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
     // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여

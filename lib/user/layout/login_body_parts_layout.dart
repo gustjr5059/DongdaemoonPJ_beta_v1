@@ -52,6 +52,7 @@ import '../../product/provider/product_state_provider.dart';
 import '../../review/provider/review_state_provider.dart';
 import '../../wishlist/provider/wishlist_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
+import '../provider/profile_all_providers.dart';
 import '../provider/profile_state_provider.dart';
 import '../provider/sns_login_state_provider.dart';
 
@@ -153,6 +154,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(profileMainSmall1BannerPageProvider.notifier).state =
       0; // 마이페이지 소배너 페이지뷰 초기화
+  ref.invalidate(profileUserInfoProvider); // 마이페이지 회원정보 데이터 초기화
   // 머아패아자 화면 관련 초기화 부분 끝
 
   // 공지사항 화면 관련 초기화 부분 시작
