@@ -134,7 +134,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     final double signUpChevronIconX = screenSize.width * (10 / referenceWidth);
     final double signUpChevronIconY = screenSize.height * (9 / referenceHeight);
 
-    final double interval1X = screenSize.width * (10 / referenceWidth);
+    final double interval1X = screenSize.width * (14 / referenceWidth);
     final double interval1Y = screenSize.height * (5 / referenceHeight);
     final double interval2Y = screenSize.height * (10 / referenceHeight);
     final double interval3Y = screenSize.height * (20 / referenceHeight);
@@ -248,6 +248,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                         ],
                       ),
                       SizedBox(height: interval2Y),
+                      _buildAgreementRow('본인은 14세 이상입니다. (필수)', isOverAge,
+                              (value) {
+                            setState(() {
+                              isOverAge = value ?? false;
+                              _updateAllAgreement();
+                            });
+                          }),
                       _buildAgreementRow('이용약관 동의 (필수)', isAgreedToTerms,
                           (value) {
                         setState(() {
@@ -259,13 +266,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                           '개인정보 수집 이용 동의 (필수)', isAgreedToPrivacy, (value) {
                         setState(() {
                           isAgreedToPrivacy = value ?? false;
-                          _updateAllAgreement();
-                        });
-                      }),
-                      _buildAgreementRow('본인은 14세 이상입니다. (필수)', isOverAge,
-                          (value) {
-                        setState(() {
-                          isOverAge = value ?? false;
                           _updateAllAgreement();
                         });
                       }),

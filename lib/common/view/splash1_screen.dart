@@ -1,8 +1,10 @@
 // Flutter에서 제공하는 Material 디자인 요소를 사용하기 위한 패키지입니다.
 // 이 패키지는 버튼, 카드, 타이포그래피 등의 디자인 요소를 포함하고 있으며,
 // 앱의 기본적인 UI 구성에 필수적입니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Dart의 비동기 프로그래밍을 지원하는 'dart:async' 라이브러리를 가져옵니다.
 // 이 라이브러리는 Future와 Stream을 통해 비동기 작업을 쉽게 다룰 수 있게 해주며,
@@ -15,17 +17,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
 import '../../home/view/main_home_screen.dart';
+import '../../user/provider/sns_login_all_provider.dart';
 import '../const/colors.dart';
 
 
 // ------ 스플레시1화면의 UI를 구현하는 SplashScreen1 클래스 시작 부분
-class SplashScreen1 extends StatefulWidget {
+class SplashScreen1 extends ConsumerStatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 // _SplashScreenState 클래스에서 SingleTickerProviderStateMixin을 사용하여 애니메이션 컨트롤러를 생성함.
-class _SplashScreenState extends State<SplashScreen1>
+class _SplashScreenState extends ConsumerState<SplashScreen1>
     with TickerProviderStateMixin {
   late AnimationController _controller; // 애니메이션 컨트롤러를 선언함.
   late Animation<double> _animation; // 애니메이션 값을 저장할 변수를 선언함.
@@ -41,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen1>
       duration: Duration(milliseconds: 2000), // 애니메이션 지속 시간을 2초로 설정함.
     );
     // 위젯이 생성될 때 _checkAutoLogin 메서드를 호출하여 자동 로그인 여부를 확인.
-    _checkAutoLogin();
+    _checkAutoLogin(ref);
 
     // Tween을 사용하여 애니메이션의 시작과 끝 값을 설정함.
     _animation = Tween(begin: 1.0, end: 0.5).animate(_controller)
@@ -103,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen1>
   // 자동 로그인을 확인하는 비동기 메서드
   // 앱 실행 시, 사용자가 이전에 '자동 로그인'을 체크했는지 확인하고
   // Firebase Authentication 상태와 함께 검증하여 로그인 유지 여부를 결정.
-  void _checkAutoLogin() async {
+  void _checkAutoLogin(WidgetRef ref) async {
     // ───────────────────────────────────────────────────────────────
     // (1) SharedPreferences에서 autoLogin 값 가져오기
     //     - 사용자 기기에 'autoLogin' 여부(체크박스 상태) 저장되어 있는지 확인
@@ -134,6 +137,22 @@ class _SplashScreenState extends State<SplashScreen1>
         await FirebaseAuth.instance.signOut();
         // 로그아웃 직후 user 상태를 null로 업데이트 (화면에 즉시 반영할 수 있도록)
         user = null;
+      } else {
+        // SNS 계정 로그인 사용자인 경우 추가 검증 필요
+        // ───────────────────────────────────────────────────────────────
+        // (3-2) Firestore 'users' 컬렉션에서 사용자 문서 확인
+        //       - SNS 계정 로그인 사용자의 경우에도
+        //         Firestore 'users' 컬렉션에 해당 문서가 없을 경우 로그아웃 처리
+        // ───────────────────────────────────────────────────────────────
+        // Firestore 사용자 문서 존재 여부 확인
+        final userDocumentExists = await ref.read(userDocumentExistsProvider(user.email).future);
+
+        // 사용자 문서가 존재하지 않으면 로그아웃 처리
+        if (!userDocumentExists) {
+          print('Firestore에서 사용자 문서를 찾을 수 없음: ${user.email}');
+          await FirebaseAuth.instance.signOut();
+          user = null;
+        }
       }
 
       // SNS 계정 로그인 사용자의 경우는 3-1인 이메일/비밀번호 사용자이고(autoLogin == false)이면 로그아웃 처리에 해당하지 않는 경우이므로

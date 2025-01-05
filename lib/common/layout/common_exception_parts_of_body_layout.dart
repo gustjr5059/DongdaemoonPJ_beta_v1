@@ -1564,7 +1564,9 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   final double flowImageHeight = screenSize.height * (20 / referenceHeight);
 
   // 이메일 부분 수치
-  final double emailTextFontSize = screenSize.height * (20 / referenceHeight);
+  final double emailTextFontSize1 = screenSize.height * (20 / referenceHeight);
+  final double emailTextFontSize2 = screenSize.height * (16 / referenceHeight);
+  final double emailTextFontSize3 = screenSize.height * (8 / referenceHeight);
 
   // 에러 관련 텍스트 수치
   final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
@@ -1621,7 +1623,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                       return Text(
                         '로그인 후 이용해주세요.', // 메시지 텍스트 설정
                         style: TextStyle(
-                          fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                          fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
                           color: BLACK_COLOR, // 텍스트 색상 설정
                           fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
                           fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
@@ -1641,7 +1643,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                           return Text(
                             '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
                             style: TextStyle(
-                              fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                              fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
                               color: BLACK_COLOR, // 텍스트 색상 설정
                               fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
                               fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
@@ -1654,7 +1656,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                           text: TextSpan(
                             text: '$userName님', // 첫 번째 텍스트 (사용자 이름)
                             style: TextStyle(
-                              fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                              fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
                               color: BLACK_COLOR, // 텍스트 색상 설정
                               fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
                               fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
@@ -1663,7 +1665,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                               TextSpan(
                                 text: ' 반가워요.', // 두 번째 텍스트 (환영 메시지)
                                 style: TextStyle(
-                                  fontSize: emailTextFontSize, // 텍스트 폰트 크기 설정
+                                  fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
                                   fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
                                   fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정

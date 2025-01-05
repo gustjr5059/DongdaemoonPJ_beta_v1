@@ -123,6 +123,18 @@ class SNSLoginRepository {
       throw Exception('Google 로그인 중 오류 발생: ${e.toString()}'); // 디버깅용 메시지
     }
   }
+
+  // Firestore 'users' 컬렉션에서 사용자 문서를 조회 (앱 실행 시, 로그인 계정으로 users 컬렉션 하위 문서가 존재하는지 유무 체크 -> 없을 시 자동 로그아웃)
+  Future<bool> checkIfUserDocumentExists(String? email) async {
+    if (email == null) return false; // 이메일이 null인 경우 false 반환
+    try {
+      final userDoc = await firestore.collection('users').doc(email).get();
+      return userDoc.exists; // 문서가 존재하면 true 반환
+    } catch (e) {
+      print('Firestore 사용자 문서 조회 중 오류 발생: $e');
+      return false; // 오류 발생 시 false 반환
+    }
+  }
 }
 // ----- SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API 등을 다루는 로직 끝 부분
 
