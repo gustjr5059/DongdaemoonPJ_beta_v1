@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../common/const/colors.dart';
@@ -273,16 +274,36 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
                 } else if (snapshot.hasError) {
                   return Text(
                       '콘텐츠 로드 중 오류 발생: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
+            //     } else {
+            //       // 성공적으로 로드된 경우
+            //       return Text(
+            //         snapshot.data ?? '', // 로드된 텍스트를 표시함
+            //         style: TextStyle(
+            //           fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
+            //           fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+            //           fontFamily: 'NanumGothic', // 글꼴 설정
+            //           color: BLACK_COLOR, // 텍스트 색상 설정
+            //         ), // 텍스트 스타일을 설정함
+            //       );
+            //     }
+            //   },
+            // ),
+                  // 파이어베이스 내 html로 구현된 txt 파일 -> html로 전환하여 보여주는 UI 구현 로직 부분 (flutter_html 라이브러리 사용)
                 } else {
-                  // 성공적으로 로드된 경우
-                  return Text(
-                    snapshot.data ?? '', // 로드된 텍스트를 표시함
-                    style: TextStyle(
-                      fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
-                      fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic', // 글꼴 설정
-                      color: BLACK_COLOR, // 텍스트 색상 설정
-                    ), // 텍스트 스타일을 설정함
+                  // 여기서 flutter_html 사용
+                  return Html(
+                    data: snapshot.data ?? '',
+                    style: {
+                      // body 태그 전체에 대한 스타일
+                      "body": Style(
+                        fontFamily: 'NanumGothic',
+                        fontSize: FontSize(announceDtlistTextDataFontSize),
+                        color: BLACK_COLOR,
+                      ),
+                      // 예: <h1> 태그 스타일, <p> 태그 스타일 따로 적용 가능
+                      // "h1": Style(fontSize: FontSize(20.0)),
+                      // "p": Style(fontSize: FontSize(16.0)),
+                    },
                   );
                 }
               },

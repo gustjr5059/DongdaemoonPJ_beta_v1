@@ -1566,7 +1566,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // 이메일 부분 수치
   final double emailTextFontSize1 = screenSize.height * (20 / referenceHeight);
   final double emailTextFontSize2 = screenSize.height * (16 / referenceHeight);
-  final double emailTextFontSize3 = screenSize.height * (8 / referenceHeight);
+  final double emailTextFontSize3 = screenSize.height * (10 / referenceHeight);
 
   // 에러 관련 텍스트 수치
   final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);

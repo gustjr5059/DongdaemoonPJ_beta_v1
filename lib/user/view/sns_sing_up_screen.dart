@@ -1,3 +1,4 @@
+import 'package:dongdaemoon_beta_v1/user/view/sign_up_document_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/colors.dart';
@@ -147,6 +148,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     final double signUpBtnWidth = screenSize.width * (130 / referenceWidth);
     final double signUpBtnFontSize = screenSize.height * (16 / referenceHeight);
 
+    // 이미지 위치 조정을 위한 비율 기반 수치
+    final double personImageWidth = screenSize.width * (190 / referenceWidth);
+    final double personImageHeight = screenSize.height * (170 / referenceHeight);
+
     return GestureDetector(
       onTap: () {
         // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
@@ -263,7 +268,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                         });
                       }),
                       _buildAgreementRow(
-                          '개인정보 수집 이용 동의 (필수)', isAgreedToPrivacy, (value) {
+                          '개인정보 수집 및 이용 동의 (필수)', isAgreedToPrivacy, (value) {
                         setState(() {
                           isAgreedToPrivacy = value ?? false;
                           _updateAllAgreement();
@@ -305,6 +310,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                           ),
                         ),
                       ),
+                      SizedBox(height: interval3Y),
+                      // 사람 이미지 추가
+                      Center(
+                          child: Image.asset(
+                            'asset/img/misc/login_image/login_bottom_image1.png',
+                            width: personImageWidth,
+                            height: personImageHeight,
+                            fit: BoxFit.contain, // 이미지 크기 조정
+                          ),
+                      ),
                     ],
                   ),
                   ),
@@ -323,6 +338,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
       isLoading = true;
     });
     try {
+      // FireStore에 사용자 정보 저장
       await signUpInfoRepository.signUpUser(
         snsType: widget.snsType, // SNS 타입 전달
         snsId: _snsIdController.text,
@@ -338,13 +354,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
       showCustomSnackBar(context, '회원가입이 완료되었습니다!');
 
       // 회원가입 후 홈 화면 이동
-      Future.microtask(() {
+      // FireStore 저장 완료 후 화면 이동
+      if (mounted) {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => MainHomeScreen()),
           (route) => false,
         );
-      });
+      }
     } catch (e) {
       // ScaffoldMessenger.of(context).showSnackBar(
       //   SnackBar(content: Text('회원가입 중 문제가 발생했습니다: $e')),
@@ -402,7 +419,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
         if (!isOverAgeRow)
           GestureDetector(
             onTap: () {
-              _showAgreementDetail(text);
+              // "보기" 버튼 클릭 시 분기 처리
+              String documentId;
+              String title;
+              if (text == '이용약관 동의 (필수)') {
+                documentId = 'document_1';
+                title = '웨어카노 서비스 이용 약관';
+              } else if (text == '개인정보 수집 및 이용 동의 (필수)') {
+                documentId = 'document_2';
+                title = '개인정보 수집 및 이용 내역';
+              } else {
+                return;
+              }
+
+              // SignUpDocumentScreen으로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignUpDocumentScreen(
+                    documentId: documentId,
+                    title: title,
+                  ),
+                ),
+              );
             },
             child: Text(
               '보기',
@@ -419,23 +458,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     );
   }
 
-  Future<void> _showAgreementDetail(String agreementTitle) async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(agreementTitle),
-          content: Text('$agreementTitle의 세부 내용이 여기에 표시됩니다.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('닫기'),
-            )
-          ],
-        );
-      },
-    );
-  }
 
   bool _isSignUpEnabled() {
     return isAgreedToTerms &&
