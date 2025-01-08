@@ -72,10 +72,10 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
 
     // 로그인 실패 시 스낵바
     if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
-      showCustomSnackBar(context, state.errorMessage!);
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text(state.errorMessage!)),
-      // );
+      // 에러 메시지가 존재하되, Apple 로그인 취소 상태는 제외
+      if (!state.errorMessage!.contains('canceled')) {
+        showCustomSnackBar(context, state.errorMessage!);
+      }
     }
 
     // 기존 회원일 경우: MainHomeScreen으로 이동

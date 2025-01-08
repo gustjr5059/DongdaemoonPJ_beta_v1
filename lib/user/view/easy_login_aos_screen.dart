@@ -69,11 +69,11 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
     });
 
     // 로그인 실패 시
-    if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+    // 에러 메시지 표시 (취소 상태는 제외)
+    if (state.errorMessage != null &&
+        state.errorMessage!.isNotEmpty &&
+        !state.errorMessage!.contains('취소')) {
       showCustomSnackBar(context, state.errorMessage!);
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text(state.errorMessage!)),
-      // );
     }
 
     // 기존 회원이면 -> 메인 화면으로 이동

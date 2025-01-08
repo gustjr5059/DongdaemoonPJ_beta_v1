@@ -101,13 +101,20 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
       final signInResult = await repository.signInWithApple();
       print('Apple 로그인 결과: $signInResult');
 
+      // if (signInResult == null) {
+      //   // 로그인 실패 처리
+      //   print('Apple 로그인 실패.');
+      //   state = state.copyWith(
+      //     isLoading: false,
+      //     errorMessage: '로그인 중 문제가 발생했습니다. 다시 시도해주세요.',
+      //   );
+      //   return;
+      // }
+
       if (signInResult == null) {
-        // 로그인 실패 처리
-        print('Apple 로그인 실패.');
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: '로그인 중 문제가 발생했습니다. 다시 시도해주세요.',
-        );
+        // Apple 로그인 취소 시 처리 없음
+        print('Apple 로그인이 취소되었습니다.');
+        state = state.copyWith(isLoading: false);
         return;
       }
 
@@ -184,13 +191,20 @@ class GoogleSignInNotifier extends StateNotifier<GoogleSignInState> {
       final signInResult = await repository.signInWithGoogle();
       print('Google 로그인 결과: $signInResult');
 
+      // if (signInResult == null) {
+      //   // 로그인 실패 처리
+      //   print('Google 로그인 실패.');
+      //   state = state.copyWith(
+      //     isLoading: false,
+      //     errorMessage: '로그인에 실패하였습니다. 다시 시도해주세요.',
+      //   );
+      //   return;
+      // }
+
       if (signInResult == null) {
-        // 로그인 실패 처리
-        print('Google 로그인 실패.');
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: '로그인에 실패하였습니다. 다시 시도해주세요.',
-        );
+        // Google 로그인 취소 처리
+        print('Google 로그인이 취소되었습니다.');
+        state = state.copyWith(isLoading: false);
         return;
       }
 

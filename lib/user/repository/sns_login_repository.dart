@@ -63,9 +63,19 @@ class SNSLoginRepository {
         userCredential: userCredential,
         isExistingUser: isExistingUser,
       );
-    } catch (e) {
+      // 사용자가 로그인 창을 취소했을 시, 로그인 실패 에러 메시지가 나오는 이슈 해결 포인트!!
+    } on SignInWithAppleAuthorizationException catch (e) {
+      // 사용자가 로그인 창을 취소했을 경우 (canceled 상태)
+      if (e.code == AuthorizationErrorCode.canceled) {
+        print('Apple 로그인 취소됨.');
+        return null; // 단순히 null 반환, 추가 처리 없음
+      }
+      // 다른 에러는 처리
       print('Apple 로그인 중 오류 발생: $e');
-      throw Exception('Apple 로그인 중 오류 발생: ${e.toString()}'); // 디버깅용 메시지
+      throw Exception('Apple 로그인 중 오류 발생: ${e.toString()}');
+    } catch (e) {
+      print('Apple 로그인 중 예상치 못한 오류 발생: $e');
+      throw Exception('Apple 로그인 중 오류 발생: ${e.toString()}');
     }
   }
 
@@ -82,18 +92,19 @@ class SNSLoginRepository {
       await googleSignIn.signOut();
       print('기존 Google 로그인 세션 초기화 완료.');
 
-      // 2. Google 로그인 프로세스를 실행하여 계정을 얻음
+      // 2. Google 로그인 프로세스 실행
       final googleUser = await googleSignIn.signIn();
+      // 로그인 취소 처리
       if (googleUser == null) {
         print('Google 로그인 취소됨.');
         return null; // 사용자가 로그인 취소 시 null 반환
       }
-
       print('Google 계정 정보 획득 성공. 인증 정보 요청 중.');
+
       // 3. Google 인증 정보를 획득함
       final googleAuth = await googleUser.authentication;
-
       print('Firebase 인증 정보로 Google 로그인 요청 중.');
+
       // 4. FirebaseAuth에서 Credential을 생성 후 로그인함
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
