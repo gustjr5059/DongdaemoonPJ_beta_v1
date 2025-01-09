@@ -34,6 +34,7 @@ import '../../inquiry/provider/inquiry_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../order/provider/order_state_provider.dart';
+import '../../user/provider/profile_all_providers.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_all_providers.dart';
@@ -571,6 +572,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(homeSmall1BannerPageProvider.notifier).state = 0; // 홈 소배너1 페이지뷰 초기화
   ref.read(homeSmall2BannerPageProvider.notifier).state = 0; // 홈 소배너2 페이지뷰 초기화
   ref.read(homeSmall3BannerPageProvider.notifier).state = 0; // 홈 소배너3 페이지뷰 초기화
+  ref.invalidate(eventPosterImgItemsProvider);
   // 홈 화면 관련 초기화 부분 끝
 
   // 장바구니 화면 관련 초기화 부분 시작
@@ -578,6 +580,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(cartScrollPositionProvider.notifier).state =
   0.0;
   ref.invalidate(cartItemsProvider); // 장바구니 데이터 초기화
+  // resetAndReloadCartItems를 호출하기 위해 cartItemsProvider.notifier를 읽어서 호출
+  ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
+  ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+  ref.invalidate(allCheckedProvider); // 하단 탭 바 내 전체 체크박스 체크 표시 상태 초기화
   // 장바구니 화면 관련 초기화 부분 끝
 
   // 발주 내역 화면 관련 초기화 부분 시작
@@ -615,12 +621,14 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
   ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록  데이터 로드 초기화
   ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
+  ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
   // 찜 목록 화면 관련 초기화 부분 끝
 
   // 마이페이지 화면 관련 초기화 부분 시작
   ref.read(profileMainScrollPositionProvider.notifier).state =
   0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(profileMainSmall1BannerPageProvider.notifier).state = 0; // 마이페이지 소배너 페이지뷰 초기화
+  ref.invalidate(profileUserInfoProvider); // 마이페이지 회원정보 데이터 초기화
   // 머아패아자 화면 관련 초기화 부분 끝
 
   // 공지사항 화면 관련 초기화 부분 시작

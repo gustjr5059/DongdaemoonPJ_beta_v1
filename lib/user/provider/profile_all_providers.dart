@@ -7,7 +7,7 @@ import '../repository/profile_repository.dart'; // profile_repository.dart 파�
 final profileRepositoryProvider = Provider((ref) => ProfileRepository(firestore: FirebaseFirestore.instance));
 
 // 이메일을 매개변수로 받아 사용자 정보를 제공하는 FutureProvider.family를 정의.
-final userInfoProvider = FutureProvider.family<Map<String, dynamic>?, String>((ref, email) async {
+final profileUserInfoProvider = FutureProvider.family<Map<String, dynamic>?, String>((ref, email) async {
   // profileRepositoryProvider를 사용하여 ProfileRepository 인스턴스를 가져옴.
   final repository = ref.watch(profileRepositoryProvider);
   // ProfileRepository의 getUserInfoByEmail 메서드를 호출하여 사용자 정보를 반환.

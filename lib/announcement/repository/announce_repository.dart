@@ -10,9 +10,9 @@ class AnnouncementRepository {
   // Firestore에서 공지사항 아이템을 페이징하여 가져오는 함수임
   Future<List<Map<String, dynamic>>> getPagedAnnounceItems(
       {DocumentSnapshot? lastDocument, required int limit}) async {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
-    if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    // final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    // final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    // if (userEmail == null) throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 개수만큼 데이터를 불러온다는 메시지를 출력함
 

@@ -76,19 +76,20 @@ class AnnounceItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     isLoadingMore = true; // 로딩 상태를 true로 설정함
     ref.read(isLoadingProvider.notifier).state = true; // 로딩 상태를 관리하는 프로바이더의 상태를 true로 설정함
 
-    // 사용자 인증 상태를 확인함
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print("사용자가 로그인되어 있지 않습니다.");
-      state = []; // 로그인하지 않은 경우 상태를 빈 리스트로 설정함
-      isLoadingMore = false; // 로딩 상태를 해제함
-      return;
-    }
+    // // 사용자 인증 상태를 확인함
+    // final user = FirebaseAuth.instance.currentUser;
+    // if (user == null) {
+    //   print("사용자가 로그인되어 있지 않습니다.");
+    //   state = []; // 로그인하지 않은 경우 상태를 빈 리스트로 설정함
+    //   isLoadingMore = false; // 로딩 상태를 해제함
+    //   return;
+    // }
 
-    // Firestore에서 데이터를 9개씩 페이징 처리로 불러옴
+    print("Firestore에서 새로운 공지사항 아이템 10개를 요청합니다.");
+    // Firestore에서 데이터를 10개씩 페이징 처리로 불러옴
     final newItems = await announceItemRepository.getPagedAnnounceItems(
       lastDocument: lastDocument,
-      limit: 9,
+      limit: 10,
     );
 
     if (newItems.isNotEmpty) {
@@ -110,12 +111,14 @@ class AnnounceItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     isLoadingMore = false; // 로딩 플래그를 초기화함
     state = []; // 상태를 빈 리스트로 초기화함
     lastDocument = null; // 마지막 문서 스냅샷을 초기화함
+    print("공지사항 데이터를 초기화했습니다."); // 데이터 초기화 메시지
   }
 
   // 구독을 취소하고 리소스를 해제하는 함수임
   @override
   void dispose() {
     super.dispose(); // 상위 클래스의 dispose 메서드를 호출함
+    print("AnnounceItemsNotifier의 리소스를 해제했습니다."); // 리소스 해제 메시지
   }
 }
 // ------ AnnounceItemsNotifier 클래스: Firestore와의 상호작용을 통해 공지사항 상태를 관리하는 StateNotifier 클래스 내용 끝
@@ -157,14 +160,14 @@ class AnnounceDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
     isLoadingMore = true; // 로딩 상태를 true로 설정함
     ref.read(isLoadingProvider.notifier).state = true; // 로딩 상태를 관리하는 프로바이더의 상태를 true로 설정함
 
-    // 사용자 인증 상태 확인함
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print("사용자가 로그인되어 있지 않습니다.");
-      state = {}; // 로그인하지 않은 경우 상태를 빈 Map으로 설정함
-      isLoadingMore = false; // 로딩 상태를 해제함
-      return;
-    }
+    // // 사용자 인증 상태 확인함
+    // final user = FirebaseAuth.instance.currentUser;
+    // if (user == null) {
+    //   print("사용자가 로그인되어 있지 않습니다.");
+    //   state = {}; // 로그인하지 않은 경우 상태를 빈 Map으로 설정함
+    //   isLoadingMore = false; // 로딩 상태를 해제함
+    //   return;
+    // }
 
     // Firestore에서 공지사항 문서 데이터를 가져옴
     final announceDetailItem = await announceItemRepository.getAnnounceDetailItem(documentId);
@@ -181,12 +184,14 @@ class AnnounceDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
   void resetAnnounceDetailItem() {
     isLoadingMore = false; // 로딩 플래그를 초기화함
     state = {}; // 상태를 빈 Map으로 초기화함
+    print("공지사항 상세 데이터를 초기화했습니다."); // 데이터 초기화 메시지
   }
 
   // 구독을 취소하고 리소스를 해제하는 함수임
   @override
   void dispose() {
     super.dispose(); // 상위 클래스의 dispose 메서드를 호출함
+    print("AnnounceDetailItemNotifier의 리소스를 해제했습니다."); // 리소스 해제 메시지
   }
 }
 // ------ AnnounceDetailItemNotifier 클래스: Firestore와의 상호작용을 통해 공지사항 상세 내용 상태를 관리하는 StateNotifier 클래스 내용 끝

@@ -54,6 +54,7 @@ import '../../../common/provider/common_all_providers.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../product/model/product_model.dart';
 import '../layout/wishlist_body_parts_layout.dart';
 import '../provider/wishlist_all_providers.dart';
@@ -141,6 +142,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 찜 목록 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
     // // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 wishlistScreenPointScrollController에 저장하는 코드
     // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -155,6 +157,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
         ref.read(wishlistScrollPositionProvider.notifier).state = 0;
         ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록 데이터 로드 초기화
         ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -230,6 +233,23 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
     final double wishlistPaddingX = screenSize.width * (17 / referenceWidth);
     final double wishlistPaddingY = screenSize.height * (8 / referenceHeight);
 
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -265,25 +285,49 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
-              padding: EdgeInsets.only(top: 0),
-              // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return Padding(
-                      // 각 항목의 좌우 간격을 wishlistPaddingX으로 설정함.
-                      padding: EdgeInsets.symmetric(horizontal: wishlistPaddingX),
-                      child: Column(
-                        children: [
-                          WishlistItemsList(), // WishlistItemsList 클래스 사용
-                          SizedBox(height: wishlistPaddingY),
-                        ],
+                padding: EdgeInsets.only(top: 0),
+                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                sliver: Consumer(
+                  builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Padding(
+                            // 각 항목의 좌우 간격을 wishlistPaddingX으로 설정함.
+                            padding: EdgeInsets.symmetric(horizontal: 0),
+                            child: Column(
+                              children: [
+                                WishlistItemsList(), // WishlistItemsList 클래스 사용
+                                SizedBox(height: wishlistPaddingY),
+                              ],
+                            ),
+                          );
+                        },
+                        childCount:
+                        1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                       ),
                     );
                   },
-                  childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                 ),
-              ),
               ),
             ],
           ),
@@ -291,10 +335,8 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: wishlistScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: wishlistScreenPointScrollController),
     );
   }
 }

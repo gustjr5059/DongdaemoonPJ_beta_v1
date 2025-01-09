@@ -21,6 +21,7 @@ final wishlistItemsLoadFutureProvider = FutureProvider.autoDispose.family<List<M
 
   // WishlistItemRepository 인스턴스를 가져옴.
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  print('WishlistItemRepository 인스턴스 획득 완료');
 
   // Firestore의 'couture_wishlist_item' 컬렉션 내에서 해당 사용자의 찜 목록 데이터를 불러옴.
   // 최신 항목이 위로 오도록 timestamp 기준으로 내림차순 정렬함.
@@ -61,6 +62,7 @@ final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Ma
 
   // WishlistItemRepository 인스턴스를 가져옴.
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
+  print('WishlistItemRepository 인스턴스 획득 완료');
 
   // Firestore의 'couture_wishlist_item' 컬렉션 내 해당 사용자의 찜 목록 데이터를 실시간으로 스트리밍함.
   // timestamp 기준으로 내림차순 정렬하여 최신 항목을 먼저 불러옴.
@@ -72,8 +74,14 @@ final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Ma
       .snapshots()
       .map((snapshot) {
 
+    // 실시간으로 가져온 데이터 개수를 출력함.
+    print('실시간 찜 목록 업데이트 - 항목 수: ${snapshot.docs.length}개');
+
     // 실시간으로 가져온 데이터를 map 함수로 변환하여 반환함.
     return snapshot.docs.map((doc) {
+      // 각 항목을 변환할 때 product_id와 관련 정보를 출력함.
+      print('실시간 데이터 항목 변환 - product_id: ${doc['product_id']}');
+
       // Firestore에서 가져온 데이터를 Map 형식으로 반환함.
       return {
         'product_id': doc['product_id'],
@@ -86,4 +94,9 @@ final wishlistItemLoadStreamProvider = StreamProvider.autoDispose.family<List<Ma
       };
     }).toList();  // 변환된 데이터를 리스트로 반환함.
   });
+});
+
+// wishlistIconRepositoryProvider를 정의 - WishlistIconRepository 인스턴스를 제공하는 Provider를 생성
+final wishlistIconRepositoryProvider = Provider<WishlistIconRepository>((ref) {
+  return WishlistIconRepository(firestore: FirebaseFirestore.instance);
 });

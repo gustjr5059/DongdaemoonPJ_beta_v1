@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../common/layout/common_body_parts_layout.dart';
@@ -18,6 +19,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
@@ -67,7 +69,7 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
         final timestamp = announceItem['time'] as Timestamp?;
         // 시간 정보를 문자열로 변환함
         final timeString = timestamp != null
-            ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
+            ? "${timestamp.toDate().year}년 ${timestamp.toDate().month.toString().padLeft(2, '0')}월 ${timestamp.toDate().day.toString().padLeft(2, '0')}일 ${timestamp.toDate().hour.toString().padLeft(2, '0')}시 ${timestamp.toDate().minute.toString().padLeft(2, '0')}분"
             : '';
 
         // 공지사항 항목을 터치할 수 있도록 GestureDetector 사용함
@@ -198,7 +200,7 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final timestamp = announceDetailItem['time'] as Timestamp?; // 공지사항의 시간 정보를 가져옴
     // 시간 정보를 문자열로 변환함
     final timeString = timestamp != null
-        ? "${timestamp.toDate().year}-${timestamp.toDate().month.toString().padLeft(2, '0')}-${timestamp.toDate().day.toString().padLeft(2, '0')} ${timestamp.toDate().hour.toString().padLeft(2, '0')}:${timestamp.toDate().minute.toString().padLeft(2, '0')}"
+        ? "${timestamp.toDate().year}년 ${timestamp.toDate().month.toString().padLeft(2, '0')}월 ${timestamp.toDate().day.toString().padLeft(2, '0')}일 ${timestamp.toDate().hour.toString().padLeft(2, '0')}시 ${timestamp.toDate().minute.toString().padLeft(2, '0')}분"
         : ''; // 시간 정보를 포맷팅함
 
     // URL을 통해 가져오는 텍스트 데이터임
@@ -240,18 +242,44 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
               future: fetchTextFromUrl(contentsTextUrl), // 텍스트 파일을 URL에서 가져옴
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return buildCommonLoadingIndicator(); // 로딩 중일 때 로딩 표시를 보여줌
+                  return Container(
+                    height: screenSize.height * 0.6, // 화면 높이의 60%로 설정함
+                    alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                    child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                  ); // 로딩 중일 때 로딩 표시를 보여줌
                 } else if (snapshot.hasError) {
-                  return Text('콘텐츠 로드 중 오류 발생: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
-                } else { // 성공적으로 로드된 경우
                   return Text(
-                    snapshot.data ?? '', // 로드된 텍스트를 표시함
-                    style: TextStyle(
-                      fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
-                      fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic', // 글꼴 설정
-                      color: BLACK_COLOR, // 텍스트 색상 설정
-                    ),  // 텍스트 스타일을 설정함
+                      '콘텐츠 로드 중 오류 발생: ${snapshot.error}'); // 에러 발생 시 에러 메시지를 출력함
+                  //     } else {
+                  //       // 성공적으로 로드된 경우
+                  //       return Text(
+                  //         snapshot.data ?? '', // 로드된 텍스트를 표시함
+                  //         style: TextStyle(
+                  //           fontSize: announceDtlistTextDataFontSize, // 텍스트 크기 설정
+                  //           fontWeight: FontWeight.normal, // 텍스트 굵기 설정
+                  //           fontFamily: 'NanumGothic', // 글꼴 설정
+                  //           color: BLACK_COLOR, // 텍스트 색상 설정
+                  //         ), // 텍스트 스타일을 설정함
+                  //       );
+                  //     }
+                  //   },
+                  // ),
+                  // 파이어베이스 내 html로 구현된 txt 파일 -> html로 전환하여 보여주는 UI 구현 로직 부분 (flutter_html 라이브러리 사용)
+                } else {
+                  // 여기서 flutter_html 사용
+                  return Html(
+                    data: snapshot.data ?? '',
+                    style: {
+                      // body 태그 전체에 대한 스타일
+                      "body": Style(
+                        fontFamily: 'NanumGothic',
+                        fontSize: FontSize(announceDtlistTextDataFontSize),
+                        color: BLACK_COLOR,
+                      ),
+                      // 예: <h1> 태그 스타일, <p> 태그 스타일 따로 적용 가능
+                      // "h1": Style(fontSize: FontSize(20.0)),
+                      // "p": Style(fontSize: FontSize(16.0)),
+                    },
                   );
                 }
               },

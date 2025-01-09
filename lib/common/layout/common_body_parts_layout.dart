@@ -27,6 +27,7 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
+import '../../user/view/login_screen.dart';
 import '../model/banner_model.dart';
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod 상태 관리 라이브러리
@@ -627,7 +628,7 @@ List<Widget> buildAlertActions(BuildContext context, {
 
 // ------ 공통 SnackBar 함수 내용 시작
 // 공통 SnackBar 함수
-void showCustomSnackBar(BuildContext context, String message) {
+void showCustomSnackBar(BuildContext context, String message, {Duration duration = const Duration(milliseconds: 2000)}) {
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -663,6 +664,7 @@ void showCustomSnackBar(BuildContext context, String message) {
         horizontal: commonSnackBarX, // X축 패딩 설정
         vertical: commonSnackBarY, // Y축 패딩 설정
       ),
+      duration: duration, // 스낵바 유지 시간 설정 (동적으로 설정 가능)
     ),
   );
 }
@@ -941,3 +943,99 @@ Widget buildCommonErrorIndicator({
   );
 }
 // ------- 공통 에러 인디케이터 위젯 함수 내용 끝
+
+// ------- 공통 로그인이 되어있지 않은 상태에서의 UI 구현 관련 함수 내용 시작
+class LoginRequiredWidget extends StatelessWidget {
+  final double textWidth;
+  final double textHeight;
+  final double textFontSize;
+  final double buttonWidth;
+  final double buttonPaddingX;
+  final double buttonPaddingY;
+  final double buttonFontSize;
+  final double marginTop;
+  final double interval;
+
+  const LoginRequiredWidget({
+    Key? key,
+    required this.textWidth,
+    required this.textHeight,
+    required this.textFontSize,
+    required this.buttonWidth,
+    required this.buttonPaddingX,
+    required this.buttonPaddingY,
+    required this.buttonFontSize,
+    required this.marginTop,
+    required this.interval,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // 안내 문구
+        Container(
+          width: textWidth, // 텍스트 너비
+          height: textHeight, // 텍스트 높이
+          margin: EdgeInsets.only(top: marginTop), // 상단 여백
+          alignment: Alignment.center, // 중앙 정렬
+          child: Text(
+            '로그인 후 이용해주세요.', // 안내 문구
+            style: TextStyle(
+              fontSize: textFontSize, // 텍스트 크기
+              fontFamily: 'NanumGothic', // 폰트
+              fontWeight: FontWeight.bold, // 굵기
+              color: BLACK_COLOR, // 색상
+            ),
+            textAlign: TextAlign.center, // 중앙 정렬
+          ),
+        ),
+        SizedBox(height: interval), // 텍스트와 버튼 사이 간격
+        // 로그인 버튼
+        Container(
+          width: buttonWidth, // 버튼 너비
+          alignment: Alignment.center, // 중앙 정렬
+          child: ElevatedButton(
+            onPressed: () {
+              // 플랫폼에 따라 로그인 화면 이동
+              if (Platform.isIOS) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                );
+              } else if (Platform.isAndroid) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                );
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: SOFTGREEN60_COLOR, // 텍스트 색상
+              backgroundColor: SOFTGREEN60_COLOR, // 버튼 배경 색상
+              padding: EdgeInsets.symmetric(
+                vertical: buttonPaddingY,
+                horizontal: buttonPaddingX,
+              ), // 패딩
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(45), // 둥근 모서리
+              ),
+            ),
+            child: Text(
+              '로그인 하기', // 버튼 텍스트
+              style: TextStyle(
+                fontSize: buttonFontSize, // 텍스트 크기
+                fontFamily: 'NanumGothic', // 폰트
+                fontWeight: FontWeight.bold, // 굵기
+                color: WHITE_COLOR, // 텍스트 색상
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+// ------- 공통 로그인이 되어있지 않은 상태에서의 UI 구현 관련 함수 내용 끝

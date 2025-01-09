@@ -41,6 +41,7 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 장바구니 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/cart_body_parts_layout.dart';
 import '../provider/cart_all_proviers.dart';
 import '../provider/cart_state_provider.dart';
@@ -124,8 +125,9 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // -> 장바구니 화면 초기화 시, 하단 탭 바 내 장바구니 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 1;
       // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
-      ref.read(cartItemsProvider.notifier).resetCartItems();
-      ref.read(cartItemsProvider.notifier).loadMoreCartItems();
+      ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+      ref.invalidate(allCheckedProvider); // 하단 탭 바 내 전체 체크박스 체크 표시 상태 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -136,6 +138,10 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(cartScrollPositionProvider.notifier).state =
             0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
+        // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
+        ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+        ref.invalidate(allCheckedProvider); // 하단 탭 바 내 전체 체크박스 체크 표시 상태 초기화
       }
     });
 
@@ -227,6 +233,35 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     final double cartlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
+    // 장바구니 안내사항 텍스트 수치
+    final double cartlistGuideTextWidth =
+        screenSize.width * (300 / referenceWidth); // 가로 비율
+    final double cartlistGuideTextFontSize1 =
+        screenSize.height * (14 / referenceHeight); // 세로 비율
+    final double cartlistGuideTextFontSize2 =
+        screenSize.height * (10 / referenceHeight); // 세로 비율
+    final double interval1Y =
+        screenSize.height * (4 / referenceHeight); // 세로 비율
+    final double interval2Y =
+        screenSize.height * (6 / referenceHeight); // 세로 비율
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -292,48 +327,85 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                 // Consumer 위젯을 사용하여 cartItemsProvider의 상태를 구독
                 sliver: Consumer(
                   builder: (context, ref, child) {
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
+                    // 사용자가 로그인되어 있을 경우 기존 장바구니 UI를 표시
                     // cartItemsProvider의 상태를 가져옴
                     final cartItems = ref.watch(cartItemsProvider);
-                    // 장바구니가 비어 있을 경우 '현재 요청품목이 없습니다.' 텍스트를 중앙에 표시
+                    final isLoading = ref.watch(isLoadingProvider);
+                    // 장바구니가 비어 있을 경우 '현재 장바구니 상품이 없습니다.' 텍스트를 중앙에 표시
                     // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
                     // loading: (), error: (err, stack)를 구분해서 구현 못함
                     // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-                    // 그대신 로딩 표시를 못 넣음...
+                    // 로딩 표시는 아래의 (cartItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (cartItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
-                            child: Container(
-                                width: cartlistEmptyTextWidth,
-                                height: cartlistEmptyTextHeight,
-                                margin: EdgeInsets.only(top: cartlistEmptyTextY),
-                              // 텍스트를 중앙에 위치하도록 설정함.
-                              alignment: Alignment.center,
-                                child: Text('현재 요청품목이 없습니다.',
-                              style: TextStyle(
-                                fontSize: cartlistEmptyTextFontSize,
-                                fontFamily: 'NanumGothic',
-                                fontWeight: FontWeight.bold,
-                                color: BLACK_COLOR,
-                              ),
-                             ),
-                           ),
-                        )
-                        // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                      child: Container(
+                        width: cartlistEmptyTextWidth,
+                        height: cartlistEmptyTextHeight,
+                        margin: EdgeInsets.only(top: cartlistEmptyTextY),
+                        // 텍스트를 중앙에 위치하도록 설정함.
+                        alignment: Alignment.center,
+                        child: Text(
+                          '현재 장바구니 상품이 없습니다.',
+                          style: TextStyle(
+                            fontSize: cartlistEmptyTextFontSize,
+                            fontFamily: 'NanumGothic',
+                            fontWeight: FontWeight.bold,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                    )
+                    // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
-                            // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return Column(
-                                  // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                                  children: [
-                                    // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
-                                    CartItemsList(),
-                                  ],
-                                );
-                              },
-                              // 아이템 개수를 1로 설정
-                              childCount: 1,
-                            ),
+                      // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Column(
+                            // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                            children: [
+                              // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
+                              CartItemsList(),
+                            ],
                           );
+                        },
+                        // 아이템 개수를 1로 설정
+                        childCount: 1,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -344,8 +416,8 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         ],
       ),
       // 하단 네비게이션 바를 빌드하는 함수 호출
-      bottomNavigationBar:
-          buildCommonBottomNavigationBar(0, ref, context, 0, 3, scrollController: cartScreenPointScrollController),
+      bottomNavigationBar: buildCommonBottomNavigationBar(0, ref, context, 0, 3,
+          scrollController: cartScreenPointScrollController),
     );
   }
 }

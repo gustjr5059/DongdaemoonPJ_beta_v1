@@ -31,6 +31,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
 
   // 생성자에서 Firestore 데이터를 구독하는 메서드 호출
   WishlistItemNotifier(this.wishlistItemRepository, this.userEmail) : super(const AsyncValue.loading()) {
+    print("WishlistItemNotifier 초기화 - Firestore 실시간 데이터 구독 시작");
     // Firestore의 실시간 데이터를 구독하는 메서드 호출
     _listenToWishlistItems();
   }
@@ -44,8 +45,10 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
         .snapshots()
         .listen((snapshot) {
       final itemIds = snapshot.docs.map((doc) => doc['product_id'] as String).toSet();
-      state = AsyncValue.data(itemIds);
+      state = AsyncValue.data(itemIds); // 실시간 데이터 수신 후 상태 업데이트
+      print("찜 목록 업데이트 - 현재 찜된 상품 수: ${itemIds.length}"); // 찜 목록 업데이트 로그
     }, onError: (error, stackTrace) {
+      print("찜 목록 구독 중 오류 발생: $error"); // 오류 발생 로그
       state = AsyncValue.error(error, stackTrace);
     });
   }
@@ -53,6 +56,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   // 클래스가 dispose될 때 구독을 취소하는 메서드
   @override
   void dispose() {
+    print("WishlistItemNotifier dispose 호출 - Firestore 구독 취소");
     // 구독 취소
     _subscription.cancel();
     super.dispose();
@@ -66,20 +70,26 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
       final items = (state as AsyncData<Set<String>>).value;
       // 상품이 찜 목록에 있는 경우 제거
       if (items.contains(productId)) {
+        print("상품 제거 요청 - productId: $productId"); // 상품 제거 요청 로그
         state = AsyncValue.data(Set.from(items)..remove(productId));
       } else {
+        print("상품 추가 요청 - productId: $productId"); // 상품 추가 요청 로그
         // 상품이 찜 목록에 없는 경우 추가
         state = AsyncValue.data(Set.from(items)..add(productId));
       }
+      print("찜 목록 상태 업데이트 - 현재 찜된 상품 수: ${state.value?.length ?? 0}"); // 상태 업데이트 로그
     }
   }
 
   // 상품 ID를 기준으로 찜 목록에서 제거하는 함수인 removeItem
   void removeItem(String productId) async {
     try {
+      print("Firestore에서 상품 제거 요청 - productId: $productId"); // Firestore 제거 요청 로그
       await wishlistItemRepository.removeFromWishlistItem(userEmail, productId);
-      state = state.whenData((items) => Set.from(items)..remove(productId));
+      state = state.whenData((items) => Set.from(items)..remove(productId)); // Firestore 제거 후 상태 업데이트
+      print("상품 제거 완료 - productId: $productId"); // 제거 완료 로그
     } catch (error, stackTrace) {
+      print("상품 제거 중 오류 발생 - productId: $productId, 오류: $error"); // 오류 발생 로그
       state = AsyncValue.error(error, stackTrace);
     }
   }
@@ -90,8 +100,10 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
     if (state is AsyncData) {
       // 현재 찜 목록 상태를 가져옴
       final items = (state as AsyncData<Set<String>>).value;
+      print("Firestore에서 상품 추가 요청 - productId: $productId"); // 상품 추가 요청 로그
       // 상품을 찜 목록에 추가
       state = AsyncValue.data(Set.from(items)..add(productId));
+      print("상품 추가 완료 - 현재 찜된 상품 수: ${state.value?.length ?? 0}"); // 추가 완료 로그
     }
   }
 
@@ -101,9 +113,11 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
     if (state is AsyncData) {
       // 현재 찜 목록 상태를 가져옴
       final items = (state as AsyncData<Set<String>>).value;
-      // 상품이 찜 목록에 있는지 여부 반환
-      return items.contains(productId);
+      final isWished = items.contains(productId); // 상품이 찜 목록에 있는지 확인
+      print("상품 찜 상태 확인 - productId: $productId, 찜 상태: $isWished"); // 찜 상태 확인 로그
+      return isWished;
     }
+    print("상품 찜 상태 확인 실패 - 데이터가 없습니다."); // 데이터 없음 로그
     // 현재 상태가 데이터가 아닌 경우 false 반환
     return false;
   }
@@ -117,4 +131,11 @@ final wishlistItemProvider = StateNotifierProvider.family<WishlistItemNotifier, 
   final wishlistRepository = ref.watch(wishlistItemRepositoryProvider);
   // WishlistItemNotifier를 생성하고 반환함.
   return WishlistItemNotifier(wishlistRepository, userEmail);
+});
+
+// 찜 목록 문서 갯수 상태를 구독하는 StreamProvider
+final wishlistItemCountProvider = StreamProvider<int>((ref) {
+  // WishlistRepository를 가져와 watchCartItemCount 호출
+  final WishlistRepository = ref.read(wishlistIconRepositoryProvider);
+  return WishlistRepository.watchWishlistItemCount();
 });

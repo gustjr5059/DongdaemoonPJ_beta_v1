@@ -9,3 +9,14 @@ final cartItemRepositoryProvider = Provider((ref) => CartItemRepository(
   firestore: FirebaseFirestore.instance, // Firebase Firestore 인스턴스를 전달
   storage: FirebaseStorage.instance, // Firebase Storage 인스턴스를 전달
 ));
+
+// cartIconRepositoryProvider를 정의 - CartIconRepository 인스턴스를 제공하는 Provider를 생성
+final cartIconRepositoryProvider = Provider<CartIconRepository>((ref) {
+  return CartIconRepository(firestore: FirebaseFirestore.instance);
+});
+
+// bool_checked 필드를 전체 false로 변경하기 위한 FutureProvider 추가
+final resetAllCartItemsCheckedProvider = FutureProvider<void>((ref) async {
+  final cartItemRepository = ref.read(cartItemRepositoryProvider);
+  await cartItemRepository.resetAllCartItemsChecked();
+});

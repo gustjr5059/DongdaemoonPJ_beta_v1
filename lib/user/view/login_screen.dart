@@ -159,9 +159,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
           // 탭 인덱스를 0으로 설정
           ref.read(tabIndexProvider.notifier).state = 0;
-          // 홈 화면으로 이동 및 현재 화면을 대체
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => HomeMainScreen()),
+          // 이전 화면 스택을 모두 제거하고 홈 화면으로 이동
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => HomeMainScreen()),
+                (Route<dynamic> route) => false,
           );
         });
       }
@@ -257,6 +258,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // 화면 이름 부분 수치
     final double screenNameTop =
         screenSize.height * (54 / referenceHeight); // 위쪽 여백 비율
+    final double backBtnTop =
+        screenSize.height * (48 / referenceHeight);
+    final double backBtnLeft =
+        screenSize.width * (10 / referenceWidth);
 
     // 화면 제목 부분 수치
     final double screenTitleLeft =
@@ -397,6 +402,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
           ),
+          // 닫기 아이콘 (스택이 있을 때만 표시)
+          if (Navigator.canPop(context))
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: backBtnLeft, top: backBtnTop),
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back), // 이전화면으로 이동 아이콘 설정
+                  color: BLACK_COLOR, // 색상 설정
+                  onPressed: () {
+                    Navigator.pop(context); // 누르면 이전 화면으로 돌아가기
+                  },
+                ),
+              ),
+            ),
           // 타이틀 텍스트
           Align(
             alignment: Alignment.topCenter,

@@ -224,5 +224,67 @@ class CartItemRepository {
     await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(id).update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
     print('장바구니 아이템 체크 상태 업데이트 완료: ID: $id');
   }
+
+  // 새로 추가되는 함수: 현재 로그인한 사용자의 모든 장바구니 아이템의 bool_checked 필드를 false로 업데이트
+  Future<void> resetAllCartItemsChecked() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('사용자가 로그인되어 있지 않습니다.');
+      // throw Exception('사용자가 로그인되어 있지 않습니다.');
+      return; // 예외를 던지지 않고 함수 종료
+    }
+    final userEmail = user.email;
+    if (userEmail == null) {
+      print('사용자 이메일을 가져올 수 없습니다.');
+      // throw Exception('사용자 이메일을 가져올 수 없습니다.');
+      return; // 예외를 던지지 않고 함수 종료
+    }
+
+    print('사용자 $userEmail의 모든 장바구니 아이템의 bool_checked 필드를 false로 업데이트합니다.');
+
+    final collectionRef = firestore.collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items');
+
+    // Firestore의 batch 기능을 사용해 모든 문서에 대해서 bool_checked를 false로 변경
+    final querySnapshot = await collectionRef.get();
+    if (querySnapshot.docs.isNotEmpty) {
+      WriteBatch batch = firestore.batch();
+      for (var doc in querySnapshot.docs) {
+        batch.update(doc.reference, {'bool_checked': false});
+      }
+      await batch.commit();
+      print('모든 장바구니 아이템 bool_checked 필드 값이 false로 초기화되었습니다.');
+    } else {
+      print('장바구니 아이템이 없습니다. 초기화할 것이 없습니다.');
+    }
+  }
 }
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 끝
+
+// ------- 장바구니 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 CartIconRepository 클래스 시작
+class CartIconRepository {
+  final FirebaseFirestore firestore;
+
+  CartIconRepository({required this.firestore});
+
+  // 장바구니 문서 갯수를 구독하는 함수
+  Stream<int> watchCartItemCount() {
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email;
+
+    if (userEmail == null) {
+      // 사용자 인증 정보가 없으면 빈 스트림 반환
+      return Stream.value(0);
+    }
+
+    // Firestore 경로에서 문서 개수를 실시간으로 반환
+    return firestore
+        .collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+}
+// ------- 장바구니 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 CartIconRepository 클래스 끝

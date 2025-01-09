@@ -176,9 +176,9 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
 
     // 발주자 정보 표 부분 수치
     final double updateRequireCompleteInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
+        screenSize.height * (11 / referenceHeight);
     final double updateRequireCompleteInfoDataFontSize =
-        screenSize.height * (13 / referenceHeight);
+        screenSize.height * (11 / referenceHeight);
     final double updateRequireCompleteInfoTextPartWidth =
         screenSize.width * (110 / referenceWidth);
     final double updateRequireCompleteInfoTextPartHeight =

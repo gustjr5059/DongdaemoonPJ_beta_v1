@@ -250,7 +250,10 @@ class OrderlistRepository {
   }
 
   // 특정 발주 번호에 해당하는 발주를 삭제하는 함수.
-  Future<void> fetchDeleteOrders(String userEmail, String orderNumber) async {
+  Future<void> fetchDeleteOrders({
+    required String userEmail,
+    required String orderNumber,
+  }) async {
     try {
       print('Firestore에서 발주 삭제 요청: 사용자 이메일 - $userEmail, 발주 번호 - $orderNumber');
 

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart'; // 플러터 Material 디자인 패키지를 가져옴
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 플러터 Riverpod 패키지를 가져옴
 import 'package:url_launcher/url_launcher.dart'; // URL을 열기 위한 패키지를 가져옴
@@ -10,14 +13,15 @@ import '../../order/provider/order_all_providers.dart'; // 주문 관련 프로�
 import '../../order/view/order_list_screen.dart'; // 주문 목록 화면을 가져옴
 import '../../product/layout/product_body_parts_layout.dart'; // 제품 관련 레이아웃을 가져옴
 import '../../wishlist/view/wishlist_screen.dart'; // 찜 목록 화면을 가져옴
-import '../view/login_screen.dart'; // 로그인 화면을 가져옴
+import '../provider/profile_all_providers.dart';
+import '../view/login_screen.dart';
+import '../view/profile_screen.dart'; // 로그인 화면을 가져옴
 
 
 // ------- 마이페이지 화면 내 회원정보 관련 데이터를 파이어베이스에서 불러와서 UI로 구현하는 UserProfileInfo 클래스 내용 시작 부분
 class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아 UserProfileInfo 클래스를 정의함
-  final String email; // 이메일 정보를 담는 필드를 선언함
 
-  UserProfileInfo({required this.email}); // 생성자를 통해 이메일 필드를 초기화함
+  UserProfileInfo(); // 생성자를 초기화
 
   @override
   Widget build(BuildContext context, WidgetRef ref) { // build 메서드를 정의하여 위젯 트리를 구성함
@@ -42,39 +46,38 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     // 텍스트 크기 계산
     final double userInfoCardViewTitleFontSize =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    final double userInfoCardViewGuideTextFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
-    // 회원정보 수정 버튼과 로그아웃 버튼의 가로, 세로 비율 계산
-    final double uesrInfoModifyBtn1X =
-        screenSize.width * (115 / referenceWidth); // 수정 버튼 가로 비율 계산
-    final double uesrInfoModifyBtn1Y =
-        screenSize.height * (45 / referenceHeight); // 수정 버튼 세로 비율 계산
-    final double uesrInfoModifyBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 수정 버튼 텍스트 크기 비율 계산
-    final double uesrInfoModifyBtnPaddingX = screenSize.width * (12 / referenceWidth); // 수정 버튼 좌우 패딩 계산
-    final double uesrInfoModifyBtnPaddingY = screenSize.height * (5 / referenceHeight); // 수정 버튼 상하 패딩 계산
-    final double logoutBtn1X =
-        screenSize.width * (95 / referenceWidth); // 로그아웃 버튼 가로 비율 계산
-    final double logoutBtn1Y =
+    // 로그인 및 회원가입 버튼과 로그아웃 버튼의 가로, 세로 비율 계산
+    final double logoutBtnX =
+        screenSize.width * (110 / referenceWidth); // 로그아웃 버튼 가로 비율 계산
+    final double logoutBtnY =
         screenSize.height * (45 / referenceHeight); // 로그아웃 버튼 세로 비율 계산
-    final double logoutBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 로그아웃 버튼 텍스트 크기 비율 계산
-    final double logoutBtnPaddingX = screenSize.width * (12 / referenceWidth); // 로그아웃 버튼 좌우 패딩 계산
-    final double logoutBtnPaddingY = screenSize.height * (5 / referenceHeight); // 로그아웃 버튼 상하 패딩 계산
+    final double loginAndJoinBtnX =
+        screenSize.width * (180 / referenceWidth); // 로그인 및 회원가입 버튼 가로 비율 계산
+    final double loginAndJoinBtnY =
+        screenSize.height * (45 / referenceHeight); // 로그인 및 회원가입 버튼 세로 비율 계산
 
     // 회원정보 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
     final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
     final double interval2Y = screenSize.height * (6 / referenceHeight); // 세로 간격 2 계산
     final double interval3Y = screenSize.height * (12 / referenceHeight); // 세로 간격 3 계산
+    final double interval4Y = screenSize.height * (20 / referenceHeight); // 세로 간격 4 계산
     final double interval1X = screenSize.width * (80 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval3X = screenSize.width * (120 / referenceWidth); // 가로 간격 3 계산
 
     // 에러 관련 텍스트 수치
     final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
     final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
-    // 유저 정보를 userInfoProvider로부터 가져옴
-    final userInfoAsyncValue = ref.watch(userInfoProvider(email));
+    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+    final user = FirebaseAuth.instance.currentUser;
+
+    // 이메일 정보를 FirebaseAuth에서 가져와 Firestore 데이터를 가져오는 데 사용.
+    final userInfoAsyncValue = ref.watch(profileUserInfoProvider(user?.email ?? ''));
 
     return userInfoAsyncValue.when( // 유저 정보의 상태에 따라 반환할 위젯을 설정함
       data: (userInfo) { // 데이터가 로드되었을 경우 실행됨
@@ -87,7 +90,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
           borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
           child: Container(
             width: uesrInfoCardViewWidth, // 카드뷰 가로 크기 설정
-            height: uesrInfoCardViewHeight, // 카드뷰 세로 크기 설정
+            // height: uesrInfoCardViewHeight, // 카드뷰 세로 크기 설정
             color: GRAY97_COLOR, // 배경색 설정
             child: CommonCardView( // 공통 카드뷰 위젯 사용
               backgroundColor: GRAY97_COLOR, // 배경색 설정
@@ -107,83 +110,87 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                       ),
                     ),
                     SizedBox(height: interval1Y), // 간격 설정
-                    _buildUserInfoRow(context, '이름', name), // 이름 정보 행 생성
-                    SizedBox(height: interval2Y), // 간격 설정
-                    _buildUserInfoRow(context, '이메일', email), // 이메일 정보 행 생성
-                    SizedBox(height: interval2Y), // 간격 설정
-                    _buildUserInfoRow(context, '휴대폰 번호', phoneNumber), // 전화번호 정보 행 생성
-                    SizedBox(height: interval3Y), // 간격 설정
-                    // 회원정보 수정 및 로그아웃 버튼을 행(Row)으로 배치함
-                    Row(
-                      children: [
-                        Container(
-                          width: uesrInfoModifyBtn1X, // 회원정보 수정 버튼 가로 설정
-                          height: uesrInfoModifyBtn1Y, // 회원정보 수정 버튼 세로 설정
-                          margin: EdgeInsets.only(left: interval1X), // 왼쪽 여백 설정
-                          child: ElevatedButton( // ElevatedButton 위젯을 사용하여 수정 버튼을 만듦
-                            onPressed: () async {
-                              const url = 'http://pf.kakao.com/_xjVrbG';
-                              try {
-                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                                if (!launched) {
-                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                                }
-                              } catch (e) {
-                                // 예외 발생 시 스낵바로 에러 메시지 출력
-                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                    if (user != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildUserInfoRow(context, '고객명', name),
+                          SizedBox(height: interval2Y),
+                          _buildUserInfoRow(context, '이메일', email),
+                          SizedBox(height: interval2Y),
+                          _buildUserInfoRow(context, '연락처', phoneNumber),
+                          SizedBox(height: interval3Y),
+                          // 로그아웃 버튼만 표시
+                          _buildActionButton(
+                            context,
+                            '로그아웃',
+                            Theme.of(context).scaffoldBackgroundColor,
+                            SOFTGREEN60_COLOR,
+                            logoutBtnX,
+                            logoutBtnY,
+                                () async {
+                              await logoutAndLoginAfterProviderReset(ref);
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (_) => ProfileMainScreen()),
+                                    (Route<dynamic> route) => false,
+                              );
+                              showCustomSnackBar(context, '로그아웃이 되었습니다.');
+                            },
+                            borderColor: SOFTGREEN60_COLOR,
+                          ),
+                        ],
+                      )
+                    else
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: interval2Y),
+                          Container(
+                            child: Text(
+                              "로그인 후 이용해주세요.",
+                              style: TextStyle(
+                                fontSize: userInfoCardViewGuideTextFontSize,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'NanumGothic',
+                                color: GRAY41_COLOR,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: interval3Y),
+                          // 로그인 및 회원가입 버튼 표시
+                          _buildActionButton(
+                            context,
+                            '로그인 및 회원가입',
+                            SOFTGREEN60_COLOR,
+                            WHITE_COLOR,
+                            loginAndJoinBtnX,
+                            loginAndJoinBtnY,
+                            // () {
+                                () async {
+                              await logoutAndLoginAfterProviderReset(ref);
+                              // 해당 로그인 화면으로 이동하는 로직은 로그인 화면 내 '닫기' 버튼을 클릭 시,
+                              // 마이페이지 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
+                              // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
+                              // IOS 플랫폼은 로그인 화면으로 이동
+                              if (Platform.isIOS) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                );
+                                // AOS 플랫폼은 로그인 화면으로 이동
+                              } else if (Platform.isAndroid) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                );
+                              } else {
+                                // 기타 플랫폼은 기본적으로 로그인 화면으로 이동
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                );
                               }
                             },
-                            style: ElevatedButton.styleFrom( // 버튼 스타일 설정
-                              foregroundColor: SOFTGREEN60_COLOR, // 텍스트 색상 설정
-                              backgroundColor: SOFTGREEN60_COLOR, // 버튼 배경색 설정
-                              padding: EdgeInsets.symmetric(vertical: uesrInfoModifyBtnPaddingY, horizontal: uesrInfoModifyBtnPaddingX), // 패딩 설정
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
-                              ),
-                            ),
-                            child: Text('회원정보 수정', // 버튼 텍스트 설정
-                              style: TextStyle(
-                                fontSize: uesrInfoModifyBtnFontSize, // 텍스트 크기 설정
-                                fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                fontFamily: 'NanumGothic', // 글꼴 설정
-                                color: WHITE_COLOR, // 텍스트 색상 설정
-                              ),
-                            ),
                           ),
-                        ),
-                        Container(
-                          width: logoutBtn1X, // 로그아웃 버튼 가로 설정
-                          height: logoutBtn1Y, // 로그아웃 버튼 세로 설정
-                          margin: EdgeInsets.only(left: interval2X), // 왼쪽 여백 설정
-                          child: ElevatedButton( // ElevatedButton 위젯을 사용하여 로그아웃 버튼을 만듦
-                            onPressed: () async { // 클릭 시 비동기 로그아웃 처리 함수 실행
-                              await logoutAndLoginAfterProviderReset(ref); // 로그아웃 처리 및 프로바이더 리셋
-                              Navigator.of(context).pushReplacement( // 화면 전환
-                                MaterialPageRoute(builder: (_) => LoginScreen()), // 로그인 화면으로 전환
-                              );
-                            },
-                            style: ElevatedButton.styleFrom( // 버튼 스타일 설정
-                              foregroundColor: SOFTGREEN60_COLOR, // 텍스트 색상 설정
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 버튼 배경색을 앱 배경색으로 설정
-                              side: BorderSide(color: SOFTGREEN60_COLOR), // 버튼 테두리 색상 설정
-                              padding: EdgeInsets.symmetric(vertical: logoutBtnPaddingY, horizontal: logoutBtnPaddingX), // 패딩 설정
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
-                              ),
-                            ),
-                            child: Text('로그아웃', // 버튼 텍스트 설정
-                              style: TextStyle(
-                                fontSize: logoutBtnFontSize, // 텍스트 크기 설정
-                                fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                fontFamily: 'NanumGothic', // 글꼴 설정
-                                color: SOFTGREEN60_COLOR, // 텍스트 색상 설정
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -202,6 +209,45 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
           fontSize2: errorTextFontSize2, // 폰트2 크기 설정
           color: BLACK_COLOR, // 색상 설정
           showSecondMessage: true, // 두 번째 메시지를 표시하도록 설정
+        ),
+      ),
+    );
+  }
+
+  // 회원정보 내 '로그인 및 회원가입'과 '로그아웃' 버튼의 UI 관련 메서드
+  Widget _buildActionButton(
+      BuildContext context,
+      String text,
+      Color bgColor,
+      Color textColor,
+      double width,
+      double height,
+      VoidCallback onPressed, {
+        Color? borderColor,
+      }) {
+
+    final Size screenSize = MediaQuery.of(context).size; // 기기 화면 크기 가져옴
+    final double referenceHeight = 852.0; // 기준 화면 높이 설정
+    final double actionBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+
+    return Container(
+      width: width,
+      height: height,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor,
+          foregroundColor: textColor,
+          side: borderColor != null ? BorderSide(color: borderColor) : BorderSide.none,
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: actionBtnTextFontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'NanumGothic',
+          ),
         ),
       ),
     );
@@ -236,9 +282,8 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 
 // ------- 마이페이지 화면 내 발주내역 관리 ~ 문의하기 관련 옵션 선택 UI 구현하는 UserProfileOptions 클래스 내용 시작 부분
 class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받아 UserProfileOptions 클래스를 정의함
-  final String email; // 이메일 정보를 담는 필드를 선언함
 
-  UserProfileOptions({required this.email}); // 생성자를 통해 이메일 필드를 초기화함
+  UserProfileOptions(); // 생성자 초기화함
 
   @override
   Widget build(BuildContext context, WidgetRef ref) { // build 메서드를 정의하여 UI를 구성함

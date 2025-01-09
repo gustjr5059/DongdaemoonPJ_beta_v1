@@ -98,6 +98,7 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       print("사용자가 로그인되어 있지 않습니다.");
       state = [];  // 로그인한 사용자가 없을 경우 상태를 빈 리스트로 설정함.
       isLoadingMore = false;  // 로딩 상태를 해제함.
+      ref.read(isLoadingProvider.notifier).state = false;
       return;
     }
 
@@ -125,36 +126,49 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   }
   // ------ Firestore에서 발주 아이템을 페이징 처리해서 불러오는 함수 끝 부분
 
-  // ------ 발주 아이템을 Firestore에서 삭제하는 함수 시작 부분
-  Future<void> deleteOrderItems(String orderNumber) async {
-    // 현재 로그인한 사용자를 확인함.
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // 발주 아이템을 Firestore에서 삭제함.
-      await orderlistRepository.fetchDeleteOrders(user.email!, orderNumber);
-
-      // 삭제된 발주 아이템을 상태에서 제거함.
-      state = state.where((item) => item['numberInfo']['order_number'] != orderNumber).toList();
-    }
-  }
-  // ------ 발주 아이템을 Firestore에서 삭제하는 함수 끝 부분
-
   // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 시작 부분
-  void resetOrderItems() {
+  void resetAndReloadOrderItems() async {
+    print("발주 아이템 데이터를 초기화합니다."); // 데이터 초기화 시작 메시지
     isLoadingMore = false;  // 로딩 상태 플래그 초기화
     state = [];  // 불러온 데이터를 초기화함
     lastDocument = null;  // 마지막 문서 스냅샷 초기화
+    print("발주 아이템 데이터 초기화 완료."); // 데이터 초기화 완료 메시지
+    await loadMoreOrderItems(); // 데이터 로드
   }
   // ------ 발주 아이템 데이터를 초기화하고 상태를 재설정하는 함수 끝 부분
 
-  // ------ Notifier가 dispose될 때 호출되는 함수 시작 부분
-  @override
-  void dispose() {
-    print("OrderlistItemsNotifier dispose 호출됨");
-    resetOrderItems();  // dispose 시 데이터 초기화 수행
-    super.dispose();  // 부모 클래스의 dispose 함수 호출함.
+  // ------ 발주 아이템을 Firestore에서 삭제하는 함수 시작 부분
+  Future<void> deleteOrderItems(String orderNumber) async {
+    print("발주 아이템 삭제 요청 - 주문 번호: $orderNumber"); // 발주 아이템 삭제 요청 메시지
+
+    // 현재 로그인한 사용자를 확인함.
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email; // 사용자 이메일 추출
+    if (userEmail == null) {
+      print("사용자 인증 실패: 로그인 필요."); // 사용자 인증 실패 메시지
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 인증 실패 예외 발생
+    }
+    // 발주 아이템을 Firestore에서 삭제함.
+    await orderlistRepository.fetchDeleteOrders(
+      userEmail: userEmail,
+      orderNumber: orderNumber,
+    );
+
+    // 삭제된 발주 아이템을 상태에서 제거함.
+    state = state.where((item) => item['numberInfo']['order_number'] != orderNumber).toList();
+    print("발주 아이템 삭제 완료 - 주문 번호: $orderNumber"); // 발주 아이템 삭제 완료 메시지
+    resetAndReloadOrderItems();
   }
-// ------ Notifier가 dispose될 때 호출되는 함수 끝 부분
+// ------ 발주 아이템을 Firestore에서 삭제하는 함수 끝 부분
+
+//   // ------ Notifier가 dispose될 때 호출되는 함수 시작 부분
+//   @override
+//   void dispose() {
+//     print("OrderlistItemsNotifier dispose 호출됨"); // dispose 호출 메시지
+//     resetAndReloadOrderItems();  // dispose 시 데이터 초기화 수행
+//     super.dispose();  // 부모 클래스의 dispose 함수 호출함.
+//   }
+// // ------ Notifier가 dispose될 때 호출되는 함수 끝 부분
 }
 // ------- Firestore에서 요청내역 화면 내 요청내역 데이터를 페이징 처리하여 상태로 관리하는 역할하는 OrderlistItemsNotifier 클래스 내용 끝 부분
 
@@ -164,11 +178,12 @@ final orderlistItemsProvider = StateNotifierProvider<OrderlistItemsNotifier, Lis
   // OrderlistRepository를 Provider에서 읽어옴.
   final orderlistRepository = ref.read(orderlistRepositoryProvider);
 
+  print("OrderlistItemsProvider 초기화 중..."); // Provider 초기화 메시지
   // OrderlistItemsNotifier를 생성하고 Provider로 반환함.
   return OrderlistItemsNotifier(orderlistRepository, ref);
 });
 
-
+// ------- order_detail_list_screen.dart - 발주 내역 상세화면 내용 데이터 처리 로직 시작 부분
 // ------ OrderlistDetailItemNotifier 클래스: Firestore와의 상호작용을 통해 요청내역 상세 화면 내 요청내역 상세 내용 상태를 관리하는 StateNotifier 클래스 내용 시작
 class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
   // orderlistRepository 인스턴스를 저장하는 변수임
@@ -189,6 +204,7 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
   OrderlistDetailItemNotifier(this.orderlistRepository, this.ref, this.userEmail, this.orderNumber) : super({}) {
     // 위젯이 완전히 빌드된 후 실행되도록 콜백을 추가함
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("초기 발주 내역 데이터를 로드합니다."); // 초기 데이터 로드 메시지
       // 발주 내역 데이터를 불러오는 함수를 호출함
       loadMoreOrderlistDetailItem(userEmail, orderNumber);
     });
@@ -198,7 +214,7 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
   Future<void> loadMoreOrderlistDetailItem(String userEmail, String orderNumber) async {
     // 만약 이미 로딩 중이라면, 중복 로딩을 방지하기 위해 반환함
     if (isLoadingMore) {
-      print("이미 로딩 중입니다.");
+      print("이미 로딩 중입니다. 추가 로드를 방지합니다."); // 중복 로드 방지 메시지
       return;
     }
 
@@ -219,9 +235,10 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
 
     // 만약 사용자가 로그인하지 않았다면, 상태를 빈 Map으로 설정하고 로딩 상태를 해제함
     if (user == null) {
-      print("사용자가 로그인되어 있지 않습니다.");
+      print("사용자가 로그인되어 있지 않습니다. 빈 데이터로 설정합니다."); // 사용자 미로그인 시 메시지
       state = {};
       isLoadingMore = false;
+      ref.read(isLoadingProvider.notifier).state = false; // 로딩 상태 해제
       return;
     }
 
@@ -229,7 +246,7 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
     final orderlistDetailItem = await orderlistRepository.fetchOrderlistItemByOrderNumber(userEmail, orderNumber);
 
     // 'title' 필드가 없을 경우 'numberInfo'의 'order_number' 필드를 대신 출력하도록 설정함
-    final title = orderlistDetailItem['title'] ?? orderlistDetailItem['numberInfo']?['order_number'] ?? '제목 없음';
+    final title = orderlistDetailItem['title'] ?? orderlistDetailItem['numberInfo']?['order_number'] ?? '';
 
     // 가져온 데이터를 상태로 설정하고, 데이터가 없을 경우 빈 Map으로 설정함
     state = orderlistDetailItem.isNotEmpty ? orderlistDetailItem : {};
@@ -245,11 +262,12 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
 
   // 발주 내역 데이터를 초기화하고 상태를 재설정하는 함수임
   void resetOrderlistDetailItem() {
+    print("발주 내역 데이터를 초기화합니다."); // 데이터 초기화 시작 메시지
     // 로딩 플래그를 초기화함
     isLoadingMore = false;
-
     // 상태를 빈 Map으로 초기화함
     state = {};
+    print("발주 내역 데이터 초기화 완료."); // 데이터 초기화 완료 메시지
   }
 
   // 구독을 취소하고 리소스를 해제하는 함수임
@@ -257,7 +275,6 @@ class OrderlistDetailItemNotifier extends StateNotifier<Map<String, dynamic>> {
   void dispose() {
     // dispose 메서드 호출을 출력함
     print('orderlistDetailItemProvider dispose 호출됨');
-
     // 상위 클래스의 dispose 메서드를 호출함
     super.dispose();
   }
@@ -271,7 +288,7 @@ final orderlistDetailItemProvider = StateNotifierProvider.autoDispose.family<
     OrderlistDetailItemNotifier, Map<String, dynamic>, Tuple2<String, String>>((ref, tuple) {
   // orderlistItemRepository 인스턴스를 가져옴
   final orderlistDetailItemRepository = ref.read(orderlistRepositoryProvider);
-
+  print("OrderlistDetailItemProvider 초기화 중..."); // Provider 초기화 메시지
   // OrderlistDetailItemNotifier 인스턴스를 반환함
   return OrderlistDetailItemNotifier(orderlistDetailItemRepository, ref, tuple.item1, tuple.item2);
 });

@@ -27,6 +27,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
@@ -41,6 +42,7 @@ import '../../common/model/banner_model.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 주문 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
+import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/order_body_parts_layout.dart';
 import '../provider/order_all_providers.dart';
 import '../provider/order_state_provider.dart';
@@ -99,13 +101,11 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // 스크롤이 끝에 도달했는지 확인함.
       if (orderListScreenPointScrollController.position.pixels ==
           orderListScreenPointScrollController.position.maxScrollExtent) {
-        // 현재 로그인한 사용자의 이메일을 가져옴.
-        final userEmail = FirebaseAuth.instance.currentUser?.email;
-        // 사용자 이메일이 존재할 경우, 추가 데이터를 로드하는 함수를 호출함.
-        if (userEmail != null) {
-          ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
-        }
+        // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
+        ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
       }
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
@@ -126,9 +126,9 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
       // 데이터 로드를 초기화하는 함수 호출
-      ref.read(orderlistItemsProvider.notifier).resetOrderItems();
-      // 추가 데이터를 로드하는 함수를 호출
-      ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
+      ref.read(orderlistItemsProvider.notifier).resetAndReloadOrderItems();
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -139,6 +139,10 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(orderListScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+        // 데이터 로드를 초기화하는 함수 호출
+        ref.read(orderlistItemsProvider.notifier).resetAndReloadOrderItems();
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
@@ -235,8 +239,23 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
     final double orderlistEmptyTextFontSize =
         screenSize.height * (16 / referenceHeight);
 
-    // orderlistItemsProvider를 통해 발주 데이터를 구독.
-    final orderlistItems = ref.watch(orderlistItemsProvider);
+    // 텍스트 폰트 크기 수치
+    final double loginGuideTextFontSize =
+        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double loginGuideTextHeight =
+        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+
+    // 로그인 하기 버튼 수치
+    final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    final double loginBtnTextFontSize =
+        screenSize.height * (14 / referenceHeight);
+    final double TextAndBtnInterval =
+        screenSize.height * (16 / referenceHeight);
+
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -299,10 +318,47 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                 padding: EdgeInsets.only(top: 0),
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: Consumer(
-                  // Consumer 위젯은 Riverpod 상태 관리 값을 구독하는 역할을 함.
                   builder: (context, ref, child) {
-                    // 발주 목록을 불러옴.
-                    final Orders = orderlistItems.toList();
+                    // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    // 사용자가 로그인되어 있지 않은 경우
+                    if (user == null) {
+                      return SliverToBoxAdapter(
+                        child: LoginRequiredWidget(
+                          textWidth: loginGuideTextWidth,
+                          textHeight: loginGuideTextHeight,
+                          textFontSize: loginGuideTextFontSize,
+                          buttonWidth: loginGuideTextWidth,
+                          buttonPaddingX: loginBtnPaddingX,
+                          buttonPaddingY: loginBtnPaddingY,
+                          buttonFontSize: loginBtnTextFontSize,
+                          marginTop: loginGuideText1Y,
+                          interval: TextAndBtnInterval,
+                        ),
+                      );
+                    }
+                    // orderlistItemsProvider를 통해 발주 데이터를 구독.
+                    final orderlistItems = ref.watch(orderlistItemsProvider);
+                    final isLoading = ref.watch(isLoadingProvider);
+                    // 발주 내역이 비어 있을 경우 '현재 발주 내역이 없습니다.' 텍스트를 중앙에 표시
+                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                    // loading: (), error: (err, stack)를 구분해서 구현 못함
+                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                    // 로딩 표시는 아래의 (orderlistItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (orderlistItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.6, // 화면 높이의 60%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
 
                     // 발주 내역이 비어 있을 경우, '발주 내역이 없습니다.' 메시지를 표시함.
                     return orderlistItems.isEmpty
@@ -337,7 +393,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                                     children: [
                                       SizedBox(height: orderlistPadding1Y),
                                       // OrderListItemWidget을 사용하여 각 리스트 항목을 보여줌.
-                                      OrderListItemWidget(order: Orders[index]),
+                                      OrderListItemWidget(order: orderlistItems[index]),
                                     ],
                                   ),
                                 );

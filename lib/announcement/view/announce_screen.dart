@@ -40,6 +40,7 @@ import '../../../common/provider/common_state_provider.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../layout/announce_body_parts_layout.dart';
 import '../provider/announce_all_provider.dart';
 import '../provider/announce_state_provider.dart';
@@ -102,6 +103,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
         // 스크롤이 끝에 도달했을 때, 추가 데이터를 로드하는 함수 호출
         ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
       }
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // initState에서 저장된 스크롤 위치로 이동
@@ -126,6 +128,8 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
       ref.read(announceItemsProvider.notifier).resetAnnounceItems();
       // 공지사항 데이터를 다시 로드하는 함수 호출
       ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
+
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -136,8 +140,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
         ref.read(announceScrollPositionProvider.notifier).state = 0;
         // 공지사항 데이터를 초기화하는 함수 호출
         ref.read(announceItemsProvider.notifier).resetAnnounceItems();
-        // 공지사항 데이터를 다시 로드하는 함수 호출
-        ref.read(announceItemsProvider.notifier).loadMoreAnnounceItems();
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       }
     });
 
@@ -263,51 +266,67 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                   builder: (context, ref, child) {
                     // announceItemsProvider를 사용하여 공지사항 아이템 목록 상태를 구독함.
                     final announceItems = ref.watch(announceItemsProvider);
-
+                    final isLoading = ref.watch(isLoadingProvider);
                     // 공지사항 목록이 비어 있으면, '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
                     // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
                     // loading: (), error: (err, stack)를 구분해서 구현 못함
                     // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-                    // 그대신 로딩 표시를 못 넣음...
+                    // 로딩 표시는 아래의 (announceItems.isEmpty && isLoading) 경우로 표시함
+
+                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                    if (announceItems.isEmpty && isLoading) {
+                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                      return SliverToBoxAdapter(
+                        // 전체 컨테이너를 설정
+                        child: Container(
+                          height: screenSize.height * 0.6, // 화면 높이의 60%로 설정함
+                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                        ),
+                      );
+                    }
+
+                    // 데이터가 비어 있는 경우
                     return announceItems.isEmpty
                         ? SliverToBoxAdapter(
-                          // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
-                          child: Container(
-                            // 공지사항이 없을 때 텍스트의 너비를 설정함.
-                            width: announcementlistEmptyTextWidth,
-                            // 공지사항이 없을 때 텍스트의 높이를 설정함.
-                            height: announcementlistEmptyTextHeight,
-                            // 텍스트 위치를 화면의 상단에서부터 설정함.
-                            margin: EdgeInsets.only(
-                                top: announcementlistEmptyTextY),
-                            // 텍스트를 중앙에 위치하도록 설정함.
-                            alignment: Alignment.center,
-                            // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
-                            child: Text('현재 공지사항이 없습니다.',
-                              style: TextStyle(
-                                // 텍스트의 폰트 크기를 설정함.
-                                fontSize: announcementlistEmptyTextFontSize,
-                                // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                                fontFamily: 'NanumGothic',
-                                // 폰트의 굵기를 'bold'로 설정함.
-                                fontWeight: FontWeight.bold,
-                                // 텍스트 색상을 검은색으로 설정함.
-                                color: BLACK_COLOR,
-                              ),
-                            ),
+                      // 공지사항이 없을 때, 텍스트를 포함한 컨테이너를 화면에 표시함.
+                      child: Container(
+                        // 공지사항이 없을 때 텍스트의 너비를 설정함.
+                        width: announcementlistEmptyTextWidth,
+                        // 공지사항이 없을 때 텍스트의 높이를 설정함.
+                        height: announcementlistEmptyTextHeight,
+                        // 텍스트 위치를 화면의 상단에서부터 설정함.
+                        margin: EdgeInsets.only(
+                            top: announcementlistEmptyTextY),
+                        // 텍스트를 중앙에 위치하도록 설정함.
+                        alignment: Alignment.center,
+                        // '현재 공지사항이 없습니다.'라는 텍스트를 표시함.
+                        child: Text(
+                          '현재 공지사항이 없습니다.',
+                          style: TextStyle(
+                            // 텍스트의 폰트 크기를 설정함.
+                            fontSize: announcementlistEmptyTextFontSize,
+                            // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                            fontFamily: 'NanumGothic',
+                            // 폰트의 굵기를 'bold'로 설정함.
+                            fontWeight: FontWeight.bold,
+                            // 텍스트 색상을 검은색으로 설정함.
+                            color: BLACK_COLOR,
                           ),
-                        )
-                        // 공지사항에 아이템이 있을 경우, SliverList로 아이템 목록을 표시함.
+                        ),
+                      ),
+                    )
+                    // 공지사항에 아이템이 있을 경우, SliverList로 아이템 목록을 표시함.
                         : SliverList(
-                          // SliverChildBuilderDelegate를 사용하여 공지사항 아이템 목록을 빌드함.
-                          delegate: SliverChildBuilderDelegate(
+                      // SliverChildBuilderDelegate를 사용하여 공지사항 아이템 목록을 빌드함.
+                      delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           // 각 항목을 패딩으로 감싸, 좌우 간격을 announcelistPaddingX로 설정함.
                           return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: announcelistPaddingX),
+                            padding: EdgeInsets.symmetric(horizontal: announcelistPaddingX),
                             child: Column(
                               children: [
+                                SizedBox(height: announcelistPaddingY),
                                 // AnnounceBodyPartsLayout을 재사용하여 공지사항 내용을 구현함.
                                 AnnounceBodyPartsLayout(),
                                 SizedBox(height: announcelistPaddingY),
@@ -328,10 +347,8 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
         ],
       ),
       bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider),
-          ref,
-          context,
-          5, 1, scrollController: announceScreenPointScrollController),
+          ref.watch(tabIndexProvider), ref, context, 5, 1,
+          scrollController: announceScreenPointScrollController),
     );
   }
 }

@@ -33,6 +33,7 @@ import '../../../common/provider/common_state_provider.dart';
 import '../../../common/layout/common_body_parts_layout.dart';
 
 // 다양한 색상을 정의하는 파일을 임포트합니다.
+import '../../cart/provider/cart_state_provider.dart';
 import '../../common/const/colors.dart';
 
 // 예외 발생 시 사용할 공통 UI 부분을 정의한 파일을 임포트합니다.
@@ -319,6 +320,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       // -> 홈 화면 초기화 시, 하단 탭 바 내 홈 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 0;
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       // 저장된 인덱스를 가져와 currentIndex 초기화
       currentIndex = ref.read(homeCurrentTabProvider);
 
@@ -414,6 +417,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
         ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
             false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 

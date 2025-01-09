@@ -497,9 +497,9 @@ class OrderListItemWidget extends ConsumerWidget {
 
     // 텍스트 크기 계산
     final double orderlistInfoOrderDateDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistInfoOrderNumberDataFontSize =
-        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
     final double orderlistInfoDetailViewBtn1X =
@@ -525,8 +525,8 @@ class OrderListItemWidget extends ConsumerWidget {
     final double interval1X = screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
 
-    // 날짜 포맷을 지정.
-    final dateFormat = DateFormat('yyyy.MM.dd');
+    // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
+    final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
     // 발주일자를 타임스탬프에서 DateTime 객체로 변환.
     final orderDate = (order!['numberInfo']['order_date'] as Timestamp).toDate();
     // 발주번호를 가져옴.
@@ -538,7 +538,7 @@ class OrderListItemWidget extends ConsumerWidget {
       borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
       child: Container(
         width: orderlistInfoCardViewWidth, // 카드뷰 가로 크기 설정
-        height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
+        // height: orderlistInfoCardViewHeight, // 카드뷰 세로 크기 설정
         color: GRAY97_COLOR, // 배경색 설정
         child: CommonCardView( // 공통 카드뷰 위젯 사용
           backgroundColor: GRAY97_COLOR, // 배경색 설정
@@ -726,9 +726,9 @@ class _OrderListDetailItemWidgetState
 
     // 텍스트 크기 계산
     final double orderlistDtInfoOrderDateDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoOrderNumberDataFontSize =
-        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoBriefIntroDataFontSize =
         screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
     final double orderlistDtInfoProdNumberDataFontSize =
@@ -757,8 +757,8 @@ class _OrderListDetailItemWidgetState
     final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
     final double interval3X = screenSize.width * (70 / referenceWidth); // 가로 간격 3 계산
 
-    // 날짜 형식을 'yyyy-MM-dd'로 지정함
-    final dateFormat = DateFormat('yyyy.MM.dd');
+    // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
+    final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
 
     // order 정보에서 발주 날짜를 가져오고, 값이 유효하면 Timestamp를 DateTime으로 변환함
     final orderDate = widget.order!['numberInfo']['order_date']
@@ -795,7 +795,7 @@ class _OrderListDetailItemWidgetState
             borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             child: Container(
               width: orderlistDtInfo1CardViewWidth, // 카드뷰 가로 크기 설정
-              height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
+              // height: orderlistDtInfo1CardViewHeight, // 카드뷰 세로 크기 설정
               color: GRAY97_COLOR, // 배경색 설정
               child: CommonCardView( // 공통 카드뷰 위젯 사용
                 backgroundColor: GRAY97_COLOR, // 배경색 설정

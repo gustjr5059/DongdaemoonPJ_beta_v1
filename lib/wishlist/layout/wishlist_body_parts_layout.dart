@@ -23,11 +23,42 @@ class WishlistIconButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 로그인된 사용자 정보를 가져옴
     final user = FirebaseAuth.instance.currentUser;
+
     // user가 null인 경우 (로그인되지 않은 경우)
     if (user == null) {
-      // 빈 위젯 반환
-      return SizedBox.shrink();
+      // 기본 빈 하트 아이콘을 반환
+      return IconButton(
+        icon: Icon(
+          Icons.favorite_border,
+          color: GRAY62_COLOR, // 빈 하트는 회색으로 표시
+        ),
+        // 버튼 클릭 시 동작 정의
+        onPressed: () {
+          // 로그인 안내 알림창 표시
+          showSubmitAlertDialog(
+            context,
+            title: '[로그인 상태]',
+            content: '로그인 후 이용해주세요.',
+            actions: [
+              TextButton(
+                child: Text(
+                  '확인',
+                  style: TextStyle(
+                    color: SOFTGREEN60_COLOR,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NanumGothic',
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 알림창 닫기
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
+
     // 현재 로그인한 사용자 이메일 가져옴
     final userEmail = user.email; // 이메일 주소를 가져옴
     if (userEmail == null) {

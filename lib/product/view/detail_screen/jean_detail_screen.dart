@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../cart/provider/cart_state_provider.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
@@ -121,6 +122,8 @@ class _JeanDetailProductScreenState
         // 페이지가 처음 생성될 때 '상품 정보 펼쳐보기' 버튼이 클릭되지 않은 상태로 초기화
         ref.read(showFullImageProvider.notifier).state = false;
         ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();  // '접기' 버튼 상태 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
@@ -131,8 +134,13 @@ class _JeanDetailProductScreenState
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         ref.read(jeanDetailScrollPositionProvider.notifier).state = 0; // jeanDetailScrollPositionProvider의 상태를 0으로 설정
         ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0; // getImagePageProvider의 상태를 0으로 설정
-        pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
+        // pageController가 ScrollView에 연결되어 있는지 확인 후 jumpToPage 호출
+        if (pageController.hasClients) {
+          pageController.jumpToPage(0); // pageController를 사용하여 페이지를 0으로 이동시킴.
+        }
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
+        ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
 
