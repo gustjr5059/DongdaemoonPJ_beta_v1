@@ -16,7 +16,8 @@ class ProfileRepository {
       // Firestore에 쿼리를 보내기 위해 QuerySnapshot 객체를 선언
       QuerySnapshot querySnapshot = await firestore
           .collection('users') // 'users' 컬렉션을 참조
-          .where('email', isEqualTo: email) // 이메일 필드가 주어진 이메일과 일치하는 문서를 찾음
+          .where('registration_id', isEqualTo: email) // 이메일 필드가 주어진 이메일과 일치하는 문서를 찾음
+          .limit(1)
           .get(); // 쿼리를 실행하여 결과를 가져옴
 
       // 검색된 문서의 수를 출력

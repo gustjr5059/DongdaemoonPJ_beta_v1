@@ -14,6 +14,8 @@ import '../../order/view/order_list_screen.dart'; // 주문 목록 화면을 가
 import '../../product/layout/product_body_parts_layout.dart'; // 제품 관련 레이아웃을 가져옴
 import '../../wishlist/view/wishlist_screen.dart'; // 찜 목록 화면을 가져옴
 import '../provider/profile_all_providers.dart';
+import '../view/easy_login_aos_screen.dart';
+import '../view/easy_login_ios_screen.dart';
 import '../view/login_screen.dart';
 import '../view/profile_screen.dart'; // 로그인 화면을 가져옴
 
@@ -168,23 +170,23 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                             // () {
                                 () async {
                               await logoutAndLoginAfterProviderReset(ref);
-                              // 해당 로그인 화면으로 이동하는 로직은 로그인 화면 내 '닫기' 버튼을 클릭 시,
+                              // 해당 로그인 화면으로 이동하는 로직은 간편 로그인 화면 내 '닫기' 버튼을 클릭 시,
                               // 마이페이지 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
                               // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
-                              // IOS 플랫폼은 로그인 화면으로 이동
+                              // IOS 플랫폼은 IOS 화면으로 이동
                               if (Platform.isIOS) {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                  MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
                                 );
-                                // AOS 플랫폼은 로그인 화면으로 이동
+                                // AOS 플랫폼은 AOS 화면으로 이동
                               } else if (Platform.isAndroid) {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                  MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
                                 );
                               } else {
-                                // 기타 플랫폼은 기본적으로 로그인 화면으로 이동
+                                // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                  MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
                                 );
                               }
                             },

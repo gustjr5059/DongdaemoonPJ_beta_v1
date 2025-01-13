@@ -50,6 +50,8 @@ dependencies:
   pdfx: ^2.0.2
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^6.0.5
+  sign_in_with_apple: ^6.1.4
+  google_sign_in: ^5.4.0
   win32: ^5.5.4
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -191,6 +193,9 @@ flutter:
     - asset/img/misc/button_img/jean_btn_1.png
     - asset/img/misc/appbar_img/home_appbar_title_img.png
     - asset/img/misc/login_image/login_bottom_image1.png
+    - asset/img/misc/login_image/apple_login_btn_img.png
+    - asset/img/misc/login_image/google_login_btn_img.png
+    - asset/img/misc/login_image/naver_login_btn_img.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

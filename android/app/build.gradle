@@ -2,6 +2,8 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    // 구글 서비스 플러그인 (구글 SNS 계정 로그인 관련 설정)
+    id 'com.google.gms.google-services'
 }
 
 def localProperties = new Properties()
@@ -111,5 +113,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
+
+// Gradle의 최하단에 구글 서비스 플러그인 적용 (구글 SNS 계정 로그인 관련 설정)
 apply plugin: 'com.google.gms.google-services'
 

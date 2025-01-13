@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
-import 'package:dongdaemoon_beta_v1/user/view/sign_up_screen.dart';
+import 'package:dongdaemoon_beta_v1/user/view/email_sign_up_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -258,19 +258,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     // 화면 이름 부분 수치
     final double screenNameTop =
-        screenSize.height * (54 / referenceHeight); // 위쪽 여백 비율
+        screenSize.height * (60 / referenceHeight); // 위쪽 여백 비율
     final double backBtnTop =
         screenSize.height * (48 / referenceHeight);
     final double backBtnLeft =
         screenSize.width * (10 / referenceWidth);
 
     // 화면 제목 부분 수치
-    final double screenTitleLeft =
-        screenSize.width * (60 / referenceWidth); // 왼쪽 여백 비율
     final double screenTitleTop =
         screenSize.height * (227 / referenceHeight); // 위쪽 여백 비율
     final double screenLoginText1FontSize =
-        screenSize.height * (24 / referenceHeight);
+        screenSize.height * (20 / referenceHeight);
     final double screenTitleTextFontSize =
         screenSize.height * (20 / referenceHeight);
 
@@ -394,7 +392,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Padding(
               padding: EdgeInsets.only(top: screenNameTop),
               child: Text(
-                'Login',
+                '관리자 로그인',
                 style: TextStyle(
                   fontSize: screenLoginText1FontSize,
                   fontWeight: FontWeight.w600,
@@ -688,101 +686,101 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-          Row(
-            children: [
-              // 회원가입 및 아이디/비밀번호 찾기 버튼
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: joinAndFindBtnLeft, top: joinAndFindBtnTop),
-                  // Figma에서 지정한 위치를 Padding으로 적용
-                  child: Container(
-                    width: joinAndFindBtnWidth, // Figma에서 지정한 전체 너비
-                    height: joinAndFindBtnHeight, // Figma에서 지정한 전체 높이
-                    child: Row(
-                      children: [
-                        // 회원가입 텍스트 버튼
-                        // Expanded(
-                        //   child: TextButton(
-                        //     onPressed: () async {
-                        //       const url = 'https://forms.gle/iiKCqxSyis3E6obP9';
-                        //       try {
-                        //         final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                        //         if (!launched) {
-                        //           // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                        //           showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                        //         }
-                        //       } catch (e) {
-                        //         // 예외 발생 시 스낵바로 에러 메시지 출력
-                        //         showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                        //       }
-                        //     },
-                        Expanded(
-                          child: TextButton(
-                            // 기존: 외부 URL 이동 (forms.gle) → 수정: SignUpScreen 이동
-                            onPressed: () {
-                              // 회원가입 화면(SingUpScreen)으로 이동
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignUpScreen(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              '회원가입',
-                              style: TextStyle(
-                                fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
-                                fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                color: WHITE_COLOR, // 피그마에서 지정된 텍스트 색상
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero, // 여백 제거
-                              alignment: Alignment.centerLeft, // 텍스트 정렬
-                            ),
-                          ),
-                        ),
-                        // 아이디/비밀번호 찾기 텍스트 버튼
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
-                              const url = 'http://pf.kakao.com/_xjVrbG';
-                              try {
-                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                                if (!launched) {
-                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                                }
-                              } catch (e) {
-                                // 예외 발생 시 스낵바로 에러 메시지 출력
-                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                              }
-                            },
-                            child: Text(
-                              '아이디/비밀번호 찾기',
-                              style: TextStyle(
-                                fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
-                                fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
-                                fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
-                                color: WHITE_COLOR, // 피그마에서 지정된 텍스트 색상
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero, // 여백 제거
-                              alignment: Alignment.centerRight, // 텍스트 정렬
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     // 회원가입 및 아이디/비밀번호 찾기 버튼
+          //     Align(
+          //       alignment: Alignment.topCenter,
+          //       child: Padding(
+          //         padding: EdgeInsets.only(
+          //             left: joinAndFindBtnLeft, top: joinAndFindBtnTop),
+          //         // Figma에서 지정한 위치를 Padding으로 적용
+          //         child: Container(
+          //           width: joinAndFindBtnWidth, // Figma에서 지정한 전체 너비
+          //           height: joinAndFindBtnHeight, // Figma에서 지정한 전체 높이
+          //           child: Row(
+          //             children: [
+          //               // 회원가입 텍스트 버튼
+          //               // Expanded(
+          //               //   child: TextButton(
+          //               //     onPressed: () async {
+          //               //       const url = 'https://forms.gle/iiKCqxSyis3E6obP9';
+          //               //       try {
+          //               //         final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+          //               //         if (!launched) {
+          //               //           // 웹 페이지를 열지 못할 경우 스낵바로 알림
+          //               //           showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+          //               //         }
+          //               //       } catch (e) {
+          //               //         // 예외 발생 시 스낵바로 에러 메시지 출력
+          //               //         showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+          //               //       }
+          //               //     },
+          //               Expanded(
+          //                 child: TextButton(
+          //                   // 기존: 외부 URL 이동 (forms.gle) → 수정: SignUpScreen 이동
+          //                   onPressed: () {
+          //                     // 회원가입 화면(SingUpScreen)으로 이동
+          //                     Navigator.push(
+          //                       context,
+          //                       MaterialPageRoute(
+          //                         builder: (context) => EmailSignUpScreen(),
+          //                       ),
+          //                     );
+          //                   },
+          //                   child: Text(
+          //                     '회원가입',
+          //                     style: TextStyle(
+          //                       fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+          //                       fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
+          //                       fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
+          //                       color: WHITE_COLOR, // 피그마에서 지정된 텍스트 색상
+          //                     ),
+          //                   ),
+          //                   style: TextButton.styleFrom(
+          //                     padding: EdgeInsets.zero, // 여백 제거
+          //                     alignment: Alignment.centerLeft, // 텍스트 정렬
+          //                   ),
+          //                 ),
+          //               ),
+          //               // 아이디/비밀번호 찾기 텍스트 버튼
+          //               Expanded(
+          //                 child: TextButton(
+          //                   onPressed: () async {
+          //                     const url = 'http://pf.kakao.com/_xjVrbG';
+          //                     try {
+          //                       final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+          //                       if (!launched) {
+          //                         // 웹 페이지를 열지 못할 경우 스낵바로 알림
+          //                         showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+          //                       }
+          //                     } catch (e) {
+          //                       // 예외 발생 시 스낵바로 에러 메시지 출력
+          //                       showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+          //                     }
+          //                   },
+          //                   child: Text(
+          //                     '아이디/비밀번호 찾기',
+          //                     style: TextStyle(
+          //                       fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+          //                       fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
+          //                       fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
+          //                       color: WHITE_COLOR, // 피그마에서 지정된 텍스트 색상
+          //                     ),
+          //                   ),
+          //                   style: TextButton.styleFrom(
+          //                     padding: EdgeInsets.zero, // 여백 제거
+          //                     alignment: Alignment.centerRight, // 텍스트 정렬
+          //                   ),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           // 로고 이미지를 나타내는 부분
           Align(
             alignment: Alignment.topCenter,

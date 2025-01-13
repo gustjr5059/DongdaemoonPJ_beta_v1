@@ -30,7 +30,8 @@ class OrderRepository {
       print('이메일에 대한 사용자 정보 가져오는 중: $email');
       QuerySnapshot querySnapshot = await firestore
           .collection('users')
-          .where('email', isEqualTo: email)
+          .where('registration_id', isEqualTo: email)
+          .limit(1)
           .get(); // Firestore에서 이메일로 사용자 정보 검색
 
       if (querySnapshot.docs.isNotEmpty) {

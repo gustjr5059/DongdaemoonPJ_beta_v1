@@ -8,14 +8,14 @@ import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../home/view/home_screen.dart';
-import '../provider/login_and_sign_up_all_provider.dart';
-import '../repository/login_and_sign_up_repository.dart';
+import '../provider/email_login_and_sign_up_all_provider.dart';
+import '../repository/email_login_and_sign_up_repository.dart';
 
 
 // ------ 회원가입 화면 클래스 시작 ------
-class SignUpScreen extends ConsumerStatefulWidget {
+class EmailSignUpScreen extends ConsumerStatefulWidget {
 
-  const SignUpScreen({
+  const EmailSignUpScreen({
     Key? key,
   }) : super(key: key);
 
@@ -24,7 +24,7 @@ class SignUpScreen extends ConsumerStatefulWidget {
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends ConsumerState<SignUpScreen>
+class _SignUpScreenState extends ConsumerState<EmailSignUpScreen>
     with WidgetsBindingObserver {
   final TextEditingController _nameController = TextEditingController(); // 이름 입력을 위한 컨트롤러
   final TextEditingController _emailController = TextEditingController(); // 아이디(이메일) 입력을 위한 컨트롤러
@@ -107,7 +107,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
 
   @override
   Widget build(BuildContext context) {
-    final signUpInfoRepository = ref.watch(signUpInfoRepositoryProvider);
+    final signUpInfoRepository = ref.watch(emailSignUpInfoRepositoryProvider);
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -326,7 +326,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
   }
 
   // Firestore에 회원 정보 저장
-  Future<void> _signUp(SignUpInfoRepository signUpInfoRepository) async {
+  Future<void> _signUp(EmailSignUpInfoRepository signUpInfoRepository) async {
     setState(() {
       isLoading = true;
     });

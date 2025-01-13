@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
-// ----- 회원가입 관련 정보 처리를 다루는 레퍼지토리인 SignUpInfoRepository 로직 시작 부분
+// ----- 회원가입 관련 정보 처리를 다루는 레퍼지토리인 EmailSignUpInfoRepository 로직 시작 부분
 // --- 회원가입 정보 레퍼지토리 클래스 시작 부분
 // Firestore에 회원 정보를 저장하는 로직을 처리하는 클래스
-class SignUpInfoRepository {
+class EmailSignUpInfoRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -54,4 +54,4 @@ class SignUpInfoRepository {
     }
   }
 }
-// ----- 회원가입 관련 정보 처리를 다루는 레퍼지토리인 SignUpInfoRepository 로직 끝 부분
+// ----- 회원가입 관련 정보 처리를 다루는 레퍼지토리인 EmailSignUpInfoRepository 로직 끝 부분

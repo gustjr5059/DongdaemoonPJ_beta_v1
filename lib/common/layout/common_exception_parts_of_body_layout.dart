@@ -33,6 +33,8 @@ import '../../product/model/product_model.dart';
 import '../../product/provider/product_state_provider.dart';
 import '../../user/provider/drawer_user_provider.dart';
 import '../../user/provider/profile_state_provider.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../../user/view/login_screen.dart';
 
 // 사용자 프로필 화면을 구현한 파일을 임포트합니다.
@@ -1576,26 +1578,26 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                     } else {
                       // 로그인 로직
                       await logoutAndLoginAfterProviderReset(ref);
-                      // 해당 로그인 화면으로 이동하는 로직은 로그인 화면 내 '닫기' 버튼을 클릭 시,
+                      // 해당 로그인 화면으로 이동하는 로직은 간편 로그인 화면 내 '닫기' 버튼을 클릭 시,
                       // 드로워 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
                       // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
-                      // IOS 플랫폼은 로그인 화면으로 이동
+                      // IOS 플랫폼은 IOS 화면으로 이동
                       if (Platform.isIOS) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (_) => LoginScreen()),
+                              builder: (_) => EasyLoginIosScreen()),
                         );
                       } else if (Platform.isAndroid) {
-                        // AOS 플랫폼은 로그인 화면으로 이동
+                        // AOS 플랫폼은 AOS 화면으로 이동
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (_) => LoginScreen()),
+                              builder: (_) => EasyLoginAosScreen()),
                         );
                       } else {
-                        // 기타 플랫폼은 기본적으로 로그인 화면으로 이동
+                        // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (_) => LoginScreen()),
+                              builder: (_) => EasyLoginAosScreen()),
                         );
                       }
                     }
