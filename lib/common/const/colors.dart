@@ -19,6 +19,7 @@ const GRAY60_COLOR = Color(0xFF999999);
 const GRAY62_COLOR = Color(0xFF9E9E9E); // Colors.grey 색상
 const GRAY65_COLOR = Color(0xFFA5A5A5);
 const GRAY69_COLOR = Color(0xFFB0B0B0);
+const GRAY74_COLOR = Color(0xFFBDBDBD); // Colors.grey.shade400 색상
 const GRAY79_COLOR = Color(0xFFCACACA);
 const GRAY81_COLOR = Color(0xFFCECECE);
 const GRAY83_COLOR = Color(0xFFD3D3D3);

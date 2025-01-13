@@ -190,6 +190,7 @@ flutter:
     - asset/img/misc/button_img/pants_btn_1.png
     - asset/img/misc/button_img/jean_btn_1.png
     - asset/img/misc/appbar_img/home_appbar_title_img.png
+    - asset/img/misc/login_image/login_bottom_image1.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

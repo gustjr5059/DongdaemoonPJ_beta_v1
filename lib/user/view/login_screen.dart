@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:dongdaemoon_beta_v1/common/const/colors.dart';
+import 'package:dongdaemoon_beta_v1/user/view/sign_up_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -702,20 +703,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Row(
                       children: [
                         // 회원가입 텍스트 버튼
+                        // Expanded(
+                        //   child: TextButton(
+                        //     onPressed: () async {
+                        //       const url = 'https://forms.gle/iiKCqxSyis3E6obP9';
+                        //       try {
+                        //         final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                        //         if (!launched) {
+                        //           // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                        //           showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                        //         }
+                        //       } catch (e) {
+                        //         // 예외 발생 시 스낵바로 에러 메시지 출력
+                        //         showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                        //       }
+                        //     },
                         Expanded(
                           child: TextButton(
-                            onPressed: () async {
-                              const url = 'https://forms.gle/iiKCqxSyis3E6obP9';
-                              try {
-                                final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-                                if (!launched) {
-                                  // 웹 페이지를 열지 못할 경우 스낵바로 알림
-                                  showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                                }
-                              } catch (e) {
-                                // 예외 발생 시 스낵바로 에러 메시지 출력
-                                showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                              }
+                            // 기존: 외부 URL 이동 (forms.gle) → 수정: SignUpScreen 이동
+                            onPressed: () {
+                              // 회원가입 화면(SingUpScreen)으로 이동
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpScreen(),
+                                ),
+                              );
                             },
                             child: Text(
                               '회원가입',
