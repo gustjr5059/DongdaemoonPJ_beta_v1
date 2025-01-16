@@ -34,8 +34,10 @@ import '../../inquiry/provider/inquiry_state_provider.dart';
 import '../../order/provider/complete_payment_provider.dart';
 import '../../order/provider/order_all_providers.dart';
 import '../../order/provider/order_state_provider.dart';
+import '../../user/provider/drawer_user_provider.dart';
 import '../../user/provider/profile_all_providers.dart';
 import '../../user/provider/profile_state_provider.dart';
+import '../../user/provider/sns_login_and_sign_up_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
@@ -558,6 +560,14 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 로그아웃했다가 재로그인 시, 초가화하려면 여기에 적용시켜야 반영이 됨
   // 모든 화면에서 로그아웃 버튼을 클릭했을 때 모든 화면의 상태를 초기화하는 로직-앱 종료 후 재실행할 때인 경우에도 여기 포함됨
   // 각 화면마다의 FirebaseAuth.instance.authStateChanges().listen((user) 여기에도 provider 구현하고, 여기에도 구현하는 두 곳 다 구현해야함.
+
+  // 간편 로그인 및 회원가입 화면 관련 초기화 부분 시작
+  // (첫 회원가입 후 로그아웃 -> 로그인 버튼 클릭 시, 회원가입 화면으로 이동하던 이슈 해결!!)
+  ref.invalidate(appleSignInNotifierProvider); // 애플 로그인한 상태 초기화 로직
+  ref.invalidate(googleSignInNotifierProvider); // 구글 로그인한 상태 초기화 로직
+  ref.invalidate(naverSignInNotifierProvider); // 네이버 로그인한 상태 초기화 로직
+  // 간편 로그인 및 회원가입 화면 관련 초기화 부분 끝
+
   // 홈 화면 관련 초기화 부분 시작
   // 스크롤 위치 및 현재 탭 인덱스 초기화
   ref.read(homeScrollPositionProvider.notifier).state =
@@ -573,6 +583,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(homeSmall2BannerPageProvider.notifier).state = 0; // 홈 소배너2 페이지뷰 초기화
   ref.read(homeSmall3BannerPageProvider.notifier).state = 0; // 홈 소배너3 페이지뷰 초기화
   ref.invalidate(eventPosterImgItemsProvider);
+  ref.invalidate(drawerUserNameProvider); // 드로워화면 회원 이름 데이터 초기화
   // 홈 화면 관련 초기화 부분 끝
 
   // 장바구니 화면 관련 초기화 부분 시작

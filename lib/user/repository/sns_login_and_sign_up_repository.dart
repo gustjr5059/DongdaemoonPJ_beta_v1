@@ -1,13 +1,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
+// import 'package:flutter_naver_login/interface/types/naver_login_result.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../model/sns_login_model.dart';
 
 
-// ----- SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API 등을 다루는 로직 시작 부분
+// ----- SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API, 구글 로그인 API, 네이버 로그인 API 등을 다루는 로직 시작 부분
 // --- SNS 로그인 레퍼지토리 클래스 시작 부분
 // FirebaseAuth와 Firestore를 활용하여 SNS 로그인을 처리하는 클래스
 class SNSLoginRepository {
@@ -147,8 +150,60 @@ class SNSLoginRepository {
       return false; // 오류 발생 시 false 반환
     }
   }
+
+  // 네이버 로그인 처리
+  Future<NaverSignInResultModel?> signInWithNaver() async {
+    try {
+      print('네이버 로그인 시작.');
+      // 네이버 로그인 실행
+      NaverLoginResult loginResult = await FlutterNaverLogin.logIn();
+
+      // 네이버 로그인 결과 status, errorMessage 디버그
+      print('Naver login status: ${loginResult.status}');
+      print('Naver login errorMessage: ${loginResult.errorMessage}');
+
+      // 로그인이 정상적으로 된 경우
+      if (loginResult.status == NaverLoginStatus.loggedIn) {
+        // 1) 액세스 토큰 획득
+        final accessToken = loginResult.accessToken;
+        print('네이버 액세스 토큰 획득 성공: $accessToken');
+
+        // 2) Firebase Functions 호출하여 커스텀 토큰 생성
+        final naverCustomToken = await FirebaseFunctions.instance
+            .httpsCallable('createNaverCustomToken')
+            .call({'naverAccessToken': accessToken});
+
+        print('커스텀 토큰 생성 성공. Firebase 인증 요청 중.');
+        // 3) Firebase 인증
+        final userCredential = await auth.signInWithCustomToken(
+            naverCustomToken.data['customToken']);
+
+        // 4) Firestore에서 기존 회원 여부 확인
+        final userDoc = await firestore
+            .collection('users')
+            .doc(userCredential.user?.uid)
+            .get();
+
+        bool isExistingUser = userDoc.exists;
+        print('기존 회원 여부 확인 완료: $isExistingUser');
+
+        return NaverSignInResultModel(
+          userCredential: userCredential,
+          isExistingUser: isExistingUser,
+        );
+      }
+      // 로그인이 아닌 다른 status(canceled, error 등)인 경우
+      else {
+        print('네이버 로그인 실패(혹은 취소) 상태입니다. status: ${loginResult.status}');
+        return null;
+      }
+    } catch (e) {
+      print('네이버 로그인 중 오류 발생: $e');
+      throw Exception('네이버 로그인 중 오류 발생: $e');
+    }
+  }
 }
-// ----- SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API 등을 다루는 로직 끝 부분
+// ----- SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API, 구글 로그인 API, 네이버 로그인 API 등을 다루는 로직 끝 부분
 
 // ----- 회원가입 관련 정보 처리를 다루는 레퍼지토리인 SnsSignUpInfoRepository 로직 시작 부분
 // --- 회원가입 정보 레퍼지토리 클래스 시작 부분

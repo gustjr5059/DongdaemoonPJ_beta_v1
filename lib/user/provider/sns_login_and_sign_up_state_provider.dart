@@ -80,6 +80,41 @@ class GoogleSignInState {
 }
 // ------ GoogleSignInState: 구글 로그인 상태를 표현하기 위한 State 클래스 끝 부분
 
+// ------ NaverSignInState: 네이버 로그인 상태를 표현하기 위한 State 클래스 시작 부분
+class NaverSignInState {
+  final bool isLoading;         // 로딩중 여부
+  final bool isLoginSuccess;    // 기존 회원 로그인 성공 여부
+  final bool isSignUpNeeded;    // 신규 회원 가입 필요 여부
+  final String? signUpEmail;    // 신규 회원의 이메일
+  final String? errorMessage;   // 에러 메시지
+
+  NaverSignInState({
+    this.isLoading = false,
+    this.isLoginSuccess = false,
+    this.isSignUpNeeded = false,
+    this.signUpEmail,
+    this.errorMessage,
+  });
+
+  NaverSignInState copyWith({
+    bool? isLoading,
+    bool? isLoginSuccess,
+    bool? isSignUpNeeded,
+    String? signUpEmail,
+    String? errorMessage,
+  }) {
+    return NaverSignInState(
+      isLoading: isLoading ?? this.isLoading,
+      isLoginSuccess: isLoginSuccess ?? this.isLoginSuccess,
+      isSignUpNeeded: isSignUpNeeded ?? this.isSignUpNeeded,
+      signUpEmail: signUpEmail ?? this.signUpEmail,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
+
+// ------ NaverSignInState: 네이버 로그인 상태를 표현하기 위한 State 클래스 끝 부분
+
 // ------ AppleSignInNotifier: 실제 Apple 로그인을 수행하고 상태를 업데이트하는 로직 시작 부분
 // --- Apple 로그인 Notifier 클래스 시작 부분
 // Apple 로그인 프로세스를 실행하고 상태를 관리하는 클래스
@@ -259,3 +294,60 @@ StateNotifierProvider<GoogleSignInNotifier, GoogleSignInState>((ref) {
   return GoogleSignInNotifier(repository);
 });
 // --- GoogleSignInNotifier 관련 Provider 끝 부분
+
+// ------ NaverSignInNotifier: 실제 네이버 로그인을 수행하고 상태를 업데이트하는 로직 시작 부분
+class NaverSignInNotifier extends StateNotifier<NaverSignInState> {
+  final SNSLoginRepository repository;
+
+  NaverSignInNotifier(this.repository) : super(NaverSignInState());
+
+  Future<void> signInWithNaver() async {
+    if (state.isLoading) return;
+
+    try {
+      state = state.copyWith(isLoading: true, errorMessage: null);
+
+      final result = await repository.signInWithNaver();
+
+      // logIn()에서 null을 리턴한 경우(로그인 실패/취소 등)
+      if (result == null) {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: '네이버 로그인 실패 또는 취소되었습니다.',
+        );
+        return;
+      }
+
+      // 기존 회원
+      if (result.isExistingUser) {
+        state = state.copyWith(isLoading: false, isLoginSuccess: true);
+      }
+      // 신규 회원
+      else {
+        state = state.copyWith(isLoading: false, isSignUpNeeded: true);
+      }
+
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: '네이버 로그인 중 오류 발생: $e',
+      );
+    }
+  }
+
+  // 상태 초기화 로직
+  void resetState() {
+    print('네이버 로그인 상태 초기화.');
+    state = NaverSignInState();
+  }
+}
+// ------ NaverSignInNotifier: 실제 네이버 로그인을 수행하고 상태를 업데이트하는 로직 끝 부분
+
+// --- NaverSignInNotifier 관련 Provider 시작 부분
+// NaverSignInNotifier의 Provider 설정
+final naverSignInNotifierProvider =
+StateNotifierProvider<NaverSignInNotifier, NaverSignInState>((ref) {
+  final repository = ref.read(snsLoginRepositoryProvider);
+  return NaverSignInNotifier(repository);
+});
+// --- NaverSignInNotifier 관련 Provider 끝 부분

@@ -26,3 +26,15 @@ class GoogleSignInResultModel {
   });
 }
 // ----- 구글 로그인 완료 후 결과 정보를 담는 클래스 끝 부분
+
+// ----- 네이버 로그인 완료 후 결과 정보를 담는 클래스 시작 부분
+class NaverSignInResultModel {
+  final UserCredential userCredential;
+  final bool isExistingUser;
+
+  NaverSignInResultModel({
+    required this.userCredential,
+    required this.isExistingUser,
+  });
+}
+// ----- 네이버 로그인 완료 후 결과 정보를 담는 클래스 끝 부분

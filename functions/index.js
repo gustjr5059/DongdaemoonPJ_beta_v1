@@ -17,6 +17,9 @@
 const functions = require('firebase-functions'); // Firebase Functions 모듈을 불러옴.
 const admin = require('firebase-admin'); // Firebase Admin SDK 모듈을 불러옴.
 const nodemailer = require('nodemailer'); // Nodemailer 모듈을 불러옴.
+const axios = require('axios'); // JavaScript로 작성된 HTTP 클라이언트 라이브러리 (API 서버나 웹 서버에 HTTP 요청을 보내 데이터를 가져오거나 전송하는 데 사용) => 즉, 네이버 로그인 화면 띄우는 역할
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 
 admin.initializeApp(); // Firebase Admin SDK를 초기화함.
 
@@ -130,6 +133,48 @@ function formatNumber(number) { // 숫자를 포맷팅하는 함수.
 //  return body;
 //}
 //// ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
+
+// Firebase Functions 환경 변수에서 네이버 Client ID 및 Secret 가져오기
+const naverClientId = functions.config().naver.client_id;
+const naverClientSecret = functions.config().naver.client_secret;
+
+// 네이버 로그인 커스텀 토큰 생성 함수
+exports.createNaverCustomToken = functions.region('asia-northeast3').https.onCall(async (data, context) => {
+  const { naverAccessToken } = data;
+
+  if (!naverAccessToken) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      '네이버 액세스 토큰이 제공되지 않았습니다.'
+    );
+  }
+
+  try {
+    const userInfoResponse = await axios.get('https://openapi.naver.com/v1/nid/me', {
+      headers: {
+        Authorization: `Bearer ${naverAccessToken}`,
+        'X-Naver-Client-Id': naverClientId,
+        'X-Naver-Client-Secret': naverClientSecret,
+      },
+    });
+
+    if (userInfoResponse.data.message !== 'success') {
+      throw new functions.https.HttpsError('unauthenticated', 'Failed to verify access token.');
+    }
+
+    const { email, id } = userInfoResponse.data.response;
+    if (!id) {
+      throw new functions.https.HttpsError('unauthenticated', '네이버 사용자 ID가 존재하지 않습니다.');
+    }
+
+    // Firebase 커스텀 토큰 생성
+    const customToken = await admin.auth().createCustomToken(id, { email });
+    return { customToken };
+  } catch (error) {
+    console.error('커스텀 토큰 생성 중 오류 발생:', error);
+    throw new functions.https.HttpsError('internal', '커스텀 토큰 생성에 실패했습니다.');
+  }
+});
 
 // Firestore 문서 생성 시 이메일 발송 함수 - Couture 버전
 exports.coutureSendOrderEmail = functions.region('asia-northeast3').firestore

@@ -30,6 +30,8 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
 
   bool isAppleLoginReset = false;  // Apple 로그인 상태 초기화 플래그
 
+  bool isNaverLoginReset = false;  // 네이버 로그인 상태 초기화 플래그
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && !isNavigatedToSignUp) {
         _listenAppleLoginState(context, ref.watch(appleSignInNotifierProvider));
+        _listenNaverLoginState(context, ref.watch(naverSignInNotifierProvider));
       }
     });
   }
@@ -100,16 +103,60 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     }
   }
 
+  // 네이버 로그인 상태 처리 로직
+  void _listenNaverLoginState(BuildContext context, NaverSignInState state) async {
+    if (state.isLoading) return;
+
+    if (state.errorMessage != null &&
+        state.errorMessage!.isNotEmpty &&
+        !state.errorMessage!.contains('취소')) {
+      // 에러 발생 시 처리
+      showCustomSnackBar(context, state.errorMessage!);
+    }
+
+    // 네이버 로그인 성공 -> 홈 화면 이동
+    if (state.isLoginSuccess) {
+      // 상태 초기화 후 화면 이동
+      ref.read(naverSignInNotifierProvider.notifier).state = NaverSignInState();
+      // MaterialPageRoute를 사용해 화면 이동
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeMainScreen()),
+      );
+    }
+
+    // 네이버 신규 회원 -> 회원가입 화면 이동
+    if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
+      isNavigatedToSignUp = true;
+      Navigator.of(context)
+          .push(MaterialPageRoute(
+        builder: (context) => SnsSignUpScreen(
+          snsType: 'naver',
+          snsId: state.signUpEmail ?? '',
+        ),
+      ))
+          .then((_) {
+        isNavigatedToSignUp = false;
+        // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
+        if (mounted && !isNaverLoginReset) {
+          ref.read(naverSignInNotifierProvider.notifier).resetState();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Provider에서 Apple 로그인 상태를 감시
     final appleLoginState = ref.watch(appleSignInNotifierProvider);
+    // Provider에서 네이버 로그인 상태를 감시
+    final naverLoginState = ref.watch(naverSignInNotifierProvider);
 
     // appleLoginState가 변경될 때만 처리
     // (간편 로그인 화면에서 회원가입 화면으로 이동하도록 하는 로직)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _listenAppleLoginState(context, appleLoginState);
+        _listenNaverLoginState(context, naverLoginState);
       }
     });
 
@@ -281,13 +328,12 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // 카카오 로그인 버튼
+                  // 네이버 로그인 버튼
                   GestureDetector(
-                    onTap: () {
-                      // TODO: 카카오 로그인 로직 (Provider/Repository) 연동
-                      // 카카오 로그인 화면으로 이동
-                      // Navigator.of(context).push(
-                      //     MaterialPageRoute(builder: (_) => KakaoLoginScreen()),
+                    onTap: () async {
+                      // 네이버 로그인 로직 호출
+                      print('네이버 로그인 버튼 클릭됨.');
+                      ref.read(naverSignInNotifierProvider.notifier).signInWithNaver();
                     },
                     child: Container(
                       child: Image.asset(

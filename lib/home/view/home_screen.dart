@@ -52,6 +52,7 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
+import '../../user/provider/drawer_user_provider.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/home_body_parts_layout.dart';
 
@@ -324,6 +325,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       // 저장된 인덱스를 가져와 currentIndex 초기화
       currentIndex = ref.read(homeCurrentTabProvider);
+      ref.invalidate(drawerUserNameProvider); // 드로워화면 회원 이름 데이터 초기화
 
       // 초기화 시 상단 탭 바 위치 복구를 위한 조건문
       if (currentIndex >= 4) {

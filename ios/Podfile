@@ -1,7 +1,7 @@
 # Uncomment this line to define a global platform for your project
 # 프로젝트의 iOS 배포 최소 버전
 # Firebase/Firestore가 요구하는 최소 버전 이상으로 변경
-platform :ios, '13.0'
+platform :ios, '14.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

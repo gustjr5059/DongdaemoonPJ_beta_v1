@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.8.0'  // Kotlin 버전을 1.8.0으로 설정
+    ext.kotlin_version = '1.9.10'  // Kotlin 버전을 1.9.10으로 설정 (flutter_naver_login 패키지 2.0.0 버전은 Kotlin 버전을 1.9.10이 필요!!)
     repositories {
         google()  // Google Maven 저장소 사용
         mavenCentral()  // Maven Central 저장소 사용
@@ -20,11 +20,11 @@ allprojects {
         mavenCentral()  // 모든 프로젝트에 Maven Central 저장소 사용
     }
 
-    // 모든 종속성 구성에서 Kotlin 버전을 강제로 1.8.0으로 고정
+    // 모든 종속성 구성에서 Kotlin 버전을 강제로 1.9.10으로 고정
     configurations.all {
         resolutionStrategy.eachDependency { details ->
             if (details.requested.group == 'org.jetbrains.kotlin') {
-                details.useVersion "1.8.0"  // Kotlin 의존성 버전을 1.8.0으로 고정
+                details.useVersion "1.9.10"  // Kotlin 의존성 버전을 1.9.10으로 고정
             }
         }
     }
