@@ -1344,7 +1344,9 @@ Widget buildTopBarList(
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴.
-  final String? userEmail = FirebaseAuth.instance.currentUser?.email;
+  // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+  final user = FirebaseAuth.instance.currentUser;
+  final userEmail = user?.email ?? user?.uid; // 이메일 주소를 가져옴
 
   // 사용자 로그인 상태 확인
   final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;

@@ -60,8 +60,9 @@ class WishlistIconButton extends ConsumerWidget {
     }
 
     // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
-    if (userEmail == null) {
+    // 네이버 로그인 및 회원가입 시, 사용자 UID를 가져와야 하므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid; // 이메일 주소를 가져옴
+    if (userEmail == null ) {
       throw Exception('사용자 이메일을 사용할 수 없습니다');
     }
     // wishlistItemProvider의 상태를 구독하여 asyncWishlist 변수에 저장
@@ -159,7 +160,8 @@ class WishlistItemsList extends ConsumerWidget {
     }
 
     // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid;
     if (userEmail == null) {
       throw Exception('사용자 이메일을 사용할 수 없습니다');
     }

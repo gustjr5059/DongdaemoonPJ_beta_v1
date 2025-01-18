@@ -151,59 +151,74 @@ class SNSLoginRepository {
     }
   }
 
-  // 네이버 로그인 처리
+// ——— 네이버 로그인 처리 함수 시작 부분
   Future<NaverSignInResultModel?> signInWithNaver() async {
     try {
-      print('네이버 로그인 시작.');
-      // 네이버 로그인 실행
-      NaverLoginResult loginResult = await FlutterNaverLogin.logIn();
+      print('네이버 로그인 시작.'); // 네이버 로그인을 시작한다는 디버그 메시지 출력
 
-      // 네이버 로그인 결과 status, errorMessage 디버그
-      print('Naver login status: ${loginResult.status}');
-      print('Naver login errorMessage: ${loginResult.errorMessage}');
+      // 네이버 로그인 실행
+      NaverLoginResult loginResult = await FlutterNaverLogin
+          .logIn(); // 네이버 로그인 호출
 
       // 로그인이 정상적으로 된 경우
-      if (loginResult.status == NaverLoginStatus.loggedIn) {
+      if (loginResult.status == NaverLoginStatus.loggedIn) { // 로그인 상태 확인
         // 1) 액세스 토큰 획득
-        final accessToken = loginResult.accessToken;
-        print('네이버 액세스 토큰 획득 성공: $accessToken');
+        // await FlutterNaverLogin.logIn();  // 네이버 로그인 시도
+        NaverAccessToken token = await FlutterNaverLogin
+            .currentAccessToken; // 네이버 액세스 토큰 가져오기
+        final String accessToken = token.accessToken; // 액세스 토큰 문자열로 저장
+
+        print('네이버 계정으로 로그인 성공 ${token.accessToken}'); // 성공 메시지 출력
 
         // 2) Firebase Functions 호출하여 커스텀 토큰 생성
-        final naverCustomToken = await FirebaseFunctions.instance
-            .httpsCallable('createNaverCustomToken')
-            .call({'naverAccessToken': accessToken});
+        final functions = FirebaseFunctions.instanceFor(
+            region: 'asia-northeast3'); // Firebase Functions 인스턴스 생성
+        final naverCustomToken = await functions
+            .httpsCallable('createNaverCustomToken_V2')
+            .call(
+            {'naverAccessToken': accessToken}); // Functions 호출 및 커스텀 토큰 생성
 
-        print('커스텀 토큰 생성 성공. Firebase 인증 요청 중.');
+        print('커스텀 토큰 생성 성공. Firebase 인증 요청 중.'); // 토큰 생성 성공 메시지 출력
+
         // 3) Firebase 인증
         final userCredential = await auth.signInWithCustomToken(
-            naverCustomToken.data['customToken']);
+            naverCustomToken.data['customToken']); // 커스텀 토큰을 사용한 Firebase 인증
 
         // 4) Firestore에서 기존 회원 여부 확인
+        final user = userCredential.user; // Firebase 사용자 정보 가져오기
+        if (user == null) { // 사용자 정보가 없는 경우
+          print('Firebase 사용자 정보 없음.'); // 오류 메시지 출력
+          return null; // null 반환
+        }
+
+        print(
+            'Firestore에서 UID 기반 기존 회원 여부 확인 중.'); // Firestore에서 기존 회원 여부 확인 메시지 출력
         final userDoc = await firestore
             .collection('users')
-            .doc(userCredential.user?.uid)
-            .get();
+            .doc('${user.uid}') // 사용자 UID로 문서명 저장
+            .get(); // Firestore 문서 조회
 
-        bool isExistingUser = userDoc.exists;
-        print('기존 회원 여부 확인 완료: $isExistingUser');
+        bool isExistingUser = userDoc.exists; // 기존 회원 여부 확인
+        print('기존 회원 여부 확인 완료: $isExistingUser'); // 결과 출력
 
         return NaverSignInResultModel(
-          userCredential: userCredential,
-          isExistingUser: isExistingUser,
+          userCredential: userCredential, // 사용자 인증 정보
+          isExistingUser: isExistingUser, // 기존 회원 여부
         );
       }
       // 로그인이 아닌 다른 status(canceled, error 등)인 경우
       else {
-        print('네이버 로그인 실패(혹은 취소) 상태입니다. status: ${loginResult.status}');
-        return null;
+        print('네이버 로그인 실패(혹은 취소) 상태입니다. status: ${loginResult
+            .status}'); // 실패 또는 취소 상태 메시지 출력
+        return null; // null 반환
       }
     } catch (e) {
-      print('네이버 로그인 중 오류 발생: $e');
-      throw Exception('네이버 로그인 중 오류 발생: $e');
+      print('네이버 로그인 중 오류 발생: $e'); // 오류 발생 메시지 출력
+      throw Exception('네이버 로그인 중 오류 발생: $e'); // 예외 발생
     }
   }
 }
-// ----- SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API, 구글 로그인 API, 네이버 로그인 API 등을 다루는 로직 끝 부분
+// ——— SNSLoginRepository: 실제 FirebaseAuth, Firestore, Apple 로그인 API, 구글 로그인 API, 네이버 로그인 API 등을 다루는 로직 끝 부분
 
 // ----- 회원가입 관련 정보 처리를 다루는 레퍼지토리인 SnsSignUpInfoRepository 로직 시작 부분
 // --- 회원가입 정보 레퍼지토리 클래스 시작 부분
@@ -232,7 +247,7 @@ class SnsSignUpInfoRepository {
 
       print('Firestore에 회원 정보 저장 중.');
       // 2. Firestore의 'users' 컬렉션에 사용자 문서를 생성하거나 업데이트함
-      final docRef = _firestore.collection('users').doc(snsId);
+      final docRef = _firestore.collection('users').doc(snsId);  // UID형태를 문서명으로 저장
       await docRef.set({
         'sns_type': snsType, // SNS 유형 ('apple' 또는 'google')
         'registration_id': snsId, // SNS 사용자 ID

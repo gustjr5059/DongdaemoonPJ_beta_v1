@@ -15,7 +15,11 @@ class WishlistItemRepository {
   // 이미지 URL을 Firebase Storage에 업로드하는 함수 - 주어진 이미지 URL을 가져와 Firebase Storage에 저장하고, 다운로드 URL을 반환
   Future<String> uploadImage(String imageUrl, String storagePath) async {
     try {
-      final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 Email 가져옴
+
+      // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+      final user = FirebaseAuth.instance.currentUser;
+      final userEmail = user!.email ?? user!.uid; // 현재 로그인한 사용자 Email 가져옴
+
       print('사용자 $userEmail 의 이미지를 경로 $storagePath 에 업로드합니다.'); // 디버깅 메시지 추가
       final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
       final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
@@ -33,7 +37,11 @@ class WishlistItemRepository {
   // 찜 목록에 항목을 추가하는 함수
   Future<void> addToWishlistItem(String userId, ProductContent product) async {
     try {
-      final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일을 가져옴
+
+      // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+      final user = FirebaseAuth.instance.currentUser;
+      final userEmail = user!.email ?? user!.uid; // 현재 로그인한 사용자 Email 가져옴
+
       print('사용자 $userEmail 의 찜 목록에 상품을 추가합니다.'); // 디버깅 메시지 추가
 
       // // Firestore에서 사용자의 찜 목록 항목을 가져옴
@@ -89,7 +97,11 @@ class WishlistItemRepository {
   // 찜 목록에서 항목을 제거하는 함수
   Future<void> removeFromWishlistItem(String userId, String productId) async {
     try {
-      final userEmail = FirebaseAuth.instance.currentUser!.email!; // 현재 로그인한 사용자 이메일 가져옴
+
+      // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+      final user = FirebaseAuth.instance.currentUser;
+      final userEmail = user!.email ?? user!.uid; // 현재 로그인한 사용자 Email 가져옴
+
       print('사용자 $userEmail 의 찜 목록에서 상품 $productId 를 제거합니다.'); // 디버깅 메시지 추가
       // Firestore에서 해당 상품 ID를 가진 문서를 검색
       final snapshot = await firestore.collection('couture_wishlist_item').doc(userEmail).collection('items').where('product_id', isEqualTo: productId).get();
@@ -127,8 +139,10 @@ class WishlistIconRepository {
 
   // 찜 목록 문서 갯수를 구독하는 함수
   Stream<int> watchWishlistItemCount() {
+
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
     final user = FirebaseAuth.instance.currentUser;
-    final userEmail = user?.email;
+    final userEmail = user?.email ?? user?.uid;
 
     if (userEmail == null) {
       // 사용자 인증 정보가 없으면 빈 스트림 반환

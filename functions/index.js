@@ -18,7 +18,6 @@ const functions = require('firebase-functions'); // Firebase Functions 모듈을
 const admin = require('firebase-admin'); // Firebase Admin SDK 모듈을 불러옴.
 const nodemailer = require('nodemailer'); // Nodemailer 모듈을 불러옴.
 const axios = require('axios'); // JavaScript로 작성된 HTTP 클라이언트 라이브러리 (API 서버나 웹 서버에 HTTP 요청을 보내 데이터를 가져오거나 전송하는 데 사용) => 즉, 네이버 로그인 화면 띄우는 역할
-// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 
 admin.initializeApp(); // Firebase Admin SDK를 초기화함.
@@ -135,46 +134,61 @@ function formatNumber(number) { // 숫자를 포맷팅하는 함수.
 //// ------ 파이어베이스 기반 백엔드 로직으로 이메일 전송 기능 구현한 내용 끝 부분
 
 // Firebase Functions 환경 변수에서 네이버 Client ID 및 Secret 가져오기
-const naverClientId = functions.config().naver.client_id;
-const naverClientSecret = functions.config().naver.client_secret;
+// ——— 네이버 Client ID 및 Secret 환경 변수 가져오기 시작 부분
+const naverClientId = functions.config().naver.client_id; // 네이버 Client ID를 환경 변수에서 가져옴
+const naverClientSecret = functions.config().naver.client_secret; // 네이버 Client Secret을 환경 변수에서 가져옴
 
 // 네이버 로그인 커스텀 토큰 생성 함수
-exports.createNaverCustomToken = functions.region('asia-northeast3').https.onCall(async (data, context) => {
-  const { naverAccessToken } = data;
+// ——— createNaverCustomToken_V2 함수 정의 시작 부분
+exports.createNaverCustomToken_V2 = functions.region('asia-northeast3').https.onCall(async (data, context) => {
+  const { naverAccessToken } = data; // 클라이언트로부터 전달받은 네이버 액세스 토큰
 
-  if (!naverAccessToken) {
+  console.log('네이버 액세스 토큰 수신:', naverAccessToken); // 전달받은 네이버 액세스 토큰 출력
+
+  if (!naverAccessToken) { // 네이버 액세스 토큰이 제공되지 않은 경우
+    console.error('액세스 토큰이 누락되었습니다'); // 오류 메시지 출력
     throw new functions.https.HttpsError(
       'invalid-argument',
-      '네이버 액세스 토큰이 제공되지 않았습니다.'
+      '네이버 액세스 토큰이 제공되지 않았습니다.' // 클라이언트에 반환할 오류 메시지
     );
   }
 
   try {
+    console.log('네이버 API 호출 시작...'); // 네이버 API 호출 시작 로그
     const userInfoResponse = await axios.get('https://openapi.naver.com/v1/nid/me', {
       headers: {
-        Authorization: `Bearer ${naverAccessToken}`,
-        'X-Naver-Client-Id': naverClientId,
-        'X-Naver-Client-Secret': naverClientSecret,
+        Authorization: `Bearer ${naverAccessToken}`, // 네이버 액세스 토큰을 Authorization 헤더에 포함
+        'X-Naver-Client-Id': naverClientId, // 네이버 Client ID 헤더에 포함
+        'X-Naver-Client-Secret': naverClientSecret, // 네이버 Client Secret 헤더에 포함
       },
     });
 
-    if (userInfoResponse.data.message !== 'success') {
-      throw new functions.https.HttpsError('unauthenticated', 'Failed to verify access token.');
+    console.log('네이버 API 응답 수신:', userInfoResponse.data); // 네이버 API에서 받은 응답 데이터 출력
+
+    if (userInfoResponse.data.message !== 'success') { // 네이버 액세스 토큰 검증 실패 시
+      console.error('네이버 액세스 토큰 검증에 실패했습니다'); // 오류 메시지 출력
+      throw new functions.https.HttpsError('unauthenticated', '네이버 액세스 토큰 확인 실패.'); // 클라이언트에 반환할 오류 메시지
     }
 
-    const { email, id } = userInfoResponse.data.response;
-    if (!id) {
-      throw new functions.https.HttpsError('unauthenticated', '네이버 사용자 ID가 존재하지 않습니다.');
+    const { email, id } = userInfoResponse.data.response; // 네이버 API 응답에서 사용자 이메일 및 ID 추출
+    console.log('사용자 정보 수신:', { email, id }); // 사용자 정보 출력
+
+    if (!id) { // 네이버 사용자 ID가 없는 경우
+      console.error('네이버 사용자 ID가 누락되었습니다'); // 오류 메시지 출력
+      throw new functions.https.HttpsError('unauthenticated', '네이버 사용자 ID가 존재하지 않습니다.'); // 클라이언트에 반환할 오류 메시지
     }
 
     // Firebase 커스텀 토큰 생성
-    const customToken = await admin.auth().createCustomToken(id, { email });
-    return { customToken };
+    console.log('Firebase 커스텀 토큰 생성 시작...'); // 커스텀 토큰 생성 로그
+    const customToken = await admin.auth().createCustomToken(id, { email }); // 사용자 ID와 이메일을 포함한 커스텀 토큰 생성
+    console.log('Firebase 커스텀 토큰 생성 완료:', customToken); // 생성된 커스텀 토큰 출력
+    return { customToken }; // 클라이언트에 커스텀 토큰 반환
   } catch (error) {
-    console.error('커스텀 토큰 생성 중 오류 발생:', error);
-    throw new functions.https.HttpsError('internal', '커스텀 토큰 생성에 실패했습니다.');
+    console.error('오류 발생:', error.message || error); // 오류 메시지 출력
+    throw new functions.https.HttpsError('internal', '커스텀 토큰 생성에 실패했습니다.'); // 클라이언트에 반환할 오류 메시지
   }
 });
+// ——— createNaverCustomToken_V2 함수 정의 종료 부분
 
 // Firestore 문서 생성 시 이메일 발송 함수 - Couture 버전
 exports.coutureSendOrderEmail = functions.region('asia-northeast3').firestore

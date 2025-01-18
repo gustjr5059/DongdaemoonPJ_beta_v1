@@ -318,13 +318,19 @@ class NaverSignInNotifier extends StateNotifier<NaverSignInState> {
         return;
       }
 
+      // 해당 로직은 파이어베이스 권한 내 사용자 UID 정보와 'users' 컬렉션 하위에 문서명 일치 여부로
+      // UI 구현 로직 내 회원정보 조회하는 곳에 사용하기 위한 로직
       // 기존 회원
       if (result.isExistingUser) {
         state = state.copyWith(isLoading: false, isLoginSuccess: true);
       }
       // 신규 회원
       else {
-        state = state.copyWith(isLoading: false, isSignUpNeeded: true);
+        state = state.copyWith(
+          isLoading: false,
+          isSignUpNeeded: true,
+          signUpEmail: result.userCredential.user?.uid, // UID 전달 (signUpEmail 변수명은 그대로 사용해서 기존 UI로직을 활용)
+        );
       }
 
     } catch (e) {

@@ -150,7 +150,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen2> {
         //         Firestore 'users' 컬렉션에 해당 문서가 없을 경우 로그아웃 처리
         // ───────────────────────────────────────────────────────────────
         // Firestore 사용자 문서 존재 여부 확인
-        final userDocumentExists = await ref.read(userDocumentExistsProvider(user.email).future);
+        // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+        final userDocumentExists = await ref.read(userDocumentExistsProvider(user.email ?? user?.uid).future);
 
         // 사용자 문서가 존재하지 않으면 로그아웃 처리
         if (!userDocumentExists) {

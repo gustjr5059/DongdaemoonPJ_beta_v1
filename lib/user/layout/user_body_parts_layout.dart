@@ -79,7 +79,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final user = FirebaseAuth.instance.currentUser;
 
     // 이메일 정보를 FirebaseAuth에서 가져와 Firestore 데이터를 가져오는 데 사용.
-    final userInfoAsyncValue = ref.watch(profileUserInfoProvider(user?.email ?? ''));
+    final userInfoAsyncValue = ref.watch(profileUserInfoProvider(user?.email ?? user?.uid ?? ''));
 
     return userInfoAsyncValue.when( // 유저 정보의 상태에 따라 반환할 위젯을 설정함
       data: (userInfo) { // 데이터가 로드되었을 경우 실행됨

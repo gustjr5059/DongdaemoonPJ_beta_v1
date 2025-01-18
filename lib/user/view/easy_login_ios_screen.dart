@@ -114,7 +114,8 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
       showCustomSnackBar(context, state.errorMessage!);
     }
 
-    // 네이버 로그인 성공 -> 홈 화면 이동
+    // 네이버 로그인 성공 후
+    // 네이버 기존 회원 -> 홈 화면 이동
     if (state.isLoginSuccess) {
       // 상태 초기화 후 화면 이동
       ref.read(naverSignInNotifierProvider.notifier).state = NaverSignInState();
@@ -131,7 +132,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
           .push(MaterialPageRoute(
         builder: (context) => SnsSignUpScreen(
           snsType: 'naver',
-          snsId: state.signUpEmail ?? '',
+          snsId: state.signUpEmail ?? '', // 네이버는 파이어베이스의 식별자가 아닌 UID 형태이면 이를 전달
         ),
       ))
           .then((_) {
