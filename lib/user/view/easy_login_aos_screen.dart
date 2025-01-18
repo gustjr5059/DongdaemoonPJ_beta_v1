@@ -3,6 +3,7 @@ import 'package:dongdaemoon_beta_v1/user/view/sns_sign_up_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
@@ -175,7 +176,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
     final double screenNameTop =
         screenSize.height * (60 / referenceHeight); // 위쪽 여백 비율
     final double backBtnTop =
-        screenSize.height * (48 / referenceHeight);
+        screenSize.height * (50 / referenceHeight);
     final double backBtnLeft =
         screenSize.width * (10 / referenceWidth);
 
@@ -207,13 +208,29 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
     final double easyLoginBtnImageHeight =
         screenSize.height * (70 / referenceHeight);
 
+    // 네이버 로그인 안내 텍스트 부분 수치
+    final double guidelineText3Left =
+        screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
+    final double guidelineText3Top =
+        screenSize.height * (450 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText4Top =
+        screenSize.height * (470 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText5Top =
+        screenSize.height * (482 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText3FontSize =
+        screenSize.height * (8 / referenceHeight); // 텍스트 크기
+
     // 로그인 개인정보 처리방침 안내 텍스트1 부분 수치
+    final double guidelineText1Left =
+        screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
     final double guidelineText1Top =
         screenSize.height * (680 / referenceHeight); // 위쪽 여백 비율
     final double guidelineText1FontSize =
         screenSize.height * (13 / referenceHeight); // 텍스트 크기
 
     // 로그인 개인정보 처리방침 안내 텍스트2 부분 수치
+    final double guidelineText2Left =
+        screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
     final double guidelineText2Top =
         screenSize.height * (710 / referenceHeight); // 위쪽 여백 비율
     final double guidelineText2FontSize =
@@ -362,56 +379,107 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
               ),
             ),
           ),
-          // // 개인정보 처리방침 안내 텍스트1
-          // Align(
-          //   alignment: Alignment.topCenter,
-          //   child: Padding(
-          //     padding: EdgeInsets.only(top: guidelineText1Top),
-          //     child: Text(
-          //       '로그인함으로써 개인정보 처리방침에 동의합니다.',
-          //       style: TextStyle(
-          //         fontFamily: 'NanumGothic',
-          //         fontWeight: FontWeight.normal,
-          //         fontSize: guidelineText1FontSize,
-          //         color: WHITE_COLOR,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // // 개인정보 처리방침 안내 텍스트2
-          // Align(
-          //   alignment: Alignment.topCenter,
-          //   child: Padding(
-          //     padding: EdgeInsets.only(top: guidelineText2Top),
-          //     child: GestureDetector(
-          //       // GestureDetector 사용하여 탭 이벤트 처리
-          //       onTap: () async {
-          //         const url = 'https://pf.kakao.com/_xjVrbG'; // 열려는 URL
-          //         try {
-          //           final bool launched = await launchUrl(Uri.parse(url),
-          //               mode:
-          //               LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
-          //           if (!launched) {
-          //             // 웹 페이지를 열지 못할 경우 스낵바로 알림
-          //             showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-          //           }
-          //         } catch (e) {
-          //           // 예외 발생 시 스낵바로 에러 메시지 출력
-          //           showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-          //         }
-          //       },
-          //       child: Text(
-          //         '개인정보 처리방침 보기',
-          //         style: TextStyle(
-          //           fontFamily: 'NanumGothic',
-          //           fontWeight: FontWeight.bold,
-          //           fontSize: guidelineText2FontSize,
-          //           color: BLUE49_COLOR, // 파란색 텍스트
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          // 네이버 로그인 안내 텍스트1
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText3Left, top: guidelineText3Top),
+              child: Text(
+                '[네이버 로그인 안내]',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText3FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
+          // 네이버 로그인 안내 텍스트2
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText3Left, top: guidelineText4Top),
+              child: Text(
+                '네이버 앱 또는 웹 브라우저 내 로그아웃을 직접 실행 후',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText3FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
+          // 네이버 로그인 안내 텍스트3
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText3Left, top: guidelineText5Top),
+              child: Text(
+                "'로그인' 버튼 클릭 시, 타 네이버 계정 선택이 가능합니다.",
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText3FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
+          // 개인정보 처리방침 안내 텍스트1
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText1Left, top: guidelineText1Top),
+              child: Text(
+                '로그인함으로써 개인정보 처리방침에 동의합니다.',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText1FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
+          // 개인정보 처리방침 안내 텍스트2
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText2Left, top: guidelineText2Top),
+              child: GestureDetector( // GestureDetector 사용하여 탭 이벤트 처리
+                onTap: () async {
+                  const url = 'https://gshe.oopy.io/couture/privacy'; // 열려는 URL
+                  try {
+                    final bool launched = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication); // 외부 브라우저에서 URL 열기
+                    if (!launched) {
+                      // 웹 페이지를 열지 못할 경우 스낵바로 알림
+                      showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
+                    }
+                  } catch (e) {
+                    // 예외 발생 시 스낵바로 에러 메시지 출력
+                    showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                  }
+                },
+                child: Text(
+                  '개인정보 처리방침 보기',
+                  style: TextStyle(
+                    fontFamily: 'NanumGothic',
+                    fontWeight: FontWeight.normal,
+                    fontSize: guidelineText2FontSize,
+                    color: BLUE49_COLOR, // 파란색 텍스트
+                    decoration: TextDecoration.underline, // 밑줄 추가
+                  ),
+                ),
+              ),
+            ),
+          ),
           // 관리자 로그인 화면으로 이동 버튼
           Align(
             alignment: Alignment.topCenter,

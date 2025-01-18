@@ -510,7 +510,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#! /bin/sh\n\n# env.plist 경로 지정\nENV_PLIST_PATH=\"${PROJECT_DIR}/env.plist\"\n\n# env.plist 파일이 존재하는지 확인\nif [ -f \"$ENV_PLIST_PATH\" ]; then\n  echo \"env.plist 파일을 찾았습니다. 값을 불러옵니다...\"\n\n  # PlistBuddy로 각 키 값을 읽어옴\n  NAVER_CONSUMER_KEY=$(/usr/libexec/PlistBuddy -c \"Print :NAVER_CONSUMER_KEY\" \"$ENV_PLIST_PATH\")\n  NAVER_CONSUMER_SECRET=$(/usr/libexec/PlistBuddy -c \"Print :NAVER_CONSUMER_SECRET\" \"$ENV_PLIST_PATH\")\n  NAVER_SERVICE_APP_URL_SCHEME=$(/usr/libexec/PlistBuddy -c \"Print :NAVER_SERVICE_APP_URL_SCHEME\" \"$ENV_PLIST_PATH\")\n  NAVER_SERVICE_APP_NAME=$(/usr/libexec/PlistBuddy -c \"Print :NAVER_SERVICE_APP_NAME\" \"$ENV_PLIST_PATH\")\n\n  # 값을 환경 변수로 등록\n  echo \"export NAVER_CONSUMER_KEY=${NAVER_CONSUMER_KEY}\"\n  echo \"export NAVER_CONSUMER_SECRET=${NAVER_CONSUMER_SECRET}\"\n  echo \"export NAVER_SERVICE_APP_URL_SCHEME=${NAVER_SERVICE_APP_URL_SCHEME}\"\n  echo \"export NAVER_SERVICE_APP_NAME=${NAVER_SERVICE_APP_NAME}\"\n\nelse\n  echo \"env.plist 파일이 존재하지 않습니다. 빌드 스크립트를 종료합니다.\"\nfi\n";
+			shellScript = "
+";
 		};
 		F3D652FEA9405FBB99E52957 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

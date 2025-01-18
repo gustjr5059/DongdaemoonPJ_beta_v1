@@ -55,7 +55,9 @@ class OrderRepository {
   }) async {
     print('발주 처리 중...');
     // 현재 로그인한 사용자의 이메일을 가져옴
-    final userEmail = FirebaseAuth.instance.currentUser?.email;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자가 로그인하지 않았습니다');
       throw Exception('사용자가 로그인하지 않았습니다');

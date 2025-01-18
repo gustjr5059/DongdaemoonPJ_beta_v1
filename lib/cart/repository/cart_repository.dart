@@ -27,7 +27,8 @@ class CartItemRepository {
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
     // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자 이메일을 가져올 수 없습니다.');
       throw Exception('사용자 이메일을 가져올 수 없습니다.');
@@ -51,7 +52,8 @@ class CartItemRepository {
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
     // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자 이메일을 가져올 수 없습니다.');
       throw Exception('사용자 이메일을 가져올 수 없습니다.');
@@ -138,7 +140,8 @@ class CartItemRepository {
 // Firestore에서 장바구니 아이템을 페이징 처리하여 불러오는 함수
   Future<List<Map<String, dynamic>>> getPagedCartItems({DocumentSnapshot? lastDocument, required int limit}) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
@@ -167,7 +170,8 @@ class CartItemRepository {
 // 장바구니의 특정 아이템에 대한 실시간 구독 스트림을 제공하는 함수
   Stream<Map<String, dynamic>> cartItemStream(String itemId) {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     return firestore.collection('couture_request_item')
@@ -197,7 +201,8 @@ class CartItemRepository {
       print('사용자가 로그인되어 있지 않습니다.');
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외를 발생시킴
     }
-    final userEmail = user.email; // 현재 로그인한 사용자의 이메일 주소를 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자 이메일을 가져올 수 없습니다.'); // 사용자의 이메일이 없는 경우 예외를 발생시킴
       throw Exception('사용자 이메일을 가져올 수 없습니다.');
@@ -215,7 +220,8 @@ class CartItemRepository {
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
     // 현재 로그인한 사용자 이메일 가져옴
-    final userEmail = user.email; // 이메일 주소를 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자 이메일을 가져올 수 없습니다.');
       throw Exception('사용자 이메일을 가져올 수 없습니다.');
@@ -233,7 +239,8 @@ class CartItemRepository {
       // throw Exception('사용자가 로그인되어 있지 않습니다.');
       return; // 예외를 던지지 않고 함수 종료
     }
-    final userEmail = user.email;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자 이메일을 가져올 수 없습니다.');
       // throw Exception('사용자 이메일을 가져올 수 없습니다.');
@@ -271,7 +278,8 @@ class CartIconRepository {
   // 장바구니 문서 갯수를 구독하는 함수
   Stream<int> watchCartItemCount() {
     final user = FirebaseAuth.instance.currentUser;
-    final userEmail = user?.email;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
 
     if (userEmail == null) {
       // 사용자 인증 정보가 없으면 빈 스트림 반환

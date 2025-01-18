@@ -1370,7 +1370,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
       screenSize.height * (70 / referenceHeight); // 위쪽 여백 비율
 
   // 이메일 부분 수치
-  final double emailTextFontSize1 = screenSize.height * (20 / referenceHeight);
+  final double emailTextFontSize1 = screenSize.height * (18 / referenceHeight);
   final double emailTextFontSize2 = screenSize.height * (16 / referenceHeight);
   final double emailTextFontSize3 = screenSize.height * (10 / referenceHeight);
 

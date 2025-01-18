@@ -86,7 +86,9 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
     orderListDetailScreenPointScrollController = ScrollController();
 
     // FirebaseAuth에서 사용자 이메일 가져오기
-    userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    userEmail = user?.email ?? user?.uid ?? ''; // 현재 로그인한 사용자 Email 가져옴
 
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계

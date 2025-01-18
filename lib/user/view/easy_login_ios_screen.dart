@@ -174,7 +174,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     final double screenNameTop =
         screenSize.height * (60 / referenceHeight); // 위쪽 여백 비율
     final double backBtnTop =
-        screenSize.height * (48 / referenceHeight);
+        screenSize.height * (50 / referenceHeight);
     final double backBtnLeft =
         screenSize.width * (10 / referenceWidth);
 
@@ -205,6 +205,18 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
         screenSize.width * (70 / referenceWidth);
     final double easyLoginBtnImageHeight =
         screenSize.height * (70 / referenceHeight);
+
+    // 네이버 로그인 안내 텍스트 부분 수치
+    final double guidelineText3Left =
+        screenSize.width * (0 / referenceWidth); // 왼쪽 여백 비율
+    final double guidelineText3Top =
+        screenSize.height * (450 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText4Top =
+        screenSize.height * (470 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText5Top =
+        screenSize.height * (482 / referenceHeight); // 위쪽 여백 비율
+    final double guidelineText3FontSize =
+        screenSize.height * (8 / referenceHeight); // 텍스트 크기
 
     // 로그인 개인정보 처리방침 안내 텍스트1 부분 수치
     final double guidelineText1Left =
@@ -417,6 +429,57 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
           //     ),
           //   ),
           // ),
+          // 네이버 로그인 안내 텍스트1
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText3Left, top: guidelineText3Top),
+              child: Text(
+                '[네이버 로그인 안내]',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText3FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
+          // 네이버 로그인 안내 텍스트2
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText3Left, top: guidelineText4Top),
+              child: Text(
+                '네이버 앱 또는 웹 브라우저 내 로그아웃을 직접 실행 후',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText3FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
+          // 네이버 로그인 안내 텍스트3
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: guidelineText3Left, top: guidelineText5Top),
+              child: Text(
+                "'로그인' 버튼 클릭 시, 타 네이버 계정 선택이 가능합니다.",
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontWeight: FontWeight.normal,
+                  fontSize: guidelineText3FontSize,
+                  color: WHITE_COLOR,
+                ),
+              ),
+            ),
+          ),
           // 개인정보 처리방침 안내 텍스트1
           Align(
             alignment: Alignment.topCenter,

@@ -104,7 +104,8 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
     // Firestore에서 5개의 발주 데이터를 페이징 처리하여 가져옴.
     final newItems = await orderlistRepository.fetchOrdersByEmail(
-      userEmail: user.email!,  // 현재 사용자 이메일을 넘김.
+      // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+      userEmail: user.email ?? user.uid, // 현재 사용자 이메일을 넘김.
       lastDocument: lastDocument,  // 마지막 문서 이후 데이터를 불러옴.
       limit: 5,  // 한 번에 5개의 아이템을 불러옴.
     );
@@ -142,8 +143,9 @@ class OrderlistItemsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     print("발주 아이템 삭제 요청 - 주문 번호: $orderNumber"); // 발주 아이템 삭제 요청 메시지
 
     // 현재 로그인한 사용자를 확인함.
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
     final user = FirebaseAuth.instance.currentUser;
-    final userEmail = user?.email; // 사용자 이메일 추출
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print("사용자 인증 실패: 로그인 필요."); // 사용자 인증 실패 메시지
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 인증 실패 예외 발생

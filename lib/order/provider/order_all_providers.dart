@@ -40,8 +40,9 @@ class PlaceOrderParams {
 final orderDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, orderId) async {
   // orderRepositoryProvider를 통해 발주 레포지토리 인스턴스를 가져옴
   final repository = ref.watch(orderRepositoryProvider);
-  // 현재 로그인한 사용자의 이메일을 가져옴
-  final userEmail = FirebaseAuth.instance.currentUser?.email;
+  // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+  final user = FirebaseAuth.instance.currentUser;
+  final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
 
   // 사용자가 로그인되어 있지 않으면 예외를 발생시킴
   if (userEmail == null) {

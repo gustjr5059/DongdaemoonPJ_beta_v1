@@ -32,19 +32,23 @@ class SnsSignUpScreen extends ConsumerStatefulWidget {
 
 class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     with WidgetsBindingObserver {
-  late final TextEditingController _snsIdController;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  bool isAgreedToAll = false;
-  bool isAgreedToTerms = false;
-  bool isAgreedToPrivacy = false;
-  bool isOverAge = false;
-  bool isLoading = false;
+  // ------ 입력 필드 및 상태 관리 변수 초기화 ------
+  late final TextEditingController _snsIdController; // SNS ID 입력 필드 컨트롤러
+  final TextEditingController _nameController = TextEditingController(); // 이름 입력 필드 컨트롤러
+  final TextEditingController _emailController = TextEditingController(); // 이메일 입력 필드 컨트롤러
+  final TextEditingController _phoneController = TextEditingController(); // 휴대폰 번호 입력 필드 컨트롤러
 
-  FocusNode _nameFocusNode = FocusNode();
-  FocusNode _emailFocusNode = FocusNode();
-  FocusNode _phoneNumberFocusNode = FocusNode();
+  // ------ 동의 체크박스 상태 관리 ------
+  bool isAgreedToAll = false; // 모든 항목 동의 상태
+  bool isAgreedToTerms = false; // 이용약관 동의 상태
+  bool isAgreedToPrivacy = false; // 개인정보 수집 및 이용 동의 상태
+  bool isOverAge = false; // 14세 이상 확인 상태
+  bool isLoading = false; // 로딩 상태
+
+  // ------ 포커스 노드 초기화 ------
+  FocusNode _nameFocusNode = FocusNode(); // 이름 입력 필드 포커스 노드
+  FocusNode _emailFocusNode = FocusNode(); // 이메일 입력 필드 포커스 노드
+  FocusNode _phoneNumberFocusNode = FocusNode(); // 휴대폰 번호 입력 필드 포커스 노드
 
   late ScrollController signUpScreenPointScrollController; // 스크롤 컨트롤러 선언
 
@@ -55,9 +59,11 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
   @override
   void initState() {
     super.initState();
-    // ScrollController를 초기화
+
+    // 스크롤 컨트롤러 초기화
     signUpScreenPointScrollController = ScrollController();
 
+    // SNS ID 입력 필드 초기화
     _snsIdController = TextEditingController(text: widget.snsId);
 
     // WidgetsBindingObserver를 추가하여 앱의 생명주기 변화 감지
@@ -69,6 +75,37 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+
+    // 이메일 입력 필드 포커스 리스너 추가
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        if (!_emailController.text.contains('@')) {
+          showCustomSnackBar(context, '이메일 형식에 맞게 재작성해주세요.');
+        }
+      }
+    });
+
+    // 휴대폰 번호 입력 필드 포커스 리스너 추가
+    _phoneNumberFocusNode.addListener(() {
+      if (!_phoneNumberFocusNode.hasFocus) {
+        // '-'가 포함된 횟수 계산
+        if ('-'.allMatches(_phoneController.text).length < 2) {
+      showCustomSnackBar(context, "'-'를 붙인 휴대폰 번호 형식에 맞게 재작성해주세요.");
+      }
+    }
+    });
+
+    // 이름 입력 필드 텍스트 변경 리스너 추가
+    _nameController.addListener(() {
+      if (_nameController.text.length > 10) {
+        showCustomSnackBar(context, '최대 10자까지 작성 가능합니다.');
+        _nameController.text = _nameController.text.substring(0, 10);
+        _nameController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _nameController.text.length),
+        );
+      }
+    });
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -91,6 +128,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     // 앱 생명주기 이벤트를 더 이상 수신하지 않겠다는 의도임.
     WidgetsBinding.instance.removeObserver(this);
 
+    // 컨트롤러 및 포커스 노드 해제
     _snsIdController.dispose();
     _nameController.dispose();
     _emailController.dispose();
@@ -289,7 +327,17 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                                 ),
                               ),
                               onPressed: _isSignUpEnabled()
-                                  ? () => _signUp(signUpInfoRepository)
+                                  ? () {
+                                if (!_validateEmailFormat() ||
+                                    !_validatePhoneNumberFormat() ||
+                                    !_validateNameLength()) {
+                                  showCustomSnackBar(
+                                      context,
+                                      '각 입력칸에 정보를 형식에 맞게 제대로 기입해주세요.');
+                                  return;
+                                }
+                                _signUp(signUpInfoRepository);
+                              }
                                   : null,
                               child: isLoading
                                   ? buildCommonLoadingIndicator()
@@ -372,6 +420,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     }
   }
 
+  // 체크 사항 행을 생성하는 함수
   Widget _buildAgreementRow(
       String text, bool value, ValueChanged<bool?> onChanged) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -420,7 +469,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
               String title;
               if (text == '이용약관 동의 (필수)') {
                 documentId = 'document_1';
-                title = '웨어카노 서비스 이용 약관';
+                title = '꾸띠르 서비스 이용 약관';
               } else if (text == '개인정보 수집 및 이용 동의 (필수)') {
                 documentId = 'document_2';
                 title = '개인정보 수집 및 이용 내역';
@@ -454,7 +503,22 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     );
   }
 
+  // 이메일 형식 유효성 검증 함수
+  bool _validateEmailFormat() {
+    return _emailController.text.contains('@');
+  }
 
+  // 휴대폰 번호 형식 유효성 검증 함수
+  bool _validatePhoneNumberFormat() {
+    return '-'.allMatches(_phoneController.text).length >= 2;
+  }
+
+  // 이름 길이 유효성 검증 함수
+  bool _validateNameLength() {
+    return _nameController.text.length <= 10;
+  }
+
+  // 회원가입 버튼 활성화 상태 확인 함수
   bool _isSignUpEnabled() {
     return isAgreedToTerms &&
         isAgreedToPrivacy &&
@@ -464,6 +528,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
         _phoneController.text.isNotEmpty;
   }
 
+  // 모든 동의 상태 업데이트 함수
   void _updateAllAgreement() {
     setState(() {
       isAgreedToAll = isAgreedToTerms && isAgreedToPrivacy && isOverAge;
@@ -526,13 +591,28 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                   ),
                   alignment: Alignment.center,
                   // 텍스트를 중앙 정렬
-                  child: Text(
-                    label, // 셀에 표시될 텍스트
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
-                      fontSize: signUpInfoTextFontSize,
-                      color: BLACK_COLOR,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '*  ',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: RED46_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextSpan(
+                          text: label,
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: BLACK_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

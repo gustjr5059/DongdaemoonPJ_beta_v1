@@ -200,7 +200,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     final orderItems = ref.watch(orderItemsProvider);
 
     // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
-    final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
+    final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email ?? user!.uid));
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -349,7 +349,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                               child: Column(
                                 children: [
                                   if (user != null)
-                                    UserInfoWidget(email: user.email!),
+                                    UserInfoWidget(email: user.email ?? user.uid),
                                   // 사용자가 로그인된 경우 사용자 정보를 표시
                                   UpdateInfoWidget(),
                                   // 업데이트 정보를 표시하는 위젯

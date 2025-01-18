@@ -260,7 +260,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final double screenNameTop =
         screenSize.height * (60 / referenceHeight); // 위쪽 여백 비율
     final double backBtnTop =
-        screenSize.height * (48 / referenceHeight);
+        screenSize.height * (50 / referenceHeight);
     final double backBtnLeft =
         screenSize.width * (10 / referenceWidth);
 

@@ -139,28 +139,19 @@ class SNSLoginRepository {
     }
   }
 
-  // Firestore 'users' 컬렉션에서 사용자 문서를 조회 (앱 실행 시, 로그인 계정으로 users 컬렉션 하위 문서가 존재하는지 유무 체크 -> 없을 시 자동 로그아웃)
-  Future<bool> checkIfUserDocumentExists(String? email) async {
-    if (email == null) return false; // 이메일이 null인 경우 false 반환
-    try {
-      final userDoc = await firestore.collection('users').doc(email).get();
-      return userDoc.exists; // 문서가 존재하면 true 반환
-    } catch (e) {
-      print('Firestore 사용자 문서 조회 중 오류 발생: $e');
-      return false; // 오류 발생 시 false 반환
-    }
-  }
-
-// ——— 네이버 로그인 처리 함수 시작 부분
+  // ——— 네이버 로그인 처리 함수 시작 부분
   Future<NaverSignInResultModel?> signInWithNaver() async {
     try {
       print('네이버 로그인 시작.'); // 네이버 로그인을 시작한다는 디버그 메시지 출력
 
-      // 네이버 로그인 실행
+      // 1. 기존 로그인 세션 초기화
+      await FlutterNaverLogin.logOut();
+
+      // 2. 네이버 로그인 실행
       NaverLoginResult loginResult = await FlutterNaverLogin
           .logIn(); // 네이버 로그인 호출
 
-      // 로그인이 정상적으로 된 경우
+      // 3. 로그인이 정상적으로 된 경우
       if (loginResult.status == NaverLoginStatus.loggedIn) { // 로그인 상태 확인
         // 1) 액세스 토큰 획득
         // await FlutterNaverLogin.logIn();  // 네이버 로그인 시도
@@ -206,7 +197,7 @@ class SNSLoginRepository {
           isExistingUser: isExistingUser, // 기존 회원 여부
         );
       }
-      // 로그인이 아닌 다른 status(canceled, error 등)인 경우
+      // 4. 로그인이 아닌 다른 status(canceled, error 등)인 경우
       else {
         print('네이버 로그인 실패(혹은 취소) 상태입니다. status: ${loginResult
             .status}'); // 실패 또는 취소 상태 메시지 출력
@@ -215,6 +206,18 @@ class SNSLoginRepository {
     } catch (e) {
       print('네이버 로그인 중 오류 발생: $e'); // 오류 발생 메시지 출력
       throw Exception('네이버 로그인 중 오류 발생: $e'); // 예외 발생
+    }
+  }
+
+  // Firestore 'users' 컬렉션에서 사용자 문서를 조회 (앱 실행 시, 로그인 계정으로 users 컬렉션 하위 문서가 존재하는지 유무 체크 -> 없을 시 자동 로그아웃)
+  Future<bool> checkIfUserDocumentExists(String? email) async {
+    if (email == null) return false; // 이메일이 null인 경우 false 반환
+    try {
+      final userDoc = await firestore.collection('users').doc(email).get();
+      return userDoc.exists; // 문서가 존재하면 true 반환
+    } catch (e) {
+      print('Firestore 사용자 문서 조회 중 오류 발생: $e');
+      return false; // 오류 발생 시 false 반환
     }
   }
 }
