@@ -244,7 +244,6 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         SizedBox(height: interval2Y),
                         _buildFixedValueRow(
                           context,
-                          // widget.snsType == 'apple' ? '애플 ID' : '구글 ID',
                           'SNS 계정',
                           _snsIdController.text,
                         ),

@@ -14,10 +14,12 @@ import '../../order/view/order_list_screen.dart'; // 주문 목록 화면을 가
 import '../../product/layout/product_body_parts_layout.dart'; // 제품 관련 레이아웃을 가져옴
 import '../../wishlist/view/wishlist_screen.dart'; // 찜 목록 화면을 가져옴
 import '../provider/profile_all_providers.dart';
+import '../provider/user_info_modify_and_secession_all_provider.dart';
 import '../view/easy_login_aos_screen.dart';
 import '../view/easy_login_ios_screen.dart';
 import '../view/login_screen.dart';
-import '../view/profile_screen.dart'; // 로그인 화면을 가져옴
+import '../view/profile_screen.dart';
+import '../view/user_info_modify_and_secession_screen.dart'; // 로그인 화면을 가져옴
 
 
 // ------- 마이페이지 화면 내 회원정보 관련 데이터를 파이어베이스에서 불러와서 UI로 구현하는 UserProfileInfo 클래스 내용 시작 부분
@@ -301,7 +303,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     final double uesrProfileOptionsCardViewWidth =
         screenSize.width * (360 / referenceWidth); // 가로 비율 계산
     final double uesrProfileOptionsCardViewHeight =
-        screenSize.height * (275 / referenceHeight); // 세로 비율 계산
+        screenSize.height * (340 / referenceHeight); // 세로 비율 계산
 
     return Container(
       width: uesrProfileOptionsCardViewWidth, // 카드뷰의 가로 크기 설정
@@ -343,6 +345,14 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                 title: '문의하기', // 문의하기 타이틀 설정
                 onTap: () { // 클릭 시 실행될 함수 설정
                   onInquiryListClick(context, ref); // 문의하기 클릭 시 호출되는 함수 실행
+                },
+              ),
+              _buildOptionTile( // 옵션 타일 생성
+                context,
+                assetPath: 'asset/img/misc/icon_img/user_info_icon.png', // 회원정보 수정 아이콘 설정
+                title: '회원정보 수정 및 탈퇴', // 회원정보 수정 타이틀 설정
+                onTap: () { // 클릭 시 실행될 함수 설정
+                  onUserInfoModifyListClick(context, ref); // 회원정보 수정 클릭 시 호출되는 함수 실행
                 },
               ),
             ],
@@ -450,6 +460,10 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
 
   void onInquiryListClick(BuildContext context, WidgetRef ref) { // 문의 클릭 함수
     navigateToScreenAndRemoveUntil(context, ref, InquiryMainScreen(), 4); // 화면 이동 함수 호출
+  }
+
+  void onUserInfoModifyListClick(BuildContext context, WidgetRef ref) { // 회원정보 수정 및 탈퇴 클릭 함수
+    navigateToScreenAndRemoveUntil(context, ref, UserInfoModifyAndSecessionScreen(), 4); // 화면 이동 함수 호출
   }
 }
 // ------ 각 옵션마다 클릭 시, 각 해당 화면으로 이동하는 로직 끝 부분

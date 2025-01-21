@@ -27,6 +27,8 @@ import '../../product/view/sub_main_screen/sale_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/spring_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/winter_sub_main_screen.dart';
+import '../../user/view/easy_login_aos_screen.dart';
+import '../../user/view/easy_login_ios_screen.dart';
 import '../../user/view/login_screen.dart';
 import '../model/banner_model.dart';
 // Riverpod는 상태 관리를 위한 외부 라이브러리입니다. 이를 통해 애플리케이션의 상태를 효율적으로 관리할 수 있습니다.
@@ -1000,15 +1002,15 @@ class LoginRequiredWidget extends StatelessWidget {
               // 플랫폼에 따라 로그인 화면 이동
               if (Platform.isIOS) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                  MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
                 );
               } else if (Platform.isAndroid) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                  MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
                 );
               } else {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                  MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
                 );
               }
             },

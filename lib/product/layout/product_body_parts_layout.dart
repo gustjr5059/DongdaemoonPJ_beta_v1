@@ -38,6 +38,8 @@ import '../../user/provider/drawer_user_provider.dart';
 import '../../user/provider/profile_all_providers.dart';
 import '../../user/provider/profile_state_provider.dart';
 import '../../user/provider/sns_login_and_sign_up_state_provider.dart';
+import '../../user/provider/user_info_modify_and_secession_all_provider.dart';
+import '../../user/provider/user_info_modify_and_secession_state_provider.dart';
 import '../../wishlist/layout/wishlist_body_parts_layout.dart';
 import '../../wishlist/provider/wishlist_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
@@ -657,6 +659,11 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(inquiryScrollPositionProvider.notifier).state =
   0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 문의하기 화면 관련 초기화 부분 끝
+
+  // 회원정보 수정 및 탈퇴 화면 관련 초기화 부분 시작
+  ref.read(userInfoModifyAndSecessionScrollPositionProvider.notifier).state = 0.0; // 회원정보 수정 및 탈퇴 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.invalidate(modifyUserInfoProvider); // SNS ID, 이름, 이메일, 휴대폰 번호 데이터 초기화
+  // 회원정보 수정 및 탈퇴 화면 관련 초기화 부분 끝
 
   // 섹션 더보기 화면과 2차 메인 화면 데이터 불러오는 로직 초기화 부분 시작
   ref.invalidate(mainProductRepositoryProvider);

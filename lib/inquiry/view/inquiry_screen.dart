@@ -204,9 +204,9 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
         screenSize.width * (393 / referenceWidth); // 가로 비율
     final double inquiryGuideTextWidth2 =
         screenSize.width * (310 / referenceWidth); // 가로 비율
-    final double inquiryGuidFontSize1 =
+    final double inquiryGuideFontSize1 =
         screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double inquiryGuidFontSize2 =
+    final double inquiryGuideFontSize2 =
         screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 문의하기로 이동 버튼 수치
@@ -273,7 +273,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               alignment: Alignment.center,
                               child: Text('* 문의는 아래 절차에 따라 진행해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
+                                  fontSize: inquiryGuideFontSize1, // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
@@ -286,7 +286,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               alignment: Alignment.centerLeft,
                               child: Text('1. [문의하기] 버튼을 클릭해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
+                                  fontSize: inquiryGuideFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
@@ -298,7 +298,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                               alignment: Alignment.centerLeft,
                               child: Text('2. 해당 페이지에서 내용 작성 후, 제출해주세요.',
                                 style: TextStyle(
-                                  fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
+                                  fontSize: inquiryGuideFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                   fontFamily: 'NanumGothic', // 글꼴 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정

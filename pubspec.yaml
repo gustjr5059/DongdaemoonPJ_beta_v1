@@ -198,6 +198,7 @@ flutter:
     - asset/img/misc/login_image/apple_login_btn_img.png
     - asset/img/misc/login_image/google_login_btn_img.png
     - asset/img/misc/login_image/naver_login_btn_img.png
+    - asset/img/misc/icon_img/user_info_icon.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
