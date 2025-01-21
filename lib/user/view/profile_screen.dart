@@ -252,6 +252,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     final double profilePaddingX = screenSize.width * (16 / referenceWidth);
     final double profilePadding1Y = screenSize.height * (5 / referenceHeight);
     final double profilePadding2Y = screenSize.height * (5 / referenceHeight);
+    final double profilePadding3Y = screenSize.height * (10 / referenceHeight);
 
     // 개인정보 처리방침 관련 안내 텍스트 수치
     final double guideTextFontSize =
@@ -376,6 +377,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                                 ),
                               ),
                             ),
+                            SizedBox(height: profilePadding3Y), // 높이 profilePadding3Y로 간격 설정
                           ],
                         ),
                       );

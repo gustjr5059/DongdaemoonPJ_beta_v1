@@ -28,7 +28,7 @@ class SNSLoginRepository {
   Future<AppleSignInResultModel?> signInWithApple() async {
     try {
       print('Apple 로그인 시작. Apple ID 자격 증명 요청 중.');
-      // 1. Apple ID 자격 증명을 얻음
+      // 1). Apple ID 자격 증명을 얻음
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
@@ -37,14 +37,15 @@ class SNSLoginRepository {
       );
 
       print('Apple ID 자격 증명 획득 성공. Firebase 인증 정보 생성 중.');
-      // 2. Firebase 인증에 필요한 OAuthCredential을 생성함
+
+      // 2). Firebase 인증에 필요한 OAuthCredential을 생성함
       final oauthCredential = OAuthProvider('apple.com').credential(
         idToken: credential.identityToken,
         accessToken: credential.authorizationCode,
       );
 
       print('Firebase 인증 정보로 로그인 요청 중.');
-      // 3. FirebaseAuth를 사용해 로그인 시도함
+      // 3). FirebaseAuth를 사용해 로그인 시도함
       final userCredential = await auth.signInWithCredential(oauthCredential);
       final User? user = userCredential.user;
       if (user == null) {
@@ -52,8 +53,34 @@ class SNSLoginRepository {
         return null; // 로그인 실패 시 null 반환
       }
 
+      // 4) [탈퇴 계정 검사] secession_users 컬렉션 조회
+      // secession_users 컬렉션에서 해당 계정 문서가 있는지 조회 (기존 uid 대신 email로 하시는 분은 email로 doc() 지정)
+      // 아래 예시는 uid 기준이라고 가정
+      final secessionDoc = await firestore
+          .collection('secession_users')
+          .doc(user.email) // 만약 doc(user.email)로 운영 중이시라면 email 사용
+          .get();
+
+      if (secessionDoc.exists) {
+        // 이미 탈퇴한 계정 => secession_time 비교
+        final data = secessionDoc.data();
+        if (data != null && data['secession_time'] != null) {
+          final secessionTime =
+          (data['secession_time'] as Timestamp).toDate();
+          final diff = DateTime.now().difference(secessionTime);
+
+          // 예: 5분이 안 지났으면 로그인 불가(30일이라면 inDays < 30 로 변경)
+          if (diff.inMinutes < 5) {
+            print('아직 5분이 지나지 않은 탈퇴 계정(Apple). 로그인 불가!');
+            // 예외를 던져서 Notifier에서 처리
+            throw Exception('secessionUser');
+            // → AppleSignInNotifier에서 catch → state.errorMessage='secessionUser'
+          }
+        }
+      }
+
       print('Firebase 로그인 성공. Firestore에서 회원 여부 확인 중.');
-      // 4. Firestore에서 기존 회원 여부를 확인함
+      // 5). Firestore에서 기존 회원 여부를 확인함
       final userDoc = await firestore
           .collection('users')
           .doc(user.email)
@@ -62,7 +89,7 @@ class SNSLoginRepository {
       bool isExistingUser = userDoc.exists;
       print('회원 여부 확인 완료. 기존 회원 여부: $isExistingUser');
 
-      // 5. 결과 객체 반환함
+      // 6). 결과 객체 반환함
       return AppleSignInResultModel(
         userCredential: userCredential,
         isExistingUser: isExistingUser,
@@ -89,14 +116,14 @@ class SNSLoginRepository {
   Future<GoogleSignInResultModel?> signInWithGoogle() async {
     try {
       print('Google 로그인 시작. Google Sign-In 요청 중.');
-      // 1. Google 로그인 객체를 생성함
+      // 1). Google 로그인 객체를 생성함
       final googleSignIn = GoogleSignIn();
 
       // 기존 세션 로그아웃 (구글 로그인 버튼 클릭할 때마다 구글 계정 선택 화면이 나오도록 로그아웃하도록 함)
       await googleSignIn.signOut();
       print('기존 Google 로그인 세션 초기화 완료.');
 
-      // 2. Google 로그인 프로세스 실행
+      // 2). Google 로그인 프로세스 실행
       final googleUser = await googleSignIn.signIn();
       // 로그인 취소 처리
       if (googleUser == null) {
@@ -105,30 +132,62 @@ class SNSLoginRepository {
       }
       print('Google 계정 정보 획득 성공. 인증 정보 요청 중.');
 
-      // 3. Google 인증 정보를 획득함
+      // 3). Google 인증 정보를 획득함
       final googleAuth = await googleUser.authentication;
       print('Firebase 인증 정보로 Google 로그인 요청 중.');
 
-      // 4. FirebaseAuth에서 Credential을 생성 후 로그인함
+      // 4). FirebaseAuth에서 Credential을 생성 후 로그인함
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      print('Firebase 인증 정보로 로그인 요청 중.');
+
       final userCredential = await auth.signInWithCredential(credential);
 
-      // 5. Firestore에서 기존 회원 여부를 확인함
-      final user = userCredential.user;
+      final User? user = userCredential.user;
       if (user == null) {
-        print('Google 로그인 실패. 사용자 정보 없음.');
-        return null;
+        print('Apple 로그인 실패. 사용자 정보 없음.');
+        return null; // 로그인 실패 시 null 반환
+      }
+
+      // 5) [탈퇴 계정 검사] secession_users 컬렉션 조회
+      // secession_users 컬렉션에서 해당 계정 문서가 있는지 조회 (기존 uid 대신 email로 하시는 분은 email로 doc() 지정)
+      // 아래 예시는 uid 기준이라고 가정
+      final secessionDoc = await firestore
+          .collection('secession_users')
+          .doc(user.email) // 만약 doc(user.email)로 운영 중이시라면 email 사용
+          .get();
+
+      if (secessionDoc.exists) {
+        // 이미 탈퇴한 계정 => secession_time 비교
+        final data = secessionDoc.data();
+        if (data != null && data['secession_time'] != null) {
+          final secessionTime =
+          (data['secession_time'] as Timestamp).toDate();
+          final diff = DateTime.now().difference(secessionTime);
+
+          // 예: 5분이 안 지났으면 로그인 불가(30일이라면 inDays < 30 로 변경)
+          if (diff.inMinutes < 5) {
+            print('아직 5분이 지나지 않은 탈퇴 계정(Apple). 로그인 불가!');
+            // 예외를 던져서 Notifier에서 처리
+            throw Exception('secessionUser');
+            // → AppleSignInNotifier에서 catch → state.errorMessage='secessionUser'
+          }
+        }
       }
 
       print('Firebase 로그인 성공. Firestore에서 회원 여부 확인 중.');
-      final userDoc = await firestore.collection('users').doc(user.email).get();
+      // 6). Firestore에서 기존 회원 여부를 확인함
+      final userDoc = await firestore
+          .collection('users')
+          .doc(user.email)
+          .get();
+
       bool isExistingUser = userDoc.exists;
       print('회원 여부 확인 완료. 기존 회원 여부: $isExistingUser');
 
-      // 6. 결과 객체 반환함
+      // 7). 결과 객체 반환함
       return GoogleSignInResultModel(
         userCredential: userCredential,
         isExistingUser: isExistingUser,
@@ -144,24 +203,25 @@ class SNSLoginRepository {
     try {
       print('네이버 로그인 시작.'); // 네이버 로그인을 시작한다는 디버그 메시지 출력
 
-      // 1. 기존 로그인 세션 초기화
+      // 1). 기존 로그인 세션 초기화
       await FlutterNaverLogin.logOut();
 
-      // 2. 네이버 로그인 실행
+      // 2). 네이버 로그인 실행
       NaverLoginResult loginResult = await FlutterNaverLogin
           .logIn(); // 네이버 로그인 호출
+      print('네이버 로그인 실패(혹은 취소). status: ${loginResult.status}');
 
-      // 3. 로그인이 정상적으로 된 경우
+      // 3) 로그인 상태별 분기
       if (loginResult.status == NaverLoginStatus.loggedIn) { // 로그인 상태 확인
-        // 1) 액세스 토큰 획득
-        // await FlutterNaverLogin.logIn();  // 네이버 로그인 시도
+        // ---- 정상 로그인인 경우 ----
+        // (1) 액세스 토큰 획득
         NaverAccessToken token = await FlutterNaverLogin
             .currentAccessToken; // 네이버 액세스 토큰 가져오기
         final String accessToken = token.accessToken; // 액세스 토큰 문자열로 저장
 
         print('네이버 계정으로 로그인 성공 ${token.accessToken}'); // 성공 메시지 출력
 
-        // 2) Firebase Functions 호출하여 커스텀 토큰 생성
+        // (2) Firebase Functions 호출 → 커스텀 토큰 생성
         final functions = FirebaseFunctions.instanceFor(
             region: 'asia-northeast3'); // Firebase Functions 인스턴스 생성
         final naverCustomToken = await functions
@@ -171,43 +231,65 @@ class SNSLoginRepository {
 
         print('커스텀 토큰 생성 성공. Firebase 인증 요청 중.'); // 토큰 생성 성공 메시지 출력
 
-        // 3) Firebase 인증
+        // (3) Firebase 인증
         final userCredential = await auth.signInWithCustomToken(
             naverCustomToken.data['customToken']); // 커스텀 토큰을 사용한 Firebase 인증
 
-        // 4) Firestore에서 기존 회원 여부 확인
         final user = userCredential.user; // Firebase 사용자 정보 가져오기
         if (user == null) { // 사용자 정보가 없는 경우
           print('Firebase 사용자 정보 없음.'); // 오류 메시지 출력
           return null; // null 반환
         }
 
-        print(
-            'Firestore에서 UID 기반 기존 회원 여부 확인 중.'); // Firestore에서 기존 회원 여부 확인 메시지 출력
-        final userDoc = await firestore
-            .collection('users')
-            .doc('${user.uid}') // 사용자 UID로 문서명 저장
-            .get(); // Firestore 문서 조회
+        // (4) Firestore의 `secession_users` 조회 → 탈퇴 5분 이내 여부 검사
+      final secessionDoc = await firestore
+          .collection('secession_users')
+          .doc(user.uid) // 네이버는 doc(user.uid) 로 저장 중
+          .get();
 
-        bool isExistingUser = userDoc.exists; // 기존 회원 여부 확인
-        print('기존 회원 여부 확인 완료: $isExistingUser'); // 결과 출력
+      if (secessionDoc.exists) {
+        // 탈퇴한 기록이 있는 계정이라면 => secession_time 비교
+        final data = secessionDoc.data();
+        if (data != null && data['secession_time'] != null) {
+          final secessionTime =
+          (data['secession_time'] as Timestamp).toDate();
+          final diff = DateTime.now().difference(secessionTime);
 
+          // 5분 제한 (30일로 쓰고 싶으시면 diff.inDays < 30 등으로 변경)
+          if (diff.inMinutes < 5) {
+            print('아직 5분 안 지난 탈퇴 계정! → secessionUser 예외 던짐.');
+            // 여기서는 예외를 던집니다. (Notifier에서 받아서 AlertDialog 띄움)
+            throw Exception('secessionUser');
+          }
+        }
+      }
+
+      // (5) Firestore `users` 컬렉션에서 기존 회원 여부 판단
+      final userDoc = await firestore
+          .collection('users')
+          .doc(user.uid) // 네이버는 uid 형태로 users에 문서 저장
+          .get();
+
+      bool isExistingUser = userDoc.exists;
+      print('기존 회원 여부: $isExistingUser');
+
+        // (6) 결과 리턴 (NaverSignInResultModel)
         return NaverSignInResultModel(
-          userCredential: userCredential, // 사용자 인증 정보
-          isExistingUser: isExistingUser, // 기존 회원 여부
+          userCredential: userCredential,
+          isExistingUser: isExistingUser,
         );
+      } else {
+        // ---- 로그인 실패 혹은 취소 ----
+        print('네이버 로그인 실패(혹은 취소). status: ${loginResult.status}');
+        return null;
       }
-      // 4. 로그인이 아닌 다른 status(canceled, error 등)인 경우
-      else {
-        print('네이버 로그인 실패(혹은 취소) 상태입니다. status: ${loginResult
-            .status}'); // 실패 또는 취소 상태 메시지 출력
-        return null; // null 반환
-      }
+
     } catch (e) {
-      print('네이버 로그인 중 오류 발생: $e'); // 오류 발생 메시지 출력
-      throw Exception('네이버 로그인 중 오류 발생: $e'); // 예외 발생
+      print('네이버 로그인 중 오류 발생: $e');
+      throw Exception('네이버 로그인 중 오류 발생: $e');
     }
   }
+
 
   // Firestore 'users' 컬렉션에서 사용자 문서를 조회 (앱 실행 시, 로그인 계정으로 users 컬렉션 하위 문서가 존재하는지 유무 체크 -> 없을 시 자동 로그아웃)
   Future<bool> checkIfUserDocumentExists(String? email) async {

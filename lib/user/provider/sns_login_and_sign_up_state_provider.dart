@@ -136,16 +136,6 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
       final signInResult = await repository.signInWithApple();
       print('Apple 로그인 결과: $signInResult');
 
-      // if (signInResult == null) {
-      //   // 로그인 실패 처리
-      //   print('Apple 로그인 실패.');
-      //   state = state.copyWith(
-      //     isLoading: false,
-      //     errorMessage: '로그인 중 문제가 발생했습니다. 다시 시도해주세요.',
-      //   );
-      //   return;
-      // }
-
       if (signInResult == null) {
         // Apple 로그인 취소 시 처리 없음
         print('Apple 로그인이 취소되었습니다.');
@@ -179,12 +169,23 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
         );
       }
     } catch (e) {
-      // 에러 처리
-      print('Apple 로그인 중 오류 발생: $e');
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: '로그인 실패: $e',
-      );
+      final errorMsg = e.toString();
+      print('AppleSignInNotifier 에러: $errorMsg');
+
+      // 'secessionUser'인지 분기
+      if (errorMsg.contains('secessionUser')) {
+        // → EasyLoginIosScreen에서 AlertDialog
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'secessionUser',
+        );
+      } else {
+        // 일반 오류
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: '로그인 실패: $errorMsg',
+        );
+      }
     }
   }
 
@@ -226,16 +227,6 @@ class GoogleSignInNotifier extends StateNotifier<GoogleSignInState> {
       final signInResult = await repository.signInWithGoogle();
       print('Google 로그인 결과: $signInResult');
 
-      // if (signInResult == null) {
-      //   // 로그인 실패 처리
-      //   print('Google 로그인 실패.');
-      //   state = state.copyWith(
-      //     isLoading: false,
-      //     errorMessage: '로그인에 실패하였습니다. 다시 시도해주세요.',
-      //   );
-      //   return;
-      // }
-
       if (signInResult == null) {
         // Google 로그인 취소 처리
         print('Google 로그인이 취소되었습니다.');
@@ -269,12 +260,23 @@ class GoogleSignInNotifier extends StateNotifier<GoogleSignInState> {
         );
       }
     } catch (e) {
-      // 에러 처리
-      print('Google 로그인 중 오류 발생: $e');
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: '로그인 실패: $e',
-      );
+      final errorMsg = e.toString();
+      print('GoogleSignInNotifier 에러: $errorMsg');
+
+      // 'secessionUser'인지 분기
+      if (errorMsg.contains('secessionUser')) {
+        // → EasyLoginAosScreen에서 AlertDialog
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'secessionUser',
+        );
+      } else {
+        // 일반 오류
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: '로그인 실패: $errorMsg',
+        );
+      }
     }
   }
 
@@ -308,6 +310,9 @@ class NaverSignInNotifier extends StateNotifier<NaverSignInState> {
       state = state.copyWith(isLoading: true, errorMessage: null);
 
       final result = await repository.signInWithNaver();
+      // ↑ 여기서 만약 '탈퇴 5분 내 계정'이라면
+      //   repository.signInWithNaver() 내부에서 `throw Exception('secessionUser');`
+      //   로 넘어올 것이고, 아래 catch에서 잡힙니다.
 
       // logIn()에서 null을 리턴한 경우(로그인 실패/취소 등)
       if (result == null) {
@@ -334,10 +339,24 @@ class NaverSignInNotifier extends StateNotifier<NaverSignInState> {
       }
 
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: '네이버 로그인 중 오류 발생: $e',
-      );
+      // 여기서 'secessionUser' 인지, 일반 오류인지 분기
+      final errorMsg = e.toString();
+      print('NaverSignInNotifier 에러: $errorMsg');
+
+      // 만약 'secessionUser'라면 state.errorMessage 값을 특정 문자열로 저장
+      if (errorMsg.contains('secessionUser')) {
+        // UI에서 AlertDialog로 안내
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'secessionUser',
+        );
+      } else {
+        // 일반 오류
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: '네이버 로그인 중 오류 발생: $errorMsg',
+        );
+      }
     }
   }
 

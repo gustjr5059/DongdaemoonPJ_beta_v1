@@ -65,7 +65,35 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       isLoading = state.isLoading;
     });
 
-    // 로그인 실패 시
+    // 1) 'secessionUser' 인 경우 => AlertDialog 보여주고, 상태 초기화
+    if (state.errorMessage == 'secessionUser') {
+      showSubmitAlertDialog(
+        context,
+        title: '[회원가입 실패]',
+        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 5분 이후에만 재가입이 가능합니다.',
+        // 30일로 쓰고 싶으면 문구만 30일로 변경.
+        actions: [
+          TextButton(
+            child: Text(
+              '확인',
+              style: TextStyle(
+                color: SOFTGREEN60_COLOR,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // 알림창 닫기
+            },
+          ),
+        ],
+      );
+      // AlertDialog 닫은 뒤(사용자가 확인 누른 뒤)에는 상태 초기화
+      ref.read(googleSignInNotifierProvider.notifier).resetState();
+      return;
+    }
+
+    // 2) 로그인 실패 시
     // 에러 메시지 표시 (취소 상태는 제외)
     if (state.errorMessage != null &&
         state.errorMessage!.isNotEmpty &&
@@ -73,7 +101,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       showCustomSnackBar(context, state.errorMessage!);
     }
 
-    // 기존 회원이면 -> 메인 화면으로 이동
+    // 3) 기존 회원이면 -> 메인 화면으로 이동
     if (state.isLoginSuccess) {
       // 상태 초기화 후 화면 이동
       ref.read(googleSignInNotifierProvider.notifier).state = GoogleSignInState();
@@ -83,7 +111,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       );
     }
 
-    // 신규 회원이면 -> 회원가입 화면으로 이동 (이메일, 이름 등을 전달)
+    // 4) 신규 회원이면 -> 회원가입 화면으로 이동 (이메일, 이름 등을 전달)
     // 신규 회원일 경우
     if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
       isNavigatedToSignUp = true;
@@ -109,6 +137,35 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
   void _listenNaverLoginState(BuildContext context, NaverSignInState state) async {
     if (state.isLoading) return;
 
+    // 1) 'secessionUser' 인 경우 => AlertDialog 보여주고, 상태 초기화
+    if (state.errorMessage == 'secessionUser') {
+      showSubmitAlertDialog(
+        context,
+        title: '[회원가입 실패]',
+        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 5분 이후에만 재가입이 가능합니다.',
+        // 30일로 쓰고 싶으면 문구만 30일로 변경.
+        actions: [
+          TextButton(
+            child: Text(
+              '확인',
+              style: TextStyle(
+                color: SOFTGREEN60_COLOR,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // 알림창 닫기
+            },
+          ),
+        ],
+      );
+      // AlertDialog 닫은 뒤(사용자가 확인 누른 뒤)에는 상태 초기화
+      ref.read(naverSignInNotifierProvider.notifier).resetState();
+      return;
+    }
+
+    // 2) 다른 일반 오류 메시지는 스낵바로 처리
     if (state.errorMessage != null &&
         state.errorMessage!.isNotEmpty &&
         !state.errorMessage!.contains('취소')) {
@@ -116,7 +173,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       showCustomSnackBar(context, state.errorMessage!);
     }
 
-    // 네이버 로그인 성공 -> 홈 화면 이동
+    // 3) 로그인 성공 => 홈 화면 이동
     if (state.isLoginSuccess) {
       // 상태 초기화 후 화면 이동
       ref.read(naverSignInNotifierProvider.notifier).state = NaverSignInState();
@@ -126,7 +183,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       );
     }
 
-    // 네이버 신규 회원 -> 회원가입 화면 이동
+    // 4) 신규 회원 => 회원가입 화면 이동
     if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
       isNavigatedToSignUp = true;
       Navigator.of(context)
