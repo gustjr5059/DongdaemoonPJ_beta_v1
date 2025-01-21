@@ -781,10 +781,47 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                 BottomNavigationBarItem(
                   icon: Padding(
                     padding: EdgeInsets.symmetric(horizontal: interval1X),
-                    child: Icon(Icons.receipt_long_outlined,
-                        size: bottomNavigationIconSize), // 발주 내역 아이콘
+                    child: Consumer(
+                      builder: (context, ref, _) {
+                        final orderlistItemCount =
+                            ref.watch(orderlistItemCountProvider).value ?? 0;
+
+                        return Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
+                          children: [
+                            Icon(Icons.receipt_long_outlined,
+                                size: bottomNavigationIconSize), // 발주 내역 아이콘
+                            if (orderlistItemCount > 0)
+                              Positioned(
+                                right: -badgeOffsetX, // 아이콘의 우측 상단으로 위치 설정
+                                top: -badgeOffsetY, // 아이콘의 상단 위로 위치 설정
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  // 뱃지 내부 여백
+                                  decoration: BoxDecoration(
+                                    color: REDBROWN_COLOR, // 뱃지 배경색 (밝은 갈색)
+                                    shape: BoxShape.circle, // 뱃지 모양 (원형)
+                                  ),
+                                  child: Text(
+                                    orderlistItemCount >= 100
+                                        ? '99+'
+                                        : '$orderlistItemCount',
+                                    // 100개 이상은 '99+'로 표시
+                                    style: TextStyle(
+                                      color: WHITE_COLOR, // 텍스트 색상
+                                      fontSize: badgeTextFontSize, // 텍스트 크기
+                                      fontWeight: FontWeight.bold, // 텍스트 두께
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                  label: '요청내역', // 요청 내역 라벨
+                  label: '요청내역',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(

@@ -49,6 +49,7 @@ import '../../product/model/product_model.dart';
 import '../layout/complete_body_parts_layout.dart';
 import '../provider/complete_payment_provider.dart';
 import '../provider/order_all_providers.dart';
+import '../provider/order_state_provider.dart';
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는 경우가 있으므로 로컬 context를 사용
@@ -113,6 +114,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
       // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -126,6 +128,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
             0.0; // 로그아웃 시 completePaymentScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       }
     });
 

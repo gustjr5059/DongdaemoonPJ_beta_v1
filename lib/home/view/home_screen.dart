@@ -45,6 +45,7 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
+import '../../order/provider/order_state_provider.dart';
 import '../../product/view/sub_main_screen/autumn_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/best_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/new_sub_main_screen.dart';
@@ -322,6 +323,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
       ref.read(tabIndexProvider.notifier).state = 0;
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       // 저장된 인덱스를 가져와 currentIndex 초기화
       currentIndex = ref.read(homeCurrentTabProvider);
@@ -420,6 +422,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
             false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

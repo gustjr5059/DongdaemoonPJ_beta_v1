@@ -116,6 +116,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
       // -> 블라우스 메인 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
@@ -130,6 +131,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
             0.0; // 로그아웃 시 orderMainScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 상품 데이터는 유지됨.
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

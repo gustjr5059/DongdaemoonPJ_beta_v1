@@ -37,6 +37,7 @@ import '../../../home/layout/home_body_parts_layout.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../../order/provider/order_state_provider.dart';
 import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
@@ -146,6 +147,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen>
         ref.read(tabIndexProvider.notifier).state = -1;
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
@@ -196,6 +198,7 @@ class _AutumnSubMainScreenState extends ConsumerState<AutumnSubMainScreen>
             ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

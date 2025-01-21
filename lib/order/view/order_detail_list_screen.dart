@@ -109,6 +109,7 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
       // -> 발주내역 화면 초기화 시, 하단 탭 바 내 발주내역 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 2;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
@@ -121,6 +122,7 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
         ref.read(orderListDetailScrollPositionProvider.notifier).state =
             0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

@@ -51,6 +51,7 @@ import '../../../common/provider/common_all_providers.dart';
 
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
+import '../../../order/provider/order_state_provider.dart';
 import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_state_provider.dart';
@@ -178,6 +179,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 cardiganMainScreenPointScrollController에 저장하는 코드
@@ -226,6 +228,7 @@ class _CardiganMainScreenState extends ConsumerState<CardiganMainScreen>
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

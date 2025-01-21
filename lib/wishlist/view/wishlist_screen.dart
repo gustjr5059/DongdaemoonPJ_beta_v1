@@ -55,6 +55,7 @@ import '../../../common/provider/common_all_providers.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../cart/provider/cart_state_provider.dart';
+import '../../order/provider/order_state_provider.dart';
 import '../../product/model/product_model.dart';
 import '../layout/wishlist_body_parts_layout.dart';
 import '../provider/wishlist_all_providers.dart';
@@ -143,6 +144,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
       // -> 찜 목록 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
     });
     // // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 wishlistScreenPointScrollController에 저장하는 코드
     // // 상단 탭바 버튼 클릭 시, 해당 섹션으로 화면 이동하는 위치를 저장하는거에 해당 부분도 추가하여
@@ -158,6 +160,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
         ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록 데이터 로드 초기화
         ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       }
     });
 

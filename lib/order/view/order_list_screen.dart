@@ -105,7 +105,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         ref.read(orderlistItemsProvider.notifier).loadMoreOrderItems();
       }
 
-      ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      // ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
     });
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
@@ -128,6 +128,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
       // 데이터 로드를 초기화하는 함수 호출
       ref.read(orderlistItemsProvider.notifier).resetAndReloadOrderItems();
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
     });
 
@@ -142,6 +143,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
         // 데이터 로드를 초기화하는 함수 호출
         ref.read(orderlistItemsProvider.notifier).resetAndReloadOrderItems();
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

@@ -81,9 +81,10 @@ class OrderRepository {
 
     // 발주 데이터를 Firestore에 저장할 때 버튼 상태 필드를 추가.
     await orderDoc.collection('button_info').doc('info').set({
-      'private_orderList_closed_button': false // 초기값은 false로 설정
+      'private_orderList_closed_button': false, // 초기값은 false로 설정
+      'is_deleted': false,
     });
-    print('버튼 정보 저장됨.');
+    print('버튼 정보 저장됨 (private_orderList_closed_button=false, is_deleted=false)');
 
     // 상품 정보를 반복문을 통해 Firestore에 저장
     for (var i = 0; i < productInfo.length; i++) {
@@ -126,6 +127,7 @@ class OrderRepository {
         'order_date': now, // 주문 날짜
       },
       'private_orderList_closed_button': false,
+      'is_deleted': false,
     });
     print('발주 데이터 Firestore에 저장됨.');
 
@@ -197,6 +199,7 @@ class OrderlistRepository {
       // 'numberInfo.order_number' 필드 기준 내림차순으로 해서 최신 문서 순으로 정렬되도록 함.
       // 해당 조건값으로 하는 색인 추가함!!
       Query query = userDocRef.collection('orders')
+          .where('is_deleted', isEqualTo: false)
           .where('private_orderList_closed_button', isEqualTo: false)
           .orderBy('numberInfo.order_number', descending: true)
           .limit(limit);
@@ -360,3 +363,52 @@ class OrderlistRepository {
   }
 }
 // ------ 발주내역 화면 내 데이터 불러오는 OrderlistRepository 클래스 내용 끝 부분
+
+// ------- 요청내역 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 OrderlistIconRepository 클래스 시작
+class OrderlistIconRepository {
+  final FirebaseFirestore firestore;
+
+  OrderlistIconRepository({required this.firestore});
+
+  // 요청 내역 문서 갯수를 구독하는 함수
+  // 요청 내역(orders) 문서 "갯수"를 실시간으로 구독하는 함수.
+  //
+  // - `fetchOrdersByEmail()`에서 사용한 로직과 동일하게
+  //   - `is_deleted == false`
+  //  - `private_orderList_closed_button == false`
+  //  - `orderBy('numberInfo.order_number', descending: true)`
+  //  조건을 만족하는 문서들을 가져온 뒤, `.docs.length`를 반환한다.
+  Stream<int> watchOrderlistItemCount() {
+    // 현재 FirebaseAuth에 로그인되어 있는 유저 정보
+    final user = FirebaseAuth.instance.currentUser;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user?.email ?? user?.uid;
+
+    // 사용자 인증 정보가 없으면(로그인되지 않은 경우) 빈 스트림(0)을 반환
+    if (userEmail == null) {
+      return Stream.value(0);
+    }
+
+    // "couture_order_list/{userEmail}" 문서를 참조
+    final userDocRef = firestore
+        .collection('couture_order_list')
+        .doc(userEmail);
+
+    // fetchOrdersByEmail()에서와 동일한 쿼리 구성:
+    //  - is_deleted == false
+    //  - private_orderList_closed_button == false
+    //  - orderBy('numberInfo.order_number', descending: true)
+    // (limit(...)는 생략하거나, 필요 시 원하는 값으로 설정할 수 있음)
+    final query = userDocRef.collection('orders')
+        .where('is_deleted', isEqualTo: false)
+        .where('private_orderList_closed_button', isEqualTo: false)
+        .orderBy('numberInfo.order_number', descending: true);
+
+    // 해당 쿼리의 snapshots()를 구독하여, 문서 개수를 계산하여 스트림으로 내보냄
+    return query.snapshots().map((snapshot) {
+      // snapshot.docs.length → 조건에 맞는 문서 수
+      return snapshot.docs.length;
+    });
+  }
+}
+// ------- 요청내역 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 OrderlistIconRepository 클래스 끝

@@ -605,6 +605,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   0.0;
   // 발주 목록 내 데이터를 불러오는 orderlistItemsProvider 초기화
   ref.invalidate(orderlistItemsProvider);
+  ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
   // 발주 내역 화면 관련 초기화 부분 끝
 
   // 발주 내역 상세 화면 관련 초기화 부분 시작

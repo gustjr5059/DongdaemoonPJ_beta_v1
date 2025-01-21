@@ -294,3 +294,10 @@ final orderlistDetailItemProvider = StateNotifierProvider.autoDispose.family<
   // OrderlistDetailItemNotifier 인스턴스를 반환함
   return OrderlistDetailItemNotifier(orderlistDetailItemRepository, ref, tuple.item1, tuple.item2);
 });
+
+// 요청내역 문서 갯수 상태를 구독하는 StreamProvider
+final orderlistItemCountProvider = StreamProvider<int>((ref) {
+  // orderlistRepository를 가져와 watchOrderlistItemCount 호출
+  final orderlistRepository = ref.read(orderlistIconRepositoryProvider);
+  return orderlistRepository.watchOrderlistItemCount();
+});

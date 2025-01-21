@@ -40,6 +40,8 @@ import '../../../common/layout/common_body_parts_layout.dart'; // 공통 UI 컴�
 // 이 파일은 홈 화면의 주요 구성 요소들을 정의하며, 사용자에게 첫 인상을 제공하는 중요한 역할을 합니다.
 import '../../../common/provider/common_state_provider.dart';
 import '../../cart/provider/cart_state_provider.dart';
+import '../../home/view/home_screen.dart';
+import '../../order/provider/order_state_provider.dart';
 import '../layout/user_body_parts_layout.dart';
 import '../provider/user_info_modify_and_secession_all_provider.dart';
 import '../provider/user_info_modify_and_secession_state_provider.dart';
@@ -54,13 +56,15 @@ class UserInfoModifyAndSecessionScreen extends ConsumerStatefulWidget {
   const UserInfoModifyAndSecessionScreen({Key? key}) : super(key: key);
 
   @override
-  _UserInfoModifyAndSecessionScreenState createState() => _UserInfoModifyAndSecessionScreenState();
+  _UserInfoModifyAndSecessionScreenState createState() =>
+      _UserInfoModifyAndSecessionScreenState();
 }
 
 // _UserInfoModifyAndSecessionScreenState 클래스 시작
 // _UserInfoModifyAndSecessionScreenState 클래스는 UserInfoModifyAndSecessionScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
-class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModifyAndSecessionScreen>
+class _UserInfoModifyAndSecessionScreenState
+    extends ConsumerState<UserInfoModifyAndSecessionScreen>
     with WidgetsBindingObserver {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -95,6 +99,7 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
       TextEditingController(); // 휴대폰 번호 입력 필드 컨트롤러
 
   bool isLoading = false; // 로딩 상태
+  bool isChecked = false; // 체크박스 상태
 
   // ------ 포커스 노드 초기화 ------
   FocusNode _nameFocusNode = FocusNode(); // 이름 입력 필드 포커스 노드
@@ -128,13 +133,15 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
             ref.read(userInfoModifyAndSecessionScrollPositionProvider);
         // userInfoModifyAndSecessionScreenPointScrollController.jumpTo 메서드를 사용하여 스크롤 위치를 savedScrollPosition으로 즉시 이동함.
         // 이는 스크롤 애니메이션이나 다른 복잡한 동작 없이 바로 지정된 위치로 점프함.
-        userInfoModifyAndSecessionScreenPointScrollController.jumpTo(savedScrollPosition);
+        userInfoModifyAndSecessionScreenPointScrollController
+            .jumpTo(savedScrollPosition);
       }
 
       // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
       // -> 문의하기 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
       ref.read(tabIndexProvider.notifier).state = -1;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref
           .read(userInfoModifyNotifierProvider.notifier)
           .fetchUserInfo(userEmail); // SNS ID, 이름, 이메일, 휴대폰 번호 데이터 초기화
@@ -148,8 +155,11 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
       if (!mounted) return; // 위젯이 비활성화된 상태면 바로 반환
       if (user == null) {
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
-        ref.read(userInfoModifyAndSecessionScrollPositionProvider.notifier).state = 0;
+        ref
+            .read(userInfoModifyAndSecessionScrollPositionProvider.notifier)
+            .state = 0;
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref
             .read(userInfoModifyNotifierProvider.notifier)
             .fetchUserInfo(userEmail); // SNS ID, 이름, 이메일, 휴대폰 번호 데이터 초기화
@@ -222,7 +232,8 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
     // 사용자 인증 상태 감지 구독 해제함.
     authStateChangesSubscription?.cancel();
 
-    userInfoModifyAndSecessionScreenPointScrollController.dispose(); // ScrollController 해제
+    userInfoModifyAndSecessionScreenPointScrollController
+        .dispose(); // ScrollController 해제
 
     _nameController.dispose();
     _emailController.dispose();
@@ -292,9 +303,9 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
         screenSize.height * (12 / referenceHeight);
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
-    final double modifyBtnHeight = screenSize.height * (30 / referenceHeight);
-    final double modifyBtnWidth = screenSize.width * (140 / referenceWidth);
-    final double modifyBtnFontSize = screenSize.height * (14 / referenceHeight);
+    final double modifyAndSecessionBtnHeight = screenSize.height * (30 / referenceHeight);
+    final double modifyAndSecessionBtnWidth = screenSize.width * (140 / referenceWidth);
+    final double modifyAndSecessionBtnFontSize = screenSize.height * (14 / referenceHeight);
 
     // 텍스트 폰트 크기 수치
     final double loginGuideTextFontSize =
@@ -308,6 +319,8 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
         screenSize.width * (393 / referenceWidth); // 가로 비율
     final double titleTextFontSize =
         screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double subTitleTextFontSize =
+        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
@@ -316,6 +329,17 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
         screenSize.height * (14 / referenceHeight);
     final double TextAndBtnInterval =
         screenSize.height * (16 / referenceHeight);
+
+    // 탈퇴하기 버튼 관련 부분 수치
+    final double userSecessionInfoCardViewWidth =
+        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    final double userSecessionInfoCardViewPaddingX =
+        screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    final double userSecessionInfoCardViewPadding1Y =
+        screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    final double checkboxTextFontSize = screenSize.height * (14 / referenceHeight);
+    final double userSecessionInfoTextFontSize =
+        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
 
     return GestureDetector(
       onTap: () {
@@ -379,7 +403,7 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
                       final userInfoState =
                           ref.watch(userInfoModifyNotifierProvider);
                       // 로딩 상태 변수
-                      final isLoading = ref.watch(isLoadingProvider);
+                      var isLoading = ref.watch(isLoadingProvider);
 
                       // 사용자가 로그인되어 있지 않은 경우
                       if (user == null) {
@@ -427,11 +451,15 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
                                       Container(
                                         width: titleTextWidth,
                                         alignment: Alignment.centerLeft,
-                                        child: Text('회원정보 수정',
+                                        child: Text(
+                                          '회원정보 수정',
                                           style: TextStyle(
-                                            fontSize: titleTextFontSize, // 텍스트 크기 설정
-                                            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                            fontFamily: 'NanumGothic', // 글꼴 설정
+                                            fontSize: titleTextFontSize,
+                                            // 텍스트 크기 설정
+                                            fontWeight: FontWeight.bold,
+                                            // 텍스트 굵기 설정
+                                            fontFamily: 'NanumGothic',
+                                            // 글꼴 설정
                                             color: BLACK_COLOR, // 텍스트 색상 설정
                                           ),
                                         ),
@@ -463,8 +491,8 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
                                       SizedBox(height: interval2Y),
                                       Center(
                                         child: Container(
-                                          width: modifyBtnWidth,
-                                          height: modifyBtnHeight,
+                                          width: modifyAndSecessionBtnWidth,
+                                          height: modifyAndSecessionBtnHeight,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor:
@@ -500,7 +528,7 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize:
-                                                          modifyBtnFontSize,
+                                                          modifyAndSecessionBtnFontSize,
                                                       color: _isModifyEnabled()
                                                           ? SOFTGREEN60_COLOR
                                                           : GRAY40_COLOR,
@@ -513,16 +541,189 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
                                       Container(
                                         width: titleTextWidth,
                                         alignment: Alignment.centerLeft,
-                                        child: Text('회원정보 탈퇴',
+                                        child: Text(
+                                          '회원정보 탈퇴',
                                           style: TextStyle(
-                                            fontSize: titleTextFontSize, // 텍스트 크기 설정
-                                            fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                            fontFamily: 'NanumGothic', // 글꼴 설정
+                                            fontSize: titleTextFontSize,
+                                            // 텍스트 크기 설정
+                                            fontWeight: FontWeight.bold,
+                                            // 텍스트 굵기 설정
+                                            fontFamily: 'NanumGothic',
+                                            // 글꼴 설정
                                             color: BLACK_COLOR, // 텍스트 색상 설정
                                           ),
                                         ),
                                       ),
                                       SizedBox(height: interval1Y),
+                                      Text(
+                                        '준수사항',
+                                        style: TextStyle(
+                                          fontSize: subTitleTextFontSize,
+                                          // 텍스트 크기 설정
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'NanumGothic',
+                                          // 글꼴 설정
+                                          color: BLACK_COLOR, // 텍스트 색상 설정
+                                        ),
+                                      ),
+                                      SizedBox(height: interval3Y),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Container(
+                                          width: userSecessionInfoCardViewWidth,
+                                          color: GRAY97_COLOR, // 배경색 설정
+                                          child: CommonCardView(
+                                            backgroundColor: GRAY97_COLOR,
+                                            // 배경색 설정
+                                            elevation: 0,
+                                            // 그림자 깊이 설정
+                                            content: Padding(
+                                              // 패딩 설정
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical:
+                                                      userSecessionInfoCardViewPadding1Y,
+                                                  horizontal:
+                                                      userSecessionInfoCardViewPaddingX),
+                                              // 상하 좌우 패딩 설정
+                                              child: Column(
+                                                // 컬럼 위젯으로 구성함
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '1. 회원 탈퇴 시 모든 혜택이 소멸됩니다.',
+                                                    style: TextStyle(
+                                                      fontSize: userSecessionInfoTextFontSize,
+                                                      // 텍스트 크기 설정
+                                                      fontWeight: FontWeight.normal,
+                                                      fontFamily: 'NanumGothic',
+                                                      // 글꼴 설정
+                                                      color: BLACK_COLOR, // 텍스트 색상 설정
+                                                  ),
+                                                  ),
+                                                  Text(
+                                                    '2. 동일한 SNS 계정으로 재가입은 30일간 제한됩니다.',
+                                                    style: TextStyle(
+                                                      fontSize: userSecessionInfoTextFontSize,
+                                                      // 텍스트 크기 설정
+                                                      fontWeight: FontWeight.normal,
+                                                      fontFamily: 'NanumGothic',
+                                                      // 글꼴 설정
+                                                      color: BLACK_COLOR, // 텍스트 색상 설정
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '3. 탈퇴 후 데이터 복구는 불가능합니다.',
+                                                    style: TextStyle(
+                                                      fontSize: userSecessionInfoTextFontSize,
+                                                      // 텍스트 크기 설정
+                                                      fontWeight: FontWeight.normal,
+                                                      fontFamily: 'NanumGothic',
+                                                      // 글꼴 설정
+                                                      color: BLACK_COLOR, // 텍스트 색상 설정
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: interval1Y),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Checkbox(
+                                            value: isChecked,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                isChecked = value ?? false;
+                                              });
+                                            },
+                                            activeColor: SOFTGREEN60_COLOR, // 피그마에서 체크박스 색상을 투명하게 설정
+                                            checkColor: WHITE_COLOR, // 체크 표시 색상
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              '위 내용을 숙지하였으며 탈퇴에 동의합니다.',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      checkboxTextFontSize),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: interval1Y),
+                                      // "탈퇴하기" 버튼: 아래 부분이 변경된 로직
+                                      Consumer(
+                                        builder: (context, ref, child) {
+                                          // 회원 탈퇴 관련 비동기 상태를 가져옴
+                                          final secessionState = ref.watch(
+                                              userSecessionNotifierProvider);
+
+                                          return Center(
+                                            // 버튼을 감싸는 컨테이너를 생성함
+                                            child: Container(
+                                              width: modifyAndSecessionBtnWidth, // 버튼의 너비를 설정함
+                                              height:
+                                              modifyAndSecessionBtnHeight, // 버튼의 높이를 설정함
+                                              child: ElevatedButton(
+                                                // ElevatedButton 스타일 설정 시작
+                                                style: ElevatedButton.styleFrom(
+                                                  // 버튼 텍스트 색상을 설정함
+                                                  foregroundColor: isChecked
+                                                      ? SOFTGREEN60_COLOR // 체크된 경우의 색상
+                                                      : GRAY62_COLOR, // 체크되지 않은 경우의 색상
+                                                  // 버튼 배경색을 테마의 배경색으로 설정함
+                                                  backgroundColor:
+                                                  Theme.of(context)
+                                                      .scaffoldBackgroundColor,
+                                                  // 버튼 테두리 색상을 설정함
+                                                  side: BorderSide(
+                                                    color: isChecked
+                                                        ? SOFTGREEN60_COLOR // 체크된 경우의 색상
+                                                        : GRAY62_COLOR, // 체크되지 않은 경우의 색상
+                                                  ),
+                                                ),
+                                                // 버튼의 onPressed 동작 설정 시작
+                                                onPressed: isChecked
+                                                    ? () async {
+                                                  // 만약 secessionState가 로딩 중이면 중복 호출을 방지함
+                                                  if (secessionState
+                                                  is AsyncLoading) {
+                                                    return;
+                                                  }
+                                                  // 탈퇴 로직을 실행함
+                                                  await onSecessionPressed();
+                                                }
+                                                    : null, // 버튼이 비활성화된 경우 null 처리
+                                                // 버튼 내부 위젯 설정 시작
+                                                child: secessionState.maybeWhen(
+                                                  // 로딩 상태일 때 로딩 인디케이터를 표시함
+                                                  loading: () =>
+                                                      buildCommonLoadingIndicator(),
+                                                  // 기본 상태일 때 텍스트를 표시함
+                                                  orElse: () => Text(
+                                                    '탈퇴하기', // 버튼에 표시할 텍스트
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold, // 텍스트를 굵게 설정함
+                                                      fontSize:
+                                                      modifyAndSecessionBtnFontSize, // 텍스트 크기를 설정함
+                                                      color: isChecked
+                                                          ? SOFTGREEN60_COLOR // 체크된 경우의 색상
+                                                          : GRAY40_COLOR, // 체크되지 않은 경우의 색상
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      // "탈퇴하기" 버튼 끝
+                                      SizedBox(height: interval2Y),
                                     ],
                                   );
                                 },
@@ -562,12 +763,14 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
                 ),
               ],
             ),
-            buildTopButton(context, userInfoModifyAndSecessionScreenPointScrollController),
+            buildTopButton(
+                context, userInfoModifyAndSecessionScreenPointScrollController),
           ],
         ),
         bottomNavigationBar: buildCommonBottomNavigationBar(
             ref.watch(tabIndexProvider), ref, context, 5, 1,
-            scrollController: userInfoModifyAndSecessionScreenPointScrollController),
+            scrollController:
+                userInfoModifyAndSecessionScreenPointScrollController),
       ),
     );
   }
@@ -634,6 +837,84 @@ class _UserInfoModifyAndSecessionScreenState extends ConsumerState<UserInfoModif
     return _nameController.text.isNotEmpty ||
         _emailController.text.isNotEmpty ||
         _phoneController.text.isNotEmpty;
+  }
+
+  // 회원 탈퇴를 진행하는 함수
+  Future<void> onSecessionPressed() async {
+
+    // 현재 로그인한 유저
+    final currentUser =
+        FirebaseAuth.instance.currentUser;
+    final userEmail = currentUser?.email ??
+        currentUser?.uid ??
+        '';
+
+    await showSubmitAlertDialog(
+      context,
+      title: '[회원 탈퇴]',
+      content:
+      '탈퇴 시, 해당 계정은 30일간 재가입이 불가하며,\n데이터 복구는 불가능합니다.\n정말 탈퇴하시겠습니까?',
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            '아니요',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight:
+              FontWeight.bold,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+            try {
+              // 레포지토리 호출
+              await ref
+                  .read(
+                  userSecessionNotifierProvider
+                      .notifier)
+                  .secessionUser(
+                  userEmail);
+
+              // 탈퇴가 성공하면 Firebase 로그아웃
+              await FirebaseAuth.instance
+                  .signOut();
+
+              // 홈 화면으로 이동
+              if (!mounted) return;
+              Navigator
+                  .pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      HomeMainScreen(),
+                ),
+                    (route) => false,
+              );
+
+              showCustomSnackBar(
+                  context, '회원 탈퇴가 완료되었습니다.');
+            } catch (e) {
+              showCustomSnackBar(
+                  context,
+                  '회원 탈퇴 중 오류 발생: $e');
+            }
+          },
+          child: Text(
+            '예',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight:
+              FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   // 고정된 값을 가진 행을 생성하는 함수

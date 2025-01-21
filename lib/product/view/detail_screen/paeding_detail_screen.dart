@@ -9,6 +9,7 @@ import '../../../cart/provider/cart_state_provider.dart';
 import '../../../common/const/colors.dart';
 import '../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../common/provider/common_state_provider.dart';
+import '../../../order/provider/order_state_provider.dart';
 import '../../../wishlist/provider/wishlist_state_provider.dart';
 import '../../layout/product_body_parts_layout.dart';
 import '../../provider/product_all_providers.dart';
@@ -125,6 +126,7 @@ class _PaedingDetailProductScreenState
         ref.read(showFullImageProvider.notifier).state = false;
         ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();  // '접기' 버튼 상태 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });
@@ -142,6 +144,7 @@ class _PaedingDetailProductScreenState
         }
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
       }
     });

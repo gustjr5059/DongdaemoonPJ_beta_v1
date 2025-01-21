@@ -45,6 +45,7 @@ import '../../common/provider/common_all_providers.dart';
 
 // 프로필 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../../order/provider/order_all_providers.dart';
+import '../../order/provider/order_state_provider.dart';
 import '../../product/provider/product_all_providers.dart';
 import '../layout/user_body_parts_layout.dart';
 import '../provider/profile_all_providers.dart';
@@ -129,6 +130,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
       // -> 마이페이지 화면 초기화 시, 하단 탭 바 내 마이페이지 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 3;
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       ref.invalidate(profileUserInfoProvider); // 마이페이지 회원정보 데이터 초기화
     });
 
@@ -154,6 +156,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
         ref.read(profileMainScrollPositionProvider.notifier).state =
             0.0; // 마이페이지 화면 자체의 스크롤 위치 인덱스를 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
       }
     });
 

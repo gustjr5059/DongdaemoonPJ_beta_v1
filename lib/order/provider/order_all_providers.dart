@@ -55,3 +55,8 @@ final orderDataProvider = FutureProvider.family<Map<String, dynamic>, String>((r
 
 // OrderlistRepository를 제공하는 Provider
 final orderlistRepositoryProvider = Provider((ref) => OrderlistRepository(firestore: FirebaseFirestore.instance));
+
+// orderlistIconRepositoryProvider를 정의 - OrderlistIconRepository 인스턴스를 제공하는 Provider를 생성
+final orderlistIconRepositoryProvider = Provider<OrderlistIconRepository>((ref) {
+  return OrderlistIconRepository(firestore: FirebaseFirestore.instance);
+});
