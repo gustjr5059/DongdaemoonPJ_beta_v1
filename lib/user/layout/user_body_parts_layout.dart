@@ -351,8 +351,8 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                 context,
                 assetPath: 'asset/img/misc/icon_img/user_info_icon.png', // 회원정보 수정 아이콘 설정
                 title: '회원정보 수정 및 탈퇴', // 회원정보 수정 타이틀 설정
-                onTap: () { // 클릭 시 실행될 함수 설정
-                  onUserInfoModifyListClick(context, ref); // 회원정보 수정 클릭 시 호출되는 함수 실행
+                onTap: () async { // 클릭 시 실행될 함수 설정
+                  await onUserInfoModifyListClick(context, ref); // 회원정보 수정 클릭 시 호출되는 함수 실행
                 },
               ),
             ],
@@ -462,8 +462,41 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     navigateToScreenAndRemoveUntil(context, ref, InquiryMainScreen(), 4); // 화면 이동 함수 호출
   }
 
-  void onUserInfoModifyListClick(BuildContext context, WidgetRef ref) { // 회원정보 수정 및 탈퇴 클릭 함수
-    navigateToScreenAndRemoveUntil(context, ref, UserInfoModifyAndSecessionScreen(), 4); // 화면 이동 함수 호출
+  // void onUserInfoModifyListClick(BuildContext context, WidgetRef ref) { // 회원정보 수정 및 탈퇴 클릭 함수
+  //   navigateToScreenAndRemoveUntil(context, ref, UserInfoModifyAndSecessionScreen(), 4); // 화면 이동 함수 호출
+  // }
+
+  // // 회원정보 수정 및 탈퇴 클릭 함수
+  Future<void> onUserInfoModifyListClick(BuildContext context, WidgetRef ref) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      showCustomSnackBar(context, '로그인 후 이용해주세요.');
+      return;
+    }
+
+    final String registrationId = user.email ?? user.uid;
+
+    try {
+      final userDoc = await ref.read(profileUserInfoProvider(registrationId).future);
+
+      if (userDoc == null) {
+        showCustomSnackBar(context, '회원정보가 없습니다. 다시 로그인해주세요.');
+        return;
+      }
+
+      final String? snsType = userDoc['sns_type'];
+
+      if (snsType == 'none') {
+        showCustomSnackBar(context, '관리자 계정이므로 불가합니다.');
+        return;
+      }
+
+      navigateToScreenAndRemoveUntil(context, ref, UserInfoModifyAndSecessionScreen(), 4); // 화면 이동 함수 호출
+
+    } catch (error) {
+      print('오류: $error');
+      showCustomSnackBar(context, '오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    }
   }
 }
 // ------ 각 옵션마다 클릭 시, 각 해당 화면으로 이동하는 로직 끝 부분

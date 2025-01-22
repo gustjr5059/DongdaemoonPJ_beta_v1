@@ -112,7 +112,7 @@
 		EF288E262C88655F002D29E8 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		EF288E272C88655F002D29E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EF81B1C92D34CD02003F4B15 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		EF81B1CA2D37C7E7003F4B15 /* NaverThirdPartyLogin.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = NaverThirdPartyLogin.xcframework; path = "Pods/naveridlogin-sdk-ios/NaverThirdPartyLogin.xcframework"; sourceTree = "<group>"; };
+		EF81B1CA2D37C7E7003F4B15 /* NaverThirdPartyLogin.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:U6VV7FMD97:NHN Corporation"; lastKnownFileType = wrapper.xcframework; name = NaverThirdPartyLogin.xcframework; path = "Pods/naveridlogin-sdk-ios/NaverThirdPartyLogin.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
