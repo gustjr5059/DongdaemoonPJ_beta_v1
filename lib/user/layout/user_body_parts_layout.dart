@@ -79,9 +79,10 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 
     // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
     final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid; // 이메일 주소를 가져옴
 
     // 이메일 정보를 FirebaseAuth에서 가져와 Firestore 데이터를 가져오는 데 사용.
-    final userInfoAsyncValue = ref.watch(profileUserInfoProvider(user?.email ?? user?.uid ?? ''));
+    final userInfoAsyncValue = ref.watch(profileUserInfoProvider(userEmail ?? ''));
 
     return userInfoAsyncValue.when( // 유저 정보의 상태에 따라 반환할 위젯을 설정함
       data: (userInfo) { // 데이터가 로드되었을 경우 실행됨
@@ -114,7 +115,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                       ),
                     ),
                     SizedBox(height: interval1Y), // 간격 설정
-                    if (user != null)
+                    if (userEmail != null)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

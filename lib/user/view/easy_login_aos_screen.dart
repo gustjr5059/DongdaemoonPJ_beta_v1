@@ -1,7 +1,9 @@
 
 import 'package:dongdaemoon_beta_v1/user/view/sns_sign_up_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -127,6 +129,12 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
         isNavigatedToSignUp = false; // 상태 초기화
         // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
         if (mounted && !isGoogleLoginReset) {
+
+          // 회원가입 화면에서 이전화면으로 이동할 시, 로그인 상태 해제하는 로직
+          // 해당 로직이 있어야 로그인 화면 -> 회원가입 화면 -> 다시 로그인 화면 -> 홈 화면 -> 마이페이지 화면일 시,
+          // users 내 문서 조회를 할만한 계정이 없도록 해서 로그인 하기 버튼이 나오도록 가능
+          FirebaseAuth.instance.signOut(); // FirebaseAuth 로그아웃
+
           ref.read(googleSignInNotifierProvider.notifier).resetState();
         }
       });
@@ -197,6 +205,13 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
         isNavigatedToSignUp = false;
         // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
         if (mounted && !isNaverLoginReset) {
+
+          // 회원가입 화면에서 이전화면으로 이동할 시, 로그인 상태 해제하는 로직
+          // 해당 로직이 있어야 로그인 화면 -> 회원가입 화면 -> 다시 로그인 화면 -> 홈 화면 -> 마이페이지 화면일 시,
+          // users 내 문서 조회를 할만한 계정이 없도록 해서 로그인 하기 버튼이 나오도록 가능
+          FirebaseAuth.instance.signOut(); // FirebaseAuth 로그아웃
+          FlutterNaverLogin.logOut(); // 네이버 로그아웃
+
           ref.read(naverSignInNotifierProvider.notifier).resetState();
         }
       });
