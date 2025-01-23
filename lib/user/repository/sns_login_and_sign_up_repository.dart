@@ -70,8 +70,10 @@ class SNSLoginRepository {
           final diff = DateTime.now().difference(secessionTime);
 
           // 예: 5분이 안 지났으면 로그인 불가(30일이라면 inDays < 30 로 변경)
-          if (diff.inMinutes < 5) {
-            print('아직 5분이 지나지 않은 탈퇴 계정(Apple). 로그인 불가!');
+          // 5분: diff.inMinutes < 5
+          // 30일: diff.inDays < 30
+          if (diff.inDays < 30) {
+            print('아직 30일이 지나지 않은 탈퇴 계정(Apple). 로그인 불가!');
             // 예외를 던져서 Notifier에서 처리
             throw Exception('secessionUser');
             // → AppleSignInNotifier에서 catch → state.errorMessage='secessionUser'
@@ -99,14 +101,15 @@ class SNSLoginRepository {
       // 사용자가 로그인 창을 취소했을 경우 (canceled 상태)
       if (e.code == AuthorizationErrorCode.canceled) {
         print('Apple 로그인 취소됨.');
-        return null; // 단순히 null 반환, 추가 처리 없음
+        return null; // 취소된 경우, 추가 처리는 하지 않음
+      } else if (e.code == AuthorizationErrorCode.unknown) {
+        print('Apple 로그인 중 알 수 없는 오류 발생: $e');
+        throw Exception('Apple 로그인 중 오류 발생: ${e.toString()}');
       }
-      // 다른 에러는 처리
-      print('Apple 로그인 중 오류 발생: $e');
-      throw Exception('Apple 로그인 중 오류 발생: ${e.toString()}');
+      throw Exception('Apple 로그인 중 처리되지 않은 오류 발생: ${e.toString()}');
     } catch (e) {
-      print('Apple 로그인 중 예상치 못한 오류 발생: $e');
-      throw Exception('Apple 로그인 중 오류 발생: ${e.toString()}');
+      print('Apple 로그인 중 예외 발생: $e');
+      throw Exception('Apple 로그인 중 예외 발생: ${e.toString()}');
     }
   }
 
@@ -147,7 +150,7 @@ class SNSLoginRepository {
 
       final User? user = userCredential.user;
       if (user == null) {
-        print('Apple 로그인 실패. 사용자 정보 없음.');
+        print('Google 로그인 실패. 사용자 정보 없음.');
         return null; // 로그인 실패 시 null 반환
       }
 
@@ -168,11 +171,13 @@ class SNSLoginRepository {
           final diff = DateTime.now().difference(secessionTime);
 
           // 예: 5분이 안 지났으면 로그인 불가(30일이라면 inDays < 30 로 변경)
-          if (diff.inMinutes < 5) {
-            print('아직 5분이 지나지 않은 탈퇴 계정(Apple). 로그인 불가!');
+          // 5분: diff.inMinutes < 5
+          // 30일: diff.inDays < 30
+          if (diff.inDays < 30) {
+            print('아직 30분이 지나지 않은 탈퇴 계정(Google). 로그인 불가!');
             // 예외를 던져서 Notifier에서 처리
             throw Exception('secessionUser');
-            // → AppleSignInNotifier에서 catch → state.errorMessage='secessionUser'
+            // → GoogleSignInNotifier에서 catch → state.errorMessage='secessionUser'
           }
         }
       }
@@ -255,9 +260,11 @@ class SNSLoginRepository {
           (data['secession_time'] as Timestamp).toDate();
           final diff = DateTime.now().difference(secessionTime);
 
-          // 5분 제한 (30일로 쓰고 싶으시면 diff.inDays < 30 등으로 변경)
-          if (diff.inMinutes < 5) {
-            print('아직 5분 안 지난 탈퇴 계정! → secessionUser 예외 던짐.');
+          // 예: 5분이 안 지났으면 로그인 불가(30일이라면 inDays < 30 로 변경)
+          // 5분: diff.inMinutes < 5
+          // 30일: diff.inDays < 30
+          if (diff.inDays < 30) {
+            print('아직 30일이 안 지난 탈퇴 계정! → secessionUser 예외 던짐.');
             // 여기서는 예외를 던집니다. (Notifier에서 받아서 AlertDialog 띄움)
             throw Exception('secessionUser');
           }

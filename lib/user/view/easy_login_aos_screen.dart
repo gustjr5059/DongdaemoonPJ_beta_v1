@@ -72,7 +72,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       showSubmitAlertDialog(
         context,
         title: '[회원가입 실패]',
-        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 5분 이후에만 재가입이 가능합니다.',
+        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 30일 이후에만 재가입이 가능합니다.',
         // 30일로 쓰고 싶으면 문구만 30일로 변경.
         actions: [
           TextButton(
@@ -150,7 +150,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
       showSubmitAlertDialog(
         context,
         title: '[회원가입 실패]',
-        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 5분 이후에만 재가입이 가능합니다.',
+        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 30일 이후에만 재가입이 가능합니다.',
         // 30일로 쓰고 싶으면 문구만 30일로 변경.
         actions: [
           TextButton(

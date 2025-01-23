@@ -71,7 +71,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
       showSubmitAlertDialog(
         context,
         title: '[회원가입 실패]',
-        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 5분 이후에만 재가입이 가능합니다.',
+        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 30일 이후에만 재가입이 가능합니다.',
         // 30일로 쓰고 싶으면 문구만 30일로 변경.
         actions: [
           TextButton(
@@ -97,7 +97,14 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     // 2) 로그인 실패 시 스낵바
     if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
       // 에러 메시지가 존재하되, Apple 로그인 취소 상태는 제외
-      if (!state.errorMessage!.contains('canceled')) {
+      // 로그인 취소(`canceled`) 상태와 기타 오류를 구분
+      if (state.errorMessage!.contains('canceled')) {
+        print('Apple 로그인 취소됨.');
+      } else if (state.errorMessage!.contains('error 1000')) {
+        // 에러 1000 처리
+        showCustomSnackBar(context, 'Apple 로그인 중 문제가 발생했습니다. 다시 시도해주세요.');
+        ref.read(appleSignInNotifierProvider.notifier).resetState();
+      } else {
         showCustomSnackBar(context, state.errorMessage!);
       }
     }
@@ -148,7 +155,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
       showSubmitAlertDialog(
         context,
         title: '[회원가입 실패]',
-        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 5분 이후에만 재가입이 가능합니다.',
+        content: '해당 계정은 탈퇴한 계정이며,\n탈퇴 후 30일 이후에만 재가입이 가능합니다.',
         // 30일로 쓰고 싶으면 문구만 30일로 변경.
         actions: [
           TextButton(
