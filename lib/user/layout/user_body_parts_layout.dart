@@ -77,6 +77,10 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
+    // 회원정보 내 계정별 이미지 수치
+    final double snsTypeImageWidth = screenSize.width * (20 / referenceWidth);
+    final double snsTypeImageHeight = screenSize.height * (20 / referenceHeight);
+
     // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
     final user = FirebaseAuth.instance.currentUser;
     final userEmail = user?.email ?? user?.uid; // 이메일 주소를 가져옴
@@ -86,6 +90,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 
     return userInfoAsyncValue.when( // 유저 정보의 상태에 따라 반환할 위젯을 설정함
       data: (userInfo) { // 데이터가 로드되었을 경우 실행됨
+        final snsType = userInfo?['sns_type'] ?? ''; // 계정 종류 정보를 가져오고, 없으면 ''로 설정함
         final name = userInfo?['name'] ?? ''; // 이름 정보를 가져오고, 없으면 ''로 설정함
         final email = userInfo?['email'] ?? ''; // 이메일 정보를 가져오고, 없으면 ''로 설정함
         final phoneNumber = userInfo?['phone_number'] ?? ''; // 전화번호 정보를 가져오고, 없으면 ''로 설정함
@@ -119,6 +124,9 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: interval2Y),
+                          _buildUserInfoSnsTypeRow(context, snsType, snsTypeImageWidth, snsTypeImageHeight),
+                          SizedBox(height: interval1Y),
                           _buildUserInfoRow(context, '고객명', name),
                           SizedBox(height: interval2Y),
                           _buildUserInfoRow(context, '이메일', email),
@@ -258,7 +266,79 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     );
   }
 
-  // 사용자 정보 행을 구성하는 메서드
+  // SNS 타입 행을 구성하는 메서드
+  Widget _buildUserInfoSnsTypeRow(
+      BuildContext context, String snsType, double imageWidth, double imageHeight) {
+    String assetPath;
+    String snsTypeText;
+
+    final Size screenSize = MediaQuery.of(context).size; // 기기 화면 크기 가져옴
+    final double referenceWidth = 393.0; // 기준 화면 너비 설정
+    final double referenceHeight = 852.0; // 기준 화면 높이 설정
+    final double intervalX = screenSize.width * (8 / referenceWidth);
+    final double uesrInfoTextFontSize =
+        screenSize.height * (17 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // SNS 타입에 따라 이미지 경로와 텍스트를 설정
+    switch (snsType) {
+      case 'apple':
+        assetPath = 'asset/img/misc/login_image/apple_login_btn_img.png';
+        snsTypeText = '애플 계정';
+        break;
+      case 'naver':
+        assetPath = 'asset/img/misc/login_image/naver_login_btn_img.png';
+        snsTypeText = '네이버 계정';
+        break;
+      case 'google':
+        assetPath = 'asset/img/misc/login_image/google_login_btn_img.png';
+        snsTypeText = '구글 계정';
+        break;
+      case 'none':
+      default:
+        assetPath = 'asset/img/misc/logo_img/couture_logo_image.png';
+        snsTypeText = '관리자 계정';
+    }
+
+    return Row(
+      children: [
+        Image.asset(
+          assetPath,
+          width: imageWidth,
+          height: imageHeight,
+          fit: BoxFit.contain,
+        ),
+        SizedBox(width: intervalX),
+        RichText(
+          text: TextSpan(
+            children: [
+              // SNS 타입 텍스트
+              TextSpan(
+                text: snsTypeText,
+                style: TextStyle(
+                  fontSize: uesrInfoTextFontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  color: SOFTGREEN60_COLOR, // SNS 텍스트 색상
+                ),
+              ),
+              // "(으)로 로그인 중입니다." 텍스트
+              TextSpan(
+                text: '(으)로 로그인 중입니다.',
+                style: TextStyle(
+                  fontSize: uesrInfoTextFontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NanumGothic',
+                  color: GRAY41_COLOR, // 나머지 텍스트 색상
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 사용자 정보 고객명, 이메일, 연락처 행을 구성하는 메서드
   Widget _buildUserInfoRow(BuildContext context, String label, String value) {
     final Size screenSize = MediaQuery.of(context).size; // 기기 화면 크기 가져옴
     final double referenceHeight = 852.0; // 기준 화면 높이 설정
