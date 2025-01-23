@@ -22,6 +22,7 @@ import 'package:flutter/services.dart';
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 // Riverpod는 애플리케이션의 상태를 효율적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Riverpod를 사용한 상태 관리를 위한 import
+
 import 'package:url_launcher/url_launcher.dart';
 
 // 애플리케이션에서 발생할 수 있는 예외 상황을 처리하기 위한 공통 UI 레이아웃 파일을 임포트합니다.
@@ -45,6 +46,12 @@ import '../../order/provider/order_state_provider.dart';
 import '../layout/user_body_parts_layout.dart';
 import '../provider/user_info_modify_and_secession_all_provider.dart';
 import '../provider/user_info_modify_and_secession_state_provider.dart';
+
+import 'package:korean_profanity_filter/korean_profanity_filter.dart'
+as KoreanFilter; // 별칭 설정 (korean_profanity_filter 패키지 임포트)
+import 'package:profanity_filter/profanity_filter.dart'
+as EnglishFilter; // 별칭 설정 (profanity_filter 패키지 임포트)
+
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
@@ -97,6 +104,11 @@ class _UserInfoModifyAndSecessionScreenState
       TextEditingController(); // 이메일 입력 필드 컨트롤러
   final TextEditingController _phoneController =
       TextEditingController(); // 휴대폰 번호 입력 필드 컨트롤러
+
+  // ProfanityFilter라는 클래스가 두 개의 패키지(korean_profanity_filter와 profanity_filter)에서 동일한 이름으로 정의되어 있어서 충돌이 발생함
+  // 이런 경우, 하나의 패키지에서 해당 이름을 사용하려면 as 키워드로 별칭을 부여해야 합니다. 별칭을 사용하면 두 패키지의 동일한 이름 충돌을 피함
+  final EnglishFilter.ProfanityFilter _englishProfanityFilter =
+  EnglishFilter.ProfanityFilter(); // 영어 비속어 필터 객체
 
   bool isLoading = false; // 로딩 상태
   bool isChecked = false; // 체크박스 상태
@@ -176,37 +188,91 @@ class _UserInfoModifyAndSecessionScreenState
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
 
-    // 이메일 입력 필드 포커스 리스너 추가
+    // 이메일 입력 필드 포커스 리스너 추가 (유효성 체크)
     _emailFocusNode.addListener(() {
-      // 포커스가 해제되었을 때 이메일 형식 검사
       if (!_emailFocusNode.hasFocus) {
-        if (!_emailController.text.contains('@')) {
-          showCustomSnackBar(context, '이메일 형식에 맞게 재작성해주세요.');
+        // 입력값이 있을 때만 검사
+        // @를 포함하지 않거나, @를 제외한 값이 없는 경우
+        if (_emailController.text.isNotEmpty &&
+            (!_emailController.text.contains('@') ||
+                _emailController.text
+                    .replaceAll('@', '')
+                    .trim()
+                    .isEmpty)) {
+          showCustomSnackBar(context, '이메일 형식에 맞게 기입해주세요.');
+        }
+        // 빈칸 포함 여부 확인
+        if (_emailController.text.contains(' ')) {
+          showCustomSnackBar(context, '빈칸 없이 이메일을 기입해주세요.');
+          _nameController.clear();
+          return;
         }
       }
     });
 
-    // 휴대폰 번호 입력 필드 포커스 리스너 추가
+    // 휴대폰 번호 입력 필드 포커스 리스너 추가 (유효성 체크)
     _phoneNumberFocusNode.addListener(() {
-      // 포커스가 해제되었을 때 휴대폰 번호 형식 검사
       if (!_phoneNumberFocusNode.hasFocus) {
         // '-'가 포함된 횟수 계산
-        if ('-'.allMatches(_phoneController.text).length < 2) {
-          showCustomSnackBar(context, "'-'를 붙인 휴대폰 번호 형식에 맞게 재작성해주세요.");
+        // 입력값이 있을 때만 검사
+        // '-' 사이 양쪽 어디에든 입력값이 없거나 '-'가 2개 미만인 경우
+        // => '-' 기준으로 문자열을 나누어 List<String>로 저장한 후, 부분 문자열(parts)의 길이가 3이 아닌 경우로 구현
+        String phoneText = _phoneController.text;
+        List<String> parts = phoneText.split('-');
+        if (phoneText.isNotEmpty &&
+            (parts.length != 3 || parts.any((part) => part.isEmpty))) {
+          showCustomSnackBar(context, "'-'를 붙인 휴대폰 번호 형식에 맞게 기입해주세요.");
+        }
+        // 빈칸 포함 여부 확인
+        if (_phoneController.text.contains(' ')) {
+          showCustomSnackBar(context, '빈칸 없이 휴대폰 번호를 기입해주세요.');
+          _nameController.clear();
+          return;
         }
       }
     });
 
-    // 이름 입력 필드 텍스트 변경 리스너 추가
+    // ----- 이름 입력 필드 텍스트 변경 리스너 추가 (유효성 체크) 시작
+    // 이름 내 빈칸 제한 필터링
     _nameController.addListener(() {
-      if (_nameController.text.length > 10) {
+      // 빈칸 입력 방지
+      // if (!_nameFocusNode.hasFocus) {
+      // 빈칸 포함 여부 확인
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.contains(' ')) {
+        showCustomSnackBar(context, '빈칸 없이 이름을 입력해주세요.');
+        _nameController.clear();
+        return;
+      }
+
+      // 이름 길이 제한 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.length > 10) {
         showCustomSnackBar(context, '최대 10자까지 작성 가능합니다.');
         _nameController.text = _nameController.text.substring(0, 10);
         _nameController.selection = TextSelection.fromPosition(
           TextPosition(offset: _nameController.text.length),
         );
       }
+
+      // 영어 비속어 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _englishProfanityFilter.hasProfanity(_nameController.text)) {
+        showCustomSnackBar(context, '영어 비속어가 포함된 이름은 사용할 수 없습니다.');
+        _nameController.clear(); // 필드값이 초기화가 됨
+        return;
+      }
+
+      // 한국어 비속어 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.containsBadWords) {
+        showCustomSnackBar(context, '한국어 비속어가 포함된 이름은 사용할 수 없습니다.');
+        _nameController.clear();
+        return;
+      }
+      // }
     });
+    // ----- 이름 입력 필드 텍스트 변경 리스너 추가 (유효성 체크) 끝
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -277,6 +343,8 @@ class _UserInfoModifyAndSecessionScreenState
     // body 부분 데이터 내용의 전체 패딩 수치
     final double userInfoModifyPaddingX =
         screenSize.width * (8 / referenceWidth);
+    final double nameGuideTextFontSize =
+        screenSize.height * (10 / referenceHeight);
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double userInfoModifyChevronIconWidth =
@@ -474,20 +542,54 @@ class _UserInfoModifyAndSecessionScreenState
                                           _nameController,
                                           _nameFocusNode,
                                           "'성'을 붙여서 이름을 기입해주세요."),
-                                      SizedBox(height: interval1Y),
+                                      Align(
+                                        alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                        child: Text(
+                                          '* 빈칸 없이 최대 10자 이내이며, 비속어는 사용할 수 없습니다.',
+                                          style: TextStyle(
+                                            fontSize: nameGuideTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.normal,
+                                            color: GRAY60_COLOR,
+                                          ),
+                                        ),
+                                      ),
                                       _buildEditableRow(
                                           context,
                                           '이메일',
                                           _emailController,
                                           _emailFocusNode,
-                                          "이메일을 입력하세요."),
-                                      SizedBox(height: interval1Y),
+                                          "이메일 형식에 맞게 이메일을 기입해주세요."),
+                                      Align(
+                                        alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                        child: Text(
+                                          '* 예) abc@naver.com, abc@hanmail.net',
+                                          style: TextStyle(
+                                            fontSize: nameGuideTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.normal,
+                                            color: GRAY60_COLOR,
+                                          ),
+                                        ),
+                                      ),
                                       _buildEditableRow(
                                           context,
                                           '휴대폰 번호',
                                           _phoneController,
                                           _phoneNumberFocusNode,
                                           "'-'를 붙여서 연락처를 기입해주세요."),
+                                      Align(
+                                        alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                        child: Text(
+                                          '* 예) 010-XXXX-XXXX',
+                                          style: TextStyle(
+                                            fontSize: nameGuideTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.normal,
+                                            color: GRAY60_COLOR,
+                                          ),
+                                        ),
+                                      ),
                                       SizedBox(height: interval2Y),
                                       Center(
                                         child: Container(
@@ -816,17 +918,24 @@ class _UserInfoModifyAndSecessionScreenState
 
   // 이메일 형식 유효성 검증 함수
   bool _validateEmailFormat() {
-    return _emailController.text.contains('@');
+    // @를 포함하고 @를 제외한 값이 비어있지 않은 경우에만 유효함
+    return _emailController.text.contains('@') &&
+        _emailController.text.replaceAll('@', '').trim().isNotEmpty;
   }
 
   // 휴대폰 번호 형식 유효성 검증 함수
   bool _validatePhoneNumberFormat() {
-    return '-'.allMatches(_phoneController.text).length >= 2;
+    String phoneText = _phoneController.text;
+    List<String> parts = phoneText.split('-');
+    // '-' 사이 양쪽 어디에든 입력값이 없거나 '-'가 2개 이상인 경우에만 유효함
+    return parts.length == 3 && parts.every((part) => part.isNotEmpty);
   }
 
   // 이름 길이 유효성 검증 함수
   bool _validateNameLength() {
-    return _nameController.text.length <= 10;
+    // 빈 값이고, 10자 이하인 경우에만 유효함
+    return _nameController.text.isNotEmpty &&
+        _nameController.text.length <= 10;
   }
 
   // 수정하기 버튼 활성화 상태 확인 함수
@@ -834,8 +943,8 @@ class _UserInfoModifyAndSecessionScreenState
     // 원본 코드에서는 '하나라도 값이 있다면' 버튼이 활성화되도록 작성되어 있으나,
     // 일반적으로는 "이름, 이메일, 휴대폰 번호 모두 입력"일 경우에만 활성화시키는 등
     // 조건을 다양하게 변경할 수도 있음.
-    return _nameController.text.isNotEmpty ||
-        _emailController.text.isNotEmpty ||
+    return _nameController.text.isNotEmpty &&
+        _emailController.text.isNotEmpty &&
         _phoneController.text.isNotEmpty;
   }
 

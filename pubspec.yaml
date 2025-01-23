@@ -50,6 +50,9 @@ dependencies:
   pdfx: ^2.0.2
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^6.0.5
+  # sign_in_with_apple: 애플 로그인 관련 패키지
+  # google_sign_in: 구글 로그인 관련 패키지
+  # flutter_naver_login: 네이버 로그인 관련 패키지
   sign_in_with_apple: ^6.1.4
   google_sign_in: ^5.4.0
   flutter_naver_login: ^2.0.0
@@ -71,7 +74,12 @@ dependencies:
   debounce_throttle: ^2.0.0
   firebase_storage: ^11.7.5
   tuple: ^2.0.0
+  # flutter_html: txt 형식의 파일 내용 내 html 요소가 있을 시, htmel 옵션을 반영해서 UI 구현 가능하도록 하는 패키지
   flutter_html: ^3.0.0-beta.2
+  # profanity_filter: 영어 비속어 필터 관련 패키지
+  # korean_profanity_filter: 한국어 비속어 필터 관련 패키지
+  profanity_filter: ^2.0.0
+  korean_profanity_filter: ^1.0.0
 
 dev_dependencies:
   flutter_test:

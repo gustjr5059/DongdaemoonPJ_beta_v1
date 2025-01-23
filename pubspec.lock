@@ -869,6 +869,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.9.0"
+  korean_profanity_filter:
+    dependency: "direct main"
+    description:
+      name: korean_profanity_filter
+      sha256: "2e162e2377d96035f9eb89382488cd5ca44e765b6561c6703f9a89c9ee541d97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -1157,6 +1165,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  profanity_filter:
+    dependency: "direct main"
+    description:
+      name: profanity_filter
+      sha256: afe466d42a2763a5b86849192bee3337de45a9566d5915a0fe4aa5f9cd2e8ac4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   protobuf:
     dependency: transitive
     description:

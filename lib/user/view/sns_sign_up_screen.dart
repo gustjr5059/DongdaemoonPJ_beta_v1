@@ -1,21 +1,22 @@
-
 import 'package:dongdaemoon_beta_v1/user/view/sign_up_document_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../home/view/home_screen.dart';
 import '../provider/sns_login_and_sign_up_all_provider.dart';
 import '../repository/sns_login_and_sign_up_repository.dart';
-
+import 'package:korean_profanity_filter/korean_profanity_filter.dart'
+    as KoreanFilter; // 별칭 설정 (korean_profanity_filter 패키지 임포트)
+import 'package:profanity_filter/profanity_filter.dart'
+    as EnglishFilter; // 별칭 설정 (profanity_filter 패키지 임포트)
 
 // ------ 회원가입 화면 클래스 시작 ------
 class SnsSignUpScreen extends ConsumerStatefulWidget {
   final String snsType; // 'apple' 또는 'google'
-  final String snsId;   // SNS 계정 ID (Apple ID 또는 Google ID)
+  final String snsId; // SNS 계정 ID (Apple ID 또는 Google ID)
   // final String platformType; // 'ios' 또는 'aos' (이전 화면 구분)
 
   const SnsSignUpScreen({
@@ -25,7 +26,6 @@ class SnsSignUpScreen extends ConsumerStatefulWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   _SnsSignUpScreenState createState() => _SnsSignUpScreenState();
 }
@@ -34,9 +34,17 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     with WidgetsBindingObserver {
   // ------ 입력 필드 및 상태 관리 변수 초기화 ------
   late final TextEditingController _snsIdController; // SNS ID 입력 필드 컨트롤러
-  final TextEditingController _nameController = TextEditingController(); // 이름 입력 필드 컨트롤러
-  final TextEditingController _emailController = TextEditingController(); // 이메일 입력 필드 컨트롤러
-  final TextEditingController _phoneController = TextEditingController(); // 휴대폰 번호 입력 필드 컨트롤러
+  final TextEditingController _nameController =
+      TextEditingController(); // 이름 입력 필드 컨트롤러
+  final TextEditingController _emailController =
+      TextEditingController(); // 이메일 입력 필드 컨트롤러
+  final TextEditingController _phoneController =
+      TextEditingController(); // 휴대폰 번호 입력 필드 컨트롤러
+
+  // ProfanityFilter라는 클래스가 두 개의 패키지(korean_profanity_filter와 profanity_filter)에서 동일한 이름으로 정의되어 있어서 충돌이 발생함
+  // 이런 경우, 하나의 패키지에서 해당 이름을 사용하려면 as 키워드로 별칭을 부여해야 합니다. 별칭을 사용하면 두 패키지의 동일한 이름 충돌을 피함
+  final EnglishFilter.ProfanityFilter _englishProfanityFilter =
+      EnglishFilter.ProfanityFilter(); // 영어 비속어 필터 객체
 
   // ------ 동의 체크박스 상태 관리 ------
   bool isAgreedToAll = false; // 모든 항목 동의 상태
@@ -76,36 +84,91 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
 
-
-    // 이메일 입력 필드 포커스 리스너 추가
+    // 이메일 입력 필드 포커스 리스너 추가 (유효성 체크)
     _emailFocusNode.addListener(() {
       if (!_emailFocusNode.hasFocus) {
-        if (!_emailController.text.contains('@')) {
-          showCustomSnackBar(context, '이메일 형식에 맞게 재작성해주세요.');
+        // 입력값이 있을 때만 검사
+        // @를 포함하지 않거나, @를 제외한 값이 없는 경우
+        if (_emailController.text.isNotEmpty &&
+            (!_emailController.text.contains('@') ||
+                _emailController.text
+                    .replaceAll('@', '')
+                    .trim()
+                    .isEmpty)) {
+          showCustomSnackBar(context, '이메일 형식에 맞게 기입해주세요.');
+        }
+        // 빈칸 포함 여부 확인
+        if (_emailController.text.contains(' ')) {
+          showCustomSnackBar(context, '빈칸 없이 이메일을 기입해주세요.');
+          _nameController.clear();
+          return;
         }
       }
     });
 
-    // 휴대폰 번호 입력 필드 포커스 리스너 추가
+    // 휴대폰 번호 입력 필드 포커스 리스너 추가 (유효성 체크)
     _phoneNumberFocusNode.addListener(() {
       if (!_phoneNumberFocusNode.hasFocus) {
         // '-'가 포함된 횟수 계산
-        if ('-'.allMatches(_phoneController.text).length < 2) {
-      showCustomSnackBar(context, "'-'를 붙인 휴대폰 번호 형식에 맞게 재작성해주세요.");
+        // 입력값이 있을 때만 검사
+        // '-' 사이 양쪽 어디에든 입력값이 없거나 '-'가 2개 미만인 경우
+        // => '-' 기준으로 문자열을 나누어 List<String>로 저장한 후, 부분 문자열(parts)의 길이가 3이 아닌 경우로 구현
+        String phoneText = _phoneController.text;
+        List<String> parts = phoneText.split('-');
+        if (phoneText.isNotEmpty &&
+            (parts.length != 3 || parts.any((part) => part.isEmpty))) {
+          showCustomSnackBar(context, "'-'를 붙인 휴대폰 번호 형식에 맞게 기입해주세요.");
+        }
+        // 빈칸 포함 여부 확인
+        if (_phoneController.text.contains(' ')) {
+          showCustomSnackBar(context, '빈칸 없이 휴대폰 번호를 기입해주세요.');
+          _nameController.clear();
+          return;
+        }
       }
-    }
     });
 
-    // 이름 입력 필드 텍스트 변경 리스너 추가
+    // ----- 이름 입력 필드 텍스트 변경 리스너 추가 (유효성 체크) 시작
+    // 이름 내 빈칸 제한 필터링
     _nameController.addListener(() {
-      if (_nameController.text.length > 10) {
+      // 빈칸 입력 방지
+      // if (!_nameFocusNode.hasFocus) {
+      // 빈칸 포함 여부 확인
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.contains(' ')) {
+        showCustomSnackBar(context, '빈칸 없이 이름을 기입해주세요.');
+        _nameController.clear();
+        return;
+      }
+
+      // 이름 길이 제한 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.length > 10) {
         showCustomSnackBar(context, '최대 10자까지 작성 가능합니다.');
         _nameController.text = _nameController.text.substring(0, 10);
         _nameController.selection = TextSelection.fromPosition(
           TextPosition(offset: _nameController.text.length),
         );
       }
+
+      // 영어 비속어 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _englishProfanityFilter.hasProfanity(_nameController.text)) {
+        showCustomSnackBar(context, '영어 비속어가 포함된 이름은 사용할 수 없습니다.');
+        _nameController.clear(); // 필드값이 초기화가 됨
+        return;
+      }
+
+      // 한국어 비속어 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.containsBadWords) {
+        showCustomSnackBar(context, '한국어 비속어가 포함된 이름은 사용할 수 없습니다.');
+        _nameController.clear();
+        return;
+      }
+      // }
     });
+    // ----- 이름 입력 필드 텍스트 변경 리스너 추가 (유효성 체크) 끝
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -183,6 +246,8 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double interval3Y = screenSize.height * (20 / referenceHeight);
     final double interval4Y = screenSize.height * (40 / referenceHeight);
 
+    final double nameGuideTextFontSize =
+        screenSize.height * (10 / referenceHeight);
     final double allAgreeCheckBoxTextFontSize =
         screenSize.height * (20 / referenceHeight);
 
@@ -192,7 +257,8 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
 
     // 이미지 위치 조정을 위한 비율 기반 수치
     final double personImageWidth = screenSize.width * (190 / referenceWidth);
-    final double personImageHeight = screenSize.height * (170 / referenceHeight);
+    final double personImageHeight =
+        screenSize.height * (170 / referenceHeight);
 
     return GestureDetector(
       onTap: () {
@@ -215,32 +281,63 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                      background: buildCommonAppBar(
-                        context: context,
-                        ref: ref,
-                        title: '회원가입',
-                        fontFamily: 'NanumGothic',
-                        leadingType: LeadingType.back,
-                        buttonCase: 1,
-                        appBarTitleWidth: signUpAppBarTitleWidth,
-                        appBarTitleHeight: signUpAppBarTitleHeight,
-                        appBarTitleX: signUpAppBarTitleX,
-                        appBarTitleY: signUpAppBarTitleY,
-                        chevronIconWidth: signUpChevronIconWidth,
-                        chevronIconHeight: signUpChevronIconHeight,
-                        chevronIconX: signUpChevronIconX,
-                        chevronIconY: signUpChevronIconY,
-                        // platformType: widget.platformType, // platformType 전달
-                      ),
+                    background: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '회원가입',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.back,
+                      buttonCase: 1,
+                      appBarTitleWidth: signUpAppBarTitleWidth,
+                      appBarTitleHeight: signUpAppBarTitleHeight,
+                      appBarTitleX: signUpAppBarTitleX,
+                      appBarTitleY: signUpAppBarTitleY,
+                      chevronIconWidth: signUpChevronIconWidth,
+                      chevronIconHeight: signUpChevronIconHeight,
+                      chevronIconX: signUpChevronIconX,
+                      chevronIconY: signUpChevronIconY,
+                      // platformType: widget.platformType, // platformType 전달
+                    ),
                   ),
                   leading: null,
                   // backgroundColor: BUTTON_COLOR,
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우 패딩 추가
+                    padding: EdgeInsets.symmetric(horizontal: interval1X),
+                    // 좌우 패딩 추가
                     child: Column(
                       children: [
+                        SizedBox(height: interval2Y),
+                        // '* 필수' 텍스트
+                        Align(
+                          alignment: Alignment.centerRight, // 오른쪽 정렬
+                          // Row는 기존 왼쪽 정렬이므로 오른쪽 정렬로 따로 옵션을 주고 싶으면 Row 대신 RichText와 같은 위젯을 사용해야함!!
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '* ',
+                                  style: TextStyle(
+                                    fontSize: nameGuideTextFontSize,
+                                    fontFamily: 'NanumGothic',
+                                    fontWeight: FontWeight.bold,
+                                    color: RED46_COLOR,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '필수',
+                                  style: TextStyle(
+                                    fontSize: nameGuideTextFontSize,
+                                    fontFamily: 'NanumGothic',
+                                    fontWeight: FontWeight.bold,
+                                    color: BLACK_COLOR,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         SizedBox(height: interval2Y),
                         _buildFixedValueRow(
                           context,
@@ -250,12 +347,46 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         SizedBox(height: interval1Y),
                         _buildEditableRow(context, '이름', _nameController,
                             _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
-                        SizedBox(height: interval1Y),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 빈칸 없이 최대 10자 이내이며, 비속어는 사용할 수 없습니다.',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
                         _buildEditableRow(context, '이메일', _emailController,
-                            _emailFocusNode, "이메일을 입력하세요."),
-                        SizedBox(height: interval1Y),
+                            _emailFocusNode, "이메일 형식에 맞게 이메일을 기입해주세요."),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 예) abc@naver.com, abc@hanmail.net',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
                         _buildEditableRow(context, '휴대폰 번호', _phoneController,
                             _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 예) 010-XXXX-XXXX',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
                         SizedBox(height: interval3Y),
                         Row(
                           children: [
@@ -271,7 +402,8 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                                     isOverAge = isAgreedToAll;
                                   });
                                 },
-                                activeColor: SOFTGREEN60_COLOR, // 활성화된 체크박스 색상 설정
+                                activeColor:
+                                    SOFTGREEN60_COLOR, // 활성화된 체크박스 색상 설정
                               ),
                             ),
                             Text(
@@ -287,19 +419,19 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         ),
                         SizedBox(height: interval2Y),
                         _buildAgreementRow('본인은 14세 이상입니다. (필수)', isOverAge,
-                                (value) {
-                              setState(() {
-                                isOverAge = value ?? false;
-                                _updateAllAgreement();
-                              });
-                            }),
+                            (value) {
+                          setState(() {
+                            isOverAge = value ?? false;
+                            _updateAllAgreement();
+                          });
+                        }),
                         _buildAgreementRow('이용약관 동의 (필수)', isAgreedToTerms,
-                                (value) {
-                              setState(() {
-                                isAgreedToTerms = value ?? false;
-                                _updateAllAgreement();
-                              });
-                            }),
+                            (value) {
+                          setState(() {
+                            isAgreedToTerms = value ?? false;
+                            _updateAllAgreement();
+                          });
+                        }),
                         _buildAgreementRow(
                             '개인정보 수집 및 이용 동의 (필수)', isAgreedToPrivacy, (value) {
                           setState(() {
@@ -318,7 +450,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                                     ? SOFTGREEN60_COLOR
                                     : GRAY62_COLOR,
                                 backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 side: BorderSide(
                                   color: _isSignUpEnabled()
                                       ? SOFTGREEN60_COLOR
@@ -327,29 +459,28 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                               ),
                               onPressed: _isSignUpEnabled()
                                   ? () {
-                                if (!_validateEmailFormat() ||
-                                    !_validatePhoneNumberFormat() ||
-                                    !_validateNameLength()) {
-                                  showCustomSnackBar(
-                                      context,
-                                      '각 입력칸에 정보를 형식에 맞게 제대로 기입해주세요.');
-                                  return;
-                                }
-                                _signUp(signUpInfoRepository);
-                              }
+                                      if (!_validateEmailFormat() ||
+                                          !_validatePhoneNumberFormat() ||
+                                          !_validateNameLength()) {
+                                        showCustomSnackBar(context,
+                                            '각 입력칸에 정보를 형식에 맞게 제대로 기입해주세요.');
+                                        return;
+                                      }
+                                      _signUp(signUpInfoRepository);
+                                    }
                                   : null,
                               child: isLoading
                                   ? buildCommonLoadingIndicator()
                                   : Text(
-                                '가입하기',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: signUpBtnFontSize,
-                                  color: _isSignUpEnabled()
-                                      ? SOFTGREEN60_COLOR
-                                      : GRAY40_COLOR,
-                                ),
-                              ),
+                                      '가입하기',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: signUpBtnFontSize,
+                                        color: _isSignUpEnabled()
+                                            ? SOFTGREEN60_COLOR
+                                            : GRAY40_COLOR,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
@@ -383,7 +514,8 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     try {
       // FireStore에 사용자 정보 저장
       await signUpInfoRepository.signUpUser(
-        snsType: widget.snsType, // SNS 타입 전달
+        snsType: widget.snsType,
+        // SNS 타입 전달
         snsId: _snsIdController.text,
         name: _nameController.text,
         email: _emailController.text,
@@ -402,7 +534,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => HomeMainScreen()),
-              (route) => false,
+          (route) => false,
         );
       }
     } catch (e) {
@@ -411,7 +543,6 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
       // );
 
       showCustomSnackBar(context, '회원가입 중 문제가 발생했습니다: $e');
-
     } finally {
       setState(() {
         isLoading = false;
@@ -504,17 +635,21 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
 
   // 이메일 형식 유효성 검증 함수
   bool _validateEmailFormat() {
-    return _emailController.text.contains('@');
+    return _emailController.text.contains('@') &&
+        _emailController.text.replaceAll('@', '').trim().isNotEmpty;
   }
 
   // 휴대폰 번호 형식 유효성 검증 함수
   bool _validatePhoneNumberFormat() {
-    return '-'.allMatches(_phoneController.text).length >= 2;
+    String phoneText = _phoneController.text;
+    List<String> parts = phoneText.split('-');
+    return parts.length == 3 && parts.every((part) => part.isNotEmpty);
   }
 
   // 이름 길이 유효성 검증 함수
   bool _validateNameLength() {
-    return _nameController.text.length <= 10;
+    return _nameController.text.isNotEmpty &&
+        _nameController.text.length <= 10;
   }
 
   // 회원가입 버튼 활성화 상태 확인 함수
@@ -584,7 +719,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                   decoration: BoxDecoration(
                     // color: GRAY96_COLOR,
                     color:
-                    Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                        Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                     border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -620,7 +755,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                   child: Container(
                     decoration: BoxDecoration(
                       color:
-                      Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                          Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                       border: Border.all(
                         color: focusNode.hasFocus
                             ? SOFTGREEN60_COLOR
@@ -630,7 +765,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                       borderRadius: BorderRadius.circular(6),
                     ),
                     padding:
-                    EdgeInsets.symmetric(horizontal: signUpInfoDataPartX),
+                        EdgeInsets.symmetric(horizontal: signUpInfoDataPartX),
                     alignment: Alignment.centerLeft, // 텍스트 정렬
                     child: GestureDetector(
                       onTap: () {
@@ -722,8 +857,8 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                 borderRadius:
-                // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
-                BorderRadius.circular(6),
+                    // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
+                    BorderRadius.circular(6),
               ),
               // 배경 색상 설정
               alignment: Alignment.center,
