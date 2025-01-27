@@ -126,7 +126,9 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
         MaterialPageRoute(
           builder: (context) => SnsSignUpScreen(
             snsType: 'apple', // SNS 타입 전달
-            snsId: state.signUpEmail ?? '',
+            snsId: state.signUpEmail ?? '', // SNS 계정
+            prefilledEmail: state.signUpEmail ?? '', // 이메일
+            prefilledName: state.signUpFullName ?? '', // 이름
             // platformType: 'ios', // 플랫폼 정보 전달
           ),
         ),
@@ -199,13 +201,15 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     }
 
     // 4) 신규 회원 => 회원가입 화면 이동
-    if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
+    if (state.isSignUpNeeded && state.signUpId != null && !isNavigatedToSignUp) {
       isNavigatedToSignUp = true;
       Navigator.of(context)
           .push(MaterialPageRoute(
         builder: (context) => SnsSignUpScreen(
           snsType: 'naver',
-          snsId: state.signUpEmail ?? '', // 네이버는 파이어베이스의 식별자가 아닌 UID 형태이면 이를 전달
+          snsId: state.signUpId ?? '', // 네이버는 파이어베이스의 식별자가 아닌 UID 형태이면 이를 전달
+          prefilledEmail: state.signUpEmail ?? '', // 이메일
+          prefilledName: state.signUpName ?? '', // 이름
         ),
       ))
           .then((_) {

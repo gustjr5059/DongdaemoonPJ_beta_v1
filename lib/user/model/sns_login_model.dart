@@ -7,10 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AppleSignInResultModel {
   final UserCredential userCredential;
   final bool isExistingUser;
+  final String? signUpFullName;
+  final String? signUpEmail;
 
   AppleSignInResultModel({
     required this.userCredential,
     required this.isExistingUser,
+    this.signUpFullName,
+    this.signUpEmail,
   });
 }
 // ----- 애플 로그인 완료 후 결과 정보를 담는 클래스 끝 부분
@@ -19,10 +23,12 @@ class AppleSignInResultModel {
 class GoogleSignInResultModel {
   final UserCredential userCredential;
   final bool isExistingUser;
+  final String? name;
 
   GoogleSignInResultModel({
     required this.userCredential,
     required this.isExistingUser,
+    this.name,
   });
 }
 // ----- 구글 로그인 완료 후 결과 정보를 담는 클래스 끝 부분
@@ -31,10 +37,14 @@ class GoogleSignInResultModel {
 class NaverSignInResultModel {
   final UserCredential userCredential;
   final bool isExistingUser;
+  final String? name;
+  final String? email;
 
   NaverSignInResultModel({
     required this.userCredential,
     required this.isExistingUser,
+    this.name,
+    this.email,
   });
 }
 // ----- 네이버 로그인 완료 후 결과 정보를 담는 클래스 끝 부분

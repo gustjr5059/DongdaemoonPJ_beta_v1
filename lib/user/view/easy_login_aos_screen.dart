@@ -123,6 +123,8 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
             snsType: 'google', // SNS 타입 전달
             snsId: state.signUpEmail ?? '',
             // platformType: 'aos', // 플랫폼 정보 전달
+            prefilledEmail: state.signUpEmail ?? '', // 이메일 전달
+            prefilledName: state.signUpName ?? '', // 이름 전달
           ),
         ),
       ).then((_) {
@@ -192,13 +194,15 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
     }
 
     // 4) 신규 회원 => 회원가입 화면 이동
-    if (state.isSignUpNeeded && state.signUpEmail != null && !isNavigatedToSignUp) {
+    if (state.isSignUpNeeded && state.signUpId != null && !isNavigatedToSignUp) {
       isNavigatedToSignUp = true;
       Navigator.of(context)
           .push(MaterialPageRoute(
         builder: (context) => SnsSignUpScreen(
           snsType: 'naver',
-          snsId: state.signUpEmail ?? '',
+          snsId: state.signUpId ?? '', // SNS 계정
+          prefilledEmail: state.signUpEmail ?? '', // 이메일
+          prefilledName: state.signUpName ?? '', // 이름
         ),
       ))
           .then((_) {

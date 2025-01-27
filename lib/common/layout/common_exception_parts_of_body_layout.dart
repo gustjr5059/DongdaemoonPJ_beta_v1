@@ -1170,47 +1170,45 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                     height: bottomBtnC2Height,
                     child: ElevatedButton(
                       // 버튼 클릭 시 호출되는 함수
-                        onPressed: () {
-                          if (user == null) {
-                            // 사용자 정보가 없으면 로그인 안내 알림창 표시
-                            showSubmitAlertDialog(
-                              context,
-                              title: '[로그인 상태]',
-                              content: '로그인 후 이용해주세요.',
-                              actions: [
-                                TextButton(
-                                  child: Text(
-                                    '확인',
-                                    style: TextStyle(
-                                      color: SOFTGREEN60_COLOR,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'NanumGothic',
-                                    ),
+                      onPressed: () {
+                        if (user == null) {
+                          // 사용자 정보가 없으면 로그인 안내 알림창 표시
+                          showSubmitAlertDialog(
+                            context,
+                            title: '[로그인 상태]',
+                            content: '로그인 후 이용해주세요.',
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  '확인',
+                                  style: TextStyle(
+                                    color: SOFTGREEN60_COLOR,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'NanumGothic',
                                   ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
                                 ),
-                              ],
-                            );
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
+                          // 선택된 아이템이 있는지 확인
+                          if (orderProducts.isEmpty) {
+                            // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
+                            showCustomSnackBar(context, '업데이트 요청할 상품을 선택해주세요.');
                           } else {
-                            // 선택된 아이템이 있는지 확인
-                            if (orderProducts.isEmpty) {
-                              // 체크박스에 선택된 상품이 없는 경우 경고 메시지 표시
-                              showCustomSnackBar(context,
-                                  '업데이트 요청할 상품을 선택해주세요.');
-                            } else {
-                              // 체크된 상품이 있는 경우 발주 화면으로 이동
-                              ref
-                                  .read(orderItemsProvider.notifier)
-                                  .setOrderItems(
-                                  orderProducts); // 주문 아이템 상태 업데이트
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => OrderMainScreen()),
-                              );
-                            }
+                            // 체크된 상품이 있는 경우 발주 화면으로 이동
+                            ref
+                                .read(orderItemsProvider.notifier)
+                                .setOrderItems(orderProducts); // 주문 아이템 상태 업데이트
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => OrderMainScreen()),
+                            );
                           }
+                        }
                       },
                       // 버튼 스타일 설정 (배경색: BUTTON_COLOR, 글자색: INPUT_BG_COLOR)
                       style: ElevatedButton.styleFrom(
@@ -1407,7 +1405,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
       screenSize.height * (70 / referenceHeight); // 위쪽 여백 비율
 
   // 이메일 부분 수치
-  final double emailTextFontSize1 = screenSize.height * (18 / referenceHeight);
+  final double emailTextFontSize1 = screenSize.height * (13 / referenceHeight);
   final double emailTextFontSize2 = screenSize.height * (16 / referenceHeight);
   final double emailTextFontSize3 = screenSize.height * (10 / referenceHeight);
 
@@ -1433,59 +1431,40 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
       color: WHITE_COLOR, // 전체 드로어의 배경색을 흰색으로 설정
       child: Stack(
         children: [
-        // 로고 및 이메일 배치
-        // Positioned(
-        //   left: drawerLogoIconX, // 로고의 X 좌표 설정 (왼쪽 여백)
-        //   top: drawerLogoIconY, // 로고의 Y 좌표 설정 (위쪽 여백)
-        Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: drawerLogoIconY,
-          ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: drawerLogoIconWidth,
-                  height: drawerLogoIconHeight,
-                  padding: EdgeInsets.zero,
-                  // 패딩 제거
-                  margin: EdgeInsets.zero,
-                  // 마진 제거
-                  child: Image.asset(
-                    'asset/img/misc/logo_img/couture_logo_v1.png',
+          // 로고 및 이메일 배치
+          // Positioned(
+          //   left: drawerLogoIconX, // 로고의 X 좌표 설정 (왼쪽 여백)
+          //   top: drawerLogoIconY, // 로고의 Y 좌표 설정 (위쪽 여백)
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: drawerLogoIconY,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: drawerLogoIconWidth,
+                    height: drawerLogoIconHeight,
+                    padding: EdgeInsets.zero,
+                    // 패딩 제거
+                    margin: EdgeInsets.zero,
+                    // 마진 제거
+                    child: Image.asset(
+                      'asset/img/misc/logo_img/couture_logo_v1.png',
+                    ),
                   ),
-                ),
-                Consumer(builder: (context, ref, child) {
-                  // 이메일 확인 및 FutureProvider 호출
-                  // 사용자의 이메일 정보를 확인함
-                  if (userEmail == null) {
-                    // 이메일이 없는 경우 로그인 요청 메시지 출력
-                    return Text(
-                      '로그인 후 이용해주세요.', // 메시지 텍스트 설정
-                      style: TextStyle(
-                        fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
-                        color: BLACK_COLOR, // 텍스트 색상 설정
-                        fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                        fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
-                      ),
-                    );
-                  }
-
-                  // 사용자 이름을 가져오기 위한 FutureProvider 호출
-                  final userNameAsyncValue = ref.watch(drawerUserNameProvider(userEmail));
-
-                  // 사용자 이름 데이터를 기반으로 위젯 생성
-                  return userNameAsyncValue.when(
-                    data: (userName) {
-                      // userName 값이 없거나 비어 있는 경우 기본 메시지 출력
-                      if (userName == null || userName.isEmpty) {
-                        // 사용자 이름 정보를 불러올 수 없을 때 기본 메시지 출력
+                  Consumer(
+                    builder: (context, ref, child) {
+                      // 이메일 확인 및 FutureProvider 호출
+                      // 사용자의 이메일 정보를 확인함
+                      if (userEmail == null) {
+                        // 이메일이 없는 경우 로그인 요청 메시지 출력
                         return Text(
-                          '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
+                          '로그인 후 이용해주세요.', // 메시지 텍스트 설정
                           style: TextStyle(
-                            fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
+                            fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
                             color: BLACK_COLOR, // 텍스트 색상 설정
                             fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
                             fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
@@ -1493,51 +1472,100 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                         );
                       }
 
-                      // RichText를 사용하여 사용자 이름과 환영 메시지를 표시함
-                      return RichText(
-                        text: TextSpan(
-                          text: '$userName님', // 첫 번째 텍스트 (사용자 이름)
-                          style: TextStyle(
-                            fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
-                            color: BLACK_COLOR, // 텍스트 색상 설정
-                            fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                            fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
-                          ),
-                          children: [
-                            TextSpan(
-                              text: ' 반가워요.', // 두 번째 텍스트 (환영 메시지)
+                      // 사용자 이름을 가져오기 위한 FutureProvider 호출
+                      final userNameAsyncValue =
+                          ref.watch(drawerUserNameProvider(userEmail));
+
+                      // 사용자 이름 데이터를 기반으로 위젯 생성
+                      return userNameAsyncValue.when(
+                        data: (userName) {
+                          // userName 값이 없거나 비어 있는 경우 기본 메시지 출력
+                          if (userName == null || userName.isEmpty) {
+                            // 사용자 이름 정보를 불러올 수 없을 때 기본 메시지 출력
+                            return Text(
+                              '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
                               style: TextStyle(
-                                fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+                                fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
                                 color: BLACK_COLOR, // 텍스트 색상 설정
                                 fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                                fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
+                                fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
                               ),
-                            ),
-                          ],
+                            );
+                          }
+
+                          // RichText를 사용하여 사용자 이름과 환영 메시지를 표시함
+                          return Column(
+                            children: [
+                              Text(
+                                '$userName님',
+                                style: TextStyle(
+                                  fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+                                  color: BLACK_COLOR, // 텍스트 색상 설정
+                                  fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                                  fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+                                ),
+                              ),
+                              // Text(
+                              //   '반가워요.',
+                              //   style: TextStyle(
+                              //     fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
+                              //     color: BLACK_COLOR, // 텍스트 색상 설정
+                              //     fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                              //     fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
+                              //   ),
+                              // ),
+                            ],
+                          );
+                          // return RichText(
+                          //   text: TextSpan(
+                          //     text: '$userName님', // 첫 번째 텍스트 (사용자 이름)
+                          //     style: TextStyle(
+                          //       fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+                          //       color: BLACK_COLOR, // 텍스트 색상 설정
+                          //       fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                          //       fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+                          //     ),
+                          //     children: [
+                          //       TextSpan(
+                          //         text: ' 반가워요.', // 두 번째 텍스트 (환영 메시지)
+                          //         style: TextStyle(
+                          //           fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+                          //           color: BLACK_COLOR, // 텍스트 색상 설정
+                          //           fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                          //           fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // );
+                        },
+                        // 실시간 데이터 로드 중일 때 로딩 인디케이터 표시
+                        loading: () => buildCommonLoadingIndicator(),
+                        // 공통 로딩 인디케이터 호출
+                        // 실시간 데이터 로드 중 오류가 발생했을 때 처리
+                        error: (error, stack) => Container(
+                          // 에러 상태에서 중앙 배치
+                          height: errorTextHeight, // 컨테이너 높이 설정
+                          alignment: Alignment.center, // 컨테이너 중앙 정렬 설정
+                          child: buildCommonErrorIndicator(
+                            message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                            // 에러 메시지 텍스트 설정
+                            fontSize1: errorTextFontSize1,
+                            // 첫 번째 폰트 크기 설정
+                            fontSize2: errorTextFontSize2,
+                            // 두 번째 폰트 크기 설정
+                            color: BLACK_COLOR,
+                            // 텍스트 색상 설정
+                            showSecondMessage: false, // 두 번째 메시지 표시 여부 설정
+                          ),
                         ),
                       );
                     },
-                    // 실시간 데이터 로드 중일 때 로딩 인디케이터 표시
-                    loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
-                    // 실시간 데이터 로드 중 오류가 발생했을 때 처리
-                    error: (error, stack) => Container( // 에러 상태에서 중앙 배치
-                      height: errorTextHeight, // 컨테이너 높이 설정
-                      alignment: Alignment.center, // 컨테이너 중앙 정렬 설정
-                      child: buildCommonErrorIndicator(
-                        message: '에러가 발생했으니, 앱을 재실행해주세요.', // 에러 메시지 텍스트 설정
-                        fontSize1: errorTextFontSize1, // 첫 번째 폰트 크기 설정
-                        fontSize2: errorTextFontSize2, // 두 번째 폰트 크기 설정
-                        color: BLACK_COLOR, // 텍스트 색상 설정
-                        showSecondMessage: false, // 두 번째 메시지 표시 여부 설정
-                      ),
-                    ),
-                  );
-                },
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-        ),
-        ),
+          ),
           // 콘텐츠 영역 관리
           Positioned(
             top: drawerLogoIconY + 1.5 * drawerLogoIconHeight, // 로고 아래의 간격을 최소화
@@ -1611,7 +1639,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                       // Navigator.of(context).pop();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (_) => HomeMainScreen()),
-                            (Route<dynamic> route) => false,
+                        (Route<dynamic> route) => false,
                       );
                       showCustomSnackBar(context, '로그아웃이 되었습니다.');
                     } else {

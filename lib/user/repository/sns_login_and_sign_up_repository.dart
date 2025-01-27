@@ -38,20 +38,65 @@ class SNSLoginRepository {
 
       print('Apple ID 자격 증명 획득 성공. Firebase 인증 정보 생성 중.');
 
-      // 2). Firebase 인증에 필요한 OAuthCredential을 생성함
+      // 2) fullName 구성
+      final familyName = credential.familyName ?? '';
+      final givenName = credential.givenName ?? '';
+      final fullName = (familyName + givenName).trim(); // "성 + 이름"
+
+      // 3) Firebase 인증에 필요한 OAuthCredential을 생성함
       final oauthCredential = OAuthProvider('apple.com').credential(
         idToken: credential.identityToken,
         accessToken: credential.authorizationCode,
       );
 
       print('Firebase 인증 정보로 로그인 요청 중.');
-      // 3). FirebaseAuth를 사용해 로그인 시도함
+      // FirebaseAuth를 사용해 로그인 시도함
       final userCredential = await auth.signInWithCredential(oauthCredential);
       final User? user = userCredential.user;
       if (user == null) {
         print('Apple 로그인 실패. 사용자 정보 없음.');
         return null; // 로그인 실패 시 null 반환
       }
+
+      // ===========================
+      // === [변경사항] 시작 부분 ===
+      // Apple에서 fullName을 처음 로그인 시에만 한 번 보내주므로,
+      // 만약 fullName이 있다면 => apple_login_info 컬렉션에 저장
+      // fullName이 없을 경우 => apple_login_info 컬렉션에서 name 필드를 조회해 가져옴
+
+      String finalFullName = fullName; // 초기값 설정
+
+      if (fullName.isNotEmpty) {
+        // 즉, 최초 로그인 시
+        // apple_login_info/{문서ID=Apple이메일} 문서를 생성하거나(없으면), 이미 있다면 업데이트
+        final docRef = firestore
+            .collection('apple_login_info')
+            .doc(user.email); // Apple에서 제공하는 email을 문서 ID로 사용
+
+        await docRef.set({
+          'email': user.email ?? '',
+          'name': fullName,
+        }, SetOptions(merge: true));
+        // SetOptions(merge: true)를 사용하면 문서가 없으면 만들고, 있으면 병합(기존 필드 유지) 갱신
+        print('apple_login_info 컬렉션에 fullName 저장 완료: $fullName');
+      } else {
+        // (2회차 이상) fullName이 비어있다면 => 파이어스토어 apple_login_info 문서에서 name 가져오기
+        final docSnapshot = await firestore
+            .collection('apple_login_info')
+            .doc(user.email)
+            .get();
+
+        if (docSnapshot.exists) {
+          final data = docSnapshot.data();
+          if (data != null && data['name'] != null) {
+            final savedName = data['name'] as String;
+            finalFullName = savedName;
+            print('apple_login_info 컬렉션에서 fullName 읽어옴: $finalFullName');
+          }
+        }
+      }
+      // === [변경사항] 끝 부분 ===
+      // ==========================
 
       // 4) [탈퇴 계정 검사] secession_users 컬렉션 조회
       // secession_users 컬렉션에서 해당 계정 문서가 있는지 조회 (기존 uid 대신 email로 하시는 분은 email로 doc() 지정)
@@ -82,7 +127,7 @@ class SNSLoginRepository {
       }
 
       print('Firebase 로그인 성공. Firestore에서 회원 여부 확인 중.');
-      // 5). Firestore에서 기존 회원 여부를 확인함
+      // 5) Firestore에서 기존 회원 여부를 확인함
       final userDoc = await firestore
           .collection('users')
           .doc(user.email)
@@ -91,10 +136,15 @@ class SNSLoginRepository {
       bool isExistingUser = userDoc.exists;
       print('회원 여부 확인 완료. 기존 회원 여부: $isExistingUser');
 
-      // 6). 결과 객체 반환함
+      // [중요] fullName이 빈 문자열일 수도 있으니, 로그로 확인해보기
+      print('가져온 성명(fullName) = "$fullName"');
+
+      // 6) 결과 객체 반환함
       return AppleSignInResultModel(
         userCredential: userCredential,
         isExistingUser: isExistingUser,
+        signUpFullName: finalFullName, // 성+이름인 전체 이름
+        signUpEmail: user.email ?? '', // 이메일
       );
       // 사용자가 로그인 창을 취소했을 시, 로그인 실패 에러 메시지가 나오는 이슈 해결 포인트!!
     } on SignInWithAppleAuthorizationException catch (e) {
@@ -134,6 +184,8 @@ class SNSLoginRepository {
         return null; // 사용자가 로그인 취소 시 null 반환
       }
       print('Google 계정 정보 획득 성공. 인증 정보 요청 중.');
+
+      final googleDisplayName = googleUser.displayName ?? ''; // 구글 계정에 해당하는 이름 정보
 
       // 3). Google 인증 정보를 획득함
       final googleAuth = await googleUser.authentication;
@@ -196,6 +248,7 @@ class SNSLoginRepository {
       return GoogleSignInResultModel(
         userCredential: userCredential,
         isExistingUser: isExistingUser,
+        name: googleDisplayName, // Google의 displayName (구글 계정의 이름 정보)
       );
     } catch (e) {
       print('Google 로그인 중 오류 발생: $e');
@@ -218,6 +271,11 @@ class SNSLoginRepository {
 
       // 3) 로그인 상태별 분기
       if (loginResult.status == NaverLoginStatus.loggedIn) { // 로그인 상태 확인
+        // 네이버 account에서 이름, 이메일 추가 확인
+        final naverAccount = loginResult.account;
+        final naverName = naverAccount.name ?? '';
+        final naverEmail = naverAccount.email ?? '';
+
         // ---- 정상 로그인인 경우 ----
         // (1) 액세스 토큰 획득
         NaverAccessToken token = await FlutterNaverLogin
@@ -284,6 +342,8 @@ class SNSLoginRepository {
         return NaverSignInResultModel(
           userCredential: userCredential,
           isExistingUser: isExistingUser,
+          name: naverName,
+          email: naverEmail,
         );
       } else {
         // ---- 로그인 실패 혹은 취소 ----

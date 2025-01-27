@@ -52,6 +52,7 @@ class GoogleSignInState {
   final bool isLoginSuccess;     // 로그인 성공 여부 (기존 회원)
   final bool isSignUpNeeded;     // 신규 회원 가입 필요 여부
   final String? signUpEmail;     // 신규 회원의 이메일
+  final String? signUpName;      // 신규 회원의 이름
   final String? errorMessage;    // 에러 메시지
 
   GoogleSignInState({
@@ -59,6 +60,7 @@ class GoogleSignInState {
     this.isLoginSuccess = false,
     this.isSignUpNeeded = false,
     this.signUpEmail,
+    this.signUpName,
     this.errorMessage,
   });
 
@@ -67,6 +69,7 @@ class GoogleSignInState {
     bool? isLoginSuccess,
     bool? isSignUpNeeded,
     String? signUpEmail,
+    String? signUpName,
     String? errorMessage,
   }) {
     return GoogleSignInState(
@@ -74,6 +77,7 @@ class GoogleSignInState {
       isLoginSuccess: isLoginSuccess ?? this.isLoginSuccess,
       isSignUpNeeded: isSignUpNeeded ?? this.isSignUpNeeded,
       signUpEmail: signUpEmail ?? this.signUpEmail,
+      signUpName: signUpName ?? this.signUpName,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -85,14 +89,18 @@ class NaverSignInState {
   final bool isLoading;         // 로딩중 여부
   final bool isLoginSuccess;    // 기존 회원 로그인 성공 여부
   final bool isSignUpNeeded;    // 신규 회원 가입 필요 여부
-  final String? signUpEmail;    // 신규 회원의 이메일
+  final String? signUpId;       // 신규 회원의 아이디
+  final String? signUpEmail;   // 네이버 계정 email
+  final String? signUpName;    // 네이버 계정 name
   final String? errorMessage;   // 에러 메시지
 
   NaverSignInState({
     this.isLoading = false,
     this.isLoginSuccess = false,
     this.isSignUpNeeded = false,
+    this.signUpId,
     this.signUpEmail,
+    this.signUpName,
     this.errorMessage,
   });
 
@@ -100,14 +108,18 @@ class NaverSignInState {
     bool? isLoading,
     bool? isLoginSuccess,
     bool? isSignUpNeeded,
+    String? signUpId,
     String? signUpEmail,
+    String? signUpName,
     String? errorMessage,
   }) {
     return NaverSignInState(
       isLoading: isLoading ?? this.isLoading,
       isLoginSuccess: isLoginSuccess ?? this.isLoginSuccess,
       isSignUpNeeded: isSignUpNeeded ?? this.isSignUpNeeded,
+      signUpId: signUpId ?? this.signUpId,
       signUpEmail: signUpEmail ?? this.signUpEmail,
+      signUpName: signUpName ?? this.signUpName,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -165,7 +177,10 @@ class AppleSignInNotifier extends StateNotifier<AppleSignInState> {
         state = state.copyWith(
           isLoading: false,
           isSignUpNeeded: true,
-          signUpEmail: user.email ?? '',
+          // signUpEmail: user.email ?? '',
+          // AppleSignInResultModel에서 가져온 이메일, fullName 저장
+          signUpEmail: signInResult.signUpEmail ?? '',
+          signUpFullName: signInResult.signUpFullName ?? '',
         );
       }
     } catch (e) {
@@ -257,6 +272,7 @@ class GoogleSignInNotifier extends StateNotifier<GoogleSignInState> {
           isLoading: false,
           isSignUpNeeded: true,
           signUpEmail: user.email ?? '',
+          signUpName: signInResult.name ?? '',
         );
       }
     } catch (e) {
@@ -334,7 +350,9 @@ class NaverSignInNotifier extends StateNotifier<NaverSignInState> {
         state = state.copyWith(
           isLoading: false,
           isSignUpNeeded: true,
-          signUpEmail: result.userCredential.user?.uid, // UID 전달 (signUpEmail 변수명은 그대로 사용해서 기존 UI로직을 활용)
+          signUpId: result.userCredential.user?.uid, // UID 전달 (signUpEmail 변수명은 그대로 사용해서 기존 UI로직을 활용)
+          signUpEmail: result.email ?? '',
+          signUpName: result.name ?? '',
         );
       }
 
