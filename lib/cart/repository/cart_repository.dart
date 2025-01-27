@@ -9,7 +9,6 @@ import '../../product/model/product_model.dart'; // 제품 모델을 사용하�
 import 'package:crypto/crypto.dart'; // 해시 계산을 위한 crypto 패키지 사용
 import 'dart:convert'; // utf8 변환을 위해 사용
 
-
 // ------- 장바구니와 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 처리 로직인 CartItemRepository 클래스 시작
 // CartItemRepository 클래스는 Firestore와의 데이터 통신을 담당하는 역할
 class CartItemRepository {
@@ -17,37 +16,55 @@ class CartItemRepository {
   final FirebaseStorage storage; // Firebase Storage 인스턴스 변수 선언
 
   CartItemRepository(
-      {required this.firestore, required this.storage}); // 생성자에서 firestore와 storage를 초기화
+      {required this.firestore,
+      required this.storage}); // 생성자에서 firestore와 storage를 초기화
 
   // 이미지 URL을 Firebase Storage에 업로드하는 함수 - 주어진 이미지 URL을 가져와 Firebase Storage에 저장하고, 다운로드 URL을 반환
   Future<String> uploadImage(String imageUrl, String storagePath) async {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
-      print('사용자가 로그인되어 있지 않습니다.');
-      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
+    try {
+      final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
+      if (user == null) {
+        // 사용자가 로그인되어 있지 않은 경우 예외 발생
+        print('사용자가 로그인되어 있지 않습니다.');
+        throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
+      }
+      // 현재 로그인한 사용자 이메일 가져옴
+      // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+      final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
+      if (userEmail == null) {
+        print('사용자 이메일을 가져올 수 없습니다.');
+        throw Exception('사용자 이메일을 가져올 수 없습니다.');
+      }
+      print('이미지를 업로드합니다. URL: $imageUrl, 경로: $storagePath, 사용자: $userEmail');
+      final response =
+          await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
+      final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
+      final ref = storage
+          .ref()
+          .child('$userEmail/$storagePath'); // Firebase Storage에 저장할 경로 생성
+      await ref.putData(
+          bytes,
+          SettableMetadata(
+              contentType: 'image/png')); // 이미지를 Firebase Storage에 저장
+      final downloadUrl = await ref.getDownloadURL(); // 저장된 이미지의 다운로드 URL을 가져옴
+      print('이미지 업로드 완료, 접근 가능 URL: $downloadUrl');
+      return downloadUrl; // 다운로드 URL을 반환
+    } catch (e) {
+      print('이미지 업로드 중 오류 발생: $e'); // 오류 메시지 출력
+      rethrow; // 오류 발생 시 다시 던짐
     }
-    // 현재 로그인한 사용자 이메일 가져옴
-    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
-    final userEmail = user.email ?? user.uid; // 현재 로그인한 사용자 Email 가져옴
-    if (userEmail == null) {
-      print('사용자 이메일을 가져올 수 없습니다.');
-      throw Exception('사용자 이메일을 가져올 수 없습니다.');
-    }
-    print('이미지를 업로드합니다. URL: $imageUrl, 경로: $storagePath, 사용자: $userEmail');
-    final response = await http.get(Uri.parse(imageUrl)); // 주어진 이미지 URL로부터 데이터를 가져옴
-    final bytes = response.bodyBytes; // 이미지 데이터를 바이트로 변환
-    final ref = storage.ref().child('$userEmail/$storagePath'); // Firebase Storage에 저장할 경로 생성
-    await ref.putData(bytes, SettableMetadata(contentType: 'image/png')); // 이미지를 Firebase Storage에 저장
-    final downloadUrl = await ref.getDownloadURL(); // 저장된 이미지의 다운로드 URL을 가져옴
-    print('이미지 업로드 완료, 접근 가능 URL: $downloadUrl');
-    return downloadUrl; // 다운로드 URL을 반환
   }
 
   // 장바구니에 아이템 추가하는 함수 - 선택된 색상, 사이즈, 수량 정보를 포함하여 장바구니 아이템을 Firestore에 추가
-  Future<bool> addToCartItem(BuildContext context, ProductContent product, String? selectedColorText,
-      String? selectedColorUrl, String? selectedSize) async {
+  Future<bool> addToCartItem(
+      BuildContext context,
+      ProductContent product,
+      String? selectedColorText,
+      String? selectedColorUrl,
+      String? selectedSize) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+    if (user == null) {
+      // 사용자가 로그인되어 있지 않은 경우 예외 발생
       print('사용자가 로그인되어 있지 않습니다.');
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
@@ -71,82 +88,201 @@ class CartItemRepository {
         "${product.thumbnail}|${product.briefIntroduction}|${product.originalPrice}|"
         "${product.discountPrice}|${product.discountPercent}|${selectedColorText}|${selectedColorUrl}|${selectedSize}";
 
-
     // 해시 생성 (SHA-256 사용)
-    final String productHash = sha256.convert(utf8.encode(combinedData)).toString();
+    final String productHash =
+        sha256.convert(utf8.encode(combinedData)).toString();
 
+    //   // Firestore에 저장할 데이터 준비
+    //   final data = {
+    //     'product_id': product.docId, // 상품 상세 화면의 문서 id를 저장
+    //     'category': product.category, // 상품의 카테고리 저장
+    //     'product_number': product.productNumber, // 상품 번호
+    //     'thumbnails': product.thumbnail, // 제품의 썸네일 이미지 URL
+    //     'brief_introduction': product.briefIntroduction, // 제품의 간단한 소개
+    //     'original_price': product.originalPrice, // 제품의 원래 가격
+    //     'discount_price': product.discountPrice, // 제품의 할인 가격
+    //     'discount_percent': product.discountPercent, // 제품의 할인율
+    //     'selected_color_text': selectedColorText, // 선택한 색상의 텍스트 데이터 저장
+    //     'selected_color_image': null, // 나중에 저장될 이미지 URL
+    //     'selected_size': selectedSize, // 선택한 사이즈
+    //     'product_hash': productHash, // 생성된 해시값을 함께 저장
+    //     'timestamp': FieldValue.serverTimestamp(), // 현재 서버 타임스탬프를 저장
+    //     'bool_checked': false, // 기본값으로 체크되지 않은 상태로 저장
+    //   };
+    //
+    //   // Firestore 내 동일한 해시값이 있는지 확인
+    //   final querySnapshot = await firestore
+    //       .collection('couture_request_item')
+    //       .doc(userEmail)
+    //       .collection('items')
+    //       .where('product_hash', isEqualTo: productHash) // 해시로 중복 여부 확인
+    //       .get();
+    //
+    //   // 동일한 문서가 있을 경우 처리
+    //   if (querySnapshot.docs.isNotEmpty) {
+    //     print('해당 상품은 이미 요청품목에 담겨 있습니다.');
+    //     showCustomSnackBar(context, '해당 상품은 이미 요청품목에 담겨 있습니다.');
+    //     return false; // 중복이 있으면 false 반환하여 성공 메시지 표시하지 않음
+    //   }
+    //
+    //   print('상품을 장바구니에 추가합니다. 상품 ID: ${product.docId}, 선택 색상: $selectedColorText, 선택 사이즈: $selectedSize');
+    //
+    //   // 파이어스토리지에 저장할 경로 생성
+    //   final storagePath = 'couture_request_item_image/couture_request_${DateTime.now().millisecondsSinceEpoch}'; // 저장할 경로 생성
+    //
+    //   // 썸네일 이미지 저장
+    //   if (product.thumbnail != null) { // 썸네일 이미지가 있을 경우
+    //     final thumbnailUrl = await uploadImage(product.thumbnail!,
+    //         '$storagePath/thumbnails'); // 썸네일 이미지를 업로드하고 URL을 가져옴
+    //     data['thumbnails'] = thumbnailUrl; // 데이터를 업데이트
+    //     print('썸네일 이미지 업로드 완료: $thumbnailUrl');
+    //   }
+    //
+    //   // 선택한 색상 이미지 저장
+    //   if (selectedColorUrl != null) { // 선택한 색상 이미지가 있을 경우
+    //     final colorImageUrl = await uploadImage(selectedColorUrl,
+    //         '$storagePath/selected_color'); // 색상 이미지를 업로드하고 URL을 가져옴
+    //     data['selected_color_image'] = colorImageUrl; // 데이터를 업데이트
+    //     print('선택된 색상 이미지 업로드 완료: $colorImageUrl');
+    //   }
+    //
+    //   // Firestore에 데이터 저장 - 문서 ID를 타임스탬프 기반으로 설정하여 최신순으로 정렬되도록 함
+    //   await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
+    //   print('상품이 장바구니에 추가되었습니다. 사용자: $userEmail');
+    //
+    //   return true; // 성공적으로 저장되면 true 반환
+    // }
 
-    // Firestore에 저장할 데이터 준비
-    final data = {
-      'product_id': product.docId, // 상품 상세 화면의 문서 id를 저장
-      'category': product.category, // 상품의 카테고리 저장
-      'product_number': product.productNumber, // 상품 번호
-      'thumbnails': product.thumbnail, // 제품의 썸네일 이미지 URL
-      'brief_introduction': product.briefIntroduction, // 제품의 간단한 소개
-      'original_price': product.originalPrice, // 제품의 원래 가격
-      'discount_price': product.discountPrice, // 제품의 할인 가격
-      'discount_percent': product.discountPercent, // 제품의 할인율
-      'selected_color_text': selectedColorText, // 선택한 색상의 텍스트 데이터 저장
-      'selected_color_image': null, // 나중에 저장될 이미지 URL
-      'selected_size': selectedSize, // 선택한 사이즈
-      'product_hash': productHash, // 생성된 해시값을 함께 저장
-      'timestamp': FieldValue.serverTimestamp(), // 현재 서버 타임스탬프를 저장
-      'bool_checked': false, // 기본값으로 체크되지 않은 상태로 저장
-    };
-
-    // Firestore 내 동일한 해시값이 있는지 확인
+    // Firestore 내 중복 확인
     final querySnapshot = await firestore
         .collection('couture_request_item')
         .doc(userEmail)
         .collection('items')
-        .where('product_hash', isEqualTo: productHash) // 해시로 중복 여부 확인
+        .where('product_hash', isEqualTo: productHash)
         .get();
 
-    // 동일한 문서가 있을 경우 처리
     if (querySnapshot.docs.isNotEmpty) {
       print('해당 상품은 이미 요청품목에 담겨 있습니다.');
       showCustomSnackBar(context, '해당 상품은 이미 요청품목에 담겨 있습니다.');
-      return false; // 중복이 있으면 false 반환하여 성공 메시지 표시하지 않음
+      return false;
     }
 
-    print('상품을 장바구니에 추가합니다. 상품 ID: ${product.docId}, 선택 색상: $selectedColorText, 선택 사이즈: $selectedSize');
+    print('상품을 장바구니에 추가(낙관적 업데이트). '
+        '상품 ID: ${product.docId}, 선택 색상: $selectedColorText, 선택 사이즈: $selectedSize');
 
-    // 파이어스토리지에 저장할 경로 생성
-    final storagePath = 'couture_request_item_image/couture_request_${DateTime.now().millisecondsSinceEpoch}'; // 저장할 경로 생성
+    // **************
+    //  1) 문서(아이템) 먼저 생성 (이미지는 null로) => 사용자에게 즉시 알림
+    // **************
+    final int nowMillis = DateTime.now().millisecondsSinceEpoch;
+    final docRef = firestore
+        .collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .doc('$nowMillis'); // 문서 ID는 타임스탬프로
 
-    // 썸네일 이미지 저장
-    if (product.thumbnail != null) { // 썸네일 이미지가 있을 경우
-      final thumbnailUrl = await uploadImage(product.thumbnail!,
-          '$storagePath/thumbnails'); // 썸네일 이미지를 업로드하고 URL을 가져옴
-      data['thumbnails'] = thumbnailUrl; // 데이터를 업데이트
-      print('썸네일 이미지 업로드 완료: $thumbnailUrl');
-    }
+    final data = {
+      'product_id': product.docId,
+      'category': product.category,
+      'product_number': product.productNumber,
+      'thumbnails': null, // 이미지 업로드 전이므로 일단 null
+      'brief_introduction': product.briefIntroduction,
+      'original_price': product.originalPrice,
+      'discount_price': product.discountPrice,
+      'discount_percent': product.discountPercent,
+      'selected_color_text': selectedColorText,
+      'selected_color_image': null, // 색상 이미지도 일단 null
+      'selected_size': selectedSize,
+      'product_hash': productHash,
+      'timestamp': FieldValue.serverTimestamp(),
+      'bool_checked': false,
+    };
 
-    // 선택한 색상 이미지 저장
-    if (selectedColorUrl != null) { // 선택한 색상 이미지가 있을 경우
-      final colorImageUrl = await uploadImage(selectedColorUrl,
-          '$storagePath/selected_color'); // 색상 이미지를 업로드하고 URL을 가져옴
-      data['selected_color_image'] = colorImageUrl; // 데이터를 업데이트
-      print('선택된 색상 이미지 업로드 완료: $colorImageUrl');
-    }
+    // Firestore 문서 생성 (이미지 없이)
+    await docRef.set(data);
 
-    // Firestore에 데이터 저장 - 문서 ID를 타임스탬프 기반으로 설정하여 최신순으로 정렬되도록 함
-    await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc('${DateTime.now().millisecondsSinceEpoch}').set(data);
-    print('상품이 장바구니에 추가되었습니다. 사용자: $userEmail');
+    // 사용자에게 이미 성공했다고 알림 (낙관적)
+    print('문서 생성 완료 -> 즉시 장바구니 담김 알림');
+    // 이 시점에 true 반환하므로 UI에서는 "요청품목 담겼다" 메시지 빠르게 표시 가능
+    showCustomSnackBar(context, '해당 상품이 요청품목 목록에 담겼습니다.');
+    // ----------------------------------------------------
+    // (주의) 여기서 return true. -> 사용자에게는 이미 담았다고 안내
+    // ----------------------------------------------------
+    // 이후 이미지 업로드는 별도의 비동기 작업 처리
+    // ----------------------------------------------------
+    // *** 백그라운드에서 이미지 업로드하고, 성공 시 Firestore 문서 업데이트 ***
+    Future.delayed(Duration.zero, () async {
+      try {
+        // 파이어스토리지에 저장할 경로
+        final storagePath =
+            'couture_request_item_image/couture_request_${nowMillis}';
 
-    return true; // 성공적으로 저장되면 true 반환
+        final updatedData = <String, dynamic>{};
+
+        // 2) 썸네일 업로드
+        if (product.thumbnail != null) {
+          final thumbnailUrl = await _uploadImage(
+            product.thumbnail!,
+            '$storagePath/thumbnails',
+          );
+          updatedData['thumbnails'] = thumbnailUrl;
+          print('썸네일 업로드 완료: $thumbnailUrl');
+        }
+
+        // 3) 선택한 색상 이미지 업로드
+        if (selectedColorUrl != null) {
+          final colorImageUrl = await _uploadImage(
+            selectedColorUrl,
+            '$storagePath/selected_color',
+          );
+          updatedData['selected_color_image'] = colorImageUrl;
+          print('선택 색상 이미지 업로드 완료: $colorImageUrl');
+        }
+
+        // 업로드된 이미지가 있으면 Firestore 문서 업데이트
+        if (updatedData.isNotEmpty) {
+          await docRef.update(updatedData);
+          print('이미지 필드 업데이트 완료.');
+        }
+      } catch (e) {
+        print('이미지 업로드 중 오류 발생(백그라운드). $e');
+        // 필요 시 사용자에게 별도 에러 안내 가능
+      }
+    });
+
+    // UI단에서는 빠르게 처리된 것으로 인식하도록 true 반환
+    // (이미지 업로드가 끝나지 않았어도, 이미 성공 메세지는 띄워둔 상태)
+    return true;
+  }
+
+  // *** [추가] 이미지 업로드 로직을 별도 Private 함수로 분리 ***
+  Future<String> _uploadImage(String imageUrl, String storagePath) async {
+    final response = await http.get(Uri.parse(imageUrl));
+    final bytes = response.bodyBytes;
+    final ref = storage.ref().child(storagePath);
+    // 이미지 업로드
+    await ref.putData(bytes, SettableMetadata(contentType: 'image/png'));
+    // 업로드된 이미지의 다운로드 URL 얻기
+    return await ref.getDownloadURL();
   }
 
 // Firestore에서 장바구니 아이템을 페이징 처리하여 불러오는 함수
-  Future<List<Map<String, dynamic>>> getPagedCartItems({DocumentSnapshot? lastDocument, required int limit}) async {
+  Future<List<Map<String, dynamic>>> getPagedCartItems(
+      {DocumentSnapshot? lastDocument, required int limit}) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
     final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
-    if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    if (userEmail == null)
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
-    print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
+    print(
+        "Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // Firestore에서 지정한 갯수만큼 데이터를 불러온다는 메시지를 출력함
 
-    Query query = firestore.collection('couture_request_item').doc(userEmail).collection('items').orderBy('timestamp', descending: true).limit(limit);
+    Query query = firestore
+        .collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .orderBy('timestamp', descending: true)
+        .limit(limit);
     // Firestore에서 사용자의 장바구니 아이템을 'timestamp'로 내림차순 정렬하고 지정한 개수만큼 데이터를 가져오도록 쿼리를 작성함
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument); // 마지막 문서 이후부터 데이터를 불러옴
@@ -159,8 +295,9 @@ class CartItemRepository {
 
     // querySnapshot.docs.map()에서 반환되는 데이터를 정확히 Map<String, dynamic>으로 변환함
     return querySnapshot.docs.map((doc) {
-      final Map<String, dynamic> data = doc.data() as Map<String, dynamic>; // 명시적으로 데이터를 Map<String, dynamic>으로 캐스팅함
-      data['id'] = doc.id;  // 문서의 ID를 명시적으로 추가함
+      final Map<String, dynamic> data = doc.data()
+          as Map<String, dynamic>; // 명시적으로 데이터를 Map<String, dynamic>으로 캐스팅함
+      data['id'] = doc.id; // 문서의 ID를 명시적으로 추가함
       data['snapshot'] = doc; // 마지막 문서를 기록함
       print("불러온 데이터: ${data['product_id']}"); // 불러온 데이터의 product_id를 출력함
       return data;
@@ -172,32 +309,41 @@ class CartItemRepository {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
     // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
     final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
-    if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
+    if (userEmail == null)
+      throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
-    return firestore.collection('couture_request_item')
+    return firestore
+        .collection('couture_request_item')
         .doc(userEmail)
         .collection('items')
         .doc(itemId)
         .snapshots() // 지정한 아이템에 대한 실시간 스트림을 구독함
-        .handleError((error) { // 구독 중 오류가 발생하면 처리함
-      print('cartItemStream에서 오류 발생: $error'); // 오류 메시지를 출력함
-    }).map((docSnapshot) {
-      if (docSnapshot.exists) { // 문서가 존재하는 경우
-        final data = docSnapshot.data() as Map<String, dynamic>; // 문서 데이터를 Map<String, dynamic>으로 변환함
-        data['id'] = docSnapshot.id; // 문서의 ID를 명시적으로 추가함
-        return data;
-      } else {
-        // 문서가 존재하지 않는 경우 구독을 해제함
-        print('itemId에 대한 문서가 존재하지 않습니다: $itemId'); // 문서가 존재하지 않음을 출력함
-        return null; // 예외를 던지지 않고 null을 반환함
-      }
-    }).where((data) => data != null).cast<Map<String, dynamic>>(); // null 값을 필터링하여 스트림에서 제외함
+        .handleError((error) {
+          // 구독 중 오류가 발생하면 처리함
+          print('cartItemStream에서 오류 발생: $error'); // 오류 메시지를 출력함
+        })
+        .map((docSnapshot) {
+          if (docSnapshot.exists) {
+            // 문서가 존재하는 경우
+            final data = docSnapshot.data()
+                as Map<String, dynamic>; // 문서 데이터를 Map<String, dynamic>으로 변환함
+            data['id'] = docSnapshot.id; // 문서의 ID를 명시적으로 추가함
+            return data;
+          } else {
+            // 문서가 존재하지 않는 경우 구독을 해제함
+            print('itemId에 대한 문서가 존재하지 않습니다: $itemId'); // 문서가 존재하지 않음을 출력함
+            return null; // 예외를 던지지 않고 null을 반환함
+          }
+        })
+        .where((data) => data != null)
+        .cast<Map<String, dynamic>>(); // null 값을 필터링하여 스트림에서 제외함
   }
 
 // 장바구니 화면 내에서 상품 아이템을 '삭제' 버튼 클릭 시, Firestore에서 삭제되도록 하는 함수
   Future<void> removeCartItem(String docId) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외를 발생시킴
+    if (user == null) {
+      // 사용자가 로그인되어 있지 않은 경우 예외를 발생시킴
       print('사용자가 로그인되어 있지 않습니다.');
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외를 발생시킴
     }
@@ -207,15 +353,22 @@ class CartItemRepository {
       print('사용자 이메일을 가져올 수 없습니다.'); // 사용자의 이메일이 없는 경우 예외를 발생시킴
       throw Exception('사용자 이메일을 가져올 수 없습니다.');
     }
-    print('장바구니 아이템을 삭제합니다. 문서 ID: $docId, 사용자: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
-    await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(docId).delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제함
+    print(
+        '장바구니 아이템을 삭제합니다. 문서 ID: $docId, 사용자: $userEmail'); // 삭제할 문서 ID와 사용자를 출력함
+    await firestore
+        .collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .doc(docId)
+        .delete(); // 주어진 문서 ID에 해당하는 문서를 Firestore에서 삭제함
     print('장바구니 아이템 삭제 완료: 문서 ID: $docId'); // 문서 삭제 완료 메시지를 출력함
   }
 
   // Firestore에서 특정 아이템의 체크 상태를 업데이트하는 함수인 updateCartItemChecked
   Future<void> updateCartItemChecked(String id, bool checked) async {
     final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보 가져옴
-    if (user == null) { // 사용자가 로그인되어 있지 않은 경우 예외 발생
+    if (user == null) {
+      // 사용자가 로그인되어 있지 않은 경우 예외 발생
       print('사용자가 로그인되어 있지 않습니다.');
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 예외 발생
     }
@@ -227,7 +380,12 @@ class CartItemRepository {
       throw Exception('사용자 이메일을 가져올 수 없습니다.');
     }
     print('장바구니 아이템 체크 상태를 업데이트합니다. ID: $id, 상태: $checked, 사용자: $userEmail');
-    await firestore.collection('couture_request_item').doc(userEmail).collection('items').doc(id).update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
+    await firestore
+        .collection('couture_request_item')
+        .doc(userEmail)
+        .collection('items')
+        .doc(id)
+        .update({'bool_checked': checked}); // 주어진 ID에 해당하는 문서의 체크 상태를 업데이트
     print('장바구니 아이템 체크 상태 업데이트 완료: ID: $id');
   }
 
@@ -249,7 +407,8 @@ class CartItemRepository {
 
     print('사용자 $userEmail의 모든 장바구니 아이템의 bool_checked 필드를 false로 업데이트합니다.');
 
-    final collectionRef = firestore.collection('couture_request_item')
+    final collectionRef = firestore
+        .collection('couture_request_item')
         .doc(userEmail)
         .collection('items');
 

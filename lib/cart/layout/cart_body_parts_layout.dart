@@ -36,7 +36,7 @@ void onCartButtonPressed(
       product, selectedColorText, selectedColorUrl, selectedSize)
       .then((isAdded) { // addToCartItem에서 성공 여부를 받아 처리
     if (isAdded) { // 만약 데이터가 실제로 추가되었다면 성공 메시지를 표시
-      showCustomSnackBar(context, '해당 상품이 요청품목 목록에 담겼습니다.'); // 성공 메시지를 화면에 표시
+      // showCustomSnackBar(context, '해당 상품이 요청품목 목록에 담겼습니다.'); // 성공 메시지를 화면에 표시
     }
   }).catchError((error) {
     // 에러가 발생할 경우

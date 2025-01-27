@@ -122,11 +122,11 @@ class WishlistIconButton extends ConsumerWidget {
                   );
                 } else {
                   // 찜 목록에 상품 추가
-                  await wishlistRepository.addToWishlistItem(userEmail, product);
+                  await wishlistRepository.addToWishlistItem(context, userEmail, product);
                   // 로컬 상태 업데이트
                   wishlistNotifier.addItem(product.docId);
                   // 사용자에게 알림 표시
-                  showCustomSnackBar(context, '상품이 찜 목록에 담겼습니다.');
+                  // showCustomSnackBar(context, '상품이 찜 목록에 담겼습니다.');
                 }
               } catch (e) {
                 wishlistNotifier.toggleItem(product.docId);
