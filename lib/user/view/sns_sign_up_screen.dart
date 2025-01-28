@@ -101,11 +101,12 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     _emailFocusNode.addListener(() {
       if (!_emailFocusNode.hasFocus) {
         // 입력값이 있을 때만 검사
-        // @를 포함하지 않거나, @를 제외한 값이 없는 경우
+        // '@' 또는 '.'을 포함하지 않거나, '@','.'을 제외한 값이 없는 경우
         if (_emailController.text.isNotEmpty &&
             (!_emailController.text.contains('@') ||
+                !_emailController.text.contains('.') ||
                 _emailController.text
-                    .replaceAll('@', '')
+                    .replaceAll('@', '.')
                     .trim()
                     .isEmpty)) {
           showCustomSnackBar(context, '이메일 형식에 맞게 기입해주세요.');
@@ -673,7 +674,8 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
   // 이메일 형식 유효성 검증 함수
   bool _validateEmailFormat() {
     return _emailController.text.contains('@') &&
-        _emailController.text.replaceAll('@', '').trim().isNotEmpty;
+        _emailController.text.contains('.') &&
+        _emailController.text.replaceAll('@', '.').trim().isNotEmpty;
   }
 
   // 휴대폰 번호 형식 유효성 검증 함수
@@ -1003,7 +1005,6 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
       },
     );
   }
-}
 
 // 고정된 값을 가진 행을 생성하는 함수
   Widget _buildFixedValueRow(BuildContext context, String label, String value) {
@@ -1094,4 +1095,5 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
       ),
     );
   }
+}
 // ------ 회원가입 화면 클래스 끝 ------

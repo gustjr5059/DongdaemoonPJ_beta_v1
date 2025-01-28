@@ -192,11 +192,12 @@ class _UserInfoModifyAndSecessionScreenState
     _emailFocusNode.addListener(() {
       if (!_emailFocusNode.hasFocus) {
         // 입력값이 있을 때만 검사
-        // @를 포함하지 않거나, @를 제외한 값이 없는 경우
+        // '@' 또는 '.'을 포함하지 않거나, '@','.'을 제외한 값이 없는 경우
         if (_emailController.text.isNotEmpty &&
             (!_emailController.text.contains('@') ||
+                !_emailController.text.contains('.') ||
                 _emailController.text
-                    .replaceAll('@', '')
+                    .replaceAll('@', '.')
                     .trim()
                     .isEmpty)) {
           showCustomSnackBar(context, '이메일 형식에 맞게 기입해주세요.');
@@ -247,9 +248,9 @@ class _UserInfoModifyAndSecessionScreenState
 
       // 이름 길이 제한 필터링
       // 입력값이 있을 때만 검사
-      if (_nameController.text.isNotEmpty && _nameController.text.length > 10) {
-        showCustomSnackBar(context, '최대 10자까지 작성 가능합니다.');
-        _nameController.text = _nameController.text.substring(0, 10);
+      if (_nameController.text.isNotEmpty && _nameController.text.length > 20) {
+        showCustomSnackBar(context, '최대 20자까지 작성 가능합니다.');
+        _nameController.text = _nameController.text.substring(0, 20);
         _nameController.selection = TextSelection.fromPosition(
           TextPosition(offset: _nameController.text.length),
         );
@@ -533,9 +534,9 @@ class _UserInfoModifyAndSecessionScreenState
                                         ),
                                       ),
                                       SizedBox(height: interval3Y),
-                                      _buildFixedValueRow(context, 'SNS 계정',
-                                          userInfo?['registration_id'] ?? ''),
-                                      SizedBox(height: interval1Y),
+                                      // _buildFixedValueRow(context, 'SNS 계정',
+                                      //     userInfo?['registration_id'] ?? ''),
+                                      // SizedBox(height: interval1Y),
                                       _buildEditableRow(
                                           context,
                                           '이름',
@@ -545,7 +546,19 @@ class _UserInfoModifyAndSecessionScreenState
                                       Align(
                                         alignment: Alignment.centerLeft, // 왼쪽 정렬
                                         child: Text(
-                                          '* 빈칸 없이 최대 10자 이내이며, 비속어는 사용할 수 없습니다.',
+                                          "* '성'을 붙여서 이름을 기입해주세요.",
+                                          style: TextStyle(
+                                            fontSize: nameGuideTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.normal,
+                                            color: GRAY60_COLOR,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                        child: Text(
+                                          '* 빈칸 없이 최대 20자 이내이며, 비속어는 사용할 수 없습니다.',
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
                                             fontFamily: 'NanumGothic',
@@ -572,7 +585,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           ),
                                         ),
                                       ),
-                                      _buildEditableRow(
+                                      _buildPhoneNumberEditableRow(
                                           context,
                                           '휴대폰 번호',
                                           _phoneController,
@@ -587,6 +600,18 @@ class _UserInfoModifyAndSecessionScreenState
                                             fontFamily: 'NanumGothic',
                                             fontWeight: FontWeight.normal,
                                             color: GRAY60_COLOR,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                        child: Text(
+                                          '* 상품 업데이트 요청 관련 관리자 연락을 위해 휴대폰 번호가 필요합니다.',
+                                          style: TextStyle(
+                                            fontSize: nameGuideTextFontSize,
+                                            fontFamily: 'NanumGothic',
+                                            fontWeight: FontWeight.normal,
+                                            color: BLACK_COLOR,
                                           ),
                                         ),
                                       ),
@@ -877,6 +902,7 @@ class _UserInfoModifyAndSecessionScreenState
     );
   }
 
+
   // Firestore에 회원 정보 수정 내용 반영하여 저장하는 함수
   Future<void> _modifyUserInfo() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -920,7 +946,8 @@ class _UserInfoModifyAndSecessionScreenState
   bool _validateEmailFormat() {
     // @를 포함하고 @를 제외한 값이 비어있지 않은 경우에만 유효함
     return _emailController.text.contains('@') &&
-        _emailController.text.replaceAll('@', '').trim().isNotEmpty;
+        _emailController.text.contains('.') &&
+        _emailController.text.replaceAll('@', '.').trim().isNotEmpty;
   }
 
   // 휴대폰 번호 형식 유효성 검증 함수
@@ -935,7 +962,7 @@ class _UserInfoModifyAndSecessionScreenState
   bool _validateNameLength() {
     // 빈 값이고, 10자 이하인 경우에만 유효함
     return _nameController.text.isNotEmpty &&
-        _nameController.text.length <= 10;
+        _nameController.text.length <= 20;
   }
 
   // 수정하기 버튼 활성화 상태 확인 함수
@@ -971,7 +998,7 @@ class _UserInfoModifyAndSecessionScreenState
           child: Text(
             '아니요',
             style: TextStyle(
-              color: Colors.black,
+              color: BLACK_COLOR,
               fontWeight:
               FontWeight.bold,
             ),
@@ -1016,7 +1043,7 @@ class _UserInfoModifyAndSecessionScreenState
           child: Text(
             '예',
             style: TextStyle(
-              color: Colors.red,
+              color: RED46_COLOR,
               fontWeight:
               FontWeight.bold,
             ),
@@ -1115,7 +1142,6 @@ class _UserInfoModifyAndSecessionScreenState
       ),
     );
   }
-}
 
 // 수정 가능한 행을 생성하는 함수
 Widget _buildEditableRow(BuildContext context, String label,
@@ -1131,7 +1157,7 @@ Widget _buildEditableRow(BuildContext context, String label,
   final double signUpInfoTextFontSize =
       screenSize.height * (13 / referenceHeight);
   final double signUpInfoDataFontSize =
-      screenSize.height * (12 / referenceHeight);
+      screenSize.height * (10 / referenceHeight);
   final double signUpInfoTextPartWidth =
       screenSize.width * (97 / referenceWidth);
   final double signUpInfoTextPartHeight =
@@ -1251,5 +1277,157 @@ Widget _buildEditableRow(BuildContext context, String label,
       );
     },
   );
+}
+
+  // 휴대폰 번호 항목에 사용될 수정이 가능한 값을 가진 행을 생성하는 함수
+  Widget _buildPhoneNumberEditableRow(BuildContext context, String label,
+      TextEditingController controller, FocusNode focusNode, String hintText) {
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // 회원가입 정보 표 부분 수치
+    final double signUpInfoTextFontSize =
+        screenSize.height * (13 / referenceHeight);
+    final double signUpInfoDataFontSize =
+        screenSize.height * (10 / referenceHeight);
+    final double signUpInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double signUpInfoTextPartHeight =
+        screenSize.height * (40 / referenceHeight);
+    // 행 간 간격 수치
+    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // 데이터 부분 패딩 수치
+    final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+
+    // FocusNode의 상태 변화 감지 리스너 추가
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // FocusNode의 상태 변화 감지 리스너
+        focusNode.addListener(() {
+          // FocusNode 상태 변경 시 UI 업데이트
+          setState(() {});
+        });
+
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: signUpInfo4Y),
+          // 행의 상하단에 2.0 픽셀의 여백 추가
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container(
+                  width: signUpInfoTextPartWidth,
+                  // 셀의 너비 설정
+                  height: signUpInfoTextPartHeight,
+                  // 셀의 높이 설정
+                  // 라벨 셀의 너비 설정
+                  decoration: BoxDecoration(
+                    // color: GRAY96_COLOR,
+                    color:
+                    Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                    border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  alignment: Alignment.center,
+                  // 텍스트를 중앙 정렬
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '*  ',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: RED46_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextSpan(
+                          text: label,
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: BLACK_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: signUpInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color:
+                      Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                      border: Border.all(
+                        color: focusNode.hasFocus
+                            ? SOFTGREEN60_COLOR
+                            : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
+                        width: 1.0,
+                      ), // 윤곽선
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    padding:
+                    EdgeInsets.symmetric(horizontal: signUpInfoDataPartX),
+                    alignment: Alignment.centerLeft, // 텍스트 정렬
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context)
+                            .requestFocus(focusNode); // 행을 탭할 때 포커스를 설정
+                      },
+                      child: TextField(
+                        controller: controller,
+                        // 텍스트 필드 컨트롤러 설정
+                        focusNode: focusNode,
+                        // 텍스트 필드 포커스 노드 설정
+                        cursorColor: SOFTGREEN60_COLOR,
+                        // 커서 색상 설정
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: signUpInfoDataFontSize,
+                          color: BLACK_COLOR,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        // 텍스트 필드 스타일 설정
+                        decoration: InputDecoration(
+                          hintText: hintText,
+                          // 힌트 텍스트 설정
+                          hintStyle: TextStyle(color: GRAY74_COLOR),
+                          // 힌트 텍스트 색상 설정
+                          hintMaxLines: 2,
+                          // 힌트 텍스트 최대 줄 수 설정
+                          border: InputBorder.none,
+                          // 입력 경계선 제거
+                          isDense: true,
+                          // 간격 설정
+                          contentPadding: EdgeInsets.zero, // 내용 여백 제거
+                        ),
+                        maxLines: null,
+                        // 최대 줄 수 설정
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9-]')), // 숫자와 '-'만 허용
+                        ],
+                        onChanged: (value) {
+                          print('텍스트 필드 $label 변경됨: $value'); // 디버깅 메시지 추가
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 // _UserInfoModifyScreenState 클래스 끝
