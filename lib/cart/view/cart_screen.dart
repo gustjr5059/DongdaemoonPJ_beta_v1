@@ -203,64 +203,109 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double cartlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double cartlistAppBarTitleX = screenSize.width * (215 / referenceHeight);
+    // final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 홈 버튼 수치 (Case 3)
+    // final double cartlistHomeBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double cartlistHomeBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double cartlistHomeBtnX = screenSize.width * (10 / referenceWidth);
+    // final double cartlistHomeBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 3)
+    // final double cartlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double cartlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
+    // final double cartlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
+    // final double cartlistEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double cartlistEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double cartlistEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율
+    // final double cartlistEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 장바구니 안내사항 텍스트 수치
+    // final double cartlistGuideTextWidth =
+    //     screenSize.width * (300 / referenceWidth); // 가로 비율
+    // final double cartlistGuideTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight); // 세로 비율
+    // final double cartlistGuideTextFontSize2 =
+    //     screenSize.height * (10 / referenceHeight); // 세로 비율
+    // final double interval1Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 비율
+    // final double interval2Y =
+    //     screenSize.height * (6 / referenceHeight); // 세로 비율
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double cartlistAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double cartlistAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double cartlistAppBarTitleHeight = 22;
     final double cartlistAppBarTitleX = screenSize.width * (215 / referenceHeight);
-    final double cartlistAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double cartlistAppBarTitleY = 11;
 
     // 홈 버튼 수치 (Case 3)
     final double cartlistHomeBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double cartlistHomeBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double cartlistHomeBtnHeight = 40;
     final double cartlistHomeBtnX = screenSize.width * (10 / referenceWidth);
-    final double cartlistHomeBtnY = screenSize.height * (7 / referenceHeight);
+    final double cartlistHomeBtnY = 7;
 
     // 찜 목록 버튼 수치 (Case 3)
-    final double cartlistWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double cartlistWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double cartlistWishlistBtnWidth = 40;
+    final double cartlistWishlistBtnHeight = 40;
+    final double cartlistWishlistBtnX = 8;
+    final double cartlistWishlistBtnY = 7;
 
     // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
     final double cartlistEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double cartlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double cartlistEmptyTextHeight = 22; // 세로 비율
     final double cartlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double cartlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double cartlistEmptyTextFontSize = 16;
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideTextHeight = 22; // 세로 비율
     final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
-
-    // 장바구니 안내사항 텍스트 수치
-    final double cartlistGuideTextWidth =
-        screenSize.width * (300 / referenceWidth); // 가로 비율
-    final double cartlistGuideTextFontSize1 =
-        screenSize.height * (14 / referenceHeight); // 세로 비율
-    final double cartlistGuideTextFontSize2 =
-        screenSize.height * (10 / referenceHeight); // 세로 비율
-    final double interval1Y =
-        screenSize.height * (4 / referenceHeight); // 세로 비율
-    final double interval2Y =
-        screenSize.height * (6 / referenceHeight); // 세로 비율
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,

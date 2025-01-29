@@ -1,5 +1,5 @@
-
 import 'dart:io' show Platform;
+
 // iOS 스타일의 인터페이스 요소를 사용하기 위해 Cupertino 디자인 패키지를 임포트합니다.
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -151,7 +151,6 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -159,10 +158,19 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // // sortBtn 관련 수치 동적 적용
+    // final double sortBtnX = screenSize.width * (8 / referenceWidth);
+    // final double sortBtneY = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
     // sortBtn 관련 수치 동적 적용
     final double sortBtnX = screenSize.width * (8 / referenceWidth);
-    final double sortBtneY = screenSize.height * (4 / referenceHeight);
+    final double sortBtneY = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 현재 선택된 정렬 타입을 감시
     final selectedSortType = ref.watch(sortButtonProvider);
@@ -190,7 +198,6 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
   // 버튼 세부 내용인 _buildExpandedSortButton 위젯
   Widget _buildExpandedSortButton(BuildContext context, String title,
       WidgetRef ref, String selectedSortType) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -198,11 +205,21 @@ class PriceAndDiscountPercentSortButtons<T extends BaseProductListNotifier>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // // sortBtn 관련 수치 동적 적용
+    // final double sortBtn1X = screenSize.width * (4 / referenceWidth);
+    // final double sortBtn2X = screenSize.width * (8 / referenceWidth);
+    // final double sortBtnTextFontSize = screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
     // sortBtn 관련 수치 동적 적용
     final double sortBtn1X = screenSize.width * (4 / referenceWidth);
     final double sortBtn2X = screenSize.width * (8 / referenceWidth);
-    final double sortBtnTextFontSize = screenSize.height * (12 / referenceHeight);
+    final double sortBtnTextFontSize = 12;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 현재 버튼이 선택된 상태인지 여부를 결정
     final bool isSelected = selectedSortType == title;
@@ -285,7 +302,8 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
 
     // 저장된 홈 화면 내 섹션 스크롤 위치를 설정
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) { // _scrollController가 뷰에 attach되었는지 확인
+      if (_scrollController.hasClients) {
+        // _scrollController가 뷰에 attach되었는지 확인
         final savedScrollPosition =
             ref.read(homeSectionScrollPositionsProvider)[widget.category] ?? 0;
         _scrollController.jumpTo(savedScrollPosition); // 스크롤 위치 설정
@@ -377,11 +395,11 @@ class _ProductsSectionListState extends ConsumerState<ProductsSectionList> {
     return Column(
       children: [
         // 데이터를 불러옲 때 로딩되고 있는 경우
-        if (_isFetching)
-          buildCommonLoadingIndicator(), // 로딩 중일 때 로딩 인디케이터 표시
+        if (_isFetching) buildCommonLoadingIndicator(), // 로딩 중일 때 로딩 인디케이터 표시
         // 데이터가 있어서 불러온 경우
         if (products.isNotEmpty)
-          buildHorizontalDocumentsList(ref, products, context, widget.category, _scrollController),
+          buildHorizontalDocumentsList(
+              ref, products, context, widget.category, _scrollController),
         // 데이터가 없는 경우
         if (products.isEmpty && !_isFetching)
           SizedBox.shrink(), // 데이터가 없을 때 아무것도 표시하지 않음
@@ -457,12 +475,20 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    final double interval1X =
-        screenSize.width * (8 / referenceWidth);
-    final double interval1Y =
-        screenSize.height * (8 / referenceHeight);
-    final double interval2Y =
-        screenSize.height * (10 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double interval1X =
+    //     screenSize.width * (8 / referenceWidth);
+    // final double interval1Y =
+    //     screenSize.height * (8 / referenceHeight);
+    // final double interval2Y =
+    //     screenSize.height * (10 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double interval1X = screenSize.width * (8 / referenceWidth);
+    final double interval1Y = 8;
+    final double interval2Y = 10;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       children: [
@@ -490,9 +516,10 @@ class _ProductListState extends ConsumerState<GeneralProductList> {
         ),
         if (isFetching) // 가져오는 중이라면
           Padding(
-            padding: EdgeInsets.symmetric(vertical: interval1Y, horizontal: interval1X),
-            child: buildCommonLoadingIndicator() // 로딩 표시
-          ),
+              padding: EdgeInsets.symmetric(
+                  vertical: interval1Y, horizontal: interval1X),
+              child: buildCommonLoadingIndicator() // 로딩 표시
+              ),
       ],
     );
   }
@@ -513,12 +540,20 @@ Widget buildGeneralProductRow(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  final double interval1X =
-      screenSize.width * (2 / referenceWidth);
-  final double interval1Y =
-      screenSize.height * (2 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // final double interval1X =
+  //     screenSize.width * (2 / referenceWidth);
+  // final double interval1Y =
+  //     screenSize.height * (2 / referenceHeight);
+  // final itemWidth = (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
-  final itemWidth = (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  final double interval1X = screenSize.width * (2 / referenceWidth);
+  final double interval1Y = 2;
+  final itemWidth =
+      (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Row(
     // mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 수평 중앙 정렬
@@ -538,8 +573,7 @@ Widget buildGeneralProductRow(
           ),
         ),
       );
-    })
-        .toList(), // 리스트로 변환
+    }).toList(), // 리스트로 변환
   );
 }
 // ------- 데이터를 열로 나열하는 UI 구현 관련 buildGeneralProductRow 위젯 내용 구현 끝
@@ -590,8 +624,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // 장바구니 화면 관련 초기화 부분 시작
   // 장바구니 화면에서 단순 화면 스크롤 초기화
-  ref.read(cartScrollPositionProvider.notifier).state =
-  0.0;
+  ref.read(cartScrollPositionProvider.notifier).state = 0.0;
   ref.invalidate(cartItemsProvider); // 장바구니 데이터 초기화
   // resetAndReloadCartItems를 호출하기 위해 cartItemsProvider.notifier를 읽어서 호출
   ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
@@ -601,8 +634,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // 발주 내역 화면 관련 초기화 부분 시작
   // 발주 내역 화면에서 단순 화면 스크롤 초기화
-  ref.read(orderListScrollPositionProvider.notifier).state =
-  0.0;
+  ref.read(orderListScrollPositionProvider.notifier).state = 0.0;
   // 발주 목록 내 데이터를 불러오는 orderlistItemsProvider 초기화
   ref.invalidate(orderlistItemsProvider);
   ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
@@ -611,27 +643,24 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // 발주 내역 상세 화면 관련 초기화 부분 시작
   // 발주 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 발주 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
   ref.read(orderListDetailScrollPositionProvider.notifier).state =
-  0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
+      0.0; // 발주 화면 자체의 스크롤 위치 인덱스를 초기화
   // 발주 목록 상세 화면 내 발주내역 데이터를 불러오는 로직 초기화
   ref.invalidate(orderlistDetailItemProvider);
   // 발주 내역 상세 화면 관련 초기화 부분 끝
 
   // 발주 화면 관련 초기화 부분 시작
   // 발주 화면에서 단순 화면 스크롤 초기화
-  ref.read(orderMainScrollPositionProvider.notifier).state =
-  0.0;
+  ref.read(orderMainScrollPositionProvider.notifier).state = 0.0;
   // 발주 화면 관련 초기화 부분 끝
 
   // 발주 완료 화면 관련 초기화 부분 시작
   // 발주 완료 화면에서 단순 화면 스크롤 초기화
-  ref.read(completePaymentScrollPositionProvider.notifier).state =
-  0.0;
+  ref.read(completePaymentScrollPositionProvider.notifier).state = 0.0;
   // 발주 완료 화면 관련 초기화 부분 끝
 
   // 찜 목록 화면 관련 초기화 부분 시작
   // 찜 목록 화면에서 단순 화면 스크롤 초기화
-  ref.read(wishlistScrollPositionProvider.notifier).state =
-  0.0;
+  ref.read(wishlistScrollPositionProvider.notifier).state = 0.0;
   ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
   ref.invalidate(wishlistItemsLoadFutureProvider); // 찜 목록  데이터 로드 초기화
   ref.invalidate(wishlistItemLoadStreamProvider); // 찜 목록 실시간 삭제된 데이터 로드 초기화
@@ -640,16 +669,17 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // 마이페이지 화면 관련 초기화 부분 시작
   ref.read(profileMainScrollPositionProvider.notifier).state =
-  0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
-  ref.read(profileMainSmall1BannerPageProvider.notifier).state = 0; // 마이페이지 소배너 페이지뷰 초기화
+      0.0; // 마이페이지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(profileMainSmall1BannerPageProvider.notifier).state =
+      0; // 마이페이지 소배너 페이지뷰 초기화
   ref.invalidate(profileUserInfoProvider); // 마이페이지 회원정보 데이터 초기화
   // 머아패아자 화면 관련 초기화 부분 끝
 
   // 공지사항 화면 관련 초기화 부분 시작
   ref.read(announceScrollPositionProvider.notifier).state =
-  0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+      0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(announceDetailScrollPositionProvider.notifier).state =
-  0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+      0.0; // 공지사항 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 공지사항 화면 내 데이터를 불러오는 announceItemsProvider 초기화
   ref.invalidate(announceItemsProvider);
   // 공지사항 상세 화면 내 데이터를 불러오는 announceDetailItemProvider 초기화
@@ -658,11 +688,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
 
   // 문의하기 화면 관련 초기화 부분 시작
   ref.read(inquiryScrollPositionProvider.notifier).state =
-  0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
+      0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 문의하기 화면 관련 초기화 부분 끝
 
   // 회원정보 수정 및 탈퇴 화면 관련 초기화 부분 시작
-  ref.read(userInfoModifyAndSecessionScrollPositionProvider.notifier).state = 0.0; // 회원정보 수정 및 탈퇴 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.read(userInfoModifyAndSecessionScrollPositionProvider.notifier).state =
+      0.0; // 회원정보 수정 및 탈퇴 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.invalidate(modifyUserInfoProvider); // SNS ID, 이름, 이메일, 휴대폰 번호 데이터 초기화
   // 회원정보 수정 및 탈퇴 화면 관련 초기화 부분 끝
 
@@ -677,8 +708,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 블라우스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(blouseCurrentTabProvider.notifier).state =
       0; // 블라우스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(blouseMainLargeBannerPageProvider.notifier).state = 0; // 블라우스 대배너 페이지뷰 초기화
-  ref.read(blouseMainSmall1BannerPageProvider.notifier).state = 0; // 블라우스 소배너 페이지뷰 초기화
+  ref.read(blouseMainLargeBannerPageProvider.notifier).state =
+      0; // 블라우스 대배너 페이지뷰 초기화
+  ref.read(blouseMainSmall1BannerPageProvider.notifier).state =
+      0; // 블라우스 소배너 페이지뷰 초기화
   ref
       .read(blouseMainProductListProvider.notifier)
       .reset(); // 블라우스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -691,8 +724,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 가디건 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(cardiganCurrentTabProvider.notifier).state =
       0; // 가디건 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(cardiganMainLargeBannerPageProvider.notifier).state = 0; // 가디건 대배너 페이지뷰 초기화
-  ref.read(cardiganMainSmall1BannerPageProvider.notifier).state = 0; // 가디건 소배너 페이지뷰 초기화
+  ref.read(cardiganMainLargeBannerPageProvider.notifier).state =
+      0; // 가디건 대배너 페이지뷰 초기화
+  ref.read(cardiganMainSmall1BannerPageProvider.notifier).state =
+      0; // 가디건 소배너 페이지뷰 초기화
   ref
       .read(cardiganMainProductListProvider.notifier)
       .reset(); // 가디건 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -705,8 +740,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 코트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(coatCurrentTabProvider.notifier).state =
       0; // 코트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(coatMainLargeBannerPageProvider.notifier).state = 0; // 코트 대배너 페이지뷰 초기화
-  ref.read(coatMainSmall1BannerPageProvider.notifier).state = 0; // 코트 소배너 페이지뷰 초기화
+  ref.read(coatMainLargeBannerPageProvider.notifier).state =
+      0; // 코트 대배너 페이지뷰 초기화
+  ref.read(coatMainSmall1BannerPageProvider.notifier).state =
+      0; // 코트 소배너 페이지뷰 초기화
   ref
       .read(coatMainProductListProvider.notifier)
       .reset(); // 코트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -719,8 +756,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 청바지 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(jeanCurrentTabProvider.notifier).state =
       0; // 청바지 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(jeanMainLargeBannerPageProvider.notifier).state = 0; // 청바지 대배너 페이지뷰 초기화
-  ref.read(jeanMainSmall1BannerPageProvider.notifier).state = 0; // 청바지 소배너 페이지뷰 초기화
+  ref.read(jeanMainLargeBannerPageProvider.notifier).state =
+      0; // 청바지 대배너 페이지뷰 초기화
+  ref.read(jeanMainSmall1BannerPageProvider.notifier).state =
+      0; // 청바지 소배너 페이지뷰 초기화
   ref
       .read(jeanMainProductListProvider.notifier)
       .reset(); // 청바지 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -733,8 +772,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 맨투맨 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(mtmCurrentTabProvider.notifier).state =
       0; // 맨투맨 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(mtmMainLargeBannerPageProvider.notifier).state = 0; // 맨투맨 대배너 페이지뷰 초기화
-  ref.read(mtmMainSmall1BannerPageProvider.notifier).state = 0; // 맨투맨 소배너 페이지뷰 초기화
+  ref.read(mtmMainLargeBannerPageProvider.notifier).state =
+      0; // 맨투맨 대배너 페이지뷰 초기화
+  ref.read(mtmMainSmall1BannerPageProvider.notifier).state =
+      0; // 맨투맨 소배너 페이지뷰 초기화
   ref
       .read(mtmMainProductListProvider.notifier)
       .reset(); // 맨투맨 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -747,8 +788,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 니트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(neatCurrentTabProvider.notifier).state =
       0; // 니트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(neatMainLargeBannerPageProvider.notifier).state = 0; // 니트 대배너 페이지뷰 초기화
-  ref.read(neatMainSmall1BannerPageProvider.notifier).state = 0; // 니트 소배너 페이지뷰 초기화
+  ref.read(neatMainLargeBannerPageProvider.notifier).state =
+      0; // 니트 대배너 페이지뷰 초기화
+  ref.read(neatMainSmall1BannerPageProvider.notifier).state =
+      0; // 니트 소배너 페이지뷰 초기화
   ref
       .read(neatMainProductListProvider.notifier)
       .reset(); // 니트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -761,8 +804,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 원피스 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(onepieceCurrentTabProvider.notifier).state =
       0; // 원피스 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(onepieceMainLargeBannerPageProvider.notifier).state = 0; // 원피스 대배너 페이지뷰 초기화
-  ref.read(onepieceMainSmall1BannerPageProvider.notifier).state = 0; // 원피스 소배너 페이지뷰 초기화
+  ref.read(onepieceMainLargeBannerPageProvider.notifier).state =
+      0; // 원피스 대배너 페이지뷰 초기화
+  ref.read(onepieceMainSmall1BannerPageProvider.notifier).state =
+      0; // 원피스 소배너 페이지뷰 초기화
   ref
       .read(onepieceMainProductListProvider.notifier)
       .reset(); // 원피스 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -775,8 +820,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 패딩 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(paedingCurrentTabProvider.notifier).state =
       0; // 패딩 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(paedingMainLargeBannerPageProvider.notifier).state = 0; // 패딩 대배너 페이지뷰 초기화
-  ref.read(paedingMainSmall1BannerPageProvider.notifier).state = 0; // 패딩 소배너 페이지뷰 초기화
+  ref.read(paedingMainLargeBannerPageProvider.notifier).state =
+      0; // 패딩 대배너 페이지뷰 초기화
+  ref.read(paedingMainSmall1BannerPageProvider.notifier).state =
+      0; // 패딩 소배너 페이지뷰 초기화
   ref
       .read(paedingMainProductListProvider.notifier)
       .reset(); // 패딩 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -789,8 +836,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 팬츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(pantsCurrentTabProvider.notifier).state =
       0; // 팬츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(pantsMainLargeBannerPageProvider.notifier).state = 0; // 팬츠 대배너 페이지뷰 초기화
-  ref.read(pantsMainSmall1BannerPageProvider.notifier).state = 0; // 팬츠 소배너 페이지뷰 초기화
+  ref.read(pantsMainLargeBannerPageProvider.notifier).state =
+      0; // 팬츠 대배너 페이지뷰 초기화
+  ref.read(pantsMainSmall1BannerPageProvider.notifier).state =
+      0; // 팬츠 소배너 페이지뷰 초기화
   ref
       .read(pantsMainProductListProvider.notifier)
       .reset(); // 팬츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -803,8 +852,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 폴라티 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(polaCurrentTabProvider.notifier).state =
       0; // 폴라티 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(polaMainLargeBannerPageProvider.notifier).state = 0; // 폴라티 대배너 페이지뷰 초기화
-  ref.read(polaMainSmall1BannerPageProvider.notifier).state = 0; // 폴라티 소배너 페이지뷰 초기화
+  ref.read(polaMainLargeBannerPageProvider.notifier).state =
+      0; // 폴라티 대배너 페이지뷰 초기화
+  ref.read(polaMainSmall1BannerPageProvider.notifier).state =
+      0; // 폴라티 소배너 페이지뷰 초기화
   ref
       .read(polaMainProductListProvider.notifier)
       .reset(); // 폴라티 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -817,8 +868,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 티셔츠 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(shirtCurrentTabProvider.notifier).state =
       0; // 티셔츠 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(shirtMainLargeBannerPageProvider.notifier).state = 0; // 티셔츠 대배너 페이지뷰 초기화
-  ref.read(shirtMainSmall1BannerPageProvider.notifier).state = 0; // 티셔츠 소배너 페이지뷰 초기화
+  ref.read(shirtMainLargeBannerPageProvider.notifier).state =
+      0; // 티셔츠 대배너 페이지뷰 초기화
+  ref.read(shirtMainSmall1BannerPageProvider.notifier).state =
+      0; // 티셔츠 소배너 페이지뷰 초기화
   ref
       .read(shirtMainProductListProvider.notifier)
       .reset(); // 티셔츠 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -831,8 +884,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       0.0; // 스커트 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   ref.read(skirtCurrentTabProvider.notifier).state =
       0; // 스커트 메인 화면 상단 탭 바 버튼 위치 인덱스를 초기화
-  ref.read(skirtMainLargeBannerPageProvider.notifier).state = 0; // 스커트 대배너 페이지뷰 초기화
-  ref.read(skirtMainSmall1BannerPageProvider.notifier).state = 0; // 스커트 소배너 페이지뷰 초기화
+  ref.read(skirtMainLargeBannerPageProvider.notifier).state =
+      0; // 스커트 대배너 페이지뷰 초기화
+  ref.read(skirtMainSmall1BannerPageProvider.notifier).state =
+      0; // 스커트 소배너 페이지뷰 초기화
   ref
       .read(skirtMainProductListProvider.notifier)
       .reset(); // 스커트 메인 화면 상단 탭 바의 탭 관련 상품 데이터를 초기화
@@ -850,8 +905,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 신상 더보기 화면 내 상품 데이터를 초기화
   ref.read(newSubMainSortButtonProvider.notifier).state =
       ''; // 신상 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(newSubMainLargeBannerPageProvider.notifier).state = 0; // 신상 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(newSubMainSmall1BannerPageProvider.notifier).state = 0; // 신상 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(newSubMainLargeBannerPageProvider.notifier).state =
+      0; // 신상 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(newSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 신상 더보기 화면 소배너 페이지뷰 초기화
   // 신상 더보기 화면 관련 초기화 부분 끝
 
   // 스테디 셀러 더보기 화면 관련 초기화 부분 시작
@@ -862,8 +919,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 최고 더보기 화면 내 상품 데이터를 초기화
   ref.read(bestSubMainSortButtonProvider.notifier).state =
       ''; // 최고 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(bestSubMainLargeBannerPageProvider.notifier).state = 0; // 최고 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(bestSubMainSmall1BannerPageProvider.notifier).state = 0; // 최고 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(bestSubMainLargeBannerPageProvider.notifier).state =
+      0; // 최고 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(bestSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 최고 더보기 화면 소배너 페이지뷰 초기화
   // 최고 더보기 화면 관련 초기화 부분 끝
 
   // 특가 상품 더보기 화면 관련 초기화 부분 시작
@@ -874,8 +933,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 할인 더보기 화면 내 상품 데이터를 초기화
   ref.read(saleSubMainSortButtonProvider.notifier).state =
       ''; // 할인 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(saleSubMainLargeBannerPageProvider.notifier).state = 0; // 할인 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(saleSubMainSmall1BannerPageProvider.notifier).state = 0; // 할인 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(saleSubMainLargeBannerPageProvider.notifier).state =
+      0; // 할인 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(saleSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 할인 더보기 화면 소배너 페이지뷰 초기화
   // 할인 더보기 화면 관련 초기화 부분 끝
 
   // 봄 더보기 화면 관련 초기화 부분 시작
@@ -886,8 +947,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 봄 더보기 화면 내 상품 데이터를 초기화
   ref.read(springSubMainSortButtonProvider.notifier).state =
       ''; // 봄 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(springSubMainLargeBannerPageProvider.notifier).state = 0; // 봄 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(springSubMainSmall1BannerPageProvider.notifier).state = 0; // 봄 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(springSubMainLargeBannerPageProvider.notifier).state =
+      0; // 봄 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(springSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 봄 더보기 화면 소배너 페이지뷰 초기화
   // 봄 더보기 화면 관련 초기화 부분 끝
 
   // 여름 더보기 화면 관련 초기화 부분 시작
@@ -898,8 +961,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 여름 더보기 화면 내 상품 데이터를 초기화
   ref.read(summerSubMainSortButtonProvider.notifier).state =
       ''; // 여름 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(summerSubMainLargeBannerPageProvider.notifier).state = 0; // 여름 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(summerSubMainSmall1BannerPageProvider.notifier).state = 0; // 여름 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(summerSubMainLargeBannerPageProvider.notifier).state =
+      0; // 여름 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(summerSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 여름 더보기 화면 소배너 페이지뷰 초기화
   // 여름 더보기 화면 관련 초기화 부분 끝
 
   // 가을 더보기 화면 관련 초기화 부분 시작
@@ -910,8 +975,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 가을 더보기 화면 내 상품 데이터를 초기화
   ref.read(autumnSubMainSortButtonProvider.notifier).state =
       ''; // 가을 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(autumnSubMainLargeBannerPageProvider.notifier).state = 0; // 가을 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(autumnSubMainSmall1BannerPageProvider.notifier).state = 0; // 가을 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(autumnSubMainLargeBannerPageProvider.notifier).state =
+      0; // 가을 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(autumnSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 가을 더보기 화면 소배너 페이지뷰 초기화
   // 가을 더보기 화면 관련 초기화 부분 끝
 
   // 겨울 더보기 화면 관련 초기화 부분 시작
@@ -922,8 +989,10 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
       .reset(); // 겨울 더보기 화면 내 상품 데이터를 초기화
   ref.read(winterSubMainSortButtonProvider.notifier).state =
       ''; // 겨울 더보기 화면 가격 순 버튼과 할인율 순 버튼 클릭으로 인한 데이터 정렬 상태 초기화
-  ref.read(winterSubMainLargeBannerPageProvider.notifier).state = 0; // 겨울 더보기 화면 대배너 페이지뷰 초기화
-  ref.read(winterSubMainSmall1BannerPageProvider.notifier).state = 0; // 겨울 더보기 화면 소배너 페이지뷰 초기화
+  ref.read(winterSubMainLargeBannerPageProvider.notifier).state =
+      0; // 겨울 더보기 화면 대배너 페이지뷰 초기화
+  ref.read(winterSubMainSmall1BannerPageProvider.notifier).state =
+      0; // 겨울 더보기 화면 소배너 페이지뷰 초기화
   // 겨울 더보기 화면 관련 초기화 부분 끝
   // ------ 섹션 더보기 화면 관련 부분 끝
 
@@ -1101,14 +1170,14 @@ class ProductInfoDetailScreenNavigation {
       // 화면을 돌아왔을 때 선택된 사이즈의 상태를 초기화함
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
       // 화면을 돌아왔을 때 '상품정보', '문의'탭 상태를 초기화함
-      ref.read(prodDetailScreenTabSectionProvider.notifier).state = ProdDetailScreenTabSection.productInfo;
+      ref.read(prodDetailScreenTabSectionProvider.notifier).state =
+          ProdDetailScreenTabSection.productInfo;
     });
   }
 
   // Firestore에서 상세한 문서 정보를 빌드하여 UI에 구현하는 위젯.
   Widget buildProdFirestoreDetailDocument(
       BuildContext context, ProductContent product, WidgetRef ref) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -1116,6 +1185,47 @@ class ProductInfoDetailScreenNavigation {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 신상 섹션 내 요소들의 수치
+    // final double DetailDocWidth =
+    //     screenSize.width * (160 / referenceWidth); // 가로 비율
+    // final double DetailDocThumnailWidth =
+    //     screenSize.width * (152 / DetailDocWidth); // 가로 비율
+    // final double DetailDoc1X =
+    //     screenSize.width * (6 / referenceWidth);
+    // final double DetailDoc2X =
+    //     screenSize.width * (2 / referenceWidth);
+    // final double DetailDoc3X =
+    //     screenSize.width * (4 / referenceWidth);
+    // final double DetailDoc4X =
+    //     screenSize.width * (-9 / referenceWidth);
+    // final double DetailDoc1Y =
+    //     screenSize.height * (6 / referenceHeight);
+    // final double DetailDoc2Y =
+    //     screenSize.height * (2 / referenceHeight);
+    // final double DetailDoc3Y =
+    //     screenSize.height * (-11 / referenceHeight);
+    // final double DetailDocTextFontSize1 =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double DetailDocTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double DetailDocTextFontSize3 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double DetailDocTextFontSize4 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double DetailDocColorImageWidth =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double DetailDocColorImageHeight =
+    //     screenSize.height * (12 / referenceHeight);
+    //
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // final double interval1X = screenSize.width * (6 / referenceWidth);
+    // final double interval2Y = screenSize.height * (135 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 신상 섹션 내 요소들의 수치
@@ -1123,36 +1233,24 @@ class ProductInfoDetailScreenNavigation {
         screenSize.width * (160 / referenceWidth); // 가로 비율
     final double DetailDocThumnailWidth =
         screenSize.width * (152 / DetailDocWidth); // 가로 비율
-    final double DetailDoc1X =
-        screenSize.width * (6 / referenceWidth);
-    final double DetailDoc2X =
-        screenSize.width * (2 / referenceWidth);
-    final double DetailDoc3X =
-        screenSize.width * (4 / referenceWidth);
-    final double DetailDoc4X =
-        screenSize.width * (-9 / referenceWidth);
-    final double DetailDoc1Y =
-        screenSize.height * (6 / referenceHeight);
-    final double DetailDoc2Y =
-        screenSize.height * (2 / referenceHeight);
-    final double DetailDoc3Y =
-        screenSize.height * (-11 / referenceHeight);
-    final double DetailDocTextFontSize1 =
-        screenSize.height * (16 / referenceHeight);
-    final double DetailDocTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
-    final double DetailDocTextFontSize3 =
-        screenSize.height * (12 / referenceHeight);
-    final double DetailDocTextFontSize4 =
-        screenSize.height * (14 / referenceHeight);
-    final double DetailDocColorImageWidth =
-        screenSize.height * (12 / referenceHeight);
-    final double DetailDocColorImageHeight =
-        screenSize.height * (12 / referenceHeight);
+    final double DetailDoc1X = screenSize.width * (6 / referenceWidth);
+    final double DetailDoc2X = screenSize.width * (2 / referenceWidth);
+    final double DetailDoc3X = screenSize.width * (4 / referenceWidth);
+    final double DetailDoc4X = screenSize.width * (-9 / referenceWidth);
+    final double DetailDoc1Y = 6;
+    final double DetailDoc2Y = 2;
+    final double DetailDoc3Y = -11;
+    final double DetailDocTextFontSize1 = 16;
+    final double DetailDocTextFontSize2 = 12;
+    final double DetailDocTextFontSize3 = 12;
+    final double DetailDocTextFontSize4 = 14;
+    final double DetailDocColorImageWidth = 12;
+    final double DetailDocColorImageHeight = 12;
 
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
     final double interval1X = screenSize.width * (6 / referenceWidth);
-    final double interval2Y = screenSize.height * (135 / referenceHeight);
+    final double interval2Y = 135;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
@@ -1177,7 +1275,8 @@ class ProductInfoDetailScreenNavigation {
               color: GRAY62_COLOR.withOpacity(0.5),
               spreadRadius: 0, // 그림자의 퍼짐 정도
               blurRadius: 1, // 그림자 흐림 정도 (숫자가 작을수록 선명함)
-              offset: Offset(0, 4), // 그림자의 위치를 설정함 (x: 0으로 수평 위치를 고정, y: 4로 하단에만 그림자 발생)
+              offset: Offset(
+                  0, 4), // 그림자의 위치를 설정함 (x: 0으로 수평 위치를 고정, y: 4로 하단에만 그림자 발생)
             ),
           ],
         ),
@@ -1189,54 +1288,60 @@ class ProductInfoDetailScreenNavigation {
                 // 제품 썸네일을 표시함.
                 // 썸네일이 null이 아니고 빈 문자열이 아닐 때만 실행
                 // 썸네일을 가운데 정렬
-                  Center(
-                    // 썸네일 이미지와 좋아요 아이콘을 겹쳐서 표시
-                    child: Stack(
-                      children: [
-                        // 썸네일이 있으면 이미지를 표시하고, 없으면 아이콘을 표시
-                        product.thumbnail != null && product.thumbnail!.isNotEmpty
-                        // 네트워크에서 이미지를 가져와서 표시
-                        // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
-                        ? Image.network(
-                            product.thumbnail!,
-                            width: DetailDocThumnailWidth,
-                            fit: BoxFit.cover,
-                          // 이미지 로드 실패 시 아이콘 표시
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.image_not_supported,
-                            color: GRAY88_COLOR,
-                            size: interval2Y,
-                          ),
-                        )
-                            : Icon(
-                          Icons.image_not_supported,
-                          color: GRAY88_COLOR,
-                          size: interval2Y,
-                        ), // 썸네일이 없을 때 아이콘을 표시
-                        // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
-                        Positioned(
-                          top: DetailDoc3Y,  // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
-                          right: DetailDoc4X, // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
-                          // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
-                          child: WishlistIconButton(
-                              product: product, // 'product' 파라미터를 전달
-                            ),
+                Center(
+                  // 썸네일 이미지와 좋아요 아이콘을 겹쳐서 표시
+                  child: Stack(
+                    children: [
+                      // 썸네일이 있으면 이미지를 표시하고, 없으면 아이콘을 표시
+                      product.thumbnail != null && product.thumbnail!.isNotEmpty
+                          // 네트워크에서 이미지를 가져와서 표시
+                          // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
+                          ? Image.network(
+                              product.thumbnail!,
+                              width: DetailDocThumnailWidth,
+                              fit: BoxFit.cover,
+                              // 이미지 로드 실패 시 아이콘 표시
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                Icons.image_not_supported,
+                                color: GRAY88_COLOR,
+                                size: interval2Y,
+                              ),
+                            )
+                          : Icon(
+                              Icons.image_not_supported,
+                              color: GRAY88_COLOR,
+                              size: interval2Y,
+                            ), // 썸네일이 없을 때 아이콘을 표시
+                      // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
+                      Positioned(
+                        top: DetailDoc3Y,
+                        // 자식 위젯을 상위 위젯의 위쪽 경계에서 -10 만큼 떨어뜨림 (위로 10 이동)
+                        right: DetailDoc4X,
+                        // 자식 위젯을 상위 위젯의 오른쪽 경계에서 -10 만큼 떨어뜨림 (왼쪽으로 10 이동)
+                        // 찜 목록 아이콘 동작 로직 관련 클래스인 WishlistIconButton 재사용하여 구현
+                        child: WishlistIconButton(
+                          product: product, // 'product' 파라미터를 전달
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
                 SizedBox(height: interval1Y),
                 // 제품 간단한 소개를 표시함.
-                if (product.briefIntroduction != null && product.briefIntroduction!.isNotEmpty)
+                if (product.briefIntroduction != null &&
+                    product.briefIntroduction!.isNotEmpty)
                   Padding(
-                    padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc1Y),
+                    padding:
+                        EdgeInsets.only(left: DetailDoc1X, top: DetailDoc1Y),
                     child: Text(
                       product.briefIntroduction!,
                       style: TextStyle(
-                          fontSize: DetailDocTextFontSize1,
-                          color: BLACK_COLOR, // 텍스트 색상
-                          fontFamily: 'NanumGothic',
-                          fontWeight: FontWeight.bold,),
+                        fontSize: DetailDocTextFontSize1,
+                        color: BLACK_COLOR, // 텍스트 색상
+                        fontFamily: 'NanumGothic',
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 2, // 최대 2줄까지 표시함.
                       overflow: TextOverflow.visible, // 넘치는 텍스트는 '...'으로 표시함.
                     ),
@@ -1245,83 +1350,93 @@ class ProductInfoDetailScreenNavigation {
                 // 원래 가격을 표시함. 소수점은 표시하지 않음.
                 if (product.originalPrice != null)
                   Padding(
-                    padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
+                    padding:
+                        EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Row(
                       children: [
                         Text(
-                          product.originalPrice != null ? '${numberFormat.format(product.originalPrice!)}원' : '',
+                          product.originalPrice != null
+                              ? '${numberFormat.format(product.originalPrice!)}원'
+                              : '',
                           style: TextStyle(
                               fontSize: DetailDocTextFontSize2,
-                              color: GRAY42_COLOR, // 텍스트 색상
+                              color: GRAY42_COLOR,
+                              // 텍스트 색상
                               fontFamily: 'NanumGothic',
                               fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.lineThrough
-                          ),
+                              decoration: TextDecoration.lineThrough),
                         ),
-                          SizedBox(width: interval1X),
-                          // 할인율을 빨간색으로 표시함.
-                          if (product.discountPercent != null)
-                            Text(
-                              product.discountPercent != null ? '${numberFormat.format(product.discountPercent!)}%' : '',
-                              style: TextStyle(
-                                  fontSize: DetailDocTextFontSize3,
-                                  color: RED46_COLOR, // 텍스트 색상
-                                  fontFamily: 'NanumGothic',
-                                  fontWeight: FontWeight.w800, // ExtraBold로 설정
-                               ),
+                        SizedBox(width: interval1X),
+                        // 할인율을 빨간색으로 표시함.
+                        if (product.discountPercent != null)
+                          Text(
+                            product.discountPercent != null
+                                ? '${numberFormat.format(product.discountPercent!)}%'
+                                : '',
+                            style: TextStyle(
+                              fontSize: DetailDocTextFontSize3,
+                              color: RED46_COLOR, // 텍스트 색상
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.w800, // ExtraBold로 설정
                             ),
-                         ],
-                      ),
+                          ),
+                      ],
+                    ),
                   ),
                 // 할인된 가격을 표시함. 소수점은 표시하지 않음.
                 if (product.discountPrice != null)
                   Padding(
-                    padding: EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
+                    padding:
+                        EdgeInsets.only(left: DetailDoc1X, top: DetailDoc2Y),
                     child: Text(
-                          product.discountPrice != null ? '${numberFormat.format(product.discountPrice!)}원' : '',
-                          style: TextStyle(
-                              fontSize: DetailDocTextFontSize4,
-                              color: BLACK_COLOR, // 텍스트 색상
-                              fontFamily: 'NanumGothic',
-                              fontWeight: FontWeight.w800, // ExtraBold로 설정,
-                          ),
-                        ),
+                      product.discountPrice != null
+                          ? '${numberFormat.format(product.discountPrice!)}원'
+                          : '',
+                      style: TextStyle(
+                        fontSize: DetailDocTextFontSize4,
+                        color: BLACK_COLOR, // 텍스트 색상
+                        fontFamily: 'NanumGothic',
+                        fontWeight: FontWeight.w800, // ExtraBold로 설정,
                       ),
+                    ),
+                  ),
                 SizedBox(height: interval1Y),
                 // 제품 색상 옵션을 표시함.
-                  Row(
-                    children: product.colors!
-                        .asMap()
-                        .map((index, color) => MapEntry(
-                      index,
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: index == 0 ? DetailDoc1X : DetailDoc2X, // 첫 번째 이미지만 left: 14.0, 나머지는 right: 2.0
-                          right: DetailDoc2X,
-                        ),
-                        // 썸네일이 있으면 이미지를 표시하고, 없으면 아이콘을 표시
-                        child: color != null && color!.isNotEmpty
-                        ? Image.network(
-                            color,
-                            width: DetailDocColorImageWidth,
-                            height: DetailDocColorImageHeight,
-                          // 이미지 로드 실패 시 아이콘 표시
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.image_not_supported,
-                            color: GRAY88_COLOR,
-                            size: DetailDocColorImageWidth,
-                          ),
-                        )
-                            : Icon(
-                          Icons.image_not_supported,
-                          color: GRAY88_COLOR,
-                          size: DetailDocColorImageWidth,
-                        ), // 썸네일이 없을 때 아이콘을 표시
-                      ),
-                    ))
-                        .values
-                        .toList(),
-                  ),
+                Row(
+                  children: product.colors!
+                      .asMap()
+                      .map((index, color) => MapEntry(
+                            index,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: index == 0 ? DetailDoc1X : DetailDoc2X,
+                                // 첫 번째 이미지만 left: 14.0, 나머지는 right: 2.0
+                                right: DetailDoc2X,
+                              ),
+                              // 썸네일이 있으면 이미지를 표시하고, 없으면 아이콘을 표시
+                              child: color != null && color!.isNotEmpty
+                                  ? Image.network(
+                                      color,
+                                      width: DetailDocColorImageWidth,
+                                      height: DetailDocColorImageHeight,
+                                      // 이미지 로드 실패 시 아이콘 표시
+                                      errorBuilder:
+                                          (context, error, stackTrace) => Icon(
+                                        Icons.image_not_supported,
+                                        color: GRAY88_COLOR,
+                                        size: DetailDocColorImageWidth,
+                                      ),
+                                    )
+                                  : Icon(
+                                      Icons.image_not_supported,
+                                      color: GRAY88_COLOR,
+                                      size: DetailDocColorImageWidth,
+                                    ), // 썸네일이 없을 때 아이콘을 표시
+                            ),
+                          ))
+                      .values
+                      .toList(),
+                ),
               ],
             ),
           ],
@@ -1335,7 +1450,6 @@ class ProductInfoDetailScreenNavigation {
 // ------ buildProdDetailScreenContents 위젯 시작: 상품 상세 정보를 구성하는 위젯을 정의.
 Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
     ProductContent product, PageController pageController) {
-
   return SingleChildScrollView(
     // 스크롤이 가능하도록 SingleChildScrollView 위젯을 사용.
     child: Column(
@@ -1343,19 +1457,27 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
       crossAxisAlignment: CrossAxisAlignment.start,
       // 자식 위젯들을 왼쪽 정렬로 배치.
       children: [
-        buildProductImageSliderSection(context, product, ref, pageController, product.docId), // 이미지 슬라이더 섹션
+        buildProductImageSliderSection(
+            context, product, ref, pageController, product.docId),
+        // 이미지 슬라이더 섹션
         // 제품 소개 부분과 가격 부분을 표시하는 위젯을 호출.
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
+              bottom:
+                  BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
-            content: buildProductBriefIntroAndPriceInfoSection(context, ref, product), // 제품 소개 및 가격 정보 부분 섹션
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 배경색
-            elevation: 0.0, // 그림자 효과 0
-            margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+            content: buildProductBriefIntroAndPriceInfoSection(
+                context, ref, product),
+            // 제품 소개 및 가격 정보 부분 섹션
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            // 앱 배경색
+            elevation: 0.0,
+            // 그림자 효과 0
+            margin: const EdgeInsets.symmetric(horizontal: 0.0),
+            // 좌우 여백을 0으로 설정.
             padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 0.0으로 설정.
           ),
         ),
@@ -1363,14 +1485,19 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
+              bottom:
+                  BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
-            content: ProductColorAndSizeSelection(product: product), // 색상과 사이즈 선택 관련 섹션
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 배경색
-            elevation: 0.0, // 그림자 효과 0
-            margin: const EdgeInsets.symmetric(horizontal: 0.0), // 좌우 여백을 0으로 설정.
+            content: ProductColorAndSizeSelection(product: product),
+            // 색상과 사이즈 선택 관련 섹션
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            // 앱 배경색
+            elevation: 0.0,
+            // 그림자 효과 0
+            margin: const EdgeInsets.symmetric(horizontal: 0.0),
+            // 좌우 여백을 0으로 설정.
             padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 1.0으로 설정.
           ),
         ),
@@ -1378,11 +1505,13 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
         Container(
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
+              bottom:
+                  BorderSide(color: GRAY85_COLOR, width: 1.0), // 하단 테두리 색상을 지정함
             ),
           ),
           child: CommonCardView(
-            content: buildProductSelectOptionsSelection(context, ref, product), // 총 선택 내용이 나오는 섹션
+            content: buildProductSelectOptionsSelection(context, ref, product),
+            // 총 선택 내용이 나오는 섹션
             backgroundColor: GRAY93_COLOR,
             elevation: 0.0,
             margin: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -1396,27 +1525,48 @@ Widget buildProdDetailScreenContents(BuildContext context, WidgetRef ref,
 // ------ buildProdDetailScreenContents 위젯의 구현 끝
 
 // ------ buildProductImageSlider 위젯 시작: 제품 이미지 부분을 구현.
-Widget buildProductImageSliderSection(BuildContext context, ProductContent product, WidgetRef ref,
-    PageController pageController, String productId) {
-
+Widget buildProductImageSliderSection(
+    BuildContext context,
+    ProductContent product,
+    WidgetRef ref,
+    PageController pageController,
+    String productId) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
   // 기준 화면 크기: 가로 393 세로 852
-  final double referenceWidht = 393.0;
+  final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 이미지 부분 수치
+  // final double ImageSliderSectionHeight = screenSize.height * (421 / referenceHeight);
+  //
+  // // 이미지 인디케이터 부분 수치
+  // final double ImageSliderSectionIndicator1Y = screenSize.height * (10 / referenceHeight);
+  // final double ImageSliderSectionIndicator2Y = screenSize.height * (8 / referenceHeight);
+  // final double ImageSliderSectionIndicator1X = screenSize.width * (4 / referenceWidht);
+  // final double ImageSliderSectionIndicatorWidth = screenSize.height * (12 / referenceHeight);
+  // final double ImageSliderSectionIndicatorHeight = screenSize.height * (12 / referenceHeight);
+  //
+  // final double interval1X = screenSize.width * (250 / referenceWidht);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 이미지 부분 수치
-  final double ImageSliderSectionHeight = screenSize.height * (421 / referenceHeight);
+  final double ImageSliderSectionHeight = 421;
 
   // 이미지 인디케이터 부분 수치
-  final double ImageSliderSectionIndicator1Y = screenSize.height * (10 / referenceHeight);
-  final double ImageSliderSectionIndicator2Y = screenSize.height * (8 / referenceHeight);
-  final double ImageSliderSectionIndicator1X = screenSize.width * (4 / referenceWidht);
-  final double ImageSliderSectionIndicatorWidth = screenSize.height * (12 / referenceHeight);
-  final double ImageSliderSectionIndicatorHeight = screenSize.height * (12 / referenceHeight);
+  final double ImageSliderSectionIndicator1Y = 10;
+  final double ImageSliderSectionIndicator2Y = 8;
+  final double ImageSliderSectionIndicator1X =
+      screenSize.width * (4 / referenceWidth);
+  final double ImageSliderSectionIndicatorWidth =
+      screenSize.width * (12 / referenceWidth);
+  final double ImageSliderSectionIndicatorHeight = 12;
 
-  final double interval1X = screenSize.width * (250 / referenceWidht);
+  final double interval1X = screenSize.width * (250 / referenceWidth);
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
@@ -1435,15 +1585,22 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
           },
         ),
         // product.detailPageImages를 반복하여 이미지 위젯을 생성.
-        items: product.detailPageImages?.map((image) { // product.detailPageImages 리스트를 map 함수로 반복
+        items: product.detailPageImages?.map((image) {
+          // product.detailPageImages 리스트를 map 함수로 반복
           return Builder(
-            builder: (BuildContext context) { // 각 항목에 대한 빌더 함수 정의
-              return GestureDetector( // 터치 제스처를 감지하는 위젯
-                onTap: () { // 터치 시 동작할 함수 정의
-                  Navigator.push( // 새로운 화면으로 이동
+            builder: (BuildContext context) {
+              // 각 항목에 대한 빌더 함수 정의
+              return GestureDetector(
+                // 터치 제스처를 감지하는 위젯
+                onTap: () {
+                  // 터치 시 동작할 함수 정의
+                  Navigator.push(
+                    // 새로운 화면으로 이동
                     context,
-                    MaterialPageRoute( // 페이지 라우트 정의
-                      builder: (_) => ProductDetailOriginalImageScreen( // ProductDetailOriginalImageScreen 화면으로 이동
+                    MaterialPageRoute(
+                      // 페이지 라우트 정의
+                      builder: (_) => ProductDetailOriginalImageScreen(
+                        // ProductDetailOriginalImageScreen 화면으로 이동
                         images: product.detailPageImages!, // 이미지 리스트 전달
                         initialPage: ref.read(pageProvider), // 초기 페이지 인덱스 전달
                       ),
@@ -1452,22 +1609,24 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
                 },
                 // 이미지가 있으면 이미지를 표시하고, 없으면 아이콘을 표시
                 child: image != null && image!.isNotEmpty
-                ? Image.network( // 네트워크 이미지를 보여주는 위젯
-                  image, // 이미지 URL 설정
-                  fit: BoxFit.cover, // 이미지가 컨테이너를 가득 채우도록 설정
-                  width: MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
-                  // 이미지 로드 실패 시 아이콘 표시
-                  errorBuilder: (context, error, stackTrace) => Icon(
-                    Icons.image_not_supported,
-                    color: GRAY88_COLOR,
-                    size: interval1X,
-                  ),
-                )
+                    ? Image.network(
+                        // 네트워크 이미지를 보여주는 위젯
+                        image, // 이미지 URL 설정
+                        fit: BoxFit.cover, // 이미지가 컨테이너를 가득 채우도록 설정
+                        width:
+                            MediaQuery.of(context).size.width, // 화면의 너비에 맞게 설정
+                        // 이미지 로드 실패 시 아이콘 표시
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.image_not_supported,
+                          color: GRAY88_COLOR,
+                          size: interval1X,
+                        ),
+                      )
                     : Icon(
-                  Icons.image_not_supported,
-                  color: GRAY88_COLOR,
-                  size: interval1X,
-                ), // 썸네일이 없을 때 아이콘을 표시
+                        Icons.image_not_supported,
+                        color: GRAY88_COLOR,
+                        size: interval1X,
+                      ), // 썸네일이 없을 때 아이콘을 표시
               );
             },
           );
@@ -1482,23 +1641,25 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
           mainAxisAlignment: MainAxisAlignment.center,
           // product.detailPageImages의 각 항목을 반복하여 인디케이터를 생성함.
           children: product.detailPageImages?.asMap().entries.map((entry) {
-            return GestureDetector(
-              // 인디케이터를 클릭하면 해당 페이지로 이동함.
-              onTap: () => pageController.jumpToPage(entry.key),
-              child: Container(
-                width: ImageSliderSectionIndicatorWidth,
-                height: ImageSliderSectionIndicatorHeight,
-                margin: EdgeInsets.symmetric(vertical: ImageSliderSectionIndicator2Y, horizontal: ImageSliderSectionIndicator1X),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  // 현재 페이지를 기준으로 인디케이터 색상을 변경함.
-                  color: ref.watch(pageProvider) == entry.key
-                      ? BLACK_COLOR
-                      : WHITE_COLOR,
-                ),
-              ),
-            );
-          }).toList() ??
+                return GestureDetector(
+                  // 인디케이터를 클릭하면 해당 페이지로 이동함.
+                  onTap: () => pageController.jumpToPage(entry.key),
+                  child: Container(
+                    width: ImageSliderSectionIndicatorWidth,
+                    height: ImageSliderSectionIndicatorHeight,
+                    margin: EdgeInsets.symmetric(
+                        vertical: ImageSliderSectionIndicator2Y,
+                        horizontal: ImageSliderSectionIndicator1X),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      // 현재 페이지를 기준으로 인디케이터 색상을 변경함.
+                      color: ref.watch(pageProvider) == entry.key
+                          ? BLACK_COLOR
+                          : WHITE_COLOR,
+                    ),
+                  ),
+                );
+              }).toList() ??
               [],
         ),
       ),
@@ -1510,7 +1671,6 @@ Widget buildProductImageSliderSection(BuildContext context, ProductContent produ
 // ------ buildProductBriefIntroAndPriceInfoSection 위젯 시작: 제품 소개 및 가격 정보 부분을 구현.
 Widget buildProductBriefIntroAndPriceInfoSection(
     BuildContext context, WidgetRef ref, ProductContent product) {
-
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -1518,6 +1678,27 @@ Widget buildProductBriefIntroAndPriceInfoSection(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 섹션 내 x, y 부분 수치
+  // final double sectionX = screenSize.width * (24 / referenceWidth);
+  // final double section1Y = screenSize.width * (30 / referenceHeight);
+  // final double section2Y = screenSize.width * (10 / referenceHeight);
+  // final double section3Y = screenSize.width * (1 / referenceHeight);
+  // final double width1X = screenSize.width * (15 / referenceWidth);
+  //
+  // // 상품번호 텍스트 부분 수치
+  // final double productNumberFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 크기
+  // // 상품 설명 텍스트 부분 수치
+  // final double productIntroductionFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+  // // 상품 원가 텍스트 부분 수치
+  // final double productOriginalPriceFontSize = screenSize.height * (18 / referenceHeight); // 텍스트 크기
+  // // 상품 할인가 텍스트 부분 수치
+  // final double productDiscountPriceFontSize = screenSize.height * (24 / referenceHeight); // 텍스트 크기
+  // // 상품 할인율 텍스트 부분 수치
+  // final double productDiscountPercentFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 섹션 내 x, y 부분 수치
   final double sectionX = screenSize.width * (24 / referenceWidth);
   final double section1Y = screenSize.width * (30 / referenceHeight);
@@ -1526,20 +1707,21 @@ Widget buildProductBriefIntroAndPriceInfoSection(
   final double width1X = screenSize.width * (15 / referenceWidth);
 
   // 상품번호 텍스트 부분 수치
-  final double productNumberFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 크기
+  final double productNumberFontSize = 14; // 텍스트 크기
   // 상품 설명 텍스트 부분 수치
-  final double productIntroductionFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
+  final double productIntroductionFontSize = 22; // 텍스트 크기
   // 상품 원가 텍스트 부분 수치
-  final double productOriginalPriceFontSize = screenSize.height * (18 / referenceHeight); // 텍스트 크기
+  final double productOriginalPriceFontSize = 18; // 텍스트 크기
   // 상품 할인가 텍스트 부분 수치
-  final double productDiscountPriceFontSize = screenSize.height * (24 / referenceHeight); // 텍스트 크기
+  final double productDiscountPriceFontSize = 24; // 텍스트 크기
   // 상품 할인율 텍스트 부분 수치
-  final double productDiscountPercentFontSize = screenSize.height * (22 / referenceHeight); // 텍스트 크기
-
+  final double productDiscountPercentFontSize = 22; // 텍스트 크기
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'); // 정규식을 사용하여 천 단위로 쉼표를 추가.
   return Padding(
-    padding: EdgeInsets.only(left: sectionX, right: sectionX), // 좌/우 패딩을 sectionX로 설정
+    padding: EdgeInsets.only(left: sectionX, right: sectionX),
+    // 좌/우 패딩을 sectionX로 설정
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
       children: [
@@ -1550,15 +1732,16 @@ Widget buildProductBriefIntroAndPriceInfoSection(
             child: Text(
               '상품번호: ${product.productNumber ?? ''}', // productNumber 내용을 표시
               style: TextStyle(
-                  fontSize: productNumberFontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
-                  color: BLACK_COLOR,
+                fontSize: productNumberFontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NanumGothic',
+                color: BLACK_COLOR,
               ), // 글자 크기를 14로 설정
             ),
           ),
         // 제품 간단한 소개를 표시함.
-        if (product.briefIntroduction != null) // briefIntroduction이 null이 아닌 경우에만 표시
+        if (product.briefIntroduction !=
+            null) // briefIntroduction이 null이 아닌 경우에만 표시
           Padding(
             padding: EdgeInsets.only(top: section2Y), // 상단 패딩을 section2Y로 설정
             child: Text(
@@ -1581,9 +1764,12 @@ Widget buildProductBriefIntroAndPriceInfoSection(
               '${product.originalPrice != null ? product.originalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원', // 원래 가격을 표시, 소수점 없음
               style: TextStyle(
                 fontSize: productOriginalPriceFontSize,
-                decoration: TextDecoration.lineThrough, // 취소선을 추가
-                color: GRAY60_COLOR, // 색상을 연한 회색으로 설정
-                decorationColor: GRAY38_COLOR, // 취소선 색상을 진한 회색으로 설정
+                decoration: TextDecoration.lineThrough,
+                // 취소선을 추가
+                color: GRAY60_COLOR,
+                // 색상을 연한 회색으로 설정
+                decorationColor: GRAY38_COLOR,
+                // 취소선 색상을 진한 회색으로 설정
                 fontFamily: 'NanumGothic',
               ),
             ),
@@ -1595,19 +1781,22 @@ Widget buildProductBriefIntroAndPriceInfoSection(
             child: Row(
               children: [
                 Text(
-                  '${product.discountPrice != null ? product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원', // 할인된 가격을 표시, 소수점 없음
-                    style: TextStyle(
-                      fontSize: productDiscountPriceFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
-                    ),
+                  '${product.discountPrice != null ? product.discountPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원',
+                  // 할인된 가격을 표시, 소수점 없음
+                  style: TextStyle(
+                    fontSize: productDiscountPriceFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: BLACK_COLOR,
+                    fontFamily: 'NanumGothic',
+                  ),
                 ),
                 SizedBox(width: width1X), // 간격을 추가
                 // 할인율을 빨간색으로 표시함.
-                if (product.discountPercent != null) // discountPercent가 null이 아닌 경우에만 표시
+                if (product.discountPercent !=
+                    null) // discountPercent가 null이 아닌 경우에만 표시
                   Text(
-                    '${product.discountPercent != null ? product.discountPercent!.toStringAsFixed(0) : ''}%', // 할인율을 표시, 소수점 없음
+                    '${product.discountPercent != null ? product.discountPercent!.toStringAsFixed(0) : ''}%',
+                    // 할인율을 표시, 소수점 없음
                     style: TextStyle(
                       fontSize: productDiscountPercentFontSize,
                       fontWeight: FontWeight.w800,
@@ -1634,13 +1823,16 @@ Widget buildProductBriefIntroAndPriceInfoSection(
 class ProductColorAndSizeSelection extends ConsumerStatefulWidget {
   final ProductContent product;
 
-  const ProductColorAndSizeSelection({Key? key, required this.product}) : super(key: key);
+  const ProductColorAndSizeSelection({Key? key, required this.product})
+      : super(key: key);
 
   @override
-  _ProductColorAndSizeSelectionState createState() => _ProductColorAndSizeSelectionState();
+  _ProductColorAndSizeSelectionState createState() =>
+      _ProductColorAndSizeSelectionState();
 }
 
-class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSizeSelection> {
+class _ProductColorAndSizeSelectionState
+    extends ConsumerState<ProductColorAndSizeSelection> {
   @override
   void initState() {
     super.initState();
@@ -1658,9 +1850,12 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
 
     // 초기값으로 상태를 업데이트
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(colorSelectionUrlProvider.notifier).state ??= initialColorImage; // 선택된 색상 이미지
-      ref.read(colorSelectionTextProvider.notifier).state ??= initialColorText; // 선택된 색상 텍스트
-      ref.read(sizeSelectionIndexProvider.notifier).state ??= initialSize; // 선택된 사이즈
+      ref.read(colorSelectionUrlProvider.notifier).state ??=
+          initialColorImage; // 선택된 색상 이미지
+      ref.read(colorSelectionTextProvider.notifier).state ??=
+          initialColorText; // 선택된 색상 텍스트
+      ref.read(sizeSelectionIndexProvider.notifier).state ??=
+          initialSize; // 선택된 사이즈
     });
   }
 
@@ -1675,41 +1870,71 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 섹션 내 x, y 부분 수치
+    // final double sectionX = screenSize.width * (24 / referenceWidth);
+    // final double section1Y = screenSize.width * (40 / referenceHeight);
+    // final double section2Y = screenSize.width * (8 / referenceHeight);
+    // final double width1X = screenSize.width * (57 / referenceWidth);
+    // final double width2X = screenSize.width * (12 / referenceWidth);
+    // final double width3X = screenSize.width * (45 / referenceWidth);
+    //
+    // // 색상 텍스트 부분 수치
+    // final double colorFontSize = screenSize.height * (16 / referenceHeight);
+    // // 색상 이미지 데이터 부분 수치
+    // final double colorImageLength = screenSize.width * (24 / referenceWidth);
+    // // 색상 텍스트 데이터 부분 수치
+    // final double colorTextSize = screenSize.width * (16 / referenceWidth);
+    // // 사이즈 텍스트 부분 수치
+    // final double sizeFontSize = screenSize.height * (16 / referenceHeight);
+    // // 사이즈 텍스트 데이터 부분 수치
+    // final double sizeTextSize = screenSize.width * (16 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 섹션 내 x, y 부분 수치
     final double sectionX = screenSize.width * (24 / referenceWidth);
-    final double section1Y = screenSize.width * (40 / referenceHeight);
-    final double section2Y = screenSize.width * (8 / referenceHeight);
-    final double width1X = screenSize.width * (57 / referenceWidth);
-    final double width2X = screenSize.width * (12 / referenceWidth);
-    final double width3X = screenSize.width * (45 / referenceWidth);
+    final double section1Y = 20;
+    final double section2Y = 8;
+    final double section3Y = 4;
+    final double section4Y = 2;
+    final double width1X = 57;
+    final double width2X = 12;
+    final double width3X = 45;
 
     // 색상 텍스트 부분 수치
-    final double colorFontSize = screenSize.height * (16 / referenceHeight);
+    final double colorFontSize = 16;
     // 색상 이미지 데이터 부분 수치
-    final double colorImageLength = screenSize.width * (24 / referenceWidth);
+    final double colorImageLength = 24;
     // 색상 텍스트 데이터 부분 수치
-    final double colorTextSize = screenSize.width * (16 / referenceWidth);
+    final double colorTextSize = 16;
     // 사이즈 텍스트 부분 수치
-    final double sizeFontSize = screenSize.height * (16 / referenceHeight);
+    final double sizeFontSize = 16;
     // 사이즈 텍스트 데이터 부분 수치
-    final double sizeTextSize = screenSize.width * (16 / referenceWidth);
+    final double sizeTextSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
-      padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y), // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
+      padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y),
+      // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             // 자식 위젯들을 왼쪽 정렬로 배치.
             children: [
-              Text('색상',
-                style: TextStyle(
-                  fontSize: colorFontSize,
-                  fontWeight: FontWeight.bold,
-                  color: BLACK_COLOR,
-                  fontFamily: 'NanumGothic',
-                )
-              ),// '색상' 라벨을 표시.
+              Container(
+                padding: EdgeInsets.only(top: section3Y),
+                child: Text(
+                  '색상',
+                  style: TextStyle(
+                    fontSize: colorFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: BLACK_COLOR,
+                    fontFamily: 'NanumGothic',
+                  ),
+                ),
+              ), // '색상' 라벨을 표시.
               SizedBox(width: width1X), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 width1X로 설정.
               Expanded(
                 // 드롭다운 버튼을 화면 너비에 맞게 확장.
@@ -1718,67 +1943,94 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                   // 드롭다운 버튼의 너비를 최대로 확장.
                   underline: SizedBox.shrink(),
                   // 아래 선을 보이지 않게 설정.
-                  value: product.colorOptions?.any((option) => option['url'] == ref.watch(colorSelectionUrlProvider)) == true
+                  value: product.colorOptions?.any((option) =>
+                              option['url'] ==
+                              ref.watch(colorSelectionUrlProvider)) ==
+                          true
                       ? ref.watch(colorSelectionUrlProvider)
                       : null,
                   // 선택된 색상 값을 가져옴.
                   onChanged: (newValue) {
-                    final selectedIndex = product.colorOptions?.indexWhere((option) => option['url'] == newValue) ?? -1;
-                    final selectedText = product.colorOptions?.firstWhere((option) => option['url'] == newValue)?['text'];
+                    final selectedIndex = product.colorOptions?.indexWhere(
+                            (option) => option['url'] == newValue) ??
+                        -1;
+                    final selectedText = product.colorOptions?.firstWhere(
+                        (option) => option['url'] == newValue)?['text'];
                     // 새로운 값과 일치하는 색상 옵션의 인덱스를 찾음.
-                    ref.read(colorSelectionIndexProvider.notifier).state = selectedIndex;
-                    ref.read(colorSelectionTextProvider.notifier).state = selectedText ?? ''; // 색상 텍스트 업데이트
+                    ref.read(colorSelectionIndexProvider.notifier).state =
+                        selectedIndex;
+                    ref.read(colorSelectionTextProvider.notifier).state =
+                        selectedText ?? ''; // 색상 텍스트 업데이트
                     // 색상 인덱스를 업데이트.
-                    ref.read(colorSelectionUrlProvider.notifier).state = newValue;
+                    ref.read(colorSelectionUrlProvider.notifier).state =
+                        newValue;
                     // 선택된 색상 URL을 업데이트.
                   },
                   items: product.colorOptions
-                      ?.map((option) => DropdownMenuItem<String>(
-                    value: option['url'], // 각 옵션의 URL을 값으로 사용.
-                    child: Row(
-                      children: [
-                        option['url'] != null && option['url'] != ''
-                            ? Image.network(
-                          option['url'],
-                          width: colorImageLength,
-                          height: colorImageLength,
-                        ) // URL이 있는 경우 이미지를 표시
-                            : Icon(
-                          Icons.image_not_supported,
-                          color: GRAY88_COLOR,
-                          size: colorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
-                        ), // URL이 없을 경우 아이콘을 표시
-                        SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
-                        Text(option['text'] ?? '', // 색상의 텍스트 설명을 표시, 값이 없을 경우 빈 문자열.
-                          style: TextStyle(
-                            fontSize: colorTextSize,
-                            fontWeight: FontWeight.bold,
-                            color: BLACK_COLOR,
-                            fontFamily: 'NanumGothic',
-                          ),
-                        ),// 색상의 텍스트 설명을 표시.
-                      ],
-                    ),
-                  ))
-                      .toList() ?? [], // 드롭다운 메뉴 아이템 목록을 생성하며, 목록이 없을 경우 빈 리스트 사용.
+                          ?.map((option) => DropdownMenuItem<String>(
+                                value: option['url'], // 각 옵션의 URL을 값으로 사용.
+                                child: Row(
+                                  children: [
+                                    option['url'] != null && option['url'] != ''
+                                        ? Image.network(
+                                            option['url'],
+                                            width: colorImageLength,
+                                            height: colorImageLength,
+                                          ) // URL이 있는 경우 이미지를 표시
+                                        : Icon(
+                                            Icons.image_not_supported,
+                                            color: GRAY88_COLOR,
+                                            size:
+                                                colorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
+                                          ),
+                                    // URL이 없을 경우 아이콘을 표시
+                                    SizedBox(width: width2X),
+                                    // 이미지와 텍스트 사이의 간격을 width2X로 설정.
+                                    Container(
+                                      padding: EdgeInsets.only(top: section4Y),
+                                      child: Text(
+                                        option['text'] ?? '',
+                                        // 색상의 텍스트 설명을 표시, 값이 없을 경우 빈 문자열.
+                                        style: TextStyle(
+                                          fontSize: colorTextSize,
+                                          fontWeight: FontWeight.bold,
+                                          color: BLACK_COLOR,
+                                          fontFamily: 'NanumGothic',
+                                        ),
+                                      ),
+                                    ),
+                                    // 색상의 텍스트 설명을 표시.
+                                  ],
+                                ),
+                              ),
+                  )
+                          .toList() ??
+                      [], // 드롭다운 메뉴 아이템 목록을 생성하며, 목록이 없을 경우 빈 리스트 사용.
                 ),
               ),
             ],
           ),
-          SizedBox(height: section2Y), // 색상 선택과 사이즈 선택 사이의 수직 간격을 section2Y로 설정.
+          SizedBox(height: section2Y),
+          // 색상 선택과 사이즈 선택 사이의 수직 간격을 section2Y로 설정.
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             // 자식 위젯들을 왼쪽 정렬로 배치.
             children: [
-              Text('사이즈',
+              Container(
+                padding: EdgeInsets.only(top: section3Y),
+                child: Text(
+                  '사이즈',
                   style: TextStyle(
                     fontSize: sizeFontSize,
                     fontWeight: FontWeight.bold,
                     color: BLACK_COLOR,
                     fontFamily: 'NanumGothic',
-                  )
-              ), // '사이즈' 라벨을 표시.
-              SizedBox(width: width3X), // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 width3X로 설정.
+                  ),
+                ),
+              ),
+              // '사이즈' 라벨을 표시.
+              SizedBox(width: width3X),
+              // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 width3X로 설정.
               Expanded(
                 // 드롭다운 버튼을 화면 너비에 맞게 확장.
                 child: DropdownButton<String>(
@@ -1786,27 +2038,30 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
                   // 드롭다운 버튼의 너비를 최대로 확장.
                   underline: SizedBox.shrink(),
                   // 아래 선을 보이지 않게 설정.
-                  value: product.sizes?.contains(ref.watch(sizeSelectionIndexProvider)) == true
+                  value: product.sizes?.contains(
+                              ref.watch(sizeSelectionIndexProvider)) ==
+                          true
                       ? ref.watch(sizeSelectionIndexProvider)
                       : null,
                   // 선택된 사이즈 값을 가져옴.
                   onChanged: (newValue) {
-                    ref.read(sizeSelectionIndexProvider.notifier).state = newValue!;
+                    ref.read(sizeSelectionIndexProvider.notifier).state =
+                        newValue!;
                     // 새로운 사이즈가 선택되면 상태를 업데이트.
                   },
                   items: product.sizes
-                      ?.map((size) => DropdownMenuItem<String>(
-                    value: size, // 각 사이즈를 값으로 사용.
-                    child: Text(size,
-                      style: TextStyle(
-                        fontSize: sizeTextSize,
-                        fontWeight: FontWeight.bold,
-                        color: BLACK_COLOR,
-                        fontFamily: 'NanumGothic',
-                      )
-                    ), // 사이즈 텍스트를 표시.
-                  ))
-                      .toList() ?? [], // 드롭다운 메뉴 아이템 목록을 생성.
+                          ?.map((size) => DropdownMenuItem<String>(
+                                value: size, // 각 사이즈를 값으로 사용.
+                                child: Text(size,
+                                    style: TextStyle(
+                                      fontSize: sizeTextSize,
+                                      fontWeight: FontWeight.bold,
+                                      color: BLACK_COLOR,
+                                      fontFamily: 'NanumGothic',
+                                    )), // 사이즈 텍스트를 표시.
+                              ))
+                          .toList() ??
+                      [], // 드롭다운 메뉴 아이템 목록을 생성.
                 ),
               ),
               SizedBox(height: section1Y)
@@ -1821,7 +2076,8 @@ class _ProductColorAndSizeSelectionState extends ConsumerState<ProductColorAndSi
 
 // ------ buildProductSelectOptionsSelection 위젯 시작: 선택한 색상, 선택한 사이즈 부분을 구현.
 // 선택한 색상, 사이즈를 표시하는 위젯을 생성하는 함수.
-Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, ProductContent product) {
+Widget buildProductSelectOptionsSelection(
+    BuildContext context, WidgetRef ref, ProductContent product) {
   // 선택한 색상 URL을 가져옴.
   final selectedColorUrl = ref.watch(colorSelectionUrlProvider);
   // 선택한 색상 텍스트를 가져옴.
@@ -1836,24 +2092,48 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 섹션 내 x, y 부분 수치
+  // final double sectionX = screenSize.width * (24 / referenceWidth);
+  // final double section1Y = screenSize.width * (40 / referenceHeight);
+  // final double section2Y = screenSize.width * (30 / referenceHeight);
+  // final double width1X = screenSize.width * (57 / referenceWidth);
+  // final double width2X = screenSize.width * (12 / referenceWidth);
+  // final double width3X = screenSize.width * (41 / referenceWidth);
+  //
+  // // 선택한 색상 텍스트 부분 수치
+  // final double selectedColorFontSize = screenSize.height * (16 / referenceHeight);
+  // // 선택한 색상 이미지 데이터 부분 수치
+  // final double selectedColorImageLength = screenSize.width * (24 / referenceWidth);
+  // // 산텍힌 색상 텍스트 데이터 부분 수치
+  // final double selectedColorTextSize = screenSize.width * (16 / referenceWidth);
+  // // 선택한 사이즈 텍스트 부분 수치
+  // final double selectedSizeFontSize = screenSize.height * (16 / referenceHeight);
+  // // 선택한 사이즈 텍스트 데이터 부분 수치
+  // final double selectedSizeTextSize = screenSize.width * (16 / referenceWidth);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 섹션 내 x, y 부분 수치
   final double sectionX = screenSize.width * (24 / referenceWidth);
-  final double section1Y = screenSize.width * (40 / referenceHeight);
-  final double section2Y = screenSize.width * (30 / referenceHeight);
-  final double width1X = screenSize.width * (57 / referenceWidth);
-  final double width2X = screenSize.width * (12 / referenceWidth);
-  final double width3X = screenSize.width * (41 / referenceWidth);
+  final double section1Y = 40;
+  final double section2Y = 30;
+  final double section3Y = 2;
+  final double width1X = 57;
+  final double width2X = 12;
+  final double width3X = 41;
 
   // 선택한 색상 텍스트 부분 수치
-  final double selectedColorFontSize = screenSize.height * (16 / referenceHeight);
+  final double selectedColorFontSize = 16;
   // 선택한 색상 이미지 데이터 부분 수치
-  final double selectedColorImageLength = screenSize.width * (24 / referenceWidth);
+  final double selectedColorImageLength = 24;
   // 산텍힌 색상 텍스트 데이터 부분 수치
-  final double selectedColorTextSize = screenSize.width * (16 / referenceWidth);
+  final double selectedColorTextSize = 16;
   // 선택한 사이즈 텍스트 부분 수치
-  final double selectedSizeFontSize = screenSize.height * (16 / referenceHeight);
+  final double selectedSizeFontSize = 16;
   // 선택한 사이즈 텍스트 데이터 부분 수치
-  final double selectedSizeTextSize = screenSize.width * (16 / referenceWidth);
+  final double selectedSizeTextSize = 16;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1861,41 +2141,53 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
       // 색상과 사이즈가 선택되었을 때만 보여줌.
       if (selectedColorUrl != null && selectedSize != null)
         Padding(
-          padding: EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y), // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
+          padding:
+              EdgeInsets.only(left: sectionX, right: sectionX, top: section1Y),
+          // 좌우 여백을 sectionX, 위쪽 여백을 section1Y로 설정.
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   // 선택한 색상을 텍스트로 표시함.
-                  Text('선택한 색상 :',
+                  Container(
+                    padding: EdgeInsets.only(top: section3Y),
+                    child: Text(
+                      '선택한 색상 :',
                       style: TextStyle(
                         fontSize: selectedColorFontSize,
                         fontWeight: FontWeight.bold,
                         color: BLACK_COLOR,
                         fontFamily: 'NanumGothic',
-                      )
+                      ),
+                    ),
                   ),
                   SizedBox(width: width1X), // 텍스트와 이미지 사이의 간격을 width1X로 설정.
                   // 선택한 색상이 존재하면 이미지를 표시함.
                   selectedColorUrl != null && selectedColorUrl != ''
                       ? Image.network(
-                      selectedColorUrl,
-                      width: selectedColorImageLength,
-                      height: selectedColorImageLength,
-                    ) : Icon(
-                    Icons.image_not_supported,
-                    color: GRAY88_COLOR,
-                    size: selectedColorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
-                  ),
+                          selectedColorUrl,
+                          width: selectedColorImageLength,
+                          height: selectedColorImageLength,
+                        )
+                      : Icon(
+                          Icons.image_not_supported,
+                          color: GRAY88_COLOR,
+                          size:
+                              selectedColorImageLength, // 이미지 크기에 맞춘 아이콘 크기 설정
+                        ),
                   SizedBox(width: width2X), // 이미지와 텍스트 사이의 간격을 width2X로 설정.
                   // 선택한 색상 이름을 텍스트로 표시함.
-                  Text(selectedColorText ?? '',
-                    style: TextStyle(
-                      fontSize: selectedColorTextSize,
-                      fontWeight: FontWeight.bold,
-                      color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
+                  Container(
+                    padding: EdgeInsets.only(top: section3Y),
+                    child: Text(
+                      selectedColorText ?? '',
+                      style: TextStyle(
+                        fontSize: selectedColorTextSize,
+                        fontWeight: FontWeight.bold,
+                        color: BLACK_COLOR,
+                        fontFamily: 'NanumGothic',
+                      ),
                     ),
                   ),
                 ],
@@ -1904,24 +2196,27 @@ Widget buildProductSelectOptionsSelection(BuildContext context, WidgetRef ref, P
               Row(
                 children: [
                   // 선택한 사이즈를 텍스트로 표시함.
-                  Text('선택한 사이즈 : ',
-                        style: TextStyle(
-                          fontSize: selectedSizeFontSize,
-                          fontWeight: FontWeight.bold,
-                          color: BLACK_COLOR,
-                          fontFamily: 'NanumGothic',
+                  Container(
+                    padding: EdgeInsets.only(top: section3Y),
+                    child: Text(
+                      '선택한 사이즈 : ',
+                      style: TextStyle(
+                        fontSize: selectedSizeFontSize,
+                        fontWeight: FontWeight.bold,
+                        color: BLACK_COLOR,
+                        fontFamily: 'NanumGothic',
                       ),
+                    ),
                   ),
                   SizedBox(width: width3X), // 텍스트와 이미지 사이의 간격을 width3X로 설정.
                   // 선택한 색상 이름을 텍스트로 표시함.
                   Text(selectedSize ?? '',
-                    style: TextStyle(
-                      fontSize: selectedSizeTextSize,
-                      fontWeight: FontWeight.bold,
-                      color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
-                      )
-                  ),
+                      style: TextStyle(
+                        fontSize: selectedSizeTextSize,
+                        fontWeight: FontWeight.bold,
+                        color: BLACK_COLOR,
+                        fontFamily: 'NanumGothic',
+                      )),
                 ],
               ),
               SizedBox(height: section1Y),
@@ -1956,8 +2251,15 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     // 기준 화면 크기: 세로 852
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 섹션 내 y 부분 수치
+    // final double section1Y = screenSize.width * (60 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 섹션 내 y 부분 수치
-    final double section1Y = screenSize.width * (60 / referenceHeight);
+    final double section1Y = 60;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1971,20 +2273,28 @@ class ProductDetailScreenTabs extends ConsumerWidget {
   }
 
   // 탭 버튼들을 빌드하는 위젯인 _buildTabButtons
-  Widget _buildTabButtons(BuildContext context, WidgetRef ref, ProdDetailScreenTabSection currentTabSection) {
+  Widget _buildTabButtons(BuildContext context, WidgetRef ref,
+      ProdDetailScreenTabSection currentTabSection) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         // '상품정보' 탭 버튼을 빌드
-        _buildTabButton(context, ref, ProdDetailScreenTabSection.productInfo, currentTabSection, '상품정보'),
+        _buildTabButton(context, ref, ProdDetailScreenTabSection.productInfo,
+            currentTabSection, '상품정보'),
         // '문의' 탭 버튼을 빌드
-        _buildTabButton(context, ref, ProdDetailScreenTabSection.inquiry, currentTabSection, '문의'),
+        _buildTabButton(context, ref, ProdDetailScreenTabSection.inquiry,
+            currentTabSection, '문의'),
       ],
     );
   }
 
   // 개별 탭 버튼을 빌드하는 위젯인 _buildTabButton
-  Widget _buildTabButton(BuildContext context, WidgetRef ref, ProdDetailScreenTabSection section, ProdDetailScreenTabSection currentTabSection, String text) {
+  Widget _buildTabButton(
+      BuildContext context,
+      WidgetRef ref,
+      ProdDetailScreenTabSection section,
+      ProdDetailScreenTabSection currentTabSection,
+      String text) {
     final isSelected = section == currentTabSection; // 현재 선택된 탭인지 확인
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -1993,9 +2303,15 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     // 기준 화면 크기: 세로 852
     final double referenceHeight = 852.0;
 
-    // 상품정보 및 문의 선택 버튼 부분 수치
-    final double _buildTabButtonFontSize = screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 상품정보 및 문의 선택 버튼 부분 수치
+    // final double _buildTabButtonFontSize = screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 상품정보 및 문의 선택 버튼 부분 수치
+    final double _buildTabButtonFontSize = 14;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -2010,8 +2326,11 @@ class ProductDetailScreenTabs extends ConsumerWidget {
             style: TextStyle(
               fontSize: _buildTabButtonFontSize,
               fontFamily: 'NanumGothic',
-              color: isSelected ? BLACK_COLOR : GRAY62_COLOR, // 선택된 탭이면 검정색, 아니면 회색
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // 선택된 탭이면 굵게, 아니면 일반
+              color: isSelected ? BLACK_COLOR : GRAY62_COLOR,
+              // 선택된 탭이면 검정색, 아니면 회색
+              fontWeight: isSelected
+                  ? FontWeight.bold
+                  : FontWeight.normal, // 선택된 탭이면 굵게, 아니면 일반
             ),
           ),
           if (isSelected) // 선택된 탭이면 밑줄 표시
@@ -2043,7 +2362,8 @@ class ProductDetailScreenTabs extends ConsumerWidget {
 class ProductInfoContents extends ConsumerStatefulWidget {
   final String fullPath;
 
-  const ProductInfoContents({Key? key, required this.fullPath}) : super(key: key);
+  const ProductInfoContents({Key? key, required this.fullPath})
+      : super(key: key);
 
   @override
   _ProductInfoContentsState createState() => _ProductInfoContentsState();
@@ -2055,7 +2375,6 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
   // 이미지 URL을 받아서 이미지의 1/5만 표시하는 위젯을 생성하는 함수
   // 이미지의 상단 부분만 보여줌.
   Widget buildPartialImage(BuildContext context, String imageUrl) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -2075,7 +2394,8 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
                 ? Image.network(
                     imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
                     fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
-                    width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
+                    width:
+                        MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
                     errorBuilder: (context, error, stackTrace) => Icon(
                       Icons.image_not_supported,
                       color: GRAY88_COLOR,
@@ -2083,10 +2403,10 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
                     ), // 이미지 로드 실패 시 아이콘 표시
                   )
                 : Icon(
-              Icons.image_not_supported,
-              color: GRAY88_COLOR,
-              size: interval3X,
-            ), // 이미지 URL이 없을 때 아이콘 표시
+                    Icons.image_not_supported,
+                    color: GRAY88_COLOR,
+                    size: interval3X,
+                  ), // 이미지 URL이 없을 때 아이콘 표시
           ),
         );
       },
@@ -2096,7 +2416,6 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
   // 전체 이미지를 표시하는 함수
   // 이미지 전체를 보여줌.
   Widget buildFullImage(BuildContext context, String imageUrl) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -2107,21 +2426,21 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     final double interval3X = screenSize.width * (150 / referenceWidth);
 
     return imageUrl != null && imageUrl.isNotEmpty
-          ? Image.network(
-              imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
-              fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
-              width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
-              errorBuilder: (context, error, stackTrace) => Icon(
-                Icons.image_not_supported,
-                color: GRAY88_COLOR,
-                size: interval3X,
-              ), // 이미지 로드 실패 시 아이콘 표시
-            )
-          : Icon(
+        ? Image.network(
+            imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
+            fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
+            width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
+            errorBuilder: (context, error, stackTrace) => Icon(
               Icons.image_not_supported,
               color: GRAY88_COLOR,
               size: interval3X,
-            );// 이미지 URL이 없을 때 아이콘 표시
+            ), // 이미지 로드 실패 시 아이콘 표시
+          )
+        : Icon(
+            Icons.image_not_supported,
+            color: GRAY88_COLOR,
+            size: interval3X,
+          ); // 이미지 URL이 없을 때 아이콘 표시
   }
 
   // 밑줄과 텍스트를 포함하는 UI 위젯을 생성하는 함수
@@ -2131,12 +2450,21 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     final double referenceWidth = 393.0; // 기준 화면 너비
     final double referenceHeight = 852.0; // 기준 화면 높이
 
-    final double buildSectionTitleFontSize =
-        screenSize.height * (16 / referenceHeight); // 폰트 크기 설정
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double buildSectionTitleFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 폰트 크기 설정
+    // final double buildSectionWidthX =
+    //     screenSize.width * (8 / referenceWidth); // 좌우 여백 설정
+    // final double buildSectionLineY =
+    //     screenSize.height * (10 / referenceHeight); // 구분선 위 아래 간격 설정
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double buildSectionTitleFontSize = 16; // 폰트 크기 설정
     final double buildSectionWidthX =
         screenSize.width * (8 / referenceWidth); // 좌우 여백 설정
-    final double buildSectionLineY =
-        screenSize.height * (10 / referenceHeight); // 구분선 위 아래 간격 설정
+    final double buildSectionLineY = 10; // 구분선 위 아래 간격 설정
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       children: [
@@ -2146,7 +2474,8 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
                 child: Divider(thickness: 3, color: GRAY85_COLOR)), // 왼쪽 구분선
             Padding(
               padding: EdgeInsets.only(
-                  left: buildSectionWidthX, right: buildSectionWidthX), // 텍스트 양옆 여백 설정
+                  left: buildSectionWidthX, right: buildSectionWidthX),
+              // 텍스트 양옆 여백 설정
               child: Text(
                 title, // 전달받은 제목을 표시함.
                 style: TextStyle(
@@ -2168,27 +2497,41 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
 
   // 이미지 전체를 볼 수 있는 버튼을 생성하는 함수
   // 버튼을 눌러 이미지를 펼치거나 접는 기능을 제공함.
-  Widget buildExpandButton(BuildContext context, WidgetRef ref, String text, IconData icon, bool isCollapseButton) {
+  Widget buildExpandButton(BuildContext context, WidgetRef ref, String text,
+      IconData icon, bool isCollapseButton) {
     final Size screenSize = MediaQuery.of(context).size;
     final double referenceWidth = 393.0; // 기준 화면 너비
     final double referenceHeight = 852.0; // 기준 화면 높이
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double expandBtnWidth =
+    //     screenSize.width * (345 / referenceWidth); // 버튼 너비 설정
+    // final double expandBtnHeight =
+    //     screenSize.height * (54 / referenceHeight); // 버튼 높이 설정
+    // final double expandBtnX =
+    //     screenSize.width * (24 / referenceWidth); // 왼쪽 여백 설정
+    // final double expandBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 버튼 내 텍스트 크기 설정
+    // final double expandBtnY =
+    //     screenSize.height * (2 / referenceHeight); // 상단 여백 설정
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     final double expandBtnWidth =
         screenSize.width * (345 / referenceWidth); // 버튼 너비 설정
-    final double expandBtnHeight =
-        screenSize.height * (54 / referenceHeight); // 버튼 높이 설정
+    final double expandBtnHeight = 54; // 버튼 높이 설정
     final double expandBtnX =
         screenSize.width * (24 / referenceWidth); // 왼쪽 여백 설정
-    final double expandBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 버튼 내 텍스트 크기 설정
-    final double expandBtnY =
-        screenSize.height * (2 / referenceHeight); // 상단 여백 설정
+    final double expandBtnFontSize = 14; // 버튼 내 텍스트 크기 설정
+    final double expandBtnY = 2; // 상단 여백 설정
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // '접기' 버튼은 마지막 이미지를 로드한 후에만 표시됨.
     bool showFullImage = ref.read(showFullImageProvider);
-    bool hasMoreImages = ref.read(imagesProvider(widget.fullPath).notifier).hasMore;
-    bool showCollapseButton = ref.watch(imagesProvider(widget.fullPath).notifier).showCollapseButton;
-
+    bool hasMoreImages =
+        ref.read(imagesProvider(widget.fullPath).notifier).hasMore;
+    bool showCollapseButton =
+        ref.watch(imagesProvider(widget.fullPath).notifier).showCollapseButton;
 
     // 버튼을 보여줄지 여부를 결정
     if (isCollapseButton && hasMoreImages) {
@@ -2203,23 +2546,28 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
         onPressed: () {
           // showFullImage 상태를 토글함.
           ref.read(showFullImageProvider.notifier).state =
-          !showFullImage; // 버튼 클릭 시 이미지 상태 변경
+              !showFullImage; // 버튼 클릭 시 이미지 상태 변경
           // '접기' 버튼 숨김 상태 초기화
           if (showFullImage) {
-            ref.read(imagesProvider(widget.fullPath).notifier).resetButtonState();
+            ref
+                .read(imagesProvider(widget.fullPath).notifier)
+                .resetButtonState();
           }
           // 이미 모든 데이터를 불러왔으면 바로 접기 버튼 표시
           if (!showFullImage && !hasMoreImages) {
-            ref.read(imagesProvider(widget.fullPath).notifier).showCollapseButton = true;
+            ref
+                .read(imagesProvider(widget.fullPath).notifier)
+                .showCollapseButton = true;
           }
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: SOFTGREEN60_COLOR, // 아이콘 및 텍스트 색상 설정
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+          backgroundColor:
+              Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
           side: BorderSide(color: SOFTGREEN60_COLOR), // 버튼 테두리 색상 설정
         ),
-        icon: Icon(icon,
-            size: expandBtnFontSize, color: SOFTGREEN60_COLOR), // 아이콘 크기 및 색상 설정
+        icon: Icon(icon, size: expandBtnFontSize, color: SOFTGREEN60_COLOR),
+        // 아이콘 크기 및 색상 설정
         label: Text(
           text, // 전달받은 텍스트를 버튼에 표시함.
           style: TextStyle(
@@ -2235,15 +2583,16 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
 
   @override
   Widget build(BuildContext context) {
-    final images = ref.watch(imagesProvider(widget.fullPath)); // Firestore에서 이미지 목록을 받아옴.
+    final images =
+        ref.watch(imagesProvider(widget.fullPath)); // Firestore에서 이미지 목록을 받아옴.
     bool showFullImage = ref.watch(showFullImageProvider); // 이미지 전체 보기 여부 상태 확인
-    bool showCollapseButton = ref.watch(imagesProvider(widget.fullPath).notifier).showCollapseButton; // '접기' 버튼 표시 여부
+    bool showCollapseButton = ref
+        .watch(imagesProvider(widget.fullPath).notifier)
+        .showCollapseButton; // '접기' 버튼 표시 여부
     // bool hasMoreImages = ref.watch(imagesProvider(widget.fullPath).notifier).hasMore;
 
     final Size screenSize = MediaQuery.of(context).size;
     final double referenceHeight = 852.0; // 기준 화면 높이
-    final double productInfoY =
-        screenSize.height * (4 / referenceHeight); // 제품 정보 상단 여백 설정
 
     // 표시할 이미지 리스트 결정
     List<String> imagesToShow = images;
@@ -2255,7 +2604,8 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildSectionTitle(context, 'DETAILS INFO'), // 상세 정보 섹션 타이틀 표시
+        buildSectionTitle(context, 'DETAILS INFO'),
+        // 상세 정보 섹션 타이틀 표시
         // 이미지 리스트 표시
         Column(
           children: imagesToShow.map((imageUrl) {
@@ -2270,16 +2620,18 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
         ),
         // SizedBox(height: productInfoY), // 이미지 리스트 아래 여백 설정
         if (!showFullImage)
-          buildExpandButton(context, ref, '상품 정보 펼쳐보기', Icons.arrow_downward, false), // 펼치기 버튼 표시
+          buildExpandButton(
+              context, ref, '상품 정보 펼쳐보기', Icons.arrow_downward, false),
+        // 펼치기 버튼 표시
         // showFullImage 경우와 showCollapseButton 경우 둘 중 하나라도 참인 경우
         if (showFullImage || showCollapseButton)
-          buildExpandButton(context, ref, '접기', Icons.arrow_upward, true), // 접기 버튼은 마지막 이미지가 로드된 후에만 표시
+          buildExpandButton(context, ref, '접기', Icons.arrow_upward, true),
+        // 접기 버튼은 마지막 이미지가 로드된 후에만 표시
       ],
     );
   }
 }
 // -------- 상품 상세 화면 내 상품정보에서 UI로 구현되는 내용 관련 ProductInfoContents 클래스 부분 끝
-
 
 // ------ 연결된 링크로 이동하는 '상품 문의하기' 버튼을 UI로 구현하는 ProductInquiryContents 클래스 내용 구현 시작
 // ProductInquiryContents 클래스는 StatelessWidget을 상속받아 정의됨
@@ -2287,7 +2639,6 @@ class ProductInquiryContents extends StatelessWidget {
   // build 메서드를 오버라이드하여 UI를 구성
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -2295,11 +2646,21 @@ class ProductInquiryContents extends StatelessWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 버튼 관련 수치 동적 적용
+    // final double productInquiryBtnFontSize = screenSize.height * (14 / referenceHeight);
+    // final double productInquiryCardViewY = screenSize.height * (20 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 버튼 관련 수치 동적 적용
-    final double productInquiryBtnFontSize = screenSize.height * (14 / referenceHeight);
-    final double productInquiryCardViewY = screenSize.height * (20 / referenceHeight);
+    final double productInquiryBtnFontSize = 14;
+    final double productInquiryCardViewY = 20;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
 
     // CommonCardView 위젯을 반환, content에 Column 위젯을 사용하여 여러 위젯을 세로로 배치
     return CommonCardView(
@@ -2310,7 +2671,8 @@ class ProductInquiryContents extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: SOFTGREEN60_COLOR, // 텍스트 색상
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+              backgroundColor:
+                  Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
               side: BorderSide(color: SOFTGREEN60_COLOR), // 테두리 색상
             ),
             // 버튼이 눌렸을 때의 동작 정의
@@ -2330,19 +2692,21 @@ class ProductInquiryContents extends StatelessWidget {
             // 버튼의 자식 위젯으로 텍스트를 설정
             child: Text(
               '상품 문의하기',
-                style: TextStyle(
-                    fontFamily: 'NanumGothic',
-                    fontSize: productInquiryBtnFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: SOFTGREEN60_COLOR
-                ),
+              style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: productInquiryBtnFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: SOFTGREEN60_COLOR),
             ),
           ),
         ],
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      elevation: 0.0, // 그림자 효과 0
-      margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: productInquiryCardViewY), // 좌우 여백을 0으로 설정.
+      elevation: 0.0,
+      // 그림자 효과 0
+      margin: EdgeInsets.symmetric(
+          horizontal: 0.0, vertical: productInquiryCardViewY),
+      // 좌우 여백을 0으로 설정.
       padding: const EdgeInsets.all(0.0), // 카드 내부 여백을 0.0으로 설정.
     );
   }

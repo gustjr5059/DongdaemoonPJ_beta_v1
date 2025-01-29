@@ -211,55 +211,101 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double orderAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double orderAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double orderAppBarTitleX = screenSize.height * (5 / referenceHeight);
+    // final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double orderChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double orderChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double orderChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double orderChevronIconY = screenSize.height * (9 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 2)
+    // final double orderWishlistBtnWidth =
+    //     screenSize.width * (40 / referenceWidth);
+    // final double orderWishlistBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    // final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double orderAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double orderAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double orderAppBarTitleX = screenSize.height * (5 / referenceHeight);
-    final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double orderAppBarTitleHeight = 22;
+    final double orderAppBarTitleX = 5;
+    final double orderAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double orderChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double orderChevronIconHeight = 24;
     final double orderChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double orderChevronIconY = screenSize.height * (9 / referenceHeight);
+    final double orderChevronIconY = 9;
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderWishlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double orderWishlistBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderWishlistBtnWidth = 40;
+    final double orderWishlistBtnHeight = 40;
+    final double orderWishlistBtnX = 10;
+    final double orderWishlistBtnY = 7;
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    final double loginGuideTextHeight = 22; // 세로 비율
+    final double loginGuideText1Y = 270;
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
+
+    final double interval1Y = 30;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -395,6 +441,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                                       ),
                                     ),
                                   ),
+                                  SizedBox(height: interval1Y),
                                 ],
                               ),
                             );

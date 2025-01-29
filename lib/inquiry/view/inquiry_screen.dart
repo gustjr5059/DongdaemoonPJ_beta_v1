@@ -184,44 +184,81 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double inquiryAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double inquiryAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double inquiryPaddingX = screenSize.width * (8 / referenceWidth);
+    //
+    // // 컨텐츠 사이의 간격 계산
+    // final double interval1Y = screenSize.height * (200 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
+    // final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double inquiryGuideTextWidth1 =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double inquiryGuideTextWidth2 =
+    //     screenSize.width * (310 / referenceWidth); // 가로 비율
+    // final double inquiryGuideFontSize1 =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double inquiryGuideFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 문의하기로 이동 버튼 수치
+    // final double inquiryBtnWidth =
+    //     screenSize.width * (250 / referenceWidth); // 문의하기로 이동 버튼 가로 비율 계산
+    // final double inquiryBtnHeight =
+    //     screenSize.height * (45 / referenceHeight); // 문의하기로 이동 버튼 세로 비율 계산
+    // final double inquiryBtnPaddingX = screenSize.width * (20 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
+    // final double inquiryBtnPaddingY = screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
+    // final double inquiryBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 문의하기로 이동 버튼 텍스트 크기 비율 계산
+    // final double inquiryBtnX = screenSize.width * (120 / referenceWidth);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double inquiryAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double inquiryAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double inquiryAppBarTitleHeight = 22;
     final double inquiryAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double inquiryAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double inquiryAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double inquiryPaddingX = screenSize.width * (8 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (200 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
-    final double interval1X = screenSize.width * (30 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval1Y = 200; // 세로 간격 1 계산
+    final double interval2Y = 40; // 세로 간격 2 계산
+    final double interval3Y = 50; // 세로 간격 3 계산
 
     // 텍스트 폰트 크기 수치
     final double inquiryGuideTextWidth1 =
         screenSize.width * (393 / referenceWidth); // 가로 비율
     final double inquiryGuideTextWidth2 =
         screenSize.width * (310 / referenceWidth); // 가로 비율
-    final double inquiryGuideFontSize1 =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double inquiryGuideFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double inquiryGuideFontSize1 = 18; // 텍스트 크기 비율 계산
+    final double inquiryGuideFontSize2 = 14; // 텍스트 크기 비율 계산
 
     // 문의하기로 이동 버튼 수치
     final double inquiryBtnWidth =
         screenSize.width * (250 / referenceWidth); // 문의하기로 이동 버튼 가로 비율 계산
-    final double inquiryBtnHeight =
-        screenSize.height * (45 / referenceHeight); // 문의하기로 이동 버튼 세로 비율 계산
+    final double inquiryBtnHeight = 45; // 문의하기로 이동 버튼 세로 비율 계산
     final double inquiryBtnPaddingX = screenSize.width * (20 / referenceWidth); // 문의하기로 이동 버튼 좌우 패딩 계산
-    final double inquiryBtnPaddingY = screenSize.height * (5 / referenceHeight); // 문의하기로 이동 버튼 상하 패딩 계산
-    final double inquiryBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 문의하기로 이동 버튼 텍스트 크기 비율 계산
+    final double inquiryBtnPaddingY = 5; // 문의하기로 이동 버튼 상하 패딩 계산
+    final double inquiryBtnFontSize = 14; // 문의하기로 이동 버튼 텍스트 크기 비율 계산
     final double inquiryBtnX = screenSize.width * (120 / referenceWidth);
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Scaffold(
       body: Stack(
@@ -353,6 +390,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                 ),
                               ),
                             ),
+                            SizedBox(height: interval2Y),
                           ],
                         ),
                       );

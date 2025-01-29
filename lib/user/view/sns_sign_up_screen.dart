@@ -237,42 +237,75 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // AppBar 관련 수치 동적 적용
+    // final double signUpAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double signUpAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double signUpAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double signUpAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double signUpChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double signUpChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double signUpChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double signUpChevronIconY = screenSize.height * (9 / referenceHeight);
+    //
+    // final double interval1X = screenSize.width * (14 / referenceWidth);
+    // final double interval1Y = screenSize.height * (5 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (20 / referenceHeight);
+    // final double interval4Y = screenSize.height * (40 / referenceHeight);
+    //
+    // final double nameGuideTextFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double allAgreeCheckBoxTextFontSize =
+    //     screenSize.height * (20 / referenceHeight);
+    //
+    // final double signUpBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double signUpBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double signUpBtnFontSize = screenSize.height * (16 / referenceHeight);
+    //
+    // // 이미지 위치 조정을 위한 비율 기반 수치
+    // final double personImageWidth = screenSize.width * (190 / referenceWidth);
+    // final double personImageHeight =
+    //     screenSize.height * (170 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // AppBar 관련 수치 동적 적용
     final double signUpAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double signUpAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double signUpAppBarTitleHeight = 22;
     final double signUpAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double signUpAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double signUpAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double signUpChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double signUpChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double signUpChevronIconHeight = 24;
     final double signUpChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double signUpChevronIconY = screenSize.height * (9 / referenceHeight);
+    final double signUpChevronIconY = 9;
 
     final double interval1X = screenSize.width * (14 / referenceWidth);
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (20 / referenceHeight);
-    final double interval4Y = screenSize.height * (40 / referenceHeight);
+    final double interval2Y = 10;
+    final double interval3Y = 20;
 
-    final double nameGuideTextFontSize =
-        screenSize.height * (10 / referenceHeight);
-    final double allAgreeCheckBoxTextFontSize =
-        screenSize.height * (20 / referenceHeight);
+    final double nameGuideTextFontSize = 10;
+    final double allAgreeCheckBoxTextFontSize = 20;
 
-    final double signUpBtnHeight = screenSize.height * (50 / referenceHeight);
+    final double signUpBtnHeight = 50;
     final double signUpBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double signUpBtnFontSize = screenSize.height * (16 / referenceHeight);
+    final double signUpBtnFontSize = 16;
 
     // 이미지 위치 조정을 위한 비율 기반 수치
     final double personImageWidth = screenSize.width * (190 / referenceWidth);
-    final double personImageHeight =
-        screenSize.height * (170 / referenceHeight);
+    final double personImageHeight = 170;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -598,8 +631,14 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    final double agreeCheckBoxTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double agreeCheckBoxTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double agreeCheckBoxTextFontSize = 14;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // '본인은 14세 이상입니다. (필수)' 항목인지 확인
     bool isOverAgeRow = text == '본인은 14세 이상입니다. (필수)';
@@ -718,20 +757,36 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (10 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 10;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // FocusNode의 상태 변화 감지 리스너 추가
     return StatefulBuilder(
@@ -865,20 +920,36 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (10 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 10;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // FocusNode의 상태 변화 감지 리스너 추가
     return StatefulBuilder(
@@ -1015,22 +1086,40 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (8 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    //
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    //
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (8 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 8;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
 
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
 
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: signUpInfo4Y),

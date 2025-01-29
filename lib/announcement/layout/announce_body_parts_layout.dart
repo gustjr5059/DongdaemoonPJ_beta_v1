@@ -22,20 +22,37 @@ class AnnounceBodyPartsLayout extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double announcelistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double announcelistTitleDataFontSize =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double announcelistTimeDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 컨텐츠 사이의 간격 계산
+    // final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
+    // final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // body 부분 전체 패딩 수치 계산
-    final double announcelistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    final double announcelistPadding1Y = 8; // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double announcelistTitleDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double announcelistTimeDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double announcelistTitleDataFontSize = 18; // 텍스트 크기 비율 계산
+    final double announcelistTimeDataFontSize = 14; // 텍스트 크기 비율 계산
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
-    final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
+    final double interval1Y = 4; // 세로 간격 1 계산
+    final double errorTextFontSize = 14; // 에러 메세지 폰트 크기
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // announceItemsProvider를 통해 공지사항 아이템 목록 상태를 가져옴
     final announceItems = ref.watch(announceItemsProvider);
@@ -152,26 +169,45 @@ class AnnounceDetailBodyPartsLayout extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double announceDtlistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double announceDtlistTitleDataFontSize =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double announceDtlistTimeDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double announceDtlistTextDataFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double announceDtlistWeblinkDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 컨텐츠 사이의 간격 계산
+    // final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y = screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
+    // final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // body 부분 전체 패딩 수치 계산
-    final double announceDtlistPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    final double announceDtlistPadding1Y = 8; // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double announceDtlistTitleDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double announceDtlistTimeDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double announceDtlistTextDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double announceDtlistWeblinkDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double announceDtlistTitleDataFontSize = 18; // 텍스트 크기 비율 계산
+    final double announceDtlistTimeDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double announceDtlistTextDataFontSize = 16; // 텍스트 크기 비율 계산
+    final double announceDtlistWeblinkDataFontSize = 14; // 텍스트 크기 비율 계산
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y = screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
-
-    final double errorTextFontSize = screenSize.height * (14 / referenceHeight); // 에러 메세지 폰트 크기
+    final double interval1Y = 8; // 세로 간격 1 계산
+    final double interval2Y = 16; // 세로 간격 1 계산
+    final double errorTextFontSize = 14; // 에러 메세지 폰트 크기
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 공지사항 상세 데이터를 가져옴
     final announceDetailItem = ref.watch(announceDetailItemProvider(documentId));

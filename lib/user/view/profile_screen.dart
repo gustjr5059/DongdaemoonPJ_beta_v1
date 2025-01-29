@@ -234,29 +234,55 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 소배너 부분 관련 수치
+    // final double profileMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
+    // final double profileMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
+    // final double profileMainScreenSmallBannerViewHeight =
+    //     screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double profileAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double profileAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double profileAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double profilePaddingX = screenSize.width * (16 / referenceWidth);
+    // final double profilePadding1Y = screenSize.height * (5 / referenceHeight);
+    // final double profilePadding2Y = screenSize.height * (5 / referenceHeight);
+    // final double profilePadding3Y = screenSize.height * (10 / referenceHeight);
+    //
+    // // 개인정보 처리방침 관련 안내 텍스트 수치
+    // final double guideTextFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 소배너 부분 관련 수치
     final double profileMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double profileMainScreenSmallBannerHeight = screenSize.height * (90 / referenceHeight); // 소배너 이미지 높이
-    final double profileMainScreenSmallBannerViewHeight =
-        screenSize.height * (90 / referenceHeight); // 소배너 화면 세로 비율
+    final double profileMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
+    final double profileMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double profileAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double profileAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double profileAppBarTitleHeight = 22;
     final double profileAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double profileAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double profileAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double profilePaddingX = screenSize.width * (16 / referenceWidth);
-    final double profilePadding1Y = screenSize.height * (5 / referenceHeight);
-    final double profilePadding2Y = screenSize.height * (5 / referenceHeight);
-    final double profilePadding3Y = screenSize.height * (10 / referenceHeight);
+    final double profilePadding1Y = 5;
+    final double profilePadding2Y = 5;
+    final double profilePadding3Y = 10;
 
     // 개인정보 처리방침 관련 안내 텍스트 수치
-    final double guideTextFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double guideTextFontSize = 12;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 현재 로그인된 사용자를 FirebaseAuth 인스턴스로부터 가져옴
     final User? user = FirebaseAuth.instance.currentUser;

@@ -216,44 +216,81 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double completePaymentAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double completePaymentAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double completePaymentAppBarTitleX =
+    //     screenSize.width * (5 / referenceHeight);
+    // final double completePaymentAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    //
+    // // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
+    // final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double completePaymentAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double completePaymentAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double completePaymentAppBarTitleHeight = 22;
     final double completePaymentAppBarTitleX =
-        screenSize.width * (5 / referenceHeight);
-    final double completePaymentAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+        screenSize.width * (5 / referenceWidth);
+    final double completePaymentAppBarTitleY = 11;
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // orderDataProvider에서 orderId를 통해 주문 데이터를 구독함.
     final orderDataFuture = ref.watch(orderDataProvider(widget.orderId));
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    final double loginGuideTextHeight = 22; // 세로 비율
+    final double loginGuideText1Y = 270;
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
+
+    final double interval1Y = 30;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 주문 데이터의 상태에 따라 다른 UI를 표시
     return orderDataFuture.when(
@@ -347,6 +384,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                                         return ProductContent.fromMap(item);
                                       }).toList(), // 데이터가 null일 경우에도 안전하게 처리
                                     ),
+                                    SizedBox(height: interval1Y),
                                   ],
                                 ),
                               );

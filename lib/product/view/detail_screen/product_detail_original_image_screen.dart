@@ -61,12 +61,12 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
 
     final double interval1X = screenSize.width * (250 / referenceWidht);
     final double interval2X = screenSize.width * (20 / referenceWidht);
-    final double interval1Y = screenSize.height * (40 / referenceHeight);
-    final double interval2Y = screenSize.height * (54 / referenceHeight);
-    final double pageTextFontSize = screenSize.height * (16 / referenceHeight);
+    final double interval1Y = 40;
+    final double interval2Y = 54;
+    final double pageTextFontSize = 16;
 
     return Scaffold(
-      backgroundColor: Colors.black, // 배경색을 검은색으로 설정
+      backgroundColor: BLACK_COLOR, // 배경색을 검은색으로 설정
       body: Stack( // 여러 위젯을 겹쳐서 배치
         children: [
           Column(

@@ -123,10 +123,19 @@ class BannerImageClass extends StatelessWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
-    final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
+    final double errorTextHeight = 600;
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return imageUrl.isNotEmpty // 이미지 URL이 비어 있지 않은 경우
         ? CachedNetworkImage(
@@ -219,15 +228,29 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  // 비율을 기준으로 배너 페이지 뷰 인디케이터 크기와 위치 설정
-  final double commonBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
-  final double commonBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
-  final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X 위치
-  final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y 위치
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기준으로 배너 페이지 뷰 인디케이터 크기와 위치 설정 관련 수치
+  // final double commonBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
+  // final double commonBannerViewPageIndicatorHeight = screenSize.height * (25 / referenceHeight); // 페이지 번호 높이
+  // final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X 위치
+  // final double commonBannerViewPageIndicatorY = screenSize.height * (7 / referenceHeight); // 페이지 번호 Y 위치
 
-  // 에러 메시지 텍스트 크기 설정
-  final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
-  final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+  // // 에러 메시지 텍스트 크기 설정 관련 수치
+  // final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
+  // final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  // 배너 페이지 뷰 인디케이터 크기와 위치 설정 관련 수치
+  final double commonBannerViewPageIndicatorWidth = screenSize.width * (50 / referenceWidth); // 페이지 번호 너비
+  final double commonBannerViewPageIndicatorHeight = 25; // 페이지 번호 높이
+  final double commonBannerViewPageIndicatorX = screenSize.width * (20 / referenceWidth); // 페이지 번호 X 위치
+  final double commonBannerViewPageIndicatorY = 7; // 페이지 번호 Y 위치
+
+  // 에러 메시지 텍스트 크기 설정 관련 수치
+  final double errorTextFontSize1 = 14; // 첫 번째 에러 텍스트 크기
+  final double errorTextFontSize2 = 12; // 두 번째 에러 텍스트 크기
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // 배너 이미지를 비동기로 가져옴
   final asyncBannerImages = ref.watch(bannerImagesProvider);
@@ -465,9 +488,17 @@ Widget buildTopButton(BuildContext context, ScrollController scrollController) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // final double topBarX = screenSize.width * (22 / referenceWidth); // X 위치 설정
+  // final double topBarY = screenSize.height * (170 / referenceHeight); // Y 위치 설정
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  // 비율을 기반으로 동적으로 크기와 위치 설정 관련 수치
   final double topBarX = screenSize.width * (22 / referenceWidth); // X 위치 설정
-  final double topBarY = screenSize.height * (170 / referenceHeight); // Y 위치 설정
+  final double topBarY = 170; // Y 위치 설정
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Positioned(
     top: screenSize.height - topBarY, // 화면 하단에서 200px 위로 위치
@@ -527,9 +558,18 @@ Future<bool> showSubmitAlertDialog(BuildContext context, {
       // 기준 화면 크기: 가로 393, 세로 852
       final double referenceHeight = 852.0;
 
-      // 비율을 기반으로 동적으로 크기와 위치를 설정함
-      final double AlertDialogBtnFontSize1 = screenSize.height * (14 / referenceHeight);
-      final double AlertDialogBtnFontSize2 = screenSize.height * (11 / referenceHeight);
+      // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+      // 비율을 기반으로 동적으로 크기와 위치를 설정 관련 수치
+      // final double AlertDialogBtnFontSize1 = screenSize.height * (14 / referenceHeight);
+      // final double AlertDialogBtnFontSize2 = screenSize.height * (11 / referenceHeight);
+      // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+      //  --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+      // 비율을 기반으로 동적으로 크기와 위치를 설정 관련 수치
+      // (갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈)
+      final double AlertDialogBtnFontSize1 = 14;
+      final double AlertDialogBtnFontSize2 = 11;
+      //  --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
       // 플랫폼이 iOS인 경우 CupertinoAlertDialog 사용
       if (Platform.isIOS) {
@@ -639,11 +679,21 @@ void showCustomSnackBar(BuildContext context, String message, {Duration duration
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  // 스낵바 부분 수치 설정
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // 스낵바 부분 수치 설정 관련 수치
+  // final double commonSnackBarWidth = screenSize.width * (393 / referenceWidth); // 스낵바 너비 설정
+  // final double commonSnackBarX = screenSize.width * (20 / referenceWidth); // X축 패딩
+  // final double commonSnackBarY = screenSize.height * (16 / referenceHeight); // Y축 패딩
+  // final double commonSnackBarTextFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 폰트 크기 설정
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  // 스낵바 부분 수치 설정 관련 수치
   final double commonSnackBarWidth = screenSize.width * (393 / referenceWidth); // 스낵바 너비 설정
   final double commonSnackBarX = screenSize.width * (20 / referenceWidth); // X축 패딩
-  final double commonSnackBarY = screenSize.height * (16 / referenceHeight); // Y축 패딩
-  final double commonSnackBarTextFontSize = screenSize.height * (14 / referenceHeight); // 텍스트 폰트 크기 설정
+  final double commonSnackBarY = 16; // Y축 패딩
+  final double commonSnackBarTextFontSize = 14; // 텍스트 폰트 크기 설정
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
@@ -794,16 +844,33 @@ class _EventPosterImgSectionListState extends ConsumerState<EventPosterImgSectio
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 이벤트 포스터 이미지 관련 설정 수치
+    // // 화면 비율에 따른 가로 크기 설정
+    // final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
+    // // 화면 비율에 따른 세로 크기 설정
+    // final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    // // 아이템 간 여백 비율 설정
+    // final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 = screenSize.height * (12 / referenceHeight);
+    // final double errorTextFontSize2 = screenSize.height * (10 / referenceHeight);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 이벤트 포스터 이미지 관련 설정 수치
     // 화면 비율에 따른 가로 크기 설정
     final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
     // 화면 비율에 따른 세로 크기 설정
-    final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    final double DetailDocHeight = 250;
     // 아이템 간 여백 비율 설정
     final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (12 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (10 / referenceHeight);
+    final double errorTextFontSize1 = 12;
+    final double errorTextFontSize2 = 10;
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
 
     return SingleChildScrollView(

@@ -173,36 +173,82 @@ class WishlistItemsList extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 찜 목록 아이템별 카드뷰 섹션 부분 수치
+    // final double wishlistCardViewWidth =
+    //     screenSize.width * (353 / referenceWidth); // 가로 비율
+    // final double wishlistCardViewHeight =
+    //     screenSize.height * (143 / referenceHeight); // 세로 비율
+    // // 썸네일 이미지 부분 수치
+    // final double wishlistThumnailPartWidth =
+    //     screenSize.width * (126 / referenceWidth); // 가로 비율
+    // final double wishlistThumnailPartHeight =
+    //     screenSize.height * (126 / referenceHeight); // 세로 비율
+    // // 텍스트 데이터 부분 수치
+    // final double wishlistTextDataPartHeight =
+    //     screenSize.height * (126 / referenceHeight); // 세로 비율
+    // final double wishlistBriefIntroductionFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double wishlistOriginalPriceFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double wishlistDiscountPercentFontSize =
+    //     screenSize.height * (15 / referenceHeight);
+    // final double wishlistDiscountPriceFontSize =
+    //     screenSize.height * (15 / referenceHeight);
+    // // 삭제 버튼 부분 수치
+    // final double wishlistDeleteBtn1X =
+    //     screenSize.width * (20 / referenceWidth); // 가로 비율
+    // final double wishlistDeleteBtn1Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 비율
+    // final double wishlistDeleteBtnFontSize =
+    //     screenSize.height * (15 / referenceHeight);
+    // // 텍스트 데이터 간 너비, 높이
+    // final double wishlist1X =
+    //     screenSize.width * (12 / referenceWidth); // 가로 비율
+    // final double wishlist2X =
+    //     screenSize.width * (30 / referenceWidth); // 가로 비율
+    // final double wishlist1Y =
+    //     screenSize.width * (2 / referenceWidth); // 가로 비율
+    //
+    // // 찜 목록 비어있는 경우의 알림 부분 수치
+    // final double wishlistEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double wishlistEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double wishlistEmptyTextX =
+    //     screenSize.width * (45 / referenceWidth); // 가로 비율
+    // final double wishlistEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율
+    // final double wishlistEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double interval1X = screenSize.width * (70 / referenceWidth);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
-    // 찜 목록 아이템별 카드뷰 섹션 부분 수치
-    final double wishlistCardViewWidth =
-        screenSize.width * (353 / referenceWidth); // 가로 비율
-    final double wishlistCardViewHeight =
-        screenSize.height * (143 / referenceHeight); // 세로 비율
     // 썸네일 이미지 부분 수치
     final double wishlistThumnailPartWidth =
         screenSize.width * (126 / referenceWidth); // 가로 비율
-    final double wishlistThumnailPartHeight =
-        screenSize.height * (126 / referenceHeight); // 세로 비율
+    final double wishlistThumnailPartHeight = 126; // 세로 비율
     // 텍스트 데이터 부분 수치
-    final double wishlistTextDataPartHeight =
-        screenSize.height * (126 / referenceHeight); // 세로 비율
-    final double wishlistBriefIntroductionFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double wishlistOriginalPriceFontSize =
-        screenSize.height * (12 / referenceHeight);
-    final double wishlistDiscountPercentFontSize =
-        screenSize.height * (15 / referenceHeight);
-    final double wishlistDiscountPriceFontSize =
-        screenSize.height * (15 / referenceHeight);
+    final double wishlistTextDataPartHeight = 126; // 세로 비율
+    final double wishlistBriefIntroductionFontSize = 13;
+    final double wishlistOriginalPriceFontSize = 12;
+    final double wishlistDiscountPercentFontSize = 15;
+    final double wishlistDiscountPriceFontSize = 15;
     // 삭제 버튼 부분 수치
     final double wishlistDeleteBtn1X =
         screenSize.width * (20 / referenceWidth); // 가로 비율
-    final double wishlistDeleteBtn1Y =
-        screenSize.height * (4 / referenceHeight); // 세로 비율
-    final double wishlistDeleteBtnFontSize =
-        screenSize.height * (15 / referenceHeight);
+    final double wishlistDeleteBtn1Y = 4; // 세로 비율
+    final double wishlistDeleteBtnFontSize = 15;
     // 텍스트 데이터 간 너비, 높이
     final double wishlist1X =
         screenSize.width * (12 / referenceWidth); // 가로 비율
@@ -214,20 +260,17 @@ class WishlistItemsList extends ConsumerWidget {
     // 찜 목록 비어있는 경우의 알림 부분 수치
     final double wishlistEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double wishlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double wishlistEmptyTextX =
-        screenSize.width * (45 / referenceWidth); // 가로 비율
+    final double wishlistEmptyTextHeight = 22; // 세로 비율
     final double wishlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double wishlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double wishlistEmptyTextFontSize = 16;
     final double interval1X = screenSize.width * (70 / referenceWidth);
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // StreamProvider로 실시간 데이터 변경을 구독
     final wishlistItemStream = ref.watch(wishlistItemLoadStreamProvider(userEmail));
@@ -302,7 +345,7 @@ class WishlistItemsList extends ConsumerWidget {
                     children: [
                       Container(
                         // 이미지 컨테이너의 너비를 설정함
-                        width: wishlistThumnailPartWidth,
+                        width: wishlistThumnailPartHeight,
                         // 이미지 컨테이너의 높이를 설정함
                         height: wishlistThumnailPartHeight,
                         // 썸네일이 있을 경우 이미지를 표시하고, 없을 경우 아이콘을 표시함

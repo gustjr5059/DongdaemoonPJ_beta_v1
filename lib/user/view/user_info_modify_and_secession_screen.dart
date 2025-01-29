@@ -329,86 +329,153 @@ class _UserInfoModifyAndSecessionScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double userInfoModifyAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double userInfoModifyAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double userInfoModifyAppBarTitleX =
+    //     screenSize.width * (5 / referenceHeight);
+    // final double userInfoModifyAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double userInfoModifyPaddingX =
+    //     screenSize.width * (8 / referenceWidth);
+    // final double nameGuideTextFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double userInfoModifyChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double userInfoModifyChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double userInfoModifyChevronIconX =
+    //     screenSize.width * (10 / referenceWidth);
+    // final double userInfoModifyChevronIconY =
+    //     screenSize.height * (9 / referenceHeight);
+    //
+    // // 컨텐츠 사이의 간격 계산
+    // final double interval1Y =
+    //     screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y =
+    //     screenSize.height * (32 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y =
+    //     screenSize.height * (10 / referenceHeight); // 세로 간격 3 계산
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    //
+    // final double modifyAndSecessionBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double modifyAndSecessionBtnWidth = screenSize.width * (140 / referenceWidth);
+    // final double modifyAndSecessionBtnFontSize = screenSize.height * (14 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    // final double titleTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double titleTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double subTitleTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 탈퇴하기 버튼 관련 부분 수치
+    // final double userSecessionInfoCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double userSecessionInfoCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    // final double userSecessionInfoCardViewPadding1Y =
+    //     screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    // final double checkboxTextFontSize = screenSize.height * (14 / referenceHeight);
+    // final double userSecessionInfoTextFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double userInfoModifyAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double userInfoModifyAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double userInfoModifyAppBarTitleHeight = 22;
     final double userInfoModifyAppBarTitleX =
         screenSize.width * (5 / referenceHeight);
-    final double userInfoModifyAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double userInfoModifyAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double userInfoModifyPaddingX =
         screenSize.width * (8 / referenceWidth);
-    final double nameGuideTextFontSize =
-        screenSize.height * (10 / referenceHeight);
+    final double nameGuideTextFontSize = 10;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double userInfoModifyChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double userInfoModifyChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double userInfoModifyChevronIconHeight = 24;
     final double userInfoModifyChevronIconX =
         screenSize.width * (10 / referenceWidth);
-    final double userInfoModifyChevronIconY =
-        screenSize.height * (9 / referenceHeight);
+    final double userInfoModifyChevronIconY = 9;
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (16 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y =
-        screenSize.height * (32 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 3 계산
+    final double interval1Y = 16; // 세로 간격 1 계산
+    final double interval2Y = 32; // 세로 간격 2 계산
+    final double interval3Y = 10; // 세로 간격 3 계산
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
-    final double modifyAndSecessionBtnHeight = screenSize.height * (30 / referenceHeight);
+    final double modifyAndSecessionBtnHeight = 30;
     final double modifyAndSecessionBtnWidth = screenSize.width * (140 / referenceWidth);
-    final double modifyAndSecessionBtnFontSize = screenSize.height * (14 / referenceHeight);
+    final double modifyAndSecessionBtnFontSize = 14;
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y = screenSize.height * (270 / referenceHeight);
+    final double loginGuideTextHeight = 22; // 세로 비율
+    final double loginGuideText1Y = 270;
     final double titleTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double titleTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double subTitleTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double titleTextFontSize = 16; // 텍스트 크기 비율 계산
+    final double subTitleTextFontSize = 14; // 텍스트 크기 비율 계산
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
 
     // 탈퇴하기 버튼 관련 부분 수치
     final double userSecessionInfoCardViewWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율 계산
     final double userSecessionInfoCardViewPaddingX =
         screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double userSecessionInfoCardViewPadding1Y =
-        screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
-    final double checkboxTextFontSize = screenSize.height * (14 / referenceHeight);
-    final double userSecessionInfoTextFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    final double userSecessionInfoCardViewPadding1Y = 8; // 상하 패딩 계산
+    final double checkboxTextFontSize = 14;
+    final double userSecessionInfoTextFontSize = 12; // 텍스트 크기 비율 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -1062,22 +1129,40 @@ class _UserInfoModifyAndSecessionScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (8 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    //
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    //
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (8 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 8;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
 
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
 
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: signUpInfo4Y),
@@ -1153,20 +1238,36 @@ Widget _buildEditableRow(BuildContext context, String label,
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 회원가입 정보 표 부분 수치
+  // final double signUpInfoTextFontSize =
+  //     screenSize.height * (13 / referenceHeight);
+  // final double signUpInfoDataFontSize =
+  //     screenSize.height * (10 / referenceHeight);
+  // final double signUpInfoTextPartWidth =
+  //     screenSize.width * (97 / referenceWidth);
+  // final double signUpInfoTextPartHeight =
+  //     screenSize.height * (40 / referenceHeight);
+  // // 행 간 간격 수치
+  // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+  // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+  // // 데이터 부분 패딩 수치
+  // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 회원가입 정보 표 부분 수치
-  final double signUpInfoTextFontSize =
-      screenSize.height * (13 / referenceHeight);
-  final double signUpInfoDataFontSize =
-      screenSize.height * (10 / referenceHeight);
+  final double signUpInfoTextFontSize = 13;
+  final double signUpInfoDataFontSize = 10;
   final double signUpInfoTextPartWidth =
       screenSize.width * (97 / referenceWidth);
-  final double signUpInfoTextPartHeight =
-      screenSize.height * (40 / referenceHeight);
+  final double signUpInfoTextPartHeight = 40;
   // 행 간 간격 수치
-  final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+  final double signUpInfo4Y = 2;
   final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
   // 데이터 부분 패딩 수치
   final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // FocusNode의 상태 변화 감지 리스너 추가
   return StatefulBuilder(
@@ -1289,20 +1390,36 @@ Widget _buildEditableRow(BuildContext context, String label,
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (10 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 10;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // FocusNode의 상태 변화 감지 리스너 추가
     return StatefulBuilder(

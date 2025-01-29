@@ -203,28 +203,51 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double announceAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double announceAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double announceAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double announcelistPaddingX = screenSize.width * (17 / referenceWidth);
+    // final double announcelistPaddingY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 공지사항이 비어있는 경우의 알림 부분 수치임
+    // final double announcementlistEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율임
+    // final double announcementlistEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율임
+    // final double announcementlistEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율임
+    // final double announcementlistEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double announceAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double announceAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double announceAppBarTitleHeight = 22;
     final double announceAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double announceAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double announceAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double announcelistPaddingX = screenSize.width * (17 / referenceWidth);
-    final double announcelistPaddingY = screenSize.height * (8 / referenceHeight);
+    final double announcelistPaddingY = 8;
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementlistEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율임
-    final double announcementlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율임
+    final double announcementlistEmptyTextHeight = 22; // 세로 비율임
     final double announcementlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율임
-    final double announcementlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
-
+    final double announcementlistEmptyTextFontSize = 16; // 폰트 크기를 비율로 설정함
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Scaffold(
       body: Stack(

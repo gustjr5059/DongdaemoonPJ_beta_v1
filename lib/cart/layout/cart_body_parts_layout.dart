@@ -61,68 +61,109 @@ class CartItemsList extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // 장바구니 카드뷰 섹션 크기 설정
+    // final double cartlistCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
+    // final double cartlistCardViewHeight =
+    //     screenSize.height * (270 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+    // final double cartlistCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
+    // // 썸네일 이미지 크기 설정
+    // final double cartlistThumnailPartWidth =
+    //     screenSize.width * (120 / referenceWidth); // 썸네일 가로 비율 설정함
+    // final double cartlistThumnailPartHeight =
+    //     screenSize.width * (120 / referenceWidth); // 썸네일 세로 비율 설정함
+    // // 상품 색상 이미지 크기 설정
+    // final double cartlistSelctedColorImageDataWidth =
+    //     screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    // final double cartlistSelctedColorImageDataHeight =
+    //     screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    // // 텍스트 데이터 패딩 및 글꼴 크기 설정
+    // final double cartlistDataPaddingX =
+    //     screenSize.width * (13 / referenceWidth); // 텍스트 데이터의 가로 패딩 설정함
+    // final double cartlistDataPaddingY =
+    //     screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
+    // final double cartlistProductNumberFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 상품 번호 글꼴 크기 설정함
+    // final double cartlistTextDataPartHeight =
+    //     screenSize.height * (140 / referenceHeight); // 텍스트 데이터 부분의 높이 설정함
+    // final double cartlistBriefIntroductionFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 간략한 설명 글꼴 크기 설정함
+    // final double cartlistOriginalPriceFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 원래 가격 글꼴 크기 설정함
+    // final double cartlistDiscountPercentFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
+    // final double cartlistDiscountPriceFontSize =
+    //     screenSize.height * (15 / referenceHeight); // 할인 가격 글꼴 크기 설정함
+    // final double cartlistSelectedColorTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
+    // final double cartlistSelectedSizeTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
+    // // 삭제 버튼 글꼴 및 위치 설정
+    // final double cartlistDeleteBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 삭제 버튼 글꼴 크기 설정함
+    // final double cartlistDeleteBtn1X =
+    //     screenSize.width * (10 / referenceWidth); // 삭제 버튼 가로 위치 설정함
+    // final double cartlistDeleteBtn1Y =
+    //     screenSize.width * (1 / referenceHeight); // 삭제 버튼 세로 위치 설정함
+    //
+    // // 텍스트 데이터 간 너비 및 높이 설정
+    // final double cartlist1X =
+    //     screenSize.width * (12 / referenceWidth); // 텍스트 간 가로 여백 설정함
+    // final double cartlist2X =
+    //     screenSize.width * (19 / referenceWidth); // 텍스트 간 가로 여백 설정함
+    // final double cartlist3X =
+    //     screenSize.width * (30 / referenceWidth); // 텍스트 간 가로 여백 설정함
+    // final double cartlist1Y =
+    //     screenSize.width * (6 / referenceWidth); // 텍스트 간 세로 여백 설정함
+    // final double cartlist2Y =
+    //     screenSize.width * (8 / referenceWidth); // 텍스트 간 세로 여백 설정함
+    //
+    // final double interval1X =
+    //     screenSize.width * (70 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 장바구니 카드뷰 섹션 크기 설정
     final double cartlistCardViewWidth =
         screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
-    final double cartlistCardViewHeight =
-        screenSize.height * (270 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+    final double cartlistCardViewHeight = 270; // 화면 세로 비율에 맞게 설정함
     final double cartlistCardViewPaddingX =
         screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
     // 썸네일 이미지 크기 설정
-    final double cartlistThumnailPartWidth =
-        screenSize.width * (120 / referenceWidth); // 썸네일 가로 비율 설정함
-    final double cartlistThumnailPartHeight =
-        screenSize.width * (120 / referenceWidth); // 썸네일 세로 비율 설정함
+    final double cartlistThumnailPartHeight = 120; // 썸네일 세로 비율 설정함
     // 상품 색상 이미지 크기 설정
-    final double cartlistSelctedColorImageDataWidth =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
-    final double cartlistSelctedColorImageDataHeight =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    final double cartlistSelctedColorImageDataHeight = 16; // 색상 이미지 세로 크기 설정함
     // 텍스트 데이터 패딩 및 글꼴 크기 설정
     final double cartlistDataPaddingX =
         screenSize.width * (13 / referenceWidth); // 텍스트 데이터의 가로 패딩 설정함
-    final double cartlistDataPaddingY =
-        screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
-    final double cartlistProductNumberFontSize =
-        screenSize.height * (12 / referenceHeight); // 상품 번호 글꼴 크기 설정함
-    final double cartlistTextDataPartHeight =
-        screenSize.height * (140 / referenceHeight); // 텍스트 데이터 부분의 높이 설정함
-    final double cartlistBriefIntroductionFontSize =
-        screenSize.height * (16 / referenceHeight); // 간략한 설명 글꼴 크기 설정함
-    final double cartlistOriginalPriceFontSize =
-        screenSize.height * (13 / referenceHeight); // 원래 가격 글꼴 크기 설정함
-    final double cartlistDiscountPercentFontSize =
-        screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
-    final double cartlistDiscountPriceFontSize =
-        screenSize.height * (15 / referenceHeight); // 할인 가격 글꼴 크기 설정함
-    final double cartlistSelectedColorTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
-    final double cartlistSelectedSizeTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
+    final double cartlistDataPaddingY = 10; // 텍스트 데이터의 세로 패딩 설정함
+    final double cartlistProductNumberFontSize = 12; // 상품 번호 글꼴 크기 설정함
+    final double cartlistTextDataPartHeight = 140; // 텍스트 데이터 부분의 높이 설정함
+    final double cartlistBriefIntroductionFontSize = 16; // 간략한 설명 글꼴 크기 설정함
+    final double cartlistOriginalPriceFontSize = 13; // 원래 가격 글꼴 크기 설정함
+    final double cartlistDiscountPercentFontSize = 14; // 할인 퍼센트 글꼴 크기 설정함
+    final double cartlistDiscountPriceFontSize = 15; // 할인 가격 글꼴 크기 설정함
+    final double cartlistSelectedColorTextFontSize = 14; // 선택된 색상 텍스트 글꼴 크기 설정함
+    final double cartlistSelectedSizeTextFontSize = 14; // 선택된 사이즈 텍스트 글꼴 크기 설정함
     // 삭제 버튼 글꼴 및 위치 설정
-    final double cartlistDeleteBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 삭제 버튼 글꼴 크기 설정함
-    final double cartlistDeleteBtn1X =
-        screenSize.width * (10 / referenceWidth); // 삭제 버튼 가로 위치 설정함
-    final double cartlistDeleteBtn1Y =
-        screenSize.width * (1 / referenceHeight); // 삭제 버튼 세로 위치 설정함
+    final double cartlistDeleteBtnFontSize = 14; // 삭제 버튼 글꼴 크기 설정함
+    final double cartlistDeleteBtn1X = 10; // 삭제 버튼 가로 위치 설정함
+    final double cartlistDeleteBtn1Y = 1; // 삭제 버튼 세로 위치 설정함
 
     // 텍스트 데이터 간 너비 및 높이 설정
-    final double cartlist1X =
-        screenSize.width * (12 / referenceWidth); // 텍스트 간 가로 여백 설정함
-    final double cartlist2X =
-        screenSize.width * (19 / referenceWidth); // 텍스트 간 가로 여백 설정함
-    final double cartlist3X =
-        screenSize.width * (30 / referenceWidth); // 텍스트 간 가로 여백 설정함
-    final double cartlist1Y =
-        screenSize.width * (6 / referenceWidth); // 텍스트 간 세로 여백 설정함
-    final double cartlist2Y =
-        screenSize.width * (8 / referenceWidth); // 텍스트 간 세로 여백 설정함
-
-    final double interval1X =
-        screenSize.width * (70 / referenceWidth);
+    final double cartlist1X = 20; // 텍스트 간 가로 여백 설정함
+    final double cartlist2X = 19; // 텍스트 간 가로 여백 설정함
+    final double cartlist3X = 30; // 텍스트 간 가로 여백 설정함
+    final double cartlist4X = 10; // 텍스트 간 가로 여백 설정함
+    final double cartlist1Y = 6; // 텍스트 간 세로 여백 설정함
+    final double interval1X = 70;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // cartItemsProvider를 통해 장바구니 아이템 목록 상태를 가져옴
     final cartItems = ref.watch(cartItemsProvider);
@@ -294,7 +335,7 @@ class CartItemsList extends ConsumerWidget {
                               ),
                             Container(
                               height: cartlistThumnailPartHeight,
-                              width: cartlistThumnailPartWidth,
+                              width: cartlistThumnailPartHeight,
                               padding: EdgeInsets.only(left: cartlistDataPaddingX, bottom: cartlistDataPaddingY),
                               child: cartItem['thumbnails'] != null && cartItem['thumbnails'] != ''
                                   ? FittedBox(
@@ -366,10 +407,10 @@ class CartItemsList extends ConsumerWidget {
                                   Image.network(
                                     cartItem['selected_color_image'] ?? '',
                                     height: cartlistSelctedColorImageDataHeight,
-                                    width: cartlistSelctedColorImageDataWidth,
+                                    // width: cartlistSelctedColorImageDataWidth,
                                     fit: BoxFit.cover,
                                   ),
-                                SizedBox(width: cartlist1X),
+                                SizedBox(width: cartlist4X),
                                 // 선택된 색상 텍스트를 표시함
                                 Text(
                                   '${cartItem['selected_color_text'] ?? ''}',
@@ -385,7 +426,7 @@ class CartItemsList extends ConsumerWidget {
                             SizedBox(height: cartlist1Y),
                             // 선택된 사이즈를 왼쪽 여백을 주어 표시함
                             Padding(
-                              padding: EdgeInsets.only(left: cartlist3X),
+                              padding: EdgeInsets.only(left: 0),
                               child: Text(
                                 '${cartItem['selected_size'] ?? ''}',
                                 style: TextStyle(

@@ -34,33 +34,55 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 업데이트 요청 완료 부분 수치
+    // final double updateRequireCompletePaddingX =
+    //     screenSize.width * (32 / referenceWidth);
+    // final double updateRequireCompletePaddingY =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double updateRequireCompleteTitleFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double updateRequireCompleteSubTitleFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double updateRequireNoticeFontSize1 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double updateRequireNoticeFontSize2 =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // final double updateRequireCompleteInfo1Y =
+    //     screenSize.height * (20 / referenceHeight);
+    // final double updateRequireCompleteInfo2Y =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double updateRequireCompleteInfo3Y =
+    //     screenSize.height * (10 / referenceHeight);
+    //
+    // // 버튼 관련 수치 동적 적용
+    // final double combackHomeBtn1X = screenSize.width * (15 / referenceWidth);
+    // final double combackHomeBtn1Y = screenSize.height * (50 / referenceHeight);
+    // final double combackHomeBtn2Y = screenSize.height * (100 / referenceHeight);
+    // final double combackHomeBtnFontSize = screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 업데이트 요청 완료 부분 수치
     final double updateRequireCompletePaddingX =
         screenSize.width * (32 / referenceWidth);
-    final double updateRequireCompletePaddingY =
-        screenSize.width * (24 / referenceWidth);
-    final double updateRequireCompleteTitleFontSize =
-        screenSize.height * (16 / referenceHeight);
-    final double updateRequireCompleteSubTitleFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double updateRequireNoticeFontSize1 =
-        screenSize.height * (12 / referenceHeight);
-    final double updateRequireNoticeFontSize2 =
-        screenSize.height * (11 / referenceHeight);
+    final double updateRequireCompletePaddingY = 24;
+    final double updateRequireCompleteTitleFontSize = 16;
+    final double updateRequireCompleteSubTitleFontSize = 14;
+    final double updateRequireNoticeFontSize1 = 12;
+    final double updateRequireNoticeFontSize2 = 11;
 
-    final double updateRequireCompleteInfo1Y =
-        screenSize.height * (20 / referenceHeight);
-    final double updateRequireCompleteInfo2Y =
-        screenSize.height * (40 / referenceHeight);
-    final double updateRequireCompleteInfo3Y =
-        screenSize.height * (10 / referenceHeight);
+    final double updateRequireCompleteInfo1Y = 20;
+    final double updateRequireCompleteInfo2Y = 40;
+    final double updateRequireCompleteInfo3Y = 10;
 
     // 버튼 관련 수치 동적 적용
-    final double combackHomeBtn1X = screenSize.width * (15 / referenceWidth);
-    final double combackHomeBtn1Y = screenSize.height * (50 / referenceHeight);
-    final double combackHomeBtn2Y = screenSize.height * (100 / referenceHeight);
-    final double combackHomeBtnFontSize = screenSize.height * (16 / referenceHeight);
-
+    final double combackHomeBtn1X = 15;
+    final double combackHomeBtn1Y = 50;
+    final double combackHomeBtn2Y = 100;
+    final double combackHomeBtnFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 숫자 포맷을 설정 (천 단위 콤마 추가)
     final numberFormat = NumberFormat('###,###');
@@ -174,23 +196,40 @@ class UpdateRequestCompleteInfoWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 발주자 정보 표 부분 수치
+    // final double updateRequireCompleteInfoTextFontSize =
+    //     screenSize.height * (11 / referenceHeight);
+    // final double updateRequireCompleteInfoDataFontSize =
+    //     screenSize.height * (11 / referenceHeight);
+    // final double updateRequireCompleteInfoTextPartWidth =
+    //     screenSize.width * (110 / referenceWidth);
+    // final double updateRequireCompleteInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double updateRequireCompleteInfo4Y =
+    //     screenSize.height * (3 / referenceHeight);
+    // final double updateRequireCompleteInfo5Y =
+    //     screenSize.height * (6 / referenceHeight);
+    // // 데이터 부분 패딩 수치
+    // final double updateRequireCompleteInfoDataPartX =
+    //     screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 발주자 정보 표 부분 수치
-    final double updateRequireCompleteInfoTextFontSize =
-        screenSize.height * (11 / referenceHeight);
-    final double updateRequireCompleteInfoDataFontSize =
-        screenSize.height * (11 / referenceHeight);
+    final double updateRequireCompleteInfoTextFontSize = 11;
+    final double updateRequireCompleteInfoDataFontSize = 8;
     final double updateRequireCompleteInfoTextPartWidth =
         screenSize.width * (110 / referenceWidth);
-    final double updateRequireCompleteInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double updateRequireCompleteInfoTextPartHeight = 40;
     // 행 간 간격 수치
-    final double updateRequireCompleteInfo4Y =
-        screenSize.height * (3 / referenceHeight);
-    final double updateRequireCompleteInfo5Y =
-        screenSize.height * (6 / referenceHeight);
+    final double updateRequireCompleteInfo4Y = 3;
+    final double updateRequireCompleteInfo5Y = 6;
     // 데이터 부분 패딩 수치
     final double updateRequireCompleteInfoDataPartX =
         screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: updateRequireCompleteInfo4Y), // 행 간 간격 조정

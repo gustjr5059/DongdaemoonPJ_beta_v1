@@ -26,7 +26,6 @@ class SplashScreen2 extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen2> {
-
   @override
   void initState() {
     super.initState();
@@ -134,7 +133,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen2> {
     if (user != null) {
       // 3-1) 'password' Provider인 경우 → 이메일/비밀번호 로그인 방식을 사용했는지 체크
       //      autoLogin이 false라면 => 자동 로그인 해제
-      bool isEmailUser = user.providerData.any((info) => info.providerId == 'password');
+      bool isEmailUser =
+          user.providerData.any((info) => info.providerId == 'password');
 
       // ▸ 이메일/비밀번호 사용자이고(autoLogin == false)이면 로그아웃 처리
       if (isEmailUser && !autoLogin) {
@@ -151,7 +151,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen2> {
         // ───────────────────────────────────────────────────────────────
         // Firestore 사용자 문서 존재 여부 확인
         // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
-        final userDocumentExists = await ref.read(userDocumentExistsProvider(user.email ?? user?.uid).future);
+        final userDocumentExists = await ref
+            .read(userDocumentExistsProvider(user.email ?? user?.uid).future);
 
         // 사용자 문서가 존재하지 않으면 로그아웃 처리
         if (!userDocumentExists) {
@@ -212,19 +213,52 @@ class _SplashScreenState extends ConsumerState<SplashScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 스플래시 화면 UI 구성
+    // return Scaffold(
+    //   body: Stack(
+    //     // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
+    //       children: <Widget>[
+    //       Positioned.fill(
+    //         child: Image.asset(
+    //         'asset/img/misc/splash_image/couture_splash2_bg_img.png', // 이미지 파일 경로를 설정.
+    //         fit: BoxFit.cover, // 이미지 비율을 유지하면서 화면에 맞게 조절
+    //       ),
+    //      ),
+    //     ],
+    //   ),
+    // );
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 스플래시 화면 UI 구성
     return Scaffold(
-      body: Stack(
-        // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
-          children: <Widget>[
-          Positioned.fill(
-            child: Image.asset(
-            'asset/img/misc/splash_image/couture_splash2_bg_img.png', // 이미지 파일 경로를 설정.
-            fit: BoxFit.cover, // 이미지 비율을 유지하면서 화면에 맞게 조절
+      // body에 바로 CustomScrollView 배치
+      body: CustomScrollView(
+        slivers: [
+          // SliverFillRemaining:
+          // 남은 화면 전체를 차지하기 때문에
+          // 배경 이미지를 상하단까지 완전히 채울 수 있음.
+          SliverFillRemaining(
+            // 만약 스크롤이 필요 없고, 화면을 '정적으로' 채우기만 한다면
+            // hasScrollBody: false 를 사용해서 내용이 화면보다 작을 때 스크롤이 비활성화되도록 할 수 있음
+            hasScrollBody: false,
+            child: Stack(
+              children: [
+                // 배경 이미지
+                Positioned.fill(
+                  child: Image.asset(
+                    'asset/img/misc/splash_image/couture_splash2_bg_img.png',
+                    // 이미지 파일 경로를 설정.
+                    fit: BoxFit.cover, // 이미지 비율을 유지하면서 화면에 맞게 조절
+                  ),
+                ),
+              ],
+            ),
           ),
-         ),
         ],
       ),
     );
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   }
 }

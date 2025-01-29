@@ -37,49 +37,85 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 마이페이지 회원정보 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double uesrInfoCardViewWidth =
+    //     screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double uesrInfoCardViewPaddingX = screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    // final double uesrInfoCardViewPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double userInfoCardViewTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double userInfoCardViewGuideTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 로그인 및 회원가입 버튼과 로그아웃 버튼의 가로, 세로 비율 계산
+    // final double logoutBtnX =
+    //     screenSize.width * (110 / referenceWidth); // 로그아웃 버튼 가로 비율 계산
+    // final double logoutBtnY =
+    //     screenSize.height * (45 / referenceHeight); // 로그아웃 버튼 세로 비율 계산
+    // final double loginAndJoinBtnX =
+    //     screenSize.width * (180 / referenceWidth); // 로그인 및 회원가입 버튼 가로 비율 계산
+    // final double loginAndJoinBtnY =
+    //     screenSize.height * (45 / referenceHeight); // 로그인 및 회원가입 버튼 세로 비율 계산
+    //
+    // // 회원정보 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    // final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y = screenSize.height * (6 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y = screenSize.height * (12 / referenceHeight); // 세로 간격 3 계산
+    // final double interval4Y = screenSize.height * (20 / referenceHeight); // 세로 간격 4 계산
+    // final double interval1X = screenSize.width * (80 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    // final double interval3X = screenSize.width * (120 / referenceWidth); // 가로 간격 3 계산
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    //
+    // // 회원정보 내 계정별 이미지 수치
+    // final double snsTypeImageWidth = screenSize.width * (20 / referenceWidth);
+    // final double snsTypeImageHeight = screenSize.height * (20 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 마이페이지 회원정보 카드뷰 섹션의 가로와 세로 비율 계산
     final double uesrInfoCardViewWidth =
         screenSize.width * (360 / referenceWidth); // 가로 비율 계산
-    final double uesrInfoCardViewHeight =
-        screenSize.height * (220 / referenceHeight); // 세로 비율 계산
 
     // body 부분 전체 패딩 수치 계산
     final double uesrInfoCardViewPaddingX = screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double uesrInfoCardViewPadding1Y = screenSize.height * (8 / referenceHeight); // 상하 패딩 계산
+    final double uesrInfoCardViewPadding1Y = 8; // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double userInfoCardViewTitleFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double userInfoCardViewGuideTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double userInfoCardViewTitleFontSize = 18; // 텍스트 크기 비율 계산
+    final double userInfoCardViewGuideTextFontSize = 14; // 텍스트 크기 비율 계산
 
     // 로그인 및 회원가입 버튼과 로그아웃 버튼의 가로, 세로 비율 계산
     final double logoutBtnX =
         screenSize.width * (110 / referenceWidth); // 로그아웃 버튼 가로 비율 계산
-    final double logoutBtnY =
-        screenSize.height * (45 / referenceHeight); // 로그아웃 버튼 세로 비율 계산
+    final double logoutBtnY = 45; // 로그아웃 버튼 세로 비율 계산
     final double loginAndJoinBtnX =
         screenSize.width * (180 / referenceWidth); // 로그인 및 회원가입 버튼 가로 비율 계산
-    final double loginAndJoinBtnY =
-        screenSize.height * (45 / referenceHeight); // 로그인 및 회원가입 버튼 세로 비율 계산
+    final double loginAndJoinBtnY = 45; // 로그인 및 회원가입 버튼 세로 비율 계산
 
     // 회원정보 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y = screenSize.height * (6 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y = screenSize.height * (12 / referenceHeight); // 세로 간격 3 계산
-    final double interval4Y = screenSize.height * (20 / referenceHeight); // 세로 간격 4 계산
-    final double interval1X = screenSize.width * (80 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
-    final double interval3X = screenSize.width * (120 / referenceWidth); // 가로 간격 3 계산
+    final double interval1Y = 8; // 세로 간격 1 계산
+    final double interval2Y = 6; // 세로 간격 2 계산
+    final double interval3Y = 12; // 세로 간격 3 계산
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // 회원정보 내 계정별 이미지 수치
-    final double snsTypeImageWidth = screenSize.width * (20 / referenceWidth);
-    final double snsTypeImageHeight = screenSize.height * (20 / referenceHeight);
+    final double snsTypeImageWidth = 20;
+    final double snsTypeImageHeight = 20;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // FirebaseAuth를 사용하여 현재 로그인 상태를 확인
     final user = FirebaseAuth.instance.currentUser;
@@ -241,8 +277,15 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
 
     final Size screenSize = MediaQuery.of(context).size; // 기기 화면 크기 가져옴
     final double referenceHeight = 852.0; // 기준 화면 높이 설정
-    final double actionBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double actionBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double actionBtnTextFontSize = 14; // 텍스트 크기 비율 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Container(
       width: width,
@@ -276,8 +319,15 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
     final double referenceWidth = 393.0; // 기준 화면 너비 설정
     final double referenceHeight = 852.0; // 기준 화면 높이 설정
     final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double uesrInfoTextFontSize =
-        screenSize.height * (17 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double uesrInfoTextFontSize =
+    //     screenSize.height * (17 / referenceHeight); // 텍스트 크기 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double uesrInfoTextFontSize = 17; // 텍스트 크기 비율 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // SNS 타입에 따라 이미지 경로와 텍스트를 설정
     switch (snsType) {
@@ -342,8 +392,15 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
   Widget _buildUserInfoRow(BuildContext context, String label, String value) {
     final Size screenSize = MediaQuery.of(context).size; // 기기 화면 크기 가져옴
     final double referenceHeight = 852.0; // 기준 화면 높이 설정
-    final double uesrInfoTextFontSize =
-        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double uesrInfoTextFontSize =
+    //     screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double uesrInfoTextFontSize = 15; // 텍스트 크기 비율 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Row( // 행을 구성하는 위젯 생성
       children: [
@@ -383,8 +440,15 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     // 마이페이지 회원정보 카드뷰 섹션의 가로와 세로 비율 계산
     final double uesrProfileOptionsCardViewWidth =
         screenSize.width * (360 / referenceWidth); // 가로 비율 계산
-    final double uesrProfileOptionsCardViewHeight =
-        screenSize.height * (340 / referenceHeight); // 세로 비율 계산
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double uesrProfileOptionsCardViewHeight =
+    //     screenSize.height * (340 / referenceHeight); // 세로 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double uesrProfileOptionsCardViewHeight = 340; // 세로 비율 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Container(
       width: uesrProfileOptionsCardViewWidth, // 카드뷰의 가로 크기 설정
@@ -454,25 +518,47 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 마이페이지 옵션 버튼 크기 비율 계산
+    // final double userProfileOptionsHeight = screenSize.height * (60 / referenceHeight); // 버튼 높이 계산
+    // final double interval1X = screenSize.width * (12 / referenceWidth); // 아이콘과 텍스트 사이의 간격 계산
+    // final double interval2X = screenSize.width * (8 / referenceWidth); // 텍스트와 화살표 사이의 간격 계산
+    //
+    // // 마이페이지 옵션 버튼 내 구분선 부분 수치 계산
+    // final double uesrProfileOptionsDividerWidth =
+    //     screenSize.width * (360 / referenceWidth); // 구분선 가로 길이 계산
+    // final double uesrProfileOptionsDividerHeight =
+    //     screenSize.height * (1 / referenceHeight); // 구분선 세로 길이 계산
+    //
+    // // 아이콘 크기 관련 수치 계산
+    // final double iconImageWidth = screenSize.width * (24 / referenceWidth); // 아이콘 가로 크기 계산
+    // final double iconImageHeight = screenSize.width * (24 / referenceWidth); // 아이콘 세로 크기 계산
+    // final double iconTextFontSize =
+    //     screenSize.height * (15 / referenceHeight); // 아이콘 텍스트 크기 계산
+    // final double chevronBtnImageWidth = screenSize.width * (10 / referenceWidth); // 화살표 이미지 가로 크기 계산
+    // final double chevronBtnImageHeight = screenSize.width * (24 / referenceWidth); // 화살표 이미지 세로 크기 계산
+    // final double optionTitleY = screenSize.height * (10 / referenceHeight); // 타이틀 상하 패딩 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 마이페이지 옵션 버튼 크기 비율 계산
-    final double userProfileOptionsHeight = screenSize.height * (60 / referenceHeight); // 버튼 높이 계산
+    final double userProfileOptionsHeight = 60; // 버튼 높이 계산
     final double interval1X = screenSize.width * (12 / referenceWidth); // 아이콘과 텍스트 사이의 간격 계산
     final double interval2X = screenSize.width * (8 / referenceWidth); // 텍스트와 화살표 사이의 간격 계산
 
     // 마이페이지 옵션 버튼 내 구분선 부분 수치 계산
     final double uesrProfileOptionsDividerWidth =
         screenSize.width * (360 / referenceWidth); // 구분선 가로 길이 계산
-    final double uesrProfileOptionsDividerHeight =
-        screenSize.height * (1 / referenceHeight); // 구분선 세로 길이 계산
+    final double uesrProfileOptionsDividerHeight = 1; // 구분선 세로 길이 계산
 
     // 아이콘 크기 관련 수치 계산
     final double iconImageWidth = screenSize.width * (24 / referenceWidth); // 아이콘 가로 크기 계산
-    final double iconImageHeight = screenSize.width * (24 / referenceWidth); // 아이콘 세로 크기 계산
-    final double iconTextFontSize =
-        screenSize.height * (15 / referenceHeight); // 아이콘 텍스트 크기 계산
+    final double iconImageHeight = 24; // 아이콘 세로 크기 계산
+    final double iconTextFontSize = 15; // 아이콘 텍스트 크기 계산
     final double chevronBtnImageWidth = screenSize.width * (10 / referenceWidth); // 화살표 이미지 가로 크기 계산
-    final double chevronBtnImageHeight = screenSize.width * (24 / referenceWidth); // 화살표 이미지 세로 크기 계산
-    final double optionTitleY = screenSize.height * (10 / referenceHeight); // 타이틀 상하 패딩 계산
+    final double chevronBtnImageHeight = 24; // 화살표 이미지 세로 크기 계산
+    final double optionTitleY = 10; // 타이틀 상하 패딩 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column( // 컬럼 위젯으로 UI를 구성함
       children: [

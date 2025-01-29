@@ -232,42 +232,83 @@ class _CoatDetailProductScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double productDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double productDtAppBarTitleX = screenSize.height * (70 / referenceHeight);
+    // final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double productDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    // final double productDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    // final double productDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
+    //
+    // //  업데이트 요청 목록 버튼 수치 (Case 4)
+    // final double productDtCartlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double productDtCartlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double productDtCartlistBtnX = screenSize.width * (1 / referenceWidth);
+    // final double productDtCartlistBtnY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 홈 버튼 수치 (Case 4)
+    // final double productDtHomeBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double productDtHomeBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double productDtHomeBtnX = screenSize.width * (1 / referenceWidth);
+    // final double productDtHomeBtnY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 4)
+    // final double productDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double productDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
+    // final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double productDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double productDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
-    final double productDtAppBarTitleX = screenSize.height * (70 / referenceHeight);
-    final double productDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double productDtAppBarTitleHeight = 22;
+    final double productDtAppBarTitleX = screenSize.width * (70 / referenceWidth);
+    final double productDtAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double productDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
-    final double productDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double productDtChevronIconHeight = 24;
     final double productDtChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double productDtChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double productDtChevronIconY = 8;
 
     //  업데이트 요청 목록 버튼 수치 (Case 4)
-    final double productDtCartlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double productDtCartlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productDtCartlistBtnWidth = 40;
+    final double productDtCartlistBtnHeight = 40;
     final double productDtCartlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double productDtCartlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double productDtCartlistBtnY = 8;
 
     // 홈 버튼 수치 (Case 4)
     final double productDtHomeBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double productDtHomeBtnHeight = screenSize.height * (40 / referenceHeight);
+    final double productDtHomeBtnHeight = 40;
     final double productDtHomeBtnX = screenSize.width * (1 / referenceWidth);
-    final double productDtHomeBtnY = screenSize.height * (8 / referenceHeight);
+    final double productDtHomeBtnY = 8;
 
     // 찜 목록 버튼 수치 (Case 4)
-    final double productDtWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double productDtWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double productDtWishlistBtnX = screenSize.width * (1 / referenceWidth);
-    final double productDtWishlistBtnY = screenSize.height * (8 / referenceHeight);
+    final double productDtWishlistBtnWidth = 40;
+    final double productDtWishlistBtnHeight = 40;
+    final double productDtWishlistBtnX = 1;
+    final double productDtWishlistBtnY = 8;
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
 
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
