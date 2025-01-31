@@ -32,6 +32,8 @@
         특정 작업을 취소하거나 추가적인 액션을 취할 수 있는 기회를 제공 -->
         <!--android:icon="@mipmap/ic_launcher" : 사용자가 앱을 다운로드 받을 때,
         보이는 앱 아이콘 디자인 부분임-추후에 디자이너가 앱 아이콘 모양 그려주면 해당 이미지 추가하면 됨.-->
+        <!-- android:screenOrientation="portrait":
+        앱이 세로 모드(Portrait)로만 실행되며, 가로 모드(Landscape)로 회전되지 않도록 하는 설정 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -40,7 +42,8 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
-            tools:ignore="Instantiatable">
+            tools:ignore="Instantiatable"
+            android:screenOrientation="portrait">
 <!--            tools:ignore="Instantiatable"을 사용하면 Lint 검사 도구가 해당 경고를 무시하도록 지시하여 더 이상 "MainActivity must extend android.app.Activity"와 같은 경고를 표시하지 않게 됨-->
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user

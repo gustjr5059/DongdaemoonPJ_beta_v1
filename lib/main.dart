@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart'; // iOS 스타일 위젯 관련 패키�
 // Flutter의 UI 구성 요소를 제공하는 Material 디자인 패키지를 임포트합니다.
 // 이 패키지는 다양한 머티리얼 디자인 위젯을 포함하여 사용자 인터페이스를 효과적으로 구성할 수 있도록 도와줍니다.
 import 'package:flutter/material.dart'; // Material 디자인 위젯 관련 패키지
+import 'package:flutter/services.dart';
 // 상태 관리를 위한 현대적인 라이브러리인 Riverpod를 임포트합니다.
 // Riverpod는 애플리케이션의 상태를 효과적으로 관리하고, 상태 변화에 따라 UI를 자동으로 업데이트합니다.
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이브러리 Riverpod 관련 패키지
@@ -36,6 +37,13 @@ void main() async {
     options:
         DefaultFirebaseOptions.currentPlatform, // 현재 플랫폼에 맞는 Firebase 초기 설정 적용
   );
+
+  // 앱이 기기에서 세로 모드(Portrait)만 허용
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown, // iPad 지원 시 필요
+  ]);
+
   runApp(
     ProviderScope(
       // 앱 전체에 걸쳐 Riverpod 상태 관리를 가능하게 하는 최상위 위젯
