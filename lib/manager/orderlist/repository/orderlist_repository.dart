@@ -11,7 +11,7 @@ class AdminOrderlistRepository {
   // 현재 로그인한 이메일을 가져오는 헬퍼 함수
   Future<String?> _getCurrentUserEmail() async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    return currentUser?.email;
+    return currentUser?.email ?? currentUser?.uid;
   }
 
   // 현재 로그인한 이메일로부터 market_code 값을 가져오는 헬퍼 함수
@@ -22,7 +22,7 @@ class AdminOrderlistRepository {
     // 'users' 컬렉션에서 현재 로그인한 이메일과 동일한 문서를 찾는다.
     final querySnapshot = await firestore
         .collection('users')
-        .where('email', isEqualTo: currentUserEmail)
+        .where('registration_id', isEqualTo: currentUserEmail)
         .limit(1) // 해당 이메일은 유일하다고 가정
         .get();
 
@@ -47,7 +47,7 @@ class AdminOrderlistRepository {
       // 변경된 부분: 현재 로그인한 이메일을 제외한 나머지 이메일 리스트를 추출
       final emailList = querySnapshot.docs
           .map((doc) => doc.data()['email'] as String)
-          .where((email) => email.isNotEmpty && email != currentUserEmail) // 변경된 부분
+          .where((email) => email.isNotEmpty && email != (currentUserEmail ?? '')) // 변경된 부분
           .toList();
 
       print('유효한 이메일 ${emailList.length}개를 필터링함.');
@@ -71,11 +71,38 @@ class AdminOrderlistRepository {
         print('마지막 문서 이후의 데이터를 가져옵니다.');
       }
 
+      // ---------- (1) 'users' 컬렉션에서 userEmail에 대응하는 문서를 찾음 ----------
+      // 기존에는 바로 wearcano_order_list.doc(userEmail)를 참조했으나,
+      // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 만약 문서를 찾지 못하면 빈 리스트 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('해당 이메일과 일치하는 users 문서를 찾지 못했음: $userEmail');
+        return [];
+      }
+
+      // 찾은 문서에서 registration_id 필드를 가져옴
+      final userDocData = userQuerySnapshot.docs.first.data();
+      final registrationId = userDocData['registration_id']?.toString() ?? '';
+
+      // 만약 registration_id 필드가 없으면 빈 리스트 반환
+      if (registrationId.isEmpty) {
+        print('해당 users 문서에 registration_id가 없음: $userEmail');
+        return [];
+      }
+
+      // ---------- (2) wearcano_order_list 컬렉션에서 doc(registrationId)로 참조 ----------
+      final userDocRef = firestore
+          .collection('wearcano_order_list')
+          .doc(registrationId);
+
       // market_code 값을 가져옴
       final currentMarketCode = await _getMarketCodeForCurrentUserEmail();
-
-      // 'wearcano_order_list' 컬렉션에서 해당 사용자 이메일의 문서를 참조
-      final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
 
       // 'orders' 컬렉션에서 'private_orderList_closed_button' 값이 false인 문서들만 조회하며, 최신순으로 정렬하고 제한된 개수만큼 가져옴
       // market_code가 master인지 아닌지에 따라 쿼리 분기
@@ -140,8 +167,35 @@ class AdminOrderlistRepository {
     print("발주 상세 데이터 요청 시작: orderNumber=$orderNumber, userEmail=$userEmail");
 
     try {
-      // Firestore의 'couture_order_list' 컬렉션에서 사용자의 이메일을 기준으로 문서 참조를 가져옴
-      final userDocRef = firestore.collection('wearcano_order_list').doc(userEmail);
+      // ---------- (1) 'users' 컬렉션에서 userEmail에 대응하는 문서를 찾음 ----------
+      // 기존에는 바로 wearcano_order_list.doc(userEmail)를 참조했으나,
+      // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 만약 문서를 찾지 못하면 빈 Map 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('해당 이메일과 일치하는 users 문서를 찾지 못했음: $userEmail');
+        return {};
+      }
+
+      // 찾은 문서에서 registration_id 필드를 가져옴
+      final userDocData = userQuerySnapshot.docs.first.data();
+      final registrationId = userDocData['registration_id']?.toString() ?? '';
+
+      // 만약 registration_id 필드가 없으면 빈 Map 반환
+      if (registrationId.isEmpty) {
+        print('해당 users 문서에 registration_id가 없음: $userEmail');
+        return {};
+      }
+
+      // ---------- (2) wearcano_order_list 컬렉션에서 doc(registrationId)로 참조 ----------
+      final userDocRef = firestore
+          .collection('wearcano_order_list')
+          .doc(registrationId);
 
       // 'orders' 서브 컬렉션에서 'numberInfo.order_number' 필드와 일치하는 주문 번호를 가진 문서를 조회함
       final ordersQuerySnapshot = await userDocRef.collection('orders')

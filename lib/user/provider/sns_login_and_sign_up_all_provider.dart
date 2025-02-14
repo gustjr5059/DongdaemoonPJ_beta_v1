@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../repository/sns_login_repository.dart';
+import '../repository/sns_login_and_sign_up_repository.dart';
 
 
 // SNSLoginRepository Provider인 snsLoginRepositoryProvider
@@ -19,7 +19,7 @@ final userDocumentExistsProvider = FutureProvider.family<bool, String?>((ref, em
   return await userRepository.checkIfUserDocumentExists(email);
 });
 
-// 회원가입 Repository Provider인 signUpInfoRepositoryProvider
-final signUpInfoRepositoryProvider = Provider<SignUpInfoRepository>((ref) {
-  return SignUpInfoRepository();
+// 회원가입 Repository Provider인 snsSignUpInfoRepositoryProvider
+final snsSignUpInfoRepositoryProvider = Provider<SnsSignUpInfoRepository>((ref) {
+  return SnsSignUpInfoRepository();
 });

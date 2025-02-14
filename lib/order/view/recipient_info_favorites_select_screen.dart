@@ -123,6 +123,7 @@ class _RecipientInfoFavoritesSelectScreenState
           .loadMoreRecipientInfoItems();
 
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -135,6 +136,7 @@ class _RecipientInfoFavoritesSelectScreenState
             .read(recipientInfoFavoritesSelectScrollPositionProvider.notifier)
             .state = 0.0; // 수령자 정보 즐겨찾기 선택 화면 자체의 스크롤 위치 인덱스를 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
       }
     });
 
@@ -196,56 +198,98 @@ class _RecipientInfoFavoritesSelectScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double recipientInfoAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double recipientInfoAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double recipientInfoAppBarTitleX =
+    //     screenSize.height * (5 / referenceHeight);
+    // final double recipientInfoAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double recipientInfoChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double recipientInfoChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double recipientInfoChevronIconX =
+    //     screenSize.width * (12 / referenceWidth);
+    // final double recipientInfoChevronIconY =
+    //     screenSize.height * (8 / referenceHeight);
+    //
+    // // 수령자 정보 즐겨찾기 목록 비어있는 경우의 알림 부분 수치
+    // final double recipientInfoEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double recipientInfoEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double recipientInfoEmptyTextX =
+    //     screenSize.width * (100 / referenceWidth); // 가로 비율
+    // final double recipientInfoEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율
+    // final double recipientInfoEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double recipientInfoAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double recipientInfoAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double recipientInfoAppBarTitleX =
-        screenSize.height * (5 / referenceHeight);
-    final double recipientInfoAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double recipientInfoAppBarTitleHeight = 22;
+    final double recipientInfoAppBarTitleX = 5;
+    final double recipientInfoAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double recipientInfoChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double recipientInfoChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double recipientInfoChevronIconHeight = 24;
     final double recipientInfoChevronIconX =
         screenSize.width * (12 / referenceWidth);
-    final double recipientInfoChevronIconY =
-        screenSize.height * (8 / referenceHeight);
+    final double recipientInfoChevronIconY = 8;
 
     // 수령자 정보 즐겨찾기 목록 비어있는 경우의 알림 부분 수치
     final double recipientInfoEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double recipientInfoEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double recipientInfoEmptyTextX =
-        screenSize.width * (100 / referenceWidth); // 가로 비율
+    final double recipientInfoEmptyTextHeight = 22; // 세로 비율
     final double recipientInfoEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double recipientInfoEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double recipientInfoEmptyTextFontSize = 16;
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+    final double loginGuideTextHeight = 22; // 세로 비율
+    final double loginGuideText1Y = 300;
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,

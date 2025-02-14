@@ -13,7 +13,6 @@ import '../provider/orderlist_all_provider.dart';
 import '../provider/orderlist_state_provider.dart';
 import '../view/orderlist_detail_screen.dart';
 
-
 // ------ 발주내역 관리 화면 내 드롭다운 메뉴 버튼 및 버튼 클릭 시, 나오는 데이터 UI 내용을 구현하는 AdminOrderListContents 클래스 시작
 // ——— AdminOrderListItemWidget 클래스 시작 부분
 class AdminOrderListItemWidget extends ConsumerStatefulWidget {
@@ -34,10 +33,10 @@ class _AdminOrderListItemWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final selectedUserEmail =
-    ref.watch(adminSelectedOrdererEmailProvider); // 선택된 발주자 이메일 상태를 구독하는 동작임
+    final selectedUserEmail = ref
+        .watch(adminSelectedOrdererEmailProvider); // 선택된 발주자 이메일 상태를 구독하는 동작임
     final usersEmail =
-    ref.watch(adminOrdererEmailProvider); // 모든 발주자 이메일 목록을 구독하는 동작임
+        ref.watch(adminOrdererEmailProvider); // 모든 발주자 이메일 목록을 구독하는 동작임
     final orderlistItems = ref.watch(
         adminOrderlistItemsListNotifierProvider); // 선택된 발주자의 발주 내역 리스트를 구독하는 동작임
 
@@ -51,51 +50,85 @@ class _AdminOrderListItemWidgetState
     final double referenceWidth = 393.0; // 기준 화면 가로 크기임
     final double referenceHeight = 852.0; // 기준 화면 세로 크기임
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double ordererDropdownBtnWidth =
+    //     screenSize.width * (250 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
+    // final double ordererDropdownBtnHeight =
+    //     screenSize.height * (50 / referenceHeight); // 드롭다운 버튼의 세로 비율 크기임
+    // final double ordererSelectDataTextSize1 =
+    //     screenSize.height * (12 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
+    // final double ordererSelectDataTextSize2 =
+    //     screenSize.height * (12 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
+    //
+    // // 컨텐츠 사이 간격 수치임
+    // final double interval1Y =
+    //     screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산용임
+    // final double interval2Y =
+    //     screenSize.height * (12 / referenceHeight); // 세로 간격 2 계산용임
+    // final double interval3Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 간격 3 계산용임
+    // final double interval1X = screenSize.width * (8 / referenceWidth); // 가로 간격 계산용임
+    //
+    // // 발주 내역이 없을 경우 표시할 메시지 관련 사이즈 비율 계산용임
+    // final double orderlistEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 발주 내역 없음 텍스트 가로 비율임
+    // final double orderlistEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 발주 내역 없음 텍스트 세로 비율임
+    // final double orderlistEmptyTextX =
+    //     screenSize.width * (50 / referenceWidth); // 발주 내역 없음 텍스트 가로 위치 비율임
+    // final double orderlistEmptyTextY =
+    //     screenSize.height * (200 / referenceHeight); // 발주 내역 없음 텍스트 세로 위치 비율임
+    // final double orderlistEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 발주 내역 없음 텍스트 크기 비율임
+    //
+    // // 텍스트 크기 비율 계산용임
+    // final double orderlistInfoOrderStatusDataFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 발주 상태 텍스트 크기 비율임
+    // final double orderlistInfoOrderNumberDataFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 발주 번호 텍스트 크기 비율임
+    // final double orderlistInfoOrderDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 발주 날짜 텍스트 크기 비율임
+    //
+    // // 발주내역 상세보기 버튼 크기 비율 계산용임
+    // final double orderlistInfoDetailViewBtn1X =
+    //     screenSize.width * (220 / referenceWidth); // 상세보기 버튼 가로 비율임
+    // final double orderlistInfoDetailViewBtn1Y =
+    //     screenSize.height * (40 / referenceHeight); // 상세보기 버튼 세로 비율임
+    // final double orderlistInfoDetailViewBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 상세보기 버튼 텍스트 크기 비율임
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     final double ordererDropdownBtnWidth =
-        screenSize.width * (250 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
-    final double ordererDropdownBtnHeight =
-        screenSize.height * (50 / referenceHeight); // 드롭다운 버튼의 세로 비율 크기임
-    final double ordererSelectDataTextSize1 =
-        screenSize.height * (12 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
-    final double ordererSelectDataTextSize2 =
-        screenSize.height * (12 / referenceHeight); // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
+        screenSize.width * (300 / referenceWidth); // 드롭다운 버튼의 가로 비율 크기임
+    final double ordererDropdownBtnHeight = 50; // 드롭다운 버튼의 세로 비율 크기임
+    final double ordererSelectDataTextSize1 = 12; // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
+    final double ordererSelectDataTextSize2 = 12; // 드롭다운 버튼 내 텍스트 크기 비율 계산용임
 
     // 컨텐츠 사이 간격 수치임
-    final double interval1Y =
-        screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산용임
-    final double interval2Y =
-        screenSize.height * (12 / referenceHeight); // 세로 간격 2 계산용임
-    final double interval3Y =
-        screenSize.height * (4 / referenceHeight); // 세로 간격 3 계산용임
-    final double interval1X = screenSize.width * (8 / referenceWidth); // 가로 간격 계산용임
+    final double interval1Y = 8; // 세로 간격 1 계산용임
+    final double interval2Y = 12; // 세로 간격 2 계산용임
+    final double interval3Y = 4; // 세로 간격 3 계산용임
+    final double interval1X = 2; // 가로 간격 계산용임
 
     // 발주 내역이 없을 경우 표시할 메시지 관련 사이즈 비율 계산용임
     final double orderlistEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 발주 내역 없음 텍스트 가로 비율임
-    final double orderlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 발주 내역 없음 텍스트 세로 비율임
-    final double orderlistEmptyTextX =
-        screenSize.width * (50 / referenceWidth); // 발주 내역 없음 텍스트 가로 위치 비율임
+    final double orderlistEmptyTextHeight = 22; // 발주 내역 없음 텍스트 세로 비율임
     final double orderlistEmptyTextY =
         screenSize.height * (200 / referenceHeight); // 발주 내역 없음 텍스트 세로 위치 비율임
-    final double orderlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 발주 내역 없음 텍스트 크기 비율임
+    final double orderlistEmptyTextFontSize = 16; // 발주 내역 없음 텍스트 크기 비율임
 
     // 텍스트 크기 비율 계산용임
-    final double orderlistInfoOrderStatusDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 발주 상태 텍스트 크기 비율임
-    final double orderlistInfoOrderNumberDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 발주 번호 텍스트 크기 비율임
-    final double orderlistInfoOrderDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 발주 날짜 텍스트 크기 비율임
+    final double orderlistInfoOrderStatusDataFontSize = 16; // 발주 상태 텍스트 크기 비율임
+    final double orderlistInfoOrderNumberDataFontSize = 16; // 발주 번호 텍스트 크기 비율임
+    final double orderlistInfoOrderDateDataFontSize = 14; // 발주 날짜 텍스트 크기 비율임
 
     // 발주내역 상세보기 버튼 크기 비율 계산용임
-    final double orderlistInfoDetailViewBtn1X =
-        screenSize.width * (220 / referenceWidth); // 상세보기 버튼 가로 비율임
-    final double orderlistInfoDetailViewBtn1Y =
-        screenSize.height * (40 / referenceHeight); // 상세보기 버튼 세로 비율임
-    final double orderlistInfoDetailViewBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 상세보기 버튼 텍스트 크기 비율임
+    final double orderlistInfoDetailViewBtn1X = screenSize.width * (220 / referenceWidth); // 상세보기 버튼 가로 비율임
+    final double orderlistInfoDetailViewBtn1Y = 40; // 상세보기 버튼 세로 비율임
+    final double orderlistInfoDetailViewBtnFontSize = 14; // 상세보기 버튼 텍스트 크기 비율임
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       children: [
@@ -103,73 +136,90 @@ class _AdminOrderListItemWidgetState
         // 드롭다운 버튼을 중앙에 위치시키는 Center 위젯임
         Center(
           child: Container(
-            width: ordererDropdownBtnWidth, // 드롭다운 버튼 가로 크기 설정임
-            height: ordererDropdownBtnHeight, // 드롭다운 버튼 세로 크기 설정임
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색 지정임
-              border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선 설정임
-              borderRadius: BorderRadius.circular(6), // 모서리를 둥글게 처리함
-            ),
-            padding: EdgeInsets.symmetric(horizontal: interval1X), // 드롭다운 내부 좌우 패딩 설정임
-            alignment: Alignment.center, // 드롭다운 콘텐츠 중앙 정렬용임
-            child: DropdownButtonHideUnderline(
-              child: usersEmail.when(
-                data: (usersEmailList) {
-                  final uniqueUsersEmailList =
-                  usersEmailList.toSet().toList(); // 발주자 이메일 목록 중복 제거용임
-                  final validSelectedUserEmail = (selectedUserEmail != null &&
-                      uniqueUsersEmailList.contains(selectedUserEmail))
-                      ? selectedUserEmail
-                      : null; // 선택된 이메일이 유효하지 않을 경우 null 처리함
+            width: ordererDropdownBtnWidth,
+            // 드롭다운 버튼 가로 크기 설정임
+            height: ordererDropdownBtnHeight,
+            // 드롭다운 버튼 세로 크기 설정임
+            // decoration: BoxDecoration(
+            //   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색 지정임
+            //   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선 설정임
+            //   borderRadius: BorderRadius.circular(6), // 모서리를 둥글게 처리함
+            // ),
+            // padding: EdgeInsets.symmetric(horizontal: interval1X), // 드롭다운 내부 좌우 패딩 설정임
+            // alignment: Alignment.center, // 드롭다운 콘텐츠 중앙 정렬용임
+            child: InputDecorator(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: usersEmail.when(
+                  data: (usersEmailList) {
+                    final uniqueUsersEmailList =
+                        usersEmailList.toSet().toList(); // 발주자 이메일 목록 중복 제거용임
+                    final validSelectedUserEmail = (selectedUserEmail != null &&
+                            uniqueUsersEmailList.contains(selectedUserEmail))
+                        ? selectedUserEmail
+                        : null; // 선택된 이메일이 유효하지 않을 경우 null 처리함
 
-                  return DropdownButton<String>(
-                    hint: Center(
-                      child: Text(
-                        '발주자 선택', // 드롭다운에 표시될 힌트 텍스트임
-                        style: TextStyle(
-                          fontFamily: 'NanumGothic',
-                          fontSize: ordererSelectDataTextSize1, // 텍스트 크기 설정임
-                        ),
-                      ),
-                    ),
-                    value: validSelectedUserEmail, // 선택된 이메일 값 설정임
-                    onChanged: (value) {
-                      // 이메일 선택 시 상태 업데이트용임
-                      ref
-                          .read(adminSelectedOrdererEmailProvider.notifier)
-                          .state = value; // 선택된 이메일 값 변경 동작임
-                    },
-                    items: uniqueUsersEmailList.map((email) {
-                      return DropdownMenuItem<String>(
-                        value: email, // 이메일 값 설정임
+                    return DropdownButton<String>(
+                      hint: Center(
                         child: Text(
-                          email, // 드롭다운 항목으로 표시할 이메일 텍스트임
+                          '발주자 선택', // 드롭다운에 표시될 힌트 텍스트임
                           style: TextStyle(
-                            fontWeight: FontWeight.normal,
                             fontFamily: 'NanumGothic',
-                            fontSize: ordererSelectDataTextSize2, // 텍스트 크기 설정임
-                            color: BLACK_COLOR, // 텍스트 색상 설정임
+                            fontSize: ordererSelectDataTextSize1, // 텍스트 크기 설정임
                           ),
                         ),
-                      );
-                    }).toList(),
-                  );
-                },
-                loading: () => buildCommonLoadingIndicator(), // 로딩 상태 시 로딩 인디케이터 표시용임
-                error: (e, stack) =>
-                const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')), // 에러 발생 시 안내 메시지 표시용임
+                      ),
+                      value: validSelectedUserEmail, // 선택된 이메일 값 설정임
+                      onChanged: (value) {
+                        // 이메일 선택 시 상태 업데이트용임
+                        ref
+                            .read(adminSelectedOrdererEmailProvider.notifier)
+                            .state = value; // 선택된 이메일 값 변경 동작임
+                      },
+                      items: uniqueUsersEmailList.map((email) {
+                        return DropdownMenuItem<String>(
+                          value: email, // 이메일 값 설정임
+                          child: Text(
+                            email, // 드롭다운 항목으로 표시할 이메일 텍스트임
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'NanumGothic',
+                              fontSize: ordererSelectDataTextSize2,
+                              // 텍스트 크기 설정임
+                              color: BLACK_COLOR, // 텍스트 색상 설정임
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                  loading: () => buildCommonLoadingIndicator(),
+                  // 로딩 상태 시 로딩 인디케이터 표시용임
+                  error: (e, stack) => const Center(
+                      child: Text(
+                          '에러가 발생했으니, 앱을 재실행해주세요.')), // 에러 발생 시 안내 메시지 표시용임
+                ),
               ),
             ),
           ),
         ),
         SizedBox(height: interval1Y), // 드롭다운 버튼 아래 여백용임
         if (orderlistItems.isEmpty)
-        // 발주 내역이 없을 경우 알림 메시지 표시용임
+          // 발주 내역이 없을 경우 알림 메시지 표시용임
           Container(
-            width: orderlistEmptyTextWidth, // 알림 메시지 컨테이너 가로 크기임
-            height: orderlistEmptyTextHeight, // 알림 메시지 컨테이너 세로 크기임
-            margin: EdgeInsets.only(top: orderlistEmptyTextY), // 상단 여백 설정임
-            alignment: Alignment.center, // 텍스트 중앙 정렬용임
+            width: orderlistEmptyTextWidth,
+            // 알림 메시지 컨테이너 가로 크기임
+            height: orderlistEmptyTextHeight,
+            // 알림 메시지 컨테이너 세로 크기임
+            margin: EdgeInsets.only(top: orderlistEmptyTextY),
+            // 상단 여백 설정임
+            alignment: Alignment.center,
+            // 텍스트 중앙 정렬용임
             child: Text(
               '현재 발주 내역이 없습니다.', // 발주 내역 없음 메시지 텍스트임
               style: TextStyle(
@@ -181,7 +231,7 @@ class _AdminOrderListItemWidgetState
             ),
           )
         else
-        // 발주 내역이 있을 경우 해당 내역을 리스트 형태로 표시함
+          // 발주 내역이 있을 경우 해당 내역을 리스트 형태로 표시함
           Column(
             children: orderlistItems.asMap().entries.map((entry) {
               final index = entry.key; // 현재 아이템의 인덱스 번호임
@@ -197,7 +247,7 @@ class _AdminOrderListItemWidgetState
                 ),
                 child: CommonCardView(
                   backgroundColor:
-                  Theme.of(context).scaffoldBackgroundColor, // 카드뷰 배경색 설정임
+                      Theme.of(context).scaffoldBackgroundColor, // 카드뷰 배경색 설정임
                   elevation: 0, // 카드뷰 그림자 깊이 설정임
                   content: Padding(
                     padding: EdgeInsets.zero, // 패딩 없음 설정임
@@ -205,11 +255,13 @@ class _AdminOrderListItemWidgetState
                       crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬용임
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // 양 끝 정렬용임
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // 양 끝 정렬용임
                           children: [
                             // 발주번호 표시 텍스트
                             Text(
-                              '발주번호:  ${orderlistItem['order_number'] ?? ''}', // 발주 번호 정보 표시용임
+                              '발주번호:  ${orderlistItem['order_number'] ?? ''}',
+                              // 발주 번호 정보 표시용임
                               style: TextStyle(
                                 fontSize: orderlistInfoOrderNumberDataFontSize,
                                 fontWeight: FontWeight.bold,
@@ -217,12 +269,13 @@ class _AdminOrderListItemWidgetState
                                 color: BLACK_COLOR,
                               ),
                             ),
+                            SizedBox(width: interval1X),
                             // 발주상태 표시 텍스트
                             Text(
                               orderlistItem['order_status']
-                                  ?.toString()
-                                  .isNotEmpty ==
-                                  true
+                                          ?.toString()
+                                          .isNotEmpty ==
+                                      true
                                   ? orderlistItem['order_status']
                                   : '',
                               style: TextStyle(
@@ -248,13 +301,17 @@ class _AdminOrderListItemWidgetState
                         SizedBox(height: interval2Y), // 간격 추가용임
                         // 상세보기 버튼을 배치하는 행임
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬용임
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // 중앙 정렬용임
                           children: [
                             Container(
-                              width: orderlistInfoDetailViewBtn1X, // 상세보기 버튼 가로 크기 설정임
-                              height: orderlistInfoDetailViewBtn1Y, // 상세보기 버튼 세로 크기 설정임
+                              width: orderlistInfoDetailViewBtn1X,
+                              // 상세보기 버튼 가로 크기 설정임
+                              height: orderlistInfoDetailViewBtn1Y,
+                              // 상세보기 버튼 세로 크기 설정임
                               margin:
-                              EdgeInsets.symmetric(vertical: interval3Y), // 상하 간격 설정임
+                                  EdgeInsets.symmetric(vertical: interval3Y),
+                              // 상하 간격 설정임
                               child: ElevatedButton(
                                 onPressed: () {
                                   // 상세보기 버튼 클릭 시 발주 상세 화면으로 이동함
@@ -263,10 +320,12 @@ class _AdminOrderListItemWidgetState
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           AdminOrderListDetailScreen(
-                                            orderNumber:
-                                            orderlistItem['order_number'] ?? '', // 발주 번호 전달용임
-                                            userEmail: selectedUserEmail ?? '', // 발주자 이메일 전달용임
-                                          ),
+                                        orderNumber:
+                                            orderlistItem['order_number'] ?? '',
+                                        // 발주 번호 전달용임
+                                        userEmail: selectedUserEmail ??
+                                            '', // 발주자 이메일 전달용임
+                                      ),
                                     ),
                                   );
                                 },
@@ -275,14 +334,15 @@ class _AdminOrderListItemWidgetState
                                   backgroundColor: ORANGE56_COLOR,
                                   padding: EdgeInsets.zero,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(45), // 모서리를 둥글게 처리함
+                                    borderRadius: BorderRadius.circular(
+                                        45), // 모서리를 둥글게 처리함
                                   ),
                                 ),
                                 child: Text(
                                   '발주 내역 상세보기', // 버튼 텍스트 표시용임
                                   style: TextStyle(
-                                    fontSize: orderlistInfoDetailViewBtnFontSize,
+                                    fontSize:
+                                        orderlistInfoDetailViewBtnFontSize,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'NanumGothic',
                                     color: WHITE_COLOR,
@@ -332,88 +392,140 @@ class _AdminOrderListDetailItemWidgetState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 발주내역 상세 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double orderlistDtInfo3CardViewWidth =
+    //     screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    // final double orderlistDtInfo3CardViewHeight =
+    //     screenSize.height * (200 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double orderlistDtInfoCardViewPaddingX =
+    //     screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
+    // final double orderlistDtInfoCardViewPadding1Y =
+    //     screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double orderlistDtInfoOrderNumberDataFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoOrderDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoPaymentCompletionDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfodeliveryStartDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoPaymentInfoDataFontSize1 =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoPaymentInfoDataFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoOrdererInfoDataFontSize1 =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoOrdererInfoDataFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoRecipientInfoDataFontSize1 =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoRecipientInfoDataFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoRefundCompletionDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoBriefIntroDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoProdNumberDataFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoOriginalPriceDataFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoDiscountPriceDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoDiscountPercentDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoColorImageDataWidth =
+    //     screenSize.width * (14 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    // final double orderlistDtInfoColorImageDataHeight =
+    //     screenSize.width * (14 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    // final double orderlistDtInfoColorTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoSizeTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoCountTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    // final double interval1Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y =
+    //     screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y =
+    //     screenSize.height * (16 / referenceHeight); // 세로 간격 3 계산
+    // final double interval4Y =
+    //     screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
+    // final double interval1X =
+    //     screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X =
+    //     screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    // final double interval3X =
+    //     screenSize.width * (20 / referenceWidth); // 가로 간격 3 계산
+    // final double interval4X =
+    //     screenSize.width * (70 / referenceWidth); // 가로 간격 4 계산
+    //
+    // // 에러 메시지 텍스트 크기 설정
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 발주내역 상세 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
-    final double orderlistDtInfo3CardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
-    final double orderlistDtInfo3CardViewHeight =
-        screenSize.height * (200 / referenceHeight); // 세로 비율 계산
 
     // body 부분 전체 패딩 수치 계산
     final double orderlistDtInfoCardViewPaddingX =
         screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
-    final double orderlistDtInfoCardViewPadding1Y =
-        screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
+    final double orderlistDtInfoCardViewPadding1Y = 5; // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double orderlistDtInfoOrderNumberDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoOrderDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoPaymentCompletionDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfodeliveryStartDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoPaymentInfoDataFontSize1 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoPaymentInfoDataFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoOrdererInfoDataFontSize1 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoOrdererInfoDataFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoRecipientInfoDataFontSize1 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoRecipientInfoDataFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoRefundCompletionDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoBriefIntroDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoProdNumberDataFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoOriginalPriceDataFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoDiscountPriceDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoDiscountPercentDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoColorImageDataWidth =
-        screenSize.width * (14 / referenceWidth); // 색상 이미지 가로 크기 설정함
-    final double orderlistDtInfoColorImageDataHeight =
-        screenSize.width * (14 / referenceWidth); // 색상 이미지 세로 크기 설정함
-    final double orderlistDtInfoColorTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoSizeTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoCountTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrderNumberDataFontSize = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrderDateDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoPaymentCompletionDateDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfodeliveryStartDateDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoPaymentInfoDataFontSize1 = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoPaymentInfoDataFontSize2 = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrdererInfoDataFontSize1 = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrdererInfoDataFontSize2 = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoRecipientInfoDataFontSize1 = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoRecipientInfoDataFontSize2 = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoRefundCompletionDateDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoBriefIntroDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoProdNumberDataFontSize = 12; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOriginalPriceDataFontSize = 12; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoDiscountPriceDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoDiscountPercentDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoColorImageDataWidth = 14; // 색상 이미지 가로 크기 설정함
+    final double orderlistDtInfoColorImageDataHeight = 14; // 색상 이미지 세로 크기 설정함
+    final double orderlistDtInfoColorTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoSizeTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoCountTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoThumnailPartHeight = 120; // 썸네일 세로 비율 설정함
+    final double orderlistDtInfoTextDataPartHeight = 160; // 텍스트 데이터 부분의 높이 설정함
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y =
-        screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y =
-        screenSize.height * (16 / referenceHeight); // 세로 간격 3 계산
-    final double interval4Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
-    final double interval1X =
-        screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X =
-        screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
-    final double interval3X =
-        screenSize.width * (20 / referenceWidth); // 가로 간격 3 계산
-    final double interval4X =
-        screenSize.width * (70 / referenceWidth); // 가로 간격 4 계산
+    final double interval1Y = 4; // 세로 간격 1 계산
+    final double interval2Y = 8; // 세로 간격 2 계산
+    final double interval3Y = 16; // 세로 간격 3 계산
+    final double interval4Y = 10; // 세로 간격 4 계산
+    final double interval1X = 20; // 가로 간격 1 계산
+    final double interval2X = 10; // 가로 간격 2 계산
+    final double interval4X = 70; // 가로 간격 4 계산
 
     // 에러 메시지 텍스트 크기 설정
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+    final double errorTextFontSize1 = 14; // 첫 번째 에러 텍스트 크기
+    final double errorTextFontSize2 = 12; // 두 번째 에러 텍스트 크기
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
@@ -432,17 +544,18 @@ class _AdminOrderListDetailItemWidgetState
             : '';
 
     // 선택된 이메일 계정 데이터를 불러오고, 값이 유효하지 않으면 ''을 반환함
-    final selectedUserEmail = ref.watch(adminSelectedOrdererEmailProvider) ?? '';
+    final selectedUserEmail =
+        ref.watch(adminSelectedOrdererEmailProvider) ?? '';
 
     // 결제 완료일 데이터(선택된 이메일 계정과 발주번호 관련)를 비동기로 가져오는 provider를 호출하고 결과를 paymentCompleteDateAsyncValue에 저장함
     final paymentCompleteDateAsyncValue = ref.watch(
-        paymentCompleteDateForSelectedEmailProvider(Tuple2(selectedUserEmail, orderNumber))
-    );
+        paymentCompleteDateForSelectedEmailProvider(
+            Tuple2(selectedUserEmail, orderNumber)));
 
     // 배송 시작 날짜 데이터(선택된 이메일 계정과 발주번호 관련)를 비동기로 가져오는 provider를 호출하고 결과를 deliveryStartDateAsyncValue에 저장함
     final deliveryStartDateAsyncValue = ref.watch(
-        deliveryStartDateForSelectedEmailProvider(Tuple2(selectedUserEmail, orderNumber))
-    );
+        deliveryStartDateForSelectedEmailProvider(
+            Tuple2(selectedUserEmail, orderNumber)));
 
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
@@ -481,9 +594,16 @@ class _AdminOrderListDetailItemWidgetState
     final ordererInfo = widget.order!['ordererInfo'] ?? {};
 
     // 발주자 정보에서 이름, 이메일, 휴대폰 번호를 가져오고, 값이 유효하지 않으면 기본 메시지를 설정함
-    final ordererName = ordererInfo['name']?.toString().isNotEmpty == true ? ordererInfo['name'] : '';
-    final ordererPhone = ordererInfo['phone_number']?.toString().isNotEmpty == true ? ordererInfo['phone_number'] : '';
-    final ordererEmail = ordererInfo['email']?.toString().isNotEmpty == true ? ordererInfo['email'] : '';
+    final ordererName = ordererInfo['name']?.toString().isNotEmpty == true
+        ? ordererInfo['name']
+        : '';
+    final ordererPhone =
+        ordererInfo['phone_number']?.toString().isNotEmpty == true
+            ? ordererInfo['phone_number']
+            : '';
+    final ordererEmail = ordererInfo['email']?.toString().isNotEmpty == true
+        ? ordererInfo['email']
+        : '';
 
     // 수령자 정보가 null인지 확인하고 각 필드를 안전하게 접근함
     final recipientInfo = widget.order!['recipientInfo'] ?? {};
@@ -746,13 +866,13 @@ class _AdminOrderListDetailItemWidgetState
           decoration: BoxDecoration(
             border: Border(
               bottom:
-              BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                  BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
             ),
           ),
           child: CommonCardView(
             // 공통 카드뷰 위젯 사용
             backgroundColor:
-            Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
+                Theme.of(context).scaffoldBackgroundColor, // 배경색 설정
             elevation: 0, // 그림자 깊이 설정
             content: Padding(
               // 패딩 설정
@@ -970,15 +1090,16 @@ class _AdminOrderListDetailItemWidgetState
                                 Row(
                                   children: [
                                     // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
-                                    Expanded(
-                                      flex: 4,
-                                      child: productInfo['thumbnails']
-                                                  ?.toString()
-                                                  .isNotEmpty ==
-                                              true
-                                          ? Image.network(
+                                    Container(
+                                      height: orderlistDtInfoThumnailPartHeight,
+                                      width: orderlistDtInfoThumnailPartHeight,
+                                      child: productInfo['thumbnails'] !=
+                                          null &&
+                                          productInfo['thumbnails'] != ''
+                                          ? FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: Image.network(
                                               productInfo['thumbnails'],
-                                              fit: BoxFit.cover,
                                               // 이미지 로드 실패 시 아이콘 표시
                                               errorBuilder: (context, error,
                                                       stackTrace) =>
@@ -986,6 +1107,7 @@ class _AdminOrderListDetailItemWidgetState
                                                 Icons.image_not_supported,
                                                 color: GRAY88_COLOR,
                                                 size: interval4X,
+                                                  ),
                                               ),
                                             )
                                           : Icon(
@@ -996,8 +1118,10 @@ class _AdminOrderListDetailItemWidgetState
                                     ), // 썸네일이 없을 때 아이콘을 표시
                                     SizedBox(width: interval1X),
                                     // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
-                                    Expanded(
-                                      flex: 6,
+                                    Container(
+                                      height: orderlistDtInfoTextDataPartHeight,
+                                      padding:
+                                      EdgeInsets.only(top: interval4Y * 2),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -1192,14 +1316,14 @@ Widget _buildOrdererInfoRow(BuildContext context, String label, String value,
         ),
         // 값을 표시하는 텍스트
         Text(
-            value ?? '',
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
-              color: BLACK_COLOR,
-            ),
+          value ?? '',
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'NanumGothic',
+            color: BLACK_COLOR,
           ),
+        ),
       ],
     ),
   );

@@ -13,7 +13,7 @@ final currentUserEmailProvider = StreamProvider<String?>((ref) async* {
   // FirebaseAuth 인스턴스를 통해 현재 사용자 정보를 가져옴.
   final user = FirebaseAuth.instance.currentUser;
   // 현재 사용자의 이메일을 반환.
-  yield user?.email;
+  yield user?.email ?? user?.uid;
 });
 
 // 특정 발주번호에 해당하는 결제완료일을 가져오는 함수를 불러와서 사용 가능하도록 하는 paymentCompleteDateProvider

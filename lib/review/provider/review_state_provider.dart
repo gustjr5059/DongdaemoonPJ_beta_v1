@@ -51,7 +51,7 @@ class PrivateReviewItemsListNotifier extends StateNotifier<List<Map<String, dyna
 
     // 현재 로그인된 사용자 이메일 가져오기
     final user = FirebaseAuth.instance.currentUser; // FirebaseAuth에서 현재 사용자 정보 가져옴
-    final userEmail = user?.email; // 사용자 이메일 추출
+    final userEmail = user?.email ?? user?.uid; // 사용자 이메일 추출
     if (userEmail == null) {
       print("사용자 인증 실패: 로그인 필요."); // 사용자 인증 실패 메시지
       state = []; // 상태 초기화
@@ -93,7 +93,7 @@ class PrivateReviewItemsListNotifier extends StateNotifier<List<Map<String, dyna
   // ——— 특정 리뷰 데이터를 삭제 처리하는 함수
   Future<void> deleteReview(String separatorKey) async {
     final user = FirebaseAuth.instance.currentUser; // FirebaseAuth에서 현재 사용자 정보 가져옴
-    final userEmail = user?.email; // 사용자 이메일 추출
+    final userEmail = user?.email ?? user?.uid; // 사용자 이메일 추출
     if (userEmail == null) {
       print("사용자 인증 실패: 로그인 필요."); // 사용자 인증 실패 메시지
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 인증 실패 예외 발생

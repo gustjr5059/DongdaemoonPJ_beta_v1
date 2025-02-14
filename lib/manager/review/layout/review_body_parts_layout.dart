@@ -57,110 +57,175 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    // 리뷰 관리 화면 내 리뷰 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
-    final double reviewInfoCardViewWidth =
-        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
-    final double reviewInfoCardViewHeight =
-        screenSize.height * (480 / referenceHeight); // 세로 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 리뷰 관리 화면 내 리뷰 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double reviewInfoCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double reviewInfoCardViewHeight =
+    //     screenSize.height * (480 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double reviewInfoCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    // final double reviewInfoCardViewPadding1Y =
+    //     screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double reviewBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double reviewBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double reviewBtnX = screenSize.width * (12 / referenceWidth);
+    // final double reviewBtnY = screenSize.height * (10 / referenceHeight);
+    // final double reviewBtnFontSize = screenSize.height * (16 / referenceHeight);
+    // final double paddingX = screenSize.width * (2 / referenceWidth);
+    // final double reviewRecipientDropdownBtnWidth =
+    //     screenSize.width * (250 / referenceWidth);
+    // final double reviewRecipientDropdownBtnHeight =
+    //     screenSize.height * (50 / referenceHeight);
+    //
+    // final double reviewTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight); //  크기 설정함
+    // final double reviewWriterSelectDataTextSize1 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double reviewWriterSelectDataTextSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double reviewDataTextSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double reviewDataTextSize2 =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double reviewDeleteTimeDataTextSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double reviewStatusIconTextSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double reviewOriginalPriceFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 원래 가격 글꼴 크기 설정함
+    // final double reviewDiscountPercentFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
+    // final double reviewDiscountPriceFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 할인 가격 글꼴 크기 설정함
+    // final double reviewSelectedColorTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
+    // final double reviewSelectedSizeTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
+    // final double reviewSelectedCountTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 수량 텍스트 글꼴 크기 설정함
+    // final double reviewOrderNumberDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); //  크기 설정함
+    // final double reviewProdNumberDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); //  크기 설정함
+    // final double reviewBriefIntroductionDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); //  크기 설정함
+    //
+    // // 상품 색상 이미지 크기 설정
+    // final double reviewSelctedColorImageDataWidth =
+    //     screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    // final double reviewSelctedColorImageDataHeight =
+    //     screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    //
+    // final double reviewTitleTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 리뷰 제목 텍스트 글꼴 크기 설정함
+    // final double reviewContentsTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 리뷰 내용 텍스트 글꼴 크기 설정함
+    // final double reviewWriteDateTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 리뷰 작성일자 텍스트 글꼴 크기 설정함
+    // final double reviewExpandedBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
+    // final double reviewExpandedBtnHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    //
+    // // 삭제 버튼 수치
+    // final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    // final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
+    // final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    //
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (20 / referenceHeight);
+    // final double interval2Y = screenSize.height * (2 / referenceHeight);
+    // final double interval3Y = screenSize.height * (4 / referenceHeight);
+    // final double interval4Y = screenSize.height * (6 / referenceHeight);
+    // final double interval5Y = screenSize.height * (8 / referenceHeight);
+    // final double interval1X = screenSize.width * (8 / referenceWidth);
+    // final double interval2X = screenSize.width * (19 / referenceWidth);
+    // final double interval3X = screenSize.width * (20 / referenceWidth);
+    // final double interval4X = screenSize.width * (70 / referenceWidth);
+    //
+    // // 리뷰 목록 부분이 비어있는 경우의 알림 부분 수치
+    // final double reviewEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double reviewEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double reviewEmptyTextX =
+    //     screenSize.width * (70 / referenceWidth); // 가로 비율
+    // final double reviewEmptyTextY =
+    //     screenSize.height * (200 / referenceHeight); // 세로 비율
+    // final double reviewEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
-    // body 부분 전체 패딩 수치 계산
-    final double reviewInfoCardViewPaddingX =
-        screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double reviewInfoCardViewPadding1Y =
-        screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double reviewBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double reviewBtnHeight = screenSize.height * (50 / referenceHeight);
-    final double reviewBtnX = screenSize.width * (12 / referenceWidth);
-    final double reviewBtnY = screenSize.height * (10 / referenceHeight);
-    final double reviewBtnFontSize = screenSize.height * (16 / referenceHeight);
-    final double paddingX = screenSize.width * (2 / referenceWidth);
     final double reviewRecipientDropdownBtnWidth =
-        screenSize.width * (250 / referenceWidth);
-    final double reviewRecipientDropdownBtnHeight =
-        screenSize.height * (50 / referenceHeight);
+        screenSize.width * (300 / referenceWidth);
+    final double reviewRecipientDropdownBtnHeight = 50;
 
-    final double reviewTitleFontSize =
-        screenSize.height * (18 / referenceHeight); //  크기 설정함
-    final double reviewWriterSelectDataTextSize1 =
-        screenSize.height * (12 / referenceHeight);
-    final double reviewWriterSelectDataTextSize2 =
-        screenSize.height * (12 / referenceHeight);
-    final double reviewDataTextSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double reviewDataTextSize2 =
-        screenSize.height * (16 / referenceHeight);
-    final double reviewDeleteTimeDataTextSize =
-        screenSize.height * (13 / referenceHeight);
-    final double reviewStatusIconTextSize =
-        screenSize.height * (13 / referenceHeight);
-    final double reviewOriginalPriceFontSize =
-        screenSize.height * (12 / referenceHeight); // 원래 가격 글꼴 크기 설정함
-    final double reviewDiscountPercentFontSize =
-        screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
-    final double reviewDiscountPriceFontSize =
-        screenSize.height * (14 / referenceHeight); // 할인 가격 글꼴 크기 설정함
-    final double reviewSelectedColorTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
-    final double reviewSelectedSizeTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
-    final double reviewSelectedCountTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 수량 텍스트 글꼴 크기 설정함
-    final double reviewOrderNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); //  크기 설정함
-    final double reviewProdNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); //  크기 설정함
-    final double reviewBriefIntroductionDataFontSize =
-        screenSize.height * (14 / referenceHeight); //  크기 설정함
+    final double reviewTitleFontSize = 18; //  크기 설정함
+    final double reviewWriterSelectDataTextSize1 = 12;
+    final double reviewWriterSelectDataTextSize2 = 12;
+    final double reviewDeleteTimeDataTextSize = 13;
+    final double reviewStatusIconTextSize = 13;
+    final double reviewOriginalPriceFontSize = 12; // 원래 가격 글꼴 크기 설정함
+    final double reviewDiscountPercentFontSize = 14; // 할인 퍼센트 글꼴 크기 설정함
+    final double reviewDiscountPriceFontSize = 14; // 할인 가격 글꼴 크기 설정함
+    final double reviewSelectedColorTextFontSize = 14; // 선택된 색상 텍스트 글꼴 크기 설정함
+    final double reviewSelectedSizeTextFontSize = 14; // 선택된 사이즈 텍스트 글꼴 크기 설정함
+    final double reviewSelectedCountTextFontSize = 14; // 선택된 수량 텍스트 글꼴 크기 설정함
+    final double reviewOrderNumberDataFontSize = 14; //  크기 설정함
+    final double reviewProdNumberDataFontSize = 14; //  크기 설정함
+    final double reviewBriefIntroductionDataFontSize = 14; //  크기 설정함
+    final double orderlistDtInfoThumnailPartHeight = 120; // 썸네일 세로 비율 설정함
+    final double orderlistDtInfoTextDataPartHeight = 160; // 텍스트 데이터 부분의 높이 설정함
 
     // 상품 색상 이미지 크기 설정
-    final double reviewSelctedColorImageDataWidth =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
-    final double reviewSelctedColorImageDataHeight =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    final double reviewSelctedColorImageDataWidth = 16; // 색상 이미지 가로 크기 설정함
+    final double reviewSelctedColorImageDataHeight = 16; // 색상 이미지 세로 크기 설정함
 
-    final double reviewTitleTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 리뷰 제목 텍스트 글꼴 크기 설정함
-    final double reviewContentsTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 리뷰 내용 텍스트 글꼴 크기 설정함
-    final double reviewWriteDateTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 리뷰 작성일자 텍스트 글꼴 크기 설정함
-    final double reviewExpandedBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
-    final double reviewExpandedBtnHeight =
-        screenSize.height * (30 / referenceHeight);
+    final double reviewTitleTextFontSize = 14; // 리뷰 제목 텍스트 글꼴 크기 설정함
+    final double reviewContentsTextFontSize = 14; // 리뷰 내용 텍스트 글꼴 크기 설정함
+    final double reviewWriteDateTextFontSize = 14; // 리뷰 작성일자 텍스트 글꼴 크기 설정함
+    final double reviewExpandedBtnFontSize = 14; // 펼치기 및 닫기 버튼 크기
+    final double reviewExpandedBtnHeight = 30;
 
     // 삭제 버튼 수치
-    final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    final double deleteBtnHeight = 30;
     final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
-    final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    final double intervalX = screenSize.width * (30 / referenceWidth);
+    final double deleteBtnPaddingY = 2;
     final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
-    final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    final double deleteBtnFontSize = 12;
 
     // 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (20 / referenceHeight);
-    final double interval2Y = screenSize.height * (2 / referenceHeight);
-    final double interval3Y = screenSize.height * (4 / referenceHeight);
-    final double interval4Y = screenSize.height * (6 / referenceHeight);
-    final double interval5Y = screenSize.height * (8 / referenceHeight);
-    final double interval1X = screenSize.width * (8 / referenceWidth);
-    final double interval2X = screenSize.width * (19 / referenceWidth);
-    final double interval3X = screenSize.width * (20 / referenceWidth);
-    final double interval4X = screenSize.width * (70 / referenceWidth);
+    final double interval1Y = 20;
+    final double interval2Y = 2;
+    final double interval3Y = 4;
+    final double interval4Y = 6;
+    final double interval5Y = 8;
+    final double interval6Y = 10;
+    final double interval1X = 8;
+    final double interval2X = 19;
+    final double interval3X = 20;
+    final double interval4X = 70;
 
     // 리뷰 목록 부분이 비어있는 경우의 알림 부분 수치
     final double reviewEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double reviewEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double reviewEmptyTextX =
-        screenSize.width * (70 / referenceWidth); // 가로 비율
+    final double reviewEmptyTextHeight = 22; // 세로 비율
     final double reviewEmptyTextY =
         screenSize.height * (200 / referenceHeight); // 세로 비율
-    final double reviewEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double reviewEmptyTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       children: [
@@ -170,67 +235,76 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
           child: Container(
             width: reviewRecipientDropdownBtnWidth,
             height: reviewRecipientDropdownBtnHeight,
-            decoration: BoxDecoration(
-              // color: GRAY96_COLOR,
-              color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-              border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-              borderRadius: BorderRadius.circular(6),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: intervalX),
-            alignment: Alignment.center,
-            // 텍스트 정렬
-            child: DropdownButtonHideUnderline(
-              child: usersEmail.when(
-                data: (usersEmailList) {
-                  final uniqueUsersEmailList =
-                      usersEmailList.toSet().toList(); // 드롭다운 메뉴 이메일값들
-                  final validSelectedUserEmail = (selectedUserEmail != null &&
-                          uniqueUsersEmailList.contains(selectedUserEmail))
-                      ? selectedUserEmail
-                      : null; // 드롭다운 메뉴에서 선택된 이메일 값이 유효하지 않을 경우 null 처리
+            // decoration: BoxDecoration(
+            //   // color: GRAY96_COLOR,
+            //   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+            //   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+            //   borderRadius: BorderRadius.circular(6),
+            // ),
+            // padding: EdgeInsets.symmetric(horizontal: intervalX),
+            // alignment: Alignment.center,
+            child: InputDecorator(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              ),
+              // 텍스트 정렬
+              child: DropdownButtonHideUnderline(
+                child: usersEmail.when(
+                  data: (usersEmailList) {
+                    final uniqueUsersEmailList =
+                        usersEmailList.toSet().toList(); // 드롭다운 메뉴 이메일값들
+                    final validSelectedUserEmail = (selectedUserEmail != null &&
+                            uniqueUsersEmailList.contains(selectedUserEmail))
+                        ? selectedUserEmail
+                        : null; // 드롭다운 메뉴에서 선택된 이메일 값이 유효하지 않을 경우 null 처리
 
-                  return DropdownButton<String>(
-                    hint: Center(
-                      child: Text(
-                        '리뷰 작성자 선택',
-                        style: TextStyle(
-                          fontFamily: 'NanumGothic',
-                          fontSize: reviewWriterSelectDataTextSize1,
+                    return DropdownButton<String>(
+                      hint: Center(
+                        child: Text(
+                          '리뷰 작성자 선택',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: reviewWriterSelectDataTextSize1,
+                          ),
                         ),
                       ),
-                    ),
-                    // 드롭다운 버튼의 힌트 텍스트 설정
-                    // // value: selectedUserEmail ?? '', // 선택된 이메일 값을 드롭다운 버튼에 반영하는 코드
-                    // value: (selectedUserEmail?.isNotEmpty ?? false)
-                    //     ? selectedUserEmail
-                    //     : '', // selectedUserEmail 값이 없으면 빈 문자열 반환 (위의 코드와 동작은 동일한데 null 케이스와 빈 문자열 케이스를 명시적으로 표현한 것)
-                    value: validSelectedUserEmail,
-                    // 선택된 이메일 값
-                    onChanged: (value) {
-                      ref.read(adminSelectedUserEmailProvider.notifier).state =
-                          value; // 선택된 이메일 값을 변경하는 코드
-                    },
-                    items: uniqueUsersEmailList.map((email) {
-                      return DropdownMenuItem<String>(
-                        value: email, // 각 이메일을 드롭다운의 항목으로 설정하는 코드
-                        child: Text(
-                          email,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'NanumGothic',
-                            fontSize: reviewWriterSelectDataTextSize2,
-                            color: BLACK_COLOR,
-                          ),
-                        ), // 드롭다운 항목에 표시할 텍스트 설정
-                      );
-                    }).toList(),
-                  );
-                },
-                // 데이터가 로딩 중인 경우
-                loading: () => buildCommonLoadingIndicator(),
-                // 에러가 발생한 경우
-                error: (e, stack) =>
-                    const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
+                      // 드롭다운 버튼의 힌트 텍스트 설정
+                      // // value: selectedUserEmail ?? '', // 선택된 이메일 값을 드롭다운 버튼에 반영하는 코드
+                      // value: (selectedUserEmail?.isNotEmpty ?? false)
+                      //     ? selectedUserEmail
+                      //     : '', // selectedUserEmail 값이 없으면 빈 문자열 반환 (위의 코드와 동작은 동일한데 null 케이스와 빈 문자열 케이스를 명시적으로 표현한 것)
+                      value: validSelectedUserEmail,
+                      // 선택된 이메일 값
+                      onChanged: (value) {
+                        ref
+                            .read(adminSelectedUserEmailProvider.notifier)
+                            .state = value; // 선택된 이메일 값을 변경하는 코드
+                      },
+                      items: uniqueUsersEmailList.map((email) {
+                        return DropdownMenuItem<String>(
+                          value: email, // 각 이메일을 드롭다운의 항목으로 설정하는 코드
+                          child: Text(
+                            email,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'NanumGothic',
+                              fontSize: reviewWriterSelectDataTextSize2,
+                              color: BLACK_COLOR,
+                            ),
+                          ), // 드롭다운 항목에 표시할 텍스트 설정
+                        );
+                      }).toList(),
+                    );
+                  },
+                  // 데이터가 로딩 중인 경우
+                  loading: () => buildCommonLoadingIndicator(),
+                  // 에러가 발생한 경우
+                  error: (e, stack) =>
+                      const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
+                ),
               ),
             ),
           ),
@@ -310,7 +384,8 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                           Row(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start, // 왼쪽 정렬
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                // 왼쪽 정렬
                                 children: [
                                   Text(
                                     statusIcon, // 리뷰 상태 아이콘 표시
@@ -321,20 +396,23 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                       // 텍스트 굵기 설정
                                       fontFamily: 'NanumGothic',
                                       color:
-                                      review['private_review_closed_button'] ==
-                                          true
-                                          ? RED46_COLOR
-                                          : BLACK_COLOR, // 상태에 따라 텍스트 색상 변경
+                                          review['private_review_closed_button'] ==
+                                                  true
+                                              ? RED46_COLOR
+                                              : BLACK_COLOR, // 상태에 따라 텍스트 색상 변경
                                     ),
                                   ),
-                                  if (deleteTime.isNotEmpty) // deleteTime이 존재하는 경우
+                                  if (deleteTime
+                                      .isNotEmpty) // deleteTime이 존재하는 경우
                                     Padding(
-                                      padding: EdgeInsets.only(left: interval1X),
+                                      padding:
+                                          EdgeInsets.only(left: interval1X),
                                       // 상태 아이콘과 간격 추가
                                       child: Text(
                                         deleteTime, // 삭제 시간을 표시
                                         style: TextStyle(
-                                          fontSize: reviewDeleteTimeDataTextSize,
+                                          fontSize:
+                                              reviewDeleteTimeDataTextSize,
                                           // 텍스트 크기 설정
                                           fontWeight: FontWeight.bold,
                                           // 텍스트 굵기 설정
@@ -459,7 +537,8 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
 
                           _buildReviewInfoRow(
                               '상품번호: ',
-                              review['product_number']?.toString().isNotEmpty == true
+                              review['product_number']?.toString().isNotEmpty ==
+                                      true
                                   ? review['product_number']
                                   : '',
                               bold: true,
@@ -470,8 +549,10 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                           SizedBox(height: interval2Y),
 
                           _buildReviewInfoRow(
-                              review['brief_introduction']?.toString().isNotEmpty ==
-                                  true
+                              review['brief_introduction']
+                                          ?.toString()
+                                          .isNotEmpty ==
+                                      true
                                   ? review['brief_introduction']
                                   : '',
                               '',
@@ -487,12 +568,10 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                               final product = ProductContent(
                                 docId: review['product_id'] ?? '',
                                 // 제품 ID 설정
-                                category:
-                                    review['category']?.toString() ?? '',
+                                category: review['category']?.toString() ?? '',
                                 // 제품 카테고리 설정
                                 productNumber:
-                                    review['product_number']?.toString() ??
-                                        '',
+                                    review['product_number']?.toString() ?? '',
                                 // 제품 번호 설정
                                 thumbnail:
                                     review['thumbnails']?.toString() ?? '',
@@ -530,45 +609,48 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                   children: [
                                     Row(
                                       children: [
-                                        Expanded(
-                                          flex: 4,
-                                          child: review['thumbnails']
-                                                      ?.toString()
-                                                      .isNotEmpty ==
-                                                  true
-                                              ? Image.network(
-                                                  review['thumbnails'],
+                                        // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                        Container(
+                                          height: orderlistDtInfoThumnailPartHeight,
+                                          width: orderlistDtInfoThumnailPartHeight,
+                                          child: review['thumbnails'] != null && review['thumbnails'] != ''
+                                              ? FittedBox(
                                             fit: BoxFit.cover,
-                                            // 이미지 로드 실패 시 아이콘 표시
-                                            errorBuilder:
-                                                (context, error, stackTrace) =>
-                                                Icon(
+                                            child: Image.network(
+                                                  review['thumbnails'],
+                                                  // 이미지 로드 실패 시 아이콘 표시
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Icon(
+                                                    Icons.image_not_supported,
+                                                    color: GRAY88_COLOR,
+                                                    size: interval4X,
+                                                  ),
+                                            ),
+                                                )
+                                              : Icon(
                                                   Icons.image_not_supported,
                                                   color: GRAY88_COLOR,
                                                   size: interval4X,
                                                 ),
-                                          )
-                                              : Icon(
-                                            Icons.image_not_supported,
-                                            color: GRAY88_COLOR,
-                                            size: interval4X,
-                                          ),
                                         ),
                                         // 리뷰에 썸네일 이미지가 존재하면 이를 네트워크에서 불러와 표시함.
                                         // 썸네일 이미지가 없을 경우 대체 아이콘(이미지 미지원)을 표시함.
                                         SizedBox(width: interval3X),
                                         // 이미지와 텍스트 사이의 간격 설정
-                                        Expanded(
-                                          flex: 6,
+                                        Container(
+                                          height: orderlistDtInfoTextDataPartHeight,
+                                          padding:
+                                          EdgeInsets.only(top: interval6Y * 2),
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 '${numberFormat.format(review['original_price']?.toString().isNotEmpty == true ? review['original_price'] as num : '')} 원',
                                                 style: TextStyle(
                                                   fontSize:
-                                                  reviewOriginalPriceFontSize,
+                                                      reviewOriginalPriceFontSize,
                                                   fontFamily: 'NanumGothic',
                                                   color: GRAY60_COLOR,
                                                   // 텍스트 색상 설정
@@ -586,21 +668,24 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                     '${numberFormat.format(review['discount_price']?.toString().isNotEmpty == true ? review['discount_price'] as num : '')} 원',
                                                     style: TextStyle(
                                                         fontSize:
-                                                        reviewDiscountPriceFontSize,
-                                                        fontFamily: 'NanumGothic',
+                                                            reviewDiscountPriceFontSize,
+                                                        fontFamily:
+                                                            'NanumGothic',
                                                         color: BLACK_COLOR,
                                                         // 텍스트 색상 설정
-                                                        fontWeight: FontWeight.bold),
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                   SizedBox(width: interval2X),
                                                   Text(
                                                     '${numberFormat.format(review['discount_percent']?.toString().isNotEmpty == true ? review['discount_percent'] as num : '')}%',
                                                     style: TextStyle(
                                                       fontSize:
-                                                      reviewDiscountPercentFontSize,
+                                                          reviewDiscountPercentFontSize,
                                                       fontFamily: 'NanumGothic',
                                                       color: RED46_COLOR,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ],
@@ -611,50 +696,54 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                 children: [
                                                   // 선택된 색상 이미지를 표시하고, 없을 경우 대체 아이콘 표시
                                                   review['selected_color_image']
-                                                      ?.toString()
-                                                      .isNotEmpty ==
-                                                      true
+                                                              ?.toString()
+                                                              .isNotEmpty ==
+                                                          true
                                                       ? Image.network(
-                                                    review[
-                                                    'selected_color_image'],
-                                                    height:
-                                                    reviewSelctedColorImageDataHeight,
-                                                    width:
-                                                    reviewSelctedColorImageDataWidth,
-                                                    fit: BoxFit.cover,
-                                                    // 이미지 로드 실패 시 아이콘 표시
-                                                    errorBuilder: (context,
-                                                        error,
-                                                        stackTrace) =>
-                                                        Icon(
-                                                          Icons.image_not_supported,
+                                                          review[
+                                                              'selected_color_image'],
+                                                          height:
+                                                              reviewSelctedColorImageDataHeight,
+                                                          width:
+                                                              reviewSelctedColorImageDataWidth,
+                                                          fit: BoxFit.cover,
+                                                          // 이미지 로드 실패 시 아이콘 표시
+                                                          errorBuilder: (context,
+                                                                  error,
+                                                                  stackTrace) =>
+                                                              Icon(
+                                                            Icons
+                                                                .image_not_supported,
+                                                            color: GRAY88_COLOR,
+                                                            size:
+                                                                reviewSelctedColorImageDataHeight,
+                                                          ),
+                                                        )
+                                                      : Icon(
+                                                          Icons
+                                                              .image_not_supported,
                                                           color: GRAY88_COLOR,
                                                           size:
-                                                          reviewSelctedColorImageDataHeight,
+                                                              reviewSelctedColorImageDataHeight,
                                                         ),
-                                                  )
-                                                      : Icon(
-                                                    Icons.image_not_supported,
-                                                    color: GRAY88_COLOR,
-                                                    size:
-                                                    reviewSelctedColorImageDataHeight,
-                                                  ),
                                                   SizedBox(width: interval1X),
                                                   // 선택된 색상 텍스트를 표시
                                                   Text(
                                                     review['selected_color_text']
-                                                        ?.toString()
-                                                        .isNotEmpty ==
-                                                        true
+                                                                ?.toString()
+                                                                .isNotEmpty ==
+                                                            true
                                                         ? review[
-                                                    'selected_color_text']
+                                                            'selected_color_text']
                                                         : '',
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontSize:
-                                                      reviewSelectedColorTextFontSize,
+                                                          reviewSelectedColorTextFontSize,
                                                       fontFamily: 'NanumGothic',
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       color: BLACK_COLOR,
                                                     ),
                                                   ),
@@ -670,7 +759,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                 '${review['selected_size']?.toString().isNotEmpty == true ? review['selected_size'] : ''}',
                                                 style: TextStyle(
                                                   fontSize:
-                                                  reviewSelectedSizeTextFontSize,
+                                                      reviewSelectedSizeTextFontSize,
                                                   fontFamily: 'NanumGothic',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
@@ -682,7 +771,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                 '${review['selected_count']?.toString().isNotEmpty == true ? review['selected_count'] : ''}개',
                                                 style: TextStyle(
                                                   fontSize:
-                                                  reviewSelectedCountTextFontSize,
+                                                      reviewSelectedCountTextFontSize,
                                                   fontFamily: 'NanumGothic',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
@@ -716,14 +805,14 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                             _buildReviewInfoRow(
                               '작성일시: ',
                               review['review_write_time'] != null &&
-                                  review['review_write_time'] is Timestamp
+                                      review['review_write_time'] is Timestamp
                                   ? dateFormat.format(
-                                  (review['review_write_time'] as Timestamp)
-                                      .toDate())
+                                      (review['review_write_time'] as Timestamp)
+                                          .toDate())
                                   : '',
                               bold: true,
                               fontSize:
-                              reviewWriteDateTextFontSize, // 리뷰 내용 텍스트 글꼴 크기 설정함
+                                  reviewWriteDateTextFontSize, // 리뷰 내용 텍스트 글꼴 크기 설정함
                             ),
                             // 리뷰 작성일자가 존재할 경우 이를 표시함.
                             // 작성일자는 'yyyy.MM.dd' 형식으로 변환하여 표시되며, 굵은 텍스트로 렌더링됨.
@@ -732,7 +821,8 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
 
                             _buildReviewInfoRow(
                                 '제목: ',
-                                review['review_title']?.toString().isNotEmpty == true
+                                review['review_title']?.toString().isNotEmpty ==
+                                        true
                                     ? review['review_title']
                                     : '',
                                 bold: true,
@@ -743,8 +833,10 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                             SizedBox(height: interval2Y),
                             _buildReviewInfoRow(
                                 '내용: ',
-                                review['review_contents']?.toString().isNotEmpty ==
-                                    true
+                                review['review_contents']
+                                            ?.toString()
+                                            .isNotEmpty ==
+                                        true
                                     ? review['review_contents']
                                     : '',
                                 bold: true,
@@ -771,15 +863,18 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                               onPressed: () {
                                 setState(() {
                                   _expandedReviews[index] =
-                                  !(_expandedReviews[index] ??
-                                      false); // 펼치기/닫기 상태 변경
+                                      !(_expandedReviews[index] ??
+                                          false); // 펼치기/닫기 상태 변경
                                 });
                               },
                               style: ElevatedButton.styleFrom(
-                                foregroundColor: GRAY44_COLOR, // 아이콘 및 텍스트 색상 설정
-                                backgroundColor: Theme.of(context)
-                                    .scaffoldBackgroundColor, // 앱 기본 배경색
-                                side: BorderSide(color: GRAY44_COLOR), // 버튼 테두리 색상 설정
+                                foregroundColor: GRAY44_COLOR,
+                                // 아이콘 및 텍스트 색상 설정
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                // 앱 기본 배경색
+                                side: BorderSide(color: GRAY44_COLOR),
+                                // 버튼 테두리 색상 설정
                                 padding: EdgeInsets.zero, // 버튼 내부 여백 제거
                               ),
                               icon: Icon(
@@ -794,8 +889,10 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                 // 확장 여부에 따라 텍스트 변경
                                 style: TextStyle(
                                   fontFamily: 'NanumGothic',
-                                  fontSize: reviewExpandedBtnFontSize, // 텍스트 크기 설정
-                                  fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+                                  fontSize: reviewExpandedBtnFontSize,
+                                  // 텍스트 크기 설정
+                                  fontWeight: FontWeight.bold,
+                                  // 텍스트 굵기 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
@@ -823,9 +920,17 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     if (label.length + value.length <= 30) {
       return Padding(

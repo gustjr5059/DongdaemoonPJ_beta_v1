@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+9
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
+  sdk: '>=3.5.3 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -52,14 +52,17 @@ dependencies:
   pdfx: ^2.0.2
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^6.0.5
+  # sign_in_with_apple: 애플 로그인 관련 패키지
+  # google_sign_in: 구글 로그인 관련 패키지
+  # flutter_naver_login: 네이버 로그인 관련 패키지
   sign_in_with_apple: ^6.1.4
   google_sign_in: ^5.4.0
+  flutter_naver_login: ^2.0.0
   win32: ^5.5.4
   remedi_kopo: ^0.0.2
   firebase_messaging: ^14.2.5
   flutter_app_badger: ^1.1.2
   flutter_local_notifications: ^9.9.1
-  flutter_html: ^3.0.0-beta.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -77,6 +80,12 @@ dependencies:
   debounce_throttle: ^2.0.0
   firebase_storage: ^11.7.5
   tuple: ^2.0.0
+  # flutter_html: txt 형식의 파일 내용 내 html 요소가 있을 시, htmel 옵션을 반영해서 UI 구현 가능하도록 하는 패키지
+  flutter_html: ^3.0.0-beta.2
+  # profanity_filter: 영어 비속어 필터 관련 패키지
+  # korean_profanity_filter: 한국어 비속어 필터 관련 패키지
+  profanity_filter: ^2.0.0
+  korean_profanity_filter: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -188,6 +197,7 @@ flutter:
     - asset/img/misc/login_image/apple_login_btn_img.png
     - asset/img/misc/login_image/google_login_btn_img.png
     - asset/img/misc/login_image/kakao_login_btn_img.png
+    - asset/img/misc/login_image/naver_login_btn_img.png
     - asset/img/misc/drawer_img/message_management_logo_v1.png
     - asset/img/misc/drawer_img/orderlist_management_logo_v1.png
     - asset/img/misc/drawer_img/review_management_logo_v1.png

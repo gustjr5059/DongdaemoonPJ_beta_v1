@@ -38,5 +38,6 @@ const ORANGE56_COLOR = Color(0xFFE17735);
 const ORANGE_BEIGE_COLOR = Color(0xFFFDF3E9);
 const RED30_COLOR = Color(0xFFFF0000);
 const RED46_COLOR = Color(0xFFF44336); // Colors.red 색상
+const REDBROWN_COLOR = Color(0xFF905269);
 // ------- 웨어카노 앱 1차 단계 프로젝트 관련 색상 끝 부분
 

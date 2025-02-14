@@ -45,6 +45,8 @@ import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../common/provider/common_all_providers.dart';
 
 // 홈 화면 구성을 위한 레이아웃 파일을 임포트합니다.
+import '../../order/provider/order_state_provider.dart';
+import '../../user/provider/drawer_user_provider.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
 import '../layout/home_body_parts_layout.dart';
 
@@ -235,9 +237,12 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
       // tabIndexProvider의 상태를 하단 탭 바 내 홈 버튼 인덱스인 0과 매핑
       // -> 홈 화면 초기화 시, 하단 탭 바 내 홈 버튼을 활성화
       ref.read(tabIndexProvider.notifier).state = 0;
+      ref.invalidate(marketBtnProvider); // 홈 마켓 버튼 페이지뷰 초기화
       ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+      ref.invalidate(drawerUserNameProvider); // 드로워화면 회원 이름 데이터 초기화
     });
 
     // 사용자가 스크롤할 때마다 현재의 스크롤 위치를 scrollPositionProvider에 저장하는 코드
@@ -292,7 +297,9 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
         ref.invalidate(marketBtnProvider); // 홈 마켓 버튼 페이지뷰 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+        ref.invalidate(drawerUserNameProvider); // 드로워화면 회원 이름 데이터 초기화
       }
     });
 
@@ -404,53 +411,97 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 대배너 부분 관련 수치
+    // final double homeScreenLargeBannerWidth =
+    //     screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    // final double homeScreenLargeBannerHeight =
+    //     screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
+    // final double homeScreenLargeBannerViewHeight =
+    //     screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+    //
+    // // 홈 소배너 부분 관련 수치
+    // final double homeScreenSmallBannerWidth =
+    //     screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
+    // final double homeScreenSmallBannerHeight =
+    //     screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
+    // final double homeScreenSmallBannerViewHeight =
+    //     screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double homeAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double homeAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 드로어 아이콘 관련 수치 동적 적용
+    // final double homeDrawerIconWidth = screenSize.width * (28 / referenceWidth);
+    // final double homeDrawerIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double homeDrawerIconX = screenSize.width * (10 / referenceWidth);
+    // final double homeDrawerIconY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 2)
+    // final double homeWishlistBtnWidth =
+    //     screenSize.width * (40 / referenceWidth);
+    // final double homeWishlistBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    // final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 홈 화면 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (5 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (60 / referenceHeight);
+    // final double interval4Y = screenSize.height * (13 / referenceHeight);
+    // final double interval5Y = screenSize.height * (8 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 대배너 부분 관련 수치
     final double homeScreenLargeBannerWidth =
         screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double homeScreenLargeBannerHeight =
-        screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
-    final double homeScreenLargeBannerViewHeight =
-        screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+    final double homeScreenLargeBannerHeight = 378; // 대배너 이미지 높이
+    final double homeScreenLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
 
     // 홈 소배너 부분 관련 수치
     final double homeScreenSmallBannerWidth =
         screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
-    final double homeScreenSmallBannerHeight =
-        screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
-    final double homeScreenSmallBannerViewHeight =
-        screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
+    final double homeScreenSmallBannerHeight = 127; // 소배너 이미지 높이
+    final double homeScreenSmallBannerViewHeight = 127; // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double homeAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double homeAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double homeAppBarTitleHeight = 22;
     final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double homeAppBarTitleY = 11;
 
     // 드로어 아이콘 관련 수치 동적 적용
     final double homeDrawerIconWidth = screenSize.width * (28 / referenceWidth);
-    final double homeDrawerIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double homeDrawerIconHeight = 24;
     final double homeDrawerIconX = screenSize.width * (10 / referenceWidth);
-    final double homeDrawerIconY = screenSize.height * (8 / referenceHeight);
+    final double homeDrawerIconY = 8;
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double homeWishlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double homeWishlistBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double homeWishlistBtnWidth = 40;
+    final double homeWishlistBtnHeight = 40;
+    final double homeWishlistBtnX = 10;
+    final double homeWishlistBtnY = 7;
 
     // 홈 화면 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (60 / referenceHeight);
-    final double interval4Y = screenSize.height * (13 / referenceHeight);
-    final double interval5Y = screenSize.height * (8 / referenceHeight);
+    final double interval1Y = 5;
+    final double interval2Y = 10;
+    final double interval3Y = 60;
+    final double interval4Y = 13;
+    final double interval5Y = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,

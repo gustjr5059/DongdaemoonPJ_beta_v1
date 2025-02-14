@@ -31,7 +31,7 @@ class OrderRepository {
       print('이메일에 대한 사용자 정보 가져오는 중: $email');
       QuerySnapshot querySnapshot = await firestore
           .collection('users')
-          .where('email', isEqualTo: email)
+          .where('registration_id', isEqualTo: email)
           .get(); // Firestore에서 이메일로 사용자 정보 검색
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -58,7 +58,9 @@ class OrderRepository {
   }) async {
     print('발주 처리 중...');
     // 현재 로그인한 사용자의 이메일을 가져옴
-    final userEmail = FirebaseAuth.instance.currentUser?.email;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
     if (userEmail == null) {
       print('사용자가 로그인하지 않았습니다');
       throw Exception('사용자가 로그인하지 않았습니다');
@@ -92,7 +94,8 @@ class OrderRepository {
     await orderDoc.collection('button_info').doc('info').set({
       'boolRefundBtn': false, // 초기값은 false로 설정
       'boolReviewWriteBtn': false, // 초기값은 false로 설정
-      'private_orderList_closed_button': false // 초기값은 false로 설정
+      'private_orderList_closed_button': false, // 초기값은 false로 설정
+      'is_deleted': false,
     });
     print('버튼 정보 저장됨.');
 
@@ -160,6 +163,7 @@ class OrderRepository {
         'market_code': marketCode, // number_info 컬렉션에 market_code 추가
       },
       'private_orderList_closed_button': false, // 발주내역 화면에서 발주내역을 삭제 시, UI에서 안 보이도록 하기 위한 로직
+      'is_deleted': false,
     });
     print('발주 데이터 Firestore에 저장됨.');
 
@@ -250,6 +254,7 @@ class OrderlistRepository {
       // 'numberInfo.order_number' 필드 기준 내림차순으로 해서 최신 문서 순으로 정렬되도록 함.
       // 해당 조건값으로 하는 색인 추가함!!
       Query query = userDocRef.collection('orders')
+          .where('is_deleted', isEqualTo: false)
           .where('private_orderList_closed_button', isEqualTo: false)
           .orderBy('numberInfo.order_number', descending: true)
           .limit(limit);
@@ -453,7 +458,11 @@ class RecipientInfoItemRepository {
   // 수령자 정보를 Firestore에 저장하는 함수
   Future<bool> saveRecipientInfo(BuildContext context, Map<String, dynamic> recipientInfo) async {
     try {
-      final userEmail = FirebaseAuth.instance.currentUser?.email;
+      // 현재 로그인한 사용자의 이메일을 가져옴
+      // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+      final user = FirebaseAuth.instance.currentUser;
+      final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
+
       if (userEmail == null) throw Exception('사용자가 로그인 되어있지 않습니다.'); // 로그인되지 않은 경우 예외를 발생시킴
 
       // 필수 항목 검증
@@ -525,8 +534,11 @@ class RecipientInfoItemRepository {
   // Firestore에서 수령자 정보 즐겨찾기 목록 내 아이템을 페이징 처리하여 불러오는 함수
   // Firestore로부터 수령자 정보를 페이징하여 불러오는 함수
   Future<List<Map<String, dynamic>>> getPagedRecipientInfoItems({DocumentSnapshot? lastDocument, required int limit}) async {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    // 현재 로그인한 사용자의 이메일을 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
+
     if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인하지 않은 경우 예외를 발생시킴
 
     print("Firestore에서 ${limit}개씩 데이터를 불러옵니다. 마지막 문서: $lastDocument"); // 지정된 갯수만큼 데이터를 불러온다는 메시지를 출력함
@@ -562,8 +574,11 @@ class RecipientInfoItemRepository {
   // 수령자 정보 즐겨찾기 목록의 특정 아이템에 대한 실시간 구독 스트림을 제공하는 함수
   // 특정 수령자 정보를 실시간으로 구독하는 스트림을 제공함
   Stream<Map<String, dynamic>> recipientInfoItemStream(String itemId) {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
-    final userEmail = user?.email; // 사용자의 이메일 주소를 가져옴
+    // 현재 로그인한 사용자의 이메일을 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
+
     if (userEmail == null) throw Exception('사용자가 로그인되어 있지 않습니다.'); // 로그인하지 않은 경우 예외 발생
 
     // 지정한 아이템에 대한 실시간 스트림을 구독함
@@ -589,12 +604,16 @@ class RecipientInfoItemRepository {
   // 수령자 정보 즐겨찾기 선택 화면 내에서 아이템을 '삭제' 버튼 클릭 시, Firestore에서 삭제되도록 하는 함수
   // Firestore에서 수령자 정보를 삭제하는 함수
   Future<void> removeRecipientInfoItem(String docId) async {
-    final user = FirebaseAuth.instance.currentUser; // 현재 로그인한 사용자 정보를 가져옴
+    // 현재 로그인한 사용자의 이메일을 가져옴
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid; // 현재 로그인한 사용자 Email 가져옴
+
     if (user == null) {
       print('사용자가 로그인되어 있지 않습니다.'); // 사용자가 로그인되지 않은 경우 예외 발생
       throw Exception('사용자가 로그인되어 있지 않습니다.');
     }
-    final userEmail = user.email; // 사용자의 이메일 주소를 가져옴
+
     if (userEmail == null) {
       print('사용자 이메일을 불러올 수 없습니다.'); // 이메일이 없는 경우 예외 발생
       throw Exception('사용자 이메일을 불러올 수 없습니다.');
@@ -608,3 +627,52 @@ class RecipientInfoItemRepository {
   }
 }
 // ------- 수령자 정보 즐겨찾기 선택 화면과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오는 관리 관련 데이터 처리 로직인 RecipientInfoItemRepository 클래스 끝
+
+// ------- 발주내역 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 OrderlistIconRepository 클래스 시작
+class OrderlistIconRepository {
+  final FirebaseFirestore firestore;
+
+  OrderlistIconRepository({required this.firestore});
+
+  // 요청 내역 문서 갯수를 구독하는 함수
+  // 요청 내역(orders) 문서 "갯수"를 실시간으로 구독하는 함수.
+  //
+  // - `fetchOrdersByEmail()`에서 사용한 로직과 동일하게
+  //   - `is_deleted == false`
+  //  - `private_orderList_closed_button == false`
+  //  - `orderBy('numberInfo.order_number', descending: true)`
+  //  조건을 만족하는 문서들을 가져온 뒤, `.docs.length`를 반환한다.
+  Stream<int> watchOrderlistItemCount() {
+    // 현재 FirebaseAuth에 로그인되어 있는 유저 정보
+    final user = FirebaseAuth.instance.currentUser;
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final userEmail = user?.email ?? user?.uid;
+
+    // 사용자 인증 정보가 없으면(로그인되지 않은 경우) 빈 스트림(0)을 반환
+    if (userEmail == null) {
+      return Stream.value(0);
+    }
+
+    // "couture_order_list/{userEmail}" 문서를 참조
+    final userDocRef = firestore
+        .collection('wearcano_order_list')
+        .doc(userEmail);
+
+    // fetchOrdersByEmail()에서와 동일한 쿼리 구성:
+    //  - is_deleted == false
+    //  - private_orderList_closed_button == false
+    //  - orderBy('numberInfo.order_number', descending: true)
+    // (limit(...)는 생략하거나, 필요 시 원하는 값으로 설정할 수 있음)
+    final query = userDocRef.collection('orders')
+        .where('is_deleted', isEqualTo: false)
+        .where('private_orderList_closed_button', isEqualTo: false)
+        .orderBy('numberInfo.order_number', descending: true);
+
+    // 해당 쿼리의 snapshots()를 구독하여, 문서 개수를 계산하여 스트림으로 내보냄
+    return query.snapshots().map((snapshot) {
+      // snapshot.docs.length → 조건에 맞는 문서 수
+      return snapshot.docs.length;
+    });
+  }
+}
+// ------- 발주내역 아이콘과 관련된 데이터를 Firebase에 저장하고 저장된 데이터를 불러오고 하는 관리 관련 데이터 차리 로직인 OrderlistIconRepository 클래스 끝

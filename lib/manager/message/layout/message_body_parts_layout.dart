@@ -18,8 +18,15 @@ class AdminMessageScreenTabs extends ConsumerWidget {
     // 기준 화면 크기: 세로 852
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double intervalY = screenSize.height * (20 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double intervalY = screenSize.height * (20 / referenceHeight);
+    final double intervalY = 20;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 현재 선택된 탭을 가져옴.
     final currentTab = ref.watch(adminMessageScreenTabProvider);
@@ -64,13 +71,22 @@ class AdminMessageScreenTabs extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double messageTabBtnFontSize =
+    //     screenSize.height * (18 / referenceHeight);
+    // final double messageTabBtnLineWidth =
+    //     screenSize.width * (70 / referenceWidth);
+    // final double messageTabBtnLineHeight =
+    //     screenSize.height * (2 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double messageTabBtnFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double messageTabBtnLineWidth =
-        screenSize.width * (70 / referenceWidth);
-    final double messageTabBtnLineHeight =
-        screenSize.height * (2 / referenceHeight);
+    final double messageTabBtnFontSize = 18;
+    final double messageTabBtnLineWidth = 80;
+    final double messageTabBtnLineHeight = 2;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -130,6 +146,10 @@ class _AdminMessageCreateFormScreenState
   String? selectedProduct; // 선택된 상품 저장
   String? selectedSeparatorKey; // 선택된 separator_key 저장
 
+  // '직접입력'일 때 사용하는 TextEditingController와 FocusNode
+  late TextEditingController _directInputController;
+  late FocusNode _directInputFocusNode;
+
   @override
   void initState() {
     super.initState();
@@ -140,17 +160,37 @@ class _AdminMessageCreateFormScreenState
     // 초기화 함수를 호출하도록 합니다. 이렇게 하면 다른 위젯들이
     // 초기화된 후 _resetForm 함수가 실행되므로 안정성이 보장됨.
     Future.microtask(() => _resetForm());
+
+    // 직접 입력용 Controller & FocusNode 초기화
+    _directInputController = TextEditingController();
+    _directInputFocusNode = FocusNode();
+
+    // 필요하다면 포커스 리스너를 통해 포커스 해제 시점에 추가 로직을 넣을 수 있음
+    _directInputFocusNode.addListener(() {
+      if (!_directInputFocusNode.hasFocus) {
+        // 예: 입력값 검증 등을 수행할 수 있음
+      }
+    });
   }
 
+  // didChangeDependencies(): 화면 상태관리 위젯 중 하나로 포커스를 잃었을 때의 상태관리 위젯
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   // 초기화 함수를 지연 호출
+  //   // 위젯의 종속성이 변경될 때, 동일하게 Future.microtask를 사용하여
+  //   // _resetForm 함수를 지연 호출. 이는 위젯 트리의 변경 사항이
+  //   // 완전히 반영된 후 초기화 로직이 실행되도록 하여,
+  //   // 안정성을 높이고 의도하지 않은 동작을 방지.
+  //   Future.microtask(() => _resetForm());
+  // }
+
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // 초기화 함수를 지연 호출
-    // 위젯의 종속성이 변경될 때, 동일하게 Future.microtask를 사용하여
-    // _resetForm 함수를 지연 호출. 이는 위젯 트리의 변경 사항이
-    // 완전히 반영된 후 초기화 로직이 실행되도록 하여,
-    // 안정성을 높이고 의도하지 않은 동작을 방지.
-    Future.microtask(() => _resetForm());
+  void dispose() {
+    // 직접 입력용 Controller & FocusNode 해제
+    _directInputController.dispose();
+    _directInputFocusNode.dispose();
+    super.dispose();
   }
 
   void _resetForm() {
@@ -167,8 +207,12 @@ class _AdminMessageCreateFormScreenState
       ref.read(adminCustomMessageProvider.notifier).state = null;
       messageContentText = ''; // 초기 메시지 내용을 빈 문자열로 설정
       selectedProduct = null; // 상품 선택 초기화
+
       ref.invalidate(orderNumbersProvider); // 발주목록 초기화
       ref.invalidate(receiversProvider); // 수신자 목록 초기화
+
+      // 직접입력용 컨트롤러 내용도 함께 초기화
+      _directInputController.text = '';
     });
   }
 
@@ -180,7 +224,7 @@ class _AdminMessageCreateFormScreenState
     final receivers = ref.watch(receiversProvider);
     // 선택된 수신자에 따른 발주번호 목록을 가져옴.
     final orderNumbers = ref.watch(orderNumbersProvider(selectedReceiver));
-    // 현재 입력된 메시지 내용을 가져옴.
+    // 현재 입력된 메시지 내용을 가져옴.('결제 완료 메세지', '배송 중 메세지', '환불 메세지', '직접입력')
     final messageContent = ref.watch(adminMessageContentProvider);
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -190,51 +234,89 @@ class _AdminMessageCreateFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double sendingBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double sendingBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double sendingBtnX = screenSize.width * (12 / referenceWidth);
+    // final double sendingBtnY = screenSize.height * (10 / referenceHeight);
+    // final double sendingBtnFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double paddingX = screenSize.width * (16 / referenceWidth);
+    // final double paddingY = screenSize.height * (16 / referenceHeight);
+    //
+    // final double ordererDataTitleTextSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double ordererDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double RecipientDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double OrderNumberDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double ContentDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double RefundDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double messageContentDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+    //
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (15 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (60 / referenceHeight);
+    // final double interval1X = screenSize.width * (25 / referenceWidth);
+    // final double interval2X = screenSize.width * (10 / referenceWidth);
+    // final double interval3X = screenSize.width * (12 / referenceWidth);
+    // final double interval4X = screenSize.width * (39 / referenceWidth);
+    //
+    // // 쪽지 작성 부분이 비어있는 경우의 알림 부분 수치
+    // final double messageEmptyTextWidth =
+    //     screenSize.width * (200 / referenceWidth); // 가로 비율
+    // final double messageEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double messageEmptyTextX =
+    //     screenSize.width * (45 / referenceWidth); // 가로 비율
+    // final double messageEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율
+    // final double messageEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
     final double sendingBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double sendingBtnHeight = screenSize.height * (50 / referenceHeight);
-    final double sendingBtnX = screenSize.width * (12 / referenceWidth);
-    final double sendingBtnY = screenSize.height * (10 / referenceHeight);
-    final double sendingBtnFontSize =
-        screenSize.height * (16 / referenceHeight);
-    final double paddingX = screenSize.width * (16 / referenceWidth);
-    final double paddingY = screenSize.height * (16 / referenceHeight);
+    final double sendingBtnHeight = 50;
+    final double sendingBtnX = 12;
+    final double sendingBtnY = 10;
+    final double sendingBtnFontSize = 16;
+    final double paddingX = screenSize.width * (32 / referenceWidth);
+    final double paddingY = 16;
 
-    final double ordererDataTitleTextSize =
-        screenSize.height * (14 / referenceHeight);
-    final double ordererDataTextSize =
-        screenSize.height * (12 / referenceHeight);
-    final double RecipientDataTextSize =
-        screenSize.height * (12 / referenceHeight);
-    final double OrderNumberDataTextSize =
-        screenSize.height * (12 / referenceHeight);
-    final double ContentDataTextSize =
-        screenSize.height * (12 / referenceHeight);
-    final double RefundDataTextSize =
-        screenSize.height * (12 / referenceHeight);
-    final double messageContentDataTextSize =
-        screenSize.height * (12 / referenceHeight);
+    final double ordererDataTitleTextSize = 14;
+    final double ordererDataTextSize = 10;
+    final double RecipientDataTextSize = 10;
+    final double OrderNumberDataTextSize = 10;
+    final double ContentDataTextSize = 10;
+    final double RefundDataTextSize = 10;
+    final double messageContentDataTextSize = 10;
 
     // 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (15 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (60 / referenceHeight);
-    final double interval1X = screenSize.width * (25 / referenceWidth);
-    final double interval2X = screenSize.width * (10 / referenceWidth);
-    final double interval3X = screenSize.width * (12 / referenceWidth);
-    final double interval4X = screenSize.width * (39 / referenceWidth);
+    final double interval1Y = 15;
+    final double interval2Y = 10;
+    final double interval3Y = 60;
+    final double interval1X = 25;
+    final double interval2X = 10;
+    final double interval3X = 12;
+    final double interval4X = 39;
 
     // 쪽지 작성 부분이 비어있는 경우의 알림 부분 수치
     final double messageEmptyTextWidth =
-        screenSize.width * (200 / referenceWidth); // 가로 비율
-    final double messageEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double messageEmptyTextX =
-        screenSize.width * (45 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double messageEmptyTextHeight = 22; // 세로 비율
     final double messageEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double messageEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double messageEmptyTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 만약 현재 사용자가 없다면 로딩 스피너를 표시.
     if (currentUser == null) {
@@ -261,7 +343,7 @@ class _AdminMessageCreateFormScreenState
     return Padding(
       padding: EdgeInsets.symmetric(vertical: paddingY, horizontal: paddingX),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // 발신자 정보를 표시하는 행.
           Row(
@@ -292,6 +374,9 @@ class _AdminMessageCreateFormScreenState
             ],
           ),
           SizedBox(height: interval1Y),
+          // ---------------------
+          // 2) 수신자 (전체 초기화)
+          // ---------------------
           // 수신자를 선택하는 드롭다운 메뉴를 포함한 행.
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -329,10 +414,21 @@ class _AdminMessageCreateFormScreenState
                         ),
                         value: selectedReceiver,
                         // 수신자 선택 시 상태를 업데이트.
+                        // 수신자 변경 시 => 전체 리셋
                         onChanged: (value) {
                           setState(() {
                             selectedReceiver = value;
                             selectedOrderNumber = null;
+                            ref.read(adminMessageContentProvider.notifier).state = null;
+                            ref.read(adminCustomMessageProvider.notifier).state = null;
+                            messageContentText = '';
+                            selectedProduct = null;
+                            selectedSeparatorKey = null;
+                            // '직접입력' 컨트롤러 초기화
+                            _directInputController.text = '';
+                            // 발주번호·수신자 목록도 다시 불러옴
+                            ref.invalidate(orderNumbersProvider);
+                            ref.invalidate(receiversProvider);
                           });
                         },
                         // 수신자 목록을 드롭다운 항목으로 변환.
@@ -363,6 +459,9 @@ class _AdminMessageCreateFormScreenState
             ],
           ),
           SizedBox(height: interval1Y),
+          // ---------------------
+          // 3) 발주번호 (내용만 초기화)
+          // ---------------------
           // 발주번호를 선택하는 드롭다운 메뉴를 포함한 행.
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -403,8 +502,20 @@ class _AdminMessageCreateFormScreenState
                           : (value) {
                               setState(() {
                                 selectedOrderNumber = value;
+
+                                // === 내용만 초기화 로직 ===
+                                ref
+                                    .read(adminMessageContentProvider.notifier)
+                                    .state = null;
+                                ref
+                                    .read(adminCustomMessageProvider.notifier)
+                                    .state = null;
+                                messageContentText = '';
+                                selectedProduct = null;
+                                selectedSeparatorKey = null;
+                                _directInputController.text = '';
                               });
-                            },
+                      },
                       // 수신자가 선택된 경우 발주번호 목록을 드롭다운 항목으로 변환.
                       items: selectedReceiver == null
                           ? []
@@ -437,6 +548,9 @@ class _AdminMessageCreateFormScreenState
           if (selectedReceiver != null && orderNumbers.isLoading)
             buildCommonLoadingIndicator(),
           SizedBox(height: interval1Y),
+          // ---------------------
+          // 4) 내용 드롭다운
+          // ---------------------
           // 메시지 내용을 선택하는 드롭다운 메뉴를 포함한 행.
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -482,6 +596,7 @@ class _AdminMessageCreateFormScreenState
                           ? null
                           : (value) {
                               setState(() {
+
                                 // 선택된 메시지 내용에 따라 텍스트를 설정.
                                 if (value == '결제 완료 메세지') {
                                   messageContentText = '해당 발주 건은 결제 완료 되었습니다.';
@@ -491,6 +606,8 @@ class _AdminMessageCreateFormScreenState
                                   messageContentText = '해당 발주 건은 환불 처리 되었습니다.';
                                 } else if (value == '직접입력') {
                                   messageContentText = ''; // 직접입력 시 초기화
+                                  // TextEditingController도 비움
+                                  _directInputController.text = '';
                                 } else {
                                   messageContentText = '';
                                 }
@@ -501,6 +618,11 @@ class _AdminMessageCreateFormScreenState
                                 ref
                                     .read(adminCustomMessageProvider.notifier)
                                     .state = messageContentText;
+
+                                // === 내용만 초기화 로직 ===
+                                selectedProduct = null;
+                                selectedSeparatorKey = null;
+                                _directInputController.text = '';
                               });
                             },
                       // 메시지 내용을 드롭다운 항목으로 변환.
@@ -561,6 +683,9 @@ class _AdminMessageCreateFormScreenState
             ],
           ),
           SizedBox(height: interval1Y),
+          // ---------------------
+          // 5) 메시지 내용 UI
+          // ---------------------
           // 메시지 내용에 따라 다르게 처리.
           if (messageContent == '결제 완료 메세지' || messageContent == '배송 중 메세지')
             AbsorbPointer(
@@ -570,6 +695,7 @@ class _AdminMessageCreateFormScreenState
                 // TextFormField를 강제로 새로고침하는 키
                 initialValue: messageContentText,
                 style: TextStyle(fontSize: messageContentDataTextSize),
+                cursorColor: ORANGE56_COLOR, // 커서 색상 설정
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6.0),
@@ -579,9 +705,11 @@ class _AdminMessageCreateFormScreenState
               ),
             )
           else if (messageContent == '직접입력')
+            // TextFormField → TextField + controller & focusNode
             // 직접 입력 시 입력창을 활성화.
             TextFormField(
-              initialValue: '',
+              controller: _directInputController,
+              focusNode: _directInputFocusNode,
               maxLength: 200,
               maxLines: null,
               // 입력 시 자동으로 줄바꿈
@@ -589,6 +717,7 @@ class _AdminMessageCreateFormScreenState
                 fontSize: ContentDataTextSize,
                 fontFamily: 'NanumGothic',
               ),
+              cursorColor: ORANGE56_COLOR, // 커서 색상 설정
               decoration: InputDecoration(
                 hintText: '200자 이내로 작성 가능합니다.',
                 border: OutlineInputBorder(
@@ -714,6 +843,9 @@ class _AdminMessageCreateFormScreenState
               },
             ),
           SizedBox(height: interval3Y),
+          // ---------------------
+          // 6) 발송하기 버튼
+          // ---------------------
           if (messageContent != null && messageContent!.isNotEmpty)
             Center(
               child: Container(
@@ -735,9 +867,13 @@ class _AdminMessageCreateFormScreenState
                           'selected_separator_key': selectedSeparatorKey,
                         }).future);
 
+                        // 발송 완료 후, 수신자/발주번호/내용은 그대로 둘 수도 있고
+                        // 혹은 특정 부분만 초기화할 수도 있음.
+                        // 여기서는 messageContent만 null 처리 예시
                         // 발송 완료 후 상태 초기화
                         setState(() {
-                          // selectedReceiver = null;
+                          // 수신자, 발주번호, 상품, 내용 등만 초기화
+                          selectedReceiver = null;
                           selectedOrderNumber = null;
                           selectedProduct = null;
                           messageContentText = '';
@@ -745,6 +881,7 @@ class _AdminMessageCreateFormScreenState
                               null;
                           ref.read(adminCustomMessageProvider.notifier).state =
                               null;
+                          _directInputController.text = '';
                         });
 
                         // 발송 성공 메시지 표시
@@ -795,12 +932,23 @@ class _AdminMessageCreateFormScreenState
     // 기준 화면 크기: 세로 852
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double selectDataTextSize =
+    //     screenSize.height * (12 / referenceHeight);
+
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (10 / referenceHeight);
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double selectDataTextSize =
-        screenSize.height * (12 / referenceHeight);
+    final double selectDataTextSize = 12;
 
     // 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (10 / referenceHeight);
+    final double interval1Y = 10;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center, // 행의 수직 정렬을 중앙에 맞춤.
@@ -851,7 +999,6 @@ class AdminMessageListScreen extends ConsumerStatefulWidget {
 
 class _AdminMessageListScreenState
     extends ConsumerState<AdminMessageListScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -885,7 +1032,6 @@ class _AdminMessageListScreenState
     });
   }
 
-
 // message_delete_time 필드의 데이터 타입이 Timestamp로 되어 있어, 이를 DateTime으로 변환한 후, 문자열로 포맷팅하는 함수
   String formatTimestamp(dynamic timestamp) {
     if (timestamp is Timestamp) {
@@ -913,73 +1059,112 @@ class _AdminMessageListScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    // 쪽지 관리 화면 내 쪽지 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
-    final double messageInfoCardViewWidth =
-        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
-    final double messageInfoCardViewHeight =
-        screenSize.height * (110 / referenceHeight); // 세로 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 쪽지 관리 화면 내 쪽지 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double messageInfoCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double messageInfoCardViewHeight =
+    //     screenSize.height * (110 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double messageInfoCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    // final double messageInfoCardViewPadding1Y =
+    //     screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double sendingBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double sendingBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double sendingBtnX = screenSize.width * (12 / referenceWidth);
+    // final double sendingBtnY = screenSize.height * (10 / referenceHeight);
+    // final double sendingBtnFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double paddingX = screenSize.width * (2 / referenceWidth);
+    // final double messageRecipientDropdownBtnWidth =
+    //     screenSize.width * (230 / referenceWidth);
+    // final double messageRecipientDropdownBtnHeight =
+    //     screenSize.height * (50 / referenceHeight);
+    //
+    // final double messageDeleteTimeDataTextSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double messageStatusIconTextSize =
+    //     screenSize.height * (13 / referenceHeight);
+    //
+    // final double messageRecipientSelectDataTextSize1 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double messageRecipientSelectDataTextSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double messageDataTextSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double messageDataTextSize2 =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 삭제 버튼 수치
+    // final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    // final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
+    // final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    //
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (20 / referenceHeight);
+    // final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // final double interval3Y = screenSize.height * (60 / referenceHeight);
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval2X = screenSize.width * (10 / referenceWidth);
+    // final double interval3X = screenSize.width * (12 / referenceWidth);
+    // final double interval4X = screenSize.width * (39 / referenceWidth);
+    //
+    // // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
+    // final double messageEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double messageEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double messageEmptyTextX =
+    //     screenSize.width * (70 / referenceWidth); // 가로 비율
+    // final double messageEmptyTextY =
+    //     screenSize.height * (200 / referenceHeight); // 세로 비율
+    // final double messageEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
-    // body 부분 전체 패딩 수치 계산
-    final double messageInfoCardViewPaddingX =
-        screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double messageInfoCardViewPadding1Y =
-        screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 쪽지 관리 화면 내 쪽지 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double sendingBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double sendingBtnHeight = screenSize.height * (50 / referenceHeight);
-    final double sendingBtnX = screenSize.width * (12 / referenceWidth);
-    final double sendingBtnY = screenSize.height * (10 / referenceHeight);
-    final double sendingBtnFontSize =
-        screenSize.height * (16 / referenceHeight);
-    final double paddingX = screenSize.width * (2 / referenceWidth);
     final double messageRecipientDropdownBtnWidth =
-        screenSize.width * (230 / referenceWidth);
-    final double messageRecipientDropdownBtnHeight =
-        screenSize.height * (50 / referenceHeight);
+        screenSize.width * (300 / referenceWidth);
+    final double messageRecipientDropdownBtnHeight = 50;
 
-    final double messageDeleteTimeDataTextSize =
-        screenSize.height * (13 / referenceHeight);
-    final double messageStatusIconTextSize =
-        screenSize.height * (13 / referenceHeight);
+    final double messageDeleteTimeDataTextSize = 13;
+    final double messageStatusIconTextSize = 13;
 
-    final double messageRecipientSelectDataTextSize1 =
-        screenSize.height * (12 / referenceHeight);
-    final double messageRecipientSelectDataTextSize2 =
-        screenSize.height * (12 / referenceHeight);
-    final double messageDataTextSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double messageDataTextSize2 =
-        screenSize.height * (16 / referenceHeight);
+    final double messageRecipientSelectDataTextSize1 = 12;
+    final double messageRecipientSelectDataTextSize2 = 12;
+    final double messageDataTextSize1 = 14;
 
     // 삭제 버튼 수치
-    final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    final double deleteBtnHeight = 30;
     final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
-    final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
-    final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
-    final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    final double intervalX = screenSize.width * (20 / referenceWidth);
+    final double deleteBtnPaddingY = 2;
+    final double deleteBtnPaddingX = 4;
+    final double deleteBtnFontSize = 12;
 
     // 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (20 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
-    final double interval3Y = screenSize.height * (60 / referenceHeight);
+    final double interval1Y = 20;
+    final double interval2Y = 4;
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval2X = screenSize.width * (10 / referenceWidth);
-    final double interval3X = screenSize.width * (12 / referenceWidth);
-    final double interval4X = screenSize.width * (39 / referenceWidth);
 
     // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
     final double messageEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double messageEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double messageEmptyTextX =
-        screenSize.width * (70 / referenceWidth); // 가로 비율
+    final double messageEmptyTextHeight = 22; // 세로 비율
     final double messageEmptyTextY =
-        screenSize.height * (200 / referenceHeight); // 세로 비율
-    final double messageEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+        screenSize.height * (150 / referenceHeight); // 세로 비율
+    final double messageEmptyTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       children: [
@@ -988,61 +1173,72 @@ class _AdminMessageListScreenState
           child: Container(
             width: messageRecipientDropdownBtnWidth,
             height: messageRecipientDropdownBtnHeight,
-            decoration: BoxDecoration(
-              // color: GRAY96_COLOR,
-              color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-              border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
-              borderRadius: BorderRadius.circular(6),
-            ),
-            alignment: Alignment.center,
-            // 텍스트 정렬
-            child: DropdownButtonHideUnderline(
-              child: receivers.when(
-                data: (receiversList) {
-                  final uniqueReceiversList =
-                      receiversList.toSet().toList(); // 드롭다운 메뉴 이메일값들
-                  final validSelectedreceivers = (selectedReceiver != null &&
-                          uniqueReceiversList.contains(selectedReceiver))
-                      ? selectedReceiver
-                      : null; // 드롭다운 메뉴에서 선택된 이메일 값이 유효하지 않을 경우 null 처리
+            child: InputDecorator(
+              // width: messageRecipientDropdownBtnWidth,
+              // height: messageRecipientDropdownBtnHeight,
+              // decoration: BoxDecoration(
+              //   // color: GRAY96_COLOR,
+              //   color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+              //   border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+              //   borderRadius: BorderRadius.circular(6),
+              // ),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              ),
+              // alignment: Alignment.center,
+              // 텍스트 정렬
+              child: DropdownButtonHideUnderline(
+                child: receivers.when(
+                  data: (receiversList) {
+                    final uniqueReceiversList =
+                        receiversList.toSet().toList(); // 드롭다운 메뉴 이메일값들
+                    final validSelectedreceivers = (selectedReceiver != null &&
+                            uniqueReceiversList.contains(selectedReceiver))
+                        ? selectedReceiver
+                        : null; // 드롭다운 메뉴에서 선택된 이메일 값이 유효하지 않을 경우 null 처리
 
-                  // 수신자 필터링을 위한 드롭다운 메뉴 버튼
-                  return DropdownButton<String>(
-                    hint: Center(
-                      child: Text(
-                        '쪽지 수신자 선택',
-                        style: TextStyle(
-                          fontFamily: 'NanumGothic',
-                          fontSize: messageRecipientSelectDataTextSize1,
-                        ),
-                      ),
-                    ), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
-                    value: selectedReceiver, // 현재 선택된 수신자 이메일 값 설정
-                    onChanged: (value) {
-                      // 선택한 수신자 이메일을 상태로 업데이트
-                      ref.read(selectedReceiverProvider.notifier).state = value;
-                    },
-                    items: uniqueReceiversList.map((receiver) {
-                      return DropdownMenuItem<String>(
-                        value: receiver.email, // 수신자 이메일 값 설정
+                    // 수신자 필터링을 위한 드롭다운 메뉴 버튼
+                    return DropdownButton<String>(
+                      hint: Center(
                         child: Text(
-                          receiver.email,
+                          '쪽지 수신자 선택',
                           style: TextStyle(
-                            fontWeight: FontWeight.normal,
                             fontFamily: 'NanumGothic',
-                            fontSize: messageRecipientSelectDataTextSize2,
-                            color: BLACK_COLOR,
+                            fontSize: messageRecipientSelectDataTextSize1,
                           ),
-                        ), // 드롭다운 메뉴에 표시될 이메일 텍스트 설정
-                      );
-                    }).toList(),
-                  );
-                },
-                // 데이터가 로딩 중인 경우
-                loading: () => buildCommonLoadingIndicator(),
-                // 에러가 발생한 경우
-                error: (e, stack) =>
-                    const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
+                        ),
+                      ), // 드롭다운 메뉴에서 선택할 수신자 선택 힌트 텍스트
+                      value: selectedReceiver, // 현재 선택된 수신자 이메일 값 설정
+                      onChanged: (value) {
+                        // 선택한 수신자 이메일을 상태로 업데이트
+                        ref.read(selectedReceiverProvider.notifier).state =
+                            value;
+                      },
+                      items: uniqueReceiversList.map((receiver) {
+                        return DropdownMenuItem<String>(
+                          value: receiver.email, // 수신자 이메일 값 설정
+                          child: Text(
+                            receiver.email,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'NanumGothic',
+                              fontSize: messageRecipientSelectDataTextSize2,
+                              color: BLACK_COLOR,
+                            ),
+                          ), // 드롭다운 메뉴에 표시될 이메일 텍스트 설정
+                        );
+                      }).toList(),
+                    );
+                  },
+                  // 데이터가 로딩 중인 경우
+                  loading: () => buildCommonLoadingIndicator(),
+                  // 에러가 발생한 경우
+                  error: (e, stack) =>
+                      const Center(child: Text('에러가 발생했으니, 앱을 재실행해주세요.')),
+                ),
               ),
             ),
           ),
@@ -1275,9 +1471,17 @@ class _AdminMessageListScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     if (label.length + value.length <= 30) {
       return Padding(

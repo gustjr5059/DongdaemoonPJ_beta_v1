@@ -158,6 +158,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
 
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -172,6 +173,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
         // print("로그아웃 시 정렬 상태 및 상품 데이터 초기화됨");
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
       }
     });
 
@@ -258,7 +260,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     final User? user = FirebaseAuth.instance.currentUser;
 
     // 사용자 정보를 상태로 관리하고 이를 가져옴, 현재 사용자의 이메일을 이용하여 사용자 정보 프로바이더를 구독
-    final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email!));
+    final userInfoAsyncValue = ref.watch(userInfoProvider(user!.email ?? user!.uid));
 
     // 주문할 상품 목록을 상태로 관리하고 이를 가져옴
     final orderItems = ref.watch(orderItemsProvider);
@@ -284,58 +286,105 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double orderAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double orderAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double orderAppBarTitleX = screenSize.height * (5 / referenceHeight);
+    // final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double orderChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double orderChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double orderChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double orderChevronIconY = screenSize.height * (9 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 2)
+    // final double orderWishlistBtnWidth =
+    //     screenSize.width * (40 / referenceWidth);
+    // final double orderWishlistBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    // final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // final double interval1Y = screenSize.height * (20 / referenceHeight);
+    // final double interval2Y = screenSize.height * (40 / referenceHeight);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double orderAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double orderAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double orderAppBarTitleX = screenSize.height * (5 / referenceHeight);
-    final double orderAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double orderAppBarTitleHeight = 22;
+    final double orderAppBarTitleX = 5;
+    final double orderAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double orderChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double orderChevronIconHeight = 24;
     final double orderChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double orderChevronIconY = screenSize.height * (9 / referenceHeight);
+    final double orderChevronIconY = 9;
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderWishlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double orderWishlistBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double orderWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double orderWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double orderWishlistBtnWidth = 40;
+    final double orderWishlistBtnHeight = 40;
+    final double orderWishlistBtnX = 10;
+    final double orderWishlistBtnY = 7;
 
-    final double interval1Y = screenSize.height * (20 / referenceHeight);
-    final double interval2Y = screenSize.height * (40 / referenceHeight);
+    final double interval1Y = 20;
+    final double interval2Y = 40;
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y = screenSize.height * (300 / referenceHeight);
+    final double loginGuideTextHeight = 22; // 세로 비율
+    final double loginGuideText1Y = 300;
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -435,11 +484,11 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                               child: Column(
                                 children: [
                                   if (user != null)
-                                    UserInfoWidget(email: user.email!),
+                                    UserInfoWidget(email: user.email ?? user.uid),
                                   // 사용자가 로그인된 경우 사용자 정보를 표시
                                   if (user != null)
                                     RecipientInfoWidget(
-                                      email: user.email!,
+                                      email: user.email ?? user.uid,
                                       // 수령자 정보 위젯에 이메일 전달
                                       nameController: nameController,
                                       // 이름 입력 컨트롤러 전달

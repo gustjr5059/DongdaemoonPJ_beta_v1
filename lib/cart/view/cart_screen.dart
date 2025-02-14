@@ -128,6 +128,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
       // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
       ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+      ref.invalidate(allCheckedProvider); // 하단 탭 바 내 전체 체크박스 체크 표시 상태 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -137,10 +138,11 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
         // 사용자가 로그아웃한 경우, 현재 페이지 인덱스를 0으로 설정
         // 장바구니 화면에서 로그아웃 이벤트를 실시간으로 감지하고 처리하는 로직 (여기에도 장바구니 화면 내 프로바이더 중 초기화해야하는 것을 로직 구현)
         ref.read(cartScrollPositionProvider.notifier).state =
-            0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
+        0.0; // 장바구니 화면 자체의 스크롤 위치 인덱스를 초기화
         // 장바구니 화면으로 돌아왔을 때 데이터를 초기화하고 다시 불러옴
         ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+        ref.invalidate(allCheckedProvider); // 하단 탭 바 내 전체 체크박스 체크 표시 상태 초기화
       }
     });
 
@@ -201,73 +203,129 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double cartlistAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double cartlistAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double cartlistAppBarTitleX =
+    //     screenSize.width * (215 / referenceHeight);
+    // final double cartlistAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // 홈 버튼 수치 (Case 3)
+    // final double cartlistHomeBtnWidth =
+    //     screenSize.width * (40 / referenceWidth);
+    // final double cartlistHomeBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double cartlistHomeBtnX = screenSize.width * (10 / referenceWidth);
+    // final double cartlistHomeBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 3)
+    // final double cartlistWishlistBtnWidth =
+    //     screenSize.width * (40 / referenceWidth);
+    // final double cartlistWishlistBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
+    // final double cartlistWishlistBtnY =
+    //     screenSize.height * (7 / referenceHeight);
+    //
+    // // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
+    // final double cartlistEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double cartlistEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double cartlistEmptyTextY =
+    //     screenSize.height * (250 / referenceHeight);
+    // final double cartlistEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y = screenSize.height * (260 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 장바구니 안내사항 텍스트 수치
+    // final double cartlistGuideTextWidth =
+    //     screenSize.width * (300 / referenceWidth); // 가로 비율
+    // final double cartlistGuideTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight); // 세로 비율
+    // final double cartlistGuideTextFontSize2 =
+    //     screenSize.height * (10 / referenceHeight); // 세로 비율
+    // final double interval1Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 비율
+    // final double interval2Y =
+    //     screenSize.height * (6 / referenceHeight); // 세로 비율
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double cartlistAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double cartlistAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double cartlistAppBarTitleHeight = 22;
     final double cartlistAppBarTitleX =
         screenSize.width * (215 / referenceHeight);
-    final double cartlistAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double cartlistAppBarTitleY = 11;
 
     // 홈 버튼 수치 (Case 3)
     final double cartlistHomeBtnWidth =
         screenSize.width * (40 / referenceWidth);
-    final double cartlistHomeBtnHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double cartlistHomeBtnHeight = 40;
     final double cartlistHomeBtnX = screenSize.width * (10 / referenceWidth);
-    final double cartlistHomeBtnY = screenSize.height * (7 / referenceHeight);
+    final double cartlistHomeBtnY = 7;
 
     // 찜 목록 버튼 수치 (Case 3)
-    final double cartlistWishlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double cartlistWishlistBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double cartlistWishlistBtnX = screenSize.width * (8 / referenceWidth);
-    final double cartlistWishlistBtnY =
-        screenSize.height * (7 / referenceHeight);
+    final double cartlistWishlistBtnWidth = 40;
+    final double cartlistWishlistBtnHeight = 40;
+    final double cartlistWishlistBtnX = 8;
+    final double cartlistWishlistBtnY = 7;
 
     // 업데이트 요청 목록 비어있는 경우의 알림 부분 수치
     final double cartlistEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double cartlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double cartlistEmptyTextHeight = 22; // 세로 비율
     final double cartlistEmptyTextY =
         screenSize.height * (250 / referenceHeight);
-    final double cartlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double cartlistEmptyTextFontSize = 16;
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double loginGuideTextHeight = 22; // 세로 비율
     final double loginGuideText1Y = screenSize.height * (260 / referenceHeight);
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX = screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY = screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
 
     // 장바구니 안내사항 텍스트 수치
     final double cartlistGuideTextWidth =
         screenSize.width * (300 / referenceWidth); // 가로 비율
-    final double cartlistGuideTextFontSize1 =
-        screenSize.height * (14 / referenceHeight); // 세로 비율
-    final double cartlistGuideTextFontSize2 =
-        screenSize.height * (10 / referenceHeight); // 세로 비율
-    final double interval1Y =
-        screenSize.height * (4 / referenceHeight); // 세로 비율
-    final double interval2Y =
-        screenSize.height * (6 / referenceHeight); // 세로 비율
+    final double cartlistGuideTextFontSize1 = 14; // 세로 비율
+    final double cartlistGuideTextFontSize2 = 10; // 세로 비율
+    final double interval1Y = 4; // 세로 비율
+    final double interval2Y = 6; // 세로 비율
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -451,40 +509,40 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                     // 데이터가 비어 있는 경우
                     return cartItems.isEmpty
                         ? SliverToBoxAdapter(
-                            child: Container(
-                              width: cartlistEmptyTextWidth,
-                              height: cartlistEmptyTextHeight,
-                              margin: EdgeInsets.only(top: cartlistEmptyTextY),
-                              // 텍스트를 중앙에 위치하도록 설정함.
-                              alignment: Alignment.center,
-                              child: Text(
-                                '현재 장바구니 상품이 없습니다.',
-                                style: TextStyle(
-                                  fontSize: cartlistEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
-                                  fontWeight: FontWeight.bold,
-                                  color: BLACK_COLOR,
-                                ),
-                              ),
-                            ),
-                          )
-                        // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
+                      child: Container(
+                        width: cartlistEmptyTextWidth,
+                        height: cartlistEmptyTextHeight,
+                        margin: EdgeInsets.only(top: cartlistEmptyTextY),
+                        // 텍스트를 중앙에 위치하도록 설정함.
+                        alignment: Alignment.center,
+                        child: Text(
+                          '현재 장바구니 상품이 없습니다.',
+                          style: TextStyle(
+                            fontSize: cartlistEmptyTextFontSize,
+                            fontFamily: 'NanumGothic',
+                            fontWeight: FontWeight.bold,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                    )
+                    // 장바구니에 아이템이 있을 경우 SliverList를 사용하여 아이템 목록을 표시
                         : SliverList(
-                            // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return Column(
-                                  // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
-                                  children: [
-                                    // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
-                                    CartItemsList(),
-                                  ],
-                                );
-                              },
-                              // 아이템 개수를 1로 설정
-                              childCount: 1,
-                            ),
+                      // SliverChildBuilderDelegate를 사용하여 아이템 목록을 빌드
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Column(
+                            // 아이템 사이에 여백을 주기 위한 SizedBox 위젯
+                            children: [
+                              // CartItemsList 위젯을 사용하여 장바구니 아이템 목록을 표시
+                              CartItemsList(),
+                            ],
                           );
+                        },
+                        // 아이템 개수를 1로 설정
+                        childCount: 1,
+                      ),
+                    );
                   },
                 ),
               ),

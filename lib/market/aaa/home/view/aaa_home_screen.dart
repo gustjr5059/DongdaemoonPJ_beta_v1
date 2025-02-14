@@ -94,6 +94,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
   // 배너 이미지의 총 개수를 저장하는 변수
   // 대배너
   int bannerImageCount1 = 5;
+
   // 소배너
   int bannerImageCount2 = 3;
 
@@ -184,7 +185,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     if (newCurrentIndex != currentIndex) {
       // 현재 인덱스가 변경된 경우
       currentIndex = newCurrentIndex; // 현재 인덱스를 갱신함
-      ref.read(aaaHomeCurrentTabProvider.notifier).state = currentIndex; // 상태 업데이트
+      ref.read(aaaHomeCurrentTabProvider.notifier).state =
+          currentIndex; // 상태 업데이트
     }
 
     // '봄'이나 '여름' 탭이 활성화될 때 자동 스크롤
@@ -234,7 +236,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       if (context != null) {
         // 섹션의 context가 null이 아닐 경우
         final renderBox =
-        context.findRenderObject() as RenderBox; // RenderBox 객체로 변환
+            context.findRenderObject() as RenderBox; // RenderBox 객체로 변환
         final position = renderBox.localToGlobal(Offset.zero); // 글로벌 좌표로 변환
         if (position.dy <= kToolbarHeight + preferredSizeHeight + intervalY) {
           // 위치가 특정 높이 내에 있을 경우
@@ -268,7 +270,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     // 'ref'를 사용하여 'aaaHomeScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(aaaHomeScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(aaaHomeScrollPositionProvider.notifier).state =
+        currentScrollPosition;
   }
 
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
@@ -401,11 +404,11 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
         ref.read(aaaHomeSmall2BannerPageProvider.notifier).state = 0;
         ref.read(aaaHomeSmall3BannerPageProvider.notifier).state = 0;
         ref.read(aaaHomeScrollPositionProvider.notifier).state =
-        0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
+            0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
         ref.read(aaaHomeCurrentTabProvider.notifier).state =
-        0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+            0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
         ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
-        false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
+            false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
@@ -536,7 +539,6 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
 
     // 이벤트 이미지 탭 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     void onEventImageTap(int index) {
-
       // 다른 탭이 선택된 경우
       GlobalKey sectionKey = _getSectionKey(index); // 선택된 섹션의 GlobalKey를 가져옴
       if (sectionKey.currentContext != null) {
@@ -567,50 +569,99 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 앱 바 부분 수치
+    // final double expandedHeight =
+    //     screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
+    // final double preferredSizeHeight =
+    //     screenSize.height * (60 / referenceHeight); // 상단 탭 바 높이 비율
+    //
+    // // 대배너 부분 관련 수치
+    // final double homeScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    // final double homeScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
+    // final double homeScreenLargeBannerViewHeight =
+    //     screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+    //
+    // // 홈 소배너 부분 관련 수치
+    // final double homeScreenSmallBannerWidth = screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
+    // final double homeScreenSmallBannerHeight = screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
+    // final double homeScreenSmallBannerViewHeight =
+    //     screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double homeChevronIconWidth = screenSize.width * (28 / referenceWidth);
+    // final double homeChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    // final double homeChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double homeChevronIconY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 2)
+    // final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    // final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 홈 화면 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (5 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (60 / referenceHeight);
+    // final double interval4Y = screenSize.height * (13 / referenceHeight);
+    // final double interval5Y = screenSize.height * (8 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 앱 바 부분 수치
-    final double expandedHeight =
-        screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
-    final double preferredSizeHeight =
-        screenSize.height * (60 / referenceHeight); // 상단 탭 바 높이 비율
+    final double expandedHeight = 104; // 앱 바의 확장 최대 높이 비율
+    final double preferredSizeHeight = 60; // 상단 탭 바 높이 비율
 
     // 대배너 부분 관련 수치
-    final double homeScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double homeScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
-    final double homeScreenLargeBannerViewHeight =
-        screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+    final double homeScreenLargeBannerWidth =
+        screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    final double homeScreenLargeBannerHeight = 378; // 대배너 이미지 높이
+    final double homeScreenLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
 
     // 홈 소배너 부분 관련 수치
-    final double homeScreenSmallBannerWidth = screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
-    final double homeScreenSmallBannerHeight = screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
-    final double homeScreenSmallBannerViewHeight =
-        screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
+    final double homeScreenSmallBannerWidth =
+        screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
+    final double homeScreenSmallBannerHeight = 127; // 소배너 이미지 높이
+    final double homeScreenSmallBannerViewHeight = 127; // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double homeAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double homeAppBarTitleHeight = 22;
     final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double homeAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double homeChevronIconWidth = screenSize.width * (28 / referenceWidth);
-    final double homeChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double homeChevronIconWidth =
+        screenSize.width * (28 / referenceWidth);
+    final double homeChevronIconHeight = 24;
     final double homeChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double homeChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double homeChevronIconY = 8;
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double homeWishlistBtnWidth = 40;
+    final double homeWishlistBtnHeight = 40;
+    final double homeWishlistBtnX = 10;
+    final double homeWishlistBtnY = 7;
 
     // 홈 화면 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (60 / referenceHeight);
-    final double interval4Y = screenSize.height * (13 / referenceHeight);
-    final double interval5Y = screenSize.height * (8 / referenceHeight);
+    final double interval1Y = 5;
+    final double interval2Y = 10;
+    final double interval3Y = 60;
+    final double interval4Y = 13;
+    final double interval5Y = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -637,36 +688,37 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                   collapseMode: CollapseMode.pin,
                   // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
                   background: buildCommonAppBar(
-                    context: context,
-                    ref: ref,
-                    title: 'WEARCANO',
-                    fontFamily: 'Charter',
-                    boolEventImg: true,
-                    boolTitleImg: true,
-                    titleImageFieldName: 'title_img_1',
-                    titleImagePath:
-                    'asset/img/misc/appbar_img/home_appbar_title_img.png',
-                    // 앱 바 타이틀 이미지 경로 추가
-                    leadingType: LeadingType.back,
-                    // 아무 버튼도 없음.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
-                    appBarTitleWidth: homeAppBarTitleWidth,
-                    appBarTitleHeight: homeAppBarTitleHeight,
-                    appBarTitleX: homeAppBarTitleX,
-                    appBarTitleY: homeAppBarTitleY,
-                    chevronIconWidth: homeChevronIconWidth,
-                    chevronIconHeight: homeChevronIconHeight,
-                    chevronIconX: homeChevronIconX,
-                    chevronIconY: homeChevronIconY,
-                    wishlistBtnWidth: homeWishlistBtnWidth,
-                    wishlistBtnHeight: homeWishlistBtnHeight,
-                    wishlistBtnX: homeWishlistBtnX,
-                    wishlistBtnY: homeWishlistBtnY,
-                    scrollController: homeScreenPointScrollController,
-                    // sectionKey: sectionWinterKey,
-                    // 여기서 이벤트 이미지 클릭 시 onEventImageTap(8) 호출
-                    onEventImageTap: () => onEventImageTap(8),
-                  ),
+                      context: context,
+                      ref: ref,
+                      title: 'WEARCANO',
+                      fontFamily: 'Charter',
+                      boolEventImg: true,
+                      boolTitleImg: true,
+                      titleImageFieldName: 'title_img_1',
+                      titleImagePath:
+                          'asset/img/misc/appbar_img/home_appbar_title_img.png',
+                      // 앱 바 타이틀 이미지 경로 추가
+                      leadingType: LeadingType.back,
+                      // 아무 버튼도 없음.
+                      buttonCase: 2,
+                      // 2번 케이스 (찜 목록 버튼만 노출)
+                      appBarTitleWidth: homeAppBarTitleWidth,
+                      appBarTitleHeight: homeAppBarTitleHeight,
+                      appBarTitleX: homeAppBarTitleX,
+                      appBarTitleY: homeAppBarTitleY,
+                      chevronIconWidth: homeChevronIconWidth,
+                      chevronIconHeight: homeChevronIconHeight,
+                      chevronIconX: homeChevronIconX,
+                      chevronIconY: homeChevronIconY,
+                      wishlistBtnWidth: homeWishlistBtnWidth,
+                      wishlistBtnHeight: homeWishlistBtnHeight,
+                      wishlistBtnX: homeWishlistBtnX,
+                      wishlistBtnY: homeWishlistBtnY,
+                      scrollController: homeScreenPointScrollController,
+                      // sectionKey: sectionWinterKey,
+                      // 여기서 이벤트 이미지 클릭 시 onEventImageTap(8) 호출
+                      onEventImageTap: () => onEventImageTap(8),
+                    ),
                 ),
                 leading: null,
                 // 좌측 상단의 메뉴 버튼 등을 제거함.
@@ -677,13 +729,17 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                   preferredSize: Size.fromHeight(preferredSizeHeight),
                   // AppBar 하단에 PreferredSize를 사용하여 탭 바의 높이 지정
                   child: Container(
+                    // 아이폰은 노치 디자인(예: iPhone 12, 13, 14, 15) 및 홈 버튼 없는 화면을 지원하기 위해 Safe Area를 적용하므로
+                    // iOS는 기본적으로 스크린 전체 너비를 사용하지 않고, Safe Area 안쪽으로 UI를 배치하려고 함
+                    // 그래서 iOS에서는 가로형일 때는 양 끝이 원래 세로형 기준 Safe Area 공간이므로 적용이 안됨
+                    width: double.infinity, // 전체 너비 적용
                     // color: BUTTON_COLOR, // 상단 탭 바 색상 설정
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 설정함
-                        bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                      ),
+                          top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 설정함
+                          bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                          ),
                     ),
                   ),
                 ),
@@ -697,7 +753,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                     return Padding(
                       // 각 항목의 좌우 간격을 1.0으로 설정함.
                       padding: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -709,9 +765,12 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                             content: Container(
                               // 모서리에 반경을 주기 위해 BoxDecoration 추가
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정
+                                borderRadius: BorderRadius.circular(0),
+                                // 큰 배너의 모서리 반경을 0으로 설정
                                 border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                               child: SizedBox(
@@ -726,31 +785,38 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeLargeBannerPageProvider,
+                                      aaaHomeLargeBannerPageProvider,
                                   // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
                                   pageController: _largeBannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _largeBannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaAllLargeBannerImagesProvider,
+                                      aaaAllLargeBannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 대배너 클릭 시 호출할 함수 aaaOnLargeBannerTap 실행
-                                  aaaOnLargeBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaAllLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaAllLargeBannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenLargeBannerWidth, // 원하는 너비
-                                  height: homeScreenLargeBannerHeight, // 원하는 높이
+                                      // 대배너 클릭 시 호출할 함수 aaaOnLargeBannerTap 실행
+                                      aaaOnLargeBannerTap(
+                                          context, // 현재 화면의 컨텍스트를 전달함
+                                          index, // 클릭된 배너의 인덱스를 전달함
+                                          // aaaAllLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                          ref
+                                                  .watch(
+                                                      aaaAllLargeBannerImagesProvider)
+                                                  .value ??
+                                              [],
+                                          ref // Provider의 참조를 전달함
+                                          ),
+                                  width: homeScreenLargeBannerWidth,
+                                  // 원하는 너비
+                                  height: homeScreenLargeBannerHeight,
+                                  // 원하는 높이
                                   borderRadius: 0,
                                 ),
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                            backgroundColor: Theme.of(context)
+                                .scaffoldBackgroundColor, // 앱 기본 배경색
                             // 카드뷰 배경 색상 : 앱 기본 배경색
                             elevation: 4,
                             // 카드뷰 그림자 깊이
@@ -765,7 +831,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           // 중간 카테고리 버튼 리스트를 카드뷰로 구성
                           CommonCardView(
                             // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                            backgroundColor: Theme.of(context)
+                                .scaffoldBackgroundColor, // 앱 기본 배경색
                             // 카드뷰 배경 색상 : 앱 기본 배경색
                             elevation: 0,
                             // 카드뷰 그림자 깊이
@@ -777,7 +844,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                               ),
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),
@@ -788,7 +857,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                             content: Container(
                               // 모서리에 반경을 주기 위해 BoxDecoration 추가
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5), // 작은 배너의 모서리 반경을 5로 설정
+                                borderRadius: BorderRadius.circular(
+                                    5), // 작은 배너의 모서리 반경을 5로 설정
                               ),
                               child: SizedBox(
                                 // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
@@ -802,31 +872,38 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeSmall1BannerPageProvider,
+                                      aaaHomeSmall1BannerPageProvider,
                                   // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
                                   pageController: _small1BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small1BannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaHomeSmall1BannerImagesProvider,
+                                      aaaHomeSmall1BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
-                                  aaaOnSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaHomeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaHomeSmall1BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth, // 원하는 너비
-                                  height: homeScreenSmallBannerHeight, // 원하는 높이
+                                      // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
+                                      aaaOnSmallBannerTap(
+                                          context, // 현재 화면의 컨텍스트를 전달함
+                                          index, // 클릭된 배너의 인덱스를 전달함
+                                          // aaaHomeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                          ref
+                                                  .watch(
+                                                      aaaHomeSmall1BannerImagesProvider)
+                                                  .value ??
+                                              [],
+                                          ref // Provider의 참조를 전달함
+                                          ),
+                                  width: homeScreenSmallBannerWidth,
+                                  // 원하는 너비
+                                  height: homeScreenSmallBannerHeight,
+                                  // 원하는 높이
                                   borderRadius: 5,
                                 ),
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                            backgroundColor: Theme.of(context)
+                                .scaffoldBackgroundColor, // 앱 기본 배경색
                             // 카드뷰 배경 색상 : 앱 기본 배경색
                             elevation: 0,
                             // 카드뷰 그림자 깊이
@@ -837,7 +914,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -854,7 +933,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -871,7 +952,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -880,15 +963,17 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           // 할인 제품 섹션
                           Container(
                             key: sectionSaleKey,
-                            child: buildSectionCard(
-                                context, ref, "특가 상품", aaaBuildSaleProductsSection,
+                            child: buildSectionCard(context, ref, "특가 상품",
+                                aaaBuildSaleProductsSection,
                                 destinationScreen: AaaSaleSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -899,7 +984,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                             content: Container(
                               // 모서리에 반경을 주기 위해 BoxDecoration 추가
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5), // 작은 배너의 모서리 반경을 5로 설정
+                                borderRadius: BorderRadius.circular(
+                                    5), // 작은 배너의 모서리 반경을 5로 설정
                               ),
                               child: SizedBox(
                                 // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
@@ -913,31 +999,38 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeSmall2BannerPageProvider,
+                                      aaaHomeSmall2BannerPageProvider,
                                   // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
                                   pageController: _small2BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small2BannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaHomeSmall2BannerImagesProvider,
+                                      aaaHomeSmall2BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
-                                  aaaOnSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaHomeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaHomeSmall2BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth, // 원하는 너비
-                                  height: homeScreenSmallBannerHeight, // 원하는 높이
+                                      // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
+                                      aaaOnSmallBannerTap(
+                                          context, // 현재 화면의 컨텍스트를 전달함
+                                          index, // 클릭된 배너의 인덱스를 전달함
+                                          // aaaHomeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                          ref
+                                                  .watch(
+                                                      aaaHomeSmall2BannerImagesProvider)
+                                                  .value ??
+                                              [],
+                                          ref // Provider의 참조를 전달함
+                                          ),
+                                  width: homeScreenSmallBannerWidth,
+                                  // 원하는 너비
+                                  height: homeScreenSmallBannerHeight,
+                                  // 원하는 높이
                                   borderRadius: 5,
                                 ),
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                            backgroundColor: Theme.of(context)
+                                .scaffoldBackgroundColor, // 앱 기본 배경색
                             // 카드뷰 배경 색상 : 앱 기본 배경색
                             elevation: 0,
                             // 카드뷰 그림자 깊이
@@ -948,7 +1041,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -957,15 +1052,17 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
                           Container(
                             key: sectionSpringKey,
-                            child: buildSectionCard(
-                                context, ref, "봄", aaaBuildSpringProductsSection,
+                            child: buildSectionCard(context, ref, "봄",
+                                aaaBuildSpringProductsSection,
                                 destinationScreen: AaaSpringSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -973,15 +1070,17 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
                           Container(
                             key: sectionSummerKey,
-                            child: buildSectionCard(
-                                context, ref, "여름", aaaBuildSummerProductsSection,
+                            child: buildSectionCard(context, ref, "여름",
+                                aaaBuildSummerProductsSection,
                                 destinationScreen: AaaSummerSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -992,7 +1091,8 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                             content: Container(
                               // 모서리에 반경을 주기 위해 BoxDecoration 추가
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5), // 작은 배너의 모서리 반경을 5로 설정
+                                borderRadius: BorderRadius.circular(
+                                    5), // 작은 배너의 모서리 반경을 5로 설정
                               ),
                               child: SizedBox(
                                 // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
@@ -1006,31 +1106,38 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                                   ref: ref,
                                   // 현재 페이지를 관리하는 Provider를 전달
                                   currentPageProvider:
-                                  aaaHomeSmall3BannerPageProvider,
+                                      aaaHomeSmall3BannerPageProvider,
                                   // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
                                   pageController: _small3BannerPageController,
                                   // 배너 자동 스크롤 기능을 전달
                                   bannerAutoScroll: _small3BannerAutoScroll,
                                   // 배너 이미지들을 관리하는 Provider를 전달
                                   bannerImagesProvider:
-                                  aaaHomeSmall3BannerImagesProvider,
+                                      aaaHomeSmall3BannerImagesProvider,
                                   // 배너를 탭했을 때 실행할 함수를 전달
                                   onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
-                                  aaaOnSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aaaHomeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aaaHomeSmall3BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth, // 원하는 너비
-                                  height: homeScreenSmallBannerHeight, // 원하는 높이
+                                      // 소배너 클릭 시 호출할 함수 aaaOnSmallBannerTap 실행
+                                      aaaOnSmallBannerTap(
+                                          context, // 현재 화면의 컨텍스트를 전달함
+                                          index, // 클릭된 배너의 인덱스를 전달함
+                                          // aaaHomeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                                          ref
+                                                  .watch(
+                                                      aaaHomeSmall3BannerImagesProvider)
+                                                  .value ??
+                                              [],
+                                          ref // Provider의 참조를 전달함
+                                          ),
+                                  width: homeScreenSmallBannerWidth,
+                                  // 원하는 너비
+                                  height: homeScreenSmallBannerHeight,
+                                  // 원하는 높이
                                   borderRadius: 5,
                                 ),
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                            backgroundColor: Theme.of(context)
+                                .scaffoldBackgroundColor, // 앱 기본 배경색
                             // 카드뷰 배경 색상 : 앱 기본 배경색
                             elevation: 0,
                             // 카드뷰 그림자 깊이
@@ -1041,7 +1148,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -1049,15 +1158,17 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
                           Container(
                             key: sectionAutumnKey,
-                            child: buildSectionCard(
-                                context, ref, "가을", aaaBuildAutumnProductsSection,
+                            child: buildSectionCard(context, ref, "가을",
+                                aaaBuildAutumnProductsSection,
                                 destinationScreen: AaaAutumnSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -1065,15 +1176,17 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                           Container(
                             key: sectionWinterKey,
-                            child: buildSectionCard(
-                                context, ref, "겨울", aaaBuildWinterProductsSection,
+                            child: buildSectionCard(context, ref, "겨울",
+                                aaaBuildWinterProductsSection,
                                 destinationScreen: AaaWinterSubMainScreen(),
                                 showPlusButton: true),
                           ),
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -1086,7 +1199,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
                           ),
@@ -1108,7 +1223,13 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-        ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: homeScreenPointScrollController,),
+        ref.watch(tabIndexProvider),
+        ref,
+        context,
+        5,
+        1,
+        scrollController: homeScreenPointScrollController,
+      ),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );

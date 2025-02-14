@@ -1,46 +1,67 @@
 import 'package:dongdaemoon_beta_v1/user/view/sign_up_document_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/common_body_parts_layout.dart';
 import '../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../home/view/main_home_screen.dart';
-import '../provider/sns_login_all_provider.dart';
-import '../repository/sns_login_repository.dart';
+import '../provider/sns_login_and_sign_up_all_provider.dart';
+import '../repository/sns_login_and_sign_up_repository.dart';
+import 'package:korean_profanity_filter/korean_profanity_filter.dart'
+as KoreanFilter; // 별칭 설정 (korean_profanity_filter 패키지 임포트)
+import 'package:profanity_filter/profanity_filter.dart'
+as EnglishFilter; // 별칭 설정 (profanity_filter 패키지 임포트)
 
 // ------ 회원가입 화면 클래스 시작 ------
-class SignUpScreen extends ConsumerStatefulWidget {
+class SnsSignUpScreen extends ConsumerStatefulWidget {
   final String snsType; // 'apple' 또는 'google'
   final String snsId;   // SNS 계정 ID (Apple ID 또는 Google ID)
   // final String platformType; // 'ios' 또는 'aos' (이전 화면 구분)
+  final String? prefilledEmail; // SNS 계정에서 가져온 이메일
+  final String? prefilledName; // SNS 계정에서 가져온 이름
 
-  const SignUpScreen({
+  const SnsSignUpScreen({
     required this.snsType,
     required this.snsId,
     // required this.platformType,
+    this.prefilledEmail,
+    this.prefilledName,
     Key? key,
   }) : super(key: key);
 
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SnsSignUpScreenState createState() => _SnsSignUpScreenState();
 }
 
-class _SignUpScreenState extends ConsumerState<SignUpScreen>
+class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     with WidgetsBindingObserver {
-  late final TextEditingController _snsIdController;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  bool isAgreedToAll = false;
-  bool isAgreedToTerms = false;
-  bool isAgreedToPrivacy = false;
-  bool isOverAge = false;
-  bool isLoading = false;
+  // ------ 입력 필드 및 상태 관리 변수 초기화 ------
+  late final TextEditingController _snsIdController; // SNS ID 입력 필드 컨트롤러
+  final TextEditingController _nameController =
+  TextEditingController(); // 이름 입력 필드 컨트롤러
+  final TextEditingController _emailController =
+  TextEditingController(); // 이메일 입력 필드 컨트롤러
+  final TextEditingController _phoneController =
+  TextEditingController(); // 휴대폰 번호 입력 필드 컨트롤러
 
-  FocusNode _nameFocusNode = FocusNode();
-  FocusNode _emailFocusNode = FocusNode();
-  FocusNode _phoneNumberFocusNode = FocusNode();
+  // ProfanityFilter라는 클래스가 두 개의 패키지(korean_profanity_filter와 profanity_filter)에서 동일한 이름으로 정의되어 있어서 충돌이 발생함
+  // 이런 경우, 하나의 패키지에서 해당 이름을 사용하려면 as 키워드로 별칭을 부여해야 합니다. 별칭을 사용하면 두 패키지의 동일한 이름 충돌을 피함
+  final EnglishFilter.ProfanityFilter _englishProfanityFilter =
+  EnglishFilter.ProfanityFilter(); // 영어 비속어 필터 객체
+
+  // ------ 동의 체크박스 상태 관리 ------
+  bool isAgreedToAll = false; // 모든 항목 동의 상태
+  bool isAgreedToTerms = false; // 이용약관 동의 상태
+  bool isAgreedToPrivacy = false; // 개인정보 수집 및 이용 동의 상태
+  bool isOverAge = false; // 14세 이상 확인 상태
+  bool isLoading = false; // 로딩 상태
+
+  // ------ 포커스 노드 초기화 ------
+  FocusNode _nameFocusNode = FocusNode(); // 이름 입력 필드 포커스 노드
+  FocusNode _emailFocusNode = FocusNode(); // 이메일 입력 필드 포커스 노드
+  FocusNode _phoneNumberFocusNode = FocusNode(); // 휴대폰 번호 입력 필드 포커스 노드
 
   late ScrollController signUpScreenPointScrollController; // 스크롤 컨트롤러 선언
 
@@ -51,10 +72,20 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
   @override
   void initState() {
     super.initState();
-    // ScrollController를 초기화
+
+    // 스크롤 컨트롤러 초기화
     signUpScreenPointScrollController = ScrollController();
 
+    // SNS ID 입력 필드 초기화
     _snsIdController = TextEditingController(text: widget.snsId);
+
+    // 이메일 항목 입력칸과 이름 항목 입력칸에 SNS 계정에서 불러와서 미리 자동 완성 되도록 설정
+    if (widget.prefilledEmail != null && widget.prefilledEmail!.isNotEmpty) {
+      _emailController.text = widget.prefilledEmail!;
+    }
+    if (widget.prefilledName != null && widget.prefilledName!.isNotEmpty) {
+      _nameController.text = widget.prefilledName!;
+    }
 
     // WidgetsBindingObserver를 추가하여 앱의 생명주기 변화 감지
     WidgetsBinding.instance.addObserver(this); // 생명주기 옵저버 등록
@@ -65,6 +96,93 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     // 네트워크 상태 체크 시작
     _networkChecker = NetworkChecker(context);
     _networkChecker?.checkNetworkStatus();
+
+    // 이메일 입력 필드 포커스 리스너 추가 (유효성 체크)
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        // 입력값이 있을 때만 검사
+        // '@' 또는 '.'을 포함하지 않거나, '@','.'을 제외한 값이 없는 경우
+        if (_emailController.text.isNotEmpty &&
+            (!_emailController.text.contains('@') ||
+                !_emailController.text.contains('.') ||
+                _emailController.text
+                    .replaceAll('@', '.')
+                    .trim()
+                    .isEmpty)) {
+          showCustomSnackBar(context, '이메일 형식에 맞게 기입해주세요.');
+        }
+        // 빈칸 포함 여부 확인
+        if (_emailController.text.contains(' ')) {
+          showCustomSnackBar(context, '빈칸 없이 이메일을 기입해주세요.');
+          _nameController.clear();
+          return;
+        }
+      }
+    });
+
+    // 휴대폰 번호 입력 필드 포커스 리스너 추가 (유효성 체크)
+    _phoneNumberFocusNode.addListener(() {
+      if (!_phoneNumberFocusNode.hasFocus) {
+        // '-'가 포함된 횟수 계산
+        // 입력값이 있을 때만 검사
+        // '-' 사이 양쪽 어디에든 입력값이 없거나 '-'가 2개 미만인 경우
+        // => '-' 기준으로 문자열을 나누어 List<String>로 저장한 후, 부분 문자열(parts)의 길이가 3이 아닌 경우로 구현
+        String phoneText = _phoneController.text;
+        List<String> parts = phoneText.split('-');
+        if (phoneText.isNotEmpty &&
+            (parts.length != 3 || parts.any((part) => part.isEmpty))) {
+          showCustomSnackBar(context, "'-'를 붙인 휴대폰 번호 형식에 맞게 기입해주세요.");
+        }
+        // 빈칸 포함 여부 확인
+        if (_phoneController.text.contains(' ')) {
+          showCustomSnackBar(context, '빈칸 없이 휴대폰 번호를 기입해주세요.');
+          _nameController.clear();
+          return;
+        }
+      }
+    });
+
+    // ----- 이름 입력 필드 텍스트 변경 리스너 추가 (유효성 체크) 시작
+    // 이름 내 빈칸 제한 필터링
+    _nameController.addListener(() {
+      // 빈칸 입력 방지
+      // if (!_nameFocusNode.hasFocus) {
+      // 빈칸 포함 여부 확인
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.contains(' ')) {
+        showCustomSnackBar(context, '빈칸 없이 이름을 기입해주세요.');
+        _nameController.clear();
+        return;
+      }
+
+      // 이름 길이 제한 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.length > 20) {
+        showCustomSnackBar(context, '최대 20자까지 작성 가능합니다.');
+        _nameController.text = _nameController.text.substring(0, 20);
+        _nameController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _nameController.text.length),
+        );
+      }
+
+      // 영어 비속어 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _englishProfanityFilter.hasProfanity(_nameController.text)) {
+        showCustomSnackBar(context, '영어 비속어가 포함된 이름은 사용할 수 없습니다.');
+        _nameController.clear(); // 필드값이 초기화가 됨
+        return;
+      }
+
+      // 한국어 비속어 필터링
+      // 입력값이 있을 때만 검사
+      if (_nameController.text.isNotEmpty && _nameController.text.containsBadWords) {
+        showCustomSnackBar(context, '한국어 비속어가 포함된 이름은 사용할 수 없습니다.');
+        _nameController.clear();
+        return;
+      }
+      // }
+    });
+    // ----- 이름 입력 필드 텍스트 변경 리스너 추가 (유효성 체크) 끝
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -87,6 +205,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     // 앱 생명주기 이벤트를 더 이상 수신하지 않겠다는 의도임.
     WidgetsBinding.instance.removeObserver(this);
 
+    // 컨트롤러 및 포커스 노드 해제
     _snsIdController.dispose();
     _nameController.dispose();
     _emailController.dispose();
@@ -109,7 +228,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
 
   @override
   Widget build(BuildContext context) {
-    final signUpInfoRepository = ref.watch(signUpInfoRepositoryProvider);
+    final signUpInfoRepository = ref.watch(snsSignUpInfoRepositoryProvider);
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -118,39 +237,75 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // AppBar 관련 수치 동적 적용
+    // final double signUpAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double signUpAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double signUpAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double signUpAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double signUpChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double signUpChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double signUpChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double signUpChevronIconY = screenSize.height * (9 / referenceHeight);
+    //
+    // final double interval1X = screenSize.width * (14 / referenceWidth);
+    // final double interval1Y = screenSize.height * (5 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (20 / referenceHeight);
+    // final double interval4Y = screenSize.height * (40 / referenceHeight);
+    //
+    // final double nameGuideTextFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double allAgreeCheckBoxTextFontSize =
+    //     screenSize.height * (20 / referenceHeight);
+    //
+    // final double signUpBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double signUpBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double signUpBtnFontSize = screenSize.height * (16 / referenceHeight);
+    //
+    // // 이미지 위치 조정을 위한 비율 기반 수치
+    // final double personImageWidth = screenSize.width * (190 / referenceWidth);
+    // final double personImageHeight =
+    //     screenSize.height * (170 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // AppBar 관련 수치 동적 적용
     final double signUpAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double signUpAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double signUpAppBarTitleHeight = 22;
     final double signUpAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double signUpAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double signUpAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double signUpChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double signUpChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double signUpChevronIconHeight = 24;
     final double signUpChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double signUpChevronIconY = screenSize.height * (9 / referenceHeight);
+    final double signUpChevronIconY = 9;
 
     final double interval1X = screenSize.width * (14 / referenceWidth);
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (20 / referenceHeight);
-    final double interval4Y = screenSize.height * (40 / referenceHeight);
+    final double interval2Y = 10;
+    final double interval3Y = 20;
 
-    final double allAgreeCheckBoxTextFontSize =
-        screenSize.height * (20 / referenceHeight);
+    final double nameGuideTextFontSize = 10;
+    final double allAgreeCheckBoxTextFontSize = 20;
 
-    final double signUpBtnHeight = screenSize.height * (50 / referenceHeight);
+    final double signUpBtnHeight = 50;
     final double signUpBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double signUpBtnFontSize = screenSize.height * (16 / referenceHeight);
+    final double signUpBtnFontSize = 16;
 
     // 이미지 위치 조정을 위한 비율 기반 수치
     final double personImageWidth = screenSize.width * (190 / referenceWidth);
-    final double personImageHeight = screenSize.height * (170 / referenceHeight);
+    final double personImageHeight = 170;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -173,30 +328,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                    background: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
-                        ),
-                      ),
-                      child: buildCommonAppBar(
-                        context: context,
-                        ref: ref,
-                        title: '회원가입',
-                        fontFamily: 'NanumGothic',
-                        leadingType: LeadingType.back,
-                        buttonCase: 1,
-                        appBarTitleWidth: signUpAppBarTitleWidth,
-                        appBarTitleHeight: signUpAppBarTitleHeight,
-                        appBarTitleX: signUpAppBarTitleX,
-                        appBarTitleY: signUpAppBarTitleY,
-                        chevronIconWidth: signUpChevronIconWidth,
-                        chevronIconHeight: signUpChevronIconHeight,
-                        chevronIconX: signUpChevronIconX,
-                        chevronIconY: signUpChevronIconY,
-                        // platformType: widget.platformType, // platformType 전달
-                      ),
+                    background: buildCommonAppBar(
+                      context: context,
+                      ref: ref,
+                      title: '회원가입',
+                      fontFamily: 'NanumGothic',
+                      leadingType: LeadingType.back,
+                      buttonCase: 1,
+                      appBarTitleWidth: signUpAppBarTitleWidth,
+                      appBarTitleHeight: signUpAppBarTitleHeight,
+                      appBarTitleX: signUpAppBarTitleX,
+                      appBarTitleY: signUpAppBarTitleY,
+                      chevronIconWidth: signUpChevronIconWidth,
+                      chevronIconHeight: signUpChevronIconHeight,
+                      chevronIconX: signUpChevronIconX,
+                      chevronIconY: signUpChevronIconY,
+                      // platformType: widget.platformType, // platformType 전달
                     ),
                   ),
                   leading: null,
@@ -204,124 +351,222 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우 패딩 추가
-                  child: Column(
-                    children: [
-                      SizedBox(height: interval2Y),
-                      _buildFixedValueRow(
-                        context,
-                        // widget.snsType == 'apple' ? '애플 ID' : '구글 ID',
-                        'SNS 계정',
-                        _snsIdController.text,
-                      ),
-                      SizedBox(height: interval1Y),
-                      _buildEditableRow(context, '이름', _nameController,
-                          _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
-                      SizedBox(height: interval1Y),
-                      _buildEditableRow(context, '이메일', _emailController,
-                          _emailFocusNode, "이메일을 입력하세요."),
-                      SizedBox(height: interval1Y),
-                      _buildEditableRow(context, '휴대폰 번호', _phoneController,
-                          _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."),
-                      SizedBox(height: interval3Y),
-                      Row(
-                        children: [
-                          Transform.scale(
-                            scale: 1.3, // 체크박스 크기 설정
-                            child: Checkbox(
-                              value: isAgreedToAll,
-                              onChanged: (value) {
-                                setState(() {
-                                  isAgreedToAll = value ?? false;
-                                  isAgreedToTerms = isAgreedToAll;
-                                  isAgreedToPrivacy = isAgreedToAll;
-                                  isOverAge = isAgreedToAll;
-                                });
-                              },
-                              activeColor: ORANGE56_COLOR, // 활성화된 체크박스 색상 설정
+                    padding: EdgeInsets.symmetric(horizontal: interval1X),
+                    // 좌우 패딩 추가
+                    child: Column(
+                      children: [
+                        SizedBox(height: interval2Y),
+                        // '* 필수' 텍스트
+                        Align(
+                          alignment: Alignment.centerRight, // 오른쪽 정렬
+                          // Row는 기존 왼쪽 정렬이므로 오른쪽 정렬로 따로 옵션을 주고 싶으면 Row 대신 RichText와 같은 위젯을 사용해야함!!
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '* ',
+                                  style: TextStyle(
+                                    fontSize: nameGuideTextFontSize,
+                                    fontFamily: 'NanumGothic',
+                                    fontWeight: FontWeight.bold,
+                                    color: RED46_COLOR,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '필수',
+                                  style: TextStyle(
+                                    fontSize: nameGuideTextFontSize,
+                                    fontFamily: 'NanumGothic',
+                                    fontWeight: FontWeight.bold,
+                                    color: BLACK_COLOR,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            '모든 항목 선택',
+                        ),
+                        SizedBox(height: interval2Y),
+                        // _buildFixedValueRow(
+                        //   context,
+                        //   'SNS 계정',
+                        //   _snsIdController.text,
+                        // ),
+                        // SizedBox(height: interval1Y),
+                        _buildEditableRow(context, '이름', _nameController,
+                            _nameFocusNode, "'성'을 붙여서 이름을 기입해주세요."),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            "* '성'을 붙여서 이름을 기입해주세요.",
                             style: TextStyle(
-                              fontSize: allAgreeCheckBoxTextFontSize,
+                              fontSize: nameGuideTextFontSize,
                               fontFamily: 'NanumGothic',
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 빈칸 없이 최대 20자 이내이며, 비속어는 사용할 수 없습니다.',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
+                        _buildEditableRow(context, '이메일', _emailController,
+                            _emailFocusNode, "이메일 형식에 맞게 이메일을 기입해주세요."),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 예) abc@naver.com, abc@hanmail.net',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
+                        _buildPhoneNumberEditableRow(context, '휴대폰 번호', _phoneController,
+                            _phoneNumberFocusNode, "'-'를 붙여서 연락처를 기입해주세요."),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 예) 010-XXXX-XXXX',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: GRAY60_COLOR,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(
+                            '* 상품 업데이트 요청 관련 관리자 연락을 위해 휴대폰 번호가 필요합니다.',
+                            style: TextStyle(
+                              fontSize: nameGuideTextFontSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: interval2Y),
-                      _buildAgreementRow('본인은 14세 이상입니다. (필수)', isOverAge,
-                              (value) {
-                            setState(() {
-                              isOverAge = value ?? false;
-                              _updateAllAgreement();
-                            });
-                          }),
-                      _buildAgreementRow('이용약관 동의 (필수)', isAgreedToTerms,
-                          (value) {
-                        setState(() {
-                          isAgreedToTerms = value ?? false;
-                          _updateAllAgreement();
-                        });
-                      }),
-                      _buildAgreementRow(
-                          '개인정보 수집 및 이용 동의 (필수)', isAgreedToPrivacy, (value) {
-                        setState(() {
-                          isAgreedToPrivacy = value ?? false;
-                          _updateAllAgreement();
-                        });
-                      }),
-                      SizedBox(height: interval3Y),
-                      Center(
-                        child: Container(
-                          width: signUpBtnWidth,
-                          height: signUpBtnHeight,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: _isSignUpEnabled()
-                                  ? ORANGE56_COLOR
-                                  : GRAY62_COLOR,
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              side: BorderSide(
-                                color: _isSignUpEnabled()
-                                    ? ORANGE56_COLOR
-                                    : GRAY62_COLOR,
+                        ),
+                        SizedBox(height: interval3Y),
+                        Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.3, // 체크박스 크기 설정
+                              child: Checkbox(
+                                value: isAgreedToAll,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isAgreedToAll = value ?? false;
+                                    isAgreedToTerms = isAgreedToAll;
+                                    isAgreedToPrivacy = isAgreedToAll;
+                                    isOverAge = isAgreedToAll;
+                                  });
+                                },
+                                activeColor:
+                                ORANGE56_COLOR, // 활성화된 체크박스 색상 설정
                               ),
                             ),
-                            onPressed: _isSignUpEnabled()
-                                ? () => _signUp(signUpInfoRepository)
-                                : null,
-                            child: isLoading
-                                ? buildCommonLoadingIndicator()
-                                : Text(
-                                    '가입하기',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: signUpBtnFontSize,
-                                      color: _isSignUpEnabled()
-                                          ? ORANGE56_COLOR
-                                          : GRAY40_COLOR,
-                                    ),
-                                  ),
+                            Text(
+                              '모든 항목 선택',
+                              style: TextStyle(
+                                fontSize: allAgreeCheckBoxTextFontSize,
+                                fontFamily: 'NanumGothic',
+                                fontWeight: FontWeight.bold,
+                                color: BLACK_COLOR,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: interval2Y),
+                        _buildAgreementRow('본인은 14세 이상입니다. (필수)', isOverAge,
+                                (value) {
+                              setState(() {
+                                isOverAge = value ?? false;
+                                _updateAllAgreement();
+                              });
+                            }),
+                        _buildAgreementRow('이용약관 동의 (필수)', isAgreedToTerms,
+                                (value) {
+                              setState(() {
+                                isAgreedToTerms = value ?? false;
+                                _updateAllAgreement();
+                              });
+                            }),
+                        _buildAgreementRow(
+                            '개인정보 수집 및 이용 동의 (필수)', isAgreedToPrivacy, (value) {
+                          setState(() {
+                            isAgreedToPrivacy = value ?? false;
+                            _updateAllAgreement();
+                          });
+                        }),
+                        SizedBox(height: interval3Y),
+                        Center(
+                          child: Container(
+                            width: signUpBtnWidth,
+                            height: signUpBtnHeight,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: _isSignUpEnabled()
+                                    ? ORANGE56_COLOR
+                                    : GRAY62_COLOR,
+                                backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                                side: BorderSide(
+                                  color: _isSignUpEnabled()
+                                      ? ORANGE56_COLOR
+                                      : GRAY62_COLOR,
+                                ),
+                              ),
+                              onPressed: _isSignUpEnabled()
+                                  ? () {
+                                if (!_validateEmailFormat() ||
+                                    !_validatePhoneNumberFormat() ||
+                                    !_validateNameLength()) {
+                                  showCustomSnackBar(context,
+                                      '각 입력칸에 정보를 형식에 맞게 제대로 기입해주세요.');
+                                  return;
+                                }
+                                _signUp(signUpInfoRepository);
+                              }
+                                  : null,
+                              child: isLoading
+                                  ? buildCommonLoadingIndicator()
+                                  : Text(
+                                '가입하기',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: signUpBtnFontSize,
+                                  color: _isSignUpEnabled()
+                                      ? ORANGE56_COLOR
+                                      : GRAY40_COLOR,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: interval3Y),
-                      // 사람 이미지 추가
-                      Center(
+                        SizedBox(height: interval3Y),
+                        // 사람 이미지 추가
+                        Center(
                           child: Image.asset(
                             'asset/img/misc/login_image/login_bottom_image1.png',
                             width: personImageWidth,
                             height: personImageHeight,
                             fit: BoxFit.contain, // 이미지 크기 조정
                           ),
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -333,14 +578,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
   }
 
   // Firestore에 회원 정보 저장
-  Future<void> _signUp(SignUpInfoRepository signUpInfoRepository) async {
+  Future<void> _signUp(SnsSignUpInfoRepository signUpInfoRepository) async {
     setState(() {
       isLoading = true;
     });
     try {
       // FireStore에 사용자 정보 저장
       await signUpInfoRepository.signUpUser(
-        snsType: widget.snsType, // SNS 타입 전달
+        snsType: widget.snsType,
+        // SNS 타입 전달
         snsId: _snsIdController.text,
         name: _nameController.text,
         email: _emailController.text,
@@ -359,7 +605,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => MainHomeScreen()),
-          (route) => false,
+              (route) => false,
         );
       }
     } catch (e) {
@@ -368,7 +614,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
       // );
 
       showCustomSnackBar(context, '회원가입 중 문제가 발생했습니다: $e');
-
     } finally {
       setState(() {
         isLoading = false;
@@ -376,6 +621,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     }
   }
 
+  // 체크 사항 행을 생성하는 함수
   Widget _buildAgreementRow(
       String text, bool value, ValueChanged<bool?> onChanged) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -385,8 +631,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    final double agreeCheckBoxTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double agreeCheckBoxTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double agreeCheckBoxTextFontSize = 14;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // '본인은 14세 이상입니다. (필수)' 항목인지 확인
     bool isOverAgeRow = text == '본인은 14세 이상입니다. (필수)';
@@ -424,7 +676,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
               String title;
               if (text == '이용약관 동의 (필수)') {
                 documentId = 'document_1';
-                title = '웨어카노 서비스 이용 약관';
+                title = '꾸띠르 서비스 이용 약관';
               } else if (text == '개인정보 수집 및 이용 동의 (필수)') {
                 documentId = 'document_2';
                 title = '개인정보 수집 및 이용 내역';
@@ -458,7 +710,27 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     );
   }
 
+  // 이메일 형식 유효성 검증 함수
+  bool _validateEmailFormat() {
+    return _emailController.text.contains('@') &&
+        _emailController.text.contains('.') &&
+        _emailController.text.replaceAll('@', '.').trim().isNotEmpty;
+  }
 
+  // 휴대폰 번호 형식 유효성 검증 함수
+  bool _validatePhoneNumberFormat() {
+    String phoneText = _phoneController.text;
+    List<String> parts = phoneText.split('-');
+    return parts.length == 3 && parts.every((part) => part.isNotEmpty);
+  }
+
+  // 이름 길이 유효성 검증 함수
+  bool _validateNameLength() {
+    return _nameController.text.isNotEmpty &&
+        _nameController.text.length <= 20;
+  }
+
+  // 회원가입 버튼 활성화 상태 확인 함수
   bool _isSignUpEnabled() {
     return isAgreedToTerms &&
         isAgreedToPrivacy &&
@@ -468,6 +740,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
         _phoneController.text.isNotEmpty;
   }
 
+  // 모든 동의 상태 업데이트 함수
   void _updateAllAgreement() {
     setState(() {
       isAgreedToAll = isAgreedToTerms && isAgreedToPrivacy && isOverAge;
@@ -484,20 +757,36 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 10;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // FocusNode의 상태 변화 감지 리스너 추가
     return StatefulBuilder(
@@ -524,19 +813,34 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                   decoration: BoxDecoration(
                     // color: GRAY96_COLOR,
                     color:
-                        Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                    Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                     border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                     borderRadius: BorderRadius.circular(6),
                   ),
                   alignment: Alignment.center,
                   // 텍스트를 중앙 정렬
-                  child: Text(
-                    label, // 셀에 표시될 텍스트
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
-                      fontSize: signUpInfoTextFontSize,
-                      color: BLACK_COLOR,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '*  ',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: RED46_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextSpan(
+                          text: label,
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: BLACK_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -545,7 +849,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                   child: Container(
                     decoration: BoxDecoration(
                       color:
-                          Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                      Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                       border: Border.all(
                         color: focusNode.hasFocus
                             ? ORANGE56_COLOR
@@ -555,7 +859,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                       borderRadius: BorderRadius.circular(6),
                     ),
                     padding:
-                        EdgeInsets.symmetric(horizontal: signUpInfoDataPartX),
+                    EdgeInsets.symmetric(horizontal: signUpInfoDataPartX),
                     alignment: Alignment.centerLeft, // 텍스트 정렬
                     child: GestureDetector(
                       onTap: () {
@@ -606,7 +910,174 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     );
   }
 
-  // 고정된 값을 가진 행을 생성하는 함수
+  // 휴대폰 번호 항목에 사용될 수정이 가능한 값을 가진 행을 생성하는 함수
+  Widget _buildPhoneNumberEditableRow(BuildContext context, String label,
+      TextEditingController controller, FocusNode focusNode, String hintText) {
+    // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 화면 크기: 가로 393, 세로 852
+    final double referenceWidth = 393.0;
+    final double referenceHeight = 852.0;
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 회원가입 정보 표 부분 수치
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 10;
+    final double signUpInfoTextPartWidth =
+        screenSize.width * (97 / referenceWidth);
+    final double signUpInfoTextPartHeight = 40;
+    // 행 간 간격 수치
+    final double signUpInfo4Y = 2;
+    final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    // 데이터 부분 패딩 수치
+    final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
+    // FocusNode의 상태 변화 감지 리스너 추가
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // FocusNode의 상태 변화 감지 리스너
+        focusNode.addListener(() {
+          // FocusNode 상태 변경 시 UI 업데이트
+          setState(() {});
+        });
+
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: signUpInfo4Y),
+          // 행의 상하단에 2.0 픽셀의 여백 추가
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 자식 위젯들을 위아래로 늘림
+              children: [
+                Container(
+                  width: signUpInfoTextPartWidth,
+                  // 셀의 너비 설정
+                  height: signUpInfoTextPartHeight,
+                  // 셀의 높이 설정
+                  // 라벨 셀의 너비 설정
+                  decoration: BoxDecoration(
+                    // color: GRAY96_COLOR,
+                    color:
+                    Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                    border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  alignment: Alignment.center,
+                  // 텍스트를 중앙 정렬
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '*  ',
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: RED46_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextSpan(
+                          text: label,
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: signUpInfoTextFontSize,
+                            color: BLACK_COLOR,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: signUpInfo1X), // 왼쪽과 오른쪽 사이 간격 추가
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color:
+                      Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
+                      border: Border.all(
+                        color: focusNode.hasFocus
+                            ? ORANGE56_COLOR
+                            : GRAY83_COLOR, // 포커스 여부에 따른 색상 변경
+                        width: 1.0,
+                      ), // 윤곽선
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    padding:
+                    EdgeInsets.symmetric(horizontal: signUpInfoDataPartX),
+                    alignment: Alignment.centerLeft, // 텍스트 정렬
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context)
+                            .requestFocus(focusNode); // 행을 탭할 때 포커스를 설정
+                      },
+                      child: TextField(
+                        controller: controller,
+                        // 텍스트 필드 컨트롤러 설정
+                        focusNode: focusNode,
+                        // 텍스트 필드 포커스 노드 설정
+                        cursorColor: ORANGE56_COLOR,
+                        // 커서 색상 설정
+                        style: TextStyle(
+                          fontFamily: 'NanumGothic',
+                          fontSize: signUpInfoDataFontSize,
+                          color: BLACK_COLOR,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        // 텍스트 필드 스타일 설정
+                        decoration: InputDecoration(
+                          hintText: hintText,
+                          // 힌트 텍스트 설정
+                          hintStyle: TextStyle(color: GRAY74_COLOR),
+                          // 힌트 텍스트 색상 설정
+                          hintMaxLines: 2,
+                          // 힌트 텍스트 최대 줄 수 설정
+                          border: InputBorder.none,
+                          // 입력 경계선 제거
+                          isDense: true,
+                          // 간격 설정
+                          contentPadding: EdgeInsets.zero, // 내용 여백 제거
+                        ),
+                        maxLines: null,
+                        // 최대 줄 수 설정
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9-]')), // 숫자와 '-'만 허용
+                        ],
+                        onChanged: (value) {
+                          print('텍스트 필드 $label 변경됨: $value'); // 디버깅 메시지 추가
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+// 고정된 값을 가진 행을 생성하는 함수
   Widget _buildFixedValueRow(BuildContext context, String label, String value) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -615,22 +1086,40 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 회원가입 정보 표 부분 수치
+    // final double signUpInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double signUpInfoDataFontSize =
+    //     screenSize.height * (8 / referenceHeight);
+    // final double signUpInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double signUpInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    //
+    // // 행 간 간격 수치
+    // final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
+    //
+    // // 데이터 부분 패딩 수치
+    // final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 회원가입 정보 표 부분 수치
-    final double signUpInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double signUpInfoDataFontSize =
-        screenSize.height * (8 / referenceHeight);
+    final double signUpInfoTextFontSize = 13;
+    final double signUpInfoDataFontSize = 8;
     final double signUpInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double signUpInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double signUpInfoTextPartHeight = 40;
 
     // 행 간 간격 수치
-    final double signUpInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double signUpInfo4Y = 2;
     final double signUpInfo1X = screenSize.width * (4 / referenceWidth);
 
     // 데이터 부분 패딩 수치
     final double signUpInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: signUpInfo4Y),
@@ -647,8 +1136,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                 color: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
                 border: Border.all(color: GRAY83_COLOR, width: 1), // 윤곽선
                 borderRadius:
-                    // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
-                    BorderRadius.circular(6),
+                // BorderRadius.only(topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)), // 왼쪽만 둥글게
+                BorderRadius.circular(6),
               ),
               // 배경 색상 설정
               alignment: Alignment.center,

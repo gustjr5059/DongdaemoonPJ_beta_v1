@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dongdaemoon_beta_v1/home/view/main_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,17 +26,18 @@ class PrivateReviewCreateDetailFormScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> productInfo; // 특정 상품 정보를 담는 변수
   final Map<String, dynamic> numberInfo; // 발주 정보를 담는 변수
   final String userEmail; // 사용자의 이메일을 저장하기 위한 변수
-  final TextEditingController titleController =
-      TextEditingController(); // 리뷰 제목을 입력받기 위한 컨트롤러
-  final TextEditingController contentController =
-      TextEditingController(); // 리뷰 내용을 입력받기 위한 컨트롤러
+  // final TextEditingController titleController =
+  //     TextEditingController(); // 리뷰 제목을 입력받기 위한 컨트롤러
+  // final TextEditingController contentController =
+  //     TextEditingController(); // 리뷰 내용을 입력받기 위한 컨트롤러
 
   // 생성자에서 productInfo, numberInfo, userEmail을 필수로 받아옴
   PrivateReviewCreateDetailFormScreen({
+    Key? key,
     required this.productInfo,
     required this.numberInfo,
     required this.userEmail,
-  });
+  }) : super(key: key);
 
   // 상태를 생성하는 메서드
   @override
@@ -49,6 +51,49 @@ class _PrivateReviewCreateDetailFormScreenState
   final List<File> _images = []; // 최대 3개의 이미지를 저장하기 위한 리스트
   final ImagePicker _picker =
       ImagePicker(); // 갤러리에서 이미지를 선택하기 위한 ImagePicker 객체
+
+  // "회원정보 수정" 예제처럼 TextEditingController는 State에서 관리
+  late TextEditingController _titleController;
+  late TextEditingController _contentController;
+
+  // 리뷰 제목, 리뷰 내용에 대한 FocusNode도 동일하게 관리
+  late FocusNode _titleFocusNode;
+  late FocusNode _contentFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    // 컨트롤러 초기화
+    _titleController = TextEditingController();
+    _contentController = TextEditingController();
+
+    // 포커스 노드 초기화
+    _titleFocusNode = FocusNode();
+    _contentFocusNode = FocusNode();
+
+    // (필요하다면) 포커스 리스너를 추가하여 포커스 상태 변화를 감지할 수 있음
+    // 예: 포커스 해제 시에 입력값 검증 등을 수행
+    _titleFocusNode.addListener(() {
+      if (!_titleFocusNode.hasFocus) {
+        // 여기서 리뷰 제목을 검증하거나, 조건에 맞지 않으면 snackBar 등을 보여줄 수 있음
+      }
+    });
+    _contentFocusNode.addListener(() {
+      if (!_contentFocusNode.hasFocus) {
+        // 여기서 리뷰 내용을 검증하거나, 조건에 맞지 않으면 snackBar 등을 보여줄 수 있음
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // 컨트롤러 및 포커스노드 해제
+    _titleController.dispose();
+    _contentController.dispose();
+    _titleFocusNode.dispose();
+    _contentFocusNode.dispose();
+    super.dispose();
+  }
 
   // ----- 리뷰 사진 업로드 관련 함수 시작 부분
   // 권한 요청 함수
@@ -165,87 +210,122 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 리뷰 관리 화면 내 리뷰 작성 탭에서 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double reviewDtInfo1CardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double reviewDtInfo1CardViewHeight =
+    //     screenSize.height * (380 / referenceHeight); // 세로 비율 계산
+    // final double reviewDtInfo2CardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double reviewDtInfo2CardViewHeight =
+    //     screenSize.height * (130 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double reviewDtInfoCardViewPaddingX =
+    //     screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
+    // final double reviewDtInfoCardViewPadding1Y =
+    //     screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double reviewDtInfoTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoOrderDateDataFontSize =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoOrderNumberDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoBriefIntroDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoProdNumberDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoOriginalPriceDataFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoDiscountPriceDataFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoDiscountPercentDataFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoColorImageDataWidth =
+    //     screenSize.width * (13 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    // final double reviewDtInfoColorImageDataHeight =
+    //     screenSize.width * (13 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    // final double reviewDtInfoColorTextDataFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoSizeTextDataFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoCountTextDataFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoDateTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double reviewDtInfoGuideTextFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 리뷰 작성 버튼 수치
+    // final double reviewWriteBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double reviewWriteBtnWidth =
+    //     screenSize.width * (100 / referenceWidth);
+    // final double reviewWriteBtnPaddingY =
+    //     screenSize.height * (2 / referenceHeight);
+    // final double reviewWriteBtnPaddingX =
+    //     screenSize.width * (4 / referenceWidth);
+    // final double reviewWriteBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    //
+    // // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    // final double interval1Y =
+    //     screenSize.height * (2 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y =
+    //     screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y =
+    //     screenSize.height * (20 / referenceHeight); // 세로 간격 3 계산
+    // final double interval4Y =
+    //     screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
+    // final double interval1X =
+    //     screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X =
+    //     screenSize.width * (19 / referenceWidth); // 가로 간격 2 계산
+    // final double interval3X =
+    //     screenSize.width * (8 / referenceWidth); // 가로 간격 3 계산
+    // final double interval4X =
+    //     screenSize.width * (10 / referenceWidth); // 가로 간격 4 계산
+    // final double interval5X =
+    //     screenSize.width * (50 / referenceWidth); // 가로 간격 4 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
-    // 리뷰 관리 화면 내 리뷰 작성 탭에서 카드뷰 섹션의 가로와 세로 비율 계산
-    final double reviewDtInfo1CardViewWidth =
-        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
-    final double reviewDtInfo1CardViewHeight =
-        screenSize.height * (380 / referenceHeight); // 세로 비율 계산
-    final double reviewDtInfo2CardViewWidth =
-        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
-    final double reviewDtInfo2CardViewHeight =
-        screenSize.height * (130 / referenceHeight); // 세로 비율 계산
-
-    // body 부분 전체 패딩 수치 계산
-    final double reviewDtInfoCardViewPaddingX =
-        screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
-    final double reviewDtInfoCardViewPadding1Y =
-        screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
-
     // 텍스트 크기 계산
-    final double reviewDtInfoTitleFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoOrderDateDataFontSize =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoOrderNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoBriefIntroDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoProdNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoOriginalPriceDataFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoDiscountPriceDataFontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoDiscountPercentDataFontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoColorImageDataWidth =
-        screenSize.width * (13 / referenceWidth); // 색상 이미지 가로 크기 설정함
-    final double reviewDtInfoColorImageDataHeight =
-        screenSize.width * (13 / referenceWidth); // 색상 이미지 세로 크기 설정함
-    final double reviewDtInfoColorTextDataFontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoSizeTextDataFontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoCountTextDataFontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoDateTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double reviewDtInfoGuideTextFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
-
-    // 리뷰 작성 버튼 수치
-    final double reviewWriteBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double reviewWriteBtnWidth =
-        screenSize.width * (100 / referenceWidth);
-    final double reviewWriteBtnPaddingY =
-        screenSize.height * (2 / referenceHeight);
-    final double reviewWriteBtnPaddingX =
-        screenSize.width * (4 / referenceWidth);
-    final double reviewWriteBtnFontSize =
-        screenSize.height * (14 / referenceHeight);
+    final double reviewDtInfoTitleFontSize = 18; // 텍스트 크기 비율 계산
+    final double reviewDtInfoOrderNumberDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double reviewDtInfoBriefIntroDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double reviewDtInfoProdNumberDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double reviewDtInfoOriginalPriceDataFontSize = 12; // 텍스트 크기 비율 계산
+    final double reviewDtInfoDiscountPriceDataFontSize = 13; // 텍스트 크기 비율 계산
+    final double reviewDtInfoDiscountPercentDataFontSize = 13; // 텍스트 크기 비율 계산
+    final double reviewDtInfoColorImageDataWidth = 13; // 색상 이미지 가로 크기 설정함
+    final double reviewDtInfoColorImageDataHeight = 13; // 색상 이미지 세로 크기 설정함
+    final double reviewDtInfoColorTextDataFontSize = 13; // 텍스트 크기 비율 계산
+    final double reviewDtInfoSizeTextDataFontSize = 13; // 텍스트 크기 비율 계산
+    final double reviewDtInfoCountTextDataFontSize = 13; // 텍스트 크기 비율 계산
+    final double reviewDtInfoDateTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double reviewDtInfoGuideTextFontSize = 12; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoThumnailPartHeight = 120; // 썸네일 세로 비율 설정함
+    final double orderlistDtInfoTextDataPartHeight = 160; // 텍스트 데이터 부분의 높이 설정함
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (2 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y =
-        screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y =
-        screenSize.height * (20 / referenceHeight); // 세로 간격 3 계산
-    final double interval4Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
-    final double interval1X =
-        screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X =
-        screenSize.width * (19 / referenceWidth); // 가로 간격 2 계산
-    final double interval3X =
-        screenSize.width * (8 / referenceWidth); // 가로 간격 3 계산
-    final double interval4X =
-        screenSize.width * (10 / referenceWidth); // 가로 간격 4 계산
-    final double interval5X =
-        screenSize.width * (50 / referenceWidth); // 가로 간격 4 계산
+    final double interval1Y = 2; // 세로 간격 1 계산
+    final double interval2Y = 8; // 세로 간격 2 계산
+    final double interval3Y = 20; // 세로 간격 3 계산
+    final double interval4Y = 10; // 세로 간격 4 계산
+    final double interval1X = 20; // 가로 간격 1 계산
+    final double interval2X = 19; // 가로 간격 2 계산
+    final double interval3X = 8; // 가로 간격 3 계산
+    final double interval4X = 10; // 가로 간격 4 계산
+    final double interval5X = 50; // 가로 간격 4 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,23 +437,27 @@ class _PrivateReviewCreateDetailFormScreenState
                           children: [
                             Row(
                               children: [
-                                Expanded(
-                                  flex: 3,
+                                // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                Container(
+                                  height: orderlistDtInfoThumnailPartHeight,
+                                  width: orderlistDtInfoThumnailPartHeight,
                                   // 상품 썸네일 이미지를 표시하고, 이미지가 없을 경우 대체 아이콘을 표시함
                                   child: widget.productInfo['thumbnails']
                                               ?.toString()
                                               .isNotEmpty ==
                                           true
-                                      ? Image.network(
-                                          widget.productInfo['thumbnails'],
+                                      ? FittedBox(
                                           fit: BoxFit.cover,
-                                          // 이미지 로드 실패 시 아이콘 표시
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Icon(
-                                            Icons.image_not_supported,
-                                            color: GRAY88_COLOR,
-                                            size: interval5X,
+                                          child: Image.network(
+                                            widget.productInfo['thumbnails'],
+                                            // 이미지 로드 실패 시 아이콘 표시
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Icon(
+                                              Icons.image_not_supported,
+                                              color: GRAY88_COLOR,
+                                              size: interval5X,
+                                            ),
                                           ),
                                         )
                                       : Icon(
@@ -383,8 +467,10 @@ class _PrivateReviewCreateDetailFormScreenState
                                         ),
                                 ),
                                 SizedBox(width: interval1X), // 요소 간의 간격을 추가
-                                Expanded(
-                                  flex: 7,
+                                // 이미지와 텍스트 사이의 간격 설정
+                                Container(
+                                  height: orderlistDtInfoTextDataPartHeight,
+                                  padding: EdgeInsets.only(top: interval4Y * 2),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -589,7 +675,7 @@ class _PrivateReviewCreateDetailFormScreenState
         SizedBox(height: interval4Y), // 요소 간의 간격을 추가
         // 리뷰 제목을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
         _buildTitleRow(
-            context, '리뷰 제목', widget.titleController, '50자 이내로 작성 가능합니다.'),
+            context, '리뷰 제목', _titleController, _titleFocusNode, '50자 이내로 작성 가능합니다.'),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         // 작성자 정보를 표시하는 행을 빌드하는 함수 호출
         _buildUserRow(ref, '작성자', widget.userEmail),
@@ -599,7 +685,7 @@ class _PrivateReviewCreateDetailFormScreenState
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         // 리뷰 내용을 입력할 수 있는 입력 필드를 빌드하는 함수 호출
         _buildContentsRow(
-            context, '리뷰 내용', widget.contentController, '300자 이내로 작성 가능합니다.'),
+            context, '리뷰 내용', _contentController, _contentFocusNode,  '300자 이내로 작성 가능합니다.'),
         SizedBox(height: interval2Y), // 요소 간의 간격을 추가
         Container(
           // 패딩을 추가하여 요소 주위에 여백을 줌
@@ -635,9 +721,16 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
-    final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
+    final double interval1X = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -678,6 +771,7 @@ class _PrivateReviewCreateDetailFormScreenState
     BuildContext context,
     String label,
     TextEditingController controller,
+    FocusNode focusNode,
     String hintText,
   ) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -687,21 +781,35 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // final double interval2X = screenSize.width * (8 / referenceWidth);
+    // final double interval3X = screenSize.width * (10 / referenceWidth);
+    // final double reviewInfoRowTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
+    // final double reviewInfoRowHeight =
+    //     screenSize.width * (90 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
-    final double interval2X = screenSize.width * (8 / referenceWidth);
-    final double interval3X = screenSize.width * (10 / referenceWidth);
-    final double reviewInfoRowTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+    final double interval1Y = 2;
+    final double interval2Y = 4;
+    final double interval3X = 10;
+    final double reviewInfoRowTextFontSize = 12;
     final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
-    final double reviewInfoRowHeight =
-        screenSize.width * (90 / referenceHeight);
+    final double reviewInfoRowHeight = 50;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       // 패딩을 추가하여 요소 주위에 여백을 줌
-      padding: EdgeInsets.symmetric(horizontal: interval3X, vertical: interval1Y),
+      padding:
+          EdgeInsets.symmetric(horizontal: interval3X, vertical: interval1Y),
       // 행의 상하단에 2.0 픽셀의 여백 추가
       child: Column(
         // 요소들을 세로로 배치하기 위해 Column 사용
@@ -746,16 +854,24 @@ class _PrivateReviewCreateDetailFormScreenState
                     controller: controller, // 텍스트 필드 컨트롤러 설정
                     maxLength: 50, // 최대 글자 수 설정
                     maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
+                    cursorColor: ORANGE56_COLOR, // 커서 색상 설정
                     decoration: InputDecoration(
                       // 텍스트 필드의 외관을 설정
-                      hintText: hintText, // 힌트 텍스트 설정
+                      hintText: hintText,
+                      // 힌트 텍스트 설정
+                      hintStyle: TextStyle(color: GRAY74_COLOR),
+                      // 힌트 텍스트 색상 설정
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
-                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
-                      ), // 입력 경계선 설정
+                        borderRadius:
+                            BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                      ),
+                      // 입력 경계선 설정
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0), // 비활성 상태의 테두리 설정
-                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
+                        // 비활성 상태의 테두리 설정
+                        borderRadius:
+                            BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
                       ),
                       focusedBorder: OutlineInputBorder(
                         // 활성화 상태의 테두리 설정
@@ -763,10 +879,18 @@ class _PrivateReviewCreateDetailFormScreenState
                           color: ORANGE56_COLOR,
                           width: 1.0,
                         ), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
-                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                        borderRadius:
+                            BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
                       ),
                       counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
                     ),
+                    style:
+                    TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'NanumGothic',
+                      fontSize: reviewInfoRowTextFontSize,
+                      color: BLACK_COLOR,
+                    ), // 텍스트를 설정
                   ),
                 ),
               ],
@@ -826,17 +950,30 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // final double interval2X = screenSize.width * (8 / referenceWidth);
+    // final double interval3X = screenSize.width * (10 / referenceWidth);
+    // final double reviewInfoRowTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
+    // final double reviewInfoRowHeight =
+    //     screenSize.width * (90 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 2;
     final double interval2X = screenSize.width * (8 / referenceWidth);
-    final double interval3X = screenSize.width * (10 / referenceWidth);
-    final double reviewInfoRowTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+    final double interval3X = 10;
+    final double reviewInfoRowTextFontSize = 12;
     final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
-    final double reviewInfoRowHeight =
-        screenSize.width * (90 / referenceHeight);
+    final double reviewInfoRowHeight = 50;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       // 패딩을 추가하여 요소 주위에 여백을 줌
@@ -918,6 +1055,7 @@ class _PrivateReviewCreateDetailFormScreenState
     BuildContext context,
     String label,
     TextEditingController controller,
+    FocusNode focusNode,
     String hintText,
   ) {
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -927,17 +1065,30 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // final double interval2X = screenSize.width * (8 / referenceWidth);
+    // final double interval3X = screenSize.width * (10 / referenceWidth);
+    // final double reviewInfoRowTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
+    // final double reviewInfoRowHeight =
+    //     screenSize.width * (90 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
-    final double interval2X = screenSize.width * (8 / referenceWidth);
-    final double interval3X = screenSize.width * (10 / referenceWidth);
-    final double reviewInfoRowTextFontSize =
-        screenSize.height * (14 / referenceHeight);
+    final double interval1Y = 2;
+    final double interval2Y = 4;
+    final double interval3X = 10;
+    final double reviewInfoRowTextFontSize = 12;
     final double reviewInfoRowWidth = screenSize.width * (70 / referenceWidth);
-    final double reviewInfoRowHeight =
-        screenSize.width * (90 / referenceHeight);
+    final double reviewInfoRowHeight = 50;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       // 패딩을 추가하여 요소 주위에 여백을 줌
@@ -989,27 +1140,43 @@ class _PrivateReviewCreateDetailFormScreenState
                     controller: controller, // 텍스트 필드 컨트롤러 설정
                     maxLength: 300, // 최대 글자 수 설정
                     maxLines: null, // 텍스트가 길어질 때 자동으로 줄바꿈 되도록 설정
+                    cursorColor: ORANGE56_COLOR, // 커서 색상 설정
                     decoration: InputDecoration(
                       // 텍스트 필드의 외관을 설정
-                      hintText: hintText, // 힌트 텍스트 설정
+                      hintText: hintText,
+                      // 힌트 텍스트 설정
+                      hintStyle: TextStyle(color: GRAY74_COLOR),
+                      // 힌트 텍스트 색상 설정
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
-                          borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
-                      ), // 입력 경계선 설정
+                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
+                        borderRadius:
+                            BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                      ),
+                      // 입력 경계선 설정
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0), // 비활성 상태의 테두리 설정
-                        borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                        borderSide: BorderSide(color: GRAY83_COLOR, width: 1.0),
+                        // 비활성 상태의 테두리 설정
+                        borderRadius:
+                            BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
                       ),
                       focusedBorder: OutlineInputBorder(
                         // 활성화 상태의 테두리 설정
                         borderSide: BorderSide(
-                            color: ORANGE56_COLOR,
-                            width: 1.0,
+                          color: ORANGE56_COLOR,
+                          width: 1.0,
                         ), // 활성화 상태의 테두리 색상을 BUTTON_COLOR로 설정
-                          borderRadius: BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
+                        borderRadius:
+                            BorderRadius.circular(6), // 모서리 각도를 제목 라벨과 동일하게 설정
                       ),
                       counterText: '', // 글자수 표시를 비워둠 (아래에 별도로 표시)
                     ),
+                    style:
+                    TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'NanumGothic',
+                      fontSize: reviewInfoRowTextFontSize,
+                      color: BLACK_COLOR,
+                    ), // 텍스트를 설정
                   ),
                 ),
               ],
@@ -1049,36 +1216,59 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval2X = screenSize.width * (8 / referenceWidth);
+    // final double interval3X = screenSize.width * (2 / referenceWidth);
+    // final double interval4X = screenSize.width * (10 / referenceWidth);
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (30 / referenceHeight);
+    // final double interval4Y = screenSize.height * (4 / referenceHeight);
+    // final double reviewInfoRowTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double reviewInfoGuideTextFontSize =
+    //     screenSize.height * (11 / referenceHeight);
+    // final double reviewInfoRowBtnImageSize =
+    //     screenSize.height * (25 / referenceHeight);
+    // final double reviewPhotoRowWidth =
+    //     screenSize.width * (210 / referenceWidth);
+    // final double reviewPhotoBtnWidth = screenSize.width * (60 / referenceWidth);
+    // final double reviewPhotoRowHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    // final double reviewInfoImageWidth =
+    //     screenSize.width * (60 / referenceWidth);
+    // final double reviewInfoImageHeight =
+    //     screenSize.width * (60 / referenceHeight);
+    // final double reviewInfoImageX = screenSize.width * (10 / referenceWidth);
+    // final double reviewInfoImageY = screenSize.width * (10 / referenceHeight);
+    //
+    // final double dynamicContainerWidth =
+    //     screenSize.width * (373 / referenceWidth); // 새 컨테이너 너비
+    // final double dynamicContainerHeight = dynamicContainerWidth / 4; // 높이 설정
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
-    final double interval1X = screenSize.width * (4 / referenceWidth);
     final double interval2X = screenSize.width * (8 / referenceWidth);
     final double interval3X = screenSize.width * (2 / referenceWidth);
-    final double interval4X = screenSize.width * (10 / referenceWidth);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (30 / referenceHeight);
-    final double interval4Y = screenSize.height * (4 / referenceHeight);
-    final double reviewInfoRowTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double reviewInfoGuideTextFontSize =
-        screenSize.height * (11 / referenceHeight);
-    final double reviewInfoRowBtnImageSize =
-        screenSize.height * (25 / referenceHeight);
+    final double interval4X = 10;
+    final double interval1Y = 2;
+    final double interval2Y = 10;
+    final double interval4Y = 4;
+    final double reviewInfoRowTextFontSize = 12;
+    final double reviewInfoGuideTextFontSize = 11;
+    final double reviewInfoRowBtnImageSize = 25;
     final double reviewPhotoRowWidth =
         screenSize.width * (210 / referenceWidth);
     final double reviewPhotoBtnWidth = screenSize.width * (60 / referenceWidth);
-    final double reviewPhotoRowHeight =
-        screenSize.height * (30 / referenceHeight);
-    final double reviewInfoImageWidth =
-        screenSize.width * (60 / referenceWidth);
-    final double reviewInfoImageHeight =
-        screenSize.width * (60 / referenceHeight);
-    final double reviewInfoImageX = screenSize.width * (10 / referenceWidth);
-    final double reviewInfoImageY = screenSize.width * (10 / referenceHeight);
+    final double reviewPhotoRowHeight = 30;
 
     final double dynamicContainerWidth =
         screenSize.width * (373 / referenceWidth); // 새 컨테이너 너비
     final double dynamicContainerHeight = dynamicContainerWidth / 4; // 높이 설정
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding:
@@ -1243,13 +1433,22 @@ class _PrivateReviewCreateDetailFormScreenState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (30 / referenceWidth);
+    // final double interval2X = screenSize.width * (8 / referenceWidth);
+    // final double interval3X = screenSize.width * (20 / referenceWidth);
+    // final double interval1Y = screenSize.height * (10 / referenceHeight);
+    // final double reviewWriteBtnTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (30 / referenceWidth);
-    final double interval2X = screenSize.width * (8 / referenceWidth);
-    final double interval3X = screenSize.width * (20 / referenceWidth);
-    final double interval1Y = screenSize.height * (10 / referenceHeight);
-    final double reviewWriteBtnTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double interval1Y = 10;
+    final double reviewWriteBtnTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Center(
       // Center 위젯을 사용하여 버튼을 중앙에 배치함
@@ -1258,8 +1457,8 @@ class _PrivateReviewCreateDetailFormScreenState
         onPressed: () async {
           // 버튼 클릭 시 실행되는 비동기 함수
           // 필수 항목 검증 (리뷰 제목, 리뷰 내용을 작성해야만 저장되도록 설정)
-          if (widget.titleController.text.isEmpty ||
-              widget.contentController.text.isEmpty) {
+          if (_titleController.text.isEmpty ||
+              _contentController.text.isEmpty) {
             showCustomSnackBar(context, '리뷰 제목과 리뷰 내용을 기입한 후 등록해주세요.');
             return;
           }
@@ -1294,9 +1493,9 @@ class _PrivateReviewCreateDetailFormScreenState
                     // 사용자의 이메일을 전달함
                     orderNumber: widget.numberInfo['order_number'],
                     // 주문 번호를 전달함
-                    reviewTitle: widget.titleController.text,
+                    reviewTitle: _titleController.text,
                     // 리뷰 제목을 전달함
-                    reviewContents: widget.contentController.text,
+                    reviewContents: _contentController.text,
                     // 리뷰 내용을 전달함
                     images: _images,
                     // 첨부된 이미지를 전달함
@@ -1323,9 +1522,10 @@ class _PrivateReviewCreateDetailFormScreenState
                   navigateToScreenAndRemoveUntil(
                     context,
                     ref,
-                    PrivateReviewMainScreen(navigateToListTab: true),
-                    // 리뷰 메인 화면으로 이동함
-                    4, // 하단 탭바의 인덱스를 초기화함 (필요시 변경)
+                    // PrivateReviewMainScreen(navigateToListTab: true),
+                    MainHomeScreen(),
+                    // 메인 홈 화면으로 이동함
+                    0, // 하단 탭바의 인덱스를 초기화함 (필요시 변경)
                   );
 
                   // 리뷰 작성 완료 메시지를 표시함
@@ -1384,77 +1584,134 @@ class _PrivateReviewItemsListState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    final double reviewTitleFontSize =
-        screenSize.height * (18 / referenceHeight); //  크기 설정함
-    final double reviewOriginalPriceFontSize =
-        screenSize.height * (12 / referenceHeight); // 원래 가격 글꼴 크기 설정함
-    final double reviewDiscountPercentFontSize =
-        screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
-    final double reviewDiscountPriceFontSize =
-        screenSize.height * (14 / referenceHeight); // 할인 가격 글꼴 크기 설정함
-    final double reviewSelectedColorTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
-    final double reviewSelectedSizeTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
-    final double reviewSelectedCountTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 선택된 수량 텍스트 글꼴 크기 설정함
-    final double reviewOrderNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); //  크기 설정함
-    final double reviewProdNumberDataFontSize =
-        screenSize.height * (14 / referenceHeight); //  크기 설정함
-    final double reviewBriefIntroductionDataFontSize =
-        screenSize.height * (14 / referenceHeight); //  크기 설정함
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double reviewTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight); //  크기 설정함
+    // final double reviewOriginalPriceFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 원래 가격 글꼴 크기 설정함
+    // final double reviewDiscountPercentFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 할인 퍼센트 글꼴 크기 설정함
+    // final double reviewDiscountPriceFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 할인 가격 글꼴 크기 설정함
+    // final double reviewSelectedColorTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 색상 텍스트 글꼴 크기 설정함
+    // final double reviewSelectedSizeTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 사이즈 텍스트 글꼴 크기 설정함
+    // final double reviewSelectedCountTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 선택된 수량 텍스트 글꼴 크기 설정함
+    // final double reviewOrderNumberDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); //  크기 설정함
+    // final double reviewProdNumberDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); //  크기 설정함
+    // final double reviewBriefIntroductionDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); //  크기 설정함
+    //
+    // // 상품 색상 이미지 크기 설정
+    // final double reviewSelctedColorImageDataWidth =
+    //     screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    // final double reviewSelctedColorImageDataHeight =
+    //     screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    //
+    // // 리뷰 제목 등의 텍스트 데이터 크기 설정
+    // final double reviewTitleTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 리뷰 제목 텍스트 글꼴 크기 설정함
+    // final double reviewContentsTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 리뷰 내용 텍스트 글꼴 크기 설정함
+    // final double reviewWriteDateTextFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 리뷰 작성일자 텍스트 글꼴 크기 설정함
+    //
+    // // 펼치기 및 닫기 버튼 수치
+    // final double reviewExpandedBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
+    // final double reviewExpandedBtnHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    //
+    // // 삭제 버튼 수치
+    // final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    // final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
+    // final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    //
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (20 / referenceHeight);
+    // final double interval2Y = screenSize.height * (2 / referenceHeight);
+    // final double interval3Y = screenSize.height * (4 / referenceHeight);
+    // final double interval4Y = screenSize.height * (6 / referenceHeight);
+    // final double interval5Y = screenSize.height * (8 / referenceHeight);
+    // final double interval1X = screenSize.width * (8 / referenceWidth);
+    // final double interval2X = screenSize.width * (19 / referenceWidth);
+    // final double interval3X = screenSize.width * (20 / referenceWidth);
+    // final double interval4X = screenSize.width * (70 / referenceWidth);
+    //
+    // // 리뷰 목록 부분이 비어있는 경우의 알림 부분 수치
+    // final double reviewEmptyTextWidth =
+    //     screenSize.width * (250 / referenceWidth); // 가로 비율
+    // final double reviewEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double reviewEmptyTextX =
+    //     screenSize.width * (70 / referenceWidth); // 가로 비율
+    // final double reviewEmptyTextY =
+    //     screenSize.height * (200 / referenceHeight); // 세로 비율
+    // final double reviewEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double reviewTitleFontSize = 18; //  크기 설정함
+    final double reviewOriginalPriceFontSize = 12; // 원래 가격 글꼴 크기 설정함
+    final double reviewDiscountPercentFontSize = 14; // 할인 퍼센트 글꼴 크기 설정함
+    final double reviewDiscountPriceFontSize = 14; // 할인 가격 글꼴 크기 설정함
+    final double reviewSelectedColorTextFontSize = 14; // 선택된 색상 텍스트 글꼴 크기 설정함
+    final double reviewSelectedSizeTextFontSize = 14; // 선택된 사이즈 텍스트 글꼴 크기 설정함
+    final double reviewSelectedCountTextFontSize = 14; // 선택된 수량 텍스트 글꼴 크기 설정함
+    final double reviewOrderNumberDataFontSize = 14; //  크기 설정함
+    final double reviewProdNumberDataFontSize = 14; //  크기 설정함
+    final double reviewBriefIntroductionDataFontSize = 14; //  크기 설정함
+    final double orderlistDtInfoThumnailPartHeight = 120; // 썸네일 세로 비율 설정함
+    final double orderlistDtInfoTextDataPartHeight = 160; // 텍스트 데이터 부분의 높이 설정함
 
     // 상품 색상 이미지 크기 설정
-    final double reviewSelctedColorImageDataWidth =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 가로 크기 설정함
-    final double reviewSelctedColorImageDataHeight =
-        screenSize.width * (16 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    final double reviewSelctedColorImageDataWidth = 16; // 색상 이미지 가로 크기 설정함
+    final double reviewSelctedColorImageDataHeight = 16; // 색상 이미지 세로 크기 설정함
 
     // 리뷰 제목 등의 텍스트 데이터 크기 설정
-    final double reviewTitleTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 리뷰 제목 텍스트 글꼴 크기 설정함
-    final double reviewContentsTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 리뷰 내용 텍스트 글꼴 크기 설정함
-    final double reviewWriteDateTextFontSize =
-        screenSize.height * (14 / referenceHeight); // 리뷰 작성일자 텍스트 글꼴 크기 설정함
+    final double reviewTitleTextFontSize = 14; // 리뷰 제목 텍스트 글꼴 크기 설정함
+    final double reviewContentsTextFontSize = 14; // 리뷰 내용 텍스트 글꼴 크기 설정함
+    final double reviewWriteDateTextFontSize = 14; // 리뷰 작성일자 텍스트 글꼴 크기 설정함
 
     // 펼치기 및 닫기 버튼 수치
-    final double reviewExpandedBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
-    final double reviewExpandedBtnHeight =
-        screenSize.height * (30 / referenceHeight);
+    final double reviewExpandedBtnFontSize = 14; // 펼치기 및 닫기 버튼 크기
+    final double reviewExpandedBtnHeight = 30;
 
     // 삭제 버튼 수치
-    final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    final double deleteBtnHeight = 30;
     final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
     final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    final double deleteBtnPaddingY = 2;
     final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
-    final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    final double deleteBtnFontSize = 12;
 
     // 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (20 / referenceHeight);
-    final double interval2Y = screenSize.height * (2 / referenceHeight);
-    final double interval3Y = screenSize.height * (4 / referenceHeight);
-    final double interval4Y = screenSize.height * (6 / referenceHeight);
-    final double interval5Y = screenSize.height * (8 / referenceHeight);
-    final double interval1X = screenSize.width * (8 / referenceWidth);
-    final double interval2X = screenSize.width * (19 / referenceWidth);
-    final double interval3X = screenSize.width * (20 / referenceWidth);
-    final double interval4X = screenSize.width * (70 / referenceWidth);
+    final double interval2Y = 2;
+    final double interval3Y = 4;
+    final double interval4Y = 6;
+    final double interval5Y = 8;
+    final double interval6Y = 10;
+    final double interval1X = 8;
+    final double interval2X = 19;
+    final double interval3X = 20;
+    final double interval4X = 70;
 
     // 리뷰 목록 부분이 비어있는 경우의 알림 부분 수치
     final double reviewEmptyTextWidth =
-        screenSize.width * (250 / referenceWidth); // 가로 비율
-    final double reviewEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double reviewEmptyTextX =
-        screenSize.width * (70 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double reviewEmptyTextHeight = 22; // 세로 비율
     final double reviewEmptyTextY =
         screenSize.height * (200 / referenceHeight); // 세로 비율
-    final double reviewEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double reviewEmptyTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 숫자 형식을 '###,###'로 지정함
     final numberFormat = NumberFormat('###,###');
@@ -1699,22 +1956,24 @@ class _PrivateReviewItemsListState
                             children: [
                               Row(
                                 children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: review['thumbnails']
-                                                ?.toString()
-                                                .isNotEmpty ==
-                                            true
-                                        ? Image.network(
-                                            review['thumbnails'],
+                                  // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
+                                  Container(
+                                    height: orderlistDtInfoThumnailPartHeight,
+                                    width: orderlistDtInfoThumnailPartHeight,
+                                    child: review['thumbnails'] != null &&
+                                            review['thumbnails'] != ''
+                                        ? FittedBox(
                                             fit: BoxFit.cover,
-                                            // 이미지 로드 실패 시 아이콘 표시
-                                            errorBuilder:
-                                                (context, error, stackTrace) =>
-                                                    Icon(
-                                              Icons.image_not_supported,
-                                              color: GRAY88_COLOR,
-                                              size: interval4X,
+                                            child: Image.network(
+                                              review['thumbnails'],
+                                              // 이미지 로드 실패 시 아이콘 표시
+                                              errorBuilder: (context, error,
+                                                      stackTrace) =>
+                                                  Icon(
+                                                Icons.image_not_supported,
+                                                color: GRAY88_COLOR,
+                                                size: interval4X,
+                                              ),
                                             ),
                                           )
                                         : Icon(
@@ -1726,8 +1985,11 @@ class _PrivateReviewItemsListState
                                   // 리뷰에 썸네일 이미지가 존재하면 이를 네트워크에서 불러와 표시함.
                                   // 썸네일 이미지가 없을 경우 대체 아이콘(이미지 미지원)을 표시함.
                                   SizedBox(width: interval3X),
-                                  Expanded(
-                                    flex: 6,
+                                  // 이미지와 텍스트 사이의 간격 설정
+                                  Container(
+                                    height: orderlistDtInfoTextDataPartHeight,
+                                    padding:
+                                        EdgeInsets.only(top: interval6Y * 2),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -1990,9 +2252,17 @@ class _PrivateReviewItemsListState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     if (label.length + value.length <= 30) {
       return Padding(

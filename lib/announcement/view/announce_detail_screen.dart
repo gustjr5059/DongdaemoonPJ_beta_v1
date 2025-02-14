@@ -41,6 +41,7 @@ import '../../../common/provider/common_state_provider.dart';
 // 제품 상태 관리를 위해 사용되는 상태 제공자 파일을 임포트합니다.
 // 이 파일은 제품 관련 데이터의 상태를 관리하고, 필요에 따라 상태를 업데이트하는 로직을 포함합니다.
 import '../../cart/provider/cart_state_provider.dart';
+import '../../order/provider/order_state_provider.dart';
 import '../../user/view/easy_login_aos_screen.dart';
 import '../../user/view/easy_login_ios_screen.dart';
 import '../layout/announce_body_parts_layout.dart';
@@ -130,6 +131,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
           .loadMoreAnnounceDetailItem(widget.documentId);
 
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -147,6 +149,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
             .read(announceDetailItemProvider(widget.documentId).notifier)
             .loadMoreAnnounceDetailItem(widget.documentId);
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
       }
     });
 
@@ -205,43 +208,63 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double announceDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double announceDtAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double announceDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double announceDtAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double announceDtlistPaddingX = screenSize.width * (17 / referenceWidth);
+    // final double announceDtlistPaddingY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double announceDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    // final double announceDtChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    // final double announceDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double announceDtChevronIconY = screenSize.height * (9 / referenceHeight);
+    //
+    // // 공지사항이 비어있는 경우의 알림 부분 수치임
+    // final double announcementDetailEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율임
+    // final double announcementDetailEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율임
+    // final double announcementDetailEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율임
+    // final double announcementDetailEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double announceDtAppBarTitleWidth =
-        screenSize.width * (240 / referenceWidth);
-    final double announceDtAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double announceDtAppBarTitleX =
-        screenSize.width * (5 / referenceHeight);
-    final double announceDtAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double announceDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    final double announceDtAppBarTitleHeight = 22;
+    final double announceDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    final double announceDtAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double announceDtlistPaddingX =
-        screenSize.width * (17 / referenceWidth);
-    final double announceDtlistPaddingY =
-        screenSize.height * (8 / referenceHeight);
+    final double announceDtlistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double announceDtlistPaddingY = 8;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double announceDtChevronIconWidth =
-        screenSize.width * (24 / referenceWidth);
-    final double announceDtChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
-    final double announceDtChevronIconX =
-        screenSize.width * (10 / referenceWidth);
-    final double announceDtChevronIconY =
-        screenSize.height * (9 / referenceHeight);
+    final double announceDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double announceDtChevronIconHeight = 24;
+    final double announceDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double announceDtChevronIconY = 9;
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
     final double announcementDetailEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율임
-    final double announcementDetailEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율임
+    final double announcementDetailEmptyTextHeight = 22; // 세로 비율임
     final double announcementDetailEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율임
-    final double announcementDetailEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 폰트 크기를 비율로 설정함
+    final double announcementDetailEmptyTextFontSize = 16; // 폰트 크기를 비율로 설정함
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Scaffold(
       body: Stack(

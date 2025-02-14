@@ -39,30 +39,53 @@ class UserInfoWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // 발주하기 요청 화면 내 요소들의 수치 설정
+    // final double orderRequirePadding1 =
+    //     screenSize.width * (32 / referenceWidth);
+    // final double orderRequirePadding2 =
+    //     screenSize.height * (32 / referenceHeight);
+    // final double ordererInfoTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight);
+    // final double orderRequireNoticeFontSize1 =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double orderRequireNoticeFontSize2 =
+    //     screenSize.height * (9 / referenceHeight);
+    //
+    // final double ordererInfo1Y = screenSize.height * (16 / referenceHeight);
+    // final double ordererInfo2Y = screenSize.height * (24 / referenceHeight);
+    // final double ordererInfo3Y = screenSize.height * (8 / referenceHeight);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
     final double orderRequirePadding1 =
         screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 =
-        screenSize.height * (32 / referenceHeight);
-    final double ordererInfoTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double orderRequireNoticeFontSize1 =
-        screenSize.height * (10 / referenceHeight);
-    final double orderRequireNoticeFontSize2 =
-        screenSize.height * (9 / referenceHeight);
+    final double orderRequirePadding2 = 32;
+    final double ordererInfoTitleFontSize = 18;
+    final double orderRequireNoticeFontSize1 = 10;
+    final double orderRequireNoticeFontSize2 = 9;
 
-    final double ordererInfo1Y = screenSize.height * (16 / referenceHeight);
-    final double ordererInfo2Y = screenSize.height * (24 / referenceHeight);
-    final double ordererInfo3Y = screenSize.height * (8 / referenceHeight);
+    final double ordererInfo1Y = 16;
+    final double ordererInfo2Y = 24;
+    final double ordererInfo3Y = 8;
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
+    final double errorTextFontSize1 = 14;
+    final double errorTextFontSize2 = 12;
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     final userInfoAsyncValue =
         ref.watch(userInfoProvider(email)); // Riverpod을 사용하여 사용자 정보 프로바이더를 구독
@@ -159,22 +182,38 @@ class UserInfoWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    // 발주자 정보 표 부분 수치
-    final double ordererInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double ordererInfoDataFontSize =
-        screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 발주자 정보 표 부분 수치
+    // final double ordererInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double ordererInfoDataFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double ordererInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double ordererInfoTextPartHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double ordererInfo4Y =
+    //     screenSize.height * (2 / referenceHeight);
+    // final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double ordererInfoDataPartX =
+    //     screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 요청자 정보 표 부분 수치
+    final double ordererInfoTextFontSize = 13;
+    final double ordererInfoDataFontSize = 10;
     final double ordererInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double ordererInfoTextPartHeight =
-        screenSize.height * (30 / referenceHeight);
-
+    final double ordererInfoTextPartHeight = 30;
     // 행 간 간격 수치
-    final double ordererInfo4Y = screenSize.height * (2 / referenceHeight);
+    final double ordererInfo4Y = 2;
     final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
-
     // 데이터 부분 패딩 수치
     final double ordererInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: ordererInfo4Y),
@@ -423,16 +462,29 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // 발주하기 요청 화면 내 요소들의 수치 설정
+    // final double orderRequirePadding1 =
+    //     screenSize.width * (32 / referenceWidth);
+    // final double orderRequirePadding2 =
+    //     screenSize.height * (32 / referenceHeight);
+    // final double RecipientInfoTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight);
+    // final double ordererInfo1Y = screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
     final double orderRequirePadding1 =
         screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 =
-        screenSize.height * (32 / referenceHeight);
-    final double RecipientInfoTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double ordererInfo1Y = screenSize.height * (16 / referenceHeight);
+    final double orderRequirePadding2 = 32;
+    final double RecipientInfoTitleFontSize = 18;
+    final double ordererInfo1Y = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -512,21 +564,37 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 수령자 정보 표 부분 수치
+    // final double recipientInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double recipientInfoDataFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double recipientInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double recipientInfoTextPartHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double recipientInfoDataPartX =
+    //     screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 수령자 정보 표 부분 수치
-    final double recipientInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double recipientInfoDataFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double recipientInfoTextFontSize = 13;
+    final double recipientInfoDataFontSize = 12;
     final double recipientInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double recipientInfoTextPartHeight =
-        screenSize.height * (30 / referenceHeight);
+    final double recipientInfoTextPartHeight = 30;
     // 행 간 간격 수치
-    final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    final double recipientInfo4Y = 2;
+    final double recipientInfo1X = 4;
     // 데이터 부분 패딩 수치
-    final double recipientInfoDataPartX =
-        screenSize.width * (8 / referenceWidth);
+    final double recipientInfoDataPartX = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // FocusNode의 상태 변화 감지 리스너 추가
     return StatefulBuilder(
@@ -656,21 +724,37 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 수령자 정보 표 부분 수치
+    // final double recipientInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double recipientInfoDataFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double recipientInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double recipientInfoTextPartHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double recipientInfoDataPartX =
+    //     screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 수령자 정보 표 부분 수치
-    final double recipientInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double recipientInfoDataFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double recipientInfoTextFontSize = 13;
+    final double recipientInfoDataFontSize = 12;
     final double recipientInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double recipientInfoTextPartHeight =
-        screenSize.height * (30 / referenceHeight);
+    final double recipientInfoTextPartHeight = 30;
     // 행 간 간격 수치
-    final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    final double recipientInfo4Y = 2;
+    final double recipientInfo1X = 4;
     // 데이터 부분 패딩 수치
-    final double recipientInfoDataPartX =
-        screenSize.width * (8 / referenceWidth);
+    final double recipientInfoDataPartX = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: recipientInfo4Y),
@@ -754,33 +838,56 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 수령자 정보 표 부분 수치
+    // final double recipientInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double recipientInfoDataFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double recipientInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double recipientInfoTextPartHeight =
+    //     screenSize.height * (60 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double recipientInfoDataPartX =
+    //     screenSize.width * (8 / referenceWidth);
+    // // 우편번호 찾기 버튼 수치
+    // final double postcodeSearchBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double postcodeSearchBtnWidth =
+    //     screenSize.width * (90 / referenceWidth);
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double postcodeSearchBtnPaddingY =
+    //     screenSize.height * (4 / referenceHeight);
+    // final double postcodeSearchBtnPaddingX =
+    //     screenSize.width * (4 / referenceWidth);
+    // final double postcodeSearchBtnFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 수령자 정보 표 부분 수치
-    final double recipientInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double recipientInfoDataFontSize =
-        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoTextFontSize = 13;
+    final double recipientInfoDataFontSize = 13;
     final double recipientInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double recipientInfoTextPartHeight =
-        screenSize.height * (60 / referenceHeight);
+    final double recipientInfoTextPartHeight = 60;
     // 행 간 간격 수치
-    final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    final double recipientInfo4Y = 2;
+    final double recipientInfo1X = 4;
     // 데이터 부분 패딩 수치
-    final double recipientInfoDataPartX =
-        screenSize.width * (8 / referenceWidth);
+    final double recipientInfoDataPartX = 8;
     // 우편번호 찾기 버튼 수치
-    final double postcodeSearchBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double postcodeSearchBtnWidth =
-        screenSize.width * (90 / referenceWidth);
-    final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double postcodeSearchBtnPaddingY =
-        screenSize.height * (4 / referenceHeight);
-    final double postcodeSearchBtnPaddingX =
-        screenSize.width * (4 / referenceWidth);
-    final double postcodeSearchBtnFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double postcodeSearchBtnHeight = 40;
+    final double postcodeSearchBtnWidth = 90;
+    final double intervalX = 8;
+    final double postcodeSearchBtnPaddingY = 4;
+    final double postcodeSearchBtnPaddingX = 4;
+    final double postcodeSearchBtnFontSize = 12;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: recipientInfo4Y),
@@ -887,21 +994,37 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 수령자 정보 표 부분 수치
+    // final double recipientInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double recipientInfoDataFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double recipientInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double recipientInfoTextPartHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double recipientInfoDataPartX =
+    //     screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 수령자 정보 표 부분 수치
-    final double recipientInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double recipientInfoDataFontSize =
-        screenSize.height * (13 / referenceHeight);
+    final double recipientInfoTextFontSize = 13;
+    final double recipientInfoDataFontSize = 13;
     final double recipientInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double recipientInfoTextPartHeight =
-        screenSize.height * (30 / referenceHeight);
+    final double recipientInfoTextPartHeight = 30;
     // 행 간 간격 수치
-    final double recipientInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double recipientInfo1X = screenSize.width * (4 / referenceWidth);
+    final double recipientInfo4Y = 2;
+    final double recipientInfo1X = 4;
     // 데이터 부분 패딩 수치
-    final double recipientInfoDataPartX =
-        screenSize.width * (8 / referenceWidth);
+    final double recipientInfoDataPartX = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: recipientInfo4Y),
@@ -1011,29 +1134,50 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    // // 화면 크기에 맞춰 비율로 UI 요소들의 크기와 위치를 계산함
+    //
+    // // 발주하기 요청 화면 내 요소들의 수치 설정
+    // // 발주하기 화면 내 요소들의 패딩, 폰트 크기, 간격 등을 설정함
+    // final double orderRequirePadding = screenSize.width * (32 / referenceWidth);
+    // final double orderRequireNoticeFontSize =
+    //     screenSize.height * (11 / referenceHeight);
+    // final double interval1Y = screenSize.height * (8 / referenceHeight);
+    //
+    // // 즐겨찾기 선택 버튼 수치
+    // // 즐겨찾기 선택 버튼의 높이, 너비, 패딩 및 폰트 크기를 설정함
+    // final double favoritesSelectBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double favoritesSelectBtnWidth =
+    //     screenSize.width * (90 / referenceWidth);
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double favoritesSelectBtnPaddingY =
+    //     screenSize.height * (4 / referenceHeight);
+    // final double favoritesSelectBtnPaddingX =
+    //     screenSize.width * (4 / referenceWidth);
+    // final double favoritesSelectBtnFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
     // 화면 크기에 맞춰 비율로 UI 요소들의 크기와 위치를 계산함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
     // 발주하기 화면 내 요소들의 패딩, 폰트 크기, 간격 등을 설정함
-    final double orderRequirePadding = screenSize.width * (32 / referenceWidth);
-    final double orderRequireNoticeFontSize =
-        screenSize.height * (11 / referenceHeight);
-    final double interval1Y = screenSize.height * (8 / referenceHeight);
+    final double orderRequireNoticeFontSize = 11;
+    final double interval1Y = 8;
 
     // 즐겨찾기 선택 버튼 수치
     // 즐겨찾기 선택 버튼의 높이, 너비, 패딩 및 폰트 크기를 설정함
-    final double favoritesSelectBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double favoritesSelectBtnWidth =
-        screenSize.width * (90 / referenceWidth);
-    final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double favoritesSelectBtnPaddingY =
-        screenSize.height * (4 / referenceHeight);
-    final double favoritesSelectBtnPaddingX =
-        screenSize.width * (4 / referenceWidth);
-    final double favoritesSelectBtnFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double favoritesSelectBtnHeight = 40;
+    final double favoritesSelectBtnWidth = 90;
+    final double intervalX = 8;
+    final double favoritesSelectBtnPaddingY = 4;
+    final double favoritesSelectBtnPaddingX = 4;
+    final double favoritesSelectBtnFontSize = 12;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       // 패딩을 설정하여 UI 요소의 여백을 조정함
@@ -1196,6 +1340,52 @@ class RecipientInfoItemsList extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    // // 화면 크기에 맞춰 비율로 UI 요소들의 크기와 위치를 계산함
+    //
+    // // 수령자 정보 즐겨찾기 선택 화면 내 카드뷰 섹션 크기 설정
+    // // 카드뷰의 너비와 높이를 화면 비율에 맞춰 설정함
+    // final double recipientInfolistCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
+    // final double recipientInfolistCardViewHeight =
+    //     screenSize.height * (200 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+    // final double recipientInfolistCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
+    // // 텍스트 데이터 패딩 및 글꼴 크기 설정
+    // // 텍스트 데이터의 가로와 세로 패딩, 글꼴 크기를 비율에 맞춰 설정함
+    // final double recipientInfolistDataPaddingX =
+    //     screenSize.width * (13 / referenceWidth); // 텍스트 데이터의 가로 패딩 설정함
+    // final double recipientInfolistDataPaddingY =
+    //     screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
+    // final double recipientInfolistTextDataFontSize1 =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+    // final double recipientInfolistTextDataFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+    // // 선택 버튼 수치
+    // // 선택 버튼의 크기와 패딩, 글꼴 크기를 설정함
+    // final double SelectBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double SelectBtnWidth = screenSize.width * (80 / referenceWidth);
+    // final double SelectBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    // final double SelectBtnPaddingX = screenSize.width * (2 / referenceWidth);
+    // final double SelectBtnFontSize = screenSize.height * (13 / referenceHeight);
+    // // 삭제 버튼 글꼴 및 위치 설정
+    // // 삭제 버튼의 크기, 패딩, 글꼴 크기를 설정함
+    // final double DeleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double DeleteBtnWidth = screenSize.width * (80 / referenceWidth);
+    // final double DeleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    // final double DeleteBtnPaddingX = screenSize.width * (2 / referenceWidth);
+    // final double DeleteBtnFontSize = screenSize.height * (13 / referenceHeight);
+    // // 텍스트 데이터 간 너비 및 높이 설정
+    // // 텍스트 간 가로, 세로 간격을 설정함
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double interval1Y =
+    //     screenSize.height * (8 / referenceHeight); // 텍스트 간 세로 여백 설정함
+    // final double interval2Y =
+    //     screenSize.height * (15 / referenceHeight); // 텍스트 간 세로 여백 설정함
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
     // 화면 크기에 맞춰 비율로 UI 요소들의 크기와 위치를 계산함
 
@@ -1203,41 +1393,35 @@ class RecipientInfoItemsList extends ConsumerWidget {
     // 카드뷰의 너비와 높이를 화면 비율에 맞춰 설정함
     final double recipientInfolistCardViewWidth =
         screenSize.width * (393 / referenceWidth); // 화면 가로 비율에 맞게 설정함
-    final double recipientInfolistCardViewHeight =
-        screenSize.height * (200 / referenceHeight); // 화면 세로 비율에 맞게 설정함
+    final double recipientInfolistCardViewHeight = 200; // 화면 세로 비율에 맞게 설정함
     final double recipientInfolistCardViewPaddingX =
         screenSize.width * (15 / referenceWidth); // 가로 패딩을 화면 비율에 맞게 설정함
     // 텍스트 데이터 패딩 및 글꼴 크기 설정
     // 텍스트 데이터의 가로와 세로 패딩, 글꼴 크기를 비율에 맞춰 설정함
-    final double recipientInfolistDataPaddingX =
-        screenSize.width * (13 / referenceWidth); // 텍스트 데이터의 가로 패딩 설정함
-    final double recipientInfolistDataPaddingY =
-        screenSize.height * (10 / referenceHeight); // 텍스트 데이터의 세로 패딩 설정함
-    final double recipientInfolistTextDataFontSize1 =
-        screenSize.height * (12 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
-    final double recipientInfolistTextDataFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 데이터 글꼴 크기 설정함
+    final double recipientInfolistDataPaddingX = 13; // 텍스트 데이터의 가로 패딩 설정함
+    final double recipientInfolistDataPaddingY = 10; // 텍스트 데이터의 세로 패딩 설정함
+    final double recipientInfolistTextDataFontSize1 = 12; // 텍스트 데이터 글꼴 크기 설정함
+    final double recipientInfolistTextDataFontSize2 = 14; // 텍스트 데이터 글꼴 크기 설정함
     // 선택 버튼 수치
     // 선택 버튼의 크기와 패딩, 글꼴 크기를 설정함
-    final double SelectBtnHeight = screenSize.height * (30 / referenceHeight);
-    final double SelectBtnWidth = screenSize.width * (80 / referenceWidth);
-    final double SelectBtnPaddingY = screenSize.height * (2 / referenceHeight);
-    final double SelectBtnPaddingX = screenSize.width * (2 / referenceWidth);
-    final double SelectBtnFontSize = screenSize.height * (13 / referenceHeight);
+    final double SelectBtnHeight = 30;
+    final double SelectBtnWidth = 80;
+    final double SelectBtnPaddingY = 2;
+    final double SelectBtnPaddingX = 2;
+    final double SelectBtnFontSize = 13;
     // 삭제 버튼 글꼴 및 위치 설정
     // 삭제 버튼의 크기, 패딩, 글꼴 크기를 설정함
-    final double DeleteBtnHeight = screenSize.height * (30 / referenceHeight);
-    final double DeleteBtnWidth = screenSize.width * (80 / referenceWidth);
-    final double DeleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
-    final double DeleteBtnPaddingX = screenSize.width * (2 / referenceWidth);
-    final double DeleteBtnFontSize = screenSize.height * (13 / referenceHeight);
+    final double DeleteBtnHeight = 30;
+    final double DeleteBtnWidth = 80;
+    final double DeleteBtnPaddingY = 2;
+    final double DeleteBtnPaddingX = 2;
+    final double DeleteBtnFontSize = 13;
     // 텍스트 데이터 간 너비 및 높이 설정
     // 텍스트 간 가로, 세로 간격을 설정함
-    final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double interval1Y =
-        screenSize.height * (8 / referenceHeight); // 텍스트 간 세로 여백 설정함
-    final double interval2Y =
-        screenSize.height * (15 / referenceHeight); // 텍스트 간 세로 여백 설정함
+    final double intervalX = 8;
+    final double interval1Y = 8; // 텍스트 간 세로 여백 설정함
+    final double interval2Y = 15; // 텍스트 간 세로 여백 설정함
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // recipientInfoItemsProvider를 통해 수령자 정보 즐겨찾기 목록 내 아이템 상태를 가져옴
     // Provider를 사용하여 파이어베이스로부터 수령자 정보 목록 데이터를 불러옴
@@ -1480,25 +1664,44 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // ——— 발주하기 요청 화면 요소들의 padding 값을 화면 크기에 맞게 동적으로 설정함
+    // final double orderRequirePadding1 =
+    //     screenSize.width * (32 / referenceWidth);
+    // final double orderRequirePadding2 =
+    //     screenSize.height * (32 / referenceHeight);
+    //
+    // // ——— 각 요소들의 간격을 화면 크기에 맞게 동적으로 설정함
+    // final double deliveryMethodInfo1Y =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double deliveryMethodInfo2Y =
+    //     screenSize.height * (8 / referenceHeight);
+    //
+    // // ——— 제목 텍스트의 폰트 크기를 화면 크기에 맞게 동적으로 설정함
+    // final double deliveryMethodInfoTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight);
+    //
+    // // ——— 알림 텍스트의 폰트 크기를 화면 크기에 맞게 동적으로 설정함
+    // final double deliveryMethodNoticeFontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // ——— 발주하기 요청 화면 요소들의 padding 값을 화면 크기에 맞게 동적으로 설정함
     final double orderRequirePadding1 =
         screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 =
-        screenSize.height * (32 / referenceHeight);
+    final double orderRequirePadding2 = 32;
 
     // ——— 각 요소들의 간격을 화면 크기에 맞게 동적으로 설정함
-    final double deliveryMethodInfo1Y =
-        screenSize.height * (16 / referenceHeight);
-    final double deliveryMethodInfo2Y =
-        screenSize.height * (8 / referenceHeight);
+    final double deliveryMethodInfo1Y = 16;
+    final double deliveryMethodInfo2Y = 8;
 
     // ——— 제목 텍스트의 폰트 크기를 화면 크기에 맞게 동적으로 설정함
-    final double deliveryMethodInfoTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
+    final double deliveryMethodInfoTitleFontSize = 18;
 
     // ——— 알림 텍스트의 폰트 크기를 화면 크기에 맞게 동적으로 설정함
-    final double deliveryMethodNoticeFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double deliveryMethodNoticeFontSize = 12;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       // ——— 전체 위젯의 여백(padding)을 설정함
@@ -1645,16 +1848,29 @@ class TotalPaymentWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // 발주하기 요청 화면 내 요소들의 수치 설정
+    // final double orderRequirePadding1 =
+    //     screenSize.width * (32 / referenceWidth);
+    // final double orderRequirePadding2 =
+    //     screenSize.height * (32 / referenceHeight);
+    // final double priceInfoTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight);
+    // final double priceInfo1Y = screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
     final double orderRequirePadding1 =
         screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 =
-        screenSize.height * (32 / referenceHeight);
-    final double priceInfoTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double priceInfo1Y = screenSize.height * (16 / referenceHeight);
+    final double orderRequirePadding2 = 32;
+    final double priceInfoTitleFontSize = 18;
+    final double priceInfo1Y = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     final numberFormat =
         NumberFormat('###,###'); // 숫자를 포맷하기 위한 NumberFormat 객체 생성
@@ -1705,20 +1921,36 @@ class TotalPaymentWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 발주자 정보 표 부분 수치
+    // final double ordererInfoTextFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double ordererInfoDataFontSize =
+    //     screenSize.height * (13 / referenceHeight);
+    // final double ordererInfoTextPartWidth =
+    //     screenSize.width * (97 / referenceWidth);
+    // final double ordererInfoTextPartHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // // 행 간 간격 수치
+    // final double ordererInfo4Y = screenSize.height * (2 / referenceHeight);
+    // final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
+    // // 데이터 부분 패딩 수치
+    // final double ordererInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 발주자 정보 표 부분 수치
-    final double ordererInfoTextFontSize =
-        screenSize.height * (13 / referenceHeight);
-    final double ordererInfoDataFontSize =
-        screenSize.height * (13 / referenceHeight);
+    final double ordererInfoTextFontSize = 13;
+    final double ordererInfoDataFontSize = 13;
     final double ordererInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
-    final double ordererInfoTextPartHeight =
-        screenSize.height * (40 / referenceHeight);
+    final double ordererInfoTextPartHeight = 40;
     // 행 간 간격 수치
-    final double ordererInfo4Y = screenSize.height * (2 / referenceHeight);
-    final double ordererInfo1X = screenSize.width * (4 / referenceWidth);
+    final double ordererInfo4Y = 2;
+    final double ordererInfo1X = 4;
     // 데이터 부분 패딩 수치
-    final double ordererInfoDataPartX = screenSize.width * (8 / referenceWidth);
+    final double ordererInfoDataPartX = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: ordererInfo4Y),
@@ -1794,19 +2026,33 @@ class PaymentMethodInfoWidget extends StatelessWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // 발주하기 요청 화면 내 요소들의 수치 설정
+    // final double orderRequirePadding1 =
+    //     screenSize.width * (32 / referenceWidth);
+    // final double orderRequirePadding2 =
+    //     screenSize.height * (32 / referenceHeight);
+    // final double paymentMethodInfoTitleFontSize =
+    //     screenSize.height * (18 / referenceHeight);
+    // final double orderRequireNoticeFontSize =
+    //     screenSize.height * (15 / referenceHeight);
+    // final double paymentMethodInfo1Y =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
     final double orderRequirePadding1 =
         screenSize.width * (32 / referenceWidth);
-    final double orderRequirePadding2 =
-        screenSize.height * (32 / referenceHeight);
-    final double paymentMethodInfoTitleFontSize =
-        screenSize.height * (18 / referenceHeight);
-    final double orderRequireNoticeFontSize =
-        screenSize.height * (15 / referenceHeight);
-    final double paymentMethodInfo1Y =
-        screenSize.height * (16 / referenceHeight);
+    final double orderRequirePadding2 = 32;
+    final double paymentMethodInfoTitleFontSize = 18;
+    final double orderRequireNoticeFontSize = 15;
+    final double paymentMethodInfo1Y = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.only(
@@ -1814,8 +2060,11 @@ class PaymentMethodInfoWidget extends StatelessWidget {
           right: orderRequirePadding1,
           top: orderRequirePadding2),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
-        mainAxisSize: MainAxisSize.min, // 부모의 제약 조건을 준수하도록 설정
+        // crossAxisAlignment: CrossAxisAlignment.start, // 자식 위젯들을 왼쪽 정렬
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        // 자식 위젯들을 왼쪽 정렬 (start 사용 시, 화면이 넓어지면 다른 부분과 동일한 간격으로 왼쪽 정렬이 안되는 부분 해결!!)
+        mainAxisSize: MainAxisSize.min,
+        // 부모의 제약 조건을 준수하도록 설정
         children: [
           Text(
             '결제 방법', // 결제 방법 제목 텍스트
@@ -1898,27 +2147,48 @@ class CompleteOrderButton extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치를 설정함
+    //
+    // // 발주하기 요청 화면 내 요소들의 수치 설정
+    // final double orderRequireNoticeFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double guidelineText1FontSize =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double guidelineText2FontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기
+    // final double paymentInfo1Y = screenSize.height * (16 / referenceHeight);
+    // final double paymentInfo2Y = screenSize.height * (8 / referenceHeight);
+    // final double paymentInfo3Y = screenSize.height * (4 / referenceHeight);
+    //
+    // // 결제하기 버튼 수치
+    // final double paymentBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double paymentBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double paymentBtnPaddingY =
+    //     screenSize.height * (10 / referenceHeight);
+    // final double paymentBtnPaddingX = screenSize.width * (12 / referenceWidth);
+    // final double paymentBtnFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequireNoticeFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double guidelineText1FontSize =
-        screenSize.height * (12 / referenceHeight);
-    final double guidelineText2FontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기
-    final double paymentInfo1Y = screenSize.height * (16 / referenceHeight);
-    final double paymentInfo2Y = screenSize.height * (8 / referenceHeight);
-    final double paymentInfo3Y = screenSize.height * (4 / referenceHeight);
+    final double orderRequireNoticeFontSize = 14;
+    final double guidelineText1FontSize = 12;
+    final double guidelineText2FontSize = 12; // 텍스트 크기
+    final double paymentInfo1Y = 16;
+    final double paymentInfo2Y = 8;
+    final double paymentInfo3Y = 4;
 
     // 결제하기 버튼 수치
-    final double paymentBtnHeight = screenSize.height * (50 / referenceHeight);
-    final double paymentBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double paymentBtnPaddingY =
-        screenSize.height * (10 / referenceHeight);
-    final double paymentBtnPaddingX = screenSize.width * (12 / referenceWidth);
-    final double paymentBtnFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double paymentBtnHeight = 50;
+    final double paymentBtnWidth = 130;
+    final double paymentBtnPaddingY = 10;
+    final double paymentBtnPaddingX = 12;
+    final double paymentBtnFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center, // 자식 위젯들을 중앙 정렬
@@ -2118,63 +2388,100 @@ class OrderListItemWidget extends ConsumerWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 발주내역 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double orderlistInfoCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double orderlistInfoCardViewHeight =
+    //     screenSize.height * (160 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double orderlistInfoCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    // final double orderlistInfoCardViewPadding1Y =
+    //     screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double orderlistInfoOrderStatusDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistInfoOrderNumberDataFontSize =
+    //     screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistInfoOrderDateDataFontSize =
+    //     screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
+    // final double orderlistInfoDetailViewBtn1X =
+    //     screenSize.width * (220 / referenceWidth); // 발주내역 상세보기 버튼 가로 비율 계산
+    // final double orderlistInfoDetailViewBtn1Y =
+    //     screenSize.height * (40 / referenceHeight); // 발주내역 상세보기 버튼 세로 비율 계산
+    // final double orderlistInfoDetailViewBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 발주내역 상세보기 버튼 텍스트 크기 비율 계산
+    // final double orderlistInfoDetailViewBtnPaddingX =
+    //     screenSize.width * (12 / referenceWidth); // 발주내역 상세보기 버튼 좌우 패딩 계산
+    // final double orderlistInfoDetailViewBtnPaddingY =
+    //     screenSize.height * (5 / referenceHeight); // 발주내역 상세보기 버튼 상하 패딩 계산
+    // final double deleteBtn1X =
+    //     screenSize.width * (80 / referenceWidth); // 삭제 버튼 가로 비율 계산
+    // final double deleteBtn1Y =
+    //     screenSize.height * (40 / referenceHeight); // 삭제 버튼 세로 비율 계산
+    // final double deleteBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 삭제 버튼 텍스트 크기 비율 계산
+    // final double deleteBtnPaddingX =
+    //     screenSize.width * (12 / referenceWidth); // 삭제 버튼 좌우 패딩 계산
+    // final double deleteBtnPaddingY =
+    //     screenSize.height * (5 / referenceHeight); // 삭제 버튼 상하 패딩 계산
+    //
+    // // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    // final double interval1Y =
+    //     screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y =
+    //     screenSize.height * (12 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 간격 3 계산
+    // final double interval1X =
+    //     screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X =
+    //     screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    // final double interval3X =
+    //     screenSize.width * (2 / referenceWidth); // 가로 간격 3 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 발주내역 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
     final double orderlistInfoCardViewWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율 계산
-    final double orderlistInfoCardViewHeight =
-        screenSize.height * (160 / referenceHeight); // 세로 비율 계산
+    final double orderlistInfoCardViewHeight = 160; // 세로 비율 계산
 
     // body 부분 전체 패딩 수치 계산
     final double orderlistInfoCardViewPaddingX =
         screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double orderlistInfoCardViewPadding1Y =
-        screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    final double orderlistInfoCardViewPadding1Y = 10; // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double orderlistInfoOrderStatusDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistInfoOrderNumberDataFontSize =
-        screenSize.height * (15 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistInfoOrderDateDataFontSize =
-        screenSize.height * (13 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderStatusDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderNumberDataFontSize = 15; // 텍스트 크기 비율 계산
+    final double orderlistInfoOrderDateDataFontSize = 13; // 텍스트 크기 비율 계산
 
     // 발주내역 상세보기 버튼과 삭제 버튼의 가로, 세로 비율 계산
-    final double orderlistInfoDetailViewBtn1X =
-        screenSize.width * (220 / referenceWidth); // 발주내역 상세보기 버튼 가로 비율 계산
-    final double orderlistInfoDetailViewBtn1Y =
-        screenSize.height * (40 / referenceHeight); // 발주내역 상세보기 버튼 세로 비율 계산
+    final double orderlistInfoDetailViewBtn1X = screenSize.width * (220 / referenceWidth); // 발주내역 상세보기 버튼 가로 비율 계산
+    final double orderlistInfoDetailViewBtn1Y = 40; // 발주내역 상세보기 버튼 세로 비율 계산
     final double orderlistInfoDetailViewBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 발주내역 상세보기 버튼 텍스트 크기 비율 계산
-    final double orderlistInfoDetailViewBtnPaddingX =
-        screenSize.width * (12 / referenceWidth); // 발주내역 상세보기 버튼 좌우 패딩 계산
-    final double orderlistInfoDetailViewBtnPaddingY =
-        screenSize.height * (5 / referenceHeight); // 발주내역 상세보기 버튼 상하 패딩 계산
-    final double deleteBtn1X =
-        screenSize.width * (80 / referenceWidth); // 삭제 버튼 가로 비율 계산
-    final double deleteBtn1Y =
-        screenSize.height * (40 / referenceHeight); // 삭제 버튼 세로 비율 계산
-    final double deleteBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 삭제 버튼 텍스트 크기 비율 계산
-    final double deleteBtnPaddingX =
-        screenSize.width * (12 / referenceWidth); // 삭제 버튼 좌우 패딩 계산
-    final double deleteBtnPaddingY =
-        screenSize.height * (5 / referenceHeight); // 삭제 버튼 상하 패딩 계산
+        14; // 발주내역 상세보기 버튼 텍스트 크기 비율 계산
+    final double deleteBtn1X = screenSize.width * (80 / referenceWidth); // 삭제 버튼 가로 비율 계산
+    final double deleteBtn1Y = 40; // 삭제 버튼 세로 비율 계산
+    final double deleteBtnFontSize = 14; // 삭제 버튼 텍스트 크기 비율 계산
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (8 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y =
-        screenSize.height * (12 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y =
-        screenSize.height * (4 / referenceHeight); // 세로 간격 3 계산
-    final double interval1X =
-        screenSize.width * (50 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X =
-        screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
-    final double interval3X =
-        screenSize.width * (2 / referenceWidth); // 가로 간격 3 계산
+    final double interval1Y = 8; // 세로 간격 1 계산
+    final double interval2Y = 12; // 세로 간격 2 계산
+    final double interval3Y = 4; // 세로 간격 3 계산
+    final double interval2X = 10; // 가로 간격 2 계산
+    final double interval3X = 2; // 가로 간격 3 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
@@ -2445,100 +2752,156 @@ class _OrderListDetailItemWidgetState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    // 비율을 기반으로 동적으로 크기와 위치 설정
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 발주내역 상세 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double orderlistDtInfo1CardViewWidth =
+    //     screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    // final double orderlistDtInfo1CardViewHeight =
+    //     screenSize.height * (95 / referenceHeight); // 세로 비율 계산
+    // final double orderlistDtInfo2CardViewWidth =
+    //     screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    // final double orderlistDtInfo2CardViewHeight =
+    //     screenSize.height * (220 / referenceHeight); // 세로 비율 계산
+    // final double orderlistDtInfo3CardViewWidth =
+    //     screenSize.width * (360 / referenceWidth); // 가로 비율 계산
+    // final double orderlistDtInfo3CardViewHeight =
+    //     screenSize.height * (200 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double orderlistDtInfoCardViewPaddingX =
+    //     screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
+    // final double orderlistDtInfoCardViewPadding1Y =
+    //     screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 텍스트 크기 계산
+    // final double orderlistDtInfoOrderNumberDataFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoOrderDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoPaymentCompletionDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfodeliveryStartDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoPaymentInfoDataFontSize1 =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoPaymentInfoDataFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoRecipientInfoDataFontSize1 =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoRecipientInfoDataFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoRefundCompletionDateDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoBriefIntroDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoProdNumberDataFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoOriginalPriceDataFontSize =
+    //     screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoDiscountPriceDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoDiscountPercentDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoColorImageDataWidth =
+    //     screenSize.width * (14 / referenceWidth); // 색상 이미지 가로 크기 설정함
+    // final double orderlistDtInfoColorImageDataHeight =
+    //     screenSize.width * (14 / referenceWidth); // 색상 이미지 세로 크기 설정함
+    // final double orderlistDtInfoColorTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoSizeTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double orderlistDtInfoCountTextDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 환불, 리뷰 작성, 장바구니 담기 버튼 수치
+    // final double orderlistDtInfoBottomBtnDataFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
+    // final double interval1Y =
+    //     screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y =
+    //     screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y =
+    //     screenSize.height * (16 / referenceHeight); // 세로 간격 3 계산
+    // final double interval4Y =
+    //     screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
+    // final double interval5Y =
+    //     screenSize.height * (3 / referenceHeight); // 세로 간격 5 계산
+    // final double interval6Y =
+    //     screenSize.height * (5 / referenceHeight); // 세로 간격 6 계산
+    // final double interval1X =
+    //     screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X =
+    //     screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    // final double interval3X =
+    //     screenSize.width * (20 / referenceWidth); // 가로 간격 3 계산
+    // final double interval4X =
+    //     screenSize.width * (70 / referenceWidth); // 가로 간격 4 계산
+    //
+    // // 에러 메시지 텍스트 크기 설정
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+    // final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
-    // 발주내역 상세 화면 내 카드뷰 섹션의 가로와 세로 비율 계산
-    final double orderlistDtInfo1CardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
-    final double orderlistDtInfo1CardViewHeight =
-        screenSize.height * (95 / referenceHeight); // 세로 비율 계산
-    final double orderlistDtInfo2CardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
-    final double orderlistDtInfo2CardViewHeight =
-        screenSize.height * (220 / referenceHeight); // 세로 비율 계산
-    final double orderlistDtInfo3CardViewWidth =
-        screenSize.width * (360 / referenceWidth); // 가로 비율 계산
-    final double orderlistDtInfo3CardViewHeight =
-        screenSize.height * (200 / referenceHeight); // 세로 비율 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // body 부분 전체 패딩 수치 계산
     final double orderlistDtInfoCardViewPaddingX =
         screenSize.width * (5 / referenceWidth); // 좌우 패딩 계산
-    final double orderlistDtInfoCardViewPadding1Y =
-        screenSize.height * (5 / referenceHeight); // 상하 패딩 계산
+    final double orderlistDtInfoCardViewPadding1Y = 5; // 상하 패딩 계산
 
     // 텍스트 크기 계산
-    final double orderlistDtInfoOrderNumberDataFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoOrderDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrderNumberDataFontSize = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOrderDateDataFontSize = 14; // 텍스트 크기 비율 계산
     final double orderlistDtInfoPaymentCompletionDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        14; // 텍스트 크기 비율 계산
     final double orderlistDtInfodeliveryStartDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoPaymentInfoDataFontSize1 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoPaymentInfoDataFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoRecipientInfoDataFontSize1 =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoRecipientInfoDataFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoPaymentInfoDataFontSize1 = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoPaymentInfoDataFontSize2 = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoRecipientInfoDataFontSize1 = 16; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoRecipientInfoDataFontSize2 = 14; // 텍스트 크기 비율 계산
     final double orderlistDtInfoRefundCompletionDateDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoBriefIntroDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoProdNumberDataFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoOriginalPriceDataFontSize =
-        screenSize.height * (12 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoDiscountPriceDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoBriefIntroDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoProdNumberDataFontSize = 12; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoOriginalPriceDataFontSize = 12; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoDiscountPriceDataFontSize = 14; // 텍스트 크기 비율 계산
     final double orderlistDtInfoDiscountPercentDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoColorImageDataWidth =
-        screenSize.width * (14 / referenceWidth); // 색상 이미지 가로 크기 설정함
-    final double orderlistDtInfoColorImageDataHeight =
-        screenSize.width * (14 / referenceWidth); // 색상 이미지 세로 크기 설정함
-    final double orderlistDtInfoColorTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoSizeTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
-    final double orderlistDtInfoCountTextDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+        14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoColorImageDataWidth = 14; // 색상 이미지 가로 크기 설정함
+    final double orderlistDtInfoColorImageDataHeight = 14; // 색상 이미지 세로 크기 설정함
+    final double orderlistDtInfoColorTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoSizeTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoCountTextDataFontSize = 14; // 텍스트 크기 비율 계산
+    final double orderlistDtInfoThumnailPartHeight = 120; // 썸네일 세로 비율 설정함
+    final double orderlistDtInfoTextDataPartHeight = 160; // 텍스트 데이터 부분의 높이 설정함
 
     // 환불, 리뷰 작성, 장바구니 담기 버튼 수치
-    final double orderlistDtInfoBottomBtnDataFontSize =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double orderlistDtInfoBottomBtnDataFontSize = 14; // 텍스트 크기 비율 계산
 
     // 발주내역 카드뷰 섹션 내 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (4 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y =
-        screenSize.height * (8 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y =
-        screenSize.height * (16 / referenceHeight); // 세로 간격 3 계산
-    final double interval4Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 4 계산
-    final double interval5Y =
-        screenSize.height * (3 / referenceHeight); // 세로 간격 5 계산
-    final double interval6Y =
-        screenSize.height * (5 / referenceHeight); // 세로 간격 6 계산
-    final double interval1X =
-        screenSize.width * (20 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X =
-        screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
-    final double interval3X =
-        screenSize.width * (20 / referenceWidth); // 가로 간격 3 계산
-    final double interval4X =
-        screenSize.width * (70 / referenceWidth); // 가로 간격 4 계산
+    final double interval1Y = 4; // 세로 간격 1 계산
+    final double interval2Y = 8; // 세로 간격 2 계산
+    final double interval3Y = 16; // 세로 간격 3 계산
+    final double interval4Y = 10; // 세로 간격 4 계산
+    final double interval1X = 20; // 가로 간격 1 계산
+    final double interval2X = 10; // 가로 간격 2 계산
+    final double interval3X = 20; // 가로 간격 3 계산
+    final double interval4X = 70; // 가로 간격 4 계산
 
     // 에러 메시지 텍스트 크기 설정
-    final double errorTextFontSize1 =
-        screenSize.height * (14 / referenceHeight); // 첫 번째 에러 텍스트 크기
-    final double errorTextFontSize2 =
-        screenSize.height * (12 / referenceHeight); // 두 번째 에러 텍스트 크기
+    final double errorTextFontSize1 = 14; // 첫 번째 에러 텍스트 크기
+    final double errorTextFontSize2 = 12; // 두 번째 에러 텍스트 크기
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 MM분');
@@ -3044,34 +3407,39 @@ class _OrderListDetailItemWidgetState
                                 Row(
                                   children: [
                                     // 썸네일 이미지를 표시하고, 없을 경우 대체 아이콘 표시
-                                    Expanded(
-                                      flex: 4,
-                                      child: productInfo['thumbnails']
-                                                  ?.toString()
-                                                  .isNotEmpty ==
-                                              true
-                                          ? Image.network(
-                                              productInfo['thumbnails'],
+                                    Container(
+                                      height: orderlistDtInfoThumnailPartHeight,
+                                      width: orderlistDtInfoThumnailPartHeight,
+                                      child: productInfo['thumbnails'] !=
+                                                  null &&
+                                              productInfo['thumbnails'] != ''
+                                          ? FittedBox(
                                               fit: BoxFit.cover,
-                                              // 이미지 로드 실패 시 아이콘 표시
-                                              errorBuilder: (context, error,
-                                                      stackTrace) =>
-                                                  Icon(
-                                                Icons.image_not_supported,
-                                                color: GRAY88_COLOR,
-                                                size: interval4X,
+                                              child: Image.network(
+                                                productInfo['thumbnails']!,
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    Icon(
+                                                  Icons.image_not_supported,
+                                                  // 이미지 로드 실패 시 아이콘 표시
+                                                  color: GRAY88_COLOR,
+                                                  size: interval3X,
+                                                ),
                                               ),
                                             )
                                           : Icon(
                                               Icons.image_not_supported,
+                                              // 썸네일 데이터가 없을 경우 아이콘 표시
                                               color: GRAY88_COLOR,
-                                              size: interval4X,
+                                              size: interval3X,
                                             ),
-                                    ), // 썸네일이 없을 때 아이콘을 표시
+                                    ),
                                     SizedBox(width: interval1X),
                                     // 상품의 가격, 색상, 사이즈, 수량 정보를 표시
-                                    Expanded(
-                                      flex: 6,
+                                    Container(
+                                      height: orderlistDtInfoTextDataPartHeight,
+                                      padding:
+                                          EdgeInsets.only(top: interval4Y * 2),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,

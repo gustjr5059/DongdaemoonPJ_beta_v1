@@ -120,27 +120,47 @@ AppBar buildCommonAppBar({
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  //
+  // // 앱 바 내 title 글자 크기
+  // final double titleFontSize =
+  //     screenSize.height * (17 / referenceHeight); // 텍스트 크기
+  //
+  // // ----- 앱 바 부분 수치 시작 부분
+  // final double appBarHeight =
+  //     screenSize.height * (44 / referenceHeight); // 세로 비율
+  // final double appBarCartItemCountTextFontSize = screenSize.height *
+  //     (12 / referenceHeight); // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
+  // final double appBarWishlistItemCountTextFontSize = screenSize.height *
+  //     (12 / referenceHeight); // 앱 바 찜 목록 아이콘의 찜 목록 아이템 갯수 부분 텍스트 수치
+  // final double interval1X =
+  //     screenSize.width * (3 / referenceWidth); // 장바구니 아이콘 위치 X좌표
+  // final double interval1Y =
+  //     screenSize.height * (4 / referenceHeight); // 장바구니 아이콘 위치 Y좌표
+  // final double interval2X =
+  //     screenSize.width * (1 / referenceWidth); // 찜 목록 아이콘 위치 X좌표
+  // final double interval2Y =
+  //     screenSize.height * (4 / referenceHeight); // 찜 목록 아이콘 위치 Y좌표
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 앱 바 내 title 글자 크기
-  final double titleFontSize =
-      screenSize.height * (17 / referenceHeight); // 텍스트 크기
+  final double titleFontSize = 17; // 텍스트 크기
 
   // ----- 앱 바 부분 수치 시작 부분
-  final double appBarHeight =
-      screenSize.height * (44 / referenceHeight); // 세로 비율
-  final double appBarCartItemCountTextFontSize = screenSize.height *
-      (12 / referenceHeight); // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
-  final double appBarWishlistItemCountTextFontSize = screenSize.height *
-      (12 / referenceHeight); // 앱 바 찜 목록 아이콘의 찜 목록 아이템 갯수 부분 텍스트 수치
-  final double interval1X =
-      screenSize.width * (3 / referenceWidth); // 장바구니 아이콘 위치 X좌표
-  final double interval1Y =
-      screenSize.height * (4 / referenceHeight); // 장바구니 아이콘 위치 Y좌표
-  final double interval2X =
-      screenSize.width * (1 / referenceWidth); // 찜 목록 아이콘 위치 X좌표
-  final double interval2Y =
-      screenSize.height * (4 / referenceHeight); // 찜 목록 아이콘 위치 Y좌표
+  final double appBarHeight = 44; // 앱 바 높이
+  final double appBarCartItemCountTextFontSize =
+      12; // 앱 바 장바구니 아이콘의 장바구니 아이템 갯수 부분 텍스트 수치
+  final double appBarWishlistItemCountTextFontSize =
+      12; // 앱 바 찜 목록 아이콘의 찜 목록 아이템 갯수 부분 텍스트 수치
+  final double interval1Y = 4; // 장바구니 아이콘 위치 Y좌표
+  final double interval2Y = 4; // 찜 목록 아이콘 위치 Y좌표
+  final double interval1X = 3; // 장바구니 아이콘 위치 X좌표
+  final double interval2X = 1; // 찜 목록 아이콘 위치 X좌표
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // `boolEventImg` 값에 따라 이벤트 이미지를 가져옴
   final eventImage = ref.watch(eventImageProvider).whenOrNull(
@@ -150,9 +170,11 @@ AppBar buildCommonAppBar({
 
   // Firestore에서 제목 이미지를 가져옴
   // titleImageFieldName으로 Firestore에서 지정된 필드명의 이미지 가져오기
-  final titleImage = ref.watch(titleImageFieldProvider(titleImageFieldName)).whenOrNull(
-    data: (data) => boolTitleImg && data != null && data.isNotEmpty ? data : null,
-  );
+  final titleImage =
+      ref.watch(titleImageFieldProvider(titleImageFieldName)).whenOrNull(
+            data: (data) =>
+                boolTitleImg && data != null && data.isNotEmpty ? data : null,
+          );
 
   // 이벤트 이미지를 클릭 가능하게 만드는 위젯 선언
   Widget? eventImageWidget;
@@ -212,14 +234,14 @@ AppBar buildCommonAppBar({
             onPressed: () {
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop(); // 페이지 스택이 존재하면 이전 페이지로 돌아감.
-              // } else if (platformType == 'ios') {
-              //   Navigator.of(context).pushReplacement(
-              //     MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
-              //   );
-              // } else if (platformType == 'aos') {
-              //   Navigator.of(context).pushReplacement(
-              //     MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
-              //   );
+                // } else if (platformType == 'ios') {
+                //   Navigator.of(context).pushReplacement(
+                //     MaterialPageRoute(builder: (_) => EasyLoginIosScreen()),
+                //   );
+                // } else if (platformType == 'aos') {
+                //   Navigator.of(context).pushReplacement(
+                //     MaterialPageRoute(builder: (_) => EasyLoginAosScreen()),
+                //   );
               } else {
                 showCustomSnackBar(
                     context, '이전 화면으로 이동할 수 없습니다.'); // 이전 페이지로 돌아갈 수 없다는 메시지 표시
@@ -629,21 +651,36 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  //
+  // // 하단 탭 바 내 장바구니 아이콘의 장바구니 아이템 갯수 구현 부분 관련 수치
+  // final double bottomNavigationIconSize =
+  //     screenSize.width * (24 / referenceWidth);
+  // final double interval1X = screenSize.width * (25.5 / referenceWidth); // 세로 비율
+  // final double badgeSize = screenSize.width * (20 / referenceWidth); // 배지 크기
+  // final double badgeTextFontSize =
+  //     screenSize.height * (12 / referenceHeight); // 배지 텍스트 크기
+  // final double badgeOffsetX =
+  //     screenSize.width * (20 / referenceWidth); // 배지의 X축 오프셋
+  // final double badgeOffsetY =
+  //     screenSize.height * (5 / referenceHeight); // 배지의 Y축 오프셋
+  // final double bottomNavigationIconTextFontSize =
+  //     screenSize.height * (10 / referenceHeight); // 아이콘 하단 텍스트 수치
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 하단 탭 바 내 장바구니 아이콘의 장바구니 아이템 갯수 구현 부분 관련 수치
-  final double bottomNavigationIconSize =
-      screenSize.width * (24 / referenceWidth);
+  final double bottomNavigationIconSize = 24;
   final double interval1X = screenSize.width * (25.5 / referenceWidth); // 세로 비율
   final double badgeSize = screenSize.width * (20 / referenceWidth); // 배지 크기
-  final double badgeTextFontSize =
-      screenSize.height * (12 / referenceHeight); // 배지 텍스트 크기
-  final double badgeOffsetX =
-      screenSize.width * (20 / referenceWidth); // 배지의 X축 오프셋
-  final double badgeOffsetY =
-      screenSize.height * (5 / referenceHeight); // 배지의 Y축 오프셋
-  final double bottomNavigationIconTextFontSize =
-      screenSize.height * (10 / referenceHeight); // 아이콘 하단 텍스트 수치
+  final double badgeTextFontSize = 12; // 배지 텍스트 크기
+  final double badgeOffsetX = 20; // 배지의 X축 오프셋
+  final double badgeOffsetY = 5; // 배지의 Y축 오프셋
+  final double bottomNavigationIconTextFontSize = 10; // 아이콘 하단 텍스트 수치
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   switch (navigationCase) {
     // '홈', '장바구니', '발주내역', '마이페이지' 버튼을 UI로 구현한 케이스
@@ -677,8 +714,9 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
-            height: MediaQuery.of(context).size.height *
-                0.098, // 화면 높이에 비례하여 동적 높이 설정
+            // 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하여 높이 사이즈 제한없도록 주석처리
+            // height: MediaQuery.of(context).size.height *
+            //     0.098, // 화면 높이에 비례하여 동적 높이 설정
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               // BottomNavigationBar 타입을 고정형으로 설정
@@ -693,12 +731,9 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                   // 선택된 인덱스를 상태로 업데이트
                   ref.read(tabIndexProvider.notifier).state = index;
 
-
-
                   // 화면 전환
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) {
-
                       // 선택된 인덱스에 따라 다른 화면을 반환
                       switch (index) {
                         case 0:
@@ -763,7 +798,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                   padding: EdgeInsets.all(3),
                                   // 뱃지 내부 여백
                                   decoration: BoxDecoration(
-                                    color: BLUE49_COLOR, // 뱃지 배경색 (주황색)
+                                    color: BLUE49_COLOR, // 뱃지 배경색 (파란색)
                                     shape: BoxShape.circle, // 뱃지 모양 (원형)
                                   ),
                                   // child: Container(
@@ -806,10 +841,47 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                 BottomNavigationBarItem(
                   icon: Padding(
                     padding: EdgeInsets.symmetric(horizontal: interval1X),
-                    child: Icon(Icons.receipt_long_outlined,
-                        size: bottomNavigationIconSize), // 발주 내역 아이콘
+                    child: Consumer(
+                      builder: (context, ref, _) {
+                        final orderlistItemCount =
+                            ref.watch(orderlistItemCountProvider).value ?? 0;
+
+                        return Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none, // 배지가 아이콘 영역을 넘어도 표시되도록 설정
+                          children: [
+                            Icon(Icons.receipt_long_outlined,
+                                size: bottomNavigationIconSize), // 발주 내역 아이콘
+                            if (orderlistItemCount > 0)
+                              Positioned(
+                                right: -badgeOffsetX, // 아이콘의 우측 상단으로 위치 설정
+                                top: -badgeOffsetY, // 아이콘의 상단 위로 위치 설정
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  // 뱃지 내부 여백
+                                  decoration: BoxDecoration(
+                                    color: BLUE49_COLOR, // 뱃지 배경색 (파란색)
+                                    shape: BoxShape.circle, // 뱃지 모양 (원형)
+                                  ),
+                                  child: Text(
+                                    orderlistItemCount >= 100
+                                        ? '99+'
+                                        : '$orderlistItemCount',
+                                    // 100개 이상은 '99+'로 표시
+                                    style: TextStyle(
+                                      color: WHITE_COLOR, // 텍스트 색상
+                                      fontSize: badgeTextFontSize, // 텍스트 크기
+                                      fontWeight: FontWeight.bold, // 텍스트 두께
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                  label: '발주내역', // 발주 내역 라벨
+                  label: '발주내역',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
@@ -901,28 +973,42 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
       final double referenceWidth = 393.0;
       final double referenceHeight = 852.0;
 
+      // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+      // // 비율을 기반으로 동적으로 크기와 위치 설정
+      //
+      // // 버튼 관련 수치 동적 적용
+      // final double bottomBtnC2Width = screenSize.width * (166 / referenceWidth);
+      // final double bottomBtnC2Height =
+      //     screenSize.height * (50 / referenceHeight);
+      // final double bottomBtnC2X = screenSize.width * (20 / referenceWidth);
+      // final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
+      // final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
+      // final double bottomBtnFontSize =
+      //     screenSize.height * (14 / referenceHeight);
+      // final double intervalX = screenSize.width * (10 / referenceWidth);
+      // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+      // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
       // 비율을 기반으로 동적으로 크기와 위치 설정
 
       // 버튼 관련 수치 동적 적용
-      final double bottomBtnC2Width = screenSize.width * (166 / referenceWidth);
-      final double bottomBtnC2Height =
-          screenSize.height * (50 / referenceHeight);
-      final double bottomBtnC2X = screenSize.width * (20 / referenceWidth);
-      final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
-      final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
-      final double bottomBtnFontSize =
-          screenSize.height * (14 / referenceHeight);
-
-      // 컨텐츠 사이의 수치 적용
-      final double interval1X = screenSize.width * (10 / referenceWidth);
+      final double bottomBtnC2Width = screenSize.width * (140 / referenceWidth);
+      final double bottomBtnC2Height = 50;
+      final double bottomBtnC2X = 20;
+      final double bottomBtnC2Y = 10;
+      final double bottomBarC2Y = 15;
+      final double bottomBtnFontSize = 10;
+      final double intervalX = screenSize.width * (10 / referenceWidth);
+      // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
-            height: MediaQuery.of(context).size.height *
-                0.098, // 화면 높이에 비례하여 동적 높이 설정
+            // 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하여 높이 사이즈 제한없도록 주석처리
+            // height: MediaQuery.of(context).size.height *
+            //     0.098, // 화면 높이에 비례하여 동적 높이 설정
             padding: EdgeInsets.only(bottom: bottomBarC2Y),
             // UI 패딩 설정
             child: Padding(
@@ -1161,28 +1247,47 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
       final double referenceWidth = 393.0;
       final double referenceHeight = 852.0;
 
+      // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+      // // 비율을 기반으로 동적으로 크기와 위치 설정
+      //
+      // // 버튼 관련 수치 동적 적용
+      // final double bottomBtnC2Width = screenSize.width * (100 / referenceWidth);
+      // final double bottomBtnC2Height =
+      //     screenSize.height * (40 / referenceHeight);
+      // final double bottomBtnC1X = screenSize.width * (2 / referenceWidth);
+      // final double bottomBtnC2X = screenSize.width * (24 / referenceWidth);
+      // final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
+      // final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
+      // final double bottomTextFontSize =
+      //     screenSize.height * (14 / referenceHeight);
+      // final double bottomBtnFontSize =
+      //     screenSize.height * (14 / referenceHeight);
+      // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+      // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
       // 비율을 기반으로 동적으로 크기와 위치 설정
 
       // 버튼 관련 수치 동적 적용
       final double bottomBtnC2Width = screenSize.width * (100 / referenceWidth);
-      final double bottomBtnC2Height =
-          screenSize.height * (40 / referenceHeight);
-      final double bottomBtnC1X = screenSize.width * (2 / referenceWidth);
-      final double bottomBtnC2X = screenSize.width * (24 / referenceWidth);
-      final double bottomBtnC2Y = screenSize.height * (10 / referenceHeight);
-      final double bottomBarC2Y = screenSize.height * (15 / referenceHeight);
-      final double bottomTextFontSize =
-          screenSize.height * (14 / referenceHeight);
-      final double bottomBtnFontSize =
-          screenSize.height * (14 / referenceHeight);
+      final double bottomBtnC2Height = 40;
+      final double bottomBtnC1X = 2;
+      final double bottomBtnC2X = 24;
+      final double bottomBtnC2Y = 10;
+      final double bottomBarC2Y = 15;
+      final double bottomTextFontSize = 14;
+      final double bottomBtnFontSize = 12;
+      // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
+            // 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하여 높이 사이즈 제한없도록 주석처리
+            // 해당 케이스 3번에는 1번, 2번과 달리 높이를 지정해줘야하는 이유:
+            // 케이스 3번은 내부에 사이즈 구현 중 Expanded 위젯을 사용하므로 직접 높이 지정을 해야 UI 오류가 생기지 않음
             height: MediaQuery.of(context).size.height *
-                0.098, // 화면 높이에 비례하여 동적 높이 설정
+                0.2, // 화면 높이에 비례하여 동적 높이 설정
             padding: EdgeInsets.only(bottom: bottomBarC2Y),
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -1283,18 +1388,20 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                             // 상품번호 앞 세 자리 확인 로직
                             final List<String> productPrefixes = orderProducts
                                 .map((item) => item.productNumber != null
-                                ? item.productNumber!.substring(0, 3)
-                                : '') // productNumber가 null이면 빈 문자열 반환
+                                    ? item.productNumber!.substring(0, 3)
+                                    : '') // productNumber가 null이면 빈 문자열 반환
                                 .toList();
 
                             // 모든 앞 세 자리가 동일한지 검사
-                            final bool allSamePrefix =
-                            productPrefixes.every((prefix) => prefix == productPrefixes.first);
+                            final bool allSamePrefix = productPrefixes.every(
+                                (prefix) => prefix == productPrefixes.first);
 
                             if (!allSamePrefix) {
                               // 앞 세 자리가 다른 경우 경고 메시지 표시
-                              showCustomSnackBar(context, '동일한 상점 상품끼리만 묶음 발주가 가능합니다.',
-                                  duration: Duration(milliseconds: 2000), // 2초 동안 유지
+                              showCustomSnackBar(
+                                context, '동일한 상점 상품끼리만 묶음 발주가 가능합니다.',
+                                duration:
+                                    Duration(milliseconds: 2000), // 2초 동안 유지
                               );
                               return; // 버튼 동작 중단
                             }
@@ -1302,18 +1409,23 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                             // 앞 세 자리가 동일하고 결제 금액 조건 검사
                             if (totalPaymentPrice >= 30000) {
                               // 정상 동작: 발주 화면으로 이동
-                              ref.read(orderItemsProvider.notifier).setOrderItems(orderProducts);
+                              ref
+                                  .read(orderItemsProvider.notifier)
+                                  .setOrderItems(orderProducts);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => OrderMainScreen(
-                                    totalProductPrice: totalProductPrice.toDouble(),
-                                    productDiscountPrice: totalDiscountPrice.toDouble(),
+                                    totalProductPrice:
+                                        totalProductPrice.toDouble(),
+                                    productDiscountPrice:
+                                        totalDiscountPrice.toDouble(),
                                   ),
                                 ),
                               );
                             } else {
                               // 결제 금액이 30,000원 미만인 경우 경고 메시지 표시
-                              showCustomSnackBar(context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
+                              showCustomSnackBar(
+                                  context, '30,000원 이상 금액부터 발주 요청이 가능합니다.');
                             }
                           }
                         }
@@ -1396,7 +1508,13 @@ TextStyle topBarTextStyle(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  final double topBarTextFontSize = screenSize.height * (16 / referenceHeight);
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // final double topBarTextFontSize = screenSize.height * (16 / referenceHeight);
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  final double topBarTextFontSize = 16;
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return TextStyle(
     fontSize: topBarTextFontSize, // Figma에서 확인한 텍스트 크기
@@ -1434,17 +1552,31 @@ Widget buildTopBarList(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  //
+  // // 탑 바 부분 수치
+  // final double topBarListHeight =
+  //     screenSize.width * (52 / referenceWidth); // 탑 바 리스트 높이
+  // final double topBarListX =
+  //     screenSize.width * (16 / referenceWidth); // 탑 바 리스트 X 좌표
+  // final double topBarBtnHeight =
+  //     screenSize.height * (52 / referenceHeight); // 탑 바 버튼 높이
+  //
+  // final double interval1X = screenSize.width * (22 / referenceWidth);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
 
   // 탑 바 부분 수치
-  final double topBarListHeight =
-      screenSize.width * (52 / referenceWidth); // 탑 바 리스트 높이
+  final double topBarListHeight = 52; // 탑 바 리스트 높이
   final double topBarListX =
       screenSize.width * (16 / referenceWidth); // 탑 바 리스트 X 좌표
-  final double topBarBtnHeight =
-      screenSize.height * (52 / referenceHeight); // 탑 바 버튼 높이
-  final double topBarListPaddingX =
-      screenSize.width * (22 / referenceWidth); // 탑 바 리스트 패딩 X 좌표
+  final double topBarBtnHeight = 52; // 탑 바 버튼 높이
+
+  final double interval1X = screenSize.width * (22 / referenceWidth);
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // 각 카테고리를 탭했을 때 실행될 함수. 카테고리에 따라 다른 페이지로 이동함.
   return Consumer(
@@ -1474,7 +1606,7 @@ Widget buildTopBarList(
                 alignment: Alignment.center,
                 // Container 내부 내용을 중앙 정렬
                 height: topBarBtnHeight,
-                padding: EdgeInsets.symmetric(horizontal: topBarListPaddingX),
+                padding: EdgeInsets.symmetric(horizontal: interval1X),
                 // 좌우로 패딩 적용
                 child: Text(category,
                     style: topBarTextStyle(currentIndex, index, context)),
@@ -1493,7 +1625,9 @@ Widget buildTopBarList(
 // 공통 Drawer 생성 함수. 사용자 이메일을 표시하고 로그아웃 등의 메뉴 항목을 포함함.
 Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   // FirebaseAuth에서 현재 로그인한 사용자의 이메일을 가져옴.
-  final String? userEmail = FirebaseAuth.instance.currentUser?.email;
+  // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+  final user = FirebaseAuth.instance.currentUser;
+  final userEmail = user?.email ?? user?.uid; // 이메일 주소를 가져옴
 
   // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
   // 관리자 이메일
@@ -1548,338 +1682,694 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   final double referenceWidth = 260.0;
   final double referenceHeight = 852.0;
 
+//   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+//   // 비율을 기반으로 동적으로 크기와 위치 설정
+//   // 드로워 화면 내 아이콘 요소 수치
+//   final double drawerLogoIconWidth =
+//       screenSize.width * (130 / referenceWidth); // 가로 비율
+//   final double drawerLogoIconHeight =
+//       screenSize.height * (50 / referenceWidth); // 세로 비율
+//   final double drawerLogoIconX =
+//       screenSize.width * (33 / referenceWidth); // 왼쪽 여백 비율
+//   final double drawerLogoIconY =
+//       screenSize.height * (70 / referenceHeight); // 위쪽 여백 비율
+//   final double flowImageLeft = screenSize.width * (0 / referenceWidth);
+//   final double flowImageTop = screenSize.height * (260 / referenceHeight);
+//   final double flowImageWidth = screenSize.width * (180 / referenceWidth);
+//   final double flowImageHeight = screenSize.height * (20 / referenceHeight);
+//
+//   // 이메일 부분 수치
+//   final double emailTextFontSize1 = screenSize.height * (20 / referenceHeight);
+//   final double emailTextFontSize2 = screenSize.height * (16 / referenceHeight);
+//   final double emailTextFontSize3 = screenSize.height * (10 / referenceHeight);
+//
+//   // 에러 관련 텍스트 수치
+//   final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
+//   final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+//   final double errorTextHeight = screenSize.height * (600 / referenceHeight);
+//
+//   // 로그아웃 버튼 부분 수치
+//   final double logoutTextFontSize = screenSize.height * (20 / referenceHeight);
+//   final double logoutBtnSize = screenSize.height * (20 / referenceHeight);
+//
+//   // 아이콘 사이의 간격 수치
+//   final double interval1Y = screenSize.height * (10 / referenceHeight);
+//   final double interval2Y = screenSize.height * (130 / referenceHeight);
+//   final double interval3Y = screenSize.height * (10 / referenceHeight);
+//   final double interval1X = screenSize.width * (10 / referenceWidth);
+//   final double interval2X = screenSize.width * (15 / referenceWidth);
+//
+//   // Drawer 위젯을 반환. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
+//   return Drawer(
+//     child: Container(
+//       color: WHITE_COLOR, // 전체 드로어의 배경색을 흰색으로 설정
+//       child: Stack(
+//         children: [
+//           // 로고 및 이메일 배치
+//           // Positioned(
+//           //   left: drawerLogoIconX, // 로고의 X 좌표 설정 (왼쪽 여백)
+//           //   top: drawerLogoIconY, // 로고의 Y 좌표 설정 (위쪽 여백)
+//           Align(
+//             alignment: Alignment.topCenter,
+//             child: Padding(
+//               padding: EdgeInsets.only(
+//                 top: drawerLogoIconY,
+//               ),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: [
+//                   Container(
+//                     width: drawerLogoIconWidth,
+//                     height: drawerLogoIconHeight,
+//                     padding: EdgeInsets.zero,
+//                     // 패딩 제거
+//                     margin: EdgeInsets.zero,
+//                     // 마진 제거
+//                     child: Image.asset(
+//                       'asset/img/misc/logo_img/wearcano_logo_v1.png',
+//                       // fit: BoxFit.contain, // 이미지의 fit 속성 설정
+//                     ),
+//                   ),
+//                   Consumer(builder: (context, ref, child) {
+//                     // 이메일 확인 및 FutureProvider 호출
+//                     // 사용자의 이메일 정보를 확인함
+//                     if (userEmail == null) {
+//                       // 이메일이 없는 경우 로그인 요청 메시지 출력
+//                       return Text(
+//                         '로그인 후 이용해주세요.', // 메시지 텍스트 설정
+//                         style: TextStyle(
+//                           fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
+//                           color: BLACK_COLOR, // 텍스트 색상 설정
+//                           fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                           fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+//                         ),
+//                       );
+//                     }
+//
+//                     // 사용자 이름을 가져오기 위한 FutureProvider 호출
+//                     final userNameAsyncValue = ref.watch(drawerUserNameProvider(userEmail));
+//
+//                     // 사용자 이름 데이터를 기반으로 위젯 생성
+//                     return userNameAsyncValue.when(
+//                       data: (userName) {
+//                         // userName 값이 없거나 비어 있는 경우 기본 메시지 출력
+//                         if (userName == null || userName.isEmpty) {
+//                           // 사용자 이름 정보를 불러올 수 없을 때 기본 메시지 출력
+//                           return Text(
+//                             '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
+//                             style: TextStyle(
+//                               fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
+//                               color: BLACK_COLOR, // 텍스트 색상 설정
+//                               fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                               fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+//                             ),
+//                           );
+//                         }
+//
+//                         // RichText를 사용하여 사용자 이름과 환영 메시지를 표시함
+//                         return RichText(
+//                           text: TextSpan(
+//                             text: '$userName님', // 첫 번째 텍스트 (사용자 이름)
+//                             style: TextStyle(
+//                               fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+//                               color: BLACK_COLOR, // 텍스트 색상 설정
+//                               fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                               fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+//                             ),
+//                             children: [
+//                               TextSpan(
+//                                 text: ' 반가워요.', // 두 번째 텍스트 (환영 메시지)
+//                                 style: TextStyle(
+//                                   fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+//                                   color: BLACK_COLOR, // 텍스트 색상 설정
+//                                   fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                                   fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         );
+//                       },
+//                       // 실시간 데이터 로드 중일 때 로딩 인디케이터 표시
+//                       loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
+//                       // 실시간 데이터 로드 중 오류가 발생했을 때 처리
+//                       error: (error, stack) => Container( // 에러 상태에서 중앙 배치
+//                         height: errorTextHeight, // 컨테이너 높이 설정
+//                         alignment: Alignment.center, // 컨테이너 중앙 정렬 설정
+//                         child: buildCommonErrorIndicator(
+//                           message: '에러가 발생했으니, 앱을 재실행해주세요.', // 에러 메시지 텍스트 설정
+//                           fontSize1: errorTextFontSize1, // 첫 번째 폰트 크기 설정
+//                           fontSize2: errorTextFontSize2, // 두 번째 폰트 크기 설정
+//                           color: BLACK_COLOR, // 텍스트 색상 설정
+//                           showSecondMessage: false, // 두 번째 메시지 표시 여부 설정
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           // 물결 이미지 (Positioned 위젯 사용)
+//           Align(
+//             alignment: Alignment.topCenter,
+//             child: Padding(
+//               padding: EdgeInsets.only(
+//                 // left: flowImageLeft,
+//                 top: flowImageTop,
+//               ),
+//               child: Image.asset(
+//                 'asset/img/misc/drawer_img/flow_image.png',
+//                 width: flowImageWidth,
+//                 height: flowImageHeight,
+//                 fit: BoxFit.cover, // 이미지 크기 조정
+//               ),
+//             ),
+//           ),
+//           // 콘텐츠 영역 관리
+//           Positioned(
+//             top: drawerLogoIconY + 1.5 * drawerLogoIconHeight, // 로고 아래의 간격을 최소화
+//             left: interval1X,
+//             right: 0,
+//             child: Column(
+//               children: <Widget>[
+//                 _buildListTile(
+//                   context,
+//                   '네이버 카페 채널',
+//                   'https://cafe.naver.com/ottbayo',
+//                   'asset/img/misc/drawer_img/naver_logo_v1.png',
+//                 ),
+//                 SizedBox(height: interval1Y),
+//                 // 간격을 위한 SizedBox
+//                 _buildListTile(
+//                   context,
+//                   '카카오톡 채널',
+//                   'https://pf.kakao.com/_xjVrbG',
+//                   'asset/img/misc/drawer_img/kakao_logo_v1.png',
+//                 ),
+//                 SizedBox(height: interval1Y),
+//                 // 간격을 위한 SizedBox
+//                 _buildListTile(
+//                   context,
+//                   '유튜브 채널',
+//                   'https://www.youtube.com/@OTTBAYO',
+//                   'asset/img/misc/drawer_img/youtube_logo_v1.png',
+//                 ),
+//                 SizedBox(height: interval1Y),
+//                 // 간격을 위한 SizedBox
+//                 _buildListTile(
+//                   context,
+//                   '인스타그램 채널',
+//                   'https://www.instagram.com/ottbayo',
+//                   'asset/img/misc/drawer_img/instagram_logo_v1.png',
+//                 ),
+//                 // // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
+//                 // // DB 생성 버튼
+//                 // GestureDetector(
+//                 //   onTap: () async {
+//                 //     // await createFirestoreDocuments_1();
+//                 //     // await createFirestoreDocuments_2();
+//                 //     await createFirestoreDocuments_3();
+//                 //     // await createFirestoreDocuments_4();
+//                 //     // 사용자에게 완료 메시지를 보여줌
+//                 //     ScaffoldMessenger.of(context).showSnackBar(
+//                 //       SnackBar(content: Text('DB 생성이 완료되었습니다.')),
+//                 //     );
+//                 //   },
+//                 //   child: Center(
+//                 //     child: Text(
+//                 //       'DB 생성',
+//                 //       style: TextStyle(
+//                 //         fontFamily: 'NanumGothic',
+//                 //         color: Colors.blue,
+//                 //         fontSize: 18,
+//                 //         fontWeight: FontWeight.bold,
+//                 //       ),
+//                 //     ),
+//                 //   ),
+//                 // ),
+//
+//                 // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
+//                 if (isAdmin) ...[
+//                   SizedBox(height: interval1Y),
+//                   _buildAdminListTile(
+//                     context,
+//                     '리뷰 관리',
+//                     () =>
+//                         onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
+//                     'asset/img/misc/drawer_img/review_management_logo_v1.png',
+//                   ),
+//                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+//                   _buildAdminListTile(
+//                     context,
+//                     '쪽지 관리',
+//                     () => onMessageManagementClick(
+//                         context, ref), // 클릭 시 실행될 함수 전달
+//                     'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
+//                   ),
+//                   SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+//                   _buildAdminListTile(
+//                     context,
+//                     '발주내역 관리',
+//                     () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
+//                     'asset/img/misc/drawer_img/message_management_logo_v1.png',
+//                   ),
+//                 ] else if (isSubAdmin) ...[
+//                   SizedBox(height: interval1Y),
+//                   _buildAdminListTile(
+//                     context,
+//                     '발주내역 관리',
+//                         () => onOrderListClick(context, ref),
+//                     'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
+//                   ),
+//                 ],
+//                 SizedBox(height: isAdmin ? interval3Y : interval2Y),
+//                 // 관리자 여부에 따라 간격 조정
+//                 // 로그아웃 또는 로그인 버튼 항목
+//                 GestureDetector(
+//                   onTap: () async {
+//                     if (isLoggedIn) {
+//                       // 로그아웃 로직
+//                       await logoutAndLoginAfterProviderReset(ref);
+//                       // 화면 이동 없이 버튼 텍스트와 아이콘만 변경되도록 상태를 갱신해야 함
+//                       // 상태를 변경하고 UI를 업데이트하기 위해 setState를 호출해야 하지만,
+//                       // 현재 이 함수는 StatelessWidget 또는 함수 내에 있으므로 setState를 사용할 수 없음
+//                       // 따라서 화면 전체를 다시 빌드하도록 강제하기 위해 Navigator.pop을 사용하여 드로어를 닫고,
+//                       // setState가 호출된 효과를 내도록 함
+//                       // Navigator.of(context).pop();
+//                       Navigator.of(context).pushAndRemoveUntil(
+//                         MaterialPageRoute(builder: (_) => MainHomeScreen()),
+//                         (Route<dynamic> route) => false,
+//                       );
+//                       showCustomSnackBar(context, '로그아웃이 되었습니다.');
+//                     } else {
+//                       // 로그인 로직
+//                       await logoutAndLoginAfterProviderReset(ref);
+//                       // 해당 간편 로그인 화면으로 이동하는 로직은 간편 로그인 화면 내 '닫기' 버튼을 클릭 시,
+//                       // 드로워 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
+//                       // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
+//                       // IOS 플랫폼은 IOS 화면으로 이동
+//                       if (Platform.isIOS) {
+//                         Navigator.of(context).push(
+//                           MaterialPageRoute(
+//                               builder: (_) => EasyLoginIosScreen()),
+//                         );
+//                       } else if (Platform.isAndroid) {
+//                         // AOS 플랫폼은 AOS 화면으로 이동
+//                         Navigator.of(context).push(
+//                           MaterialPageRoute(
+//                               builder: (_) => EasyLoginAosScreen()),
+//                         );
+//                       } else {
+//                         // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
+//                         Navigator.of(context).push(
+//                           MaterialPageRoute(
+//                               builder: (_) => EasyLoginAosScreen()),
+//                         );
+//                       }
+//                     }
+//                   },
+//                   child: Center(
+//                     // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
+//                     child: Row(
+//                       mainAxisSize: MainAxisSize.min, // Row 안의 요소들에 맞게 크기 조정
+//                       children: [
+//                         Text(
+//                           isLoggedIn ? 'Logout' : 'Login',
+//                           style: TextStyle(
+//                             fontFamily: 'NanumGothic',
+//                             color: GRAY47_COLOR,
+//                             fontSize: logoutTextFontSize,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ), // 로그아웃 또는 로그인 텍스트
+//                         SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
+//                         Icon(
+//                           isLoggedIn ? Icons.logout : Icons.login,
+//                           color: GRAY47_COLOR,
+//                           size: logoutBtnSize,
+//                         ), // 로그아웃 또는 로그인 아이콘
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
+// // ------ buildCommonDrawer 위젯 내용 구현 끝
+// // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 드로워 화면 내 아이콘 요소 수치
   final double drawerLogoIconWidth =
       screenSize.width * (130 / referenceWidth); // 가로 비율
-  final double drawerLogoIconHeight =
-      screenSize.height * (50 / referenceWidth); // 세로 비율
+  final double drawerLogoIconHeight = 130; // 세로 비율
   final double drawerLogoIconX =
       screenSize.width * (33 / referenceWidth); // 왼쪽 여백 비율
   final double drawerLogoIconY =
-      screenSize.height * (70 / referenceHeight); // 위쪽 여백 비율
-  final double flowImageLeft = screenSize.width * (0 / referenceWidth);
-  final double flowImageTop = screenSize.height * (260 / referenceHeight);
+      screenSize.height * (50 / referenceHeight); // 위쪽 여백 비율
+
+  final double flowImageTop = 10;
   final double flowImageWidth = screenSize.width * (180 / referenceWidth);
-  final double flowImageHeight = screenSize.height * (20 / referenceHeight);
+  final double flowImageHeight = 20;
 
   // 이메일 부분 수치
-  final double emailTextFontSize1 = screenSize.height * (20 / referenceHeight);
-  final double emailTextFontSize2 = screenSize.height * (16 / referenceHeight);
-  final double emailTextFontSize3 = screenSize.height * (10 / referenceHeight);
+  final double emailTextFontSize1 = 13;
+  final double emailTextFontSize2 = 16;
+  final double emailTextFontSize3 = 10;
 
   // 에러 관련 텍스트 수치
-  final double errorTextFontSize1 = screenSize.height * (14 / referenceHeight);
-  final double errorTextFontSize2 = screenSize.height * (12 / referenceHeight);
+  final double errorTextFontSize1 = 14;
+  final double errorTextFontSize2 = 12;
   final double errorTextHeight = screenSize.height * (600 / referenceHeight);
 
   // 로그아웃 버튼 부분 수치
-  final double logoutTextFontSize = screenSize.height * (20 / referenceHeight);
-  final double logoutBtnSize = screenSize.height * (20 / referenceHeight);
+  final double logoutTextFontSize = 22;
+  final double logoutBtnSize = 22;
 
   // 아이콘 사이의 간격 수치
-  final double interval1Y = screenSize.height * (10 / referenceHeight);
-  final double interval2Y = screenSize.height * (130 / referenceHeight);
-  final double interval3Y = screenSize.height * (10 / referenceHeight);
-  final double interval1X = screenSize.width * (10 / referenceWidth);
-  final double interval2X = screenSize.width * (15 / referenceWidth);
+  final double interval1Y = 10;
+  final double interval2Y = 130;
+  final double interval3Y = 10;
+  final double interval1X = 30;
+  final double interval2X = 15;
 
-  // Drawer 위젯을 반환. 이 위젯은 앱의 사이드 메뉴를 구현하는 데 사용.
+  // ----------------------------------------------------------------
+  // 드로어 본문을 스크롤 가능하도록 CustomScrollView를 사용함.
+  // 1) Drawer > CustomScrollView
+  // 2) SliverToBoxAdapter > Column 형태로 구성
+  // ----------------------------------------------------------------
   return Drawer(
-    child: Container(
-      color: WHITE_COLOR, // 전체 드로어의 배경색을 흰색으로 설정
-      child: Stack(
-        children: [
-          // 로고 및 이메일 배치
-          // Positioned(
-          //   left: drawerLogoIconX, // 로고의 X 좌표 설정 (왼쪽 여백)
-          //   top: drawerLogoIconY, // 로고의 Y 좌표 설정 (위쪽 여백)
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: drawerLogoIconY,
-              ),
+    backgroundColor: WHITE_COLOR,
+    child: SafeArea(
+      child: CustomScrollView(
+        slivers: [
+          // SliverToBoxAdapter를 사용하여
+          // "단일 위젯(Column 등)을 슬라이버로 감싸" 스크롤이 가능하도록 합니다.
+          SliverToBoxAdapter(
+            child: Container(
+              color: WHITE_COLOR,
+              // Stack 대신 Column으로 배치
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: drawerLogoIconWidth,
-                    height: drawerLogoIconHeight,
-                    padding: EdgeInsets.zero,
-                    // 패딩 제거
-                    margin: EdgeInsets.zero,
-                    // 마진 제거
-                    child: Image.asset(
-                      'asset/img/misc/logo_img/wearcano_logo_v1.png',
-                      // fit: BoxFit.contain, // 이미지의 fit 속성 설정
+                  // 로고와 사용자 정보를 표시하는 영역
+                  SizedBox(height: drawerLogoIconY),
+                  // 로고 가운데 정렬
+                  Center(
+                    child: Container(
+                      // width: drawerLogoIconWidth,
+                      height: drawerLogoIconHeight,
+                      child: Image.asset(
+                        'asset/img/misc/logo_img/wearcano_logo_v1.png',
+                        // fit: BoxFit.contain,
+                      ),
                     ),
                   ),
-                  Consumer(builder: (context, ref, child) {
-                    // 이메일 확인 및 FutureProvider 호출
-                    // 사용자의 이메일 정보를 확인함
-                    if (userEmail == null) {
-                      // 이메일이 없는 경우 로그인 요청 메시지 출력
-                      return Text(
-                        '로그인 후 이용해주세요.', // 메시지 텍스트 설정
-                        style: TextStyle(
-                          fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
-                          color: BLACK_COLOR, // 텍스트 색상 설정
-                          fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                          fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
-                        ),
-                      );
-                    }
-
-                    // 사용자 이름을 가져오기 위한 FutureProvider 호출
-                    final userNameAsyncValue = ref.watch(drawerUserNameProvider(userEmail));
-
-                    // 사용자 이름 데이터를 기반으로 위젯 생성
-                    return userNameAsyncValue.when(
-                      data: (userName) {
-                        // userName 값이 없거나 비어 있는 경우 기본 메시지 출력
-                        if (userName == null || userName.isEmpty) {
-                          // 사용자 이름 정보를 불러올 수 없을 때 기본 메시지 출력
+                  // 사용자 이메일/닉네임 표시
+                  Center(
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        // userEmail이 없는 경우 (비로그인 상태)
+                        if (userEmail == null) {
                           return Text(
-                            '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
+                            '로그인 후 이용해주세요.', // 메시지 텍스트
                             style: TextStyle(
-                              fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
-                              color: BLACK_COLOR, // 텍스트 색상 설정
-                              fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                              fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
+                              fontSize: emailTextFontSize2,
+                              color: BLACK_COLOR,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.bold,
                             ),
                           );
                         }
 
-                        // RichText를 사용하여 사용자 이름과 환영 메시지를 표시함
-                        return RichText(
-                          text: TextSpan(
-                            text: '$userName님', // 첫 번째 텍스트 (사용자 이름)
-                            style: TextStyle(
-                              fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
-                              color: BLACK_COLOR, // 텍스트 색상 설정
-                              fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                              fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
-                            ),
-                            children: [
-                              TextSpan(
-                                text: ' 반가워요.', // 두 번째 텍스트 (환영 메시지)
+                        // 사용자 이름을 가져오기 위한 FutureProvider 호출
+                        final userNameAsyncValue =
+                            ref.watch(drawerUserNameProvider(userEmail));
+
+                        // 사용자 이름 데이터를 기반으로 위젯 생성
+                        return userNameAsyncValue.when(
+                          data: (userName) {
+                            // userName 값이 없거나 비어 있는 경우 기본 메시지 출력
+                            if (userName == null || userName.isEmpty) {
+                              // 사용자 이름 정보를 불러올 수 없을 때 기본 메시지 출력
+                              return Text(
+                                '사용자 이름 정보를 불러올 수 없습니다.', // 기본 메시지 텍스트 설정
                                 style: TextStyle(
-                                  fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
+                                  fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
                                   fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
-                                  fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
+                                  fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
                                 ),
-                              ),
-                            ],
+                              );
+                            }
+
+                            // userName이 정상적으로 있으면
+                            return Column(
+                              children: [
+                                Text(
+                                  '$userName님',
+                                  style: TextStyle(
+                                    fontSize: emailTextFontSize1,
+                                    color: BLACK_COLOR,
+                                    fontFamily: 'NanumGothic',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  // textAlign: TextAlign.center,
+                                ),
+                                // 필요하다면 환영 문구 추가 가능
+                                // Text('반가워요!')
+                              ],
+                            );
+                          },
+                          // 실시간 데이터 로드 중일 때 로딩 인디케이터 표시
+                          loading: () => buildCommonLoadingIndicator(),
+                          // 공통 로딩 인디케이터 호출
+                          // 실시간 데이터 로드 중 오류가 발생했을 때 처리
+                          error: (error, stack) => Container(
+                            // 에러 상태에서 중앙 배치
+                            height: errorTextHeight, // 컨테이너 높이 설정
+                            alignment: Alignment.center, // 컨테이너 중앙 정렬 설정
+                            child: buildCommonErrorIndicator(
+                              message: '에러가 발생했으니, 앱을 재실행해주세요.',
+                              // 에러 메시지 텍스트 설정
+                              fontSize1: errorTextFontSize1,
+                              // 첫 번째 폰트 크기 설정
+                              fontSize2: errorTextFontSize2,
+                              // 두 번째 폰트 크기 설정
+                              color: BLACK_COLOR,
+                              // 텍스트 색상 설정
+                              showSecondMessage: false, // 두 번째 메시지 표시 여부 설정
+                            ),
                           ),
                         );
                       },
-                      // 실시간 데이터 로드 중일 때 로딩 인디케이터 표시
-                      loading: () => buildCommonLoadingIndicator(), // 공통 로딩 인디케이터 호출
-                      // 실시간 데이터 로드 중 오류가 발생했을 때 처리
-                      error: (error, stack) => Container( // 에러 상태에서 중앙 배치
-                        height: errorTextHeight, // 컨테이너 높이 설정
-                        alignment: Alignment.center, // 컨테이너 중앙 정렬 설정
-                        child: buildCommonErrorIndicator(
-                          message: '에러가 발생했으니, 앱을 재실행해주세요.', // 에러 메시지 텍스트 설정
-                          fontSize1: errorTextFontSize1, // 첫 번째 폰트 크기 설정
-                          fontSize2: errorTextFontSize2, // 두 번째 폰트 크기 설정
-                          color: BLACK_COLOR, // 텍스트 색상 설정
-                          showSecondMessage: false, // 두 번째 메시지 표시 여부 설정
-                        ),
+                    ),
+                  ),
+                  SizedBox(height: flowImageTop),
+                  // 물결 이미지 (Positioned 위젯 사용)
+                  Center(
+                    // child: Padding(
+                    //   padding: EdgeInsets.only(
+                    //     // left: flowImageLeft,
+                    //     top: flowImageTop,
+                    //   ),
+                      child: Image.asset(
+                        'asset/img/misc/drawer_img/flow_image.png',
+                        width: flowImageWidth,
+                        height: flowImageHeight,
+                        fit: BoxFit.cover, // 이미지 크기 조정
                       ),
-                    );
-                  },
+                    // ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          // 물결 이미지 (Positioned 위젯 사용)
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                // left: flowImageLeft,
-                top: flowImageTop,
-              ),
-              child: Image.asset(
-                'asset/img/misc/drawer_img/flow_image.png',
-                width: flowImageWidth,
-                height: flowImageHeight,
-                fit: BoxFit.cover, // 이미지 크기 조정
-              ),
-            ),
-          ),
-          // 콘텐츠 영역 관리
-          Positioned(
-            top: drawerLogoIconY + 1.5 * drawerLogoIconHeight, // 로고 아래의 간격을 최소화
-            left: interval1X,
-            right: 0,
-            child: Column(
-              children: <Widget>[
-                _buildListTile(
-                  context,
-                  '네이버 카페 채널',
-                  'https://cafe.naver.com/ottbayo',
-                  'asset/img/misc/drawer_img/naver_logo_v1.png',
-                ),
-                SizedBox(height: interval1Y),
-                // 간격을 위한 SizedBox
-                _buildListTile(
-                  context,
-                  '카카오톡 채널',
-                  'https://pf.kakao.com/_xjVrbG',
-                  'asset/img/misc/drawer_img/kakao_logo_v1.png',
-                ),
-                SizedBox(height: interval1Y),
-                // 간격을 위한 SizedBox
-                _buildListTile(
-                  context,
-                  '유튜브 채널',
-                  'https://www.youtube.com/@OTTBAYO',
-                  'asset/img/misc/drawer_img/youtube_logo_v1.png',
-                ),
-                SizedBox(height: interval1Y),
-                // 간격을 위한 SizedBox
-                _buildListTile(
-                  context,
-                  '인스타그램 채널',
-                  'https://www.instagram.com/ottbayo',
-                  'asset/img/misc/drawer_img/instagram_logo_v1.png',
-                ),
-                // // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
-                // // DB 생성 버튼
-                // GestureDetector(
-                //   onTap: () async {
-                //     // await createFirestoreDocuments_1();
-                //     // await createFirestoreDocuments_2();
-                //     await createFirestoreDocuments_3();
-                //     // await createFirestoreDocuments_4();
-                //     // 사용자에게 완료 메시지를 보여줌
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(content: Text('DB 생성이 완료되었습니다.')),
-                //     );
-                //   },
-                //   child: Center(
-                //     child: Text(
-                //       'DB 생성',
-                //       style: TextStyle(
-                //         fontFamily: 'NanumGothic',
-                //         color: Colors.blue,
-                //         fontSize: 18,
-                //         fontWeight: FontWeight.bold,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-
-                // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
-                if (isAdmin) ...[
-                  SizedBox(height: interval1Y),
-                  _buildAdminListTile(
-                    context,
-                    '리뷰 관리',
-                    () =>
-                        onReviewManagementClick(context, ref), // 클릭 시 실행될 함수 전달
-                    'asset/img/misc/drawer_img/review_management_logo_v1.png',
-                  ),
-                  SizedBox(height: interval1Y), // 간격을 위한 SizedBox
-                  _buildAdminListTile(
-                    context,
-                    '쪽지 관리',
-                    () => onMessageManagementClick(
-                        context, ref), // 클릭 시 실행될 함수 전달
-                    'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
-                  ),
-                  SizedBox(height: interval1Y), // 간격을 위한 SizedBox
-                  _buildAdminListTile(
-                    context,
-                    '발주내역 관리',
-                    () => onOrderListClick(context, ref), // 클릭 시 실행될 함수 전달
-                    'asset/img/misc/drawer_img/message_management_logo_v1.png',
-                  ),
-                ] else if (isSubAdmin) ...[
-                  SizedBox(height: interval1Y),
-                  _buildAdminListTile(
-                    context,
-                    '발주내역 관리',
-                        () => onOrderListClick(context, ref),
-                    'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
-                  ),
-                ],
-                SizedBox(height: isAdmin ? interval3Y : interval2Y),
-                // 관리자 여부에 따라 간격 조정
-                // 로그아웃 또는 로그인 버튼 항목
-                GestureDetector(
-                  onTap: () async {
-                    if (isLoggedIn) {
-                      // 로그아웃 로직
-                      await logoutAndLoginAfterProviderReset(ref);
-                      // 화면 이동 없이 버튼 텍스트와 아이콘만 변경되도록 상태를 갱신해야 함
-                      // 상태를 변경하고 UI를 업데이트하기 위해 setState를 호출해야 하지만,
-                      // 현재 이 함수는 StatelessWidget 또는 함수 내에 있으므로 setState를 사용할 수 없음
-                      // 따라서 화면 전체를 다시 빌드하도록 강제하기 위해 Navigator.pop을 사용하여 드로어를 닫고,
-                      // setState가 호출된 효과를 내도록 함
-                      // Navigator.of(context).pop();
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (_) => MainHomeScreen()),
-                        (Route<dynamic> route) => false,
-                      );
-                      showCustomSnackBar(context, '로그아웃이 되었습니다.');
-                    } else {
-                      // 로그인 로직
-                      await logoutAndLoginAfterProviderReset(ref);
-                      // 해당 간편 로그인 화면으로 이동하는 로직은 간편 로그인 화면 내 '닫기' 버튼을 클릭 시,
-                      // 드로워 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
-                      // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
-                      // IOS 플랫폼은 IOS 화면으로 이동
-                      if (Platform.isIOS) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => EasyLoginIosScreen()),
-                        );
-                      } else if (Platform.isAndroid) {
-                        // AOS 플랫폼은 AOS 화면으로 이동
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => EasyLoginAosScreen()),
-                        );
-                      } else {
-                        // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => EasyLoginAosScreen()),
-                        );
-                      }
-                    }
-                  },
-                  child: Center(
-                    // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min, // Row 안의 요소들에 맞게 크기 조정
+                  // 아래 ListTile들이 들어갈 부분은
+                  // 좌측 margin을 interval1X(혹은 적절한 값)로 두어
+                  // 기존 Positioned(left: interval1X) 배치를 대체합니다.
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: interval1X,
+                      right: interval1X,
+                      top: interval1Y * 1.5, // 로고와 간격
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          isLoggedIn ? 'Logout' : 'Login',
-                          style: TextStyle(
-                            fontFamily: 'NanumGothic',
-                            color: GRAY47_COLOR,
-                            fontSize: logoutTextFontSize,
-                            fontWeight: FontWeight.bold,
+                        _buildListTile(
+                          context,
+                          '네이버 카페',
+                          'https://cafe.naver.com/ottbayo',
+                          'asset/img/misc/drawer_img/naver_logo_v1.png',
+                        ),
+                        SizedBox(height: interval1Y),
+                        // 간격을 위한 SizedBox
+                        _buildListTile(
+                          context,
+                          '카카오톡',
+                          'https://pf.kakao.com/_xjVrbG',
+                          'asset/img/misc/drawer_img/kakao_logo_v1.png',
+                        ),
+                        SizedBox(height: interval1Y),
+                        // 간격을 위한 SizedBox
+                        _buildListTile(
+                          context,
+                          '유튜브',
+                          'https://www.youtube.com/@OTTBAYO',
+                          'asset/img/misc/drawer_img/youtube_logo_v1.png',
+                        ),
+                        SizedBox(height: interval1Y),
+                        // 간격을 위한 SizedBox
+                        _buildListTile(
+                          context,
+                          '인스타그램',
+                          'https://www.instagram.com/ottbayo',
+                          'asset/img/misc/drawer_img/instagram_logo_v1.png',
+                        ),
+                        // // 파이어베이스 내 파이어스토어 데이터베이스의 데이터 생성하는 로직 관련 버튼
+                        // // DB 생성 버튼
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     // await createFirestoreDocuments_1();
+                        //     // await createFirestoreDocuments_2();
+                        //     await createFirestoreDocuments_3();
+                        //     // await createFirestoreDocuments_4();
+                        //     // 사용자에게 완료 메시지를 보여줌
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(content: Text('DB 생성이 완료되었습니다.')),
+                        //     );
+                        //   },
+                        //   child: Center(
+                        //     child: Text(
+                        //       'DB 생성',
+                        //       style: TextStyle(
+                        //         fontFamily: 'NanumGothic',
+                        //         color: Colors.blue,
+                        //         fontSize: 18,
+                        //         fontWeight: FontWeight.bold,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+
+                        // 관리자 계정일 경우에만 추가적으로 표시되는 항목들
+                        if (isAdmin) ...[
+                          SizedBox(height: interval1Y),
+                          _buildAdminListTile(
+                            context,
+                            '리뷰 관리',
+                            () => onReviewManagementClick(context, ref),
+                            // 클릭 시 실행될 함수 전달
+                            'asset/img/misc/drawer_img/review_management_logo_v1.png',
                           ),
-                        ), // 로그아웃 또는 로그인 텍스트
-                        SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
-                        Icon(
-                          isLoggedIn ? Icons.logout : Icons.login,
-                          color: GRAY47_COLOR,
-                          size: logoutBtnSize,
-                        ), // 로그아웃 또는 로그인 아이콘
+                          SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+                          _buildAdminListTile(
+                            context,
+                            '쪽지 관리',
+                            () => onMessageManagementClick(
+                                context, ref), // 클릭 시 실행될 함수 전달
+                            'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
+                          ),
+                          SizedBox(height: interval1Y), // 간격을 위한 SizedBox
+                          _buildAdminListTile(
+                            context,
+                            '발주내역 관리',
+                            () => onOrderListClick(context, ref),
+                            // 클릭 시 실행될 함수 전달
+                            'asset/img/misc/drawer_img/message_management_logo_v1.png',
+                          ),
+                        ] else if (isSubAdmin) ...[
+                          SizedBox(height: interval1Y),
+                          _buildAdminListTile(
+                            context,
+                            '발주내역 관리',
+                            () => onOrderListClick(context, ref),
+                            'asset/img/misc/drawer_img/orderlist_management_logo_v1.png',
+                          ),
+                        ],
+                        SizedBox(height: isAdmin ? interval3Y : interval2Y),
+                        // 관리자 여부에 따라 간격 조정
+                        // 로그아웃 또는 로그인 버튼 항목
+                        GestureDetector(
+                          onTap: () async {
+                            if (isLoggedIn) {
+                              // 로그아웃 로직
+                              await logoutAndLoginAfterProviderReset(ref);
+                              // 화면 이동 없이 버튼 텍스트와 아이콘만 변경되도록 상태를 갱신해야 함
+                              // 상태를 변경하고 UI를 업데이트하기 위해 setState를 호출해야 하지만,
+                              // 현재 이 함수는 StatelessWidget 또는 함수 내에 있으므로 setState를 사용할 수 없음
+                              // 따라서 화면 전체를 다시 빌드하도록 강제하기 위해 Navigator.pop을 사용하여 드로어를 닫고,
+                              // setState가 호출된 효과를 내도록 함
+                              // Navigator.of(context).pop();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (_) => MainHomeScreen()),
+                                (Route<dynamic> route) => false,
+                              );
+                              showCustomSnackBar(context, '로그아웃이 되었습니다.');
+                            } else {
+                              // 로그인 로직
+                              await logoutAndLoginAfterProviderReset(ref);
+                              // 해당 간편 로그인 화면으로 이동하는 로직은 간편 로그인 화면 내 '닫기' 버튼을 클릭 시,
+                              // 드로워 화면으로 복귀해야하므로 Navigator.pushReplacement 대신 Navigator.of(context).push를 사용
+                              // Navigator.pushReplacement를 사용하면 이전 화면 스택을 제거하는 것이고, Navigator.of(context).push를 사용하면 이전 스택이 남는 것
+                              // IOS 플랫폼은 IOS 화면으로 이동
+                              if (Platform.isIOS) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (_) => EasyLoginIosScreen()),
+                                );
+                              } else if (Platform.isAndroid) {
+                                // AOS 플랫폼은 AOS 화면으로 이동
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (_) => EasyLoginAosScreen()),
+                                );
+                              } else {
+                                // 기타 플랫폼은 기본적으로 AOS 화면으로 이동
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (_) => EasyLoginAosScreen()),
+                                );
+                              }
+                            }
+                          },
+                          child: Center(
+                            // 가로 기준 중앙 정렬을 위해 Center 위젯 사용
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              // Row 안의 요소들에 맞게 크기 조정
+                              children: [
+                                Text(
+                                  isLoggedIn ? 'Logout' : 'Login',
+                                  style: TextStyle(
+                                    fontFamily: 'NanumGothic',
+                                    color: GRAY47_COLOR,
+                                    fontSize: logoutTextFontSize,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ), // 로그아웃 또는 로그인 텍스트
+                                SizedBox(width: interval2X), // 아이콘과 텍스트 사이의 간격
+                                Icon(
+                                  isLoggedIn ? Icons.logout : Icons.login,
+                                  color: GRAY47_COLOR,
+                                  size: logoutBtnSize,
+                                ), // 로그아웃 또는 로그인 아이콘
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: interval1Y),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -1888,6 +2378,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   );
 }
 // ------ buildCommonDrawer 위젯 내용 구현 끝
+// ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
 // ------ 관리자 계정인 경우 항목 클릭 시, 해당 화면으로 이동하도록 하는 함수 시작
 
@@ -1900,30 +2391,58 @@ Widget _buildAdminListTile(BuildContext context, String title,
   final double referenceWidth = 260.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 드로워 화면 내 아이콘 요소 수치
+  // final double iconImageWidth =
+  //     screenSize.width * (40 / referenceWidth); // 가로 비율
+  //
+  // // 아이콘 텍스트 부분 수치
+  // final double iconTextFontSize = screenSize.height * (16 / referenceHeight);
+  //
+  // // 아이콘 사이의 간격 수치
+  // final double interval1X = screenSize.width * (14 / referenceWidth);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 드로워 화면 내 아이콘 요소 수치
-  final double iconImageWidth =
-      screenSize.width * (40 / referenceWidth); // 가로 비율
+  final double iconImageWidth = 40; // 가로 비율
 
   // 아이콘 텍스트 부분 수치
-  final double iconTextFontSize = screenSize.height * (16 / referenceHeight);
+  final double iconTextFontSize = 16;
 
   // 아이콘 사이의 간격 수치
-  final double interval1X = screenSize.width * (14 / referenceWidth);
+  final double interval1X = 16;
+  final double interval2X = 20;
+  final double interval3X = 15;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
-  // ListTile 위젯을 반환합니다. 이 위젯은 드로어 내의 각 항목을 구성합니다.
+  // ListTile 위젯 반환
   return ListTile(
-    leading: Image.asset(leadingImage, width: iconImageWidth),
-    // 아이콘을 왼쪽에 배치
-    title: Text(title,
-        style: TextStyle(
-          fontSize: iconTextFontSize,
-          color: BLACK_COLOR, // 텍스트 색상
-          fontFamily: 'NanumGothic',
-          fontWeight: FontWeight.bold,
-        )),
-    // 제목을 설정
-    contentPadding: EdgeInsets.symmetric(horizontal: interval1X),
+    contentPadding: EdgeInsets.only(left: interval1X), // 좌우 패딩 조정
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center, // 전체 중앙 정렬
+      children: [
+        SizedBox(
+          width: iconImageWidth,
+          child: Image.asset(leadingImage, fit: BoxFit.contain),
+        ),
+        SizedBox(width: interval2X), // 아이콘과 텍스트 간 간격
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: iconTextFontSize,
+              color: BLACK_COLOR,
+              fontFamily: 'NanumGothic',
+              fontWeight: FontWeight.bold,
+            ),
+            // textAlign: TextAlign.center, // 텍스트 중앙 정렬
+          ),
+        ),
+      ],
+    ),
     // 좌우 간격 조정
     onTap: onTap, // 탭 이벤트 핸들러를 외부에서 전달받은 함수로 설정
   );
@@ -1956,28 +2475,58 @@ Widget _buildListTile(
   final double referenceWidth = 260.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 드로워 화면 내 아이콘 요소 수치
+  // final double iconImageWidth =
+  //     screenSize.width * (40 / referenceWidth); // 가로 비율
+  //
+  // // 아이콘 텍스트 부분 수치
+  // final double iconTextFontSize = screenSize.height * (16 / referenceHeight);
+  //
+  // // 아이콘 사이의 간격 수치
+  // final double interval1X = screenSize.width * (14 / referenceWidth);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 드로워 화면 내 아이콘 요소 수치
-  final double iconImageWidth =
-      screenSize.width * (40 / referenceWidth); // 가로 비율
+  final double iconImageWidth = 40; // 가로 비율
 
   // 아이콘 텍스트 부분 수치
-  final double iconTextFontSize = screenSize.height * (16 / referenceHeight);
+  final double iconTextFontSize = 16;
 
   // 아이콘 사이의 간격 수치
-  final double interval1X = screenSize.width * (14 / referenceWidth);
+  final double interval1X = 16;
+  final double interval2X = 20;
+  final double interval3X = 15;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // ListTile 위젯 반환
   return ListTile(
-    leading: Image.asset(leadingImage, width: iconImageWidth), // 이미지를 왼쪽에 배치
-    title: Text(title,
-        style: TextStyle(
-          fontSize: iconTextFontSize,
-          color: BLACK_COLOR, // 텍스트 색상
-          fontFamily: 'NanumGothic',
-          fontWeight: FontWeight.bold,
-        )), // 제목을 설정
-    contentPadding: EdgeInsets.symmetric(horizontal: interval1X), // 좌우 간격 조정
+    contentPadding: EdgeInsets.only(left: interval1X), // 좌우 패딩 조정
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center, // 전체 중앙 정렬
+      children: [
+        SizedBox(
+          width: iconImageWidth,
+          child: Image.asset(leadingImage, fit: BoxFit.contain),
+        ),
+        SizedBox(width: interval2X), // 아이콘과 텍스트 간 간격
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: iconTextFontSize,
+              color: BLACK_COLOR,
+              fontFamily: 'NanumGothic',
+              fontWeight: FontWeight.bold,
+            ),
+            // textAlign: TextAlign.center, // 텍스트 중앙 정렬
+          ),
+        ),
+      ],
+    ),
     onTap: () async {
       // 탭 이벤트 핸들러
       try {
@@ -2307,17 +2856,19 @@ Future<void> createFirestoreDocuments_2() async {
       for (int k = 1; k <= 7; k++) {
         String subCollectionId = '${productDocId}B$k';
         DocumentReference subWearcanoDocRef =
-        productDocRef.collection(subCollectionId).doc('wearcano');
+            productDocRef.collection(subCollectionId).doc('wearcano');
         CollectionReference wearcanoItemsCollectionRef =
-        subWearcanoDocRef.collection('wearcano_items');
+            subWearcanoDocRef.collection('wearcano_items');
         String type = typeMap[k] ?? '';
 
         for (int l = 1; l <= 15; l++) {
           int discountPercent = 10 + l;
-          int discountPrice = originalPrice - (originalPrice * discountPercent ~/ 100);
+          int discountPrice =
+              originalPrice - (originalPrice * discountPercent ~/ 100);
           String subDocId = '${subCollectionId}_$l';
           String productNumber = '${subDocId}_${l.toString().padLeft(3, '0')}';
-          DocumentReference subDocRef = wearcanoItemsCollectionRef.doc(subDocId);
+          DocumentReference subDocRef =
+              wearcanoItemsCollectionRef.doc(subDocId);
 
           String thumbnailUrl =
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/product_thumnail%2F$category\_$type.png?alt=media';
@@ -2490,18 +3041,18 @@ Future<void> createFirestoreDocuments_3() async {
           'category': '티셔츠',
           'product_id': productId,
         });
-      // } else if (bannerType == 'profile_main_small_banner_1') {
-      //   // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
-      //   batch.set(bannerDocRef, {
-      //     'ad_img_1':
-      //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
-      //     'ad_img_2':
-      //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
-      //     'ad_img_3':
-      //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
-      //     'category': '아우터',
-      //     'product_id': productId,
-      //   });
+        // } else if (bannerType == 'profile_main_small_banner_1') {
+        //   // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
+        //   batch.set(bannerDocRef, {
+        //     'ad_img_1':
+        //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb1.png?alt=media',
+        //     'ad_img_2':
+        //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb2.png?alt=media',
+        //     'ad_img_3':
+        //         'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb3.png?alt=media',
+        //     'category': '아우터',
+        //     'product_id': productId,
+        //   });
       } else {
         // 나머지 배너 타입들은 mb1 ~ mb57로 설정
         batch.set(bannerDocRef, {
@@ -2533,16 +3084,22 @@ Future<void> createFirestoreDocuments_3() async {
   // 기존 large_banner, home_small_banner_1 구성과 동일한 이미지/URL 패턴 사용
   // 단, category, product_id, sub_category는 추가하지 않는다.
   CollectionReference mainHomeBannerCollectionRef =
-  wearcanoDocRef.collection('main_home_banner');
+      wearcanoDocRef.collection('main_home_banner');
 
   // large_banner 문서
-  DocumentReference largeBannerDocRef = mainHomeBannerCollectionRef.doc('large_banner');
+  DocumentReference largeBannerDocRef =
+      mainHomeBannerCollectionRef.doc('large_banner');
   batch.set(largeBannerDocRef, {
-    'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon1.png?alt=media',
-    'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon2.png?alt=media',
-    'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon3.png?alt=media',
-    'ad_img_4': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_4.png?alt=media',
-    'ad_img_5': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_5.png?alt=media',
+    'ad_img_1':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon1.png?alt=media',
+    'ad_img_2':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon2.png?alt=media',
+    'ad_img_3':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fdongdaemoon3.png?alt=media',
+    'ad_img_4':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_4.png?alt=media',
+    'ad_img_5':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fbb_test_5.png?alt=media',
     'ad_url_1': 'https://www.naver.com',
     'ad_url_2': 'https://ko.aliexpress.com/',
     'ad_url_3': 'https://www.temu.com/kr',
@@ -2561,11 +3118,15 @@ Future<void> createFirestoreDocuments_3() async {
   // home_small_banner_1 문서
   // 기존 home_small_banner_1 ~ 3에서 사용한 ad_img_1 ~ ad_img_3 패턴 그대로 사용
   // 예: ad_image1, ad_image2, ad_image3
-  DocumentReference homeSmallBanner1DocRef = mainHomeBannerCollectionRef.doc('home_small_banner_1');
+  DocumentReference homeSmallBanner1DocRef =
+      mainHomeBannerCollectionRef.doc('home_small_banner_1');
   batch.set(homeSmallBanner1DocRef, {
-    'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image1.jpeg?alt=media',
-    'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image2.jpeg?alt=media',
-    'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image3.jpeg?alt=media',
+    'ad_img_1':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image1.jpeg?alt=media',
+    'ad_img_2':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image2.jpeg?alt=media',
+    'ad_img_3':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image3.jpeg?alt=media',
     'ad_url_1': 'https://www.naver.com',
     'ad_url_2': 'https://ko.aliexpress.com/',
     'ad_url_3': 'https://www.temu.com/kr',
@@ -2582,15 +3143,19 @@ Future<void> createFirestoreDocuments_3() async {
   // -------------------------------------
   // 프로필 관련 배너(profile_banner) 추가 로직
   CollectionReference profileBannerCollectionRef =
-  wearcanoDocRef.collection('profile_banner');
+      wearcanoDocRef.collection('profile_banner');
 
   // profile_small_banner_1 문서
   // home_small_banner_1 ~ 3 케이스처럼 ad_img_1 ~ 3와 ad_url_1 ~ 3 사용
-  DocumentReference profileSmallBanner1DocRef = profileBannerCollectionRef.doc('profile_small_banner_1');
+  DocumentReference profileSmallBanner1DocRef =
+      profileBannerCollectionRef.doc('profile_small_banner_1');
   batch.set(profileSmallBanner1DocRef, {
-    'ad_img_1': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image1.jpeg?alt=media',
-    'ad_img_2': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image2.jpeg?alt=media',
-    'ad_img_3': 'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image3.jpeg?alt=media',
+    'ad_img_1':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image1.jpeg?alt=media',
+    'ad_img_2':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image2.jpeg?alt=media',
+    'ad_img_3':
+        'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image3.jpeg?alt=media',
     'ad_url_1': 'https://www.naver.com',
     'ad_url_2': 'https://ko.aliexpress.com/',
     'ad_url_3': 'https://www.temu.com/kr',

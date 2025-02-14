@@ -89,7 +89,9 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
     orderListDetailScreenPointScrollController = ScrollController();
 
     // FirebaseAuth에서 사용자 이메일 가져오기
-    userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+    // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+    final user = FirebaseAuth.instance.currentUser;
+    userEmail = user?.email ?? user?.uid ?? ''; // 현재 로그인한 사용자 Email 가져옴
 
     // initState에서 저장된 스크롤 위치로 이동
     // initState에서 실행되는 코드. initState는 위젯이 생성될 때 호출되는 초기화 단계
@@ -116,6 +118,7 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
 
       ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
       ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+      ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -131,6 +134,7 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
         ref.invalidate(paymentCompleteDateProvider); // 결제완료일 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
+        ref.invalidate(orderlistItemCountProvider); // 발주내역 아이템 갯수 데이터 초기화
       }
     });
 
@@ -189,72 +193,125 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double orderlistDtAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double orderlistDtAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double orderlistDtAppBarTitleX =
+    //     screenSize.width * (5 / referenceHeight);
+    // final double orderlistDtAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double orderlistDtPaddingX = screenSize.width * (16 / referenceWidth);
+    // final double orderlistDtPadding1Y =
+    //     screenSize.height * (10 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double orderlistDtChevronIconWidth =
+    //     screenSize.width * (24 / referenceWidth);
+    // final double orderlistDtChevronIconHeight =
+    //     screenSize.height * (24 / referenceHeight);
+    // final double orderlistDtChevronIconX =
+    //     screenSize.width * (10 / referenceWidth);
+    // final double orderlistDtChevronIconY =
+    //     screenSize.height * (9 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 2)
+    // final double orderlistDtWishlistBtnWidth =
+    //     screenSize.width * (40 / referenceWidth);
+    // final double orderlistDtWishlistBtnHeight =
+    //     screenSize.height * (40 / referenceHeight);
+    // final double orderlistDtWishlistBtnX =
+    //     screenSize.width * (10 / referenceWidth);
+    // final double orderlistDtWishlistBtnY =
+    //     screenSize.height * (7 / referenceHeight);
+    //
+    // // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
+    // final double orderlistEmptyTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double orderlistEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double orderlistEmptyTextY =
+    //     screenSize.height * (300 / referenceHeight); // 세로 비율
+    // final double orderlistEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double loginGuideTextFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double loginGuideTextWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율
+    // final double loginGuideTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double loginGuideText1Y =
+    //     screenSize.height * (300 / referenceHeight);
+    //
+    // // 로그인 하기 버튼 수치
+    // final double loginBtnPaddingX =
+    //     screenSize.width * (20 / referenceWidth);
+    // final double loginBtnPaddingY =
+    //     screenSize.height * (5 / referenceHeight);
+    // final double loginBtnTextFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double TextAndBtnInterval =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double orderlistDtAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double orderlistDtAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
+    final double orderlistDtAppBarTitleHeight = 22;
     final double orderlistDtAppBarTitleX =
         screenSize.width * (5 / referenceHeight);
-    final double orderlistDtAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
+    final double orderlistDtAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double orderlistDtPaddingX = screenSize.width * (16 / referenceWidth);
-    final double orderlistDtPadding1Y =
-        screenSize.height * (10 / referenceHeight);
+    final double orderlistDtPadding1Y = 10;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
     final double orderlistDtChevronIconWidth =
         screenSize.width * (24 / referenceWidth);
-    final double orderlistDtChevronIconHeight =
-        screenSize.height * (24 / referenceHeight);
+    final double orderlistDtChevronIconHeight = 24;
     final double orderlistDtChevronIconX =
         screenSize.width * (10 / referenceWidth);
-    final double orderlistDtChevronIconY =
-        screenSize.height * (9 / referenceHeight);
+    final double orderlistDtChevronIconY = 9;
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double orderlistDtWishlistBtnWidth =
-        screenSize.width * (40 / referenceWidth);
-    final double orderlistDtWishlistBtnHeight =
-        screenSize.height * (40 / referenceHeight);
-    final double orderlistDtWishlistBtnX =
-        screenSize.width * (10 / referenceWidth);
-    final double orderlistDtWishlistBtnY =
-        screenSize.height * (7 / referenceHeight);
+    final double orderlistDtWishlistBtnWidth = 40;
+    final double orderlistDtWishlistBtnHeight = 40;
+    final double orderlistDtWishlistBtnX = 10;
+    final double orderlistDtWishlistBtnY = 7;
 
     // 발주 내역 상세 목록 비어있는 경우의 알림 부분 수치
     final double orderlistEmptyTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double orderlistEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
+    final double orderlistEmptyTextHeight = 22; // 세로 비율
     final double orderlistEmptyTextY =
         screenSize.height * (300 / referenceHeight); // 세로 비율
-    final double orderlistEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double orderlistEmptyTextFontSize = 16;
 
     // 텍스트 폰트 크기 수치
-    final double loginGuideTextFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기 비율 계산
+    final double loginGuideTextFontSize = 16; // 텍스트 크기 비율 계산
     final double loginGuideTextWidth =
         screenSize.width * (393 / referenceWidth); // 가로 비율
-    final double loginGuideTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double loginGuideText1Y =
-        screenSize.height * (300 / referenceHeight);
+    final double loginGuideTextHeight = 22; // 세로 비율
+    final double loginGuideText1Y = 300;
 
     // 로그인 하기 버튼 수치
     final double loginBtnPaddingX =
         screenSize.width * (20 / referenceWidth);
-    final double loginBtnPaddingY =
-        screenSize.height * (5 / referenceHeight);
-    final double loginBtnTextFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double TextAndBtnInterval =
-        screenSize.height * (16 / referenceHeight);
+    final double loginBtnPaddingY = 5;
+    final double loginBtnTextFontSize = 14;
+    final double TextAndBtnInterval = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // Tuple2로 이메일과 orderNumber 전달
     final orderlistDetailItem = ref.watch(

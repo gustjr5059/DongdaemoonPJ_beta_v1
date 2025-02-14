@@ -13,13 +13,13 @@ import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리를
 // 애플리케이션의 스플래시 스크린 중 두 번째 화면을 구현한 'SplashScreen2' 파일을 가져옵니다.
 // 이 화면은 앱이 시작할 때 초기 로딩 화면으로 사용되어, 사용자에게 앱 로딩 중임을 알립니다.
 import 'package:shared_preferences/shared_preferences.dart';
+
 // 애플리케이션 전반에 걸쳐 사용될 색상의 상수를 정의한 파일을 가져옵니다.
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
 import '../../home/view/main_home_screen.dart';
-import '../../user/provider/sns_login_all_provider.dart';
+import '../../user/provider/sns_login_and_sign_up_all_provider.dart';
 import '../const/colors.dart';
-
 
 // ------ 스플레시1화면의 UI를 구현하는 SplashScreen1 클래스 시작 부분
 class SplashScreen1 extends ConsumerStatefulWidget {
@@ -129,7 +129,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen1>
     if (user != null) {
       // 3-1) 'password' Provider인 경우 → 이메일/비밀번호 로그인 방식을 사용했는지 체크
       //      autoLogin이 false라면 => 자동 로그인 해제
-      bool isEmailUser = user.providerData.any((info) => info.providerId == 'password');
+      bool isEmailUser =
+          user.providerData.any((info) => info.providerId == 'password');
 
       // ▸ 이메일/비밀번호 사용자이고(autoLogin == false)이면 로그아웃 처리
       if (isEmailUser && !autoLogin) {
@@ -145,7 +146,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen1>
         //         Firestore 'users' 컬렉션에 해당 문서가 없을 경우 로그아웃 처리
         // ───────────────────────────────────────────────────────────────
         // Firestore 사용자 문서 존재 여부 확인
-        final userDocumentExists = await ref.read(userDocumentExistsProvider(user.email).future);
+        // 네이버 로그인 및 회원가입 시, 'users' 문서명이 사용자 UID이므로 해당 경우도 포함시킨 형태
+        final userDocumentExists = await ref
+            .read(userDocumentExistsProvider(user.email ?? user?.uid).future);
 
         // 사용자 문서가 존재하지 않으면 로그아웃 처리
         if (!userDocumentExists) {
@@ -206,7 +209,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen1>
 
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -221,32 +223,49 @@ class _SplashScreenState extends ConsumerState<SplashScreen1>
 
     // 화면의 UI를 구성함.
     return Scaffold(
-      body: Stack(
-        // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
-        children: <Widget>[
-          // 피그마에서 추출한 배경 이미지를 SVG로 추가
-          Positioned.fill(
-            child: Image.asset(
-              'asset/img/misc/splash_image/wearcano_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
-              fit: BoxFit.cover, // 화면 전체에 맞게 조정
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
-            child: Padding(
-              padding: EdgeInsets.only(bottom: screenX), // 하단에서부터 100의 여백을 줌.
-              child: AnimatedBuilder(
-                animation: _rotationAnimation,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _rotationAnimation.value * 2 * 3.14,
-                    child: child,
-                  );
-                },
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(ORANGE56_COLOR),
+      // body에 바로 CustomScrollView 배치
+      body: CustomScrollView(
+        slivers: [
+          // SliverFillRemaining:
+          // 남은 화면 전체를 차지하기 때문에
+          // 배경 이미지를 상하단까지 완전히 채울 수 있음.
+          SliverFillRemaining(
+            // 만약 스크롤이 필요 없고, 화면을 '정적으로' 채우기만 한다면
+            // hasScrollBody: false 를 사용해서 내용이 화면보다 작을 때 스크롤이 비활성화되도록 할 수 있음
+            hasScrollBody: false,
+            child: Stack(
+              children: [
+                // 배경 이미지
+                Positioned.fill(
+                  child: Image.asset(
+                    'asset/img/misc/splash_image/wearcano_splash1_bg_img.png',
+                    // 배경 이미지를 SVG로 설정
+                    fit: BoxFit.cover, // 화면 전체에 맞게 조정
+                    width: screenSize.width, // 화면 너비
+                    height: screenSize.height, // 화면 높이
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: screenX),
+                    // 하단에서부터 100의 여백을 줌.
+                    child: AnimatedBuilder(
+                      animation: _rotationAnimation,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: _rotationAnimation.value * 2 * 3.14,
+                          child: child,
+                        );
+                      },
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(ORANGE56_COLOR),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

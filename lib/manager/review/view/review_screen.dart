@@ -210,23 +210,39 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double reviewAppBarTitleWidth =
+    //     screenSize.width * (240 / referenceWidth);
+    // final double reviewAppBarTitleHeight =
+    //     screenSize.height * (22 / referenceHeight);
+    // final double reviewAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double reviewAppBarTitleY =
+    //     screenSize.height * (11 / referenceHeight);
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
+    //
+    // // 컨텐츠 사이의 간격 계산
+    // final double interval1Y =
+    //     screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
     final double reviewAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double reviewAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double reviewAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double reviewAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
-
-    // body 부분 데이터 내용의 전체 패딩 수치
-    final double reviewPaddingX = screenSize.width * (8 / referenceWidth);
+    final double reviewAppBarTitleHeight = 22;
+    final double reviewAppBarTitleX = screenSize.width * (5 / referenceWidth);
+    final double reviewAppBarTitleY = 11;
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    final double interval1Y = 10; // 세로 간격 1 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Scaffold(
       body: Stack(

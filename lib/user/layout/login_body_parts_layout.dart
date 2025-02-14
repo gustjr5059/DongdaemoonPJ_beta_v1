@@ -52,9 +52,12 @@ import '../../product/provider/product_state_provider.dart';
 import '../../review/provider/review_state_provider.dart';
 import '../../wishlist/provider/wishlist_all_providers.dart';
 import '../../wishlist/provider/wishlist_state_provider.dart';
+import '../provider/drawer_user_provider.dart';
 import '../provider/profile_all_providers.dart';
 import '../provider/profile_state_provider.dart';
-import '../provider/sns_login_state_provider.dart';
+import '../provider/sns_login_and_sign_up_state_provider.dart';
+import '../provider/usee_info_modify_and_secession_all_provider.dart';
+import '../provider/user_info_modify_and_secession_state_provider.dart';
 
 
 // 로그아웃 및 자동로그인 체크 상태에서 앱 종료 후 재실행 시,
@@ -79,6 +82,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // (첫 회원가입 후 로그아웃 -> 로그인 버튼 클릭 시, 회원가입 화면으로 이동하던 이슈 해결!!)
   ref.invalidate(appleSignInNotifierProvider); // 애플 로그인한 상태 초기화 로직
   ref.invalidate(googleSignInNotifierProvider); // 구글 로그인한 상태 초기화 로직
+  ref.invalidate(naverSignInNotifierProvider); // 네이버 로그인한 상태 초기화 로직
   // 간편 로그인 및 회원가입 화면 관련 초기화 부분 끝
 
   // 홈 화면 관련 초기화 부분 시작
@@ -92,6 +96,8 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(homeLargeBannerPageProvider.notifier).state = 0; // 홈 대배너 페이지뷰 초기화
   ref.read(homeSmall1BannerPageProvider.notifier).state = 0; // 홈 소배너1 페이지뷰 초기화
   ref.invalidate(marketBtnProvider); // 홈 마켓 버튼 페이지뷰 초기화
+  ref.invalidate(eventPosterImgItemsProvider); // 이벤트 포스터 이미지 데이터 초기화
+  ref.invalidate(drawerUserNameProvider); // 드로워화면 회원 이름 데이터 초기화
   // 홈 화면 관련 초기화 부분 끝
 
   // 장바구니 화면 관련 초기화 부분 시작
@@ -101,6 +107,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   // resetAndReloadCartItems를 호출하기 위해 cartItemsProvider.notifier를 읽어서 호출
   ref.read(cartItemsProvider.notifier).resetAndReloadCartItems();
   ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
+  ref.invalidate(allCheckedProvider); // 하단 탭 바 내 전체 체크박스 체크 표시 상태 초기화
   // 장바구니 화면 관련 초기화 부분 끝
 
   // 발주 내역 화면 관련 초기화 부분 시작
@@ -108,6 +115,7 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(orderListScrollPositionProvider.notifier).state = 0.0;
   // 발주 목록 내 데이터를 불러오는 orderlistItemsProvider 초기화
   ref.invalidate(orderlistItemsProvider);
+  ref.invalidate(orderlistItemCountProvider); // 요청내역 아이템 갯수 데이터 초기화
   // 발주 내역 화면 관련 초기화 부분 끝
 
   // 발주 내역 상세 화면 관련 초기화 부분 시작
@@ -172,6 +180,12 @@ Future<void> logoutAndLoginAfterProviderReset(WidgetRef ref) async {
   ref.read(inquiryScrollPositionProvider.notifier).state =
       0.0; // 문의하기 메인 화면 자체의 스크롤 위치 인덱스를 초기화
   // 문의하기 화면 관련 초기화 부분 끝
+
+  // 회원정보 수정 및 탈퇴 화면 관련 초기화 부분 시작
+  ref.read(userInfoModifyAndSecessionScrollPositionProvider.notifier).state =
+  0.0; // 회원정보 수정 및 탈퇴 화면 자체의 스크롤 위치 인덱스를 초기화
+  ref.invalidate(modifyUserInfoProvider); // SNS ID, 이름, 이메일, 휴대폰 번호 데이터 초기화
+  // 회원정보 수정 및 탈퇴 화면 관련 초기화 부분 끝
 
   // 쪽지 관리 화면 관련 초기화 부분 시작
   ref.read(privateMessageScrollPositionProvider.notifier).state =

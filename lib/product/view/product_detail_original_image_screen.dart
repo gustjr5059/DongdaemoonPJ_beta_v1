@@ -60,11 +60,21 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
     final double referenceWidht = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double interval1X = screenSize.width * (250 / referenceWidht);
+    // final double interval2X = screenSize.width * (20 / referenceWidht);
+    // final double interval1Y = screenSize.height * (40 / referenceHeight);
+    // final double interval2Y = screenSize.height * (54 / referenceHeight);
+    // final double pageTextFontSize = screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     final double interval1X = screenSize.width * (250 / referenceWidht);
     final double interval2X = screenSize.width * (20 / referenceWidht);
-    final double interval1Y = screenSize.height * (40 / referenceHeight);
-    final double interval2Y = screenSize.height * (54 / referenceHeight);
-    final double pageTextFontSize = screenSize.height * (16 / referenceHeight);
+    final double interval1Y = 42;
+    final double interval2Y = 54;
+    final double pageTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Scaffold(
       backgroundColor: BLACK_COLOR, // 배경색을 검은색으로 설정

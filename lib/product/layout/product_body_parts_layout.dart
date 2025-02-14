@@ -452,7 +452,6 @@ import '../provider/product_state_provider.dart';
 // 이 파일들은 각 카테고리별 제품의 상세 정보를 표시하는 화면을 정의합니다.
 import '../view/product_detail_original_image_screen.dart';
 
-
 // ------ pageViewWithArrows 위젯 내용 구현 시작
 // PageView와 화살표 버튼을 포함하는 위젯
 // 사용자가 페이지를 넘길 수 있도록 함.
@@ -578,810 +577,1183 @@ class ProductInfoDetailScreenNavigation {
       case "티셔츠":
         appBarTitle = '티셔츠 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaShirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "블라우스":
         appBarTitle = '블라우스 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaBlouseDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaBlouseDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "가디건":
         appBarTitle = '가디건 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaCardiganDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaCardiganDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "코트":
         appBarTitle = '코트 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaCoatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaCoatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "청바지":
         appBarTitle = '청바지 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaJeanDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaJeanDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "맨투맨":
         appBarTitle = '맨투맨 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaMtmDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaMtmDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "니트":
         appBarTitle = '니트 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaNeatDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaNeatDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "원피스":
         appBarTitle = '원피스 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaOnepieceDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaOnepieceDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "아우터":
         appBarTitle = '아우터 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaePaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaePaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaPaedingDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaPaedingDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "팬츠":
         appBarTitle = '팬츠 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaePantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaePantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaPantsDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaPantsDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "폴라티":
         appBarTitle = '폴라티 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaePolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaePolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AayPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaPolaDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaPolaDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       case "스커트":
         appBarTitle = '스커트 상세';
         if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AabSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AacSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AadSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaeSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AafSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AagSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AahSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaiSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AajSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AakSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AalSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AamSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AanSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaoSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AapSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaqSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AarSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AasSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AatSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AauSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AavSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AawSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaxSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aay') {
-          detailScreen = AaySkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaySkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AazSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbaSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbbSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbcSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AbdSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         } else {
-          detailScreen = AaaSkirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+          detailScreen = AaaSkirtDetailProductScreen(
+              fullPath: product.docId, title: appBarTitle);
         }
         break;
 
       default:
         appBarTitle = '티셔츠 상세';
-        detailScreen = AaaShirtDetailProductScreen(fullPath: product.docId, title: appBarTitle);
+        detailScreen = AaaShirtDetailProductScreen(
+            fullPath: product.docId, title: appBarTitle);
     }
 
     debugPrint('문서: ${product.docId}에 대한 $appBarTitle 화면으로 이동 중입니다.');
@@ -1396,7 +1768,8 @@ class ProductInfoDetailScreenNavigation {
       ref.read(colorSelectionUrlProvider.notifier).state = null;
       ref.read(sizeSelectionIndexProvider.notifier).state = null;
       ref.read(detailQuantityIndexProvider.notifier).state = 1;
-      ref.read(prodDetailScreenTabSectionProvider.notifier).state = ProdDetailScreenTabSection.productInfo;
+      ref.read(prodDetailScreenTabSectionProvider.notifier).state =
+          ProdDetailScreenTabSection.productInfo;
     });
   }
 
@@ -1410,6 +1783,41 @@ class ProductInfoDetailScreenNavigation {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 신상 섹션 내 요소들의 수치
+    // final double DetailDocWidth =
+    //     screenSize.width * (160 / referenceWidth); // 가로 비율
+    // final double DetailDocThumnailWidth =
+    //     screenSize.width * (152 / DetailDocWidth); // 가로 비율
+    // final double DetailDoc1X = screenSize.width * (6 / referenceWidth);
+    // final double DetailDoc2X = screenSize.width * (2 / referenceWidth);
+    // final double DetailDoc3X = screenSize.width * (4 / referenceWidth);
+    // final double DetailDoc4X = screenSize.width * (-9 / referenceWidth);
+    // final double DetailDoc1Y = screenSize.height * (6 / referenceHeight);
+    // final double DetailDoc2Y = screenSize.height * (2 / referenceHeight);
+    // final double DetailDoc3Y = screenSize.height * (-11 / referenceHeight);
+    // final double DetailDocTextFontSize1 =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double DetailDocTextFontSize2 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double DetailDocTextFontSize3 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double DetailDocTextFontSize4 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double DetailDocColorImageWidth =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double DetailDocColorImageHeight =
+    //     screenSize.height * (12 / referenceHeight);
+    //
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // final double interval1X = screenSize.width * (6 / referenceWidth);
+    // final double interval2X = screenSize.width * (100 / referenceWidth);
+    // final double interval2Y = screenSize.height * (110 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 신상 섹션 내 요소들의 수치
@@ -1420,27 +1828,21 @@ class ProductInfoDetailScreenNavigation {
     final double DetailDoc1X = screenSize.width * (6 / referenceWidth);
     final double DetailDoc2X = screenSize.width * (2 / referenceWidth);
     final double DetailDoc3X = screenSize.width * (4 / referenceWidth);
-    final double DetailDoc4X = screenSize.width * (-9 / referenceWidth);
-    final double DetailDoc1Y = screenSize.height * (6 / referenceHeight);
-    final double DetailDoc2Y = screenSize.height * (2 / referenceHeight);
-    final double DetailDoc3Y = screenSize.height * (-11 / referenceHeight);
-    final double DetailDocTextFontSize1 =
-        screenSize.height * (16 / referenceHeight);
-    final double DetailDocTextFontSize2 =
-        screenSize.height * (12 / referenceHeight);
-    final double DetailDocTextFontSize3 =
-        screenSize.height * (12 / referenceHeight);
-    final double DetailDocTextFontSize4 =
-        screenSize.height * (14 / referenceHeight);
-    final double DetailDocColorImageWidth =
-        screenSize.height * (12 / referenceHeight);
-    final double DetailDocColorImageHeight =
-        screenSize.height * (12 / referenceHeight);
+    final double DetailDoc4X = -9;
+    final double DetailDoc1Y = 6;
+    final double DetailDoc2Y = 2;
+    final double DetailDoc3Y = -11;
+    final double DetailDocTextFontSize1 = 16;
+    final double DetailDocTextFontSize2 = 12;
+    final double DetailDocTextFontSize3 = 12;
+    final double DetailDocTextFontSize4 = 14;
+    final double DetailDocColorImageWidth = 12;
+    final double DetailDocColorImageHeight = 12;
 
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
     final double interval1X = screenSize.width * (6 / referenceWidth);
-    final double interval2X = screenSize.width * (100 / referenceWidth);
-    final double interval2Y = screenSize.height * (110 / referenceHeight);
+    final double interval2Y = 135;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
     final numberFormat = NumberFormat('###,###');
@@ -1496,13 +1898,13 @@ class ProductInfoDetailScreenNavigation {
                                   Icon(
                                 Icons.image_not_supported,
                                 color: GRAY88_COLOR,
-                                size: interval2X,
+                                size: interval2Y,
                               ),
                             )
                           : Icon(
                               Icons.image_not_supported,
                               color: GRAY88_COLOR,
-                              size: interval2X,
+                              size: interval2Y,
                             ), // 썸네일이 없을 때 아이콘을 표시
                       // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
                       Positioned(
@@ -1742,26 +2144,38 @@ Widget buildProductImageSliderSection(
   final Size screenSize = MediaQuery.of(context).size;
 
   // 기준 화면 크기: 가로 393 세로 852
-  final double referenceWidht = 393.0;
+  final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 이미지 부분 수치
+  // final double ImageSliderSectionHeight = screenSize.height * (421 / referenceHeight);
+  //
+  // // 이미지 인디케이터 부분 수치
+  // final double ImageSliderSectionIndicator1Y = screenSize.height * (10 / referenceHeight);
+  // final double ImageSliderSectionIndicator2Y = screenSize.height * (8 / referenceHeight);
+  // final double ImageSliderSectionIndicator1X = screenSize.width * (4 / referenceWidht);
+  // final double ImageSliderSectionIndicatorWidth = screenSize.height * (12 / referenceHeight);
+  // final double ImageSliderSectionIndicatorHeight = screenSize.height * (12 / referenceHeight);
+  //
+  // final double interval1X = screenSize.width * (250 / referenceWidht);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 이미지 부분 수치
-  final double ImageSliderSectionHeight =
-      screenSize.height * (421 / referenceHeight);
+  final double ImageSliderSectionHeight = 421;
 
   // 이미지 인디케이터 부분 수치
-  final double ImageSliderSectionIndicator1Y =
-      screenSize.height * (10 / referenceHeight);
-  final double ImageSliderSectionIndicator2Y =
-      screenSize.height * (8 / referenceHeight);
+  final double ImageSliderSectionIndicator1Y = 10;
+  final double ImageSliderSectionIndicator2Y = 8;
   final double ImageSliderSectionIndicator1X =
-      screenSize.width * (4 / referenceWidht);
+      screenSize.width * (4 / referenceWidth);
   final double ImageSliderSectionIndicatorWidth =
-      screenSize.height * (12 / referenceHeight);
-  final double ImageSliderSectionIndicatorHeight =
-      screenSize.height * (12 / referenceHeight);
+      screenSize.width * (12 / referenceWidth);
+  final double ImageSliderSectionIndicatorHeight = 12;
 
-  final double interval1X = screenSize.width * (250 / referenceWidht);
+  final double interval1X = screenSize.width * (250 / referenceWidth);
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   // productId를 사용하여 pageProvider를 가져옴.
   final pageProvider = getImagePageProvider(productId);
@@ -1873,6 +2287,32 @@ Widget buildProductBriefIntroAndPriceInfoSection(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 섹션 내 x, y 부분 수치
+  // final double sectionX = screenSize.width * (24 / referenceWidth);
+  // final double section1Y = screenSize.width * (30 / referenceHeight);
+  // final double section2Y = screenSize.width * (10 / referenceHeight);
+  // final double section3Y = screenSize.width * (1 / referenceHeight);
+  // final double width1X = screenSize.width * (15 / referenceWidth);
+  //
+  // // 상품번호 텍스트 부분 수치
+  // final double productNumberFontSize =
+  //     screenSize.height * (13 / referenceHeight); // 텍스트 크기
+  // // 상품 설명 텍스트 부분 수치
+  // final double productIntroductionFontSize =
+  //     screenSize.height * (20 / referenceHeight); // 텍스트 크기
+  // // 상품 원가 텍스트 부분 수치
+  // final double productOriginalPriceFontSize =
+  //     screenSize.height * (16 / referenceHeight); // 텍스트 크기
+  // // 상품 할인가 텍스트 부분 수치
+  // final double productDiscountPriceFontSize =
+  //     screenSize.height * (20 / referenceHeight); // 텍스트 크기
+  // // 상품 할인율 텍스트 부분 수치
+  // final double productDiscountPercentFontSize =
+  //     screenSize.height * (18 / referenceHeight); // 텍스트 크기
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 섹션 내 x, y 부분 수치
   final double sectionX = screenSize.width * (24 / referenceWidth);
   final double section1Y = screenSize.width * (30 / referenceHeight);
@@ -1881,20 +2321,16 @@ Widget buildProductBriefIntroAndPriceInfoSection(
   final double width1X = screenSize.width * (15 / referenceWidth);
 
   // 상품번호 텍스트 부분 수치
-  final double productNumberFontSize =
-      screenSize.height * (13 / referenceHeight); // 텍스트 크기
+  final double productNumberFontSize = 13; // 텍스트 크기
   // 상품 설명 텍스트 부분 수치
-  final double productIntroductionFontSize =
-      screenSize.height * (20 / referenceHeight); // 텍스트 크기
+  final double productIntroductionFontSize = 20; // 텍스트 크기
   // 상품 원가 텍스트 부분 수치
-  final double productOriginalPriceFontSize =
-      screenSize.height * (16 / referenceHeight); // 텍스트 크기
+  final double productOriginalPriceFontSize = 16; // 텍스트 크기
   // 상품 할인가 텍스트 부분 수치
-  final double productDiscountPriceFontSize =
-      screenSize.height * (20 / referenceHeight); // 텍스트 크기
+  final double productDiscountPriceFontSize = 20; // 텍스트 크기
   // 상품 할인율 텍스트 부분 수치
-  final double productDiscountPercentFontSize =
-      screenSize.height * (18 / referenceHeight); // 텍스트 크기
+  final double productDiscountPercentFontSize = 18; // 텍스트 크기
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'); // 정규식을 사용하여 천 단위로 쉼표를 추가.
   return Padding(
@@ -2049,24 +2485,49 @@ class _ProductColorAndSizeSelectionState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 섹션 내 x, y 부분 수치
+    // final double sectionX = screenSize.width * (24 / referenceWidth);
+    // final double section1Y = screenSize.width * (40 / referenceHeight);
+    // final double section2Y = screenSize.width * (8 / referenceHeight);
+    // final double width1X = screenSize.width * (57 / referenceWidth);
+    // final double width2X = screenSize.width * (12 / referenceWidth);
+    // final double width3X = screenSize.width * (45 / referenceWidth);
+    //
+    // // 색상 텍스트 부분 수치
+    // final double colorFontSize = screenSize.height * (14 / referenceHeight);
+    // // 색상 이미지 데이터 부분 수치
+    // final double colorImageLength = screenSize.height * (16 / referenceHeight);
+    // // 색상 텍스트 데이터 부분 수치
+    // final double colorTextSize = screenSize.height * (14 / referenceHeight);
+    // // 사이즈 텍스트 부분 수치
+    // final double sizeFontSize = screenSize.height * (14 / referenceHeight);
+    // // 사이즈 텍스트 데이터 부분 수치
+    // final double sizeTextSize = screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 섹션 내 x, y 부분 수치
     final double sectionX = screenSize.width * (24 / referenceWidth);
-    final double section1Y = screenSize.width * (40 / referenceHeight);
-    final double section2Y = screenSize.width * (8 / referenceHeight);
-    final double width1X = screenSize.width * (57 / referenceWidth);
-    final double width2X = screenSize.width * (12 / referenceWidth);
-    final double width3X = screenSize.width * (45 / referenceWidth);
+    final double section1Y = 20;
+    final double section2Y = 8;
+    final double section3Y = 4;
+    final double section4Y = 2;
+    final double width1X = 57;
+    final double width2X = 12;
+    final double width3X = 45;
 
     // 색상 텍스트 부분 수치
-    final double colorFontSize = screenSize.height * (14 / referenceHeight);
+    final double colorFontSize = 16;
     // 색상 이미지 데이터 부분 수치
-    final double colorImageLength = screenSize.height * (16 / referenceHeight);
+    final double colorImageLength = 24;
     // 색상 텍스트 데이터 부분 수치
-    final double colorTextSize = screenSize.height * (14 / referenceHeight);
+    final double colorTextSize = 16;
     // 사이즈 텍스트 부분 수치
-    final double sizeFontSize = screenSize.height * (14 / referenceHeight);
+    final double sizeFontSize = 16;
     // 사이즈 텍스트 데이터 부분 수치
-    final double sizeTextSize = screenSize.height * (14 / referenceHeight);
+    final double sizeTextSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.only(
@@ -2078,13 +2539,18 @@ class _ProductColorAndSizeSelectionState
             mainAxisAlignment: MainAxisAlignment.start,
             // 자식 위젯들을 왼쪽 정렬로 배치.
             children: [
-              Text('색상',
+              Container(
+                padding: EdgeInsets.only(top: section3Y),
+                child: Text(
+                  '색상',
                   style: TextStyle(
                     fontSize: colorFontSize,
                     fontWeight: FontWeight.bold,
                     color: BLACK_COLOR,
                     fontFamily: 'NanumGothic',
-                  )), // '색상' 라벨을 표시.
+                  ),
+                ), // '색상' 라벨을 표시.
+              ),
               SizedBox(width: width1X), // '색상' 라벨과 드롭다운 버튼 사이의 간격을 width1X로 설정.
               Expanded(
                 // 드롭다운 버튼을 화면 너비에 맞게 확장.
@@ -2144,16 +2610,19 @@ class _ProductColorAndSizeSelectionState
                                           ), // URL이 없을 경우 아이콘을 표시
                                     SizedBox(width: width2X),
                                     // 이미지와 텍스트 사이의 간격을 width2X로 설정.
-                                    Text(
-                                      option['text'] ?? '',
-                                      // 색상의 텍스트 설명을 표시, 값이 없을 경우 빈 문자열.
-                                      style: TextStyle(
-                                        fontSize: colorTextSize,
-                                        fontWeight: FontWeight.bold,
-                                        color: BLACK_COLOR,
-                                        fontFamily: 'NanumGothic',
-                                      ),
-                                    ), // 색상의 텍스트 설명을 표시.
+                                    Container(
+                                      padding: EdgeInsets.only(top: section4Y),
+                                      child: Text(
+                                        option['text'] ?? '',
+                                        // 색상의 텍스트 설명을 표시, 값이 없을 경우 빈 문자열.
+                                        style: TextStyle(
+                                          fontSize: colorTextSize,
+                                          fontWeight: FontWeight.bold,
+                                          color: BLACK_COLOR,
+                                          fontFamily: 'NanumGothic',
+                                        ),
+                                      ), // 색상의 텍스트 설명을 표시.
+                                    ),
                                   ],
                                 ),
                               ))
@@ -2169,13 +2638,18 @@ class _ProductColorAndSizeSelectionState
             mainAxisAlignment: MainAxisAlignment.start,
             // 자식 위젯들을 왼쪽 정렬로 배치.
             children: [
-              Text('사이즈',
+              Container(
+                padding: EdgeInsets.only(top: section3Y),
+                child: Text(
+                  '사이즈',
                   style: TextStyle(
                     fontSize: sizeFontSize,
                     fontWeight: FontWeight.bold,
                     color: BLACK_COLOR,
                     fontFamily: 'NanumGothic',
-                  )),
+                  ),
+                ),
+              ),
               // '사이즈' 라벨을 표시.
               SizedBox(width: width3X),
               // '사이즈' 라벨과 드롭다운 버튼 사이의 간격을 width3X로 설정.
@@ -2256,46 +2730,82 @@ Widget buildProductAllCountAndPriceSelection(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 섹션 내 x, y 부분 수치
+  // final double sectionX = screenSize.width * (20 / referenceWidth);
+  // final double section1Y = screenSize.height * (15 / referenceHeight);
+  // final double section2Y = screenSize.height * (10 / referenceHeight);
+  // final double width1X = screenSize.width * (57 / referenceWidth);
+  // final double width2X = screenSize.width * (12 / referenceWidth);
+  // final double width3X = screenSize.width * (41 / referenceWidth);
+  // final double width4X = screenSize.width * (30 / referenceWidth);
+  // final double width5X = screenSize.width * (60 / referenceWidth);
+  // final double width6X = screenSize.width * (15 / referenceWidth);
+  // final double width7X = screenSize.width * (70 / referenceWidth);
+  //
+  // // 선택한 색상 텍스트 부분 수치
+  // final double selectedColorFontSize =
+  //     screenSize.height * (14 / referenceHeight);
+  // // 선택한 색상 이미지 데이터 부분 수치
+  // final double selectedColorImageLength =
+  //     screenSize.height * (16 / referenceHeight);
+  // // 산텍힌 색상 텍스트 데이터 부분 수치
+  // final double selectedColorTextSize =
+  //     screenSize.height * (14 / referenceHeight);
+  // // 선택한 사이즈 텍스트 부분 수치
+  // final double selectedSizeFontSize =
+  //     screenSize.height * (14 / referenceHeight);
+  // // 선택한 사이즈 텍스트 데이터 부분 수치
+  // final double selectedSizeTextSize =
+  //     screenSize.height * (14 / referenceHeight);
+  // // 선택한 수량 텍스트 데이터 부분 수치
+  // final double selectedCountTextSize =
+  //     screenSize.height * (14 / referenceHeight);
+  // // 총 가격 텍스트 데이터 부분 수치
+  // final double selectedAllPriceTextSize =
+  //     screenSize.height * (18 / referenceHeight);
+  //
+  // // 직접입력 버튼 수치
+  // final double directInsertBtnWidth = screenSize.width * (90 / referenceWidth);
+  // final double directInsertBtnHeight =
+  //     screenSize.height * (30 / referenceHeight);
+  // final double directInsertBtnFontSize =
+  //     screenSize.height * (10 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 섹션 내 x, y 부분 수치
   final double sectionX = screenSize.width * (20 / referenceWidth);
-  final double section1Y = screenSize.height * (15 / referenceHeight);
-  final double section2Y = screenSize.height * (10 / referenceHeight);
-  final double width1X = screenSize.width * (57 / referenceWidth);
-  final double width2X = screenSize.width * (12 / referenceWidth);
-  final double width3X = screenSize.width * (41 / referenceWidth);
-  final double width4X = screenSize.width * (30 / referenceWidth);
-  final double width5X = screenSize.width * (60 / referenceWidth);
-  final double width6X = screenSize.width * (15 / referenceWidth);
-  final double width7X = screenSize.width * (70 / referenceWidth);
+  final double section1Y = 15;
+  final double section2Y = 10;
+  final double section3Y = 2;
+  final double width1X = 57;
+  final double width2X = 12;
+  final double width3X = 41;
+  final double width4X = 30;
+  final double width6X = 15;
+  final double width7X = 70;
 
   // 선택한 색상 텍스트 부분 수치
-  final double selectedColorFontSize =
-      screenSize.height * (14 / referenceHeight);
+  final double selectedColorFontSize = 14;
   // 선택한 색상 이미지 데이터 부분 수치
-  final double selectedColorImageLength =
-      screenSize.height * (16 / referenceHeight);
+  final double selectedColorImageLength = 16;
   // 산텍힌 색상 텍스트 데이터 부분 수치
-  final double selectedColorTextSize =
-      screenSize.height * (14 / referenceHeight);
+  final double selectedColorTextSize = 14;
   // 선택한 사이즈 텍스트 부분 수치
-  final double selectedSizeFontSize =
-      screenSize.height * (14 / referenceHeight);
+  final double selectedSizeFontSize = 14;
   // 선택한 사이즈 텍스트 데이터 부분 수치
-  final double selectedSizeTextSize =
-      screenSize.height * (14 / referenceHeight);
+  final double selectedSizeTextSize = 14;
   // 선택한 수량 텍스트 데이터 부분 수치
-  final double selectedCountTextSize =
-      screenSize.height * (14 / referenceHeight);
+  final double selectedCountTextSize = 14;
   // 총 가격 텍스트 데이터 부분 수치
-  final double selectedAllPriceTextSize =
-      screenSize.height * (18 / referenceHeight);
+  final double selectedAllPriceTextSize = 18;
 
   // 직접입력 버튼 수치
-  final double directInsertBtnWidth = screenSize.width * (90 / referenceWidth);
-  final double directInsertBtnHeight =
-      screenSize.height * (30 / referenceHeight);
-  final double directInsertBtnFontSize =
-      screenSize.height * (10 / referenceHeight);
+  final double directInsertBtnWidth = 90;
+  final double directInsertBtnHeight = 30;
+  final double directInsertBtnFontSize = 10;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -2312,13 +2822,18 @@ Widget buildProductAllCountAndPriceSelection(
               Row(
                 children: [
                   // 선택한 색상을 텍스트로 표시함.
-                  Text('선택한 색상 :',
+                  Container(
+                    padding: EdgeInsets.only(top: section3Y),
+                    child: Text(
+                      '선택한 색상 :',
                       style: TextStyle(
                         fontSize: selectedColorFontSize,
                         fontWeight: FontWeight.bold,
                         color: BLACK_COLOR,
                         fontFamily: 'NanumGothic',
-                      )),
+                      ),
+                    ),
+                  ),
                   SizedBox(width: width1X), // 텍스트와 이미지 사이의 간격을 width1X로 설정.
                   // 선택한 색상이 존재하면 이미지를 표시함.
                   selectedColorUrl != null && selectedColorUrl != ''
@@ -2356,13 +2871,16 @@ Widget buildProductAllCountAndPriceSelection(
               Row(
                 children: [
                   // 선택한 사이즈를 텍스트로 표시함.
-                  Text(
-                    '선택한 사이즈 : ',
-                    style: TextStyle(
-                      fontSize: selectedSizeFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
+                  Container(
+                    padding: EdgeInsets.only(top: section3Y),
+                    child: Text(
+                      '선택한 사이즈 : ',
+                      style: TextStyle(
+                        fontSize: selectedSizeFontSize,
+                        fontWeight: FontWeight.bold,
+                        color: BLACK_COLOR,
+                        fontFamily: 'NanumGothic',
+                      ),
                     ),
                   ),
                   SizedBox(width: width3X), // 텍스트와 이미지 사이의 간격을 width3X로 설정.
@@ -2471,7 +2989,8 @@ Widget buildProductAllCountAndPriceSelection(
                               // 숫자만 입력되도록 필터링
                             ],
                             autofocus: true,
-                            cursorColor: ORANGE56_COLOR, // 커서 색상 설정
+                            cursorColor: ORANGE56_COLOR,
+                            // 커서 색상 설정
                             // 자동 포커스 설정
                             onChanged: (value) {
                               input = value; // 입력된 값 저장
@@ -2591,8 +3110,15 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     // 기준 화면 크기: 세로 852
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 섹션 내 y 부분 수치
+    // final double section1Y = screenSize.height * (20 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 섹션 내 y 부분 수치
-    final double section1Y = screenSize.height * (20 / referenceHeight);
+    final double section1Y = 20;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2639,9 +3165,15 @@ class ProductDetailScreenTabs extends ConsumerWidget {
     // 기준 화면 크기: 세로 852
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 상품정보, 리뷰 정보, 문의 선택 버튼 부분 수치
+    // final double _buildTabButtonFontSize = screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 상품정보, 리뷰 정보, 문의 선택 버튼 부분 수치
-    final double _buildTabButtonFontSize =
-        screenSize.height * (14 / referenceHeight);
+    final double _buildTabButtonFontSize = 14;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {
@@ -2795,16 +3327,28 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
     final double referenceWidth = 393.0; // 기준 화면 너비
     final double referenceHeight = 852.0; // 기준 화면 높이
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double expandBtnWidth =
+    //     screenSize.width * (345 / referenceWidth); // 버튼 너비 설정
+    // final double expandBtnHeight =
+    //     screenSize.height * (54 / referenceHeight); // 버튼 높이 설정
+    // final double expandBtnX =
+    //     screenSize.width * (24 / referenceWidth); // 왼쪽 여백 설정
+    // final double expandBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 버튼 내 텍스트 크기 설정
+    // final double expandBtnY =
+    //     screenSize.height * (2 / referenceHeight); // 상단 여백 설정
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     final double expandBtnWidth =
         screenSize.width * (345 / referenceWidth); // 버튼 너비 설정
-    final double expandBtnHeight =
-        screenSize.height * (54 / referenceHeight); // 버튼 높이 설정
+    final double expandBtnHeight = 54; // 버튼 높이 설정
     final double expandBtnX =
         screenSize.width * (24 / referenceWidth); // 왼쪽 여백 설정
-    final double expandBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 버튼 내 텍스트 크기 설정
-    final double expandBtnY =
-        screenSize.height * (2 / referenceHeight); // 상단 여백 설정
+    final double expandBtnFontSize = 14; // 버튼 내 텍스트 크기 설정
+    final double expandBtnY = 2; // 상단 여백 설정
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // '접기' 버튼은 마지막 이미지를 로드한 후에만 표시됨.
     bool showFullImage = ref.read(showFullImageProvider);
@@ -2873,8 +3417,6 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
 
     final Size screenSize = MediaQuery.of(context).size;
     final double referenceHeight = 852.0; // 기준 화면 높이
-    final double productInfoY =
-        screenSize.height * (4 / referenceHeight); // 제품 정보 상단 여백 설정
 
     // 표시할 이미지 리스트 결정
     List<String> imagesToShow = images;
@@ -2959,15 +3501,22 @@ class ProductReviewContents extends StatelessWidget {
     final double referenceWidth = 393.0; // 기준 화면 너비를 설정함.
     final double referenceHeight = 852.0; // 기준 화면 높이를 설정함.
 
-    final double buildSectionTitleFontSize =
-        screenSize.height * (16 / referenceHeight); // 텍스트 크기가 화면 높이에 비례하여 설정됨.
-    final double buildSectionWidthX = screenSize.width *
-        (8 / referenceWidth); // 텍스트 좌우 여백 크기가 화면 너비에 비례하여 설정됨.
-    final double buildSectionLineY = screenSize.height *
-        (8 / referenceHeight); // 텍스트 아래 간격이 화면 높이에 비례하여 설정됨.
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
-    final double reviewDataTextFontSize1 =
-        screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double buildSectionTitleFontSize =
+    //     screenSize.height * (16 / referenceHeight); // 텍스트 크기가 화면 높이에 비례하여 설정됨.
+    // final double buildSectionWidthX = screenSize.width *
+    //     (8 / referenceWidth); // 텍스트 좌우 여백 크기가 화면 너비에 비례하여 설정됨.
+    // final double buildSectionLineY = screenSize.height *
+    //     (8 / referenceHeight); // 텍스트 아래 간격이 화면 높이에 비례하여 설정됨.
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // final double reviewDataTextFontSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double interval1Y = 4;
+    final double reviewDataTextFontSize1 = 14;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Container(
       decoration: BoxDecoration(
@@ -3028,8 +3577,15 @@ class ProductReviewContents extends StatelessWidget {
     final double referenceWidth = 393.0; // 기준 화면 너비를 설정함.
     final double referenceHeight = 852.0; // 기준 화면 높이를 설정함.
 
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double interval1Y = 2;
+    final double interval2Y = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: interval1Y),
@@ -3074,8 +3630,15 @@ class ProductReviewContents extends StatelessWidget {
     final double referenceWidth = 393.0; // 기준 화면 너비를 설정함.
     final double referenceHeight = 852.0; // 기준 화면 높이를 설정함.
 
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double interval2Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double interval1Y = 2;
+    final double interval2Y = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: interval1Y),
@@ -3125,8 +3688,15 @@ class ProductReviewContents extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size; // 기기의 화면 크기를 동적으로 가져옴.
     final double referenceWidth = 393.0; // 기준 화면 너비를 설정함.
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double interval1X = screenSize.width * (8 / referenceWidth);
+    // final double interval2X = screenSize.width * (70 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     final double interval1X = screenSize.width * (8 / referenceWidth);
-    final double interval2X = screenSize.width * (70 / referenceWidth);
+    final double interval2X = 70;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 각 이미지를 가로로 나열하여 출력함
     return Row(
@@ -3182,12 +3752,21 @@ Widget buildSectionTitle(BuildContext context, String title) {
   final double referenceWidth = 393.0; // 기준 화면 너비
   final double referenceHeight = 852.0; // 기준 화면 높이
 
-  final double buildSectionTitleFontSize =
-      screenSize.height * (16 / referenceHeight); // 폰트 크기 설정
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // final double buildSectionTitleFontSize =
+  //     screenSize.height * (16 / referenceHeight); // 폰트 크기 설정
+  // final double buildSectionWidthX =
+  //     screenSize.width * (8 / referenceWidth); // 좌우 여백 설정
+  // final double buildSectionLineY =
+  //     screenSize.height * (10 / referenceHeight); // 구분선 위 아래 간격 설정
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  final double buildSectionTitleFontSize = 16; // 폰트 크기 설정
   final double buildSectionWidthX =
       screenSize.width * (8 / referenceWidth); // 좌우 여백 설정
-  final double buildSectionLineY =
-      screenSize.height * (10 / referenceHeight); // 구분선 위 아래 간격 설정
+  final double buildSectionLineY = 10; // 구분선 위 아래 간격 설정
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Column(
     children: [
@@ -3232,13 +3811,23 @@ class ProductInquiryContents extends StatelessWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 버튼 관련 수치 동적 적용
+    // final double productInquiryBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double productInquiryCardViewY =
+    //     screenSize.height * (20 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 버튼 관련 수치 동적 적용
-    final double productInquiryBtnFontSize =
-        screenSize.height * (14 / referenceHeight);
-    final double productInquiryCardViewY =
-        screenSize.height * (20 / referenceHeight);
+    final double productInquiryBtnFontSize = 14;
+    final double productInquiryCardViewY = 20;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // CommonCardView 위젯을 반환, content에 Column 위젯을 사용하여 여러 위젯을 세로로 배치
     return CommonCardView(

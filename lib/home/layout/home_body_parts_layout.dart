@@ -114,18 +114,33 @@ class _EventPosterImgSectionListState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 이벤트 포스터 이미지 관련 설정 수치
+    // // 화면 비율에 따른 가로 크기 설정
+    // final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
+    // // 화면 비율에 따른 세로 크기 설정
+    // final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    // // 아이템 간 여백 비율 설정
+    // final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 = screenSize.height * (12 / referenceHeight);
+    // final double errorTextFontSize2 = screenSize.height * (10 / referenceHeight);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 이벤트 포스터 이미지 관련 설정 수치
     // 화면 비율에 따른 가로 크기 설정
     final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
     // 화면 비율에 따른 세로 크기 설정
-    final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    final double DetailDocHeight = 250;
     // 아이템 간 여백 비율 설정
     final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (12 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (10 / referenceHeight);
+    final double errorTextFontSize1 = 12;
+    final double errorTextFontSize2 = 10;
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return SingleChildScrollView(
         controller: _scrollController, // 수평 스크롤 컨트롤러 설정
@@ -238,11 +253,21 @@ Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 크기와 위치를 동적으로 설정함
+  // // 섹션 내 요소들의 수치
+  // final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY = screenSize.height * (8 / referenceHeight); // 위쪽 여백 비율
+  // final double SectionTextFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기 비율
+  // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 크기와 위치를 동적으로 설정함
   // 섹션 내 요소들의 수치
   final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY = screenSize.height * (8 / referenceHeight); // 위쪽 여백 비율
-  final double SectionTextFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기 비율
+  final double SectionY = 8; // 위쪽 여백 비율
+  final double SectionTextFontSize = 20; // 텍스트 크기 비율
+  // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정
@@ -306,12 +331,20 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double interval1X = screenSize.width * (8 / referenceWidth);
+    // final double interval2X = screenSize.width * (48 / referenceWidth);
+    // final double interval1Y = screenSize.height * (8 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
     final double interval1X = screenSize.width * (8 / referenceWidth);
     final double interval2X = screenSize.width * (48 / referenceWidth);
-    final double interval1Y = screenSize.height * (8 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-
+    final double interval1Y = 8;
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     if (marketButtons.isEmpty) {
       return buildCommonLoadingIndicator();
@@ -331,6 +364,8 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
               step: item['step'],
               id: item['id'],
               buttonWidth: (screenSize.width - interval2X) / buttonsPerRow,
+              // 가로모드 시, 버튼 높이를 절대값으로 넣으면 간격 문제가 생기므로 버튼 너비와 비슷한 형태로 동적 수치로 반영함
+              buttonHeight: (screenSize.width + interval2X) / buttonsPerRow,
             );
           },
         ),
@@ -345,6 +380,8 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
     required String step,
     required String id,
     required double buttonWidth,
+    // 가로모드 시, 버튼 높이를 절대값으로 넣으면 간격 문제가 생기므로 버튼 너비와 비슷한 형태로 동적 수치로 반영함
+    required double buttonHeight,
   }) {
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
@@ -354,9 +391,16 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    final double buttonHeight = screenSize.height * (100 / referenceHeight);
-    final double interval1Y = screenSize.height * (2 / referenceHeight);
-    final double marketBtnTextFontSize = screenSize.height * (10 / referenceHeight);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double buttonHeight = screenSize.height * (100 / referenceHeight);
+    // final double interval1Y = screenSize.height * (2 / referenceHeight);
+    // final double marketBtnTextFontSize = screenSize.height * (10 / referenceHeight);
+    // // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    final double interval1Y = 2;
+    final double marketBtnTextFontSize = 10;
+    // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     final String imagePath = 'asset/img/misc/button_img/market_button_$step.png';
 
@@ -474,6 +518,7 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
       },
       child: Container(
         width: buttonWidth,
+        // 가로모드 시, 버튼 높이를 절대값으로 넣으면 간격 문제가 생기므로 버튼 너비와 비슷한 형태로 동적 수치로 반영함
         height: buttonHeight,
         padding: EdgeInsets.zero, // 패딩을 없앰
         decoration: BoxDecoration(

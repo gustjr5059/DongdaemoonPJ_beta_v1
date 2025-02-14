@@ -20,8 +20,37 @@ class PrivateReviewRepository {
     // 사용자 이메일을 통해 이름을 가져오는 비동기 함수 선언
     try { // 오류 발생 가능성이 있는 코드 블록을 시도함
       print('Fetching user name for email: $email');
+
+      // ---------- (1) 'users' 컬렉션에서 userEmail에 대응하는 문서를 찾음 ----------
+      // 기존에는 바로 wearcano_order_list.doc(userEmail)를 참조했으나,
+      // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      // 만약 문서를 찾지 못하면 빈 리스트 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('해당 이메일과 일치하는 users 문서를 찾지 못했음: $email');
+        // 함수의 반환 타입이 Future<String>이면 '문자열로 기입;'
+        return '에러 발생';
+      }
+
+      // 찾은 문서에서 registration_id 필드를 가져옴
+      final userDocData = userQuerySnapshot.docs.first.data();
+      final registrationId = userDocData['registration_id']?.toString() ?? '';
+
+      // 만약 registration_id 필드가 없으면 빈 리스트 반환
+      if (registrationId.isEmpty) {
+        print('해당 users 문서에 registration_id가 없음: $email');
+        // 함수의 반환 타입이 Future<String>이면 '문자열로 기입;'
+        return '에러 발생';
+      }
+
+      // ---------- (2) wearcano_order_list 컬렉션에서 doc(registrationId)로 참조 ----------
       DocumentSnapshot userDoc = await firestore.collection('users')
-          .doc(email)
+          .doc(registrationId)
           .get(); // Firestore에서 'users' 컬렉션의 문서를 이메일로 가져옴
       if (userDoc.exists) { // 해당 문서가 존재하는지 확인
         String userName = userDoc['name']; // 문서에서 'name' 필드의 값을 가져옴
@@ -29,15 +58,17 @@ class PrivateReviewRepository {
         return userName; // 사용자 이름을 반환
       } else { // 문서가 존재하지 않는 경우
         print('No user name found for email: $email');
-        return '알 수 없음'; // '알 수 없음'이라는 문자열을 반환
+        return '에러 발생'; // '에러 발생' 이라는 문자열을 반환
       }
     } catch (e) { // 오류가 발생한 경우 처리
       print('Error fetching user name for email $email: $e'); // 오류 메시지를 콘솔에 출력
-      return '알 수 없음'; // 오류 발생 시 '알 수 없음'이라는 문자열을 반환
+      return '에러 발생'; // 오류 발생 시 '에러 발생' 이라는 문자열을 반환
     }
   }
 
-  // 파이어스토리지에 이미지를 업로드하고 URL을 반환하는 함수
+  // ---------------------
+  // 2) (참고) 리뷰 이미지 하나를 업로드하는 Private 함수 (별도 분리)
+  // ---------------------
   Future<String?> uploadImage(File image, String storagePath) async {
     try {
       print('Uploading image to: $storagePath');
@@ -57,6 +88,9 @@ class PrivateReviewRepository {
     }
   }
 
+  // ---------------------
+  // 3) [변경] 리뷰 데이터를 "먼저 null 이미지로 생성" 후, "백그라운드에서 이미지 업로드 & 문서 업데이트"
+  // ---------------------
   // 리뷰 데이터를 파이어스토어에 저장하는 함수
   Future<void> submitReview({
     required String userEmail, // 필수: 유저 이메일
@@ -71,102 +105,88 @@ class PrivateReviewRepository {
     DateTime? deliveryStartDate, // 선택적: 배송 시작일
   }) async {
     try {
-      // 파이어스토리지에 저장할 경로 설정
-      final String storagePath = 'wearcano_review_images/$userEmail/${DateTime
-          .now()
-          .millisecondsSinceEpoch}';
 
-      // 리뷰 이미지 업로드 및 URL 리스트 생성
-      List<String?> uploadedImageUrls = [];
-      for (int i = 0; i < images.length; i++) {
-        // 각 이미지를 업로드하고 URL을 가져옴
-        final imageUrl = await uploadImage(
-            images[i], '$storagePath/review_image$i');
-        // URL이 null이 아닌 경우 리스트에 추가함
-        if (imageUrl != null) {
-          uploadedImageUrls.add(imageUrl);
-        }
+      // 기존에는 바로 wearcano_order_list.doc(userEmail)를 참조했으나,
+      // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
+      // (a) userEmail -> registrationId 찾기
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 만약 문서를 찾지 못하면 빈 리스트 반환
+      // 함수의 반환 타입이 Future<void>이면 그냥 'return;'
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('해당 이메일과 일치하는 users 문서를 찾지 못했음: $userEmail');
+        return;
       }
 
+      // 찾은 문서에서 registration_id 필드를 가져옴
+      final userDocData = userQuerySnapshot.docs.first.data();
+      final registrationId = userDocData['registration_id']?.toString() ?? '';
+
+      // 만약 registration_id 필드가 없으면 빈 리스트 반환
+      // 함수의 반환 타입이 Future<void>이면 그냥 'return;'
+      if (registrationId.isEmpty) {
+        print('해당 users 문서에 registration_id가 없음: $userEmail');
+        return;
+      }
+
+      // (b) 리뷰 문서 ID (separatorKey) 준비
       // separator_key 필드를 productInfo에서 가져옴
       final String separatorKey = productInfo['separator_key'] ?? '';
-
       // 디버그 메시지 추가
-      print("Submitting review with separatorKey: $separatorKey");
+      print("separatorKey와 함께 review 제출 중: $separatorKey");
 
-      // 현재 시간을 가져옴
+      // (c) 리뷰 작성 시간 (현재 작성 시간)
       final DateTime reviewWriteTime = DateTime.now();
 
-      // 리뷰 데이터 생성
-      final data = {
+      // ----------------------------------------
+      // 1) 먼저 Firestore 문서 생성 (이미지= null) → 즉시 "작성 완료" 처리
+      // ----------------------------------------
+      // 리뷰 필드 중 이미지 관련 필드는 null로 두어 생성
+      final initialReviewData = {
         'order_number': orderNumber,
-        // 주문 번호를 포함함
         'separator_key': separatorKey,
-        // separator_key를 포함함
         'product_number': productInfo['product_number'] ?? null,
-        // 제품 번호를 포함함
         'brief_introduction': productInfo['brief_introduction'] ?? null,
-        // 제품 간단 소개를 포함함
         'product_id': productInfo['product_id'] ?? null,
-        // 제품 ID를 포함함
         'category': productInfo['category'] ?? null,
-        // 제품 카테고리를 포함함
         'thumbnails': productInfo['thumbnails'] ?? null,
-        // 제품 썸네일을 포함함
         'original_price': productInfo['original_price'] ?? null,
-        // 원가를 포함함
         'discount_price': productInfo['discount_price'] ?? null,
-        // 할인가를 포함함
         'discount_percent': productInfo['discount_percent'] ?? null,
-        // 할인율을 포함함
         'selected_color_image': productInfo['selected_color_image'] ?? null,
-        // 선택된 색상 이미지를 포함함
         'selected_color_text': productInfo['selected_color_text'] ?? null,
-        // 선택된 색상 텍스트를 포함함
         'selected_size': productInfo['selected_size'] ?? null,
-        // 선택된 사이즈를 포함함
         'selected_count': productInfo['selected_count'] ?? null,
-        // 선택된 수량을 포함함
         'order_date': numberInfo['order_date'] ?? null,
-        // 주문 날짜를 포함함
         'payment_complete_date': paymentCompleteDate ?? null,
-        // 결제 완료일을 포함함
         'delivery_start_date': deliveryStartDate ?? null,
-        // 배송 시작일을 포함함
         'review_title': reviewTitle.isNotEmpty ? reviewTitle : null,
-        // 리뷰 제목을 포함함 (없으면 null)
         'review_contents': reviewContents.isNotEmpty ? reviewContents : null,
-        // 리뷰 내용을 포함함 (없으면 null)
-        'review_image1': uploadedImageUrls.isNotEmpty
-            ? uploadedImageUrls[0]
-            : null,
-        // 첫 번째 리뷰 이미지를 포함함 (없으면 null)
-        'review_image2': uploadedImageUrls.length > 1
-            ? uploadedImageUrls[1]
-            : null,
-        // 두 번째 리뷰 이미지를 포함함 (없으면 null)
-        'review_image3': uploadedImageUrls.length > 2
-            ? uploadedImageUrls[2]
-            : null,
-        // 세 번째 리뷰 이미지를 포함함 (없으면 null)
+        'review_image1': null, // 처음에는 null
+        'review_image2': null, // 처음에는 null
+        'review_image3': null, // 처음에는 null
         'user_name': userName.isNotEmpty ? userName : null,
-        // 유저 이름을 포함함 (없으면 null)
         'review_write_time': reviewWriteTime,
-        // 리뷰 작성 시간을 포함함
         'private_review_closed_button': false,
-        // 리뷰 삭제 버튼 활성화 관련 데이터 포함함
       };
 
-      // 파이어스토어에 리뷰 데이터를 저장함
-      await firestore.collection('wearcano_review_list')
-          .doc(userEmail) // 유저 이메일로 문서 경로 설정
-          .collection('reviews') // 'reviews' 컬렉션에 저장
-          .doc(separatorKey) // separator_key로 문서 ID 설정
-          .set(data); // 데이터 저장
+      // 문서 참조
+      final reviewDocRef = firestore
+          .collection('wearcano_review_list')
+          .doc(registrationId)
+          .collection('reviews')
+          .doc(separatorKey);
+
+      // 문서 생성
+      await reviewDocRef.set(initialReviewData);
 
       // 리뷰 작성 완료 후, 해당 발주에 대한 'boolReviewCompleteBtn' 필드를 true로 업데이트함
       await firestore.collection('wearcano_order_list')
-          .doc(userEmail)
+          .doc(registrationId)
           .collection('orders')
           .doc(orderNumber)
           .collection('product_info')
@@ -175,12 +195,51 @@ class PrivateReviewRepository {
         'boolReviewCompleteBtn': true, // 리뷰 작성 완료 버튼 필드를 true로 설정
       });
 
-      print("Review submitted successfully with separatorKey: $separatorKey");
+      // 여기까지 되면 화면단에서는 "리뷰 작성 완료" 처리를 할 수 있음
+      print("Review doc created with null images. Immediate success for the user.");
+
+      // ----------------------------------------
+      // 2) 백그라운드에서 이미지 업로드 → Firestore 문서 이미지 필드 업데이트
+      // ----------------------------------------
+      // 파이어스토리지 경로 예: wearcano_review_images/{userEmail}/{timestamp}/...
+      final String storagePath = 'wearcano_review_images/$userEmail/${DateTime.now().millisecondsSinceEpoch}';
+
+      // 백그라운드 동작 (UI에선 이미 "리뷰 작성" 완료라고 안내 가능)
+      Future.delayed(Duration.zero, () async {
+        try {
+          // 실제 업로드된 이미지 URL을 임시 저장할 map
+          // (문서 업데이트 시, "review_image1", "review_image2" 등만 변경)
+          final Map<String, String?> updatedImages = {};
+
+          // 여러 장의 이미지를 순회하며 업로드
+          for (int i = 0; i < images.length; i++) {
+            final uploadedImageUrl = await uploadImage(
+              images[i],
+              '$storagePath/review_image$i',
+            );
+            if (uploadedImageUrl != null) {
+              // 예: i=0 -> 'review_image1' 키에 저장
+              updatedImages['review_image${i + 1}'] = uploadedImageUrl;
+            }
+          }
+
+          // 업로드 완료 후, 문서 업데이트
+          if (updatedImages.isNotEmpty) {
+            await reviewDocRef.update(updatedImages);
+            print("Review images updated in Firestore: $updatedImages");
+          }
+        } catch (e) {
+          print('Error in background image upload: $e');
+          // 여기서 굳이 throw하거나 UI에 알릴 필요가 없다면 무시해도 됨
+        }
+      });
+
+      // **주의**: 여기서는 이미 set()까지 완료하여, UI에 "성공" 안내가 가능하도록 함
+      // 이미지 업로드는 별도 Future.delayed로 처리하므로, 아래에서 바로 return
+      return;
     } catch (e) {
-      // 리뷰 제출 중 발생한 오류를 출력함
       print('Failed to submit review: $e');
-      // 오류 발생 시 예외를 던져 상위에서 처리할 수 있도록 함
-      throw e;
+      throw e; // 상위에서 에러 처리를 위해 rethrow
     }
   }
 
@@ -194,12 +253,40 @@ class PrivateReviewRepository {
       // 리뷰 페이징 데이터를 가져오는 로직
       print("사용자 $userEmail에 대한 리뷰 $limit개 가져오는 중");
 
+      // ---------- (1) 'users' 컬렉션에서 userEmail에 대응하는 문서를 찾음 ----------
+      // 기존에는 바로 wearcano_order_list.doc(userEmail)를 참조했으나,
+      // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 만약 문서를 찾지 못하면 빈 리스트 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('해당 이메일과 일치하는 users 문서를 찾지 못했음: $userEmail');
+        // 함수의 반환 타입이 Future<Map>이면 '[];'
+        return [];
+      }
+
+      // 찾은 문서에서 registration_id 필드를 가져옴
+      final userDocData = userQuerySnapshot.docs.first.data();
+      final registrationId = userDocData['registration_id']?.toString() ?? '';
+
+      // 만약 registration_id 필드가 없으면 빈 리스트 반환
+      if (registrationId.isEmpty) {
+        print('해당 users 문서에 registration_id가 없음: $userEmail');
+        // 함수의 반환 타입이 Future<Map>이면 '[];'
+        return [];
+      }
+
+      // ---------- (2) wearcano_order_list 컬렉션에서 doc(registrationId)로 참조 ----------
       // Firestore 컬렉션 쿼리 작성
       // (해당 쿼리 관련 파이어스토어 내 색인-index가 존재)
       // (상품 상세 화면 내 리뷰 탭 관련 색인과는 다르게 생성)
       Query query = firestore
           .collection('wearcano_review_list') // 리뷰 리스트 컬렉션
-          .doc(userEmail) // 사용자별 문서 지정
+          .doc(registrationId) // 사용자별 문서 지정
           .collection('reviews') // 리뷰 하위 컬렉션
           .where('private_review_closed_button', isEqualTo: false) // 공개 상태 조건
           .orderBy('review_write_time', descending: true) // 리뷰 작성 시간 내림차순 정렬
@@ -239,10 +326,38 @@ class PrivateReviewRepository {
       // 리뷰 숨김 처리 로직
       print("사용자 $userEmail의 separatorKey: $separatorKey 리뷰 숨김 처리 중");
 
+      // ---------- (1) 'users' 컬렉션에서 userEmail에 대응하는 문서를 찾음 ----------
+      // 기존에는 바로 wearcano_order_list.doc(userEmail)를 참조했으나,
+      // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 만약 문서를 찾지 못하면 빈 리스트 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('해당 이메일과 일치하는 users 문서를 찾지 못했음: $userEmail');
+        // 함수의 반환 타입이 Future<void>이면 그냥 'return;'
+        return;
+      }
+
+      // 찾은 문서에서 registration_id 필드를 가져옴
+      final userDocData = userQuerySnapshot.docs.first.data();
+      final registrationId = userDocData['registration_id']?.toString() ?? '';
+
+      // 만약 registration_id 필드가 없으면 빈 리스트 반환
+      if (registrationId.isEmpty) {
+        print('해당 users 문서에 registration_id가 없음: $userEmail');
+        // 함수의 반환 타입이 Future<void>이면 그냥 'return;'
+        return;
+      }
+
+      // ---------- (2) wearcano_order_list 컬렉션에서 doc(registrationId)로 참조 ----------
       // Firestore 문서 경로 생성
       final reviewDoc = firestore
           .collection('wearcano_review_list') // 리뷰 리스트 컬렉션
-          .doc(userEmail) // 사용자별 문서 지정
+          .doc(registrationId) // 사용자별 문서 지정
           .collection('reviews') // 리뷰 하위 컬렉션
           .doc(separatorKey); // 리뷰 식별 키로 문서 지정
 

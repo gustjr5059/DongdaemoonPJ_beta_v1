@@ -20,34 +20,62 @@ class RefundPolicyGuideScreen extends StatelessWidget {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // body 부분 데이터 내용의 전체 패딩 수치
+    // final double refundPaddingX = screenSize.width * (4 / referenceWidth);
+    //
+    // // 컨텐츠 사이의 간격 계산
+    // final double interval1Y = screenSize.height * (350 / referenceHeight); // 세로 간격 1 계산
+    // final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
+    // final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
+    // final double interval1X = screenSize.width * (15 / referenceWidth); // 가로 간격 1 계산
+    // final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    //
+    // // 텍스트 폰트 크기 수치
+    // final double refundGuideFontSize1 =
+    //     screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
+    // final double refundGuideFontSize2 =
+    //     screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    //
+    // // 환불 신청하기로 이동 버튼 수치
+    // final double refundBtnWidth =
+    //     screenSize.width * (280 / referenceWidth); // 환불 신청하기로 이동 버튼 가로 비율 계산
+    // final double refundBtnHeight =
+    //     screenSize.height * (45 / referenceHeight); // 환불 신청하기로 이동 버튼 세로 비율 계산
+    // final double refundBtnPaddingX = screenSize.width * (12 / referenceWidth); // 환불 신청하기로 이동 버튼 좌우 패딩 계산
+    // final double refundBtnPaddingY = screenSize.height * (5 / referenceHeight); // 환불 신청하기로 이동 버튼 상하 패딩 계산
+    // final double refundBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 환불 신청하기로 이동 버튼 텍스트 크기 비율 계산
+    // final double refundBtnX = screenSize.width * (80 / referenceWidth);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // body 부분 데이터 내용의 전체 패딩 수치
     final double refundPaddingX = screenSize.width * (4 / referenceWidth);
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y = screenSize.height * (350 / referenceHeight); // 세로 간격 1 계산
-    final double interval2Y = screenSize.height * (40 / referenceHeight); // 세로 간격 2 계산
-    final double interval3Y = screenSize.height * (50 / referenceHeight); // 세로 간격 3 계산
-    final double interval1X = screenSize.width * (15 / referenceWidth); // 가로 간격 1 계산
-    final double interval2X = screenSize.width * (10 / referenceWidth); // 가로 간격 2 계산
+    final double interval1Y = 350; // 세로 간격 1 계산
+    final double interval2Y = 40; // 세로 간격 2 계산
+    final double interval3Y = 50; // 세로 간격 3 계산
+    final double interval1X = 15; // 가로 간격 1 계산
+    final double interval2X = 10; // 가로 간격 2 계산
 
     // 텍스트 폰트 크기 수치
-    final double refundGuideFontSize1 =
-        screenSize.height * (18 / referenceHeight); // 텍스트 크기 비율 계산
-    final double refundGuideFontSize2 =
-        screenSize.height * (14 / referenceHeight); // 텍스트 크기 비율 계산
+    final double refundGuideFontSize1 = 18; // 텍스트 크기 비율 계산
+    final double refundGuideFontSize2 = 14; // 텍스트 크기 비율 계산
 
     // 환불 신청하기로 이동 버튼 수치
-    final double refundBtnWidth =
-        screenSize.width * (280 / referenceWidth); // 환불 신청하기로 이동 버튼 가로 비율 계산
-    final double refundBtnHeight =
-        screenSize.height * (45 / referenceHeight); // 환불 신청하기로 이동 버튼 세로 비율 계산
-    final double refundBtnPaddingX = screenSize.width * (12 / referenceWidth); // 환불 신청하기로 이동 버튼 좌우 패딩 계산
-    final double refundBtnPaddingY = screenSize.height * (5 / referenceHeight); // 환불 신청하기로 이동 버튼 상하 패딩 계산
-    final double refundBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 환불 신청하기로 이동 버튼 텍스트 크기 비율 계산
-    final double refundBtnX = screenSize.width * (80 / referenceWidth);
+    final double refundBtnWidth = 280; // 환불 신청하기로 이동 버튼 가로 비율 계산
+    final double refundBtnHeight = 45; // 환불 신청하기로 이동 버튼 세로 비율 계산
+    final double refundBtnPaddingX = 12; // 환불 신청하기로 이동 버튼 좌우 패딩 계산
+    final double refundBtnPaddingY = 5; // 환불 신청하기로 이동 버튼 상하 패딩 계산
+    final double refundBtnFontSize = 14; // 환불 신청하기로 이동 버튼 텍스트 크기 비율 계산
+    final double refundBtnX = 80;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Scaffold(
       body: Stack( // 여러 위젯을 겹쳐서 배치
@@ -68,7 +96,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                     fontSize: refundGuideFontSize1, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                     fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: Colors.black, // 텍스트 색상 설정
+                                    color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                 ),
                               ),
@@ -80,7 +108,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                     fontSize: refundGuideFontSize2, // 텍스트 크기 설정
                                     fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                     fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: Colors.black, // 텍스트 색상 설정
+                                    color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                 ),
                               ),
@@ -91,7 +119,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                     fontSize: refundGuideFontSize2, // 텍스트 크기 설정
                                     fontWeight: FontWeight.normal, // 텍스트 굵기 설정
                                     fontFamily: 'NanumGothic', // 글꼴 설정
-                                    color: Colors.black, // 텍스트 색상 설정
+                                    color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                 ),
                               ),
@@ -111,8 +139,8 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom( // 버튼의 스타일을 설정함
-                                    foregroundColor: Color(0xFFE17735), // 버튼의 글자 색상을 설정함
-                                    backgroundColor: Color(0xFFE17735), // 버튼의 배경 색상을 설정함
+                                    foregroundColor: ORANGE56_COLOR, // 버튼의 글자 색상을 설정함
+                                    backgroundColor: ORANGE56_COLOR, // 버튼의 배경 색상을 설정함
                                     padding: EdgeInsets.symmetric(vertical: refundBtnPaddingY, horizontal: refundBtnPaddingX), // 패딩 설정
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(45), // 모서리 둥글게 설정
@@ -138,7 +166,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                         right: 10, // 오른쪽에서 20픽셀 안쪽에 위치
                         child: IconButton(
                           icon: Icon(Icons.close), // 닫기 아이콘 설정
-                          color: Colors.black, // 색상 설정
+                          color: BLACK_COLOR, // 색상 설정
                           onPressed: () {
                             Navigator.pop(context); // 누르면 이전 화면으로 돌아가기
                           },

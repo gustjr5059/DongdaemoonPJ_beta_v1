@@ -179,10 +179,19 @@ class AapPriceAndDiscountPercentSortButtons<T extends AapBaseProductListNotifier
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // // sortBtn 관련 수치 동적 적용
+    // final double sortBtnX = screenSize.width * (8 / referenceWidth);
+    // final double sortBtneY = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
     // sortBtn 관련 수치 동적 적용
     final double sortBtnX = screenSize.width * (8 / referenceWidth);
-    final double sortBtneY = screenSize.height * (4 / referenceHeight);
+    final double sortBtneY = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 현재 선택된 정렬 타입을 감시
     final selectedSortType = ref.watch(sortButtonProvider);
@@ -217,12 +226,22 @@ class AapPriceAndDiscountPercentSortButtons<T extends AapBaseProductListNotifier
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // // sortBtn 관련 수치 동적 적용
+    // final double sortBtn1X = screenSize.width * (4 / referenceWidth);
+    // final double sortBtn2X = screenSize.width * (8 / referenceWidth);
+    // final double sortBtnTextFontSize = screenSize.height * (12 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
     // sortBtn 관련 수치 동적 적용
     final double sortBtn1X = screenSize.width * (4 / referenceWidth);
     final double sortBtn2X = screenSize.width * (8 / referenceWidth);
-    final double sortBtnTextFontSize =
-        screenSize.height * (12 / referenceHeight);
+    final double sortBtnTextFontSize = 12;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
     // 현재 버튼이 선택된 상태인지 여부를 결정
     final bool isSelected = selectedSortType == title;
@@ -333,9 +352,20 @@ class _ProductListState extends ConsumerState<AapGeneralProductList> {
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // final double interval1X =
+    //     screenSize.width * (8 / referenceWidth);
+    // final double interval1Y =
+    //     screenSize.height * (8 / referenceHeight);
+    // final double interval2Y =
+    //     screenSize.height * (10 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     final double interval1X = screenSize.width * (8 / referenceWidth);
-    final double interval1Y = screenSize.height * (8 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
+    final double interval1Y = 8;
+    final double interval2Y = 10;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     return Column(
       children: [
@@ -387,11 +417,20 @@ Widget buildGeneralProductRow(
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
-  final double interval1X = screenSize.width * (2 / referenceWidth);
-  final double interval1Y = screenSize.height * (2 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // final double interval1X =
+  //     screenSize.width * (2 / referenceWidth);
+  // final double interval1Y =
+  //     screenSize.height * (2 / referenceHeight);
+  // final itemWidth = (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+  final double interval1X = screenSize.width * (2 / referenceWidth);
+  final double interval1Y = 2;
   final itemWidth =
       (screenSize.width / 3) - interval1X; // 아이템 너비 설정 (3개가 들어가도록 계산)
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Row(
     // mainAxisAlignment: MainAxisAlignment.spaceAround, // 아이템을 수평 중앙 정렬

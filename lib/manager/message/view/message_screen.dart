@@ -130,24 +130,34 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
         adminMessageScreenPointScrollController.jumpTo(savedScrollPosition);
       }
 
-      // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
-      // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
-      ref.read(tabIndexProvider.notifier).state = -1;
-      // 쪽지 관리 화면 초기화 시, 내용 선택 관리 드롭다운 메뉴 선택 상태 초기화
-      ref.read(adminMessageContentProvider.notifier).state = null;
-      // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
-      ref.read(adminCustomMessageProvider.notifier).state = null;
-      // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
-      ref.read(adminMessageScreenTabProvider.notifier).state =
-          MessageScreenTab.create;
-      // 선택된 수신자 이메일 상태 초기화
-      ref.read(selectedReceiverProvider.notifier).state = null;
-      // 수신자 이메일 목록 초기화
-      ref.invalidate(receiversProvider);
-      // 쪽지 목록 초기화 (프로바이더를 무효화)
-      ref
-          .read(adminMessageItemsListNotifierProvider.notifier)
-          .resetAndReloadMessages(timeFrame: 30);
+        // tabIndexProvider의 상태를 하단 탭 바 내 버튼과 매칭이 되면 안되므로 0~3이 아닌 -1로 매핑
+        // -> 쪽지 관리 화면 초기화 시, 하단 탭 바 내 모든 버튼 비활성화
+        ref
+            .read(tabIndexProvider.notifier)
+            .state = -1;
+        // 쪽지 관리 화면 초기화 시, 내용 선택 관리 드롭다운 메뉴 선택 상태 초기화
+        ref
+            .read(adminMessageContentProvider.notifier)
+            .state = null;
+        // 쪽지 관리 화면 초기화 시, 선택한 메뉴 관려 텍스트 노출 입력칸 노출 상태 초기화
+        ref
+            .read(adminCustomMessageProvider.notifier)
+            .state = null;
+        // 쪽지 관리 화면 초기화 시, 탭 선택 상태 초기화
+        ref
+            .read(adminMessageScreenTabProvider.notifier)
+            .state =
+            MessageScreenTab.create;
+        // 선택된 수신자 이메일 상태 초기화
+        ref
+            .read(selectedReceiverProvider.notifier)
+            .state = null;
+        // 수신자 이메일 목록 초기화
+        ref.invalidate(receiversProvider);
+        // 쪽지 목록 초기화 (프로바이더를 무효화)
+        ref
+            .read(adminMessageItemsListNotifierProvider.notifier)
+            .resetAndReloadMessages(timeFrame: 30);
     });
 
     // FirebaseAuth 상태 변화를 감지하여 로그인 상태 변경 시 페이지 인덱스를 초기화함.
@@ -244,88 +254,90 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
     // AppBar 관련 수치 동적 적용
     final double messageAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
-    final double messageAppBarTitleHeight =
-        screenSize.height * (22 / referenceHeight);
-    final double messageAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double messageAppBarTitleY =
-        screenSize.height * (11 / referenceHeight);
-
-    // body 부분 데이터 내용의 전체 패딩 수치
-    final double messagePaddingX = screenSize.width * (8 / referenceWidth);
+    final double messageAppBarTitleHeight = 22;
+    final double messageAppBarTitleX = screenSize.width * (5 / referenceWidth);
+    final double messageAppBarTitleY = 11;
 
     // 컨텐츠 사이의 간격 계산
-    final double interval1Y =
-        screenSize.height * (10 / referenceHeight); // 세로 간격 1 계산
+    final double interval1Y = 10; // 세로 간격 1 계산
 
+    // return GestureDetector(
+    //   onTap: () {
+    //     // 입력 필드 외부를 클릭하면 모든 입력 필드의 포커스를 해제
+    //     FocusScope.of(context).unfocus();
+    //   },
+    //   child: Scaffold(
     return Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: adminMessageScreenPointScrollController,
-            slivers: <Widget>[
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                floating: true,
-                pinned: true,
-                expandedHeight: 0.0,
-                // 확장된 높이를 0으로 설정하여 확장 기능 제거
-                // 확장 높이 설정
-                // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
-                  background: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+        body: Stack(
+          children: [
+            CustomScrollView(
+              controller: adminMessageScreenPointScrollController,
+              slivers: <Widget>[
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  floating: true,
+                  pinned: true,
+                  expandedHeight: 0.0,
+                  // 확장된 높이를 0으로 설정하여 확장 기능 제거
+                  // 확장 높이 설정
+                  // FlexibleSpaceBar를 사용하여 AppBar 부분의 확장 및 축소 효과 제공함.
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    // 앱 바 부분을 고정시키는 옵션->앱 바가 스크롤에 의해 사라지고, 그 자리에 상단 탭 바가 있는 bottom이 상단에 고정되도록 하는 기능
+                    background: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: BLACK_COLOR, width: 1.0), // 하단 테두리 추가
+                        ),
+                      ),
+                      child: buildCommonAppBar(
+                        context: context,
+                        ref: ref,
+                        title: '쪽지 관리(관리자)',
+                        fontFamily: 'NanumGothic',
+                        leadingType: LeadingType.none,
+                        buttonCase: 1,
+                        appBarTitleWidth: messageAppBarTitleWidth,
+                        appBarTitleHeight: messageAppBarTitleHeight,
+                        appBarTitleX: messageAppBarTitleX,
+                        appBarTitleY: messageAppBarTitleY,
                       ),
                     ),
-                    child: buildCommonAppBar(
-                      context: context,
-                      ref: ref,
-                      title: '쪽지 관리(관리자)',
-                      fontFamily: 'NanumGothic',
-                      leadingType: LeadingType.none,
-                      buttonCase: 1,
-                      appBarTitleWidth: messageAppBarTitleWidth,
-                      appBarTitleHeight: messageAppBarTitleHeight,
-                      appBarTitleX: messageAppBarTitleX,
-                      appBarTitleY: messageAppBarTitleY,
+                  ),
+                  leading: null,
+                  // backgroundColor: BUTTON_COLOR,
+                ),
+                // 실제 컨텐츠를 나타내는 슬리버 리스트
+                // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+                SliverPadding(
+                  padding: EdgeInsets.only(top: 5),
+                  // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            SizedBox(height: interval1Y),
+                            AdminMessageScreenTabs(),
+                            // '쪽지 작성', '쪽지 목록' 탭 내용 구현
+                            SizedBox(height: interval1Y),
+                          ],
+                        );
+                      },
+                      childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                     ),
                   ),
                 ),
-                leading: null,
-                // backgroundColor: BUTTON_COLOR,
-              ),
-              // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          SizedBox(height: interval1Y),
-                          AdminMessageScreenTabs(), // '쪽지 작성', '쪽지 목록' 탭 내용 구현
-                          SizedBox(height: interval1Y),
-                        ],
-                      );
-                    },
-                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // buildTopButton(context, managerMessageScreenPointScrollController),
-        ],
-      ),
-      bottomNavigationBar: buildCommonBottomNavigationBar(
-          ref.watch(tabIndexProvider), ref, context, 5, 1,
-          scrollController: adminMessageScreenPointScrollController),
+              ],
+            ),
+            // buildTopButton(context, managerMessageScreenPointScrollController),
+          ],
+        ),
+        bottomNavigationBar: buildCommonBottomNavigationBar(
+            ref.watch(tabIndexProvider), ref, context, 5, 1,
+            scrollController: adminMessageScreenPointScrollController),
+      // ),
     );
   }
 }

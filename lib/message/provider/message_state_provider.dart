@@ -46,7 +46,7 @@ class PrivateMessageItemsListNotifier extends StateNotifier<List<Map<String, dyn
 
     // 현재 로그인된 사용자 이메일 가져오기
     final user = FirebaseAuth.instance.currentUser; // FirebaseAuth에서 현재 사용자 정보 가져옴
-    final userEmail = user?.email; // 사용자 이메일 추출
+    final userEmail = user?.email ?? user?.uid; // 사용자 이메일 추출
     if (userEmail == null) {
       print("사용자 인증에 실패했습니다. 로그인 후 다시 시도해주세요."); // 인증 실패 메시지
       state = []; // 상태 초기화
@@ -90,7 +90,7 @@ class PrivateMessageItemsListNotifier extends StateNotifier<List<Map<String, dyn
   Future<void> deleteMessage(String messageId, int timeFrame) async {
     // 현재 로그인된 사용자 이메일 가져오기
     final user = FirebaseAuth.instance.currentUser; // FirebaseAuth에서 현재 사용자 정보 가져옴
-    final userEmail = user?.email; // 사용자 이메일 추출
+    final userEmail = user?.email ?? user?.uid; // 사용자 이메일 추출
     if (userEmail == null) {
       print("사용자 인증에 실패했습니다. 로그인 후 다시 시도해주세요."); // 인증 실패 메시지
       throw Exception('사용자가 로그인되어 있지 않습니다.'); // 인증 실패 예외 발생

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+     import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,69 +39,97 @@ class _PrivateMessageBodyPartsContentsState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
-    // 쪽지 관리 화면 내 쪽지 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
-    final double messageInfoCardViewWidth =
-        screenSize.width * (393 / referenceWidth); // 가로 비율 계산
-    final double messageInfoCardViewHeight =
-        screenSize.height * (110 / referenceHeight); // 세로 비율 계산
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 쪽지 관리 화면 내 쪽지 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
+    // final double messageInfoCardViewWidth =
+    //     screenSize.width * (393 / referenceWidth); // 가로 비율 계산
+    // final double messageInfoCardViewHeight =
+    //     screenSize.height * (110 / referenceHeight); // 세로 비율 계산
+    //
+    // // body 부분 전체 패딩 수치 계산
+    // final double messageInfoCardViewPaddingX =
+    //     screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
+    // final double messageInfoCardViewPadding1Y =
+    //     screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    //
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    // final double sendingBtnWidth = screenSize.width * (130 / referenceWidth);
+    // final double sendingBtnHeight = screenSize.height * (50 / referenceHeight);
+    // final double sendingBtnX = screenSize.width * (12 / referenceWidth);
+    // final double sendingBtnY = screenSize.height * (10 / referenceHeight);
+    // final double sendingBtnFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double paddingX = screenSize.width * (2 / referenceWidth);
+    // final double messageRecipientDropdownBtnWidth =
+    //     screenSize.width * (210 / referenceWidth);
+    // final double messageRecipientDropdownBtnHeight =
+    //     screenSize.height * (50 / referenceHeight);
+    //
+    // final double messageRecipientSelectDataTextSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // final double messageDataTextSize1 =
+    //     screenSize.height * (14 / referenceHeight);
+    // final double messageDataTextSize2 =
+    //     screenSize.height * (16 / referenceHeight);
+    //
+    // // 펼치기 및 닫기 버튼 수치
+    // final double messageExpandedBtnFontSize =
+    //     screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
+    // final double messageExpandedBtnHeight =
+    //     screenSize.height * (30 / referenceHeight);
+    // final double messageExpandedBtnWidth =
+    //     screenSize.width * (300 / referenceWidth);
+    //
+    // // 삭제 버튼 수치
+    // final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    // final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
+    // final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    // final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
+    // final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    //
+    // // 컨텐츠 사이의 간격 수치
+    // final double intervalX = screenSize.width * (8 / referenceWidth);
+    // final double interva2X = screenSize.width * (10 / referenceWidth);
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    //
+    // // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
+    // final double messageEmptyTextWidth =
+    //     screenSize.width * (250 / referenceWidth); // 가로 비율
+    // final double messageEmptyTextHeight =
+    //     screenSize.height * (22 / referenceHeight); // 세로 비율
+    // final double messageEmptyTextX =
+    //     screenSize.width * (70 / referenceWidth); // 가로 비율
+    // final double messageEmptyTextY =
+    //     screenSize.height * (200 / referenceHeight); // 세로 비율
+    // final double messageEmptyTextFontSize =
+    //     screenSize.height * (16 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
-    // body 부분 전체 패딩 수치 계산
-    final double messageInfoCardViewPaddingX =
-        screenSize.width * (15 / referenceWidth); // 좌우 패딩 계산
-    final double messageInfoCardViewPadding1Y =
-        screenSize.height * (10 / referenceHeight); // 상하 패딩 계산
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // 쪽지 관리 화면 내 쪽지 목록 탭 내 카드뷰 섹션의 가로와 세로 비율 계산
 
     // 비율을 기반으로 동적으로 크기와 위치 설정
-    final double sendingBtnWidth = screenSize.width * (130 / referenceWidth);
-    final double sendingBtnHeight = screenSize.height * (50 / referenceHeight);
-    final double sendingBtnX = screenSize.width * (12 / referenceWidth);
-    final double sendingBtnY = screenSize.height * (10 / referenceHeight);
-    final double sendingBtnFontSize =
-        screenSize.height * (16 / referenceHeight);
-    final double paddingX = screenSize.width * (2 / referenceWidth);
-    final double messageRecipientDropdownBtnWidth =
-        screenSize.width * (210 / referenceWidth);
-    final double messageRecipientDropdownBtnHeight =
-        screenSize.height * (50 / referenceHeight);
-
-    final double messageRecipientSelectDataTextSize =
-        screenSize.height * (16 / referenceHeight);
-    final double messageDataTextSize1 =
-        screenSize.height * (14 / referenceHeight);
-    final double messageDataTextSize2 =
-        screenSize.height * (16 / referenceHeight);
-
-    // 펼치기 및 닫기 버튼 수치
-    final double messageExpandedBtnFontSize =
-        screenSize.height * (14 / referenceHeight); // 펼치기 및 닫기 버튼 크기
-    final double messageExpandedBtnHeight =
-        screenSize.height * (30 / referenceHeight);
-    final double messageExpandedBtnWidth =
-        screenSize.width * (300 / referenceWidth);
+    final double messageDataTextSize1 = 14;
 
     // 삭제 버튼 수치
-    final double deleteBtnHeight = screenSize.height * (30 / referenceHeight);
+    final double deleteBtnHeight = 30;
     final double deleteBtnWidth = screenSize.width * (60 / referenceWidth);
-    final double deleteBtnPaddingY = screenSize.height * (2 / referenceHeight);
+    final double deleteBtnPaddingY = 2;
     final double deleteBtnPaddingX = screenSize.width * (4 / referenceWidth);
-    final double deleteBtnFontSize = screenSize.height * (12 / referenceHeight);
+    final double deleteBtnFontSize = 12;
 
     // 컨텐츠 사이의 간격 수치
     final double intervalX = screenSize.width * (8 / referenceWidth);
-    final double interva2X = screenSize.width * (10 / referenceWidth);
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
 
     // 쪽지 목록 부분이 비어있는 경우의 알림 부분 수치
     final double messageEmptyTextWidth =
-        screenSize.width * (250 / referenceWidth); // 가로 비율
-    final double messageEmptyTextHeight =
-        screenSize.height * (22 / referenceHeight); // 세로 비율
-    final double messageEmptyTextX =
-        screenSize.width * (70 / referenceWidth); // 가로 비율
+        screenSize.width * (393 / referenceWidth); // 가로 비율
+    final double messageEmptyTextHeight = 22; // 세로 비율
     final double messageEmptyTextY =
         screenSize.height * (200 / referenceHeight); // 세로 비율
-    final double messageEmptyTextFontSize =
-        screenSize.height * (16 / referenceHeight);
+    final double messageEmptyTextFontSize = 16;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 날짜 형식을 'yyyy년 MM월 dd일 HH시 MM분'로 지정함
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH시 mm분');
@@ -115,7 +143,7 @@ class _PrivateMessageBodyPartsContentsState
         width: messageEmptyTextWidth,
         height: messageEmptyTextHeight,
         margin:
-            EdgeInsets.only(left: messageEmptyTextX, top: messageEmptyTextY),
+            EdgeInsets.only(top: messageEmptyTextY),
         child: Text(
           '현재 쪽지 목록 내 쪽지가 없습니다.',
           style: TextStyle(
@@ -296,9 +324,17 @@ class _PrivateMessageBodyPartsContentsState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 컨텐츠 사이의 간격 수치
+    // final double interval1X = screenSize.width * (4 / referenceWidth);
+    // final double interval1Y = screenSize.height * (4 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 컨텐츠 사이의 간격 수치
     final double interval1X = screenSize.width * (4 / referenceWidth);
-    final double interval1Y = screenSize.height * (4 / referenceHeight);
+    final double interval1Y = 4;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     if (label.length + value.length <= 30) {
       return Padding(

@@ -71,14 +71,25 @@ Widget aaoBuildNewProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,14 +142,25 @@ Widget aaoBuildBestProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,14 +213,25 @@ Widget aaoBuildSaleProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,14 +284,25 @@ Widget aaoBuildSpringProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,14 +355,25 @@ Widget aaoBuildSummerProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,14 +426,25 @@ Widget aaoBuildAutumnProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,14 +497,25 @@ Widget aaoBuildWinterProductsSection(WidgetRef ref, BuildContext context) {
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 동적으로 크기와 위치 설정
+  // // 신상 섹션 내 요소들의 수치
+  // final double SectionX =
+  //     screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY =
+  //     screenSize.height * (8 / referenceHeight);
+  // final double SectionTextFontSize =
+  //     screenSize.height * (20 / referenceHeight);
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 신상 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY =
-      screenSize.height * (8 / referenceHeight);
-  final double SectionTextFontSize =
-      screenSize.height * (20 / referenceHeight);
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8;
+  final double SectionTextFontSize = 20;
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -544,18 +621,34 @@ class _AaoEventPosterImgSectionListState
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 화면 비율에 따른 가로 크기 설정
+    // final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
+    // // 화면 비율에 따른 세로 크기 설정
+    // final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    // // 아이템 간 여백 비율 설정
+    // final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
+    //
+    // // 에러 관련 텍스트 수치
+    // final double errorTextFontSize1 =
+    //     screenSize.height * (12 / referenceHeight);
+    // final double errorTextFontSize2 =
+    //     screenSize.height * (10 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 화면 비율에 따른 가로 크기 설정
     final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
     // 화면 비율에 따른 세로 크기 설정
-    final double DetailDocHeight = screenSize.height * (250 / referenceHeight);
+    final double DetailDocHeight = screenSize.width * (200 / referenceWidth);
     // 아이템 간 여백 비율 설정
-    final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
+    final double DetailDoc1X = 4;
 
     // 에러 관련 텍스트 수치
-    final double errorTextFontSize1 =
-        screenSize.height * (12 / referenceHeight);
-    final double errorTextFontSize2 =
-        screenSize.height * (10 / referenceHeight);
+    final double errorTextFontSize1 = 12;
+    final double errorTextFontSize2 = 10;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
 
     return SingleChildScrollView(
         controller: _scrollController, // 수평 스크롤 컨트롤러 설정
@@ -668,11 +761,21 @@ Widget aaoBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context
   final double referenceWidth = 393.0;
   final double referenceHeight = 852.0;
 
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+  // // 비율을 기반으로 크기와 위치를 동적으로 설정함
+  // // 섹션 내 요소들의 수치
+  // final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  // final double SectionY = screenSize.height * (8 / referenceHeight); // 위쪽 여백 비율
+  // final double SectionTextFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기 비율
+  // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 크기와 위치를 동적으로 설정함
   // 섹션 내 요소들의 수치
-  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
-  final double SectionY = screenSize.height * (8 / referenceHeight); // 위쪽 여백 비율
-  final double SectionTextFontSize = screenSize.height * (20 / referenceHeight); // 텍스트 크기 비율
+  final double SectionX = 16; // 왼쪽 여백 비율
+  final double SectionY = 8; // 위쪽 여백 비율
+  final double SectionTextFontSize = 20; // 텍스트 크기 비율
+  // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정

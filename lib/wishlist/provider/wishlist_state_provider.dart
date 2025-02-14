@@ -94,8 +94,10 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
   void addItem(String productId) {
     // 현재 상태가 데이터인 경우
     if (state is AsyncData) {
+      // 현재 찜 목록 상태를 가져옴
       final items = (state as AsyncData<Set<String>>).value; // 현재 찜 목록 상태 가져옴
       print("Firestore에서 상품 추가 요청 - productId: $productId"); // 상품 추가 요청 로그
+      // 상품을 찜 목록에 추가
       state = AsyncValue.data(Set.from(items)..add(productId)); // Firestore 추가 후 상태 업데이트
       print("상품 추가 완료 - 현재 찜된 상품 수: ${state.value?.length ?? 0}"); // 추가 완료 로그
     }
@@ -103,6 +105,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
 
   // 주어진 상품 ID가 찜 목록에 있는지 확인하는 함수
   bool isWished(String productId) {
+    // 현재 상태가 데이터인 경우
     if (state is AsyncData) {
       final items = (state as AsyncData<Set<String>>).value; // 현재 찜 목록 상태 가져옴
       final isWished = items.contains(productId); // 상품이 찜 목록에 있는지 확인
@@ -110,6 +113,7 @@ class WishlistItemNotifier extends StateNotifier<AsyncValue<Set<String>>> {
       return isWished;
     }
     print("상품 찜 상태 확인 실패 - 데이터가 없습니다."); // 데이터 없음 로그
+    // 현재 상태가 데이터가 아닌 경우 false 반환
     return false;
   }
 }
