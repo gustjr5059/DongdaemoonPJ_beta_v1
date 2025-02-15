@@ -437,13 +437,13 @@ class _AahOnepieceMainScreenState extends ConsumerState<AahOnepieceMainScreen>
 
     // 대배너 부분 관련 수치
     final double onepieceMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double onepieceMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double onepieceMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double onepieceMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double onepieceMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double onepieceMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double onepieceMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double onepieceMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double onepieceMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double onepieceMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

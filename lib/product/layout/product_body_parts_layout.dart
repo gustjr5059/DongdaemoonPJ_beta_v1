@@ -2163,7 +2163,7 @@ Widget buildProductImageSliderSection(
 
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 이미지 부분 수치
-  final double ImageSliderSectionHeight = 421;
+  final double ImageSliderSectionHeight = screenSize.width * (393 / referenceWidth);
 
   // 이미지 인디케이터 부분 수치
   final double ImageSliderSectionIndicator1Y = 10;

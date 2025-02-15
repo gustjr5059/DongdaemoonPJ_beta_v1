@@ -345,13 +345,13 @@ class _AafSummerSubMainScreenState extends ConsumerState<AafSummerSubMainScreen>
 
     // 대배너 부분 관련 수치
     final double summerSubMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double summerSubMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double summerSubMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double summerSubMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double summerSubMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double summerSubMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double summerSubMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double summerSubMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double summerSubMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double summerSubMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

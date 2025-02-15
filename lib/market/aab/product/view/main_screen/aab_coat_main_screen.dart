@@ -429,13 +429,13 @@ class _AabCoatMainScreenState extends ConsumerState<AabCoatMainScreen>
 
     // 대배너 부분 관련 수치
     final double coatMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double coatMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double coatMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double coatMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double coatMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double coatMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double coatMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double coatMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double coatMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double coatMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

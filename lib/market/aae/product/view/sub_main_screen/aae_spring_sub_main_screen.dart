@@ -345,13 +345,13 @@ class _AaeSpringSubMainScreenState extends ConsumerState<AaeSpringSubMainScreen>
 
     // 대배너 부분 관련 수치
     final double springSubMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double springSubMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double springSubMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double springSubMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double springSubMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double springSubMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double springSubMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double springSubMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double springSubMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double springSubMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

@@ -576,16 +576,16 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
         screenSize.height * (60 / referenceHeight); // 상단 탭 바 높이 비율
 
     // 대배너 부분 관련 수치
-    final double homeScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double homeScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
-    final double homeScreenLargeBannerViewHeight =
-        screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+    final double homeScreenLargeBannerWidth =
+        screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    final double homeScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double homeScreenLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 홈 소배너 부분 관련 수치
-    final double homeScreenSmallBannerWidth = screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
-    final double homeScreenSmallBannerHeight = screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
-    final double homeScreenSmallBannerViewHeight =
-        screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
+    final double homeScreenSmallBannerWidth =
+        screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
+    final double homeScreenSmallBannerHeight = screenSize.width * (127 / referenceWidth); // 소배너 이미지 높이
+    final double homeScreenSmallBannerViewHeight = screenSize.width * (127 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

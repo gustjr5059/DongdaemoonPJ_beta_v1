@@ -345,13 +345,13 @@ class _AadWinterSubMainScreenState extends ConsumerState<AadWinterSubMainScreen>
 
     // 대배너 부분 관련 수치
     final double winterSubMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double winterSubMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double winterSubMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double winterSubMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double winterSubMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double winterSubMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double winterSubMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double winterSubMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double winterSubMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double winterSubMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth);// 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

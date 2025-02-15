@@ -429,13 +429,13 @@ class _AagPantsMainScreenState extends ConsumerState<AagPantsMainScreen>
 
     // 대배너 부분 관련 수치
     final double pantsMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double pantsMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double pantsMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double pantsMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double pantsMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double pantsMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double pantsMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double pantsMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double pantsMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double pantsMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

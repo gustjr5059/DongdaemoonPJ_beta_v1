@@ -133,7 +133,7 @@ class _EventPosterImgSectionListState
     // 화면 비율에 따른 가로 크기 설정
     final double DetailDocWidth = screenSize.width * (160 / referenceWidth);
     // 화면 비율에 따른 세로 크기 설정
-    final double DetailDocHeight = 250;
+    final double DetailDocHeight = screenSize.width * (200 / referenceWidth);
     // 아이템 간 여백 비율 설정
     final double DetailDoc1X = screenSize.width * (4 / referenceWidth);
 
