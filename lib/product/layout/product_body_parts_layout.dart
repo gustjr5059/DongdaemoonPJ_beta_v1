@@ -1236,7 +1236,7 @@ class ProductInfoDetailScreenNavigation {
     final double DetailDoc1X = screenSize.width * (6 / referenceWidth);
     final double DetailDoc2X = screenSize.width * (2 / referenceWidth);
     final double DetailDoc3X = screenSize.width * (4 / referenceWidth);
-    final double DetailDoc4X = screenSize.width * (-9 / referenceWidth);
+    final double DetailDoc4X = -9;
     final double DetailDoc1Y = 6;
     final double DetailDoc2Y = 2;
     final double DetailDoc3Y = -11;
@@ -1554,7 +1554,7 @@ Widget buildProductImageSliderSection(
 
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 이미지 부분 수치
-  final double ImageSliderSectionHeight = 421;
+  final double ImageSliderSectionHeight = screenSize.width * (393 / referenceWidth);
 
   // 이미지 인디케이터 부분 수치
   final double ImageSliderSectionIndicator1Y = 10;

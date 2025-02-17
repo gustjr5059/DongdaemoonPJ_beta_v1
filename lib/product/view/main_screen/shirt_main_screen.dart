@@ -438,13 +438,13 @@ class _ShirtMainScreenState extends ConsumerState<ShirtMainScreen>
 
     // 대배너 부분 관련 수치
     final double shirtMainScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double shirtMainScreenLargeBannerHeight = 378; // 대배너 이미지 높이
-    final double shirtMainLargeBannerViewHeight = 378; // 대배너 화면 세로 비율
+    final double shirtMainScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double shirtMainLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 소배너 부분 관련 수치
     final double shirtMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double shirtMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double shirtMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double shirtMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double shirtMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

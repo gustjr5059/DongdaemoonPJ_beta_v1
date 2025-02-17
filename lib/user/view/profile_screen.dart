@@ -265,8 +265,8 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
 
     // 소배너 부분 관련 수치
     final double profileMainScreenSmallBannerWidth = screenSize.width * (361 / referenceWidth); // 소배너 이미지 너비
-    final double profileMainScreenSmallBannerHeight = 90; // 소배너 이미지 높이
-    final double profileMainScreenSmallBannerViewHeight = 90; // 소배너 화면 세로 비율
+    final double profileMainScreenSmallBannerHeight = screenSize.width * (90 / referenceWidth); // 소배너 이미지 높이
+    final double profileMainScreenSmallBannerViewHeight = screenSize.width * (90 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double profileAppBarTitleWidth = screenSize.width * (240 / referenceWidth);

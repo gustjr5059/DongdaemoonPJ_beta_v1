@@ -97,97 +97,97 @@ class _SplashScreenState extends State<SplashScreen1>
     final double screenX =
         screenSize.height * (180 / referenceHeight); // 위쪽 여백 비율
 
-// // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
-//     // 화면의 UI를 구성함.
-//     return Scaffold(
-//       body: Stack(
-//         // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
-//         children: <Widget>[
-//           // 피그마에서 추출한 배경 이미지를 SVG로 추가
-//           Positioned.fill(
-//             child: Image.asset(
-//               'asset/img/misc/splash_image/couture_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
-//               fit: BoxFit.cover, // 화면 전체에 맞게 조정
-//             ),
-//           ),
-//           Align(
-//             alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
-//             child: Padding(
-//               padding: EdgeInsets.only(bottom: screenX), // 하단에서부터 100의 여백을 줌.
-//               child: AnimatedBuilder(
-//                 animation: _rotationAnimation,
-//                 builder: (context, child) {
-//                   return Transform.rotate(
-//                     angle: _rotationAnimation.value * 2 * 3.14,
-//                     child: child,
-//                   );
-//                 },
-//                 child: CircularProgressIndicator(
-//                   valueColor: AlwaysStoppedAnimation<Color>(WHITE_COLOR),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-// // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
-
-    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+// ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
     // 화면의 UI를 구성함.
     return Scaffold(
-      // body에 바로 CustomScrollView 배치
-      body: CustomScrollView(
-        slivers: [
-          // SliverFillRemaining:
-          // 남은 화면 전체를 차지하기 때문에
-          // 배경 이미지를 상하단까지 완전히 채울 수 있음.
-          SliverFillRemaining(
-            // 만약 스크롤이 필요 없고, 화면을 '정적으로' 채우기만 한다면
-            // hasScrollBody: false 를 사용해서 내용이 화면보다 작을 때 스크롤이 비활성화되도록 할 수 있음
-            hasScrollBody: false,
-            child: Stack(
-              children: [
-                // 배경 이미지
-                Positioned.fill(
-                  child: Image.asset(
-                    'asset/img/misc/splash_image/couture_splash1_bg_img.png',
-                    fit: BoxFit.cover, // 전체 화면 꽉 채우기
-                    width: screenSize.width, // 화면 너비
-                    height: screenSize.height, // 화면 높이
-                  ),
+      body: Stack(
+        // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
+        children: <Widget>[
+          // 피그마에서 추출한 배경 이미지를 SVG로 추가
+          Positioned.fill(
+            child: Image.asset(
+              'asset/img/misc/splash_image/couture_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
+              fit: BoxFit.cover, // 화면 전체에 맞게 조정
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
+            child: Padding(
+              padding: EdgeInsets.only(bottom: screenX), // 하단에서부터 100의 여백을 줌.
+              child: AnimatedBuilder(
+                animation: _rotationAnimation,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: _rotationAnimation.value * 2 * 3.14,
+                    child: child,
+                  );
+                },
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(WHITE_COLOR),
                 ),
-                // 실제 표시할 콘텐츠(예: 로고, 로딩 인디케이터 등)는
-                // SafeArea 내부에 배치하여 상태바, 하단 제스처 영역 침범을 방지
-                SafeArea(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: screenX),
-                      // 하단에서부터 100의 여백을 줌.
-                      child: AnimatedBuilder(
-                        animation: _rotationAnimation,
-                        builder: (context, child) {
-                          return Transform.rotate(
-                            angle: _rotationAnimation.value * 2 * 3.14,
-                            child: child,
-                          );
-                        },
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            WHITE_COLOR,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],
       ),
     );
-    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+// ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
+    // // 화면의 UI를 구성함.
+    // return Scaffold(
+    //   // body에 바로 CustomScrollView 배치
+    //   body: CustomScrollView(
+    //     slivers: [
+    //       // SliverFillRemaining:
+    //       // 남은 화면 전체를 차지하기 때문에
+    //       // 배경 이미지를 상하단까지 완전히 채울 수 있음.
+    //       SliverFillRemaining(
+    //         // 만약 스크롤이 필요 없고, 화면을 '정적으로' 채우기만 한다면
+    //         // hasScrollBody: false 를 사용해서 내용이 화면보다 작을 때 스크롤이 비활성화되도록 할 수 있음
+    //         hasScrollBody: false,
+    //         child: Stack(
+    //           children: [
+    //             // 배경 이미지
+    //             Positioned.fill(
+    //               child: Image.asset(
+    //                 'asset/img/misc/splash_image/couture_splash1_bg_img.png',
+    //                 fit: BoxFit.cover, // 전체 화면 꽉 채우기
+    //                 width: screenSize.width, // 화면 너비
+    //                 height: screenSize.height, // 화면 높이
+    //               ),
+    //             ),
+    //             // 실제 표시할 콘텐츠(예: 로고, 로딩 인디케이터 등)는
+    //             // SafeArea 내부에 배치하여 상태바, 하단 제스처 영역 침범을 방지
+    //             SafeArea(
+    //               child: Align(
+    //                 alignment: Alignment.bottomCenter,
+    //                 child: Padding(
+    //                   padding: EdgeInsets.only(bottom: screenX),
+    //                   // 하단에서부터 100의 여백을 줌.
+    //                   child: AnimatedBuilder(
+    //                     animation: _rotationAnimation,
+    //                     builder: (context, child) {
+    //                       return Transform.rotate(
+    //                         angle: _rotationAnimation.value * 2 * 3.14,
+    //                         child: child,
+    //                       );
+    //                     },
+    //                     child: CircularProgressIndicator(
+    //                       valueColor: AlwaysStoppedAnimation<Color>(
+    //                         WHITE_COLOR,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
   }
 }
