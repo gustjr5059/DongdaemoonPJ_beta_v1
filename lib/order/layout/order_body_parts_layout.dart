@@ -2328,7 +2328,7 @@ class CompleteOrderButton extends ConsumerWidget {
                       )).future);
 
                       // 발주 완료 메시지를 스낵바로 표시
-                      showCustomSnackBar(context, '발주가 완료되었습니다. 이메일이 전송되었습니다.');
+                      showCustomSnackBar(context, '발주가 완료되었습니다.');
 
                       // navigateToScreenAndRemoveUntil 함수를 사용하여 발주완료 화면으로 이동
                       navigateToScreenAndRemoveUntil(

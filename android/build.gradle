@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.0' // Kotlin 버전을 1.9.10으로 설정 (flutter_naver_login 패키지 2.0.0 버전은 Kotlin 버전을 1.9.10이 필요!!)
+    ext.kotlin_version = '1.9.10' // Kotlin 버전을 1.9.10으로 설정 (flutter_naver_login 패키지 2.0.0 버전은 Kotlin 버전을 1.9.10이 필요!!)
     repositories {
         google()
         mavenCentral()

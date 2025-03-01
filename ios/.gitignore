@@ -33,6 +33,10 @@ Runner/GeneratedPluginRegistrant.*
 !default.pbxuser
 !default.perspectivev3
 !/Runner/GoogleService-Info.plist
+# Xcconfig files containing secrets
+Runner/Info.plist
+Flutter/Config.xcconfig
+Config.xcconfig
 
 # Firebase iOS configuration file
 Runner/GoogleService-Info.plist

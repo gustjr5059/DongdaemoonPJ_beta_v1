@@ -17,6 +17,8 @@
 const functions = require('firebase-functions'); // Firebase Functions 모듈을 불러옴.
 const admin = require('firebase-admin'); // Firebase Admin SDK 모듈을 불러옴.
 const nodemailer = require('nodemailer'); // Nodemailer 모듈을 불러옴.
+const axios = require('axios'); // JavaScript로 작성된 HTTP 클라이언트 라이브러리 (API 서버나 웹 서버에 HTTP 요청을 보내 데이터를 가져오거나 전송하는 데 사용) => 즉, 네이버 로그인 화면 띄우는 역할
+
 //const serviceAccount = require('./wearcano-firebase-adminsdk-file.json'); // Firebase Admin 인증 파일 불러옴.
 //
 //// Firebase Admin SDK 초기화
@@ -369,6 +371,63 @@ function generateOrderEmailBody(ordererInfo, recipientInfo, amountInfo, productI
 //    }
 //  });
 // ------ FCM 알림 전송 기능 구현 내용 끝 ------
+
+// Firebase Functions 환경 변수에서 네이버 Client ID 및 Secret 가져오기
+// ——— 네이버 Client ID 및 Secret 환경 변수 가져오기 시작 부분
+const naverClientId = functions.config().naver.client_id; // 네이버 Client ID를 환경 변수에서 가져옴
+const naverClientSecret = functions.config().naver.client_secret; // 네이버 Client Secret을 환경 변수에서 가져옴
+
+// 네이버 로그인 커스텀 토큰 생성 함수
+// ——— createNaverCustomToken_V2 함수 정의 시작 부분
+exports.createNaverCustomToken_V2 = functions.region('asia-northeast3').https.onCall(async (data, context) => {
+  const { naverAccessToken } = data; // 클라이언트로부터 전달받은 네이버 액세스 토큰
+
+  console.log('네이버 액세스 토큰 수신:', naverAccessToken); // 전달받은 네이버 액세스 토큰 출력
+
+  if (!naverAccessToken) { // 네이버 액세스 토큰이 제공되지 않은 경우
+    console.error('액세스 토큰이 누락되었습니다'); // 오류 메시지 출력
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      '네이버 액세스 토큰이 제공되지 않았습니다.' // 클라이언트에 반환할 오류 메시지
+    );
+  }
+
+  try {
+    console.log('네이버 API 호출 시작...'); // 네이버 API 호출 시작 로그
+    const userInfoResponse = await axios.get('https://openapi.naver.com/v1/nid/me', {
+      headers: {
+        Authorization: `Bearer ${naverAccessToken}`, // 네이버 액세스 토큰을 Authorization 헤더에 포함
+        'X-Naver-Client-Id': naverClientId, // 네이버 Client ID 헤더에 포함
+        'X-Naver-Client-Secret': naverClientSecret, // 네이버 Client Secret 헤더에 포함
+      },
+    });
+
+    console.log('네이버 API 응답 수신:', userInfoResponse.data); // 네이버 API에서 받은 응답 데이터 출력
+
+    if (userInfoResponse.data.message !== 'success') { // 네이버 액세스 토큰 검증 실패 시
+      console.error('네이버 액세스 토큰 검증에 실패했습니다'); // 오류 메시지 출력
+      throw new functions.https.HttpsError('unauthenticated', '네이버 액세스 토큰 확인 실패.'); // 클라이언트에 반환할 오류 메시지
+    }
+
+    const { email, id } = userInfoResponse.data.response; // 네이버 API 응답에서 사용자 이메일 및 ID 추출
+    console.log('사용자 정보 수신:', { email, id }); // 사용자 정보 출력
+
+    if (!id) { // 네이버 사용자 ID가 없는 경우
+      console.error('네이버 사용자 ID가 누락되었습니다'); // 오류 메시지 출력
+      throw new functions.https.HttpsError('unauthenticated', '네이버 사용자 ID가 존재하지 않습니다.'); // 클라이언트에 반환할 오류 메시지
+    }
+
+    // Firebase 커스텀 토큰 생성
+    console.log('Firebase 커스텀 토큰 생성 시작...'); // 커스텀 토큰 생성 로그
+    const customToken = await admin.auth().createCustomToken(id, { email }); // 사용자 ID와 이메일을 포함한 커스텀 토큰 생성
+    console.log('Firebase 커스텀 토큰 생성 완료:', customToken); // 생성된 커스텀 토큰 출력
+    return { customToken }; // 클라이언트에 커스텀 토큰 반환
+  } catch (error) {
+    console.error('오류 발생:', error.message || error); // 오류 메시지 출력
+    throw new functions.https.HttpsError('internal', '커스텀 토큰 생성에 실패했습니다.'); // 클라이언트에 반환할 오류 메시지
+  }
+});
+// ——— createNaverCustomToken_V2 함수 정의 종료 부분
 
 // ------ "배송 중 메세지" 발송 후 3일 후에 발주 상태를 업데이트하는 함수 내용 시작 부분
 // Firestore에 새로운 문서가 생성될 때, 특정 "배송 중 메세지"를 감지하고 발주 상태를 자동으로 업데이트

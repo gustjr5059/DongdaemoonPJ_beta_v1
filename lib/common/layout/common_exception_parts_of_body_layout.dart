@@ -1280,6 +1280,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
 
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor, // 전체 배경색을 지정
+        // color: Colors.yellow, // 전체 배경색을 지정
         child: SafeArea(
           bottom: false, // 하단 SafeArea를 무효화하여 경계선을 제거
           child: Container(
@@ -1287,7 +1288,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
             // 해당 케이스 3번에는 1번, 2번과 달리 높이를 지정해줘야하는 이유:
             // 케이스 3번은 내부에 사이즈 구현 중 Expanded 위젯을 사용하므로 직접 높이 지정을 해야 UI 오류가 생기지 않음
             height: MediaQuery.of(context).size.height *
-                0.2, // 화면 높이에 비례하여 동적 높이 설정
+                0.12, // 화면 높이에 비례하여 동적 높이 설정
             padding: EdgeInsets.only(bottom: bottomBarC2Y),
             child: Padding(
               padding: EdgeInsets.symmetric(

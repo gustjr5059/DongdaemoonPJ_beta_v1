@@ -28,7 +28,45 @@
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
+
+		<!-- (추가) 네이버 관련 스킴 (네이버 로그인 설정) -->
+		<string>naversearchapp</string>
+		<string>naversearchthirdlogin</string>
 	</array>
+
+	<!-- WebView 크기 스케일 설정 추가 - 네이버 로그인 화면인 웹 뷰 크기가 기기 크기에 맞게 조정되어서 나오도록 설정 (네이버 로그인 설정) -->
+	<key>UIWebViewScalesPageToFit</key>
+	<true/>
+
+	<!-- 상태바 설정 추가 (네이버 로그인 설정) -->
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+
+	<!-- CFBundleURLTypes 내에 네이버용 URL Schemes 등록 (네이버 로그인 설정) -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- ${gshe.coutureurlscheme} 대신 실제 스킴 (myapp 등)을 넣어주세요. -->
+				<string>$(NAVER_SERVICE_APP_URL_SCHEME)</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- 네이버 로그인 인증 정보 (네이버 로그인 설정)-->
+	<!--관련 정보는 보안이 중요하므로 Flutter/Config.xcconfig 파일에 지정된 변수로 불러오도록 설정-->
+	<key>naverServiceAppUrlScheme</key>
+	<string>$(NAVER_SERVICE_APP_URL_SCHEME)</string>
+	<key>naverConsumerKey</key>
+	<string>$(NAVER_CONSUMER_KEY)</string>
+	<key>naverConsumerSecret</key>
+	<string>$(NAVER_CONSUMER_SECRET)</string>
+	<key>naverServiceAppName</key>
+	<string>$(NAVER_SERVICE_APP_NAME)</string>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

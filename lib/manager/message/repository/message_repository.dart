@@ -49,22 +49,40 @@ class AdminMessageRepository {
   Future<List<String>> fetchOrderNumbers(String receiver) async {
     try {
       print('수신자 $receiver 의 발주번호를 가져오는 중...');
-      // Firestore에서 사용자의 이메일을 기준으로 검색.
+
+      // 1) 'users' 컬렉션에서 email 필드가 receiver와 동일한 문서를 조회해 문서 ID를 가져옴
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: receiver)
+          .limit(1)
+          .get();
+
+      // 해당 email을 가진 문서가 없으면 "없음" 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('users 컬렉션 내 email 필드가 $receiver 인 문서를 찾을 수 없습니다.');
+        return ['없음'];
+      }
+
+      // 2) 문서 ID를 가져옴
+      final userDocId = userQuerySnapshot.docs.first.id;
+      print('users 컬렉션에서 찾은 문서 ID: $userDocId');
+
+      // 3) wearcano_order_list 컬렉션에서 문서 ID(A)를 사용하여 orders 하위 컬렉션 가져오기
       final querySnapshot = await firestore
           .collection('wearcano_order_list')
-          .doc(receiver)
+          .doc(userDocId)
           .collection('orders')
           .get();
 
-      // 만약 주문이 없다면 '없음'을 반환.
+      // 만약 주문이 없다면 '없음'을 반환
       if (querySnapshot.docs.isEmpty) {
-        print('해당 이메일에 대한 주문이 없습니다: $receiver');
+        print('해당 ID($userDocId)에 대한 주문(orders) 문서가 없습니다.');
         return ['없음'];
       }
 
       print('이메일 $receiver 에 대한 주문 수: ${querySnapshot.docs.length}');
 
-      // 각 order 문서의 number_info 하위 컬렉션에서 order_number 필드를 가져옴.
+      // 4) 각 order 문서의 number_info 하위 컬렉션에서 order_number 필드를 가져옴.
       List<String> orderNumbers = [];
       for (var doc in querySnapshot.docs) {
         print('발주 확인 중: ${doc.id}');
@@ -82,7 +100,7 @@ class AdminMessageRepository {
         }
       }
 
-      // 발주번호가 없으면 '없음'을 반환.
+      // 5) 발주번호가 없으면 '없음'을, 있으면 해당 리스트를 반환
       return orderNumbers.isEmpty ? ['없음'] : orderNumbers;
     } catch (e) {
       print('발주 번호를 가져오는 중 오류 발생: $e');
@@ -93,16 +111,36 @@ class AdminMessageRepository {
   // 쪽지 작성 탭 화면 내 환불 신청 상품 관련 드롭다운 메뉴 버튼 내 메뉴 내용
   Future<List<String>> fetchProductOptions(String receiver, String orderNumber) async {
     try {
-      // Firestore에서 특정 수신자와 발주번호에 해당하는 문서를 조회함.
+      print('수신자 $receiver와 $orderNumber 정보를 가져오는 중...');
+
+      // 1) 'users' 컬렉션에서 email 필드가 receiver와 동일한 문서를 조회해 문서 ID를 가져옴
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: receiver)
+          .limit(1)
+          .get();
+
+      // 해당 email을 가진 문서가 없으면 "없음" 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('users 컬렉션 내 email 필드가 $receiver 인 문서를 찾을 수 없습니다.');
+        return ['없음'];
+      }
+
+      // 2) 문서 ID를 가져옴
+      final userDocId = userQuerySnapshot.docs.first.id;
+      print('users 컬렉션에서 찾은 문서 ID: $userDocId');
+
+      // 3) Firestore에서 특정 수신자와 발주번호에 해당하는 문서를 조회함.
       final querySnapshot = await firestore
           .collection('wearcano_order_list')
-          .doc(receiver)
+          .doc(userDocId)
           .collection('orders')
           .where('numberInfo.order_number', isEqualTo: orderNumber)
           .get();
 
       // 조회된 문서가 없으면 '상품 없음'을 반환함.
       if (querySnapshot.docs.isEmpty) {
+        print('해당 ID($userDocId)에 대한 주문(orders) 문서가 없습니다.');
         return ['상품 없음'];
       }
 
@@ -138,9 +176,26 @@ class AdminMessageRepository {
     print('메시지를 Firestore에 저장하는 중...');
     print('발신자: $sender, 수신자: $recipient, 주문 번호: $orderNumber, 내용: $contents');
 
+    // 1) 'users' 컬렉션에서 email 필드가 receiver와 동일한 문서를 조회해 문서 ID를 가져옴
+    final userQuerySnapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: recipient)
+        .limit(1)
+        .get();
+
+    // 해당 email을 가진 문서가 없으면 "없음" 반환
+    if (userQuerySnapshot.docs.isEmpty) {
+      print('users 컬렉션 내 email 필드가 $recipient 인 문서를 찾을 수 없습니다.');
+      return ;
+    }
+
+      // 2) 문서 ID를 가져옴
+      final userDocId = userQuerySnapshot.docs.first.id;
+      print('users 컬렉션에서 찾은 문서 ID: $userDocId');
+
     // Firestore에 저장할 문서의 참조를 생성.
     final messageDoc = firestore.collection('wearcano_message_list') // Firestore의 'message_list' 컬렉션을 참조
-        .doc(recipient) // 수신자 ID를 문서 ID로 사용하여 하위 컬렉션에 접근
+        .doc(userDocId) // 수신자 ID를 문서 ID로 사용하여 하위 컬렉션에 접근
         .collection('message') // 수신자별 메시지를 저장하는 하위 컬렉션 'message'에 접근
         .doc('${DateTime.now().millisecondsSinceEpoch}'); // 현재 시간을 기반으로 고유한 문서 ID를 생성
 
@@ -186,9 +241,27 @@ class AdminMessageRepository {
   Future<void> updateOrderStatus(String recipient, String orderNumber, String newStatus) async {
     try {
       print('발주 상태를 Firestore에 업데이트 중...');
+
+      // 1) 'users' 컬렉션에서 email 필드가 receiver와 동일한 문서를 조회해 문서 ID를 가져옴
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: recipient)
+          .limit(1)
+          .get();
+
+      // 해당 email을 가진 문서가 없으면 "없음" 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('users 컬렉션 내 email 필드가 $recipient 인 문서를 찾을 수 없습니다.');
+        return ;
+      }
+
+      // 2) 문서 ID를 가져옴
+      final userDocId = userQuerySnapshot.docs.first.id;
+      print('users 컬렉션에서 찾은 문서 ID(A): $userDocId');
+
       final orderDoc = await firestore // Firestore 참조
           .collection('wearcano_order_list') // 'order_list' 컬렉션 참조
-          .doc(recipient) // 수신자 ID를 문서 ID로 사용하여 해당 사용자의 주문 목록에 접근
+          .doc(userDocId) // 수신자 ID를 문서 ID로 사용하여 해당 사용자의 주문 목록에 접근
           .collection('orders') // 사용자의 주문 목록에 접근
           .where('numberInfo.order_number', isEqualTo: orderNumber) // 주어진 주문 번호와 일치하는 주문 검색
           .get(); // 해당 주문 정보를 가져옴
@@ -235,10 +308,27 @@ class AdminMessageRepository {
         days: timeFrame == 30 ? 30 : (timeFrame == 365 ? 365 : 0), // 30일 또는 365일 전
       ));
 
+      // 1) 'users' 컬렉션에서 email 필드가 receiver와 동일한 문서를 조회해 문서 ID를 가져옴
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 해당 email을 가진 문서가 없으면 "없음" 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('users 컬렉션 내 email 필드가 $userEmail 인 문서를 찾을 수 없습니다.');
+        return [];
+      }
+
+      // 2) 문서 ID를 가져옴
+      final userDocId = userQuerySnapshot.docs.first.id;
+      print('users 컬렉션에서 찾은 문서 ID(A): $userDocId');
+
       // Firestore에서 쿼리를 생성함
       Query query = firestore
           .collection('wearcano_message_list') // 최상위 컬렉션
-          .doc(userEmail) // 사용자 이메일 문서 참조
+          .doc(userDocId) // 사용자 이메일 문서 참조
           .collection('message') // 쪽지 하위 컬렉션
           .where('message_sendingTime', isGreaterThanOrEqualTo: dateLimit) // 메시지 전송 시간이 기준 날짜 이상인 문서 필터링
           .orderBy('message_sendingTime', descending: true) // 'message_sendingTime' 필드를 기준으로 오름차순(과거 -> 현재) 정렬
@@ -281,10 +371,27 @@ class AdminMessageRepository {
       // 디버깅: 삭제할 메시지 ID와 사용자 이메일 출력
       print('수신자 $userEmail의 쪽지 $messageId 삭제 중');
 
+      // 1) 'users' 컬렉션에서 email 필드가 receiver와 동일한 문서를 조회해 문서 ID를 가져옴
+      final userQuerySnapshot = await firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .limit(1)
+          .get();
+
+      // 해당 email을 가진 문서가 없으면 "없음" 반환
+      if (userQuerySnapshot.docs.isEmpty) {
+        print('users 컬렉션 내 email 필드가 $userEmail 인 문서를 찾을 수 없습니다.');
+        return ;
+      }
+
+      // 2) 문서명을 A라고 칭한다. (문서 ID를 가져옴)
+      final userDocId = userQuerySnapshot.docs.first.id;
+      print('users 컬렉션에서 찾은 문서 ID(A): $userDocId');
+
       // Firestore에서 해당 문서 참조를 가져옴
       final messageDoc = firestore
           .collection('wearcano_message_list') // 최상위 컬렉션
-          .doc(userEmail) // 사용자 이메일 문서 참조
+          .doc(userDocId) // 사용자 이메일 문서 참조
           .collection('message') // 쪽지 하위 컬렉션
           .doc(messageId); // 특정 메시지 문서 참조
 
