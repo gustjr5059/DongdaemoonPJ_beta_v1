@@ -24,16 +24,26 @@ class _PrivateMessageBodyPartsContentsState
 
   @override
   Widget build(BuildContext context) {
-    // 현재 로그인한 사용자의 이메일 계정을 가져옴.
-    final userEmail = FirebaseAuth.instance.currentUser?.email;
-
-    // 만약 이메일이 없다면, 로딩 스피너를 표시.
-    if (userEmail == null) {
-      return Center(child: CircularProgressIndicator());
-    }
+    // 현재 로그인한 사용자 정보 중 이메일 또는 UID 값을 가져옴
+    // (네이버 로그인인 경우에는 email이 없고 uid로 권한 승인이 되어서...)
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid;
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
+
+    // 만약 이메일이 없다면, 로딩 스피너를 표시.
+    if (userEmail == null) {
+      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+      return SliverToBoxAdapter(
+        // 전체 컨테이너를 설정
+        child: Container(
+          height: screenSize.height * 0.6, // 화면 높이의 60%로 설정함
+          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+        ),
+      );
+    }
 
     // 기준 화면 크기: 가로 393, 세로 852
     final double referenceWidth = 393.0;

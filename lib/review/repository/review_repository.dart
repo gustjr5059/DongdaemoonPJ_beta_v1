@@ -26,7 +26,7 @@ class PrivateReviewRepository {
       // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
       final userQuerySnapshot = await firestore
           .collection('users')
-          .where('email', isEqualTo: email)
+          .where('registration_id', isEqualTo: email)
           .limit(1)
           .get();
 
@@ -111,7 +111,7 @@ class PrivateReviewRepository {
       // (a) userEmail -> registrationId 찾기
       final userQuerySnapshot = await firestore
           .collection('users')
-          .where('email', isEqualTo: userEmail)
+          .where('registration_id', isEqualTo: userEmail)
           .limit(1)
           .get();
 
@@ -258,7 +258,7 @@ class PrivateReviewRepository {
       // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
       final userQuerySnapshot = await firestore
           .collection('users')
-          .where('email', isEqualTo: userEmail)
+          .where('registration_id', isEqualTo: userEmail)
           .limit(1)
           .get();
 
@@ -331,7 +331,7 @@ class PrivateReviewRepository {
       // 이제는 userEmail로 users 컬렉션에서 registration_id를 추출한 뒤, 그 값을 doc ID로 사용.
       final userQuerySnapshot = await firestore
           .collection('users')
-          .where('email', isEqualTo: userEmail)
+          .where('registration_id', isEqualTo: userEmail)
           .limit(1)
           .get();
 

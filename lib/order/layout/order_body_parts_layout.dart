@@ -3003,6 +3003,11 @@ class _OrderListDetailItemWidgetState
     // ProductInfoDetailScreenNavigation 인스턴스를 생성하여 상품 상세 화면으로 이동할 수 있도록 설정함
     final navigatorProductDetailScreen = ProductInfoDetailScreenNavigation(ref);
 
+    // 현재 로그인한 사용자 정보 중 이메일 또는 UID 값을 가져옴
+    // (네이버 로그인인 경우에는 email이 없고 uid로 권한 승인이 되어서...)
+    final user = FirebaseAuth.instance.currentUser;
+    final userEmail = user?.email ?? user?.uid;
+
     // 발주 상세 정보를 화면에 렌더링하는 위젯을 구성함
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3641,8 +3646,9 @@ class _OrderListDetailItemWidgetState
                                             numberInfo:
                                                 widget.order!['numberInfo'],
                                             // 개별 상품 발주번호 및 발주일자 전달함
-                                            userEmail: FirebaseAuth
-                                                .instance.currentUser!.email!,
+                                            // userEmail: FirebaseAuth
+                                            //     .instance.currentUser!.email!,
+                                                userEmail: userEmail!,
                                           ),
                                         ),
                                       );
