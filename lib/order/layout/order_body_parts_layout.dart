@@ -3892,30 +3892,47 @@ void onOrderAddToCartButtonPressed(
   final cartRepository = ref.read(
       cartItemRepositoryProvider); // cartItemRepositoryProvider를 사용하여 장바구니 레포지토리를 읽음
 
+  // ?? '' 혹은 ?? 0, ?.toString() ?? '' 등을 이용해
+  // 일관된 자료형(주로 문자열)으로 변환하여 무조건 동일 구조로 combinedData를 만듦.
+  // 이렇게 해야 기존 문서에서도 똑같은 “문자열 패턴”**이 생성되므로,
+  // .where('product_hash', isEqualTo: productHash)가 똑같이 매칭되어 “중복 상품”으로 인식,
+  // 새 문서 생성 대신 수량만 업데이트 로직이 정상 작동한다는 것
+
+  // 해시 생성에 필요한 필드가 null이면 기본값으로 처리
+  final String category = productInfo['category']?.toString() ?? '';
+  final String productNumber = productInfo['product_number']?.toString() ?? '';
+  final String thumbnail = productInfo['thumbnails']?.toString() ?? '';
+  final String briefIntroduction =
+      productInfo['brief_introduction']?.toString() ?? '';
+  final double originalPrice =
+  (productInfo['original_price'] is num) ? productInfo['original_price'] : 0;
+  final double discountPrice =
+  (productInfo['discount_price'] is num) ? productInfo['discount_price'] : 0;
+  final double discountPercent =
+  (productInfo['discount_percent'] is num) ? productInfo['discount_percent'] : 0;
+  final String selectedColorText =
+      productInfo['selected_color_text']?.toString() ?? '';
+  final String selectedColorImage =
+      productInfo['selected_color_image']?.toString() ?? '';
+  final String selectedSize =
+      productInfo['selected_size']?.toString() ?? '';
+  final int selectedCount =
+  (productInfo['selected_count'] is num) ? productInfo['selected_count'] : 1;
+
+  // ProductContent 객체에 동일한 필드를 전부 넣어줌
   final product = ProductContent(
-    docId: productInfo['product_id'],
-    // 제품 문서 ID를 설정함
-    category: productInfo['category'],
-    // 제품 카테고리를 설정함
-    productNumber: productInfo['product_number'],
-    // 제품 번호를 설정함
-    thumbnail: productInfo['thumbnails'],
-    // 제품 썸네일 이미지를 설정함
-    briefIntroduction: productInfo['brief_introduction'],
-    // 제품의 간단한 소개를 설정함
-    originalPrice: productInfo['original_price'],
-    // 원래 가격을 설정함
-    discountPrice: productInfo['discount_price'],
-    // 할인된 가격을 설정함
-    discountPercent: productInfo['discount_percent'],
-    // 할인 퍼센트를 설정함
-    selectedCount: productInfo['selected_count'],
-    // 선택한 수량을 설정함
-    selectedColorImage: productInfo['selected_color_image'],
-    // 선택한 색상 이미지 URL을 설정함
-    selectedColorText: productInfo['selected_color_text'],
-    // 선택한 색상 텍스트를 설정함
-    selectedSize: productInfo['selected_size'], // 선택한 사이즈를 설정함
+    docId: productInfo['product_id'] ?? '',
+    category: category,
+    productNumber: productNumber,
+    thumbnail: thumbnail,
+    briefIntroduction: briefIntroduction,
+    originalPrice: originalPrice,
+    discountPrice: discountPrice,
+    discountPercent: discountPercent,
+    selectedCount: selectedCount,
+    selectedColorImage: selectedColorImage,
+    selectedColorText: selectedColorText,
+    selectedSize: selectedSize,
   );
 
   // 장바구니 레포지토리에 제품을 추가하고, 성공 시 메시지를 표시함
