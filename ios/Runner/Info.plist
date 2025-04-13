@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>꾸띠르</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>dongdaemoon_beta_v1</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+
+	<!-- iOS14 이상에서 외부 앱 쿼리 허용 -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+
+		<!-- (추가) 네이버 관련 스킴 (네이버 로그인 설정) -->
+		<string>naversearchapp</string>
+		<string>naversearchthirdlogin</string>
+	</array>
+
+	<!-- WebView 크기 스케일 설정 추가 - 네이버 로그인 화면인 웹 뷰 크기가 기기 크기에 맞게 조정되어서 나오도록 설정 (네이버 로그인 설정) -->
+	<key>UIWebViewScalesPageToFit</key>
+	<true/>
+
+	<!-- 상태바 설정 추가 (네이버 로그인 설정) -->
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+
+	<!-- CFBundleURLTypes 내에 네이버용 URL Schemes 등록 (네이버 로그인 설정) -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- ${gshe.coutureurlscheme} 대신 실제 스킴 (myapp 등)을 넣어주세요. -->
+				<string>$(COUTURE_NAVER_SERVICE_APP_URL_SCHEME)</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- 네이버 로그인 인증 정보 (네이버 로그인 설정)-->
+	<!--관련 정보는 보안이 중요하므로 Flutter/Config.xcconfig 파일에 지정된 변수로 불러오도록 설정-->
+	<key>naverServiceAppUrlScheme</key>
+	<string>$(COUTURE_NAVER_SERVICE_APP_URL_SCHEME)</string>
+	<key>naverConsumerKey</key>
+	<string>$(COUTURE_NAVER_CONSUMER_KEY)</string>
+	<key>naverConsumerSecret</key>
+	<string>$(COUTURE_NAVER_CONSUMER_SECRET)</string>
+	<key>naverServiceAppName</key>
+	<string>$(COUTURE_NAVER_SERVICE_APP_NAME)</string>
+
+
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>사진을 업로드하기 위해 갤러리 접근 권한이 필요합니다.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

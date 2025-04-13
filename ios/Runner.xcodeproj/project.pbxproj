@@ -111,6 +111,8 @@
 		EF288E242C88655F002D29E8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EF288E262C88655F002D29E8 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		EF288E272C88655F002D29E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EF5930292DABDE3800978F59 /* Config 2.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Config 2.xcconfig"; sourceTree = "<group>"; };
+		EF59302A2DABDE4400978F59 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		EF81B1C92D34CD02003F4B15 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		EF81B1CA2D37C7E7003F4B15 /* NaverThirdPartyLogin.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:U6VV7FMD97:NHN Corporation"; lastKnownFileType = wrapper.xcframework; name = NaverThirdPartyLogin.xcframework; path = "Pods/naveridlogin-sdk-ios/NaverThirdPartyLogin.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +190,8 @@
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				4833A7FC3BF7C437F110E70E /* Pods */,
 				9590D695EC30C8AF8F1933AF /* Frameworks */,
+				EF5930292DABDE3800978F59 /* Config 2.xcconfig */,
+				EF59302A2DABDE4400978F59 /* Config.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -778,6 +782,7 @@
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF59302A2DABDE4400978F59 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -835,6 +840,7 @@
 		};
 		97C147041CF9000F007C117D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF59302A2DABDE4400978F59 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
