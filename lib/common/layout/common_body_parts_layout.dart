@@ -257,8 +257,19 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
 
   return asyncBannerImages.when(
     // 데이터가 로드되었을 때 UI 렌더링
-    data: (List<T> commonBannerImages) {
-      bannerAutoScroll.itemCount = commonBannerImages.length; // 자동 스크롤 항목 개수 설정
+    // 데이터가 있는 것만 페이지 처리, 데이터가 아예 없을 경우에는 UI 자체 미표시로 처리
+    data: (List<T> allImages) {
+      final visibleImages = allImages.where((img) {
+        if (img is AllSmallBannerImage) {
+          return img.isVisible;
+        }
+        return true;
+      }).toList();
+
+      if (visibleImages.isEmpty) {
+        return const SizedBox.shrink(); // UI 자체 미표시
+      }
+      bannerAutoScroll.itemCount = visibleImages.length; // 자동 스크롤 항목 개수 설정
       bannerAutoScroll.startAutoScroll(); // 자동 스크롤 시작
 
       return Stack(
@@ -267,13 +278,13 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
           buildBannerPageView(
             ref: ref, // 위젯 참조 전달
             pageController: pageController, // 페이지 컨트롤러 전달
-            itemCount: commonBannerImages.length, // 항목 개수 설정
+            itemCount: visibleImages.length, // 항목 개수 설정
             itemBuilder: (context, index) => GestureDetector(
               onTap: () {
                 onPageTap(context, index); // 클릭 시 콜백 함수 호출
               },
               child: BannerImageClass(
-                imageUrl: commonBannerImages[index].imageUrl, // 배너 이미지 URL 설정
+                imageUrl: visibleImages[index].imageUrl, // 배너 이미지 URL 설정
               ),
             ),
             currentPageProvider: currentPageProvider, // 현재 페이지 상태 제공자 설정
@@ -298,7 +309,7 @@ Widget buildCommonBannerPageViewSection<T extends CommonBannerImage>({
                     borderRadius: BorderRadius.circular(12), // 모서리 반경 설정
                   ),
                   child: Text(
-                    '${currentPage + 1} / ${commonBannerImages.length}', // 페이지 번호 표시
+                    '${currentPage + 1} / ${visibleImages.length}', // 페이지 번호 표시
                     style: TextStyle(color: WHITE_COLOR), // 텍스트 색상 설정
                   ),
                 );

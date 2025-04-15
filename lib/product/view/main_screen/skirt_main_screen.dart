@@ -469,6 +469,22 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
     final double interval3Y = 10;
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small1BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: skirtMainSmall1BannerPageProvider,
+      pageController: _small1BannerPageController,
+      bannerAutoScroll: _small1BannerAutoScroll,
+      bannerImagesProvider: skirtMainSmall1BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(skirtMainSmall1BannerImagesProvider).value ?? [], ref),
+      width: skirtMainScreenSmallBannerWidth,
+      height: skirtMainScreenSmallBannerHeight,
+      borderRadius: 8,
+    );
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -592,47 +608,68 @@ class _SkirtMainScreenState extends ConsumerState<SkirtMainScreen>
                               padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
                             ),
                             SizedBox(height: interval3Y), // 10의 높이를 가진 간격을 추가함
-                            CommonCardView(
-                              content: Container(
-                                // 모서리에 반경을 주기 위한 BoxDecoration 추가함
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
-                                ),
-                                child: SizedBox(
-                                  // 작은 배너 섹션의 높이를 60으로 설정함
-                                  height: skirtMainScreenSmallBannerViewHeight,
-                                  // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
-                                  child: buildCommonBannerPageViewSection<
-                                      AllSmallBannerImage>(
-                                    context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
-                                    ref: ref, // 상태 관리를 위한 참조 전달함
-                                    currentPageProvider:
-                                    skirtMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
-                                    pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
-                                    bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
-                                    bannerImagesProvider:
-                                    skirtMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
-                                    // 배너를 탭했을 때 실행할 함수를 전달
-                                    onPageTap: (context, index) =>
-                                    // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
-                                    onSmallBannerTap(
-                                        context, // 현재 화면의 컨텍스트를 전달함
-                                        index, // 클릭된 배너의 인덱스를 전달함
-                                        // skirtMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                        ref.watch(skirtMainSmall1BannerImagesProvider).value ?? [],
-                                        ref // Provider의 참조를 전달함
-                                    ),
-                                    width: skirtMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
-                                    height: skirtMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
-                                    borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
+                            // CommonCardView(
+                            //   content: Container(
+                            //     // 모서리에 반경을 주기 위한 BoxDecoration 추가함
+                            //     decoration: BoxDecoration(
+                            //       borderRadius: BorderRadius.circular(8), // 작은 배너의 모서리 반경을 8로 설정함
+                            //     ),
+                            //     child: SizedBox(
+                            //       // 작은 배너 섹션의 높이를 60으로 설정함
+                            //       height: skirtMainScreenSmallBannerViewHeight,
+                            //       // 작은 배너 섹션의 내용을 buildCommonBannerPageViewSection 위젯으로 재사용하여 구현함
+                            //       child: buildCommonBannerPageViewSection<
+                            //           AllSmallBannerImage>(
+                            //         context: context, // 위젯 트리를 위한 빌드 컨텍스트 전달함
+                            //         ref: ref, // 상태 관리를 위한 참조 전달함
+                            //         currentPageProvider:
+                            //         skirtMainSmall1BannerPageProvider, // 작은 배너 페이지의 상태 제공자를 전달함
+                            //         pageController: _small1BannerPageController, // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
+                            //         bannerAutoScroll: _small1BannerAutoScroll, // 작은 배너의 자동 스크롤 설정을 전달함
+                            //         bannerImagesProvider:
+                            //         skirtMainSmall1BannerImagesProvider, // 작은 배너 이미지의 상태 제공자를 전달함
+                            //         // 배너를 탭했을 때 실행할 함수를 전달
+                            //         onPageTap: (context, index) =>
+                            //         // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                            //         onSmallBannerTap(
+                            //             context, // 현재 화면의 컨텍스트를 전달함
+                            //             index, // 클릭된 배너의 인덱스를 전달함
+                            //             // skirtMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                            //             ref.watch(skirtMainSmall1BannerImagesProvider).value ?? [],
+                            //             ref // Provider의 참조를 전달함
+                            //         ),
+                            //         width: skirtMainScreenSmallBannerWidth, // 작은 배너 섹션의 너비를 설정함
+                            //         height: skirtMainScreenSmallBannerHeight, // 작은 배너 섹션의 높이를 설정함
+                            //         borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
+                            //   elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
+                            //   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
+                            // ),
+                            // SizedBox(height: interval1Y), // 3의 높이를 가진 간격 추가
+
+                            // ——— 소배너1 위젯 조건부 렌더링 시작 부분
+                            if (small1BannerWidget is! SizedBox) ...[
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: SizedBox(
+                                    height: skirtMainScreenSmallBannerViewHeight,
+                                    child: small1BannerWidget,
                                   ),
                                 ),
+                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                               ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
-                              elevation: 0, // 카드뷰의 그림자 깊이를 0으로 설정함
-                              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
-                            ),
-                            SizedBox(height: interval1Y), // 3의 높이를 가진 간격 추가
+                              SizedBox(height: interval1Y),
+                            ],
+                            // ——— 소배너1 위젯 조건부 렌더링 끝 부분
+
                             PriceAndDiscountPercentSortButtons<
                                 ProductMainListNotifier>(
                               productListProvider: skirtMainProductListProvider,

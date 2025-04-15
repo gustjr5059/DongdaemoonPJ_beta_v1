@@ -659,6 +659,70 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
     final double interval2Y = 10;
     final double interval3Y = 60;
 
+    // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final largeBannerWidget = buildCommonBannerPageViewSection<AllLargeBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: homeLargeBannerPageProvider,
+      pageController: _largeBannerPageController,
+      bannerAutoScroll: _largeBannerAutoScroll,
+      bannerImagesProvider: allLargeBannerImagesProvider,
+      onPageTap: (context, index) =>
+          onLargeBannerTap(context, index, ref.watch(allLargeBannerImagesProvider).value ?? [], ref),
+      width: homeScreenLargeBannerWidth,
+      height: homeScreenLargeBannerHeight,
+      borderRadius: 0,
+    );
+    // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small1BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: homeSmall1BannerPageProvider,
+      pageController: _small1BannerPageController,
+      bannerAutoScroll: _small1BannerAutoScroll,
+      bannerImagesProvider: homeSmall1BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(homeSmall1BannerImagesProvider).value ?? [], ref),
+      width: homeScreenSmallBannerWidth,
+      height: homeScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너2]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small2BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: homeSmall2BannerPageProvider,
+      pageController: _small2BannerPageController,
+      bannerAutoScroll: _small2BannerAutoScroll,
+      bannerImagesProvider: homeSmall2BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(homeSmall2BannerImagesProvider).value ?? [], ref),
+      width: homeScreenSmallBannerWidth,
+      height: homeScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너2]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너3]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small3BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: homeSmall3BannerPageProvider,
+      pageController: _small3BannerPageController,
+      bannerAutoScroll: _small3BannerAutoScroll,
+      bannerImagesProvider: homeSmall3BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(homeSmall3BannerImagesProvider).value ?? [], ref),
+      width: homeScreenSmallBannerWidth,
+      height: homeScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너3]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
     // collapsedAppBarHeight = kToolbarHeight + preferredSizeHeight;
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
@@ -747,64 +811,85 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                         children: [
                           // SizedBox(height: 5), // 높이 20으로 간격 설정
                           // 큰 배너 섹션을 카드뷰로 구성
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    0), // 큰 배너의 모서리 반경을 0으로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정함
-                                height: homeScreenLargeBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                      homeLargeBannerPageProvider,
-                                  // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
-                                  pageController: _largeBannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                      allLargeBannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
-                                  onLargeBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(allLargeBannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenLargeBannerWidth,
-                                  // 원하는 너비
-                                  height: homeScreenLargeBannerHeight,
-                                  // 원하는 높이
-                                  borderRadius: 0,
+                          // CommonCardView(
+                          //   content: Container(
+                          //     // 모서리에 반경을 주기 위해 BoxDecoration 추가
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(
+                          //           0), // 큰 배너의 모서리 반경을 0으로 설정
+                          //     ),
+                          //     child: SizedBox(
+                          //       // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정함
+                          //       height: homeScreenLargeBannerViewHeight,
+                          //       // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          //       child: buildCommonBannerPageViewSection<
+                          //           AllLargeBannerImage>(
+                          //         // 현재 빌드 컨텍스트를 전달
+                          //         context: context,
+                          //         // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                          //         ref: ref,
+                          //         // 현재 페이지를 관리하는 Provider를 전달
+                          //         currentPageProvider:
+                          //             homeLargeBannerPageProvider,
+                          //         // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
+                          //         pageController: _largeBannerPageController,
+                          //         // 배너 자동 스크롤 기능을 전달
+                          //         bannerAutoScroll: _largeBannerAutoScroll,
+                          //         // 배너 이미지들을 관리하는 Provider를 전달
+                          //         bannerImagesProvider:
+                          //             allLargeBannerImagesProvider,
+                          //         // 배너를 탭했을 때 실행할 함수를 전달
+                          //         onPageTap: (context, index) =>
+                          //         // 대배너 클릭 시 호출할 함수 onLargeBannerTap 실행
+                          //         onLargeBannerTap(
+                          //             context, // 현재 화면의 컨텍스트를 전달함
+                          //             index, // 클릭된 배너의 인덱스를 전달함
+                          //             // allLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                          //             ref.watch(allLargeBannerImagesProvider).value ?? [],
+                          //             ref // Provider의 참조를 전달함
+                          //         ),
+                          //         width: homeScreenLargeBannerWidth,
+                          //         // 원하는 너비
+                          //         height: homeScreenLargeBannerHeight,
+                          //         // 원하는 높이
+                          //         borderRadius: 0,
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   backgroundColor:
+                          //       Theme.of(context).scaffoldBackgroundColor,
+                          //   // 앱 기본 배경색
+                          //   // 카드뷰 배경 색상 : 앱 기본 배경색
+                          //   elevation: 4,
+                          //   // 카드뷰 그림자 깊이
+                          //   // padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
+                          //   //     8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                          //   padding: EdgeInsets.zero, // 패딩을 없앰
+                          //   // padding: const EdgeInsets.all(
+                          //   //     2),
+                          // ),
+                          // SizedBox(height: interval1Y), // 높이 간격 설정
+
+                          // ——— 대배너 위젯 조건부 렌더링 시작 부분
+                          if (largeBannerWidget is! SizedBox) ...[
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenLargeBannerViewHeight,
+                                  child: largeBannerWidget,
                                 ),
                               ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 4,
+                              padding: EdgeInsets.zero, // 패딩을 없앰
                             ),
-                            backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 4,
-                            // 카드뷰 그림자 깊이
-                            // padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                            //     8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-                            padding: EdgeInsets.zero, // 패딩을 없앰
-                            // padding: const EdgeInsets.all(
-                            //     2),
-                          ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+                            SizedBox(height: interval1Y),
+                          ],
+                          // ——— 대배너 위젯 조건부 렌더링 끝 부분
+
                           // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
                           // 중간 카테고리 버튼 리스트를 카드뷰로 구성
                           CommonCardView(
@@ -821,60 +906,81 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                           ),
                           SizedBox(height: interval2Y), // 높이 간격 설정
                           // 첫 번째 홈 소배너 섹션
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    5), // 작은 배너의 모서리 반경을 5로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
-                                height: homeScreenSmallBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllSmallBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                      homeSmall1BannerPageProvider,
-                                  // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
-                                  pageController: _small1BannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _small1BannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                      homeSmall1BannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
-                                  onSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // homeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(homeSmall1BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth,
-                                  // 원하는 너비
-                                  height: homeScreenSmallBannerHeight,
-                                  // 원하는 높이
-                                  borderRadius: 5,
+                          // CommonCardView(
+                          //   content: Container(
+                          //     // 모서리에 반경을 주기 위해 BoxDecoration 추가
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(
+                          //           5), // 작은 배너의 모서리 반경을 5로 설정
+                          //     ),
+                          //     child: SizedBox(
+                          //       // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
+                          //       height: homeScreenSmallBannerViewHeight,
+                          //       // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          //       child: buildCommonBannerPageViewSection<
+                          //           AllSmallBannerImage>(
+                          //         // 현재 빌드 컨텍스트를 전달
+                          //         context: context,
+                          //         // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                          //         ref: ref,
+                          //         // 현재 페이지를 관리하는 Provider를 전달
+                          //         currentPageProvider:
+                          //             homeSmall1BannerPageProvider,
+                          //         // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
+                          //         pageController: _small1BannerPageController,
+                          //         // 배너 자동 스크롤 기능을 전달
+                          //         bannerAutoScroll: _small1BannerAutoScroll,
+                          //         // 배너 이미지들을 관리하는 Provider를 전달
+                          //         bannerImagesProvider:
+                          //             homeSmall1BannerImagesProvider,
+                          //         // 배너를 탭했을 때 실행할 함수를 전달
+                          //         onPageTap: (context, index) =>
+                          //         // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                          //         onSmallBannerTap(
+                          //             context, // 현재 화면의 컨텍스트를 전달함
+                          //             index, // 클릭된 배너의 인덱스를 전달함
+                          //             // homeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                          //             ref.watch(homeSmall1BannerImagesProvider).value ?? [],
+                          //             ref // Provider의 참조를 전달함
+                          //         ),
+                          //         width: homeScreenSmallBannerWidth,
+                          //         // 원하는 너비
+                          //         height: homeScreenSmallBannerHeight,
+                          //         // 원하는 높이
+                          //         borderRadius: 5,
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   backgroundColor: Theme.of(context)
+                          //       .scaffoldBackgroundColor, // 앱 기본 배경색
+                          //   // 카드뷰 배경 색상 : 앱 기본 배경색
+                          //   elevation: 0,
+                          //   // 카드뷰 그림자 깊이
+                          //   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
+                          //       0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
+                          // ),
+                          // SizedBox(height: interval2Y), // 높이 간격 설정
+
+                          // ——— 소배너1 위젯 조건부 렌더링 시작 부분
+                          if (small1BannerWidget is! SizedBox) ...[
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenSmallBannerViewHeight,
+                                  child: small1BannerWidget,
                                 ),
                               ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             ),
-                            backgroundColor: Theme.of(context)
-                                .scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
-                          ),
-                          SizedBox(height: interval2Y), // 높이 간격 설정
+                            SizedBox(height: interval2Y),
+                          ],
+                          // ——— 소배너1 위젯 조건부 렌더링 끝 부분
+
                           // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
                           // 신상품 섹션
                           Container(
@@ -884,7 +990,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: NewSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+                          // SizedBox(height: interval1Y), // 높이 간격 설정
+
                           // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
                           // 베스트 제품 섹션
                           Container(
@@ -894,7 +1001,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: BestSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+                          // SizedBox(height: interval1Y), // 높이 간격 설정
+
                           // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
                           // 할인 제품 섹션
                           Container(
@@ -904,62 +1012,84 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: SaleSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+                          // SizedBox(height: interval1Y), // 높이 간격 설정
+
                           // 두 번째 홈 소배너 섹션
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    5), // 작은 배너의 모서리 반경을 5로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
-                                height: homeScreenSmallBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllSmallBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                      homeSmall2BannerPageProvider,
-                                  // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
-                                  pageController: _small2BannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _small2BannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                      homeSmall2BannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
-                                  onSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // homeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(homeSmall2BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth,
-                                  // 원하는 너비
-                                  height: homeScreenSmallBannerHeight,
-                                  // 원하는 높이
-                                  borderRadius: 5,
+                          // CommonCardView(
+                          //   content: Container(
+                          //     // 모서리에 반경을 주기 위해 BoxDecoration 추가
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(
+                          //           5), // 작은 배너의 모서리 반경을 5로 설정
+                          //     ),
+                          //     child: SizedBox(
+                          //       // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
+                          //       height: homeScreenSmallBannerViewHeight,
+                          //       // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          //       child: buildCommonBannerPageViewSection<
+                          //           AllSmallBannerImage>(
+                          //         // 현재 빌드 컨텍스트를 전달
+                          //         context: context,
+                          //         // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                          //         ref: ref,
+                          //         // 현재 페이지를 관리하는 Provider를 전달
+                          //         currentPageProvider:
+                          //             homeSmall2BannerPageProvider,
+                          //         // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
+                          //         pageController: _small2BannerPageController,
+                          //         // 배너 자동 스크롤 기능을 전달
+                          //         bannerAutoScroll: _small2BannerAutoScroll,
+                          //         // 배너 이미지들을 관리하는 Provider를 전달
+                          //         bannerImagesProvider:
+                          //             homeSmall2BannerImagesProvider,
+                          //         // 배너를 탭했을 때 실행할 함수를 전달
+                          //         onPageTap: (context, index) =>
+                          //         // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                          //         onSmallBannerTap(
+                          //             context, // 현재 화면의 컨텍스트를 전달함
+                          //             index, // 클릭된 배너의 인덱스를 전달함
+                          //             // homeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                          //             ref.watch(homeSmall2BannerImagesProvider).value ?? [],
+                          //             ref // Provider의 참조를 전달함
+                          //         ),
+                          //         width: homeScreenSmallBannerWidth,
+                          //         // 원하는 너비
+                          //         height: homeScreenSmallBannerHeight,
+                          //         // 원하는 높이
+                          //         borderRadius: 5,
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   backgroundColor: Theme.of(context)
+                          //       .scaffoldBackgroundColor, // 앱 기본 배경색
+                          //   // 카드뷰 배경 색상 : 앱 기본 배경색
+                          //   elevation: 0,
+                          //   // 카드뷰 그림자 깊이
+                          //   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
+                          //       0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
+                          // ),
+                          // SizedBox(height: interval2Y), // 높이 간격 설정
+
+                          // ——— 소배너2 위젯 조건부 렌더링 시작 부분
+                          if (small2BannerWidget is! SizedBox) ...[
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenSmallBannerViewHeight,
+                                  child: small2BannerWidget,
                                 ),
                               ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             ),
-                            backgroundColor: Theme.of(context)
-                                .scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
-                          ),
-                          SizedBox(height: interval2Y), // 높이 간격 설정
+                            SizedBox(height: interval2Y),
+                          ],
+                          // ——— 소배너2 위젯 조건부 렌더링 끝 부분
+
                           // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
                           // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
                           Container(
@@ -969,7 +1099,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: SpringSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+                          // SizedBox(height: interval1Y), // 높이 간격 설정
+
                           // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
                           Container(
                             key: sectionSummerKey,
@@ -978,62 +1109,83 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: SummerSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+                          // SizedBox(height: interval1Y), // 높이 간격 설정
                           // 세 번째 홈 소배너 섹션
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    5), // 작은 배너의 모서리 반경을 5로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
-                                height: homeScreenSmallBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllSmallBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                      homeSmall3BannerPageProvider,
-                                  // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
-                                  pageController: _small3BannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _small3BannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                      homeSmall3BannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
-                                  onSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // homeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(homeSmall3BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth,
-                                  // 원하는 너비
-                                  height: homeScreenSmallBannerHeight,
-                                  // 원하는 높이
-                                  borderRadius: 5,
+                          // CommonCardView(
+                          //   content: Container(
+                          //     // 모서리에 반경을 주기 위해 BoxDecoration 추가
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(
+                          //           5), // 작은 배너의 모서리 반경을 5로 설정
+                          //     ),
+                          //     child: SizedBox(
+                          //       // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
+                          //       height: homeScreenSmallBannerViewHeight,
+                          //       // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
+                          //       child: buildCommonBannerPageViewSection<
+                          //           AllSmallBannerImage>(
+                          //         // 현재 빌드 컨텍스트를 전달
+                          //         context: context,
+                          //         // Provider의 참조를 전달 (상태 관리를 위해 사용)
+                          //         ref: ref,
+                          //         // 현재 페이지를 관리하는 Provider를 전달
+                          //         currentPageProvider:
+                          //             homeSmall3BannerPageProvider,
+                          //         // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
+                          //         pageController: _small3BannerPageController,
+                          //         // 배너 자동 스크롤 기능을 전달
+                          //         bannerAutoScroll: _small3BannerAutoScroll,
+                          //         // 배너 이미지들을 관리하는 Provider를 전달
+                          //         bannerImagesProvider:
+                          //             homeSmall3BannerImagesProvider,
+                          //         // 배너를 탭했을 때 실행할 함수를 전달
+                          //         onPageTap: (context, index) =>
+                          //         // 소배너 클릭 시 호출할 함수 onSmallBannerTap 실행
+                          //         onSmallBannerTap(
+                          //             context, // 현재 화면의 컨텍스트를 전달함
+                          //             index, // 클릭된 배너의 인덱스를 전달함
+                          //             // homeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
+                          //             ref.watch(homeSmall3BannerImagesProvider).value ?? [],
+                          //             ref // Provider의 참조를 전달함
+                          //         ),
+                          //         width: homeScreenSmallBannerWidth,
+                          //         // 원하는 너비
+                          //         height: homeScreenSmallBannerHeight,
+                          //         // 원하는 높이
+                          //         borderRadius: 5,
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   backgroundColor: Theme.of(context)
+                          //       .scaffoldBackgroundColor, // 앱 기본 배경색
+                          //   // 카드뷰 배경 색상 : 앱 기본 배경색
+                          //   elevation: 0,
+                          //   // 카드뷰 그림자 깊이
+                          //   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
+                          //       0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
+                          // ),
+                          // SizedBox(height: interval2Y), // 높이 간격 설정
+
+                          // ——— 소배너3 위젯 조건부 렌더링 시작 부분
+                          if (small3BannerWidget is! SizedBox) ...[
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenSmallBannerViewHeight,
+                                  child: small3BannerWidget,
                                 ),
                               ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             ),
-                            backgroundColor: Theme.of(context)
-                                .scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
-                          ),
-                          SizedBox(height: interval2Y), // 높이 간격 설정
+                            SizedBox(height: interval2Y),
+                          ],
+                          // ——— 소배너3 위젯 조건부 렌더링 끝 부분
+
                           // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
                           Container(
                             key: sectionAutumnKey,
@@ -1042,7 +1194,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: AutumnSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval2Y), // 높이 간격 설정
+                          // SizedBox(height: interval2Y), // 높이 간격 설정
+
                           // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                           Container(
                             key: sectionWinterKey,
@@ -1051,7 +1204,8 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen>
                                 destinationScreen: WinterSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          SizedBox(height: interval2Y), // 높이 간격 설정
+                          // SizedBox(height: interval2Y), // 높이 간격 설정
+
                           // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
                           buildSectionCard(context, ref, "이벤트",
                               buildEventPosterImgProductsSection,

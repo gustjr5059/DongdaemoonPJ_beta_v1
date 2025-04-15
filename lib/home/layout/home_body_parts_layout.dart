@@ -35,14 +35,10 @@ import '../../product/view/main_screen/pola_main_screen.dart'; // 폴라(터틀�
 import '../../product/view/main_screen/shirt_main_screen.dart'; // 셔츠 카테고리 메인 화면
 import '../../product/view/main_screen/skirt_main_screen.dart'; // 스커트 카테고리 메인 화면
 
-
 // ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -
 // (카드뷰 색상, 카드뷰 섹션 내용-CommonCardView, "+" 버튼 이미지로 버튼 구현-버튼 클릭 시, 서브 메인 페이지로 이동) 위젯 구현 내용 시작
 // Flutter의 context와 ref 객체, 섹션의 제목, 내용을 빌드하는 함수, 그리고 네비게이션할 목적지 스크린을 인자로 받는 위젯 빌드 함수임.
-Widget buildSectionCard(
-    BuildContext context,
-    WidgetRef ref,
-    String title,
+Widget buildSectionCard(BuildContext context, WidgetRef ref, String title,
     Widget Function(WidgetRef, BuildContext) contentBuilder,
     // 필수가 아니라 선택적으로 사용가능하도록 매개변수를 선택할 때는
     // {}와 ?를 사용하면 됨
@@ -50,9 +46,9 @@ Widget buildSectionCard(
     bool showPlusButton = true}) {
   // 제목에 따라 다른 배경색을 설정함. '신상', '특가 상품', '여름', '겨울' 일 경우 앱 기본 색상을, 그 외의 경우는 F1F1F1 색상를 배경색으로 사용함.
   Color backgroundColor =
-  (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
-      ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
-      : GRAY95_COLOR; // F1F1F1 색상
+      (title == '신상' || title == '특가 상품' || title == '여름' || title == '겨울')
+          ? Theme.of(context).scaffoldBackgroundColor // 앱 기본 배경색
+          : GRAY95_COLOR; // F1F1F1 색상
 
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -85,23 +81,28 @@ Widget buildSectionCard(
       children: [
         // 사용자 정의 콘텐츠를 빌드하는 함수를 호출함.
         contentBuilder(ref, context),
-        if (showPlusButton && destinationScreen != null) // showPlusButton이 true이고, destinationScreen이 null이 아닌 경우
-        // '더보기' 버튼을 위치시키며, 이 버튼을 탭하면 destinationScreen으로 네비게이션함.
-        Positioned(
-          right: plusBtn1X,
-          top: plusBtn1Y,
-          child: GestureDetector(
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => destinationScreen)),
-            child: Image.asset('asset/img/misc/button_img/plus_button1.png',
-                width: plusBtnWidth, height: plusBtnHeight, color: SOFTGREEN60_COLOR),
+        if (showPlusButton &&
+            destinationScreen !=
+                null) // showPlusButton이 true이고, destinationScreen이 null이 아닌 경우
+          // '더보기' 버튼을 위치시키며, 이 버튼을 탭하면 destinationScreen으로 네비게이션함.
+          Positioned(
+            right: plusBtn1X,
+            top: plusBtn1Y,
+            child: GestureDetector(
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => destinationScreen)),
+              child: Image.asset('asset/img/misc/button_img/plus_button1.png',
+                  width: plusBtnWidth,
+                  height: plusBtnHeight,
+                  color: SOFTGREEN60_COLOR),
+            ),
           ),
-        ),
       ],
     ),
     backgroundColor: backgroundColor,
     elevation: 0, // 카드의 높이(그림자 깊이)를 설정함.
-    padding: EdgeInsets.symmetric(vertical: plusBtn2Y, horizontal: plusBtn1X), // 카드 내부의 패딩을 설정함.
+    padding: EdgeInsets.symmetric(
+        vertical: plusBtn2Y, horizontal: plusBtn1X), // 카드 내부의 패딩을 설정함.
   );
 }
 // ------ 상단 탭 바 관련 카드뷰 섹션 위젯 -
@@ -112,7 +113,7 @@ Widget buildSectionCard(
 class MidCategoryButtonList extends ConsumerWidget {
   // 카테고리 버튼 클릭시 실행할 함수를 정의 (이 함수는 BuildContext와 카테고리의 인덱스를 매개변수로 받음)
   final void Function(BuildContext context, WidgetRef ref, int index)
-  onCategoryTap;
+      onCategoryTap;
 
   // 생성자에서 필수적으로 클릭 이벤트 함수를 받음
   MidCategoryButtonList({Key? key, required this.onCategoryTap})
@@ -123,8 +124,7 @@ class MidCategoryButtonList extends ConsumerWidget {
     // 선택된 카테고리의 인덱스를 상태 관리 도구에서 가져옴
     final selectedMidCategoryIndex = ref.watch(selectedMidCategoryProvider);
     // 카테고리 확장 상태를 관리하는 상태 변수를 가져옴.
-    final boolExpanded =
-    ref.watch(midCategoryViewBoolExpandedProvider);
+    final boolExpanded = ref.watch(midCategoryViewBoolExpandedProvider);
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -143,8 +143,10 @@ class MidCategoryButtonList extends ConsumerWidget {
     // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
 
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
-    final double totalPadding = screenSize.width * (16 / referenceWidth); // 전체적인 좌우 패딩 값을 설정
-    final double spacingBetweenButtons = screenSize.width * (8 / referenceWidth); // 버튼들 사이의 간격을 설정
+    final double totalPadding =
+        screenSize.width * (16 / referenceWidth); // 전체적인 좌우 패딩 값을 설정
+    final double spacingBetweenButtons =
+        screenSize.width * (8 / referenceWidth); // 버튼들 사이의 간격을 설정
     final double iconSize = 70;
     final double iconWidth = screenSize.width * (70 / referenceWidth);
     final double iconHeight = screenSize.width * (70 / referenceHeight);
@@ -154,18 +156,18 @@ class MidCategoryButtonList extends ConsumerWidget {
     int midCategoryPerRow = screenSize.width > 900
         ? 6
         : screenSize.width > 600
-        ? 5
-        : screenSize.width > 300
-        ? 4
-        : 3;
+            ? 5
+            : screenSize.width > 300
+                ? 4
+                : 3;
     // // 전체적인 좌우 패딩 값을 설정
     // double totalPadding = 16.0;
     // // 버튼들 사이의 간격을 설정
     // double spacingBetweenButtons = 8.0;
     // 버튼의 너비를 계산 (화면 너비에서 좌우 패딩과 버튼 사이 간격을 제외한 너비를 버튼 수로 나눔)
     double buttonWidth = (screenSize.width -
-        totalPadding * 2 -
-        (midCategoryPerRow - 1) * spacingBetweenButtons) /
+            totalPadding * 2 -
+            (midCategoryPerRow - 1) * spacingBetweenButtons) /
         midCategoryPerRow;
 
     // 지퍼 버튼의 높이 설정 (기기마다의 다른 길이에 맞춰서 모두 구현되도록 재설정)
@@ -182,7 +184,7 @@ class MidCategoryButtonList extends ConsumerWidget {
     // 카테고리 확장/축소 상태를 토글하는 함수
     void toggleCategoryView() {
       ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
-      !boolExpanded;
+          !boolExpanded;
     }
 
     // 카테고리 버튼을 포함하는 애니메이션 컨테이너를 반환하고, 이 컨테이너는 확장/축소 시 높이가 변경됨.
@@ -254,18 +256,18 @@ final List<String> midCategories = [
 
 // 카테고리명과 해당하는 이미지 파일명을 매핑하는 변수
 final Map<String, String> midCategoryImageMap = {
-"티셔츠": "shirt_button_v1.png",
-"블라우스": "blouse_button_v1.png",
-"맨투맨": "mtm_button_v1.png",
-"니트": "neat_button_v1.png",
-"폴라티": "pola_button_v1.png",
-"원피스": "onepiece_button_v1.png",
-"팬츠": "pants_button_v1.png",
-"청바지": "jean_button_v1.png",
-"스커트": "skirt_button_v1.png",
-"아우터": "paeding_button_v1.png",
-"코트": "coat_button_v1.png",
-"가디건": "cardigan_button_v1.png",
+  "티셔츠": "shirt_button_v1.png",
+  "블라우스": "blouse_button_v1.png",
+  "맨투맨": "mtm_button_v1.png",
+  "니트": "neat_button_v1.png",
+  "폴라티": "pola_button_v1.png",
+  "원피스": "onepiece_button_v1.png",
+  "팬츠": "pants_button_v1.png",
+  "청바지": "jean_button_v1.png",
+  "스커트": "skirt_button_v1.png",
+  "아우터": "paeding_button_v1.png",
+  "코트": "coat_button_v1.png",
+  "가디건": "cardigan_button_v1.png",
 };
 
 // 홈 카테고리 버튼이 탭되었을 때 호출되는 함수
@@ -402,8 +404,7 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -416,10 +417,10 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
         child: Text(
           '신상', // 섹션 제목을 '신상'으로 설정
           style: TextStyle(
-              color: BLACK_COLOR, // 텍스트 색상
-              fontSize: SectionTextFontSize, // 텍스트 크기
-              fontFamily: 'NanumGothic',
-              fontWeight: FontWeight.bold,
+            color: BLACK_COLOR, // 텍스트 색상
+            fontSize: SectionTextFontSize, // 텍스트 크기
+            fontFamily: 'NanumGothic',
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -431,23 +432,23 @@ Widget buildNewProductsSection(WidgetRef ref, BuildContext context) {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
-              ),
-              child: ProductsSectionList(
-                category: '신상', // '신상' 카테고리를 설정
-                fetchProducts: (limit, startAfter) async {
-                  // 신상품 데이터를 가져오는 비동기 함수를 설정
-                  final repository = ref.watch(
-                      newProductRepositoryProvider); // newProductRepositoryProvider를 사용하여 레포지토리를 가져옴
-                  return await repository.fetchNewProductContents(
-                      limit: limit); // 레포지토리에서 신상품 데이터를 가져옴
-                },
-              ),
+            ),
+            child: ProductsSectionList(
+              category: '신상', // '신상' 카테고리를 설정
+              fetchProducts: (limit, startAfter) async {
+                // 신상품 데이터를 가져오는 비동기 함수를 설정
+                final repository = ref.watch(
+                    newProductRepositoryProvider); // newProductRepositoryProvider를 사용하여 레포지토리를 가져옴
+                return await repository.fetchNewProductContents(
+                    limit: limit); // 레포지토리에서 신상품 데이터를 가져옴
+              },
             ),
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
 // 최고 섹션을 위젯으로 구현한 부분
 // 최고 섹션에서 ProductsSectionList 위젯 사용하여 데이터 UI 구현
@@ -473,8 +474,7 @@ Widget buildBestProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -544,8 +544,7 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -569,7 +568,7 @@ Widget buildSaleProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
@@ -615,8 +614,7 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -640,7 +638,7 @@ Widget buildSpringProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
@@ -686,8 +684,7 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -711,7 +708,7 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
@@ -729,7 +726,7 @@ Widget buildSummerProductsSection(WidgetRef ref, BuildContext context) {
           ),
         ),
       ),
-     ],
+    ],
   );
 }
 
@@ -757,8 +754,7 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -782,7 +778,7 @@ Widget buildAutumnProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
@@ -828,8 +824,7 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
   // 비율을 기반으로 동적으로 크기와 위치 설정
   // 섹션 내 요소들의 수치
-  final double SectionX =
-      screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
+  final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8;
   final double SectionTextFontSize = 20;
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
@@ -853,7 +848,7 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
       Padding(
         padding: EdgeInsets.only(left: SectionX),
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
+          borderRadius: BorderRadius.circular(10), // 모서리 반경을 10으로 설정
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
@@ -879,6 +874,8 @@ Widget buildWinterProductsSection(WidgetRef ref, BuildContext context) {
 // ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 시작
 // 이벤트 섹션에서 ProductsSectionList 위젯을 사용하여 데이터 UI를 구현하는 함수
 Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
+  // 현재 불러온 이벤트 포스터 이미지 목록
+  final eventPosterImgItems = ref.watch(eventPosterImgItemsProvider);
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -900,8 +897,47 @@ Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
   final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8; // 위쪽 여백 비율
   final double SectionTextFontSize = 20; // 텍스트 크기 비율
+  final double SectionGuideTextFontSize = 16; // 텍스트 크기 비율
   // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
+  // --- 데이터가 하나도 없을 경우 → “Comming Soon” 텍스트 중앙 표시 시작 부분
+  if (eventPosterImgItems.isEmpty) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: SectionX), // 왼쪽 여백 적용
+          child: Text(
+            '이벤트', // 섹션 제목을 '이벤트'로 설정함
+            style: TextStyle(
+              color: BLACK_COLOR, // 텍스트 색상 설정
+              fontSize: SectionTextFontSize, // 텍스트 크기 설정
+              fontFamily: 'NanumGothic', // 폰트 스타일 설정
+              fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+            ),
+          ),
+        ),
+        SizedBox(height: SectionY), // 제목과 리스트 사이의 간격 추가
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 0),
+            child: Text(
+              'Comming Soon',
+              style: TextStyle(
+                color: BLACK_COLOR,
+                fontSize: SectionGuideTextFontSize,
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  // --- 데이터가 하나도 없을 경우 → “Comming Soon” 텍스트 중앙 표시 끝 부분
+
+  // --- 데이터가 있을 경우 → 기존 레이아웃 구성 시작 부분
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정
     children: [
@@ -926,11 +962,13 @@ Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: EventPosterImgSectionList(), // EventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
+            child:
+                EventPosterImgSectionList(), // EventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
           ),
         ),
       ),
     ],
   );
+  // --- 데이터가 있을 경우 → 기존 레이아웃 구성 끝 부분
 }
 // ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 끝

@@ -28,7 +28,7 @@ class SNSLoginRepository {
   Future<AppleSignInResultModel?> signInWithApple() async {
     try {
       print('Apple 로그인 시작. Apple ID 자격 증명 요청 중.');
-      // 1). Apple ID 자격 증명을 얻음
+      // 1). Apple ID 자격 증명을 얻음 (iOS 기기에 따른 FaceID or TouchID로 생체인증하도록 하는 UI가 실행되는 로직)
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,

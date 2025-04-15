@@ -29,15 +29,17 @@ class AllLargeBannerImage extends CommonBannerImage {
   final String? category;
   // subCategory를 저장할 subCategory 필드를 nullable로 선언.
   final String? subCategory;
+  // 배너 페이지의 유무 관련 isVisible 필드를 선언. (true 값이 기본값)
+  final bool isVisible;
 
-  AllLargeBannerImage({required String imageUrl, this.url, this.productId, this.category, this.subCategory,}) : super(imageUrl: imageUrl);
+  AllLargeBannerImage({required String imageUrl, this.url, this.productId, this.category, this.subCategory, this.isVisible = true,}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'AllLargeBannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
   factory AllLargeBannerImage.fromJson(Map<String, dynamic> json) {
-    // JSON 맵에서 'imageUrl', 'url', 'productId', 'category' 키의 값을 읽어서 새로운 'AllLargeBannerImage' 객체를 생성.
+    // JSON 맵에서 'imageUrl', 'url', 'productId', 'category', 'isVisible' 키의 값을 읽어서 새로운 'AllLargeBannerImage' 객체를 생성.
     // url, productId, category 필드는 nullable로 설정하여, 값이 없을 경우 null로 처리.
-    return AllLargeBannerImage(imageUrl: json['imageUrl'], url: json['url'] as String?, productId: json['productId'] as String?, category: json['category'] as String?, subCategory: json['subCategory'] as String?,);
+    return AllLargeBannerImage(imageUrl: json['imageUrl'], url: json['url'] as String?, productId: json['productId'] as String?, category: json['category'] as String?, subCategory: json['subCategory'] as String?, isVisible: json['isVisible'] ?? true,);
   }
 }
 
@@ -51,14 +53,16 @@ class AllSmallBannerImage extends CommonBannerImage {
   final String? productId;
   // category를 저장할 category 필드를 nullable로 선언.
   final String? category;
+  // 배너 페이지의 유무 관련 isVisible 필드를 선언. (true 값이 기본값)
+  final bool isVisible;
 
-  AllSmallBannerImage({required String imageUrl, this.url, this.productId, this.category,}) : super(imageUrl: imageUrl);
+  AllSmallBannerImage({required String imageUrl, this.url, this.productId, this.category, this.isVisible = true,}) : super(imageUrl: imageUrl);
 
   // 'fromJson' 팩토리 생성자는 JSON 형태의 맵에서 데이터를 읽어 'AllSmallBannerImage' 인스턴스를 생성함.
   // 이 생성자는 데이터를 외부 API나 데이터베이스로부터 받아 객체로 변환할 때 유용함.
   factory AllSmallBannerImage.fromJson(Map<String, dynamic> json) {
-    // JSON 맵에서 'imageUrl', 'url', 'productId', 키의 값을 읽어서 새로운 'AllSmallBannerImage' 객체를 생성.
+    // JSON 맵에서 'imageUrl', 'url', 'productId', 'isVisible' 키의 값을 읽어서 새로운 'AllSmallBannerImage' 객체를 생성.
     // url, productId, category 필드는 nullable로 설정하여, 값이 없을 경우 null로 처리.
-    return AllSmallBannerImage(imageUrl: json['imageUrl'], url: json['url'] as String?, productId: json['productId'] as String?, category: json['category'] as String?,);
+    return AllSmallBannerImage(imageUrl: json['imageUrl'], url: json['url'] as String?, productId: json['productId'] as String?, category: json['category'] as String?, isVisible: json['isVisible'] ?? true,);
   }
 }
