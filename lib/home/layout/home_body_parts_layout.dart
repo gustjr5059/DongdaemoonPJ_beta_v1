@@ -246,6 +246,10 @@ class _EventPosterImgSectionListState
 // ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 시작
 // 이벤트 섹션에서 ProductsSectionList 위젯을 사용하여 데이터 UI를 구현하는 함수
 Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
+
+  // 현재 불러온 이벤트 포스터 이미지 목록
+  final eventPosterImgItems = ref.watch(eventPosterImgItemsProvider);
+
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
 
@@ -267,8 +271,47 @@ Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
   final double SectionX = screenSize.width * (16 / referenceWidth); // 왼쪽 여백 비율
   final double SectionY = 8; // 위쪽 여백 비율
   final double SectionTextFontSize = 20; // 텍스트 크기 비율
+  final double SectionGuideTextFontSize = 16; // 텍스트 크기 비율
   // --- 갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
+  // --- 데이터가 하나도 없을 경우 → “Comming Soon” 텍스트 중앙 표시 시작 부분
+  if (eventPosterImgItems.isEmpty) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: SectionX), // 왼쪽 여백 적용
+          child: Text(
+            '이벤트', // 섹션 제목을 '이벤트'로 설정함
+            style: TextStyle(
+              color: BLACK_COLOR, // 텍스트 색상 설정
+              fontSize: SectionTextFontSize, // 텍스트 크기 설정
+              fontFamily: 'NanumGothic', // 폰트 스타일 설정
+              fontWeight: FontWeight.bold, // 텍스트 굵기 설정
+            ),
+          ),
+        ),
+        SizedBox(height: SectionY), // 제목과 리스트 사이의 간격 추가
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 0),
+            child: Text(
+              'Comming Soon',
+              style: TextStyle(
+                color: BLACK_COLOR,
+                fontSize: SectionGuideTextFontSize,
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  // --- 데이터가 하나도 없을 경우 → “Comming Soon” 텍스트 중앙 표시 끝 부분
+
+  // --- 데이터가 있을 경우 → 기존 레이아웃 구성 시작 부분
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내부 요소를 왼쪽 정렬로 설정
     children: [
@@ -293,12 +336,14 @@ Widget buildEventPosterImgProductsSection(WidgetRef ref, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), // 모서리 반경 설정
             ),
-            child: EventPosterImgSectionList(), // EventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
+            child:
+            EventPosterImgSectionList(), // EventPosterImgSectionList 위젯 사용하여 이벤트 이미지 리스트 표시
           ),
         ),
       ),
     ],
   );
+  // --- 데이터가 있을 경우 → 기존 레이아웃 구성 끝 부분
 }
 // ------ 이벤트 섹션을 위젯으로 구현한 부분 내용 끝
 

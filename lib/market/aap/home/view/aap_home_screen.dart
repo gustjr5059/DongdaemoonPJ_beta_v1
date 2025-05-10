@@ -41,7 +41,7 @@ import '../../product/view/sub_main_screen/aap_summer_sub_main_screen.dart';
 import '../../product/view/sub_main_screen/aap_winter_sub_main_screen.dart';
 import '../layout/aap_home_body_parts_layout.dart';
 
-// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 aab_home_all_providers.dart 파일을 가져옵니다.
+// 현재 디렉토리의 부모 디렉토리에 위치한 provider 폴더에서 aap_home_all_providers.dart 파일을 가져옵니다.
 // 이 파일은 홈 화면과 관련된 Future Provider 기능을 제공합니다.
 // 이를 통해 홈 화면에서 비동기 데이터를 호출하고 상태를 관리할 수 있습니다.
 import '../provider/aap_home_all_providers.dart';
@@ -558,7 +558,7 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
     // (common_parts.dart의 buildTopBarList 재사용 후 topBarList 위젯으로 재정의)
     Widget topBarList = buildTopBarList(context, onTopBarTap,
         aapHomeCurrentTabProvider, homeTopBarPointAutoScrollController);
-    // ------ aab_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
+    // ------ aap_common_body_parts_layout.dart 내 buildTopBarList, onTopBarTap 재사용하여 TopBar 구현 내용 끝
 
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
@@ -567,13 +567,59 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
     final double referenceWidth = 393.0;
     final double referenceHeight = 852.0;
 
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 시작 부분
+    // // 비율을 기반으로 동적으로 크기와 위치 설정
+    //
+    // // 앱 바 부분 수치
+    // final double expandedHeight =
+    //     screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
+    // final double preferredSizeHeight =
+    //     screenSize.height * (60 / referenceHeight); // 상단 탭 바 높이 비율
+    //
+    // // 대배너 부분 관련 수치
+    // final double homeScreenLargeBannerWidth = screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
+    // final double homeScreenLargeBannerHeight = screenSize.height * (378 / referenceHeight); // 대배너 이미지 높이
+    // final double homeScreenLargeBannerViewHeight =
+    //     screenSize.height * (378 / referenceHeight); // 대배너 화면 세로 비율
+    //
+    // // 홈 소배너 부분 관련 수치
+    // final double homeScreenSmallBannerWidth = screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
+    // final double homeScreenSmallBannerHeight = screenSize.height * (127 / referenceHeight); // 소배너 이미지 높이
+    // final double homeScreenSmallBannerViewHeight =
+    //     screenSize.height * (127 / referenceHeight); // 소배너 화면 세로 비율
+    //
+    // // AppBar 관련 수치 동적 적용
+    // final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    // final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    // final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    // final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    //
+    // // 이전화면으로 이동 아이콘 관련 수치 동적 적용
+    // final double homeChevronIconWidth = screenSize.width * (28 / referenceWidth);
+    // final double homeChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    // final double homeChevronIconX = screenSize.width * (10 / referenceWidth);
+    // final double homeChevronIconY = screenSize.height * (8 / referenceHeight);
+    //
+    // // 찜 목록 버튼 수치 (Case 2)
+    // final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
+    // final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
+    // final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
+    // final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    //
+    // // 홈 화면 컨텐츠 사이의 간격 수치
+    // final double interval1Y = screenSize.height * (5 / referenceHeight);
+    // final double interval2Y = screenSize.height * (10 / referenceHeight);
+    // final double interval3Y = screenSize.height * (60 / referenceHeight);
+    // final double interval4Y = screenSize.height * (13 / referenceHeight);
+    // final double interval5Y = screenSize.height * (8 / referenceHeight);
+    // // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 않은 사이즈 끝 부분
+
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 앱 바 부분 수치
-    final double expandedHeight =
-        screenSize.height * (104 / referenceHeight); // 앱 바의 확장 최대 높이 비율
-    final double preferredSizeHeight =
-        screenSize.height * (60 / referenceHeight); // 상단 탭 바 높이 비율
+    final double expandedHeight = 104; // 앱 바의 확장 최대 높이 비율
+    final double preferredSizeHeight = 60; // 상단 탭 바 높이 비율
 
     // 대배너 부분 관련 수치
     final double homeScreenLargeBannerWidth =
@@ -588,29 +634,97 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
     final double homeScreenSmallBannerViewHeight = screenSize.width * (127 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
-    final double homeAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
-    final double homeAppBarTitleHeight = screenSize.height * (22 / referenceHeight);
+    final double homeAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
+    final double homeAppBarTitleHeight = 22;
     final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
-    final double homeAppBarTitleY = screenSize.height * (11 / referenceHeight);
+    final double homeAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double homeChevronIconWidth = screenSize.width * (28 / referenceWidth);
-    final double homeChevronIconHeight = screenSize.height * (24 / referenceHeight);
+    final double homeChevronIconWidth =
+        screenSize.width * (28 / referenceWidth);
+    final double homeChevronIconHeight = 24;
     final double homeChevronIconX = screenSize.width * (10 / referenceWidth);
-    final double homeChevronIconY = screenSize.height * (8 / referenceHeight);
+    final double homeChevronIconY = 8;
 
     // 찜 목록 버튼 수치 (Case 2)
-    final double homeWishlistBtnWidth = screenSize.width * (40 / referenceWidth);
-    final double homeWishlistBtnHeight = screenSize.height * (40 / referenceHeight);
-    final double homeWishlistBtnX = screenSize.width * (10 / referenceWidth);
-    final double homeWishlistBtnY = screenSize.height * (7 / referenceHeight);
+    final double homeWishlistBtnWidth = 40;
+    final double homeWishlistBtnHeight = 40;
+    final double homeWishlistBtnX = 10;
+    final double homeWishlistBtnY = 7;
 
     // 홈 화면 컨텐츠 사이의 간격 수치
-    final double interval1Y = screenSize.height * (5 / referenceHeight);
-    final double interval2Y = screenSize.height * (10 / referenceHeight);
-    final double interval3Y = screenSize.height * (60 / referenceHeight);
-    final double interval4Y = screenSize.height * (13 / referenceHeight);
-    final double interval5Y = screenSize.height * (8 / referenceHeight);
+    final double interval1Y = 5;
+    final double interval2Y = 10;
+    final double interval3Y = 60;
+    final double interval4Y = 13;
+    final double interval5Y = 8;
+    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
+
+    // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final largeBannerWidget = buildCommonBannerPageViewSection<AllLargeBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: aapHomeLargeBannerPageProvider,
+      pageController: _largeBannerPageController,
+      bannerAutoScroll: _largeBannerAutoScroll,
+      bannerImagesProvider: aapAllLargeBannerImagesProvider,
+      onPageTap: (context, index) =>
+          onLargeBannerTap(context, index, ref.watch(aapAllLargeBannerImagesProvider).value ?? [], ref),
+      width: homeScreenLargeBannerWidth,
+      height: homeScreenLargeBannerHeight,
+      borderRadius: 0,
+    );
+    // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small1BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: aapHomeSmall1BannerPageProvider,
+      pageController: _small1BannerPageController,
+      bannerAutoScroll: _small1BannerAutoScroll,
+      bannerImagesProvider: aapHomeSmall1BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(aapHomeSmall1BannerImagesProvider).value ?? [], ref),
+      width: homeScreenSmallBannerWidth,
+      height: homeScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너2]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small2BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: aapHomeSmall2BannerPageProvider,
+      pageController: _small2BannerPageController,
+      bannerAutoScroll: _small2BannerAutoScroll,
+      bannerImagesProvider: aapHomeSmall2BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(aapHomeSmall2BannerImagesProvider).value ?? [], ref),
+      width: homeScreenSmallBannerWidth,
+      height: homeScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너2]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너3]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small3BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: aapHomeSmall3BannerPageProvider,
+      pageController: _small3BannerPageController,
+      bannerAutoScroll: _small3BannerAutoScroll,
+      bannerImagesProvider: aapHomeSmall3BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(aapHomeSmall3BannerImagesProvider).value ?? [], ref),
+      width: homeScreenSmallBannerWidth,
+      height: homeScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너3]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
@@ -702,64 +816,35 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 0.0),
                       child: Column(
                         children: [
-                          // SizedBox(height: 5), // 높이 20으로 간격 설정
-                          // 큰 배너 섹션을 카드뷰로 구성
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(0), // 큰 배너의 모서리 반경을 0으로 설정
-                                border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                          // ——— 대배너 위젯 조건부 렌더링 시작 부분
+                          if (largeBannerWidget is! SizedBox) ...[
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenLargeBannerViewHeight,
+                                  child: largeBannerWidget,
                                 ),
                               ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 200으로 설정함
-                                height: homeScreenLargeBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllLargeBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                  aapHomeLargeBannerPageProvider,
-                                  // 페이지 컨트롤러를 전달 (페이지 전환을 관리)
-                                  pageController: _largeBannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _largeBannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                  aapAllLargeBannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 대배너 클릭 시 호출할 함수 aapOnLargeBannerTap 실행
-                                  aapOnLargeBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aapAllLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aapAllLargeBannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenLargeBannerWidth, // 원하는 너비
-                                  height: homeScreenLargeBannerHeight, // 원하는 높이
-                                  borderRadius: 0,
-                                ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 4,
+                              padding: EdgeInsets.zero, // 패딩을 없앰
+                            ),
+                          ],
+                          // ——— 대배너 위젯 조건부 렌더링 끝 부분
+
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    color: BLACK_COLOR,
+                                    width: 1.0), // 하단 테두리 색상을 설정함
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 4,
-                            // 카드뷰 그림자 깊이
-                            // padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
-                            //     8.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-                            padding: EdgeInsets.zero, // 패딩을 없앰
-                            // padding: const EdgeInsets.all(
-                            //     2),
                           ),
-                          SizedBox(height: interval1Y), // 높이 간격 설정
+
                           // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
                           // 중간 카테고리 버튼 리스트를 카드뷰로 구성
                           CommonCardView(
@@ -774,65 +859,39 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
                               child: MidCategoryButtonList(
                                 onCategoryTap: aapOnMidCategoryTap,
                               ),
+                            ),
+                          ),
+
+                          // ——— 소배너1 위젯 조건부 렌더링 시작 부분
+                          if (small1BannerWidget is! SizedBox) ...[
+                            Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: interval5Y), // 높이 간격 설정
-                          // 첫 번째 홈 소배너 섹션
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5), // 작은 배너의 모서리 반경을 5로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
-                                height: homeScreenSmallBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllSmallBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                  aapHomeSmall1BannerPageProvider,
-                                  // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
-                                  pageController: _small1BannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _small1BannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                  aapHomeSmall1BannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aapOnSmallBannerTap 실행
-                                  aapOnSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aapHomeSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aapHomeSmall1BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth, // 원하는 너비
-                                  height: homeScreenSmallBannerHeight, // 원하는 높이
-                                  borderRadius: 5,
+                            SizedBox(height: interval4Y), // 높이 간격 설정
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenSmallBannerViewHeight,
+                                  child: small1BannerWidget,
                                 ),
                               ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
-                          ),
-                          SizedBox(height: interval4Y), // 높이 간격 설정
+                            SizedBox(height: interval4Y), // 높이 간격 설정
+                          ],
+                          // ——— 소배너1 위젯 조건부 렌더링 끝 부분
+
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
@@ -884,66 +943,37 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
                                 destinationScreen: AapSaleSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                              ),
-                            ),
-                          ),
-                          // SizedBox(height: interval1Y), // 높이 간격 설정
-                          SizedBox(height: interval4Y), // 높이 간격 설정
-                          // 두 번째 홈 소배너 섹션
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
+
+                          // ——— 소배너2 위젯 조건부 렌더링 시작 부분
+                          if (small2BannerWidget is! SizedBox) ...[
+                            Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5), // 작은 배너의 모서리 반경을 5로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
-                                height: homeScreenSmallBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllSmallBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                  aapHomeSmall2BannerPageProvider,
-                                  // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
-                                  pageController: _small2BannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _small2BannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                  aapHomeSmall2BannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aapOnSmallBannerTap 실행
-                                  aapOnSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aapHomeSmall2BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aapHomeSmall2BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth, // 원하는 너비
-                                  height: homeScreenSmallBannerHeight, // 원하는 높이
-                                  borderRadius: 5,
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
-                          ),
-                          SizedBox(height: interval4Y), // 높이 간격 설정
+                            SizedBox(height: interval4Y), // 높이 간격 설정
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenSmallBannerViewHeight,
+                                  child: small2BannerWidget,
+                                ),
+                              ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                            ),
+                            SizedBox(height: interval4Y), // 높이 간격 설정
+                          ],
+                          // ——— 소배너2 위젯 조건부 렌더링 끝 부분
+
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
@@ -977,66 +1007,37 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
                                 destinationScreen: AapSummerSubMainScreen(),
                                 showPlusButton: true),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                              ),
-                            ),
-                          ),
-                          // SizedBox(height: interval1Y), // 높이 간격 설정
-                          SizedBox(height: interval4Y), // 높이 간격 설정
-                          // 세 번째 홈 소배너 섹션
-                          CommonCardView(
-                            content: Container(
-                              // 모서리에 반경을 주기 위해 BoxDecoration 추가
+
+                          // ——— 소배너3 위젯 조건부 렌더링 시작 부분
+                          if (small3BannerWidget is! SizedBox) ...[
+                            Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5), // 작은 배너의 모서리 반경을 5로 설정
-                              ),
-                              child: SizedBox(
-                                // buildCommonBannerPageViewSection 위젯의 높이를 60으로 설정함
-                                height: homeScreenSmallBannerViewHeight,
-                                // 카드뷰의 내용으로 buildCommonBannerPageViewSection 위젯을 재사용하여 구현함
-                                child: buildCommonBannerPageViewSection<
-                                    AllSmallBannerImage>(
-                                  // 현재 빌드 컨텍스트를 전달
-                                  context: context,
-                                  // Provider의 참조를 전달 (상태 관리를 위해 사용)
-                                  ref: ref,
-                                  // 현재 페이지를 관리하는 Provider를 전달
-                                  currentPageProvider:
-                                  aapHomeSmall3BannerPageProvider,
-                                  // 페이지 전환을 관리하는 페이지 컨트롤러를 전달
-                                  pageController: _small3BannerPageController,
-                                  // 배너 자동 스크롤 기능을 전달
-                                  bannerAutoScroll: _small3BannerAutoScroll,
-                                  // 배너 이미지들을 관리하는 Provider를 전달
-                                  bannerImagesProvider:
-                                  aapHomeSmall3BannerImagesProvider,
-                                  // 배너를 탭했을 때 실행할 함수를 전달
-                                  onPageTap: (context, index) =>
-                                  // 소배너 클릭 시 호출할 함수 aapOnSmallBannerTap 실행
-                                  aapOnSmallBannerTap(
-                                      context, // 현재 화면의 컨텍스트를 전달함
-                                      index, // 클릭된 배너의 인덱스를 전달함
-                                      // aapHomeSmall3BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                      ref.watch(aapHomeSmall3BannerImagesProvider).value ?? [],
-                                      ref // Provider의 참조를 전달함
-                                  ),
-                                  width: homeScreenSmallBannerWidth, // 원하는 너비
-                                  height: homeScreenSmallBannerHeight, // 원하는 높이
-                                  borderRadius: 5,
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
                             ),
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0,
-                                0.0), // 카드뷰 패딩 : 좌/우: 20.0, 상/하: 0.0
-                          ),
-                          SizedBox(height: interval4Y), // 높이 간격 설정
+                            SizedBox(height: interval4Y), // 높이 간격 설정
+                            CommonCardView(
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: SizedBox(
+                                  height: homeScreenSmallBannerViewHeight,
+                                  child: small3BannerWidget,
+                                ),
+                              ),
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              elevation: 0,
+                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                            ),
+                            SizedBox(height: interval4Y), // 높이 간격 설정
+                          ],
+                          // ——— 소배너3 위젯 조건부 렌더링 끝 부분
+
                           Container(
                             decoration: BoxDecoration(
                               border: Border(
@@ -1093,7 +1094,7 @@ class _AapHomeMainScreenState extends ConsumerState<AapHomeMainScreen>
                         ],
                       ),
                     );
-                  },
+                      },
                   childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                 ),
               ),

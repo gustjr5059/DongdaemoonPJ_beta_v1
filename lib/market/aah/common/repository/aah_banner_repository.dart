@@ -31,34 +31,50 @@ class AahAllLargeBannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllLargeBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllLargeBannerImage.fromJson({
+      final bannerList = <AllLargeBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllLargeBannerImage.fromJson({
           'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
           'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllLargeBannerImage.fromJson({
+          'category': data['category'],  // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllLargeBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllLargeBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllLargeBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 4를 생성하기 위한 데이터 모델링
-        AllLargeBannerImage.fromJson({
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 4를 생성하기 위한 데이터 모델링
+      if (data['ad_img_4_bool'] == true) {
+        bannerList.add(AllLargeBannerImage.fromJson({
           'imageUrl': data['ad_img_4'],  // 이미지 URL로 사용할 데이터 'ad_img_4'
-          'url': data['ad_url_3']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 5를 생성하기 위한 데이터 모델링
-        AllLargeBannerImage.fromJson({
+          'url': data['ad_url_3'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 5를 생성하기 위한 데이터 모델링
+      if (data['ad_img_5_bool'] == true) {
+        bannerList.add(AllLargeBannerImage.fromJson({
           'imageUrl': data['ad_img_5'],  // 이미지 URL로 사용할 데이터 'ad_img_5'
-          'subCategory': data['sub_category']  // 하위 카테고리 정보 포함
-        })
-      ].whereType<AllLargeBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'subCategory': data['sub_category'],  // 하위 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('큰 배너 이미지를 가져오지 못함: 문서가 존재하지 않음.'); // 문서가 존재하지 않을 때 메시지 출력
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -91,24 +107,34 @@ class AahShirtMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('셔츠 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -139,24 +165,34 @@ class AahBlouseMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('블라우스 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -187,24 +223,34 @@ class AahMtmMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('맨투맨 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -235,24 +281,34 @@ class AahNeatMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('니트 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -283,24 +339,34 @@ class AahPolaMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('폴라티 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -331,24 +397,34 @@ class AahOnepieceMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('원피스 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -379,24 +455,34 @@ class AahPantsMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('바지 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -427,24 +513,34 @@ class AahJeanMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('청바지 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -475,24 +571,34 @@ class AahSkirtMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('스커트 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -523,24 +629,34 @@ class AahPaedingMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('패딩 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -571,24 +687,34 @@ class AahCoatMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('코트 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -619,90 +745,40 @@ class AahCardiganMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('가디건 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
     throw Exception('배너 이미지를 가져오지 못했습니다');
   }
 }
-// -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
-
-// -------- 마이페이지 메인 화면 작은 배너 관련 레퍼지토리 내용 시작
-// 'AahProfileMainSmall1BannerRepository' 클래스는 Firestore 데이터베이스에서 배너 이미지 데이터를 가져오는 기능을 제공함.
-class AahProfileMainSmall1BannerRepository {
-  // 'firestore' 변수는 FirebaseFirestore의 인스턴스를 저장함.
-  // 이 인스턴스를 통해 Firestore 데이터베이스에 접근함.
-  final FirebaseFirestore firestore;
-
-  // 생성자에서는 FirebaseFirestore의 인스턴스를 받아 'firestore' 변수에 할당함.
-  AahProfileMainSmall1BannerRepository(this.firestore);
-
-  // ------ 'fetchBannerImagesAndLink' 메서드 시작 부분
-  // 'fetchBannerImagesAndLink' 메서드는 Firestore로부터 배너 이미지를 비동기적으로 가져옴.
-  // 이 메서드는 List<AllSmallBannerImage> 타입의 Future를 반환함.
-  Future<List<AllSmallBannerImage>> fetchBannerImagesAndLink(String bannerId) async {
-    // 'Firestore에서 프로필 메인 작은 배너 이미지를 가져오는 중...'이라는 메시지를 출력함.
-    print('Firestore에서 프로필 메인 작은 배너 이미지를 가져오는 중...');
-
-    // 'banners' 컬렉션 내의 'profile_small_banner_1' 문서에 접근하여 데이터를 가져옴.
-    DocumentSnapshot snapshot =
-    await firestore.collection('banners').doc('wearcano').collection(bannerId).doc('profile_main_small_banner_1').get();
-
-    // 문서가 존재하는 경우 실행됨.
-    if (snapshot.exists) {
-      // '문서가 존재합니다. 데이터를 처리하는 중...'이라는 메시지를 출력함.
-      print('문서가 존재합니다. 데이터를 처리하는 중...');
-
-      // 문서의 데이터를 Map<String, dynamic> 형태로 변환함.
-      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-
-      // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
-    }
-
-    // '프로필 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.'라는 메시지를 출력함.
-    print('프로필 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
-
-    // 문서가 존재하지 않는 경우 예외를 발생시킴.
-    throw Exception('배너 이미지를 가져오지 못했습니다');
-  }
-}
-// -------- 마이페이지 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
 // -------- 각 카테고리 메인 화면 작은 배너 관련 레퍼지토리 내용 끝
 
 // -------- 각 섹션 더보기 화면 작은 배너 관련 레퍼지토리 내용 시작
@@ -729,24 +805,34 @@ class AahNewSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('newSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -777,24 +863,34 @@ class AahBestSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('bestSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -825,24 +921,34 @@ class AahSaleSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('saleSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -873,24 +979,34 @@ class AahSpringSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('springSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -921,24 +1037,34 @@ class AahSummerSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('summerSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -969,24 +1095,34 @@ class AahAutumnSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('autumnSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.
@@ -1017,24 +1153,34 @@ class AahWinterSubMainSmall1BannerRepository {
       // 문서의 데이터를 Map<String, dynamic> 형태로 추출함.
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       // 데이터 맵에서 특정 키를 사용하여 이미지 URL을 가져온 후 AllSmallBannerImage 객체로 변환함.
-      return [
-        // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
-          'imageUrl': data['ad_img_1'],  // 이미지 URL로 사용할 데이터 'ad_img_1'
-          'productId': data['product_id'],  // 제품 ID 정보 포함
-          'category': data['category']  // 카테고리 정보 포함
-        }),
-        // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+      final bannerList = <AllSmallBannerImage>[];
+
+      // 광고 배너 이미지 1을 생성하기 위한 데이터 모델링
+      if (data['ad_img_1_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
+          'imageUrl': data['ad_img_1'], // 이미지 URL로 사용할 데이터 'ad_img_1'
+          'productId': data['product_id'], // 제품 ID 정보 포함
+          'category': data['category'], // 카테고리 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 2를 생성하기 위한 데이터 모델링
+      if (data['ad_img_2_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_2'],  // 이미지 URL로 사용할 데이터 'ad_img_2'
-          'url': data['ad_url_1']  // 연결 URL 정보 포함
-        }),
-        // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
-        AllSmallBannerImage.fromJson({
+          'url': data['ad_url_1'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      // 광고 배너 이미지 3을 생성하기 위한 데이터 모델링
+      if (data['ad_img_3_bool'] == true) {
+        bannerList.add(AllSmallBannerImage.fromJson({
           'imageUrl': data['ad_img_3'],  // 이미지 URL로 사용할 데이터 'ad_img_3'
-          'url': data['ad_url_2']  // 연결 URL 정보 포함
-        })
-      ].whereType<AllSmallBannerImage>().toList(); // 생성된 객체들을 List로 변환하여 반환함.
+          'url': data['ad_url_2'],  // 연결 URL 정보 포함
+          'isVisible': true, // 배너 페이지 노출 유무
+        }));
+      }
+      return bannerList; // 생성된 객체들을 List로 변환하여 반환함.
     }
     print('winterSub 메인 작은 배너 이미지를 가져오지 못했습니다: 문서가 존재하지 않습니다.');
     // 문서가 존재하지 않는 경우 예외를 발생시킴.

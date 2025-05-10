@@ -3025,6 +3025,11 @@ Future<void> createFirestoreDocuments_3() async {
           'category': '티셔츠',
           'product_id': productId,
           'sub_category': '신상',
+          'ad_img_1_bool': true,
+          'ad_img_2_bool': true,
+          'ad_img_3_bool': false,
+          'ad_img_4_bool': false,
+          'ad_img_5_bool': false,
         });
       } else if ([
         'home_small_banner_1',
@@ -3039,8 +3044,13 @@ Future<void> createFirestoreDocuments_3() async {
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
           'ad_img_3':
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fad_image${homeImgCounter++}.jpeg?alt=media',
+          'ad_url_1': 'https://www.youtube.com/channel/UCV64tNB9Y1bfTe-JlFvkWcg',
+          'ad_url_2': 'https://www.temu.com/kr',
           'category': '티셔츠',
           'product_id': productId,
+          'ad_img_1_bool': false,
+          'ad_img_2_bool': true,
+          'ad_img_3_bool': false,
         });
         // } else if (bannerType == 'profile_main_small_banner_1') {
         //   // profile_main_small_banner의 이미지 URL은 mb1 ~ mb3
@@ -3063,8 +3073,13 @@ Future<void> createFirestoreDocuments_3() async {
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
           'ad_img_3':
               'https://firebasestorage.googleapis.com/v0/b/wearcanopj.appspot.com/o/banner_image%2Fmb${othersImgCounter++}.png?alt=media',
+          'ad_url_1': 'https://www.youtube.com/channel/UCV64tNB9Y1bfTe-JlFvkWcg',
+          'ad_url_2': 'https://www.temu.com/kr',
           'category': '티셔츠',
           'product_id': productId,
+          'ad_img_1_bool': false,
+          'ad_img_2_bool': true,
+          'ad_img_3_bool': false,
         });
       }
 
@@ -3106,6 +3121,11 @@ Future<void> createFirestoreDocuments_3() async {
     'ad_url_3': 'https://www.temu.com/kr',
     'ad_url_4': 'https://www.google.com',
     'ad_url_5': 'https://www.yanolja.com/',
+    'ad_img_1_bool': true,
+    'ad_img_2_bool': true,
+    'ad_img_3_bool': false,
+    'ad_img_4_bool': false,
+    'ad_img_5_bool': false,
     // category, product_id, sub_category 없음
   });
   batchCounter++;
@@ -3131,6 +3151,9 @@ Future<void> createFirestoreDocuments_3() async {
     'ad_url_1': 'https://www.naver.com',
     'ad_url_2': 'https://ko.aliexpress.com/',
     'ad_url_3': 'https://www.temu.com/kr',
+    'ad_img_1_bool': true,
+    'ad_img_2_bool': false,
+    'ad_img_3_bool': false,
     // category, product_id 없음
   });
   batchCounter++;
@@ -3160,6 +3183,9 @@ Future<void> createFirestoreDocuments_3() async {
     'ad_url_1': 'https://www.naver.com',
     'ad_url_2': 'https://ko.aliexpress.com/',
     'ad_url_3': 'https://www.temu.com/kr',
+    'ad_img_1_bool': true,
+    'ad_img_2_bool': false,
+    'ad_img_3_bool': false,
     // category, product_id 없음
   });
   batchCounter++;
