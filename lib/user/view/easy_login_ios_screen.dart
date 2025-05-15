@@ -1021,7 +1021,6 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
 
     final double interval1Y = 700;
 
-
     return Scaffold(
       body: Stack(
         children: [
@@ -1033,207 +1032,221 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
             ),
           ),
 
-          // 2) 메인 콘텐츠 (스크롤 가능)
+          // 2) 메인 콘텐츠: SafeArea + 스크롤 가능한 영역이 화면 전체를 덮도록 보장
           SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(), // iOS에서 자연스러운 스크롤
-              child: Column(
-                children: [
-                  SizedBox(height: screenNameTop),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: BouncingScrollPhysics(), // iOS에서 자연스러운 스크롤
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          SizedBox(height: screenNameTop),
 
-                  // ------------------------------------------
-                  // 상단 영역: (A) 닫기 아이콘 (B) 화면 제목(로그인)
-                  // ------------------------------------------
-                  // 닫기 아이콘 + "로그인"을 가운데 배치하기 위해 Stack 사용
-                  SizedBox(
-                    height: backBtnTop,
-                    child: Stack(
-                      children: [
-                        // (A) 닫기(뒤로가기) 아이콘 (왼쪽 정렬, canPop인 경우만)
-                        if (Navigator.canPop(context))
-                          Positioned(
-                            left: backBtnLeft,
-                            child: IconButton(
-                              icon: Icon(Icons.arrow_back),
-                              color: BLACK_COLOR,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                          // ------------------------------------------
+                          // 상단 영역: (A) 닫기 아이콘 (B) 화면 제목(로그인)
+                          // ------------------------------------------
+                          // 닫기 아이콘 + "로그인"을 가운데 배치하기 위해 Stack 사용
+                          SizedBox(
+                            height: backBtnTop,
+                            child: Stack(
+                              children: [
+                                // (A) 닫기(뒤로가기) 아이콘 (왼쪽 정렬, canPop인 경우만)
+                                if (Navigator.canPop(context))
+                                  Positioned(
+                                    left: backBtnLeft,
+                                    child: IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: BLACK_COLOR,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                // (B) 화면 제목(로그인) - 중앙 정렬
+                                Center(
+                                  child: Text(
+                                    '로그인',
+                                    style: TextStyle(
+                                      fontSize: screenLoginText1FontSize,
+                                      fontWeight: FontWeight.w600,
+                                      color: BLACK_COLOR,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        // (B) 화면 제목(로그인) - 중앙 정렬
-                        Center(
-                          child: Text(
-                            '로그인',
+
+                          SizedBox(height: screenTitleTop),
+
+                          // ------------------------------------------
+                          // 타이틀 문구
+                          // ------------------------------------------
+                          Text(
+                            '동대문 의류도매 제로마진 플랫폼',
                             style: TextStyle(
-                              fontSize: screenLoginText1FontSize,
-                              fontWeight: FontWeight.w600,
-                              color: BLACK_COLOR,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenTitleTextFontSize,
+                              color: WHITE_COLOR,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: screenSubTitleTop),
+
+                          Text(
+                            '웨어카노, Wearcano',
+                            style: TextStyle(
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              fontSize: screenSubTitleTextFontSize,
+                              color: WHITE_COLOR,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: guideTextTop),
+
+                          // 안내 문구
+                          Text(
+                            'SNS 버튼 클릭 후, 간편하게 로그인 및 회원가입을 하세요.',
+                            style: TextStyle(
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              fontSize: guideTextFontSize,
+                              color: WHITE_COLOR,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: easyLoginBtnImageTop),
+
+                          // ------------------------------------------
+                          // SNS 로그인 버튼들 (네이버, 애플)
+                          // ------------------------------------------
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // 네이버 로그인 버튼
+                              GestureDetector(
+                                onTap: () {
+                                  ref
+                                      .read(
+                                          naverSignInNotifierProvider.notifier)
+                                      .signInWithNaver();
+                                },
+                                child: Image.asset(
+                                  'asset/img/misc/login_image/naver_login_btn_img.png',
+                                  width: easyLoginBtnImageWidth,
+                                  height: easyLoginBtnImageHeight,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              SizedBox(width: interval1X),
+                              // 애플 로그인 버튼
+                              GestureDetector(
+                                onTap: () {
+                                  ref
+                                      .read(
+                                          appleSignInNotifierProvider.notifier)
+                                      .signInWithApple();
+                                },
+                                child: Image.asset(
+                                  'asset/img/misc/login_image/apple_login_btn_img.png',
+                                  width: easyLoginBtnImageWidth,
+                                  height: easyLoginBtnImageHeight,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: guidelineText3Top),
+
+                          // ------------------------------------------
+                          // 네이버 로그인 안내 문구
+                          // ------------------------------------------
+                          Text(
+                            '[네이버 로그인 안내]\n'
+                            '네이버 앱 또는 웹 브라우저 내 로그아웃을 직접 실행 후\n'
+                            "'로그인' 버튼 클릭 시, 타 네이버 계정 선택이 가능합니다.",
+                            style: TextStyle(
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              fontSize: guidelineText3FontSize,
+                              color: WHITE_COLOR,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: guidelineText1Top),
+
+                          // ------------------------------------------
+                          // 개인정보 처리방침 보기
+                          // ------------------------------------------
+                          GestureDetector(
+                            onTap: () async {
+                              const url =
+                                  'https://gshe.oopy.io/couture/privacy';
+                              try {
+                                final bool launched = await launchUrl(
+                                  Uri.parse(url),
+                                  mode: LaunchMode.externalApplication,
+                                );
+                                if (!launched) {
+                                  showCustomSnackBar(
+                                      context, '웹 페이지를 열 수 없습니다.');
+                                }
+                              } catch (e) {
+                                showCustomSnackBar(
+                                    context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
+                              }
+                            },
+                            child: Text(
+                              '개인정보 처리방침 보기',
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic',
+                                fontWeight: FontWeight.bold,
+                                fontSize: guidelineText1FontSize,
+                                color: BLUE49_COLOR,
+                                // decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  SizedBox(height: screenTitleTop),
+                          SizedBox(height: goToLoginBtnTop),
 
-                  // ------------------------------------------
-                  // 타이틀 문구
-                  // ------------------------------------------
-                  Text(
-                    '동대문 의류도매 제로마진 플랫폼',
-                    style: TextStyle(
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.bold,
-                      fontSize: screenTitleTextFontSize,
-                      color: WHITE_COLOR,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: screenSubTitleTop),
-
-                  Text(
-                    '웨어카노, Wearcano',
-                    style: TextStyle(
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.normal,
-                      fontSize: screenSubTitleTextFontSize,
-                      color: WHITE_COLOR,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: guideTextTop),
-
-                  // 안내 문구
-                  Text(
-                    'SNS 버튼 클릭 후, 간편하게 로그인 및 회원가입을 하세요.',
-                    style: TextStyle(
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.normal,
-                      fontSize: guideTextFontSize,
-                      color: WHITE_COLOR,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: easyLoginBtnImageTop),
-
-                  // ------------------------------------------
-                  // SNS 로그인 버튼들 (네이버, 애플)
-                  // ------------------------------------------
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // 네이버 로그인 버튼
-                      GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(naverSignInNotifierProvider.notifier)
-                              .signInWithNaver();
-                        },
-                        child: Image.asset(
-                          'asset/img/misc/login_image/naver_login_btn_img.png',
-                          width: easyLoginBtnImageWidth,
-                          height: easyLoginBtnImageHeight,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      SizedBox(width: interval1X),
-                      // 애플 로그인 버튼
-                      GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(appleSignInNotifierProvider.notifier)
-                              .signInWithApple();
-                        },
-                        child: Image.asset(
-                          'asset/img/misc/login_image/apple_login_btn_img.png',
-                          width: easyLoginBtnImageWidth,
-                          height: easyLoginBtnImageHeight,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: guidelineText3Top),
-
-                  // ------------------------------------------
-                  // 네이버 로그인 안내 문구
-                  // ------------------------------------------
-                  Text(
-                    '[네이버 로그인 안내]\n'
-                        '네이버 앱 또는 웹 브라우저 내 로그아웃을 직접 실행 후\n'
-                        "'로그인' 버튼 클릭 시, 타 네이버 계정 선택이 가능합니다.",
-                    style: TextStyle(
-                      fontFamily: 'NanumGothic',
-                      fontWeight: FontWeight.normal,
-                      fontSize: guidelineText3FontSize,
-                      color: WHITE_COLOR,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: guidelineText1Top),
-
-                  // ------------------------------------------
-                  // 개인정보 처리방침 보기
-                  // ------------------------------------------
-                  GestureDetector(
-                    onTap: () async {
-                      const url = 'https://gshe.oopy.io/couture/privacy';
-                      try {
-                        final bool launched = await launchUrl(
-                          Uri.parse(url),
-                          mode: LaunchMode.externalApplication,
-                        );
-                        if (!launched) {
-                          showCustomSnackBar(context, '웹 페이지를 열 수 없습니다.');
-                        }
-                      } catch (e) {
-                        showCustomSnackBar(context, '에러가 발생했습니다.\n앱을 재실행해주세요.');
-                      }
-                    },
-                    child: Text(
-                      '개인정보 처리방침 보기',
-                      style: TextStyle(
-                        fontFamily: 'NanumGothic',
-                        fontWeight: FontWeight.bold,
-                        fontSize: guidelineText1FontSize,
-                        color: BLUE49_COLOR,
-                        // decoration: TextDecoration.underline,
+                          // ------------------------------------------
+                          // 관리자 로그인 (기존 로그인 화면으로 이동)
+                          // ------------------------------------------
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => LoginScreen()),
+                              );
+                            },
+                            child: Text(
+                              '관리자 로그인',
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic',
+                                fontWeight: FontWeight.normal,
+                                fontSize: goToLoginBtnTextFontSize,
+                                color: WHITE_COLOR,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-
-                  SizedBox(height: goToLoginBtnTop),
-
-                  // ------------------------------------------
-                  // 관리자 로그인 (기존 로그인 화면으로 이동)
-                  // ------------------------------------------
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      '관리자 로그인',
-                      style: TextStyle(
-                        fontFamily: 'NanumGothic',
-                        fontWeight: FontWeight.normal,
-                        fontSize: goToLoginBtnTextFontSize,
-                        color: WHITE_COLOR,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: interval1Y), // 하단 여백
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],

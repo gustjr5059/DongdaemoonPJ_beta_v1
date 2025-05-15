@@ -394,28 +394,37 @@ class _MarketButtonListState extends ConsumerState<MarketButtonList> {
     if (marketButtons.isEmpty) {
       return buildCommonLoadingIndicator();
     }
-
+    // ——— 중간 카테고리 마켓 버튼 목록을 출력하는 IntrinsicHeight + Wrap 위젯 시작 부분
     return IntrinsicHeight(
       child: Wrap(
-        spacing: interval1X,
-        runSpacing: interval1Y,
+        spacing: interval1X, // 버튼 사이의 가로 간격 설정
+        runSpacing: interval1Y, // 버튼 줄 사이의 세로 간격 설정
         children: List.generate(
-          marketButtons.length,
+          // 전체 버튼 수를 5개 단위로 고정하여 부족한 자리는 빈칸으로 채움
+          ((marketButtons.length + buttonsPerRow - 1) ~/ buttonsPerRow) * buttonsPerRow,
               (index) {
-            final item = marketButtons[index];
-            return _buildMarketButton(
-              context: context,
-              name: item['name'],
-              step: item['step'],
-              id: item['id'],
-              buttonWidth: (screenSize.width - interval2X) / buttonsPerRow,
-              // 가로모드 시, 버튼 높이를 절대값으로 넣으면 간격 문제가 생기므로 버튼 너비와 비슷한 형태로 동적 수치로 반영함
-              buttonHeight: (screenSize.width + interval2X) / buttonsPerRow,
-            );
+            if (index < marketButtons.length) {
+              final item = marketButtons[index]; // 현재 인덱스의 버튼 데이터 추출
+              return _buildMarketButton(
+                context: context, // 현재 빌드 컨텍스트 전달
+                name: item['name'], // 마켓 버튼 이름 전달
+                step: item['step'], // 버튼 이미지 구분용 step 값 전달
+                id: item['id'], // 마켓 고유 ID 전달
+                buttonWidth: (screenSize.width - interval2X) / buttonsPerRow, // 버튼 너비 설정
+                buttonHeight: (screenSize.width + interval2X) / buttonsPerRow, // 버튼 높이 설정
+              );
+            } else {
+              // 실제 버튼 개수보다 남는 칸은 빈 SizedBox로 채움
+              return SizedBox(
+                width: (screenSize.width - interval2X) / buttonsPerRow, // 빈 버튼 너비 설정
+                height: (screenSize.width + interval2X) / buttonsPerRow, // 빈 버튼 높이 설정
+              );
+            }
           },
         ),
       ),
     );
+    // ——— 중간 카테고리 마켓 버튼 목록을 출력하는 IntrinsicHeight + Wrap 위젯 끝 부분
   }
 
   // 개별 버튼 위젯
