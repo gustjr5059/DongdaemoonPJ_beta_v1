@@ -710,4 +710,4 @@ class _AabJeanMainScreenState extends ConsumerState<AabJeanMainScreen>
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝
 // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 끝
 }
-// _AabCardiganMainScreenState 클래스 끝
+// _AabJeanMainScreenState 클래스 끝

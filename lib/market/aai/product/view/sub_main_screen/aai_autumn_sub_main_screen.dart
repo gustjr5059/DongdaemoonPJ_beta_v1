@@ -376,6 +376,39 @@ class _AaiAutumnSubMainScreenState extends ConsumerState<AaiAutumnSubMainScreen>
     final double interval2Y = 10;
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
+    // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final largeBannerWidget = buildCommonBannerPageViewSection<AllLargeBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: aaiAutumnSubMainLargeBannerPageProvider,
+      pageController: _largeBannerPageController,
+      bannerAutoScroll: _largeBannerAutoScroll,
+      bannerImagesProvider: aaiAllLargeBannerImagesProvider,
+      onPageTap: (context, index) =>
+          onLargeBannerTap(context, index, ref.watch(aaiAllLargeBannerImagesProvider).value ?? [], ref),
+      width: autumnSubMainScreenLargeBannerWidth,
+      height: autumnSubMainScreenLargeBannerHeight,
+      borderRadius: 0,
+    );
+    // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
+    final small1BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+      context: context,
+      ref: ref,
+      currentPageProvider: aaiAutumnSubMainSmall1BannerPageProvider,
+      pageController: _small1BannerPageController,
+      bannerAutoScroll: _small1BannerAutoScroll,
+      bannerImagesProvider: aaiAutumnSubMainSmall1BannerImagesProvider,
+      onPageTap: (context, index) =>
+          onSmallBannerTap(context, index, ref.watch(aaiAutumnSubMainSmall1BannerImagesProvider).value ?? [], ref),
+      width: autumnSubMainScreenSmallBannerWidth,
+      height: autumnSubMainScreenSmallBannerHeight,
+      borderRadius: 5,
+    );
+    // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
+
+
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,
     // 플러터 기본 SliverAppBar 위젯을 활용하여 앱 바의 상태 동적 UI 구현에 수월한 부분을 정의해서 해당 위젯을 바로 다른 화면에 구현하여
@@ -449,140 +482,81 @@ class _AaiAutumnSubMainScreenState extends ConsumerState<AaiAutumnSubMainScreen>
                 // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                        (BuildContext context, int index) {
                       return Padding(
                         // 각 항목의 좌우 간격을 4.0으로 설정함.
                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                         child: Column(
                           children: [
-                            // Container(
-                            //   decoration: BoxDecoration(
-                            //     border: Border(
-                            //       bottom: BorderSide(
-                            //           color: BLACK_COLOR,
-                            //           width: 1.0), // 하단 테두리 색상을 설정함
-                            //     ),
-                            //   ),
-                            // ),
-                            // SizedBox(height: 5), // 5의 높이를 가진 간격 추가
-                            // 큰 배너 섹션을 카드뷰로 구성
-                            CommonCardView(
-                              content: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      0), // 큰 배너의 모서리 반경을 0으로 설정함
-                                    border: Border(
-                                      bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                                    ),
+                            // ——— 대배너 위젯 조건부 렌더링 시작 부분
+                            if (largeBannerWidget is! SizedBox) ...[
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                  ),
+                                  child: SizedBox(
+                                    height: autumnSubMainLargeBannerViewHeight,
+                                    child: largeBannerWidget,
+                                  ),
                                 ),
-                                child: SizedBox(
-                                  height: autumnSubMainLargeBannerViewHeight,
-                                  // 큰 배너 섹션의 높이를 설정함
-                                  child: buildCommonBannerPageViewSection<
-                                      AllLargeBannerImage>(
-                                    context: context,
-                                    // 위젯 트리를 위한 빌드 컨텍스트를 전달함
-                                    ref: ref,
-                                    // 상태 관리를 위한 참조를 전달함
-                                    currentPageProvider:
-                                        aaiAutumnSubMainLargeBannerPageProvider,
-                                    // 현재 배너 페이지의 상태 제공자를 전달함
-                                    pageController: _largeBannerPageController,
-                                    // 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
-                                    bannerAutoScroll: _largeBannerAutoScroll,
-                                    // 배너 자동 스크롤 설정을 전달함
-                                    bannerImagesProvider:
-                                    aaiAllLargeBannerImagesProvider,
-                                    // 배너 이미지의 상태 제공자를 전달함
-                                    // 배너를 탭했을 때 실행할 함수를 전달
-                                    onPageTap: (context, index) =>
-                                        // 대배너 클릭 시 호출할 함수 aaiOnLargeBannerTap 실행
-                                        aaiOnLargeBannerTap(
-                                            context, // 현재 화면의 컨텍스트를 전달함
-                                            index, // 클릭된 배너의 인덱스를 전달함
-                                            // aaiAllLargeBannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                            ref
-                                                    .watch(
-                                                aaiAllLargeBannerImagesProvider)
-                                                    .value ??
-                                                [],
-                                            ref // Provider의 참조를 전달함
-                                            ),
-                                    width: autumnSubMainScreenLargeBannerWidth,
-                                    // 배너 섹션의 너비를 설정함
-                                    height:
-                                        autumnSubMainScreenLargeBannerHeight,
-                                    // 배너 섹션의 높이를 설정함
-                                    borderRadius: 0, // 배너의 모서리 반경을 0으로 설정함
+                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 4,
+                                padding: EdgeInsets.zero, // 패딩을 없앰
+                              ),
+                              // SizedBox(height: interval2Y),
+                            ],
+                            // ——— 대배너 위젯 조건부 렌더링 끝 부분
+
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
+
+                            // ——— 소배너1 위젯 조건부 렌더링 시작 부분
+                            if (small1BannerWidget is! SizedBox) ...[
+                              SizedBox(height: interval2Y), // 높이 간격 설정
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: SizedBox(
+                                    height: autumnSubMainScreenSmallBannerViewHeight,
+                                    child: small1BannerWidget,
+                                  ),
+                                ),
+                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                              ),
+                              SizedBox(height: interval2Y), // 높이 간격 설정
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                                   ),
                                 ),
                               ),
-                              backgroundColor: Theme.of(context)
-                                  .scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
-                              elevation: 4, // 카드뷰의 그림자 깊이를 설정함
-                              padding: EdgeInsets.zero, // 카드뷰의 패딩을 없앰
+                            ],
+                            // ——— 소배너1 위젯 조건부 렌더링 끝 부분
+
+                            SizedBox(height: interval1Y),
+                            AaiPriceAndDiscountPercentSortButtons<
+                                AaiSectionMoreProductListNotifier>(
+                              productListProvider:
+                              aaiAutumnSubMainProductListProvider,
+                              // 가을 제품 리스트 프로바이더 전달
+                              sortButtonProvider:
+                              aaiAutumnSubMainSortButtonProvider, // 가을 정렬 버튼 프로바이더 전달
                             ),
-                            SizedBox(height: interval2Y),
-                            // interval2Y의 높이를 가진 간격을 추가함
-                            CommonCardView(
-                              content: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      8), // 작은 배너의 모서리 반경을 8로 설정함
-                                ),
-                                child: SizedBox(
-                                  height:
-                                      autumnSubMainScreenSmallBannerViewHeight,
-                                  // 작은 배너 섹션의 높이를 설정함
-                                  child: buildCommonBannerPageViewSection<
-                                      AllSmallBannerImage>(
-                                    context: context,
-                                    // 위젯 트리를 위한 빌드 컨텍스트를 전달함
-                                    ref: ref,
-                                    // 상태 관리를 위한 참조를 전달함
-                                    currentPageProvider:
-                                        aaiAutumnSubMainSmall1BannerPageProvider,
-                                    // 작은 배너 페이지의 상태 제공자를 전달함
-                                    pageController: _small1BannerPageController,
-                                    // 작은 배너 페이지의 스크롤을 제어할 컨트롤러를 전달함
-                                    bannerAutoScroll: _small1BannerAutoScroll,
-                                    // 작은 배너 자동 스크롤 설정을 전달함
-                                    bannerImagesProvider:
-                                        aaiAutumnSubMainSmall1BannerImagesProvider,
-                                    // 작은 배너 이미지의 상태 제공자를 전달함
-                                    // 배너를 탭했을 때 실행할 함수를 전달
-                                    onPageTap: (context, index) =>
-                                        // 소배너 클릭 시 호출할 함수 aaiOnSmallBannerTap 실행
-                                        aaiOnSmallBannerTap(
-                                            context, // 현재 화면의 컨텍스트를 전달함
-                                            index, // 클릭된 배너의 인덱스를 전달함
-                                            // aaiAutumnSubMainSmall1BannerImagesProvider에서 대배너 이미지 리스트를 가져옴. 값이 없으면 빈 리스트를 사용함
-                                            ref
-                                                    .watch(
-                                                        aaiAutumnSubMainSmall1BannerImagesProvider)
-                                                    .value ??
-                                                [],
-                                            ref // Provider의 참조를 전달함
-                                            ),
-                                    width: autumnSubMainScreenSmallBannerWidth,
-                                    // 작은 배너 섹션의 너비를 설정함
-                                    height:
-                                        autumnSubMainScreenSmallBannerHeight,
-                                    // 작은 배너 섹션의 높이를 설정함
-                                    borderRadius: 8, // 작은 배너의 모서리 반경을 8로 설정함
-                                  ),
-                                ),
-                              ),
-                              backgroundColor: Theme.of(context)
-                                  .scaffoldBackgroundColor, // 앱 기본 배경색을 설정함
-                              elevation: 0, // 카드뷰의 그림자 깊이를 설정함
-                              padding: const EdgeInsets.fromLTRB(
-                                  16.0,
-                                  0.0,
-                                  16.0,
-                                  0.0), // 카드뷰의 좌우 패딩을 16.0으로 설정하고 상하 패딩을 없앰
-                            ),
-                            SizedBox(height: interval2Y), // interval1Y의 높이를 가진 간격 추가
+                            // 가격 및 할인 정렬 버튼 추가
+                            SizedBox(height: interval1Y),
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -590,25 +564,15 @@ class _AaiAutumnSubMainScreenState extends ConsumerState<AaiAutumnSubMainScreen>
                                 ),
                               ),
                             ),
-                            SizedBox(height: interval1Y),
-                            AaiPriceAndDiscountPercentSortButtons<
-                                AaiSectionMoreProductListNotifier>(
-                              productListProvider:
-                                  aaiAutumnSubMainProductListProvider,
-                              // 가을 제품 리스트 프로바이더 전달
-                              sortButtonProvider:
-                                  aaiAutumnSubMainSortButtonProvider, // 가을 정렬 버튼 프로바이더 전달
-                            ),
-                            // 가격 및 할인 정렬 버튼 추가
-                            SizedBox(height: interval1Y),
+                            SizedBox(height: interval1Y), // interval1Y의 높이를 가진 간격 추가
                             // AaiGeneralProductList 위젯을 생성, AaiSectionMoreProductListNotifier를 사용
                             AaiGeneralProductList<AaiSectionMoreProductListNotifier>(
                               // 스크롤 컨트롤러를 설정 (가을 섹션의 스크롤 컨트롤러)
                               scrollController:
-                                  autumnSubMainScreenPointScrollController,
+                              autumnSubMainScreenPointScrollController,
                               // 상품 리스트 프로바이더를 설정 (가을 섹션의 상품 리스트 프로바이더)
                               productListProvider:
-                                  aaiAutumnSubMainProductListProvider,
+                              aaiAutumnSubMainProductListProvider,
                               // 카테고리를 '가을'로 설정
                               category: '가을',
                             ),
