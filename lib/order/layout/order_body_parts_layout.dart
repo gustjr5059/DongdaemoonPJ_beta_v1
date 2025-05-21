@@ -139,7 +139,7 @@ class UserInfoWidget extends ConsumerWidget {
               ),
               SizedBox(height: ordererInfo3Y),
               Text(
-                '* 정보 변경이 필요할 시, [로그인 화면] => [회원가입] 절차로 재진행해주세요.',
+                '* 정보 변경은 [마이페이지] => [회원정보 수정] 절차로 재진행해주세요.',
                 // 안내문 텍스트
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
@@ -2050,7 +2050,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
         screenSize.width * (32 / referenceWidth);
     final double orderRequirePadding2 = 32;
     final double paymentMethodInfoTitleFontSize = 18;
-    final double orderRequireNoticeFontSize = 15;
+    final double orderRequireNoticeFontSize = 13;
     final double paymentMethodInfo1Y = 16;
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
@@ -2175,9 +2175,9 @@ class CompleteOrderButton extends ConsumerWidget {
     // 비율을 기반으로 동적으로 크기와 위치를 설정함
 
     // 발주하기 요청 화면 내 요소들의 수치 설정
-    final double orderRequireNoticeFontSize = 14;
-    final double guidelineText1FontSize = 12;
-    final double guidelineText2FontSize = 12; // 텍스트 크기
+    final double orderRequireNoticeFontSize = 12;
+    final double guidelineText1FontSize = 10;
+    final double guidelineText2FontSize = 10; // 텍스트 크기
     final double paymentInfo1Y = 16;
     final double paymentInfo2Y = 8;
     final double paymentInfo3Y = 4;

@@ -598,11 +598,17 @@ class _AdminMessageCreateFormScreenState
                               setState(() {
 
                                 // 선택된 메시지 내용에 따라 텍스트를 설정.
-                                if (value == '결제 완료 메세지') {
+                                if (value == '[택배수령] 결제 완료') {
                                   messageContentText = '해당 발주 건은 결제 완료 되었습니다.';
-                                } else if (value == '배송 중 메세지') {
+                                } else if (value == '[택배수령] 배송 중') {
                                   messageContentText = '해당 발주 건은 배송이 진행되었습니다.';
-                                } else if (value == '환불 메세지') {
+                                } else if (value == '[현장수령] 결제 완료') {
+                                  messageContentText = '해당 발주 건은 결제가 완료 되었습니다.';
+                                } else if (value == '[현장수령] 준비 완료') {
+                                  messageContentText = '해당 발주 건은 현장에서 수령 가능합니다.';
+                                } else if (value == '[현장수령] 수령 완료') {
+                                  messageContentText = '해당 발주 건은 수령 완료되었습니다.';
+                                } else if (value == '환불') {
                                   messageContentText = '해당 발주 건은 환불 처리 되었습니다.';
                                 } else if (value == '직접입력') {
                                   messageContentText = ''; // 직접입력 시 초기화
@@ -628,9 +634,9 @@ class _AdminMessageCreateFormScreenState
                       // 메시지 내용을 드롭다운 항목으로 변환.
                       items: [
                         DropdownMenuItem<String>(
-                          value: '결제 완료 메세지',
+                          value: '[택배수령] 결제 완료',
                           child: Text(
-                            '결제 완료 메세지',
+                            '[택배수령] 결제 완료',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
                               fontFamily: 'NanumGothic',
@@ -640,9 +646,45 @@ class _AdminMessageCreateFormScreenState
                           ),
                         ),
                         DropdownMenuItem<String>(
-                          value: '배송 중 메세지',
+                          value: '[택배수령] 배송 중',
                           child: Text(
-                            '배송 중 메세지',
+                            '[택배수령] 배송 중',
+                            style: TextStyle(
+                              fontSize: ContentDataTextSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: BLACK_COLOR,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '[현장수령] 결제 완료',
+                          child: Text(
+                            '[현장수령] 결제 완료',
+                            style: TextStyle(
+                              fontSize: ContentDataTextSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: BLACK_COLOR,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '[현장수령] 준비 완료',
+                          child: Text(
+                            '[현장수령] 준비 완료',
+                            style: TextStyle(
+                              fontSize: ContentDataTextSize,
+                              fontFamily: 'NanumGothic',
+                              fontWeight: FontWeight.normal,
+                              color: BLACK_COLOR,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '[현장수령] 수령 완료',
+                          child: Text(
+                            '[현장수령] 수령 완료',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
                               fontFamily: 'NanumGothic',
@@ -687,7 +729,8 @@ class _AdminMessageCreateFormScreenState
           // 5) 메시지 내용 UI
           // ---------------------
           // 메시지 내용에 따라 다르게 처리.
-          if (messageContent == '결제 완료 메세지' || messageContent == '배송 중 메세지')
+          if (messageContent == '[택배수령] 결제 완료' || messageContent == '[택배수령] 배송 중' || messageContent == '[현장수령] 결제 완료'
+              || messageContent == '[현장수령] 준비 완료' || messageContent == '[현장수령] 수령 완료')
             AbsorbPointer(
               absorbing: true, // 입력 비활성화
               child: TextFormField(

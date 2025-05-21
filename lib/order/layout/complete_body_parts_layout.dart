@@ -88,7 +88,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
         screenSize.width * (32 / referenceWidth);
     final double orderGuideInfoTitleFontSize = 18;
     final double orderGuideInfoFontSize1 = 16;
-    final double orderGuideInfoFontSize2 = 14;
+    final double orderGuideInfoFontSize2 = 10;
     final double orderGuideInfoFontSize3 = 12;
     final double interval1Y = 16;
     final double interval2Y = 5;
@@ -142,7 +142,16 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               ),
               SizedBox(height: interval2Y), // 간격
               Text(
-                '아래 계좌번호로 입금 시, 결제완료 처리 됩니다.',
+                '안내 계좌번호로 24시간 이내로 입금 시, 결제완료 처리 됩니다.',
+                style: TextStyle(
+                  fontFamily: 'NanumGothic',
+                  fontSize: orderGuideInfoFontSize2,
+                  fontWeight: FontWeight.normal,
+                  color: GRAY62_COLOR,
+                ),
+              ),
+              Text(
+                '발주 완료 후 24시간 이내로 미입금 시, 해당 발주 요청 건은 취소됩니다.',
                 style: TextStyle(
                   fontFamily: 'NanumGothic',
                   fontSize: orderGuideInfoFontSize2,
@@ -275,8 +284,8 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
 
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 발주자 정보 표 부분 수치
-    final double updateRequireCompleteInfoTextFontSize = 13;
-    final double updateRequireCompleteInfoDataFontSize = 13;
+    final double updateRequireCompleteInfoTextFontSize = 12;
+    final double updateRequireCompleteInfoDataFontSize = 11;
     final double updateRequireCompleteInfoTextPartWidth =
         screenSize.width * (97 / referenceWidth);
     final double updateRequireCompleteInfoTextPartHeight = 40;

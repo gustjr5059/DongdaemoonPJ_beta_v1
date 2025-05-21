@@ -425,7 +425,37 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         width: orderlistGuideTextWidth,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "발주상태: [결제완료] -> [배송준비] -> [배송 중] -> [배송완료]",
+                          "발주상태: 현장수령, 택배수령 별로 상이합니다.",
+                          // 설명 텍스트
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: orderlistGuideTextFontSize2,
+                            fontWeight: FontWeight.normal,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: interval1Y),
+                      Container(
+                        width: orderlistGuideTextWidth,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "현장수령: [상품준비] -> [준비완료] -> [수령완료]",
+                          // 설명 텍스트
+                          style: TextStyle(
+                            fontFamily: 'NanumGothic',
+                            fontSize: orderlistGuideTextFontSize2,
+                            fontWeight: FontWeight.normal,
+                            color: BLACK_COLOR,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: interval1Y),
+                      Container(
+                        width: orderlistGuideTextWidth,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "택배수령: [발주신청 완료] -> [배송준비] -> [배송 중] -> [배송완료]",
                           // 설명 텍스트
                           style: TextStyle(
                             fontFamily: 'NanumGothic',
