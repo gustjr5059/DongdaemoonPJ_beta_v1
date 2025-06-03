@@ -1632,7 +1632,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 
   // 사용자 이메일이 특정 관리자 이메일과 일치하는지 확인하여 관리자 여부를 결정
   // 관리자 이메일
-  final List<String> adminEmail = ['gshe.couture@gmail.com'];
+  final List<String> adminEmail = ['gshe.couture@gmail.com', 'master123@gmail.com'];
 
   // 상점주 이메일 (30개의 계정 포함)
   final List<String> subAdminEmails = [
@@ -2056,11 +2056,17 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
   final double logoutBtnSize = 22;
 
   // 아이콘 사이의 간격 수치
-  final double interval1Y = 10;
-  final double interval2Y = 130;
-  final double interval3Y = 10;
-  final double interval1X = 30;
-  final double interval2X = 15;
+  // final double interval1Y = 10;
+  // final double interval2Y = 130;
+  // final double interval3Y = 10;
+  // final double interval1X = 30;
+  // final double interval2X = 15;
+
+  final double interval1Y = screenSize.height * (10 / referenceHeight);
+  final double interval2Y = screenSize.height * (130 / referenceHeight);
+  final double interval3Y = screenSize.height * (10 / referenceHeight);
+  final double interval1X = screenSize.height * (30 / referenceHeight);
+  final double interval2X = screenSize.height * (15 / referenceHeight);
 
   // ----------------------------------------------------------------
   // 드로어 본문을 스크롤 가능하도록 CustomScrollView를 사용함.

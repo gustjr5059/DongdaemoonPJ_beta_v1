@@ -401,10 +401,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final double screenSubTitleTextFontSize = 14;
 
     // 이미지 위치 조정을 위한 비율 기반 수치
-    final double circleImageLeft = 24;
-    final double circleImageTop = 250;
-    final double circleImageWidth = 100;
-    final double circleImageHeight = 48;
     final double personImageLeft = 0;
     final double personImageTop = 600;
     final double personImageWidth = 190;
@@ -455,10 +451,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         screenSize.width * (313 / referenceWidth); // 너비 비율
     final double loginErrorMessageBarHeight = 24; // 높이 비율
     final double loginErrorMessageBarTextFontSize = 12;
-
-    final double interval1Y = 20;
-
-    // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려하지 한 사이즈 끝 부분
 
     return GestureDetector(
       onTap: () {

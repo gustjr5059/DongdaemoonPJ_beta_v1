@@ -528,7 +528,7 @@ class _AacPaedingMainScreenState extends ConsumerState<AacPaedingMainScreen>
                     // 현재 context 전달
                     ref: ref,
                     // 참조(ref) 전달
-                    title: '패딩 메인',
+                    title: '아우터 메인',
                     // AppBar의 제목을 '패딩 메인'로 설정
                     fontFamily: 'NanumGothic',
                     leadingType: LeadingType.back,

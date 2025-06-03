@@ -39,7 +39,9 @@ final receiversProvider = FutureProvider<List<User>>((ref) async {
   // 'gshe.couture@gmail.com'을 필터링하여 사용자 목록 반환
   return snapshot.docs
       .map((doc) => User.fromFirestore(doc))
-      .where((user) => user.email != 'gshe.couture@gmail.com')
+      .where((user) =>
+      user.email != 'gshe.couture@gmail.com' &&
+      user.email != 'master123@gmail.com')
       .toList();
 });
 

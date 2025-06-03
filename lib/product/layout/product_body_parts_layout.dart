@@ -1936,7 +1936,7 @@ class ProductInfoDetailScreenNavigation {
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 2, // 최대 2줄까지 표시함.
-                      overflow: TextOverflow.visible, // 넘치는 텍스트는 '...'으로 표시함.
+                      overflow: TextOverflow.ellipsis, // 넘치는 텍스트는 '...'으로 표시함.
                     ),
                   ),
                 SizedBox(height: interval1Y),

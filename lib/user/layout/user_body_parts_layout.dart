@@ -346,7 +346,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
         break;
       case 'none':
       default:
-        assetPath = 'asset/img/misc/logo_img/couture_logo_image.png';
+        assetPath = 'asset/img/misc/logo_img/wearcano_logo_v1.png';
         snsTypeText = '관리자 계정';
     }
 

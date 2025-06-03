@@ -657,7 +657,7 @@ class _UserInfoModifyAndSecessionScreenState
                                       Align(
                                         alignment: Alignment.centerLeft, // 왼쪽 정렬
                                         child: Text(
-                                          '* 상품 업데이트 요청 관련 관리자 연락을 위해 휴대폰 번호가 필요합니다.',
+                                          '* 상품 발주 내역 관련 관리자 연락을 위해 휴대폰 번호가 필요합니다.',
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
                                             fontFamily: 'NanumGothic',

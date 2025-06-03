@@ -281,7 +281,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     final double signUpAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
     final double signUpAppBarTitleHeight = 22;
-    final double signUpAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    final double signUpAppBarTitleX = screenSize.width * (5 / referenceWidth);
     final double signUpAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용

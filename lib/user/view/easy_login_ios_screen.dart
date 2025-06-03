@@ -985,41 +985,49 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     // 화면 이름 부분 수치
     final double screenNameTop = 10; // 위쪽 여백 비율
     final double backBtnTop = 50;
+    // final double screenNameTop = screenSize.height * (10 / referenceHeight); // 위쪽 여백 비율
+    // final double backBtnTop = screenSize.height * (50 / referenceHeight);
     final double backBtnLeft = screenSize.width * (10 / referenceWidth);
 
     // 화면 제목 부분 수치
-    final double screenTitleTop = 180; // 위쪽 여백 비율
+    // final double screenTitleTop = 180; // 위쪽 여백 비율
+    final double screenTitleTop = screenSize.height * (180 / referenceHeight); // 위쪽 여백 비율
     final double screenLoginText1FontSize = 20;
     final double screenTitleTextFontSize = 20;
 
     // 화면 서브제목 부분 수치
-    final double screenSubTitleTop = 20; // 위쪽 여백 비율
+    // final double screenSubTitleTop = 20; // 위쪽 여백 비율
+    final double screenSubTitleTop = screenSize.height * (20 / referenceHeight); // 위쪽 여백 비율
     final double screenSubTitleTextFontSize = 16;
 
     // 안내 텍스트 부분 수치
-    final double guideTextTop = 30; // 위쪽 여백 비율
+    // final double guideTextTop = 30; // 위쪽 여백 비율
+    final double guideTextTop = screenSize.height * (30 / referenceHeight); // 위쪽 여백 비율
     final double guideTextFontSize = 14;
 
     // SNS 계정 로그인 버튼 부분 수치
-    final double easyLoginBtnImageTop = 30; // 위쪽 여백 비율
+    // final double easyLoginBtnImageTop = 30; // 위쪽 여백 비율
+    final double easyLoginBtnImageTop = screenSize.height * (30 / referenceHeight); // 위쪽 여백 비율
     final double interval1X = 20;
     final double easyLoginBtnImageWidth =
         screenSize.width * (70 / referenceWidth);
     final double easyLoginBtnImageHeight = 70;
 
     // 네이버 로그인 안내 텍스트 부분 수치
-    final double guidelineText3Top = 30; // 위쪽 여백 비율
+    // final double guidelineText3Top = 30; // 위쪽 여백 비율
+    final double guidelineText3Top = screenSize.height * (30 / referenceHeight); // 위쪽 여백 비율
     final double guidelineText3FontSize = 8; // 텍스트 크기
 
     // 개인정보 처리방침 보기 부분 수치
-    final double guidelineText1Top = 120; // 위쪽 여백 비율
+    // final double guidelineText1Top = 120; // 위쪽 여백 비율
+    final double guidelineText1Top = screenSize.height * (120 / referenceHeight); // 위쪽 여백 비율
     final double guidelineText1FontSize = 13; // 텍스트 크기
 
     // 관리자 로그인 화면으로 이동 버튼 부분 수치
-    final double goToLoginBtnTop = 20; // 위쪽 여백 비율
+    // final double goToLoginBtnTop = 20; // 위쪽 여백 비율
+    final double goToLoginBtnTop = screenSize.height * (20 / referenceHeight); // 위쪽 여백 비율
     final double goToLoginBtnTextFontSize = 16;
 
-    final double interval1Y = 700;
 
     return Scaffold(
       body: Stack(
@@ -1059,7 +1067,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                                   Positioned(
                                     left: backBtnLeft,
                                     child: IconButton(
-                                      icon: Icon(Icons.arrow_back),
+                                      icon: Icon(Icons.chevron_left),
                                       color: BLACK_COLOR,
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -1099,6 +1107,9 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
 
                           SizedBox(height: screenSubTitleTop),
 
+                          // ------------------------------------------
+                          // 서브 타이틀 문구
+                          // ------------------------------------------
                           Text(
                             '웨어카노, Wearcano',
                             style: TextStyle(
@@ -1192,7 +1203,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                           GestureDetector(
                             onTap: () async {
                               const url =
-                                  'https://gshe.oopy.io/couture/privacy';
+                                  'https://gshe.oopy.io/1669091c-678c-8162-b0d8-eff2ed86f54d';
                               try {
                                 final bool launched = await launchUrl(
                                   Uri.parse(url),

@@ -33,7 +33,7 @@ class AdminMessageRepository {
         final userEmail = doc.data()['email'] as String? ?? '';
         print('사용자 처리 중: $userEmail');
         return userEmail;
-      }).where((email) => email.isNotEmpty && email != 'gshe.couture@gmail.com').toList(); // 'gshe.couture@gmail.com'을 제외하고 리스트에 추가
+      }).where((email) => email.isNotEmpty && email != 'gshe.couture@gmail.com' && email != 'master123@gmail.com').toList(); // 'gshe.couture@gmail.com'을 제외하고 리스트에 추가
 
       print('필터링된 사용자 이메일 목록: $userEmails');
       print('모든 사용자 이메일 가져오기 완료');

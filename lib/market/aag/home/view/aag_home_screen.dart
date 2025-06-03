@@ -757,6 +757,7 @@ class _AagHomeMainScreenState extends ConsumerState<AagHomeMainScreen>
                     fontFamily: 'Charter',
                     boolEventImg: true,
                     boolTitleImg: true,
+                    titleImageFieldName: 'title_img_7',
                     titleImagePath:
                     'asset/img/misc/appbar_img/home_appbar_title_img.png',
                     // 앱 바 타이틀 이미지 경로 추가

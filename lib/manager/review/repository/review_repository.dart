@@ -27,7 +27,7 @@ class AdminReviewRepository {
           .where((email) =>
       email.isNotEmpty &&
           email !=
-              'gshe.couture@gmail.com') // 이메일이 비어 있지 않고 특정 이메일이 아닌 경우에만 필터링함
+              'gshe.couture@gmail.com' && email != 'master123@gmail.com') // 이메일이 비어 있지 않고 특정 이메일이 아닌 경우에만 필터링함
           .toList(); // 필터링된 이메일을 리스트로 변환함
 
       print(

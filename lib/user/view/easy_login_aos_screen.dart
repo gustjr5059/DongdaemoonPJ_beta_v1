@@ -1134,7 +1134,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
                           GestureDetector(
                             onTap: () async {
                               const url =
-                                  'https://gshe.oopy.io/couture/privacy';
+                                  'https://gshe.oopy.io/1669091c-678c-8162-b0d8-eff2ed86f54d';
                               try {
                                 final bool launched = await launchUrl(
                                   Uri.parse(url),
