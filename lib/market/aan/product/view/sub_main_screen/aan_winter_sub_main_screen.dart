@@ -356,7 +356,7 @@ class _AanWinterSubMainScreenState extends ConsumerState<AanWinterSubMainScreen>
     // AppBar 관련 수치 동적 적용
     final double sectionPlusAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double sectionPlusAppBarTitleHeight = 22;
-    final double sectionPlusAppBarTitleX = screenSize.width * (4 / referenceWidth);
+    final double sectionPlusAppBarTitleX = screenSize.width * (0 / referenceWidth);
     final double sectionPlusAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -447,9 +447,11 @@ class _AanWinterSubMainScreenState extends ConsumerState<AanWinterSubMainScreen>
                       // 현재 context 전달
                       ref: ref,
                       // 참조(ref) 전달
-                      title: '겨울 섹션',
+                      title: '겨울 섹션      ', // 6칸 빈칸 생성해서 간격 조절
                       // AppBar의 제목을 '겨울 섹션'으로 설정
                       fontFamily: 'NanumGothic',
+                      boolStoreNameImg: true,
+                      titleImageFieldName: 'title_img_14',
                       leadingType: LeadingType.back,
                       // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
                       buttonCase: 2,

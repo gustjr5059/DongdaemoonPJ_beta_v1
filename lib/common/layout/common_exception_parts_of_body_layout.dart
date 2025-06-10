@@ -109,9 +109,12 @@ AppBar buildCommonAppBar({
   String? titleImagePath, // 이미지 경로를 설정하기 위한 선택적 매개변수
   bool boolEventImg = false, // 이벤트 이미지 표시 여부 설정
   bool boolTitleImg = false, // Firestore의 title_img 사용 여부 설정
+  bool boolStoreNameImg = false, // 상점 이름 이미지 표시 여부 설정
   // 추가된 콜백 파라미터
   VoidCallback? onEventImageTap,
   String titleImageFieldName = 'title_img', // 타이틀 이미지 설정
+  double storeNameImageGap = 0.0, // 상점 이름 이미지와 타이틀 사이의 간격 설정
+
 }) {
   // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
   final Size screenSize = MediaQuery.of(context).size;
@@ -169,11 +172,11 @@ AppBar buildCommonAppBar({
       );
 
   // Firestore에서 제목 이미지를 가져옴
-  // titleImageFieldName으로 Firestore에서 지정된 필드명의 이미지 가져오기
+  // titleImageFieldName으로 Firestore에서 지정된 필드명의 이미지 가져오기 (boolTitleImg, boolStoreNameImg 두 곳에서 사용)
   final titleImage =
       ref.watch(titleImageFieldProvider(titleImageFieldName)).whenOrNull(
             data: (data) =>
-                boolTitleImg && data != null && data.isNotEmpty ? data : null,
+            (boolTitleImg || boolStoreNameImg) && data != null && data.isNotEmpty ? data : null,
           );
 
   // 이벤트 이미지를 클릭 가능하게 만드는 위젯 선언
@@ -211,6 +214,76 @@ AppBar buildCommonAppBar({
           fit: BoxFit.contain, // 이미지 맞춤 방식 설정
         ),
       ),
+    );
+  }
+
+  // 상점 이름 이미지 노출되도록 하는 위젯 선언
+  Widget? storeNameImageWidget;
+  if (boolStoreNameImg && titleImage != null) {
+    storeNameImageWidget = Align(
+      alignment: Alignment.centerLeft,
+      child: Image.network(
+        titleImage,
+        width: appBarTitleWidth * 0.15,
+        height: appBarTitleHeight,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  // AppBar title 구성 분기처리 위젯 선언
+  Widget titleWidget;
+  if (boolStoreNameImg && storeNameImageWidget != null) {
+    titleWidget = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        storeNameImageWidget,
+        SizedBox(width: storeNameImageGap),
+        Expanded(
+          child: Align(
+            alignment: Alignment.center,
+            child: titleImage != null && !boolStoreNameImg
+                ? Image.network(titleImage, fit: BoxFit.cover)
+                : titleImagePath != null
+                ? Image.asset(titleImagePath, fit: BoxFit.contain)
+                : Text(
+              title,
+              style: TextStyle(
+                color: BLACK_COLOR,
+                fontSize: titleFontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: fontFamily,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
+    );
+  } else {
+    titleWidget = Stack(
+      alignment: Alignment.center,
+      children: [
+        if (eventImageWidget != null) eventImageWidget,
+        Center(
+          child: titleImage != null && !boolStoreNameImg
+              ? Image.network(titleImage, fit: BoxFit.cover)
+              : titleImagePath != null
+              ? Image.asset(titleImagePath, fit: BoxFit.contain)
+              : Text(
+            title,
+            style: TextStyle(
+              color: BLACK_COLOR,
+              fontSize: titleFontSize,
+              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 
@@ -593,36 +666,7 @@ AppBar buildCommonAppBar({
       // 텍스트 높이 설정
       margin: EdgeInsets.only(left: appBarTitleX, top: appBarTitleY),
       // 텍스트 위치 설정
-      child: Stack(
-        alignment: Alignment.center, // 자식 위젯들이 중앙에 정렬되도록 설정함
-        children: [
-          if (eventImageWidget != null) eventImageWidget,
-          Center(
-            child: titleImage != null
-                ? Image.network(
-                    titleImage, // 네트워크에서 제목 이미지를 불러옴
-                    fit: BoxFit.cover, // 이미지 크기를 조정하여 영역 내에 맞춤
-                  )
-                : (titleImagePath != null
-                    ? Image.asset(
-                        titleImagePath, // 로컬 자산에서 제목 이미지를 불러옴
-                        fit: BoxFit.contain, // 이미지 크기를 조정하여 영역 내에 맞춤
-                      )
-                    : Text(
-                        title, // 설정된 제목을 텍스트로 표시함
-                        style: TextStyle(
-                          color: BLACK_COLOR, // 텍스트 색상을 검정색으로 설정함
-                          fontSize: titleFontSize, // 텍스트 크기를 설정함
-                          fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
-                          fontFamily: fontFamily, // 텍스트 폰트를 설정함
-                        ),
-                        maxLines: 1, // 텍스트가 한 줄로 표시되도록 설정함
-                        overflow:
-                            TextOverflow.ellipsis, // 텍스트가 길 경우 생략 부호(...)를 표시함
-                      )),
-          ),
-        ],
-      ),
+      child: titleWidget, // 타이틀 위젯 설정
     ),
     centerTitle: true,
     // 제목을 중앙에 위치시킴.

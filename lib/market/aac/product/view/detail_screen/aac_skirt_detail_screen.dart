@@ -313,7 +313,8 @@ class _AacSkirtDetailProductScreenState
     // AppBar 관련 수치 동적 적용
     final double productDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double productDtAppBarTitleHeight = 22;
-    final double productDtAppBarTitleX = screenSize.width * (70 / referenceWidth);
+    final double productDtAppBarStoreNameImageGap = screenSize.width * (35 / referenceWidth);
+    final double productDtAppBarTitleX = screenSize.width * (0 / referenceWidth);
     final double productDtAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -396,6 +397,9 @@ class _AacSkirtDetailProductScreenState
                       title: widget.title,
                       // AppBar의 제목을 '스커트 상세'로 설정
                       fontFamily: 'NanumGothic',
+                      boolStoreNameImg: true,
+                      titleImageFieldName: 'title_img_3',
+                      storeNameImageGap: productDtAppBarStoreNameImageGap, // 간격을 지정
                       leadingType: LeadingType.back,
                       // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
                       buttonCase: 4,

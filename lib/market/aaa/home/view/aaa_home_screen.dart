@@ -639,7 +639,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     final double homeAppBarTitleWidth =
         screenSize.width * (240 / referenceWidth);
     final double homeAppBarTitleHeight = 22;
-    final double homeAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    final double homeAppBarTitleX = screenSize.width * (5 / referenceWidth);
     final double homeAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용

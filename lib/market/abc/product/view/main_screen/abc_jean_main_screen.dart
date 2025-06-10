@@ -440,7 +440,7 @@ class _AbcJeanMainScreenState extends ConsumerState<AbcJeanMainScreen>
     // AppBar 관련 수치 동적 적용
     final double productMainAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
     final double productMainAppBarTitleHeight = 22;
-    final double productMainAppBarTitleX = screenSize.height * (4 / referenceHeight);
+    final double productMainAppBarTitleX = screenSize.width * (0 / referenceWidth);
     final double productMainAppBarTitleY = 11;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
@@ -525,8 +525,10 @@ class _AbcJeanMainScreenState extends ConsumerState<AbcJeanMainScreen>
                     // 현재 context 전달
                     ref: ref,
                     // 참조(ref) 전달
-                    title: '청바지 메인',
+                    title: '청바지 메인      ', // 6칸 빈칸 생성해서 간격 조절
                     fontFamily: 'NanumGothic',
+                    boolStoreNameImg: true,
+                    titleImageFieldName: 'title_img_29',
                     // AppBar의 제목을 '청바지 메인'로 설정
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
