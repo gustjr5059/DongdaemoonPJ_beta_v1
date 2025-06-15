@@ -93,10 +93,12 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
   // 배너 이미지의 총 개수를 저장하는 변수
   // 대배너
   int bannerImageCount1 = 5;
+
   // 소배너
   int bannerImageCount2 = 3;
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+  bool _netOk = true; // 네트워크 연결된 상태 여부
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -183,7 +185,8 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     if (newCurrentIndex != currentIndex) {
       // 현재 인덱스가 변경된 경우
       currentIndex = newCurrentIndex; // 현재 인덱스를 갱신함
-      ref.read(aabHomeCurrentTabProvider.notifier).state = currentIndex; // 상태 업데이트
+      ref.read(aabHomeCurrentTabProvider.notifier).state =
+          currentIndex; // 상태 업데이트
     }
 
     // '봄'이나 '여름' 탭이 활성화될 때 자동 스크롤
@@ -233,7 +236,7 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
       if (context != null) {
         // 섹션의 context가 null이 아닐 경우
         final renderBox =
-        context.findRenderObject() as RenderBox; // RenderBox 객체로 변환
+            context.findRenderObject() as RenderBox; // RenderBox 객체로 변환
         final position = renderBox.localToGlobal(Offset.zero); // 글로벌 좌표로 변환
         if (position.dy <= kToolbarHeight + preferredSizeHeight + intervalY) {
           // 위치가 특정 높이 내에 있을 경우
@@ -267,10 +270,17 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     // 'ref'를 사용하여 'aabHomeScrollPositionProvider'의 notifier를 읽어옴.
     // 읽어온 notifier의 'state' 값을 'currentScrollPosition'으로 설정함.
     // 이렇게 하면 앱의 다른 부분에서 해당 스크롤 위치 정보를 참조할 수 있게 됨.
-    ref.read(aabHomeScrollPositionProvider.notifier).state = currentScrollPosition;
+    ref.read(aabHomeScrollPositionProvider.notifier).state =
+        currentScrollPosition;
   }
-
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // (이 부분이 로그인 상태에서 다른 화면 이동 후 다시 해당 화면으로 올 때, 동작 상태 조절하는 함수-초기화 / 종료)
@@ -400,11 +410,11 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
         ref.read(aabHomeSmall2BannerPageProvider.notifier).state = 0;
         ref.read(aabHomeSmall3BannerPageProvider.notifier).state = 0;
         ref.read(aabHomeScrollPositionProvider.notifier).state =
-        0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
+            0.0; // 로그아웃 시 homeScrollPositionProvider가 초기화되므로, 재로그인 시 초기 스크롤 위치에서 시작됨. 하지만 섹션 내 데이터는 유지됨.
         ref.read(aabHomeCurrentTabProvider.notifier).state =
-        0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
+            0; // 홈 화면 상단 탭 바 버튼 위치 인덱스를 초기화
         ref.read(midCategoryViewBoolExpandedProvider.notifier).state =
-        false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
+            false; // 홈 화면 내 카테고리 버튼 뷰 확장 상태 관련 provider를 초기화
         ref.invalidate(wishlistItemProvider); // 찜 목록 데이터 초기화
         ref.invalidate(cartItemCountProvider); // 장바구니 아이템 갯수 데이터 초기화
         ref.invalidate(wishlistItemCountProvider); // 찜 목록 아이템 갯수 데이터 초기화
@@ -425,8 +435,15 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
       _small3BannerAutoScroll.startAutoScroll();
     });
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
+    // 네트워크 체크 시작 – widget 모드
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.widget,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+      onStatusChange: (ok) {
+        if (mounted) setState(() => _netOk = ok);
+      },
+    );
     _networkChecker?.checkNetworkStatus();
   }
 
@@ -535,7 +552,6 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
 
     // 이벤트 이미지 탭 버튼 클릭 시, 해당 섹션으로 화면 이동 코드 시작
     void onEventImageTap(int index) {
-
       // 다른 탭이 선택된 경우
       GlobalKey sectionKey = _getSectionKey(index); // 선택된 섹션의 GlobalKey를 가져옴
       if (sectionKey.currentContext != null) {
@@ -623,14 +639,18 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     // 대배너 부분 관련 수치
     final double homeScreenLargeBannerWidth =
         screenSize.width * (393 / referenceWidth); // 대배너 이미지 너비
-    final double homeScreenLargeBannerHeight = screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
-    final double homeScreenLargeBannerViewHeight = screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
+    final double homeScreenLargeBannerHeight =
+        screenSize.width * (378 / referenceWidth); // 대배너 이미지 높이
+    final double homeScreenLargeBannerViewHeight =
+        screenSize.width * (378 / referenceWidth); // 대배너 화면 세로 비율
 
     // 홈 소배너 부분 관련 수치
     final double homeScreenSmallBannerWidth =
         screenSize.width * (345 / referenceWidth); // 소배너 이미지 너비
-    final double homeScreenSmallBannerHeight = screenSize.width * (127 / referenceWidth); // 소배너 이미지 높이
-    final double homeScreenSmallBannerViewHeight = screenSize.width * (127 / referenceWidth); // 소배너 화면 세로 비율
+    final double homeScreenSmallBannerHeight =
+        screenSize.width * (127 / referenceWidth); // 소배너 이미지 높이
+    final double homeScreenSmallBannerViewHeight =
+        screenSize.width * (127 / referenceWidth); // 소배너 화면 세로 비율
 
     // AppBar 관련 수치 동적 적용
     final double homeAppBarTitleWidth =
@@ -661,15 +681,16 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
-    final largeBannerWidget = buildCommonBannerPageViewSection<AllLargeBannerImage>(
+    final largeBannerWidget =
+        buildCommonBannerPageViewSection<AllLargeBannerImage>(
       context: context,
       ref: ref,
       currentPageProvider: aabHomeLargeBannerPageProvider,
       pageController: _largeBannerPageController,
       bannerAutoScroll: _largeBannerAutoScroll,
       bannerImagesProvider: aabAllLargeBannerImagesProvider,
-      onPageTap: (context, index) =>
-          onLargeBannerTap(context, index, ref.watch(aabAllLargeBannerImagesProvider).value ?? [], ref),
+      onPageTap: (context, index) => onLargeBannerTap(context, index,
+          ref.watch(aabAllLargeBannerImagesProvider).value ?? [], ref),
       width: homeScreenLargeBannerWidth,
       height: homeScreenLargeBannerHeight,
       borderRadius: 0,
@@ -677,15 +698,16 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     // ——— [대배너]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
 
     // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
-    final small1BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+    final small1BannerWidget =
+        buildCommonBannerPageViewSection<AllSmallBannerImage>(
       context: context,
       ref: ref,
       currentPageProvider: aabHomeSmall1BannerPageProvider,
       pageController: _small1BannerPageController,
       bannerAutoScroll: _small1BannerAutoScroll,
       bannerImagesProvider: aabHomeSmall1BannerImagesProvider,
-      onPageTap: (context, index) =>
-          onSmallBannerTap(context, index, ref.watch(aabHomeSmall1BannerImagesProvider).value ?? [], ref),
+      onPageTap: (context, index) => onSmallBannerTap(context, index,
+          ref.watch(aabHomeSmall1BannerImagesProvider).value ?? [], ref),
       width: homeScreenSmallBannerWidth,
       height: homeScreenSmallBannerHeight,
       borderRadius: 5,
@@ -693,15 +715,16 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     // ——— [소배너1]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
 
     // ——— [소배너2]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
-    final small2BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+    final small2BannerWidget =
+        buildCommonBannerPageViewSection<AllSmallBannerImage>(
       context: context,
       ref: ref,
       currentPageProvider: aabHomeSmall2BannerPageProvider,
       pageController: _small2BannerPageController,
       bannerAutoScroll: _small2BannerAutoScroll,
       bannerImagesProvider: aabHomeSmall2BannerImagesProvider,
-      onPageTap: (context, index) =>
-          onSmallBannerTap(context, index, ref.watch(aabHomeSmall2BannerImagesProvider).value ?? [], ref),
+      onPageTap: (context, index) => onSmallBannerTap(context, index,
+          ref.watch(aabHomeSmall2BannerImagesProvider).value ?? [], ref),
       width: homeScreenSmallBannerWidth,
       height: homeScreenSmallBannerHeight,
       borderRadius: 5,
@@ -709,15 +732,16 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
     // ——— [소배너2]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 끝 부분
 
     // ——— [소배너3]-공통 배너 페이지 뷰 위젯인 buildCommonBannerPageViewSection 시작 부분
-    final small3BannerWidget = buildCommonBannerPageViewSection<AllSmallBannerImage>(
+    final small3BannerWidget =
+        buildCommonBannerPageViewSection<AllSmallBannerImage>(
       context: context,
       ref: ref,
       currentPageProvider: aabHomeSmall3BannerPageProvider,
       pageController: _small3BannerPageController,
       bannerAutoScroll: _small3BannerAutoScroll,
       bannerImagesProvider: aabHomeSmall3BannerImagesProvider,
-      onPageTap: (context, index) =>
-          onSmallBannerTap(context, index, ref.watch(aabHomeSmall3BannerImagesProvider).value ?? [], ref),
+      onPageTap: (context, index) => onSmallBannerTap(context, index,
+          ref.watch(aabHomeSmall3BannerImagesProvider).value ?? [], ref),
       width: homeScreenSmallBannerWidth,
       height: homeScreenSmallBannerHeight,
       borderRadius: 5,
@@ -757,11 +781,12 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
                     boolTitleImg: true,
                     titleImageFieldName: 'title_img_2',
                     titleImagePath:
-                    'asset/img/misc/appbar_img/home_appbar_title_img.png',
+                        'asset/img/misc/appbar_img/home_appbar_title_img.png',
                     // 앱 바 타이틀 이미지 경로 추가
                     leadingType: LeadingType.back,
                     // 아무 버튼도 없음.
-                    buttonCase: 2, // 2번 케이스 (찜 목록 버튼만 노출)
+                    buttonCase: 2,
+                    // 2번 케이스 (찜 목록 버튼만 노출)
                     appBarTitleWidth: homeAppBarTitleWidth,
                     appBarTitleHeight: homeAppBarTitleHeight,
                     appBarTitleX: homeAppBarTitleX,
@@ -797,77 +822,47 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
                     child: topBarList, // 탭 바에 들어갈 위젯 배열
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: BLACK_COLOR, width: 1.0), // 상단 테두리 색상을 설정함
-                        bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                        top: BorderSide(color: BLACK_COLOR, width: 1.0),
+                        // 상단 테두리 색상을 설정함
+                        bottom: BorderSide(
+                            color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
                       ),
                     ),
                   ),
                 ),
               ),
-              // // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              // SliverPadding(
-              //   padding: EdgeInsets.only(top: 5),
-              //   // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-              //   sliver: SliverList(
-              // 실제 컨텐츠를 나타내는 슬리버 리스트
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    return Padding(
-                      // 각 항목의 좌우 간격을 1.0으로 설정함.
-                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                      child: Column(
-                        children: [
 
-                          // ——— 대배너 위젯 조건부 렌더링 시작 부분
-                          if (largeBannerWidget is! SizedBox) ...[
-                            CommonCardView(
-                              content: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(0),
+              // ── 본문 Sliver: 네트워크 상태에 따라 분기
+              if (_netOk)
+                // 실제 컨텐츠를 나타내는 슬리버 리스트
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return Padding(
+                        // 각 항목의 좌우 간격을 1.0으로 설정함.
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                        child: Column(
+                          children: [
+                            // ——— 대배너 위젯 조건부 렌더링 시작 부분
+                            if (largeBannerWidget is! SizedBox) ...[
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                  ),
+                                  child: SizedBox(
+                                    height: homeScreenLargeBannerViewHeight,
+                                    child: largeBannerWidget,
+                                  ),
                                 ),
-                                child: SizedBox(
-                                  height: homeScreenLargeBannerViewHeight,
-                                  child: largeBannerWidget,
-                                ),
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 4,
+                                padding: EdgeInsets.zero, // 패딩을 없앰
                               ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                              elevation: 4,
-                              padding: EdgeInsets.zero, // 패딩을 없앰
-                            ),
-                          ],
-                          // ——— 대배너 위젯 조건부 렌더링 끝 부분
+                            ],
+                            // ——— 대배너 위젯 조건부 렌더링 끝 부분
 
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    color: BLACK_COLOR,
-                                    width: 1.0), // 하단 테두리 색상을 설정함
-                              ),
-                            ),
-                          ),
-
-                          // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
-                          // 중간 카테고리 버튼 리스트를 카드뷰로 구성
-                          CommonCardView(
-                            // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색
-                            // 카드뷰 배경 색상 : 앱 기본 배경색
-                            elevation: 0,
-                            // 카드뷰 그림자 깊이
-                            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0,
-                                4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
-                            content: Container(
-                              child: MidCategoryButtonList(
-                                onCategoryTap: aabOnMidCategoryTap,
-                              ),
-                            ),
-                          ),
-
-                          // ——— 소배너1 위젯 조건부 렌더링 시작 부분
-                          if (small1BannerWidget is! SizedBox) ...[
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -877,79 +872,57 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
                                 ),
                               ),
                             ),
-                            SizedBox(height: interval4Y), // 높이 간격 설정
+
+                            // 카드뷰 클래스 재사용으로 MidCategoryButtonList 내용이 있는 카드뷰 구현
+                            // 중간 카테고리 버튼 리스트를 카드뷰로 구성
                             CommonCardView(
-                              content: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: SizedBox(
-                                  height: homeScreenSmallBannerViewHeight,
-                                  child: small1BannerWidget,
-                                ),
-                              ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              // 카드뷰 내용으로 MidCategoryButtonList 재사용하여 구현
+                              backgroundColor: Theme.of(context)
+                                  .scaffoldBackgroundColor, // 앱 기본 배경색
+                              // 카드뷰 배경 색상 : 앱 기본 배경색
                               elevation: 0,
-                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                              // 카드뷰 그림자 깊이
+                              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0,
+                                  4.0), // 카드뷰 패딩 : 상/좌/우: 8.0, 하: 4.0
+                              content: Container(
+                                child: MidCategoryButtonList(
+                                  onCategoryTap: aabOnMidCategoryTap,
+                                ),
+                              ),
                             ),
-                            SizedBox(height: interval4Y), // 높이 간격 설정
-                          ],
-                          // ——— 소배너1 위젯 조건부 렌더링 끝 부분
 
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            // ——— 소배너1 위젯 조건부 렌더링 시작 부분
+                            if (small1BannerWidget is! SizedBox) ...[
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        color: BLACK_COLOR,
+                                        width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          SizedBox(height: interval2Y), // 높이 간격 설정
-                          // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
-                          // 신상품 섹션
-                          Container(
-                            key: sectionNewKey,
-                            child: buildSectionCard(
-                                context, ref, "신상", aabBuildNewProductsSection,
-                                destinationScreen: AabNewSubMainScreen(),
-                                showPlusButton: true),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                              SizedBox(height: interval4Y), // 높이 간격 설정
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: SizedBox(
+                                    height: homeScreenSmallBannerViewHeight,
+                                    child: small1BannerWidget,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(
+                                    20.0, 0.0, 20.0, 0.0),
                               ),
-                            ),
-                          ),
-                          // SizedBox(height: interval1Y), // 높이 간격 설정
-                          // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
-                          // 베스트 제품 섹션
-                          Container(
-                            key: sectionBestSellerKey,
-                            child: buildSectionCard(context, ref, "스테디 셀러",
-                                aabBuildBestProductsSection,
-                                destinationScreen: AabBestSubMainScreen(),
-                                showPlusButton: true),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                              ),
-                            ),
-                          ),
-                          // SizedBox(height: interval1Y), // 높이 간격 설정
-                          // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
-                          // 할인 제품 섹션
-                          Container(
-                            key: sectionSaleKey,
-                            child: buildSectionCard(
-                                context, ref, "특가 상품", aabBuildSaleProductsSection,
-                                destinationScreen: AabSaleSubMainScreen(),
-                                showPlusButton: true),
-                          ),
+                              SizedBox(height: interval4Y), // 높이 간격 설정
+                            ],
+                            // ——— 소배너1 위젯 조건부 렌더링 끝 부분
 
-                          // ——— 소배너2 위젯 조건부 렌더링 시작 부분
-                          if (small2BannerWidget is! SizedBox) ...[
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -959,61 +932,16 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
                                 ),
                               ),
                             ),
-                            SizedBox(height: interval4Y), // 높이 간격 설정
-                            CommonCardView(
-                              content: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: SizedBox(
-                                  height: homeScreenSmallBannerViewHeight,
-                                  child: small2BannerWidget,
-                                ),
-                              ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                              elevation: 0,
-                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                            SizedBox(height: interval2Y), // 높이 간격 설정
+                            // common_parts_layout.dart에 구현된 신상 관련 옷 상품 부분
+                            // 신상품 섹션
+                            Container(
+                              key: sectionNewKey,
+                              child: buildSectionCard(context, ref, "신상",
+                                  aabBuildNewProductsSection,
+                                  destinationScreen: AabNewSubMainScreen(),
+                                  showPlusButton: true),
                             ),
-                            SizedBox(height: interval4Y), // 높이 간격 설정
-                          ],
-                          // ——— 소배너2 위젯 조건부 렌더링 끝 부분
-
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                              ),
-                            ),
-                          ),
-                          // SizedBox(height: interval2Y), // 높이 간격 설정
-                          // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
-                          // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
-                          Container(
-                            key: sectionSpringKey,
-                            child: buildSectionCard(
-                                context, ref, "봄", aabBuildSpringProductsSection,
-                                destinationScreen: AabSpringSubMainScreen(),
-                                showPlusButton: true),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
-                              ),
-                            ),
-                          ),
-                          // SizedBox(height: interval1Y), // 높이 간격 설정
-                          // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
-                          Container(
-                            key: sectionSummerKey,
-                            child: buildSectionCard(
-                                context, ref, "여름", aabBuildSummerProductsSection,
-                                destinationScreen: AabSummerSubMainScreen(),
-                                showPlusButton: true),
-                          ),
-
-                          // ——— 소배너3 위젯 조건부 렌더링 시작 부분
-                          if (small3BannerWidget is! SizedBox) ...[
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -1023,86 +951,212 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
                                 ),
                               ),
                             ),
-                            SizedBox(height: interval4Y), // 높이 간격 설정
-                            CommonCardView(
-                              content: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: SizedBox(
-                                  height: homeScreenSmallBannerViewHeight,
-                                  child: small3BannerWidget,
+                            // SizedBox(height: interval1Y), // 높이 간격 설정
+                            // common_parts_layout.dart에 구현된 최고 관련 옷 상품 부분
+                            // 베스트 제품 섹션
+                            Container(
+                              key: sectionBestSellerKey,
+                              child: buildSectionCard(context, ref, "스테디 셀러",
+                                  aabBuildBestProductsSection,
+                                  destinationScreen: AabBestSubMainScreen(),
+                                  showPlusButton: true),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
                                 ),
                               ),
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                              elevation: 0,
-                              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             ),
-                            SizedBox(height: interval4Y), // 높이 간격 설정
-                          ],
-                          // ——— 소배너3 위젯 조건부 렌더링 끝 부분
+                            // SizedBox(height: interval1Y), // 높이 간격 설정
+                            // common_parts_layout.dart에 구현된 할인 관련 옷 상품 부분
+                            // 할인 제품 섹션
+                            Container(
+                              key: sectionSaleKey,
+                              child: buildSectionCard(context, ref, "특가 상품",
+                                  aabBuildSaleProductsSection,
+                                  destinationScreen: AabSaleSubMainScreen(),
+                                  showPlusButton: true),
+                            ),
 
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            // ——— 소배너2 위젯 조건부 렌더링 시작 부분
+                            if (small2BannerWidget is! SizedBox) ...[
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        color: BLACK_COLOR,
+                                        width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: interval4Y), // 높이 간격 설정
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: SizedBox(
+                                    height: homeScreenSmallBannerViewHeight,
+                                    child: small2BannerWidget,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(
+                                    20.0, 0.0, 20.0, 0.0),
+                              ),
+                              SizedBox(height: interval4Y), // 높이 간격 설정
+                            ],
+                            // ——— 소배너2 위젯 조건부 렌더링 끝 부분
+
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
                               ),
                             ),
-                          ),
-                          // SizedBox(height: interval2Y), // 높이 간격 설정
-                          // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
-                          Container(
-                            key: sectionAutumnKey,
-                            child: buildSectionCard(
-                                context, ref, "가을", aabBuildAutumnProductsSection,
-                                destinationScreen: AabAutumnSubMainScreen(),
-                                showPlusButton: true),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            // SizedBox(height: interval2Y), // 높이 간격 설정
+                            // 계절별 제품 섹션들을 순차적으로 추가 (봄, 여름, 가을, 겨울)
+                            // common_parts_layout.dart에 구현된 봄 관련 옷 상품 부분
+                            Container(
+                              key: sectionSpringKey,
+                              child: buildSectionCard(context, ref, "봄",
+                                  aabBuildSpringProductsSection,
+                                  destinationScreen: AabSpringSubMainScreen(),
+                                  showPlusButton: true),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
                               ),
                             ),
-                          ),
-                          // SizedBox(height: interval2Y), // 높이 간격 설정
-                          // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
-                          Container(
-                            key: sectionWinterKey,
-                            child: buildSectionCard(
-                                context, ref, "겨울", aabBuildWinterProductsSection,
-                                destinationScreen: AabWinterSubMainScreen(),
-                                showPlusButton: true),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            // SizedBox(height: interval1Y), // 높이 간격 설정
+                            // common_parts_layout.dart에 구현된 여름 관련 옷 상품 부분
+                            Container(
+                              key: sectionSummerKey,
+                              child: buildSectionCard(context, ref, "여름",
+                                  aabBuildSummerProductsSection,
+                                  destinationScreen: AabSummerSubMainScreen(),
+                                  showPlusButton: true),
+                            ),
+
+                            // ——— 소배너3 위젯 조건부 렌더링 시작 부분
+                            if (small3BannerWidget is! SizedBox) ...[
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        color: BLACK_COLOR,
+                                        width: 1.0), // 하단 테두리 색상을 설정함
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: interval4Y), // 높이 간격 설정
+                              CommonCardView(
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: SizedBox(
+                                    height: homeScreenSmallBannerViewHeight,
+                                    child: small3BannerWidget,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(
+                                    20.0, 0.0, 20.0, 0.0),
+                              ),
+                              SizedBox(height: interval4Y), // 높이 간격 설정
+                            ],
+                            // ——— 소배너3 위젯 조건부 렌더링 끝 부분
+
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            key: sectionEventKey,
-                            child: buildSectionCard(context, ref, "이벤트",
-                                aabBuildEventPosterImgProductsSection,
-                                showPlusButton: false),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: BLACK_COLOR, width: 1.0), // 하단 테두리 색상을 설정함
+                            // SizedBox(height: interval2Y), // 높이 간격 설정
+                            // common_parts_layout.dart에 구현된 가을 관련 옷 상품 부분
+                            Container(
+                              key: sectionAutumnKey,
+                              child: buildSectionCard(context, ref, "가을",
+                                  aabBuildAutumnProductsSection,
+                                  destinationScreen: AabAutumnSubMainScreen(),
+                                  showPlusButton: true),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: interval3Y), // 높이 간격 설정
-                        ],
-                      ),
-                    );
-                  },
-                  childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                            // SizedBox(height: interval2Y), // 높이 간격 설정
+                            // common_parts_layout.dart에 구현된 겨울 관련 옷 상품 부분
+                            Container(
+                              key: sectionWinterKey,
+                              child: buildSectionCard(context, ref, "겨울",
+                                  aabBuildWinterProductsSection,
+                                  destinationScreen: AabWinterSubMainScreen(),
+                                  showPlusButton: true),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
+                            Container(
+                              key: sectionEventKey,
+                              child: buildSectionCard(context, ref, "이벤트",
+                                  aabBuildEventPosterImgProductsSection,
+                                  showPlusButton: false),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: BLACK_COLOR,
+                                      width: 1.0), // 하단 테두리 색상을 설정함
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: interval3Y), // 높이 간격 설정
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
+                  ),
+                )
+              // 네트워크 상태가 끊긴 경우
+              else
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: NetworkErrorWidget(onRetry: _retry),
                 ),
-              ),
-              // ),
             ],
           ),
           // buildTopButton 함수는 주어진 context와 homeScreenPointScrollController를 사용하여
@@ -1112,7 +1166,13 @@ class _AabHomeMainScreenState extends ConsumerState<AabHomeMainScreen>
       ),
       // 하단 탭 바 - 1번 케이스인 '홈','장바구니', '발주내역', '마이페이지' 버튼이 UI로 구현됨.
       bottomNavigationBar: buildCommonBottomNavigationBar(
-        ref.watch(tabIndexProvider), ref, context, 5, 1, scrollController: homeScreenPointScrollController,),
+        ref.watch(tabIndexProvider),
+        ref,
+        context,
+        5,
+        1,
+        scrollController: homeScreenPointScrollController,
+      ),
       // 공통으로 사용되는 하단 네비게이션 바를 가져옴.
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );

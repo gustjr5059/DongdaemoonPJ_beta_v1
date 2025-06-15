@@ -315,9 +315,16 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
       _small1BannerAutoScroll.startAutoScroll();
     });
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
+    // // 네트워크 상태 체크 시작
+    // _networkChecker = NetworkChecker(context);
+    // _networkChecker?.checkNetworkStatus();
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.dialog,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+    );
     _networkChecker?.checkNetworkStatus();
+
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)

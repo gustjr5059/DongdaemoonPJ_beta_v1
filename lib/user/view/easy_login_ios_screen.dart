@@ -1154,7 +1154,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                                 child: Image.asset(
                                   'asset/img/misc/login_image/naver_login_btn_img.png',
                                   width: easyLoginBtnImageWidth,
-                                  height: easyLoginBtnImageHeight,
+                                  height: easyLoginBtnImageWidth,
                                   fit: BoxFit.contain,
                                 ),
                               ),
@@ -1170,7 +1170,7 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
                                 child: Image.asset(
                                   'asset/img/misc/login_image/apple_login_btn_img.png',
                                   width: easyLoginBtnImageWidth,
-                                  height: easyLoginBtnImageHeight,
+                                  height: easyLoginBtnImageWidth,
                                   fit: BoxFit.contain,
                                 ),
                               ),

@@ -828,6 +828,7 @@ Future<bool> showSubmitAlertDialog(
   String? content, // 알림창의 내용을 나타내는 선택적 문자열
   required List<Widget> actions, // 알림창에서 사용할 버튼 리스트 (actions)
   Widget? contentWidget, // 알림창 내용 대신 사용할 위젯 (contentWidget)
+  bool barrierDismissible = false, // 사용자가 알림창 외부를 클릭해도 닫히지 않도록 설정 변수
 }) async {
   // showDialog: 비동기로 알림창을 띄우며 사용자의 입력(확인, 취소 등)을 대기함
   return await showDialog<bool>(
@@ -908,18 +909,28 @@ Future<bool> showSubmitAlertDialog(
                   fontFamily: 'NanumGothic',
                 ),
               ), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
-              actions: <Widget>[
-                // '확인' 버튼 클릭 시 false 반환하고 알림창 닫음
+              // actions: <Widget>[
+              //   // '확인' 버튼 클릭 시 false 반환하고 알림창 닫음
+              //   TextButton(
+              //     child: Text(
+              //       '확인',
+              //       style: TextStyle(
+              //         fontFamily: 'NanumGothic',
+              //       ),
+              //     ),
+              //     onPressed: () {
+              //       Navigator.of(context).pop(false);
+              //     },
+              //   ),
+              // ],
+              actions: [
                 TextButton(
-                  child: Text(
-                    '확인',
-                    style: TextStyle(
-                      fontFamily: 'NanumGothic',
-                    ),
+                  style: TextButton.styleFrom(
+                    overlayColor: ORANGE_BEIGE_COLOR,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
+                  child: const Text('확인',
+                      style: TextStyle(fontFamily: 'NanumGothic')),
+                  onPressed: () => Navigator.of(context).pop(false),
                 ),
               ],
             );
@@ -939,16 +950,21 @@ List<Widget> buildAlertActions(
   TextStyle? yesTextStyle, // '확인' 버튼 텍스트의 스타일
   VoidCallback? onYesPressed, // '확인' 버튼 클릭 시 호출될 함수
 }) {
+  final buttonStyle = TextButton.styleFrom(
+    overlayColor: ORANGE_BEIGE_COLOR,
+  ); // 버튼 클릭할 때의 색상
   if (yesText != null && onYesPressed != null) {
     // '확인' 텍스트와 onYesPressed 함수가 제공된 경우, 두 개의 버튼(취소, 확인)을 생성함
     return <Widget>[
       TextButton(
+        style: buttonStyle, // 버튼 클릭할 때의 색상 적용
         child: Text(noText, style: noTextStyle), // '취소' 버튼 텍스트에 스타일 적용
         onPressed: () {
           Navigator.of(context).pop(false); // '취소' 클릭 시 false 반환하고 알림창 닫음
         },
       ),
       TextButton(
+        style: buttonStyle, // 버튼 클릭할 때의 색상 적용
         child: Text(yesText, style: yesTextStyle), // '확인' 버튼 텍스트에 스타일 적용
         onPressed: onYesPressed, // '확인' 버튼 클릭 시 전달된 함수 호출
       ),
@@ -957,6 +973,7 @@ List<Widget> buildAlertActions(
     // '확인' 버튼이 없을 경우, '취소' 버튼만 생성함
     return <Widget>[
       TextButton(
+        style: buttonStyle, // 버튼 클릭할 때의 색상 적용
         child: Text(noText, style: noTextStyle), // '닫기' 버튼 텍스트에 스타일 적용
         onPressed: () {
           Navigator.of(context).pop(false); // '닫기' 클릭 시 false 반환하고 알림창 닫음
@@ -1024,76 +1041,223 @@ void showCustomSnackBar(BuildContext context, String message, {Duration duration
 // ------ 공통 SnackBar 함수 내용 끝
 
 // ------ 네트워크 상태 체크 함수 내용 시작
-// 네트워크 상태를 체크하는 클래스 정의
+
+// ——— 네트워크 핸들 모드 열거형 시작 부분
+enum NetHandleMode { dialog, widget }
+// ——— 네트워크 핸들 모드 열거형 끝 부분
+
+// ——— 네트워크 상태 변경 콜백 타입 정의 시작 부분
+typedef NetStatusCallback = void Function(bool isConnected);
+// ——— 네트워크 상태 변경 콜백 타입 정의 끝 부분
+
+// ——— 네트워크 상태를 체크하는 클래스 정의 시작 부분
 class NetworkChecker {
-  final BuildContext context; // 현재 앱의 화면 정보를 담고 있는 context 값
-  StreamSubscription? _subscription; // 스트림을 구독하는 역할을 하는 _subscription 변수 추가
+  final BuildContext context; // 현재 화면의 BuildContext 정보
+  final NetHandleMode mode; // 다이얼로그 또는 위젯 모드 설정 값
+  final NetStatusCallback? onStatusChange; // 네트워크 상태 변화 발생 시 호출되는 콜백 함수
+  final bool autoRecover; // 연결 복구 시 자동 복귀 여부 설정 값
 
-  // 생성자에서 context 값을 전달받아 사용
-  NetworkChecker(this.context);
+  StreamSubscription? _subscription; // 네트워크 스트림 구독 객체
+  bool _dialogVisible = false; // 중복된 네트워크 에러 다이얼로그 방지를 위한 플래그
+  bool _errorVisible = false; // 에러 위젯이 표시 중인지 여부를 나타내는 플래그
 
-  // 네트워크 상태 변화를 실시간으로 감지하는 메서드
+  // ——— 생성자 정의 시작 부분
+  NetworkChecker(
+      this.context, {
+        this.mode = NetHandleMode.dialog,
+        this.onStatusChange,
+        this.autoRecover = true,
+      });
+  // ——— 생성자 정의 끝 부분
+
+  // ——— 네트워크 상태 실시간 감지 리스너 등록 함수 시작 부분
   void checkNetworkStatus() {
-    _subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
-      // 결과 리스트를 순회하면서 네트워크 연결 상태를 확인
-      for (var result in results) {
-        if (result == ConnectivityResult.none) {
-          // 네트워크 연결이 없을 경우 네트워크 오류 알림창을 띄움
-          showNetworkErrorDialog();
-          break; // 오류가 발생하면 반복문 종료
+    _subscription = Connectivity().onConnectivityChanged.listen(_onConnChanged);
+  }
+  // ——— 네트워크 상태 실시간 감지 리스너 등록 함수 끝 부분
+
+  // ——— 현재 페이지가 화면의 최상단인지 여부 확인 함수 시작 부분
+  bool get _isTopMost => (ModalRoute.of(context)?.isCurrent ?? true);
+  // ——— 현재 페이지가 화면의 최상단인지 여부 확인 함수 끝 부분
+
+  // ——— 연결 상태 변화 시 처리 함수 시작 부분
+  Future<void> _onConnChanged(List<ConnectivityResult> results) async {
+    final hasConn = results.any((e) => e != ConnectivityResult.none);
+    final okay = hasConn && await _hasInternet();
+
+    // 연결 정상 시 처리
+    if (okay) {
+      if (mode == NetHandleMode.dialog) {
+        if (autoRecover && _dialogVisible && Navigator.canPop(context)) {
+          Navigator.of(context).pop(); // 연결 복구 시 다이얼로그 자동 닫기 처리
+          _dialogVisible = false;
+        }
+      } else {
+        if (autoRecover && _errorVisible) {
+          _errorVisible = false; // 에러 위젯 상태 초기화
+          onStatusChange?.call(true); // 연결 복구 상태 콜백 전달
         }
       }
-    });
-  }
+      return;
+    }
 
-  // 네트워크 연결 상태를 동기적으로 확인하는 메서드
+    // 연결 끊김 시 처리
+    if (!_isTopMost) return;
+
+    if (mode == NetHandleMode.dialog) {
+      if (!_dialogVisible) {
+        _dialogVisible = true;
+        await showNetworkErrorDialog(); // 네트워크 에러 다이얼로그 표시
+        _dialogVisible = false;
+      }
+    } else {
+      _errorVisible = true; // 에러 위젯 표시 상태 기록
+      onStatusChange?.call(false); // 연결 끊김 상태 콜백 전달
+    }
+  }
+  // ——— 연결 상태 변화 시 처리 함수 끝 부분
+
+  // ——— 현재 네트워크 연결 상태를 확인하는 함수 시작 부분
   Future<bool> isConnected() async {
-    // 현재 네트워크 연결 상태를 가져옴
-    var connectivityResult = await Connectivity().checkConnectivity();
-    // 네트워크가 연결되어 있지 않다면 false 반환
-    return connectivityResult != ConnectivityResult.none;
+    final cr = await Connectivity().checkConnectivity();
+    return cr != ConnectivityResult.none && await _hasInternet();
   }
+  // ——— 현재 네트워크 연결 상태를 확인하는 함수 끝 부분
 
-  // 네트워크 오류 시 알림창을 띄우는 메서드
-  void showNetworkErrorDialog() {
-    // 알림창을 보여주는 함수 호출
-    showSubmitAlertDialog(
+  // ——— 실제 인터넷 연결 여부를 확인하는 함수 시작 부분
+  Future<bool> _hasInternet() async {
+    try {
+      final res = await InternetAddress.lookup('firebase.google.com')
+          .timeout(const Duration(milliseconds: 100));
+      return res.isNotEmpty && res.first.rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+  // ——— 실제 인터넷 연결 여부를 확인하는 함수 끝 부분
+
+  // ——— 네트워크 에러 알림창 표시 함수 시작 부분
+  Future<void> showNetworkErrorDialog() async {
+    await showSubmitAlertDialog(
       context,
-      title: '[네트워크 에러]', // 알림창의 제목
-      content: '네트워크 연결 확인 후, 앱을 재실행 해주세요.', // 알림창의 내용
+      title: '[네트워크 에러]',
+      content: '네트워크 연결 확인 후, 다시 시도해주세요.',
+      barrierDismissible: false,
       actions: [
         TextButton(
-          // '확인' 버튼 정의
-          child: Text(
-            '확인',
+          style: TextButton.styleFrom(overlayColor: ORANGE_BEIGE_COLOR),
+          child: const Text(
+            '다시 시도',
             style: TextStyle(
-              color: ORANGE56_COLOR, // 버튼 텍스트 색상 지정
-              fontWeight: FontWeight.bold, // 텍스트의 굵기를 두껍게 설정
-              fontFamily: 'NanumGothic', // 글꼴 설정
+              color: ORANGE56_COLOR,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'NanumGothic',
             ),
           ),
-          onPressed: () {
-            // Android 기기에서는 앱을 종료
-            if (Platform.isAndroid) {
-              exit(0); // 앱 종료 명령
-              // iOS 기기에서는 알림창만 닫음
-            } else if (Platform.isIOS) {
-              Navigator.of(context).pop(); // 알림창 닫기
+          onPressed: () async {
+            final connected = await isConnected(); // 재연결 여부 확인
+            if (connected) {
+              Navigator.of(context).pop(); // 다이얼로그 닫기
+            } else {
+              HapticFeedback.vibrate(); // 진동 피드백 발생
+              debugPrint('네트워크가 아직 복구되지 않았습니다.'); // 디버그 로그 출력
             }
           },
         ),
       ],
     );
   }
+  // ——— 네트워크 에러 알림창 표시 함수 끝 부분
 
-  // 네트워크 상태 감지 리스너 해제하는 메서드
+  // ——— 네트워크 상태 구독 해제 함수 시작 부분
   void dispose() {
-    // 스트림 구독 해제
-    _subscription?.cancel();
+    _subscription?.cancel(); // 스트림 구독 해제
+  }
+// ——— 네트워크 상태 구독 해제 함수 끝 부분
+}
+// ——— 네트워크 상태를 체크하는 클래스 정의 끝 부분
+
+// ——— 네트워크 오류 위젯 정의 시작 부분
+class NetworkErrorWidget extends StatelessWidget {
+  final VoidCallback onRetry; // 다시 시도 버튼 클릭 시 동작할 콜백 함수
+
+  const NetworkErrorWidget({super.key, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
+    // 기준 사이즈 대비 상대 크기 계산
+    final double referenceWidth = 393.0;
+    final double logoW = screenSize.width * (100 / referenceWidth);
+    final double logoH = logoW;
+
+    // 폰트 및 간격 설정
+    final double txt1FS = 16;
+    final double txt2FS = 12;
+    final double btnFS = 14;
+    final double btnPadY = 6;
+    final double btnPadX = 24;
+    final double interval1Y = 15;
+    final double interval2Y = 8;
+    final double interval3Y = 20;
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'asset/img/misc/logo_img/wearcano_logo_v1.png',
+            width: logoW,
+            height: logoH,
+            fit: BoxFit.contain,
+          ),
+          SizedBox(height: interval1Y),
+          Text(
+            '화면을 불러오지 못했어요.',
+            style: TextStyle(
+              fontSize: txt1FS,
+              fontFamily: 'NanumGothic',
+              fontWeight: FontWeight.bold,
+              color: BLACK_COLOR,
+            ),
+          ),
+          SizedBox(height: interval2Y),
+          Text(
+            '네트워크 연결 확인 후 다시 시도해주세요.',
+            style: TextStyle(
+              fontSize: txt2FS,
+              fontFamily: 'NanumGothic',
+              fontWeight: FontWeight.normal,
+              color: GRAY38_COLOR,
+            ),
+          ),
+          SizedBox(height: interval3Y),
+          ElevatedButton(
+            onPressed: onRetry,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ORANGE56_COLOR,
+              padding: EdgeInsets.symmetric(
+                  vertical: btnPadY, horizontal: btnPadX),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(45)),
+            ),
+            child: Text(
+              '다시 시도하기',
+              style: TextStyle(
+                fontSize: btnFS,
+                fontFamily: 'NanumGothic',
+                fontWeight: FontWeight.bold,
+                color: WHITE_COLOR,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
+// ——— 네트워크 오류 위젯 정의 끝 부분
 // ------ 네트워크 상태 체크 함수 내용 끝
 
 // ------- 공통 로딩 인디케이터 위젯 함수 내용 시작

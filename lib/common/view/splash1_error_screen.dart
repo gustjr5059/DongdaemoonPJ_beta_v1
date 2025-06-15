@@ -10,6 +10,7 @@ import 'dart:async'; // 비동기 작업을 위한 dart:async 라이브러리를
 // 애플리케이션의 스플래시 스크린 중 두 번째 화면을 구현한 'SplashScreen2' 파일을 가져옵니다.
 // 이 화면은 앱이 시작할 때 초기 로딩 화면으로 사용되어, 사용자에게 앱 로딩 중임을 알립니다.
 import 'package:flutter_svg/svg.dart';
+
 // 애플리케이션 전반에 걸쳐 사용될 색상의 상수를 정의한 파일을 가져옵니다.
 // 이 파일에서 정의된 색상은 버튼, 배경, 텍스트 등 다양한 UI 요소에 일관되게 사용되어,
 // 앱의 디자인 통일성을 유지하는데 도움을 줍니다.
@@ -25,7 +26,6 @@ class SplashErrorScreen1 extends StatefulWidget {
 // _SplashScreenState 클래스에서 SingleTickerProviderStateMixin을 사용하여 애니메이션 컨트롤러를 생성함.
 class _SplashErrorScreenState extends State<SplashErrorScreen1>
     with TickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
@@ -38,7 +38,6 @@ class _SplashErrorScreenState extends State<SplashErrorScreen1>
 
   @override
   Widget build(BuildContext context) {
-
     // MediaQuery로 기기의 화면 크기를 동적으로 가져옴
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -48,36 +47,56 @@ class _SplashErrorScreenState extends State<SplashErrorScreen1>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // 화면 부분 수치
-    final double errorTextFontSize =
-        screenSize.height * (18 / referenceHeight);
+    final double errorTextFontSize = screenSize.height * (18 / referenceHeight);
     final double screenX =
-        screenSize.height * (180 / referenceHeight); // 위쪽 여백 비율
+        screenSize.height * (120 / referenceHeight); // 위쪽 여백 비율
 
     // 화면의 UI를 구성함.
     return Scaffold(
       body: Stack(
-        // Stack 위젯을 사용하여 요소들을 겹쳐서 배치함.
-        children: <Widget>[
-          // 피그마에서 추출한 배경 이미지를 SVG로 추가
+        children: [
+          // 1) 배경 이미지 전체
           Positioned.fill(
             child: Image.asset(
-              'asset/img/misc/splash_image/wearcano_splash1_bg_img.png', // 배경 이미지를 SVG로 설정
-              fit: BoxFit.cover, // 화면 전체에 맞게 조정
+              'asset/img/misc/splash_image/wearcano_splash1_bg_img.png',
+              fit: BoxFit.cover,
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
-            child: Padding(
-              padding: EdgeInsets.only(bottom: screenX), // 하단에서부터 100의 여백을 줌.
-              child: Text(
-                '네트워크가 연결되지 않았습니다.\n\n         앱을 재실행 해주세요.',
-                style: TextStyle(
-                  fontFamily: 'NanumGothic',
-                  fontWeight: FontWeight.bold,
-                  fontSize: errorTextFontSize,
-                  color: RED46_COLOR,
-                ),
-              ),
+
+          // 2) 메인 콘텐츠 – SafeArea + ScrollView 구조
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                      minWidth: constraints.maxWidth, // 너비도 강제
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          const Spacer(), // 중앙 영역 비우기 (Splash1은 로딩만 하단 배치)
+                          Padding(
+                            padding: EdgeInsets.only(bottom: screenX),
+                            // 하단에서부터 100의 여백을 줌.
+                            child: Text(
+                              '네트워크가 연결되지 않았습니다.\n\n         앱을 재실행 해주세요.',
+                              style: TextStyle(
+                                fontFamily: 'NanumGothic',
+                                fontWeight: FontWeight.bold,
+                                fontSize: errorTextFontSize,
+                                color: RED46_COLOR,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

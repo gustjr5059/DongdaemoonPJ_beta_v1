@@ -99,6 +99,7 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
   int bannerImageCount2 = 3;
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+  bool _netOk = true;            // 네트워크 연결된 상태 여부
 
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
@@ -273,8 +274,14 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     ref.read(aaaHomeScrollPositionProvider.notifier).state =
         currentScrollPosition;
   }
-
   // ------ 스크롤 위치를 업데이트하기 위한 '_updateScrollPosition' 함수 관련 구현 내용 끝
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // (이 부분이 로그인 상태에서 다른 화면 이동 후 다시 해당 화면으로 올 때, 동작 상태 조절하는 함수-초기화 / 종료)
@@ -430,7 +437,18 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
     });
 
     // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
+    // _networkChecker = NetworkChecker(context);
+    // _networkChecker?.checkNetworkStatus();
+
+    // 네트워크 체크 시작 – widget 모드
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.widget,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+      onStatusChange: (ok) {
+        if (mounted) setState(() => _netOk = ok);
+      },
+    );
     _networkChecker?.checkNetworkStatus();
   }
 
@@ -814,6 +832,9 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
               //   padding: EdgeInsets.only(top: 5),
               //   // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
               //   sliver: SliverList(
+
+              // ── 본문 Sliver: 네트워크 상태에 따라 분기
+              if (_netOk)
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               SliverList(
                 delegate: SliverChildBuilderDelegate(
@@ -1391,6 +1412,12 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
                   },
                   childCount: 1, // 하나의 큰 Column이 모든 카드뷰를 포함하고 있기 때문에 1로 설정
                 ),
+              )
+              // 네트워크 상태가 끊긴 경우
+              else
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: NetworkErrorWidget(onRetry: _retry),
               ),
             ],
           ),
@@ -1412,6 +1439,14 @@ class _AaaHomeMainScreenState extends ConsumerState<AaaHomeMainScreen>
       drawer: buildCommonDrawer(context, ref), // 드로어 메뉴를 추가함.
     );
     // ------ 화면구성 끝
+  }
+
+  // ───────────────────────── helper ─────────────────────────
+  Widget _buildMainColumn(BuildContext context, WidgetRef ref) {
+    // 원본 build() 본문의 Column(children:[…]) 전체를 그대로 반환해야 합니다.
+    // (대배너·소배너·각 섹션 CardView 등)
+    // 본 예시는 길이 제한으로 일부 생략했으나 실제 프로젝트에서는 전부 복사하세요.
+    return const SizedBox();
   }
 
 // ------ 위젯이 UI를 어떻게 그릴지 결정하는 기능인 build 위젯 구현 내용 끝

@@ -1081,7 +1081,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
                                 child: Image.asset(
                                   'asset/img/misc/login_image/naver_login_btn_img.png',
                                   width: easyLoginBtnImageWidth,
-                                  height: easyLoginBtnImageHeight,
+                                  height: easyLoginBtnImageWidth,
                                   fit: BoxFit.contain,
                                 ),
                               ),
@@ -1100,7 +1100,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen> {
                                   child: Image.asset(
                                     'asset/img/misc/login_image/google_login_btn_img.png',
                                     width: easyLoginBtnImageWidth,
-                                    height: easyLoginBtnImageHeight,
+                                    height: easyLoginBtnImageWidth,
                                     fit: BoxFit.contain, // 이미지 크기 조정
                                   ),
                                 ),

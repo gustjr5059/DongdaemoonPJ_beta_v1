@@ -223,49 +223,54 @@ class _SplashScreenState extends ConsumerState<SplashScreen1>
 
     // 화면의 UI를 구성함.
     return Scaffold(
-      // body에 바로 CustomScrollView 배치
-      body: CustomScrollView(
-        slivers: [
-          // SliverFillRemaining:
-          // 남은 화면 전체를 차지하기 때문에
-          // 배경 이미지를 상하단까지 완전히 채울 수 있음.
-          SliverFillRemaining(
-            // 만약 스크롤이 필요 없고, 화면을 '정적으로' 채우기만 한다면
-            // hasScrollBody: false 를 사용해서 내용이 화면보다 작을 때 스크롤이 비활성화되도록 할 수 있음
-            hasScrollBody: false,
-            child: Stack(
-              children: [
-                // 배경 이미지
-                Positioned.fill(
-                  child: Image.asset(
-                    'asset/img/misc/splash_image/wearcano_splash1_bg_img.png',
-                    // 배경 이미지를 SVG로 설정
-                    fit: BoxFit.cover, // 화면 전체에 맞게 조정
-                    width: screenSize.width, // 화면 너비
-                    height: screenSize.height, // 화면 높이
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter, // 하단 중앙에 배치함.
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: screenX),
-                    // 하단에서부터 100의 여백을 줌.
-                    child: AnimatedBuilder(
-                      animation: _rotationAnimation,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: _rotationAnimation.value * 2 * 3.14,
-                          child: child,
-                        );
-                      },
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(ORANGE56_COLOR),
+      body: Stack(
+        children: [
+          // 1) 배경 이미지 전체
+          Positioned.fill(
+            child: Image.asset(
+              'asset/img/misc/splash_image/wearcano_splash1_bg_img.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // 2) 메인 콘텐츠 – SafeArea + ScrollView 구조
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                      minWidth: constraints.maxWidth, // 너비도 강제
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          const Spacer(), // 중앙 영역 비우기 (Splash1은 로딩만 하단 배치)
+                          Padding(
+                            padding: EdgeInsets.only(bottom: screenX),
+                            // 하단에서부터 100의 여백을 줌.
+                            child: AnimatedBuilder(
+                              animation: _rotationAnimation,
+                              builder: (context, child) {
+                                return Transform.rotate(
+                                  angle: _rotationAnimation.value * 2 * 3.14,
+                                  child: child,
+                                );
+                              },
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    ORANGE56_COLOR),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ],
