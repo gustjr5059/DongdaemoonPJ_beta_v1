@@ -49,6 +49,8 @@ import '../provider/aad_home_all_providers.dart';
 // 홈 화면의 상태를 관리하기 위한 Provider 파일을 임포트합니다.
 import '../provider/aad_home_state_provider.dart';
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
@@ -66,7 +68,7 @@ class AadHomeMainScreen extends ConsumerStatefulWidget {
 // _AadHomeMainScreenState 클래스는 AadHomeMainScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _AadHomeMainScreenState extends ConsumerState<AadHomeMainScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware  {
   // 큰 배너를 위한 페이지 컨트롤러
   late PageController _largeBannerPageController;
 
@@ -441,8 +443,9 @@ class _AadHomeMainScreenState extends ConsumerState<AadHomeMainScreen>
       onStatusChange: (ok) {
         if (mounted) setState(() => _netOk = ok);
       },
-    );
-    _networkChecker?.checkNetworkStatus();
+    )
+      ..checkNetworkStatus()    // 실시간 스트림
+      ..checkInitialStatus();    // 최초 진입도 즉시 검사
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -469,9 +472,16 @@ class _AadHomeMainScreenState extends ConsumerState<AadHomeMainScreen>
       _small3BannerAutoScroll.stopAutoScroll();
     }
   }
-
   // ------ 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);   // 구독
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -511,8 +521,18 @@ class _AadHomeMainScreenState extends ConsumerState<AadHomeMainScreen>
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 끝 부분
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝

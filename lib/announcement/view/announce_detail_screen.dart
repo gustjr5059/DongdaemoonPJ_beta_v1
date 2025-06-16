@@ -48,6 +48,8 @@ import '../layout/announce_body_parts_layout.dart';
 import '../provider/announce_all_provider.dart';
 import '../provider/announce_state_provider.dart';
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
@@ -68,7 +70,7 @@ class AnnounceDetailScreen extends ConsumerStatefulWidget {
 // _AnnounceDetailScreenState 클래스는 AnnounceDetailScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -93,6 +95,14 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
       announceDetailScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+  bool _netOk = true; // 네트워크 연결된 상태 여부
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -159,9 +169,17 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    // 네트워크 체크 시작 – widget 모드
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.widget,
+      autoRecover: false, // '다시 시도하기' 누를 때만 복귀
+      onStatusChange: (ok) {
+        if (mounted) setState(() => _netOk = ok);
+      },
+    )
+      ..checkNetworkStatus()    // 실시간 스트림
+      ..checkInitialStatus();    // 최초 진입도 즉시 검사
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
@@ -174,8 +192,15 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
       updateStatusBar();
     }
   }
-
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);   // 구독
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -192,8 +217,18 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 끝 부분
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
@@ -242,19 +277,24 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
     // AppBar 관련 수치 동적 적용
-    final double announceDtAppBarTitleWidth = screenSize.width * (240 / referenceWidth);
+    final double announceDtAppBarTitleWidth =
+        screenSize.width * (240 / referenceWidth);
     final double announceDtAppBarTitleHeight = 22;
-    final double announceDtAppBarTitleX = screenSize.width * (5 / referenceHeight);
+    final double announceDtAppBarTitleX =
+        screenSize.width * (5 / referenceHeight);
     final double announceDtAppBarTitleY = 11;
 
     // body 부분 데이터 내용의 전체 패딩 수치
-    final double announceDtlistPaddingX = screenSize.width * (17 / referenceWidth);
+    final double announceDtlistPaddingX =
+        screenSize.width * (17 / referenceWidth);
     final double announceDtlistPaddingY = 8;
 
     // 이전화면으로 이동 아이콘 관련 수치 동적 적용
-    final double announceDtChevronIconWidth = screenSize.width * (24 / referenceWidth);
+    final double announceDtChevronIconWidth =
+        screenSize.width * (24 / referenceWidth);
     final double announceDtChevronIconHeight = 24;
-    final double announceDtChevronIconX = screenSize.width * (10 / referenceWidth);
+    final double announceDtChevronIconX =
+        screenSize.width * (10 / referenceWidth);
     final double announceDtChevronIconY = 9;
 
     // 공지사항이 비어있는 경우의 알림 부분 수치임
@@ -310,94 +350,108 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                 leading: null,
                 // backgroundColor: BUTTON_COLOR,
               ),
-              // 실제 컨텐츠를 나타내는 슬리버 리스트
-              // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
-              // 상단에 5픽셀의 여백을 추가하는 SliverPadding 위젯.
-              SliverPadding(
-                padding: EdgeInsets.only(top: 5),
-                // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
-                sliver: Consumer(
-                  // Consumer 위젯은 Riverpod 상태 관리 값을 구독하는 역할을 함.
-                  builder: (context, ref, child) {
-                    // announceDetailItemProvider를 사용해 공지사항 상세 아이템을 구독함.
-                    final announceDetailItem = ref
-                        .watch(announceDetailItemProvider(widget.documentId));
-                    final isLoading = ref.watch(isLoadingProvider);
-                    // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
-                    // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
-                    // loading: (), error: (err, stack)를 구분해서 구현 못함
-                    // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
-                    // 로딩 표시는 아래의 (announceDetailItem.isEmpty && isLoading) 경우로 표시함
 
-                    // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
-                    if (announceDetailItem.isEmpty && isLoading) {
-                      // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
-                      return SliverToBoxAdapter(
-                        // 전체 컨테이너를 설정
-                        child: Container(
-                          height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
-                          alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
-                          child: buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
-                        ),
-                      );
-                    }
+              // ── 본문 Sliver: 네트워크 상태에 따라 분기
+              if (_netOk)
+                // 실제 컨텐츠를 나타내는 슬리버 리스트
+                // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
+                // 상단에 5픽셀의 여백을 추가하는 SliverPadding 위젯.
+                SliverPadding(
+                  padding: EdgeInsets.only(top: 5),
+                  // SliverList를 사용하여 목록 아이템을 동적으로 생성함.
+                  sliver: Consumer(
+                    // Consumer 위젯은 Riverpod 상태 관리 값을 구독하는 역할을 함.
+                    builder: (context, ref, child) {
+                      // announceDetailItemProvider를 사용해 공지사항 상세 아이템을 구독함.
+                      final announceDetailItem = ref
+                          .watch(announceDetailItemProvider(widget.documentId));
+                      final isLoading = ref.watch(isLoadingProvider);
+                      // 공지사항 목록이 비어있으면 '현재 공지사항이 없습니다.'라는 텍스트를 출력함.
+                      // StateNotifierProvider를 사용한 로직에서는 AsyncValue를 사용하여 상태를 처리할 수 없으므로
+                      // loading: (), error: (err, stack)를 구분해서 구현 못함
+                      // 그래서, 이렇게 isEmpty 경우로 해서 구현하면 error와 동일하게 구현은 됨
+                      // 로딩 표시는 아래의 (announceDetailItem.isEmpty && isLoading) 경우로 표시함
 
-                    // 데이터가 비어 있는 경우
-                    return announceDetailItem.isEmpty
-                        ? SliverToBoxAdapter(
-                            // 공지사항이 없을 때, 텍스트가 포함된 컨테이너를 화면에 표시함.
-                            child: Container(
-                              // 공지사항 비어있을 때 텍스트의 너비를 설정함.
-                              width: announcementDetailEmptyTextWidth,
-                              // 공지사항 비어있을 때 텍스트의 높이를 설정함.
-                              height: announcementDetailEmptyTextHeight,
-                              // 텍스트의 위치를 화면 상단으로부터 조정함.
-                              margin: EdgeInsets.only(
-                                  top: announcementDetailEmptyTextY),
-                              // 텍스트를 중앙에 위치하도록 설정함.
-                              alignment: Alignment.center,
-                              // '에러가 발생했으니, 앱을 재실행해주세요.'라는 텍스트를 표시함.
-                              child: Text(
-                                '에러가 발생했으니, 앱을 재실행해주세요.',
-                                style: TextStyle(
-                                  // 텍스트의 폰트 크기를 설정함.
-                                  fontSize: announcementDetailEmptyTextFontSize,
-                                  // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                                  fontFamily: 'NanumGothic',
-                                  // 폰트 굵기를 'bold'로 설정함.
-                                  fontWeight: FontWeight.bold,
-                                  // 텍스트 색상을 검은색으로 설정함.
-                                  color: BLACK_COLOR,
+                      // 데이터가 비어 있고 로딩 중일 때 로딩 인디케이터 표시
+                      if (announceDetailItem.isEmpty && isLoading) {
+                        // SliverToBoxAdapter 위젯을 사용하여 리스트의 단일 항목을 삽입함
+                        return SliverToBoxAdapter(
+                          // 전체 컨테이너를 설정
+                          child: Container(
+                            height: screenSize.height * 0.7, // 화면 높이의 70%로 설정함
+                            alignment: Alignment.center, // 컨테이너 안의 내용물을 중앙 정렬함
+                            child:
+                                buildCommonLoadingIndicator(), // 로딩 인디케이터를 표시함
+                          ),
+                        );
+                      }
+
+                      // 데이터가 비어 있는 경우
+                      return announceDetailItem.isEmpty
+                          ? SliverToBoxAdapter(
+                              // 공지사항이 없을 때, 텍스트가 포함된 컨테이너를 화면에 표시함.
+                              child: Container(
+                                // 공지사항 비어있을 때 텍스트의 너비를 설정함.
+                                width: announcementDetailEmptyTextWidth,
+                                // 공지사항 비어있을 때 텍스트의 높이를 설정함.
+                                height: announcementDetailEmptyTextHeight,
+                                // 텍스트의 위치를 화면 상단으로부터 조정함.
+                                margin: EdgeInsets.only(
+                                    top: announcementDetailEmptyTextY),
+                                // 텍스트를 중앙에 위치하도록 설정함.
+                                alignment: Alignment.center,
+                                // '에러가 발생했으니, 앱을 재실행해주세요.'라는 텍스트를 표시함.
+                                child: Text(
+                                  '에러가 발생했으니, 앱을 재실행해주세요.',
+                                  style: TextStyle(
+                                    // 텍스트의 폰트 크기를 설정함.
+                                    fontSize:
+                                        announcementDetailEmptyTextFontSize,
+                                    // 폰트 패밀리를 'NanumGothic'으로 설정함.
+                                    fontFamily: 'NanumGothic',
+                                    // 폰트 굵기를 'bold'로 설정함.
+                                    fontWeight: FontWeight.bold,
+                                    // 텍스트 색상을 검은색으로 설정함.
+                                    color: BLACK_COLOR,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        // 공지사항 상세에 아이템이 있을 경우, SliverList로 아이템을 표시함.
-                        : SliverList(
-                            // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                // 각 항목을 패딩으로 감싸 좌우 간격을 announceDtlistPaddingX로 설정함.
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: announceDtlistPaddingX),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: announceDtlistPaddingY),
-                                      // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
-                                      AnnounceDetailBodyPartsLayout(
-                                          documentId: widget.documentId),
-                                      SizedBox(height: announceDtlistPaddingY),
-                                    ],
-                                  ),
-                                );
-                              },
-                              // 전체 아이템을 하나의 큰 Column으로 구성하기 때문에 childCount를 1로 설정함.
-                              childCount: 1,
-                            ),
-                          );
-                  },
+                            )
+                          // 공지사항 상세에 아이템이 있을 경우, SliverList로 아이템을 표시함.
+                          : SliverList(
+                              // SliverChildBuilderDelegate를 사용하여 각 항목을 빌드함.
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                                  // 각 항목을 패딩으로 감싸 좌우 간격을 announceDtlistPaddingX로 설정함.
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: announceDtlistPaddingX),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                            height: announceDtlistPaddingY),
+                                        // AnnounceDetailBodyPartsLayout을 재사용하여 공지사항 상세 내용을 표시함.
+                                        AnnounceDetailBodyPartsLayout(
+                                            documentId: widget.documentId),
+                                        SizedBox(
+                                            height: announceDtlistPaddingY),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                // 전체 아이템을 하나의 큰 Column으로 구성하기 때문에 childCount를 1로 설정함.
+                                childCount: 1,
+                              ),
+                            );
+                    },
+                  ),
+                )
+              // 네트워크 상태가 끊긴 경우
+              else
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: NetworkErrorWidget(onRetry: _retry),
                 ),
-              ),
             ],
           ),
           buildTopButton(context, announceDetailScreenPointScrollController),

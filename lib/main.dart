@@ -23,6 +23,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // 상태 관리 라이브러리 Riverpod 관련 패키지
 // 애플리케이션의 초기 스크린을 정의하는 스플래시 스크린 뷰 파일을 임포트합니다.
 // 이 스크린은 앱이 로딩되는 동안 사용자에게 보여지며, 첫 인상을 형성하는 중요한 역할을 합니다.
+import 'common/route_observer.dart';
 import 'common/view/splash1_error_screen.dart';
 import 'common/view/splash1_screen.dart';
 
@@ -31,6 +32,7 @@ import 'common/view/splash1_screen.dart';
 // Firebase 서비스를 사용하기 위한 필수적인 API 키, 프로젝트 ID 등의 정보가 이 파일에 정의되어 있습니다.
 import 'firebase_options.dart';
 import 'message/view/message_screen.dart'; // Firebase 초기 설정 관련 패키지 (firebase_cli를 통해 생성된 파일)
+
 
 // Firebase 초기화 코드
 // (Firebase와 Flutter 프로젝트를 연동하여 Firebase 서비스를 사용할 수 있게 함)
@@ -117,6 +119,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // 디버그 배너 숨김
+      // 모든 네비게이터 라우트 전환을 관찰하기 위해 RouteObserver 연결
+      navigatorObservers: [routeObserver],
       // Firebase가 연결되어 있으면 SplashScreen1()을 홈 화면으로 설정
       // Firebase가 연결되지 않았거나 네트워크가 끊긴 경우 SplashErrorScreen1()을 홈 화면으로 설정
       home: _isFirebaseConnected ? SplashScreen1() : SplashErrorScreen1(), // Firebase 연결 상태에 따라 화면 전환

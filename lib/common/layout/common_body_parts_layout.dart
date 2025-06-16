@@ -1076,6 +1076,24 @@ class NetworkChecker {
   }
   // ——— 네트워크 상태 실시간 감지 리스너 등록 함수 끝 부분
 
+  // ——— 최초 진입 시 상태를 한 번 즉시 점검 관련 부분 시작
+  Future<void> checkInitialStatus() async {
+    final ok = await isConnected();
+    if (ok) return;                       // 연결 정상 → 아무 것도 안 함
+
+    if (mode == NetHandleMode.dialog) {
+      if (!_dialogVisible && _isTopMost) {
+        _dialogVisible = true;
+        await showNetworkErrorDialog();    // 팝업 표시
+        _dialogVisible = false;
+      }
+    } else {
+      _errorVisible = true;
+      onStatusChange?.call(false);         // 위젯 모드 -> 에러화면 요청
+    }
+  }
+  // ——— 최초 진입 시 상태를 한 번 즉시 점검 관련 부분 끝
+
   // ——— 현재 페이지가 화면의 최상단인지 여부 확인 함수 시작 부분
   bool get _isTopMost => (ModalRoute.of(context)?.isCurrent ?? true);
   // ——— 현재 페이지가 화면의 최상단인지 여부 확인 함수 끝 부분
