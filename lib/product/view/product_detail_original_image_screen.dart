@@ -21,7 +21,8 @@ class ProductDetailOriginalImageScreen extends ConsumerStatefulWidget { // Consu
   _ProductDetailOriginalImageScreenState createState() => _ProductDetailOriginalImageScreenState();
 }
 
-class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetailOriginalImageScreen> {
+class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetailOriginalImageScreen>
+    with WidgetsBindingObserver, RouteAware {
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
@@ -35,9 +36,22 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
     });
 
     // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.dialog,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+    )
+      ..checkNetworkStatus()        // 실시간 스트림 구독
+      ..checkInitialStatus();       // 첫 진입 때도 즉시 검사
   }
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() { // 라우트 구독
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -45,8 +59,19 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
+  // ---- 다른 페이지에서 pop 하여 ‘다시 Top’ 이 됐을 때 콜백 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- 다른 페이지에서 pop 하여 ‘다시 Top’ 이 됐을 때 콜백 끝 부분
+
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   @override

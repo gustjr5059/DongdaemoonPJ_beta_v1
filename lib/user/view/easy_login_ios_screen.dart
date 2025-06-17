@@ -30,7 +30,8 @@ class EasyLoginIosScreen extends ConsumerStatefulWidget {
   _EasyLoginIosScreenState createState() => _EasyLoginIosScreenState();
 }
 
-class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
+class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen>
+    with WidgetsBindingObserver, RouteAware {
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
 
   bool isLoading = false; // 로딩 상태를 관리하는 변수
@@ -45,8 +46,13 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
   void initState() {
     super.initState();
     // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.dialog,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+    )
+      ..checkNetworkStatus()        // 실시간 스트림 구독
+      ..checkInitialStatus();       // 첫 진입 때도 즉시 검사
 
     // 위젯이 렌더링된 후 애플 로그인 상태를 확인하는 콜백 함수
     // (회원가입 화면에서 이전화면으로 이동 버튼 클릭 시, 해당 로그인 화면으로 이동하지 않는 이슈 해결 로직)
@@ -58,13 +64,32 @@ class _EasyLoginIosScreenState extends ConsumerState<EasyLoginIosScreen> {
     });
   }
 
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() { // 라우트 구독
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+  // ---- RouteObserver 구독 부분 끝
+
   @override
   void dispose() {
+
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose();
   }
+
+  // ---- 다른 페이지에서 pop 하여 ‘다시 Top’ 이 됐을 때 콜백 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- 다른 페이지에서 pop 하여 ‘다시 Top’ 이 됐을 때 콜백 끝 부분
 
   // appleLoginState(로그인 진행 상황)에 따라 UI에서 네비게이션/알림 처리
   void _listenAppleLoginState(BuildContext context, AppleSignInState state) {

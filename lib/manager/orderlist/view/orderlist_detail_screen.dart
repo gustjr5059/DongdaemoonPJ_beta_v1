@@ -55,7 +55,7 @@ class AdminOrderListDetailScreen extends ConsumerStatefulWidget {
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _AdminOrderListDetailScreenState
     extends ConsumerState<AdminOrderListDetailScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware  {
 // FirebaseAuth에서 로그인된 사용자의 이메일을 가져와서 해당 변수에 할당함
 // 가져온 이메일을 매개변수로 활용하여 Firestore 쿼리 등에 사용할 수 있음
 
@@ -83,6 +83,14 @@ class _AdminOrderListDetailScreenState
       adminOrderListDetailScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+  bool _netOk = true; // 네트워크 연결된 상태 여부
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -135,11 +143,18 @@ class _AdminOrderListDetailScreenState
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    // 네트워크 체크 시작 – widget 모드
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.widget,
+      autoRecover: false, // '다시 시도하기' 누를 때만 복귀
+      onStatusChange: (ok) {
+        if (mounted) setState(() => _netOk = ok);
+      },
+    )
+      ..checkNetworkStatus()    // 실시간 스트림
+      ..checkInitialStatus();    // 최초 진입도 즉시 검사
   }
-
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   // didChangeAppLifecycleState 함수 관련 구현 내용 시작
@@ -150,8 +165,15 @@ class _AdminOrderListDetailScreenState
       updateStatusBar();
     }
   }
-
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);   // 구독
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -169,8 +191,18 @@ class _AdminOrderListDetailScreenState
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 끝 부분
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝
@@ -352,6 +384,8 @@ class _AdminOrderListDetailScreenState
                 // SliverAppBar 배경색 설정  // AppBar 배경을 투명하게 설정 -> 투명하게 해서 스크롤 내리면 다른 컨텐츠가 비쳐서 보이는 것!!
                 // backgroundColor: BUTTON_COLOR,
               ),
+              // ── 본문 Sliver: 네트워크 상태에 따라 분기
+              if (_netOk)
               // 실제 컨텐츠를 나타내는 슬리버 리스트
               // 슬리버 패딩을 추가하여 위젯 간 간격 조정함.
               SliverPadding(
@@ -438,7 +472,13 @@ class _AdminOrderListDetailScreenState
                           );
                   },
                 ),
-              ),
+              )
+              // 네트워크 상태가 끊긴 경우
+              else
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: NetworkErrorWidget(onRetry: _retry),
+                ),
             ],
           ),
           // buildTopButton 함수는 주어진 context와 adminOrderListDetailScreenPointScrollController를 사용하여

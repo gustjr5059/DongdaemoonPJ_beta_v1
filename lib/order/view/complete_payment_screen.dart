@@ -76,7 +76,7 @@ class CompletePaymentScreen extends ConsumerStatefulWidget {
 // _CompletePaymentScreenState 클래스는 CompletePaymentScreen 위젯의 상태를 관리함.
 // WidgetsBindingObserver 믹스인을 통해 앱 생명주기 상태 변화를 감시함.
 class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware  {
   // 사용자 인증 상태 변경을 감지하는 스트림 구독 객체임.
   // 이를 통해 사용자 로그인 또는 로그아웃 상태 변경을 실시간으로 감지하고 처리할 수 있음.
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -88,6 +88,14 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
       completePaymentScreenPointScrollController; // 스크롤 컨트롤러 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+  bool _netOk = true; // 네트워크 연결된 상태 여부
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)
@@ -141,9 +149,17 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    // 네트워크 체크 시작 – widget 모드
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.widget,
+      autoRecover: false, // '다시 시도하기' 누를 때만 복귀
+      onStatusChange: (ok) {
+        if (mounted) setState(() => _netOk = ok);
+      },
+    )
+      ..checkNetworkStatus()    // 실시간 스트림
+      ..checkInitialStatus();    // 최초 진입도 즉시 검사
 
     // CompletePaymentScreen에 도착한 후 다이얼로그 표시 (이러기 위해서는 addPostFrameCallback 이게 필요함!!)
     // 원래는 업데이트 요청 화면에서 '업데이트 요청하기' 버튼 클릭 -> '예' 버튼 클릭하면 해당 로직에서 해당 알림창을 띄우는 로직을 구현하려고
@@ -172,7 +188,6 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
       );
     });
   }
-
   // 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)
 
   // 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
@@ -184,9 +199,16 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
       updateStatusBar();
     }
   }
-
   // 페이지 뷰 자동 스크롤 타이머 함수인 startAutoScrollTimer() 시작 및 정지 관린 함수인
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);   // 구독
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   // 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -203,8 +225,18 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose(); // 위젯의 기본 정리 작업 수행
   }
+
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 끝 부분
 
   // 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // 앱 실행 생명주기 관리 관련 함수 끝
@@ -358,6 +390,8 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                     leading: null,
                     // backgroundColor: BUTTON_COLOR, // 앱바 배경 색상 설정
                   ),
+                  // ── 본문 Sliver: 네트워크 상태에 따라 분기
+                  if (_netOk)
                   SliverPadding(
                     padding: EdgeInsets.only(top: 0), // 패딩 설정
                     sliver: Consumer(
@@ -410,7 +444,13 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                         );
                       },
                     ),
-                  ),
+                  )
+                  // 네트워크 상태가 끊긴 경우
+                  else
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: NetworkErrorWidget(onRetry: _retry),
+                    ),
                 ],
               ),
               // buildTopButton 함수는 주어진 context와 completePaymentScreenPointScrollController를 사용하여

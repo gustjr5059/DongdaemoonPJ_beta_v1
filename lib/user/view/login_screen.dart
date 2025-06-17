@@ -30,7 +30,8 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with WidgetsBindingObserver, RouteAware {
   // FirebaseAuth 인스턴스 초기화
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -67,8 +68,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void initState() {
     super.initState();
     // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.dialog,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+    )
+      ..checkNetworkStatus()        // 실시간 스트림 구독
+      ..checkInitialStatus();       // 첫 진입 때도 즉시 검사
     _checkNetworkAndLoadAutoLogin();
 
     // 이메일 필드에 포커스가 생기면 오류 메시지를 초기화
@@ -104,6 +110,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() { // 라우트 구독
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+  // ---- RouteObserver 구독 부분 끝
+
   @override
   void dispose() {
     // 포커스 노드 해제
@@ -113,8 +127,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose();
   }
+
+  // ---- 다른 페이지에서 pop 하여 ‘다시 Top’ 이 됐을 때 콜백 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- 다른 페이지에서 pop 하여 ‘다시 Top’ 이 됐을 때 콜백 끝 부분
 
 // 로그인 함수
   void _login() async {

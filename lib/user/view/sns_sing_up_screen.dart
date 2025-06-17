@@ -36,7 +36,7 @@ class SnsSignUpScreen extends ConsumerStatefulWidget {
 }
 
 class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware  {
   // ------ 입력 필드 및 상태 관리 변수 초기화 ------
   late final TextEditingController _snsIdController; // SNS ID 입력 필드 컨트롤러
   final TextEditingController _nameController =
@@ -93,9 +93,14 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     // 상태표시줄 색상을 안드로이드와 ios 버전에 맞춰서 변경하는데 사용되는 함수-앱 실행 생명주기에 맞춰서 변경
     updateStatusBar();
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    // 네트워크 체크 시작
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.dialog,
+      autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
+    )
+      ..checkNetworkStatus()        // 실시간 스트림 구독
+      ..checkInitialStatus();       // 첫 진입 때도 즉시 검사
 
     // 이메일 입력 필드 포커스 리스너 추가 (유효성 체크)
     _emailFocusNode.addListener(() {
@@ -195,8 +200,15 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
       updateStatusBar();
     }
   }
-
   // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);   // 구독
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 시작 (앱 실행 생명주기 관련 함수)
   @override
@@ -220,8 +232,18 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose();
   }
+
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 시작 부분
+  @override
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
+  }
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 끝 부분
 
   // ------ 기능 실행 중인 위젯 및 함수 종료하는 제거 관련 함수 구현 내용 끝 (앱 실행 생명주기 관련 함수)
   // ------ 앱 실행 생명주기 관리 관련 함수 끝

@@ -326,7 +326,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
       autoRecover: false,        // '다시 시도하기' 누를 때만 복귀
     )
       ..checkNetworkStatus()        // 실시간 스트림 구독
-      ..checkInitialStatus();       // ★ 첫 진입 때도 즉시 검사
+      ..checkInitialStatus();       // 첫 진입 때도 즉시 검사
   }
 
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 끝 (앱 실행 생명주기 관련 함수)

@@ -46,11 +46,19 @@ class OrderPostcodeSearchScreen extends ConsumerStatefulWidget {
   _OrderPostcodeSearchScreenState createState() => _OrderPostcodeSearchScreenState();
 }
 
-class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchScreen> with WidgetsBindingObserver {
+class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchScreen> with WidgetsBindingObserver, RouteAware  {
   late WebViewController _webViewController; // WebView 컨트롤러를 저장할 변수 선언
   late ScrollController orderPostcodeSearchScreenPointScrollController; // 스크롤 컨트롤러 변수 선언
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
+  bool _netOk = true; // 네트워크 연결된 상태 여부
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   StreamSubscription<User?>? authStateChangesSubscription; // 인증 상태 변화를 감지하는 스트림 구독 변수 선언
 
@@ -64,10 +72,36 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
 
     updateStatusBar(); // 앱이 다시 활성화되었을 때 상태바 업데이트
 
-    // 네트워크 상태 체크 시작
-    _networkChecker = NetworkChecker(context);
-    _networkChecker?.checkNetworkStatus();
+    // 네트워크 체크 시작 – widget 모드
+    _networkChecker = NetworkChecker(
+      context,
+      mode: NetHandleMode.widget,
+      autoRecover: false, // '다시 시도하기' 누를 때만 복귀
+      onStatusChange: (ok) {
+        if (mounted) setState(() => _netOk = ok);
+      },
+    )
+      ..checkNetworkStatus()    // 실시간 스트림
+      ..checkInitialStatus();    // 최초 진입도 즉시 검사
   }
+
+  // didChangeAppLifecycleState 함수 관련 구현 내용 시작
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      updateStatusBar();
+    }
+  }
+  // didChangeAppLifecycleState 함수 관련 구현 내용 끝
+
+  // ---- RouteObserver 구독 부분 시작
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);   // 구독
+  }
+  // ---- RouteObserver 구독 부분 끝
 
   @override
   void dispose() {
@@ -78,16 +112,18 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
     // 네트워크 체크 해제
     _networkChecker?.dispose();
 
+    // RouteObserver 해제
+    routeObserver.unsubscribe(this);
+
     super.dispose();
   }
 
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 시작 부분
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      updateStatusBar(); // 앱이 다시 활성화되었을 때 상태바 업데이트
-    }
+  void didPopNext() {
+    _networkChecker?.checkInitialStatus(); // 즉시 네트워크 재점검
   }
+  // ---- “뒤로가기” 등으로 화면이 다시 보일 때 호출되는 훅 끝 부분
 
   // HTML 파일을 로드하여 WebView에 표시하는 함수
   void _loadHtmlFromAssets() async {
@@ -161,6 +197,8 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
                   leading: null, // 기본 뒤로가기 버튼 비활성화
                   // backgroundColor: BUTTON_COLOR, // AppBar 배경색 설정
                 ),
+                // ── 본문 Sliver: 네트워크 상태에 따라 분기
+                if (_netOk)
                 SliverFillRemaining(
                   hasScrollBody: false, // 스크롤 가능 여부 설정
                   child: Padding(
@@ -182,7 +220,13 @@ class _OrderPostcodeSearchScreenState extends ConsumerState<OrderPostcodeSearchS
                       ],
                     ),
                   ),
-                ),
+                )
+                // 네트워크 상태가 끊긴 경우
+                else
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: NetworkErrorWidget(onRetry: _retry),
+                  ),
               ],
             ),
             buildTopButton(context, orderPostcodeSearchScreenPointScrollController), // 상단 버튼 빌드 함수 호출
