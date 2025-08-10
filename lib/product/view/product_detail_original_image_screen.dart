@@ -7,6 +7,8 @@ import '../../common/const/colors.dart'; // 색상 상수 파일 임포트
 import '../../common/layout/common_body_parts_layout.dart';
 import '../provider/product_state_provider.dart'; // 상태 프로바이더 파일 임포트
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 class ProductDetailOriginalImageScreen extends ConsumerStatefulWidget { // ConsumerStatefulWidget을 상속받는 클래스 선언
   final List<String> images; // 이미지 리스트
   final int initialPage; // 초기 페이지 인덱스

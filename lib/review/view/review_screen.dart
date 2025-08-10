@@ -49,6 +49,8 @@ import '../layout/review_body_parts_layout.dart';
 import '../provider/review_all_provider.dart';
 import '../provider/review_state_provider.dart';
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용 권장
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안될 수 있기 때문에 로컬 context를 사용하는 것이 좋음
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용을 권장함
@@ -97,6 +99,13 @@ class _PrivateReviewMainScreenState
 
   NetworkChecker? _networkChecker; // NetworkChecker 인스턴스 저장
   bool _netOk = true; // 네트워크 연결된 상태 여부
+
+  // ----- 재시도 버튼에서 호출 내용 시작
+  void _retry() async {
+    final ok = await _networkChecker?.isConnected() ?? false;
+    if (mounted && ok) setState(() => _netOk = true);
+  }
+  // ----- 재시도 버튼에서 호출 내용 끝
 
   // ------ 앱 실행 생명주기 관리 관련 함수 시작
   // ------ 페이지 초기 설정 기능인 initState() 함수 관련 구현 내용 시작 (앱 실행 생명주기 관련 함수)

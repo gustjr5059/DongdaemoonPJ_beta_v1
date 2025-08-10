@@ -1,7 +1,7 @@
 // Flutter에서 제공하는 Material 디자인 위젯을 사용하기 위해 필수적인 패키지입니다.
 // 이 패키지는 애플리케이션의 시각적 구성 요소들을 제공하며, UI 구축의 기본이 됩니다.
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dongdaemoon_beta_v1/user/view/sns_sing_up_screen.dart';
+import 'package:dongdaemoon_beta_v1/user/view/sns_sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
@@ -20,6 +20,8 @@ import '../../common/layout/common_body_parts_layout.dart';
 import '../../home/view/main_home_screen.dart';
 import '../../user/view/login_screen.dart';
 import '../provider/sns_login_and_sign_up_state_provider.dart'; // 로그인 화면으로 이동하기 위한 LoginScreen 임포트
+
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
 
 // ------ IOS용 간편 로그인 화면 UI 구현 관련 EasyLoginIosScreen 시작 부분
 class EasyLoginIosScreen extends ConsumerStatefulWidget {

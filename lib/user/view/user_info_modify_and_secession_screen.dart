@@ -28,6 +28,8 @@ as KoreanFilter; // 별칭 설정 (korean_profanity_filter 패키지 임포트)
 import 'package:profanity_filter/profanity_filter.dart'
 as EnglishFilter;
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용

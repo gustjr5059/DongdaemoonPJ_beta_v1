@@ -13,6 +13,8 @@ as KoreanFilter; // 별칭 설정 (korean_profanity_filter 패키지 임포트)
 import 'package:profanity_filter/profanity_filter.dart'
 as EnglishFilter; // 별칭 설정 (profanity_filter 패키지 임포트)
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 // ------ 회원가입 화면 클래스 시작 ------
 class SnsSignUpScreen extends ConsumerStatefulWidget {
   final String snsType; // 'apple' 또는 'google'

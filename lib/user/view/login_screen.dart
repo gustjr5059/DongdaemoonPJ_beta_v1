@@ -19,6 +19,8 @@ import '../../home/view/main_home_screen.dart';
 import '../../product/layout/product_body_parts_layout.dart';
 import '../provider/user_me_provider.dart';
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 // ------- 로그인 화면 관련 클래스인 LoginScreen 내용 부분 시작
 class LoginScreen extends ConsumerStatefulWidget {
   // 라우트 이름 정의

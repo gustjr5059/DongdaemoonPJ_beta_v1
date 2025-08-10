@@ -45,6 +45,8 @@ import '../layout/message_body_parts_layout.dart';
 import '../provider/message_all_provider.dart';
 import '../provider/message_state_provider.dart';
 
+import 'package:dongdaemoon_beta_v1/common/route_observer.dart';
+
 // 각 화면에서 Scaffold 위젯을 사용할 때 GlobalKey 대신 로컬 context 사용
 // GlobalKey를 사용하면 여러 위젯에서 사용이 안되는거라 로컬 context를 사용
 // Scaffold 위젯 사용 시 GlobalKey 대신 local context 사용 권장
