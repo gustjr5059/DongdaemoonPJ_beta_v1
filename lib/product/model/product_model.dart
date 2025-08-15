@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore 라
 
 // 상품의 상세 정보를 관리하는 클래스.
 class ProductContent {
-  final String docId; // Firestore에서의 문서 ID를 저장하는 필드.
+  final String docId; // Firestore에서의 문서 ID의 전체 경로를 저장하는 필드.
+  final String? onlyDocId; // Firestore에서의 문서 ID만 저장하는 필드.
   final String? thumbnail; // 제품의 썸네일 이미지 URL을 저장하는 필드.
   final List<String>? colors; // 제품의 색상 목록을 저장하는 필드.
   final String? briefIntroduction; // 제품의 간단한 소개를 저장하는 필드.
@@ -32,6 +33,7 @@ class ProductContent {
   // 클래스의 생성자입니다. 모든 필드를 초기화함.
   ProductContent({
     required this.docId,
+    this.onlyDocId,
     this.thumbnail,
     this.colors,
     this.briefIntroduction,
@@ -65,7 +67,8 @@ class ProductContent {
     if (data == null) {
       // 데이터가 null일 경우 기본값을 반환함.
       return ProductContent(
-        docId: doc.id,
+        docId: doc.reference.path,
+        onlyDocId: doc.id,
         thumbnail: null,
         colors: null,
         briefIntroduction: null,
@@ -177,6 +180,8 @@ class ProductContent {
     return ProductContent(
       docId: doc.reference.path,
       // 전체 경로를 포함하는 문서 ID.
+      onlyDocId: doc.id,
+      // 문서 ID만.
       thumbnail: data['thumbnails'] as String?,
       // 썸네일 URL.
       colors: colors.isEmpty ? null : colors,
@@ -242,6 +247,7 @@ class ProductContent {
   factory ProductContent.fromMap(Map<String, dynamic> map) {
     return ProductContent(
       docId: map['docId'] as String,
+      onlyDocId: map['onlyDocId'] as String?,
       category: map['category'] as String,
       productNumber: map['productNumber'] as String,
       thumbnail: map['thumbnail'] as String?,

@@ -11,6 +11,7 @@ import '../../../../../common/layout/common_body_parts_layout.dart';
 import '../../../../../common/layout/common_exception_parts_of_body_layout.dart';
 import '../../../../../common/provider/common_state_provider.dart';
 import '../../../../../product/layout/product_body_parts_layout.dart';
+import '../../../../../product/model/product_model.dart';
 import '../../../../../product/provider/product_state_provider.dart';
 import '../../../../../review/provider/review_state_provider.dart';
 import '../../../../../wishlist/provider/wishlist_state_provider.dart';
@@ -95,6 +96,10 @@ class _AazNeatDetailProductScreenState
   void initState() {
     super.initState();
     // StateProvider 초기화
+
+    print(
+        "AazNeatDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getImagePageProvider의 상태를 0으로 초기화함.
       ref.read(getImagePageProvider(widget.fullPath).notifier).state = 0;
@@ -380,13 +385,22 @@ class _AazNeatDetailProductScreenState
     final double errorTextHeight = screenSize.height * (600 / referenceHeight);
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
+    // "데이터 로드 완료" 로그: 데이터 상태가 Loading -> Data로 바뀔 때 단 한 번만 실행
+    ref.listen<AsyncValue<ProductContent>>(
+      aazNeatDetailProdFirestoreDataProvider(widget.fullPath),
+          (previous, next) {
+        // 데이터 상태가 로딩 중 -> 데이터 로드 완료로 변경되는 순간에만 로그를 출력합니다.
+        if (next is AsyncData && (previous is AsyncLoading || previous == null)) {
+          print("NeatDetailProductScreen: 제품 데이터 로드 완료 (ref.listen)");
+        }
+      },
+    );
+
     // Firestore 데이터 제공자를 통해 특정 문서 ID(docId)의 상품 데이터를 구독.
     final productContent =
         ref.watch(aazNeatDetailProdFirestoreDataProvider(widget.fullPath));
     final productReviews = ref.watch(productReviewListNotifierProvider(widget.fullPath)); // 리뷰 데이터를 가져옴
 
-    print(
-        "AazNeatDetailProductScreen: 제품 경로에 대한 화면 로드 중: ${widget.fullPath}"); // 디버깅 메시지 추가
 
     // ------ SliverAppBar buildCommonSliverAppBar 함수를 재사용하여 앱 바와 상단 탭 바의 스크롤 시, 상태 변화 동작 시작
     // ------ 기존 buildCommonAppBar 위젯 내용과 동일하며,

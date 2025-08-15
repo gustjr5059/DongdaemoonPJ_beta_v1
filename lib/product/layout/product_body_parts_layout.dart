@@ -559,1219 +559,184 @@ Widget buildHorizontalDocumentsList(
 }
 // ------ buildHorizontalDocumentsList 위젯 내용 구현 끝
 
+
+// ——— typedef DetailBuilder 시작 부분
+// 상세 화면 위젯 팩토리 함수 타입 정의
+// 2025-08-15 lhs
+typedef DetailBuilder = Widget Function(String path, String title);
+// ——— typedef DetailBuilder 끝 부분
+
 // -------- ProductInfoDetailScreenNavigation 클래스 내용 구현 시작
 // 홈 화면과 2차 메인화면(1차 카테고리별 메인화면)에 주로 사용될 예정
 // 상품별 간단하게 데이터를 보여주는 UI 부분과 해당 상품 클릭 시, 상품 상세화면으로 이동하도록 하는 로직
 class ProductInfoDetailScreenNavigation {
+  // ——— ref 필드 시작 부분
+  // Riverpod 상태 접근을 위한 참조자 저장
   final WidgetRef ref; // 상태 관리를 위해 사용되는 ref
+  // ——— ref 필드 끝 부분
 
+  // ——— 생성자 시작 부분
+  // 의존성 주입 형태로 ref 수신
   ProductInfoDetailScreenNavigation(this.ref);
+  // ——— 생성자 끝 부분
 
+  // ——— navigateToDetailScreen() 시작 부분
+  // 상품 카드 클릭 시 상세 화면으로 전환하는 진입 메서드
+  // 1) 상점 코드 추출
+  // 2) 카테고리별 팩토리 선택
+  // 3) 상점 코드에 맞는 상세 화면 위젯 생성 후 push
+  // 4) 복귀 시 상세 화면 관련 상태 초기화 수행
   void navigateToDetailScreen(BuildContext context, ProductContent product) {
-    Widget detailScreen;
-    String appBarTitle;
+    // ——— appBarTitle 계산 시작 부분
+    // 카테고리 기반 타이틀 문자열 구성
+    final String appBarTitle = '${product.category} 상세';
+    // ——— appBarTitle 계산 끝 부분
 
-    String docIdPrefix = product.docId.substring(0, 3);
+    // ——— 상점 코드 추출 시작 부분
+    // onlyDocId(문서 단일 ID)에서 3글자 상점 코드 우선 추출, 없으면 docId 경로의 마지막 세그먼트에서 추출 시도함
+    final String? docIdPrefix = _extractStoreCode(product); // 안전 추출 로직 적용
+    // ——— 상점 코드 추출 끝 부분
 
-    switch (product.category) {
-      case "티셔츠":
-        appBarTitle = '티셔츠 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaShirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
+    // ——— screenFactory 맵 시작 부분
+    // 상점 코드별 상세 화면 위젯 생성 팩토리 맵
+    // 신규 상점 추가 시 한 줄만 등록하도록 단일 책임화
+    final Map<String, DetailBuilder> screenFactory = {
+      'Aaa': (path, title) => AaaShirtDetailProductScreen(fullPath: path, title: title),
+      'Aab': (path, title) => AabShirtDetailProductScreen(fullPath: path, title: title),
+      'Aac': (path, title) => AacShirtDetailProductScreen(fullPath: path, title: title),
+      'Aad': (path, title) => AadShirtDetailProductScreen(fullPath: path, title: title),
+      'Aae': (path, title) => AaeShirtDetailProductScreen(fullPath: path, title: title),
+      'Aaf': (path, title) => AafShirtDetailProductScreen(fullPath: path, title: title),
+      'Aag': (path, title) => AagShirtDetailProductScreen(fullPath: path, title: title),
+      'Aah': (path, title) => AahShirtDetailProductScreen(fullPath: path, title: title),
+      'Aai': (path, title) => AaiShirtDetailProductScreen(fullPath: path, title: title),
+      'Aaj': (path, title) => AajShirtDetailProductScreen(fullPath: path, title: title),
+      'Aak': (path, title) => AakShirtDetailProductScreen(fullPath: path, title: title),
+      'Aal': (path, title) => AalShirtDetailProductScreen(fullPath: path, title: title),
+      'Aam': (path, title) => AamShirtDetailProductScreen(fullPath: path, title: title),
+      'Aan': (path, title) => AanShirtDetailProductScreen(fullPath: path, title: title),
+      'Aao': (path, title) => AaoShirtDetailProductScreen(fullPath: path, title: title),
+      'Aap': (path, title) => AapShirtDetailProductScreen(fullPath: path, title: title),
+      'Aaq': (path, title) => AaqShirtDetailProductScreen(fullPath: path, title: title),
+      'Aar': (path, title) => AarShirtDetailProductScreen(fullPath: path, title: title),
+      'Aas': (path, title) => AasShirtDetailProductScreen(fullPath: path, title: title),
+      'Aat': (path, title) => AatShirtDetailProductScreen(fullPath: path, title: title),
+      'Aau': (path, title) => AauShirtDetailProductScreen(fullPath: path, title: title),
+      'Aav': (path, title) => AavShirtDetailProductScreen(fullPath: path, title: title),
+      'Aaw': (path, title) => AawShirtDetailProductScreen(fullPath: path, title: title),
+      'Aax': (path, title) => AaxShirtDetailProductScreen(fullPath: path, title: title),
+      'Aay': (path, title) => AayShirtDetailProductScreen(fullPath: path, title: title),
+      'Aaz': (path, title) => AazShirtDetailProductScreen(fullPath: path, title: title),
+      'Aba': (path, title) => AbaShirtDetailProductScreen(fullPath: path, title: title),
+      'Abb': (path, title) => AbbShirtDetailProductScreen(fullPath: path, title: title),
+      'Abc': (path, title) => AbcShirtDetailProductScreen(fullPath: path, title: title),
+      'Abd': (path, title) => AbdShirtDetailProductScreen(fullPath: path, title: title),
+    };
+    // ——— screenFactory 맵 끝 부분
 
-      case "블라우스":
-        appBarTitle = '블라우스 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaBlouseDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
+    // ——— categoryScreenMap 시작 부분
+    // 카테고리별로 사용할 팩토리 맵핑 (예시: 현재는 동일 팩토리 사용)
+    final Map<String, Map<String, DetailBuilder>> categoryScreenMap = {
+      '티셔츠': screenFactory,
+      '블라우스': screenFactory, // 실제로는 전용 BlouseScreenFactory 분리 가능성 있음
+      '가디건': screenFactory,
+      '코트': screenFactory,
+      '청바지': screenFactory,
+      '맨투맨': screenFactory,
+      '니트': screenFactory,
+      '원피스': screenFactory,
+      '아우터': screenFactory,
+      '팬츠': screenFactory,
+      '폴라티': screenFactory,
+      '스커트': screenFactory,
+    };
+    // ——— categoryScreenMap 끝 부분
 
-      case "가디건":
-        appBarTitle = '가디건 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaCardiganDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
+    // ——— 팩토리 선택 시작 부분
+    // 1) 카테고리에 맞는 팩토리 조회
+    final Map<String, DetailBuilder>? factoryForCategory = categoryScreenMap[product.category];
 
-      case "코트":
-        appBarTitle = '코트 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaCoatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
+    // 2) 상점 코드에 맞는 builder 조회
+    final DetailBuilder? screenBuilder =
+    (docIdPrefix != null && factoryForCategory != null)
+    ? factoryForCategory[docIdPrefix]
+        : null;
+    // ——— 팩토리 선택 끝 부분
 
-      case "청바지":
-        appBarTitle = '청바지 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaJeanDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
+    // ——— 상세 화면 위젯 생성 시작 부분
+    // builder가 존재하면 해당 화면, 없으면 기본 Aaa 화면으로 폴백
+    final Widget detailScreen = _buildDetailScreen(
+      screenBuilder: screenBuilder,
+      fullPath: product.docId,
+      appBarTitle: appBarTitle,
+    );
+    // ——— 상세 화면 위젯 생성 끝 부분
 
-      case "맨투맨":
-        appBarTitle = '맨투맨 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaMtmDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      case "니트":
-        appBarTitle = '니트 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaNeatDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      case "원피스":
-        appBarTitle = '원피스 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaOnepieceDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      case "아우터":
-        appBarTitle = '아우터 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaePaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaPaedingDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      case "팬츠":
-        appBarTitle = '팬츠 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaePantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaPantsDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      case "폴라티":
-        appBarTitle = '폴라티 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaePolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AayPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaPolaDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      case "스커트":
-        appBarTitle = '스커트 상세';
-        if (docIdPrefix == 'Aaa') {
-          detailScreen = AaaSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aab') {
-          detailScreen = AabSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aac') {
-          detailScreen = AacSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aad') {
-          detailScreen = AadSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aae') {
-          detailScreen = AaeSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaf') {
-          detailScreen = AafSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aag') {
-          detailScreen = AagSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aah') {
-          detailScreen = AahSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aai') {
-          detailScreen = AaiSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaj') {
-          detailScreen = AajSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aak') {
-          detailScreen = AakSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aal') {
-          detailScreen = AalSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aam') {
-          detailScreen = AamSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aan') {
-          detailScreen = AanSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aao') {
-          detailScreen = AaoSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aap') {
-          detailScreen = AapSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaq') {
-          detailScreen = AaqSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aar') {
-          detailScreen = AarSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aas') {
-          detailScreen = AasSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aat') {
-          detailScreen = AatSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aau') {
-          detailScreen = AauSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aav') {
-          detailScreen = AavSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaw') {
-          detailScreen = AawSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aax') {
-          detailScreen = AaxSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aay') {
-          detailScreen = AaySkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aaz') {
-          detailScreen = AazSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Aba') {
-          detailScreen = AbaSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abb') {
-          detailScreen = AbbSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abc') {
-          detailScreen = AbcSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else if (docIdPrefix == 'Abd') {
-          detailScreen = AbdSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        } else {
-          detailScreen = AaaSkirtDetailProductScreen(
-              fullPath: product.docId, title: appBarTitle);
-        }
-        break;
-
-      default:
-        appBarTitle = '티셔츠 상세';
-        detailScreen = AaaShirtDetailProductScreen(
-            fullPath: product.docId, title: appBarTitle);
-    }
-
+    // ——— 네비게이션 로그 출력 시작 부분
+    // 디버깅 편의용 한글 로그 메시지 출력
     debugPrint('문서: ${product.docId}에 대한 $appBarTitle 화면으로 이동 중입니다.');
+    debugPrint('[네비게이션] onlyDocId=${product.onlyDocId}, prefix=$docIdPrefix, category=${product.category}');
+    // ——— 네비게이션 로그 출력 끝 부분
 
+    // ——— 화면 전환 시작 부분
+    // 상세 화면으로 push, 복귀 시 상태 초기화 실행
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => detailScreen),
     ).then((_) {
-      // 화면 복귀 시 상태 초기화
-      ref.read(colorSelectionIndexProvider.notifier).state = 0;
-      ref.read(colorSelectionTextProvider.notifier).state = null;
-      ref.read(colorSelectionUrlProvider.notifier).state = null;
-      ref.read(sizeSelectionIndexProvider.notifier).state = null;
-      ref.read(detailQuantityIndexProvider.notifier).state = 1;
+      // ——— 상세 상태 초기화 시작 부분
+      // 색상/사이즈/수량/탭 상태 초기화
+      ref.read(colorSelectionIndexProvider.notifier).state = 0;          // 색상 인덱스 초기화
+      ref.read(colorSelectionTextProvider.notifier).state = null;        // 색상 텍스트 초기화
+      ref.read(colorSelectionUrlProvider.notifier).state = null;         // 색상 URL 초기화
+      ref.read(sizeSelectionIndexProvider.notifier).state = null;        // 사이즈 인덱스 초기화
+      ref.read(detailQuantityIndexProvider.notifier).state = 1;          // 수량 기본값 1로 초기화
       ref.read(prodDetailScreenTabSectionProvider.notifier).state =
-          ProdDetailScreenTabSection.productInfo;
+          ProdDetailScreenTabSection.productInfo;                         // 상세화면 탭 초기화
+      // ——— 상세 상태 초기화 끝 부분
     });
+    // ——— 화면 전환 끝 부분
   }
+  // ——— navigateToDetailScreen() 끝 부분
+
+  // ——— _extractStoreCode() 시작 부분
+  // 상점 코드 3글자(Aaa/Aab...)를 안전 추출
+  // 우선 onlyDocId 사용, 없으면 docId의 마지막 세그먼트에서 추출
+  // 경로/길이 예외에 대비한 방어 로직 포함
+  String? _extractStoreCode(ProductContent product) {
+    // 후보 문자열 선정: onlyDocId 우선, 없으면 docId 사용
+    final String? primary = (product.onlyDocId != null && product.onlyDocId!.isNotEmpty)
+        ? product.onlyDocId
+        : product.docId;
+    if (primary == null || primary.isEmpty) return null; // 널/빈값 방어
+
+    // 경로일 수 있으므로 마지막 세그먼트 추출
+    final String last = primary.split('/').isNotEmpty ? primary.split('/').last : primary;
+
+    // 최소 길이 확인 후 3글자 반환
+    if (last.length < 3) return null; // 길이 부족 방어
+    return last.substring(0, 3);
+  }
+  // ——— _extractStoreCode() 끝 부분
+
+  // ——— _buildDetailScreen() 시작 부분
+  // 화면 빌더 유무에 따른 상세 화면 인스턴스 생성
+  // 없을 경우 Aaa 상세 화면으로 폴백 처리
+  Widget _buildDetailScreen({
+    required DetailBuilder? screenBuilder,
+    required String fullPath,
+    required String appBarTitle,
+  }) {
+    if (screenBuilder != null) {
+      return screenBuilder(fullPath, appBarTitle); // 정상 빌더 사용
+    }
+
+    // 폴백: Aaa 상세 화면 사용 + 경고 로그
+    debugPrint('해당 상점 코드/카테고리에 대한 상세 화면 빌더가 없어 기본 화면으로 이동합니다.');
+    return AaaShirtDetailProductScreen(fullPath: fullPath, title: appBarTitle);
+  }
+  // ——— _buildDetailScreen() 끝 부분
+
 
   // Firestore에서 상세한 문서 정보를 빌드하여 UI에 구현하는 위젯.
   Widget buildProdFirestoreDetailDocument(
