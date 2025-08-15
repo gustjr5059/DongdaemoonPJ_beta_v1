@@ -785,15 +785,16 @@ class ProductInfoDetailScreenNavigation {
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 시작 부분
     // 비율을 기반으로 동적으로 크기와 위치 설정
 
-    // 신상 섹션 내 요소들의 수치
-    final double DetailDocWidth =
-        screenSize.width * (160 / referenceWidth); // 가로 비율
-    final double DetailDocThumnailWidth =
-        screenSize.width * (152 / DetailDocWidth); // 가로 비율
+    // 섹션 내 요소들의 수치
+    final double DetailDoc5X = screenSize.width * (2 / referenceWidth);
+    final DetailDocWidth1 = (screenSize.width / 3) - DetailDoc5X; // 아이템 너비 설정
+    final DetailDocWidth2 = (screenSize.width / 3.3) - DetailDoc5X; // 빈 이미지 너비 설정
+
     final double DetailDoc1X = screenSize.width * (6 / referenceWidth);
     final double DetailDoc2X = screenSize.width * (2 / referenceWidth);
     final double DetailDoc3X = screenSize.width * (4 / referenceWidth);
     final double DetailDoc4X = -9;
+
     final double DetailDoc1Y = 6;
     final double DetailDoc2Y = 2;
     final double DetailDoc3Y = -11;
@@ -806,7 +807,7 @@ class ProductInfoDetailScreenNavigation {
 
     final double interval1Y = 4;
     final double interval1X = screenSize.width * (6 / referenceWidth);
-    final double interval2Y = 135;
+
     // ---  갤럭시 Z플립 화면 분할 케이스(화면 세로 길이가 줄어드는 형태) 고려한 사이즈 끝 부분
 
     // 숫자 형식을 지정하기 위한 NumberFormat 객체 생성
@@ -820,7 +821,7 @@ class ProductInfoDetailScreenNavigation {
       },
       child: Container(
         // 높이를 명시적으로 지정하여 충분한 공간 확보
-        width: DetailDocWidth,
+        width: DetailDocWidth1,
         padding: EdgeInsets.all(DetailDoc3X),
         margin: EdgeInsets.all(DetailDoc3X),
         decoration: BoxDecoration(
@@ -856,20 +857,21 @@ class ProductInfoDetailScreenNavigation {
                           // 아이콘 버튼을 이미지 위에 겹쳐서 위치시킴
                           ? Image.network(
                               product.thumbnail!,
-                              width: DetailDocThumnailWidth,
+                              width: DetailDocWidth1,
+                              height: DetailDocWidth2,
                               fit: BoxFit.cover,
                               // 이미지 로드 실패 시 아이콘 표시
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(
                                 Icons.image_not_supported,
                                 color: GRAY88_COLOR,
-                                size: interval2Y,
+                                size: DetailDocWidth2,
                               ),
                             )
                           : Icon(
                               Icons.image_not_supported,
                               color: GRAY88_COLOR,
-                              size: interval2Y,
+                              size: DetailDocWidth2,
                             ), // 썸네일이 없을 때 아이콘을 표시
                       // 위젯을 위치시키는 클래스, 상위 위젯의 특정 위치에 자식 위젯을 배치함
                       Positioned(
@@ -2237,17 +2239,29 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
                     fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
                     width:
                         MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
-                    errorBuilder: (context, error, stackTrace) => Icon(
-                      Icons.image_not_supported,
-                      color: GRAY88_COLOR,
-                      size: interval3X,
-                    ), // 이미지 로드 실패 시 아이콘 표시
+                    // 네트워크 에러 시 아이콘 표시
+                    errorBuilder: (context, error, stackTrace) => SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Icon(
+                          Icons.image_not_supported,
+                          color: GRAY88_COLOR,
+                          size: interval3X,
+                        ),
+                      ),
+                    ),
                   )
-                : Icon(
-                    Icons.image_not_supported,
-                    color: GRAY88_COLOR,
-                    size: interval3X,
-                  ), // 이미지 URL이 없을 때 아이콘 표시
+                  // URL이 빈값일 시 아이콘 표시
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: Icon(
+                            Icons.image_not_supported,
+                            color: GRAY88_COLOR,
+                            size: interval3X,
+                            ),
+                    ),
+                ),
           ),
         );
       },
@@ -2271,17 +2285,29 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
             imageUrl, // 주어진 URL의 이미지를 네트워크에서 불러옴.
             fit: BoxFit.fitWidth, // 이미지가 화면 너비에 맞춰 조정됨.
             width: MediaQuery.of(context).size.width, // 화면의 너비만큼 이미지를 조정함.
-            errorBuilder: (context, error, stackTrace) => Icon(
-              Icons.image_not_supported,
-              color: GRAY88_COLOR,
-              size: interval3X,
-            ), // 이미지 로드 실패 시 아이콘 표시
+            // 네트워크 에러 시 아이콘 표시
+            errorBuilder: (context, error, stackTrace) => SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: Icon(
+                  Icons.image_not_supported,
+                  color: GRAY88_COLOR,
+                  size: interval3X,
+                ),
+              ),
+            ),
           )
-        : Icon(
-            Icons.image_not_supported,
-            color: GRAY88_COLOR,
-            size: interval3X,
-          ); // 이미지 URL이 없을 때 아이콘 표시
+          // URL이 빈값일 시 아이콘 표시
+        : SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: Icon(
+                Icons.image_not_supported,
+                color: GRAY88_COLOR,
+                size: interval3X,
+              ),
+            ),
+          );
   }
 
   // 이미지 전체를 볼 수 있는 버튼을 생성하는 함수

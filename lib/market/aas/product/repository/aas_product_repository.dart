@@ -24,8 +24,8 @@ class AasNewProductRepository {
 
   AasNewProductRepository(this.firestore); // 생성자
 
-  // 신상 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchNewProductContents({int limit = 4}) async {
+  // 신상 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
+  Future<List<ProductContent>> fetchNewProductContents({int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
@@ -120,8 +120,8 @@ class AasBestProductRepository {
 
   AasBestProductRepository(this.firestore); // 생성자
 
-  // 최고 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchBestProductContents({int limit = 4}) async {
+  // 최고 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
+  Future<List<ProductContent>> fetchBestProductContents({int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
@@ -216,8 +216,8 @@ class AasSaleProductRepository {
 
   AasSaleProductRepository(this.firestore); // 생성자
 
-  // 할인 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchSaleProductContents({int limit = 4}) async {
+  // 할인 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
+  Future<List<ProductContent>> fetchSaleProductContents({int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
@@ -312,8 +312,8 @@ class AasSpringProductRepository {
 
   AasSpringProductRepository(this.firestore); // 생성자
 
-  // 봄 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
-  Future<List<ProductContent>> fetchSpringProductContents({int limit = 4}) async {
+  // 봄 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
+  Future<List<ProductContent>> fetchSpringProductContents({int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
@@ -408,9 +408,9 @@ class AasSummerProductRepository {
 
   AasSummerProductRepository(this.firestore); // 생성자
 
-  // 여름 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  // 여름 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
   Future<List<ProductContent>> fetchSummerProductContents(
-      {int limit = 4}) async {
+      {int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
@@ -505,9 +505,9 @@ class AasAutumnProductRepository {
 
   AasAutumnProductRepository(this.firestore); // 생성자
 
-  // 가을 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  // 가을 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
   Future<List<ProductContent>> fetchAutumnProductContents(
-      {int limit = 4}) async {
+      {int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
@@ -602,9 +602,9 @@ class AasWinterProductRepository {
 
   AasWinterProductRepository(this.firestore); // 생성자
 
-  // 겨울 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 4개라는 의미 : limit =4)
+  // 겨울 상품 데이터를 가져오는 함수 (제품 가져오는 단위가 5개라는 의미 : limit =5)
   Future<List<ProductContent>> fetchWinterProductContents(
-      {int limit = 4}) async {
+      {int limit = 5}) async {
     List<ProductContent> products = []; // 제품 리스트 초기화
 
     // 모든 컬렉션이 소진되었는지 확인하여 추가 호출을 방지
