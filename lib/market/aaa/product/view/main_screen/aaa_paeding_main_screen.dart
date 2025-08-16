@@ -562,7 +562,7 @@ class _AaaPaedingMainScreenState extends ConsumerState<AaaPaedingMainScreen>
                     // 참조(ref) 전달
                     title: '아우터 메인      ', // 6칸 빈칸 생성해서 간격 조절
                     // AppBar의 제목을 '패딩 메인'로 설정
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_1',
                     leadingType: LeadingType.back,

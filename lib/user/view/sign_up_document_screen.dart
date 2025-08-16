@@ -336,7 +336,7 @@ class _SignUpDocumentScreenState extends ConsumerState<SignUpDocumentScreen>
                       context: context,
                       ref: ref,
                       title: widget.title, // 동적으로 전달받은 title 사용
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.back,
                       buttonCase: 1,
                       appBarTitleWidth: documentDtAppBarTitleWidth,
@@ -407,8 +407,8 @@ class _SignUpDocumentScreenState extends ConsumerState<SignUpDocumentScreen>
                           style: TextStyle(
                             // 텍스트의 폰트 크기를 설정함.
                             fontSize: documentDetailEmptyTextFontSize,
-                            // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                            fontFamily: 'NanumGothic',
+                            // 폰트 패밀리를 'Pretendard'으로 설정함.
+                            fontFamily: 'Pretendard',
                             // 폰트 굵기를 'bold'로 설정함.
                             fontWeight: FontWeight.bold,
                             // 텍스트 색상을 검은색으로 설정함.

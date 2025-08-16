@@ -274,7 +274,7 @@ class AamPriceAndDiscountPercentSortButtons<T extends AamBaseProductListNotifier
               style: TextStyle(
                 fontSize: sortBtnTextFontSize,
                 color: WHITE_COLOR,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.w800, // ExtraBold
               ),
             ),

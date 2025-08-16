@@ -568,7 +568,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         child: Text(
                           '동대문 의류도매 제로마진 플랫폼',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontWeight: FontWeight.bold,
                             fontSize: screenTitleTextFontSize,
                             color: GRAY36_COLOR,
@@ -587,7 +587,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         child: Text(
                           '웨어카노, Wearcano',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontWeight: FontWeight.normal,
                             fontSize: screenSubTitleTextFontSize,
                             color: GRAY36_COLOR,
@@ -618,7 +618,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             focusNode: emailFocusNode,
                             hintText: '이메일을 입력해주세요.',
                             hintStyle: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // Figma에서 사용된 폰트
                               fontSize: insertFieldTextFontSize1,
                               // Figma에서 설정된 폰트 크기
@@ -634,7 +634,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               username = value;
                             },
                             textStyle: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // 피그마에서 사용된 폰트
                               fontSize: insertFieldTextFontSize2,
                               // 피그마에서 지정된 폰트 크기
@@ -690,7 +690,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             focusNode: passwordFocusNode,
                             hintText: '비밀번호를 입력해주세요.',
                             hintStyle: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // Figma에서 사용된 폰트
                               fontSize: insertFieldTextFontSize1,
                               // Figma에서 설정된 폰트 크기
@@ -706,7 +706,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               password = value;
                             },
                             textStyle: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // 피그마에서 사용된 폰트
                               fontSize: insertFieldTextFontSize2,
                               // 피그마에서 지정된 폰트 크기
@@ -785,7 +785,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         child: Text(
                           '자동로그인',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             // 피그마에서 사용된 폰트
                             fontSize: autoLoginCheckboxTextFontSize,
                             // 피그마에서 지정된 폰트 크기
@@ -835,7 +835,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             child: Text(
                               '로그인',
                               style: TextStyle(
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 // Figma에서 사용된 폰트
                                 fontSize: loginBtnTextFontSize,
                                 // Figma에서 지정한 폰트 크기
@@ -874,7 +874,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               child: Text(
                                 errorMessage!,
                                 style: TextStyle(
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   // 피그마에서 사용된 폰트
                                   fontSize: loginErrorMessageBarTextFontSize,
                                   // 피그마에서 지정한 폰트 크기
@@ -921,7 +921,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   //                   child: Text(
                   //                     '회원가입',
                   //                     style: TextStyle(
-                  //                       fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                  //                       fontFamily: 'Pretendard', // 피그마에서 사용된 폰트
                   //                       fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
                   //                       fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
                   //                       color: GRAY36_COLOR, // 피그마에서 지정된 텍스트 색상
@@ -952,7 +952,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   //                   child: Text(
                   //                     '아이디/비밀번호 찾기',
                   //                     style: TextStyle(
-                  //                       fontFamily: 'NanumGothic', // 피그마에서 사용된 폰트
+                  //                       fontFamily: 'Pretendard', // 피그마에서 사용된 폰트
                   //                       fontSize: joinAndFindBtnTextFontSize, // 피그마에서 지정된 폰트 크기
                   //                       fontWeight: FontWeight.normal, // 피그마에서 지정된 굵기
                   //                       color: GRAY36_COLOR, // 피그마에서 지정된 텍스트 색상
@@ -981,7 +981,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         child: Text(
                           '로그인함으로써 개인정보 처리방침에 동의합니다.',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontWeight: FontWeight.normal,
                             fontSize: guidelineText1FontSize,
                             color: GRAY36_COLOR,
@@ -1020,7 +1020,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                           child: Text(
                             '개인정보 처리방침 보기',
                             style: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               fontSize: guidelineText2FontSize,
                               color: BLUE49_COLOR, // 파란색 텍스트

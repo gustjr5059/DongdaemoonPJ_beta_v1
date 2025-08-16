@@ -391,7 +391,7 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
                       ref: ref,
                       // 참조(ref) 전달
                       title: '발주 내역 상세',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // AppBar의 제목을 '발주 목록 상세'로 설정
                       leadingType: LeadingType.back,
                       // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
@@ -481,7 +481,7 @@ class _OrderListDetailScreenState extends ConsumerState<OrderListDetailScreen>
                                 '에러가 발생했으니, 앱을 재실행해주세요.',
                                 style: TextStyle(
                                   fontSize: orderlistEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.bold,
                                   color: BLACK_COLOR,
                                 ),

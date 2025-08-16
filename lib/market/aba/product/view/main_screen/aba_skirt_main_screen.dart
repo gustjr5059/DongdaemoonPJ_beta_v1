@@ -560,7 +560,7 @@ class _AbaSkirtMainScreenState extends ConsumerState<AbaSkirtMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '스커트 메인      ', // 6칸 빈칸 생성해서 간격 조절
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_27',
                     // AppBar의 제목을 '스커트 메인'로 설정

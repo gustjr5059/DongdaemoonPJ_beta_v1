@@ -337,7 +337,7 @@ class _PrivateReviewCreateDetailFormScreenState
             '리뷰 상품 내용',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: reviewDtInfoTitleFontSize,
               color: BLACK_COLOR,
             ),
@@ -483,7 +483,7 @@ class _PrivateReviewCreateDetailFormScreenState
                                           // 텍스트 색상 설정
                                           fontSize:
                                               reviewDtInfoOriginalPriceDataFontSize,
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           decoration: TextDecoration
                                               .lineThrough, // 취소선 추가
                                         ),
@@ -499,7 +499,7 @@ class _PrivateReviewCreateDetailFormScreenState
                                               // 텍스트 색상 설정
                                               fontSize:
                                                   reviewDtInfoDiscountPriceDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                             ),
                                           ),
                                           SizedBox(width: interval2X),
@@ -511,7 +511,7 @@ class _PrivateReviewCreateDetailFormScreenState
                                               fontWeight: FontWeight.bold,
                                               fontSize:
                                                   reviewDtInfoDiscountPercentDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                             ),
                                           ),
                                         ],
@@ -564,7 +564,7 @@ class _PrivateReviewCreateDetailFormScreenState
                                             style: TextStyle(
                                               fontSize:
                                                   reviewDtInfoColorTextDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               fontWeight: FontWeight.bold,
                                               color: BLACK_COLOR,
                                             ),
@@ -577,7 +577,7 @@ class _PrivateReviewCreateDetailFormScreenState
                                         style: TextStyle(
                                           fontSize:
                                               reviewDtInfoSizeTextDataFontSize,
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           fontWeight: FontWeight.bold,
                                           color: BLACK_COLOR,
                                         ),
@@ -587,7 +587,7 @@ class _PrivateReviewCreateDetailFormScreenState
                                         style: TextStyle(
                                           fontSize:
                                               reviewDtInfoCountTextDataFontSize,
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           fontWeight: FontWeight.bold,
                                           color: BLACK_COLOR,
                                         ),
@@ -616,7 +616,7 @@ class _PrivateReviewCreateDetailFormScreenState
                           style: TextStyle(
                             fontSize: reviewDtInfoDateTextDataFontSize,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: BLACK_COLOR,
                           ),
                         );
@@ -639,7 +639,7 @@ class _PrivateReviewCreateDetailFormScreenState
                           style: TextStyle(
                             fontSize: reviewDtInfoDateTextDataFontSize,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: BLACK_COLOR,
                           ),
                         );
@@ -666,7 +666,7 @@ class _PrivateReviewCreateDetailFormScreenState
             '리뷰 작성 내용',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: reviewDtInfoTitleFontSize,
               color: BLACK_COLOR,
             ),
@@ -696,7 +696,7 @@ class _PrivateReviewCreateDetailFormScreenState
               '리뷰 등록 시, 해당 발주 상품 관련 리뷰는 재작성이 불가능합니다.',
               style: TextStyle(
                 fontWeight: FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontSize: reviewDtInfoGuideTextFontSize,
                 color: GRAY35_COLOR,
               ),
@@ -741,7 +741,7 @@ class _PrivateReviewCreateDetailFormScreenState
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
           ),
         ),
         // 라벨과 값 사이의 공간을 제거
@@ -753,7 +753,7 @@ class _PrivateReviewCreateDetailFormScreenState
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR,
             ),
             textAlign: TextAlign.start, // 텍스트를 시작 부분에 맞춤
@@ -840,7 +840,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: reviewInfoRowTextFontSize,
                       color: BLACK_COLOR,
                     ), // 텍스트를 굵게 설정
@@ -887,7 +887,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     style:
                     TextStyle(
                       fontWeight: FontWeight.normal,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: reviewInfoRowTextFontSize,
                       color: BLACK_COLOR,
                     ), // 텍스트를 설정
@@ -909,7 +909,7 @@ class _PrivateReviewCreateDetailFormScreenState
                   '${value.text.length}/50', // 글자 수를 반영
                   style: TextStyle(
                     color: GRAY62_COLOR,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: reviewInfoRowTextFontSize,
                   ), // 글자 수 표시 스타일
                 );
@@ -1009,7 +1009,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: reviewInfoRowTextFontSize,
                       color: BLACK_COLOR,
                     ), // 텍스트를 굵게 설정
@@ -1036,7 +1036,7 @@ class _PrivateReviewCreateDetailFormScreenState
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: BLACK_COLOR,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontSize: reviewInfoRowTextFontSize,
                       ),
                     ), // 고정된 값을 텍스트로 표시
@@ -1126,7 +1126,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: reviewInfoRowTextFontSize,
                       color: BLACK_COLOR,
                     ), // 텍스트를 굵게 설정
@@ -1173,7 +1173,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     style:
                     TextStyle(
                       fontWeight: FontWeight.normal,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: reviewInfoRowTextFontSize,
                       color: BLACK_COLOR,
                     ), // 텍스트를 설정
@@ -1195,7 +1195,7 @@ class _PrivateReviewCreateDetailFormScreenState
                   '${value.text.length}/300', // 글자 수를 반영
                   style: TextStyle(
                     color: GRAY62_COLOR,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: reviewInfoRowTextFontSize,
                   ), // 글자 수 표시 스타일
                 );
@@ -1295,7 +1295,7 @@ class _PrivateReviewCreateDetailFormScreenState
                   label, // '리뷰 사진' 텍스트
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: reviewInfoRowTextFontSize,
                     color: BLACK_COLOR,
                   ),
@@ -1359,7 +1359,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     color: BLACK_COLOR, // 텍스트 색상 검은색
                     fontWeight: FontWeight.bold, // 굵은 글씨
                     fontSize: reviewInfoGuideTextFontSize,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                   ),
                 ),
                 TextSpan(
@@ -1369,7 +1369,7 @@ class _PrivateReviewCreateDetailFormScreenState
                     color: RED46_COLOR, // 텍스트 색상 빨간색
                     fontWeight: FontWeight.bold, // 굵은 글씨
                     fontSize: reviewInfoGuideTextFontSize,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                   ),
                 ),
               ],
@@ -1553,7 +1553,7 @@ class _PrivateReviewCreateDetailFormScreenState
         child: Text(
           '리뷰 등록',
           style: TextStyle(
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             color: ORANGE56_COLOR, // 텍스트 색상 설정
             fontWeight: FontWeight.bold, // 텍스트를 Bold로 설정함
             fontSize: reviewWriteBtnTextFontSize, // 텍스트 크기를 16으로 설정함
@@ -1737,7 +1737,7 @@ class _PrivateReviewItemsListState
           '현재 리뷰 목록 내 리뷰가 없습니다.', // 리뷰가 없을 때 표시할 메시지
           style: TextStyle(
             fontSize: reviewEmptyTextFontSize, // 텍스트의 폰트 크기
-            fontFamily: 'NanumGothic', // 텍스트의 폰트 패밀리
+            fontFamily: 'Pretendard', // 텍스트의 폰트 패밀리
             fontWeight: FontWeight.bold, // 텍스트의 굵기
             color: BLACK_COLOR, // 텍스트의 색상
           ),
@@ -1797,7 +1797,7 @@ class _PrivateReviewItemsListState
                             // 텍스트 크기 설정
                             fontWeight: FontWeight.bold,
                             // 텍스트 굵기 설정
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             // 글꼴 설정
                             color: BLACK_COLOR, // 텍스트 색상 설정
                           ),
@@ -1877,7 +1877,7 @@ class _PrivateReviewItemsListState
                               '삭제',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontSize: deleteBtnFontSize,
                                 color: BLACK_COLOR,
                               ),
@@ -1999,7 +1999,7 @@ class _PrivateReviewItemsListState
                                           style: TextStyle(
                                             fontSize:
                                                 reviewOriginalPriceFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             color: GRAY60_COLOR,
                                             // 텍스트 색상 설정
                                             decoration: TextDecoration
@@ -2017,7 +2017,7 @@ class _PrivateReviewItemsListState
                                               style: TextStyle(
                                                   fontSize:
                                                       reviewDiscountPriceFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   color: BLACK_COLOR,
                                                   // 텍스트 색상 설정
                                                   fontWeight: FontWeight.bold),
@@ -2028,7 +2028,7 @@ class _PrivateReviewItemsListState
                                               style: TextStyle(
                                                 fontSize:
                                                     reviewDiscountPercentFontSize,
-                                                fontFamily: 'NanumGothic',
+                                                fontFamily: 'Pretendard',
                                                 color: RED46_COLOR,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -2083,7 +2083,7 @@ class _PrivateReviewItemsListState
                                               style: TextStyle(
                                                 fontSize:
                                                     reviewSelectedColorTextFontSize,
-                                                fontFamily: 'NanumGothic',
+                                                fontFamily: 'Pretendard',
                                                 fontWeight: FontWeight.bold,
                                                 color: BLACK_COLOR,
                                               ),
@@ -2101,7 +2101,7 @@ class _PrivateReviewItemsListState
                                           style: TextStyle(
                                             fontSize:
                                                 reviewSelectedSizeTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.bold,
                                             color: BLACK_COLOR,
                                           ),
@@ -2113,7 +2113,7 @@ class _PrivateReviewItemsListState
                                           style: TextStyle(
                                             fontSize:
                                                 reviewSelectedCountTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.bold,
                                             color: BLACK_COLOR,
                                           ),
@@ -2136,7 +2136,7 @@ class _PrivateReviewItemsListState
                         // 텍스트 크기 설정
                         fontWeight: FontWeight.bold,
                         // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         // 글꼴 설정
                         color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
@@ -2223,7 +2223,7 @@ class _PrivateReviewItemsListState
                           _expandedReviews[index] == true ? '접기' : '펼쳐보기',
                           // 확장 여부에 따라 텍스트 변경
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: reviewExpandedBtnFontSize, // 텍스트 크기 설정
                             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                             color: BLACK_COLOR, // 텍스트 색상 설정
@@ -2275,7 +2275,7 @@ class _PrivateReviewItemsListState
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: BLACK_COLOR,
               ),
             ),
@@ -2287,7 +2287,7 @@ class _PrivateReviewItemsListState
                 value ?? '',
                 style: TextStyle(
                   fontSize: fontSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: BLACK_COLOR,
                   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 ),
@@ -2313,7 +2313,7 @@ class _PrivateReviewItemsListState
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
@@ -2325,7 +2325,7 @@ class _PrivateReviewItemsListState
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
               textAlign: TextAlign.start,
               softWrap: true,

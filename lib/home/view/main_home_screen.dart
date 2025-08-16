@@ -729,6 +729,43 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen>
                           ],
                           // ——— 소배너1 위젯 조건부 렌더링 끝 부분
 
+                          // CommonCardView(
+                          //   content: Container(
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(5),
+                          //     ),
+                          //     child:
+                          //     Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: const [
+                          //     Text(
+                          //       "가나다abc123 (Pretendard w600)",
+                          //       style: TextStyle(fontFamily: 'Pretendard', fontWeight: FontWeight.w600, letterSpacing: -0.3, height: 1.35, fontSize: 18),
+                          //     ),
+                          //     Text(
+                          //       "가나다abc123 (NotoSans w600)",
+                          //       style: TextStyle(fontFamily: 'NotoSans', fontWeight: FontWeight.w600, fontSize: 18),
+                          //     ),
+                          //         Text(
+                          //           "가나다abc123 (NanumGothic w600)",
+                          //           style: TextStyle(fontFamily: 'NanumGothic', fontWeight: FontWeight.w600, fontSize: 18),
+                          //         ),
+                          //         Text(
+                          //           "가나다abc123 (GmarketSans w600)",
+                          //           style: TextStyle(fontFamily: 'GmarketSans', fontWeight: FontWeight.w500, fontSize: 18),
+                          //         ),
+                          //         Text(
+                          //           "가나다abc123 (Euljiro w600)",
+                          //           style: TextStyle(fontFamily: 'Euljiro', fontWeight: FontWeight.w500, fontSize: 18),
+                          //         ),
+                          //     ],
+                          //     ),
+                          //   ),
+                          //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          //   elevation: 0,
+                          //   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                          // ),
+
                           Container(
                             decoration: BoxDecoration(
                               border: Border(

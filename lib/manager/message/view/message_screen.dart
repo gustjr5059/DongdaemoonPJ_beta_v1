@@ -329,7 +329,7 @@ class _AdminMessageMainScreenState extends ConsumerState<AdminMessageMainScreen>
                         context: context,
                         ref: ref,
                         title: '쪽지 관리(관리자)',
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         leadingType: LeadingType.none,
                         buttonCase: 1,
                         appBarTitleWidth: messageAppBarTitleWidth,

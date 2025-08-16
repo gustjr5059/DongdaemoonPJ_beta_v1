@@ -446,7 +446,7 @@ class _PrivateReviewMainScreenState
                                 '현재 리뷰 목록 내 리뷰가 없습니다.',
                                 style: TextStyle(
                                   fontSize: reviewEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.bold,
                                   color: BLACK_COLOR,
                                 ),

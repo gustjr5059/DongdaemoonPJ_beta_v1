@@ -169,7 +169,7 @@ class _AdminOrderListItemWidgetState
                         child: Text(
                           '발주자 선택', // 드롭다운에 표시될 힌트 텍스트임
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: ordererSelectDataTextSize1, // 텍스트 크기 설정임
                           ),
                         ),
@@ -188,7 +188,7 @@ class _AdminOrderListItemWidgetState
                             email, // 드롭다운 항목으로 표시할 이메일 텍스트임
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontSize: ordererSelectDataTextSize2,
                               // 텍스트 크기 설정임
                               color: BLACK_COLOR, // 텍스트 색상 설정임
@@ -224,7 +224,7 @@ class _AdminOrderListItemWidgetState
               '현재 발주 내역이 없습니다.', // 발주 내역 없음 메시지 텍스트임
               style: TextStyle(
                 fontSize: orderlistEmptyTextFontSize, // 텍스트 크기 비율 적용임
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.bold,
                 color: BLACK_COLOR, // 텍스트 색상 설정임
               ),
@@ -265,7 +265,7 @@ class _AdminOrderListItemWidgetState
                               style: TextStyle(
                                 fontSize: orderlistInfoOrderNumberDataFontSize,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 color: BLACK_COLOR,
                               ),
                             ),
@@ -281,7 +281,7 @@ class _AdminOrderListItemWidgetState
                               style: TextStyle(
                                 fontSize: orderlistInfoOrderStatusDataFontSize,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 color: RED46_COLOR,
                               ),
                             ),
@@ -294,7 +294,7 @@ class _AdminOrderListItemWidgetState
                           style: TextStyle(
                             fontSize: orderlistInfoOrderDateDataFontSize,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: GRAY41_COLOR,
                           ),
                         ),
@@ -344,7 +344,7 @@ class _AdminOrderListItemWidgetState
                                     fontSize:
                                         orderlistInfoDetailViewBtnFontSize,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     color: WHITE_COLOR,
                                   ),
                                 ),
@@ -686,7 +686,7 @@ class _AdminOrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -700,7 +700,7 @@ class _AdminOrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: GRAY41_COLOR, // 텍스트 색상 설정
                     ),
@@ -718,7 +718,7 @@ class _AdminOrderListDetailItemWidgetState
                             // 텍스트 크기 설정
                             fontWeight: FontWeight.bold,
                             // 텍스트 굵기 설정
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             // 글꼴 설정
                             color: GRAY41_COLOR, // 텍스트 색상 설정
                           ),
@@ -759,7 +759,7 @@ class _AdminOrderListDetailItemWidgetState
                             fontSize:
                                 orderlistDtInfodeliveryStartDateDataFontSize,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: GRAY41_COLOR,
                           ),
                         );
@@ -833,7 +833,7 @@ class _AdminOrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -892,7 +892,7 @@ class _AdminOrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -950,7 +950,7 @@ class _AdminOrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -1016,7 +1016,7 @@ class _AdminOrderListDetailItemWidgetState
                           fontSize:
                               orderlistDtInfoRefundCompletionDateDataFontSize,
                           // 텍스트 크기를 16으로 설정함.
-                          fontFamily: 'NanumGothic', // 글꼴 설정
+                          fontFamily: 'Pretendard', // 글꼴 설정
                         ),
                       ),
                     SizedBox(height: interval1Y),
@@ -1131,7 +1131,7 @@ class _AdminOrderListDetailItemWidgetState
                                             style: TextStyle(
                                               fontSize:
                                                   orderlistDtInfoOriginalPriceDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               color: GRAY60_COLOR,
                                               decoration:
                                                   TextDecoration.lineThrough,
@@ -1144,7 +1144,7 @@ class _AdminOrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize:
                                                       orderlistDtInfoDiscountPriceDataFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
                                                 ),
@@ -1155,7 +1155,7 @@ class _AdminOrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize:
                                                       orderlistDtInfoDiscountPercentDataFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   color: RED46_COLOR,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -1209,7 +1209,7 @@ class _AdminOrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize:
                                                       orderlistDtInfoColorTextDataFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
                                                 ),
@@ -1223,7 +1223,7 @@ class _AdminOrderListDetailItemWidgetState
                                             style: TextStyle(
                                               fontSize:
                                                   orderlistDtInfoSizeTextDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               fontWeight: FontWeight.bold,
                                               color: BLACK_COLOR,
                                             ),
@@ -1234,7 +1234,7 @@ class _AdminOrderListDetailItemWidgetState
                                             style: TextStyle(
                                               fontSize:
                                                   orderlistDtInfoCountTextDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               fontWeight: FontWeight.bold,
                                               color: BLACK_COLOR,
                                             ),
@@ -1277,7 +1277,7 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             color: isTotal ? BLACK_COLOR : GRAY41_COLOR,
           ),
         ),
@@ -1288,7 +1288,7 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
             color: isTotal ? RED46_COLOR : BLACK_COLOR,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
           ),
         ),
       ],
@@ -1310,7 +1310,7 @@ Widget _buildOrdererInfoRow(BuildContext context, String label, String value,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             color: GRAY41_COLOR,
           ),
         ),
@@ -1320,7 +1320,7 @@ Widget _buildOrdererInfoRow(BuildContext context, String label, String value,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             color: BLACK_COLOR,
           ),
         ),
@@ -1343,7 +1343,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             color: isLongText ? BLACK_COLOR : GRAY41_COLOR,
           ),
         ),
@@ -1354,7 +1354,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR,
             ),
             textAlign: TextAlign.end,
@@ -1378,7 +1378,7 @@ Widget _buildProductInfoRow(BuildContext context, String label, String value,
         Text(
           label,
           style: TextStyle(
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontSize: fontSize,
             fontWeight: bold ? FontWeight.bold : FontWeight.normal,
             color: BLACK_COLOR,
@@ -1391,7 +1391,7 @@ Widget _buildProductInfoRow(BuildContext context, String label, String value,
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR,
             ),
             textAlign: TextAlign.end,

@@ -116,7 +116,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
               style: TextStyle(
                 color: ORANGE56_COLOR,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             onPressed: () {
@@ -201,7 +201,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
               style: TextStyle(
                 color: ORANGE56_COLOR,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             onPressed: () {
@@ -395,7 +395,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //           child: Text(
     //             '동대문 의류도매 제로마진 플랫폼',
     //             style: TextStyle(
-    //               fontFamily: 'NanumGothic',
+    //               fontFamily: 'Pretendard',
     //               fontWeight: FontWeight.bold,
     //               fontSize: screenTitleTextFontSize,
     //               color: WHITE_COLOR,
@@ -411,7 +411,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //           child: Text(
     //             '웨어카노, Wearcano',
     //             style: TextStyle(
-    //               fontFamily: 'NanumGothic',
+    //               fontFamily: 'Pretendard',
     //               fontWeight: FontWeight.normal,
     //               fontSize: screenSubTitleTextFontSize,
     //               color: WHITE_COLOR,
@@ -427,7 +427,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //           child: Text(
     //             'SNS 버튼 클릭 후, 간편하게 로그인 및 회원가입을 하세요.',
     //             style: TextStyle(
-    //               fontFamily: 'NanumGothic',
+    //               fontFamily: 'Pretendard',
     //               fontWeight: FontWeight.normal,
     //               fontSize: guideTextFontSize,
     //               color: WHITE_COLOR,
@@ -488,7 +488,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //       //     child: Text(
     //       //       '로그인함으로써 개인정보 처리방침에 동의합니다.',
     //       //       style: TextStyle(
-    //       //         fontFamily: 'NanumGothic',
+    //       //         fontFamily: 'Pretendard',
     //       //         fontWeight: FontWeight.normal,
     //       //         fontSize: guidelineText1FontSize,
     //       //         color: WHITE_COLOR,
@@ -521,7 +521,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //       //       child: Text(
     //       //         '개인정보 처리방침 보기',
     //       //         style: TextStyle(
-    //       //           fontFamily: 'NanumGothic',
+    //       //           fontFamily: 'Pretendard',
     //       //           fontWeight: FontWeight.bold,
     //       //           fontSize: guidelineText2FontSize,
     //       //           color: BLUE49_COLOR, // 파란색 텍스트
@@ -545,7 +545,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //             child: Text(
     //               '관리자 로그인',
     //               style: TextStyle(
-    //                 fontFamily: 'NanumGothic',
+    //                 fontFamily: 'Pretendard',
     //                 fontWeight: FontWeight.normal,
     //                 fontSize: goToLoginBtnTextFontSize,
     //                 color: WHITE_COLOR, // 텍스트 색상
@@ -684,7 +684,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     '동대문 의류도매 제로마진 플랫폼',
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.bold,
     //                       fontSize: screenTitleTextFontSize,
     //                       color: WHITE_COLOR,
@@ -703,7 +703,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     '웨어카노, Wearcano',
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.normal,
     //                       fontSize: screenSubTitleTextFontSize,
     //                       color: WHITE_COLOR,
@@ -722,7 +722,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     'SNS 버튼 클릭 후, 간편하게 로그인 및 회원가입을 하세요.',
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.normal,
     //                       fontSize: guideTextFontSize,
     //                       color: WHITE_COLOR,
@@ -795,7 +795,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     '[네이버 로그인 안내]',
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.normal,
     //                       fontSize: guidelineText3FontSize,
     //                       color: WHITE_COLOR,
@@ -815,7 +815,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     '네이버 앱 또는 웹 브라우저 내 로그아웃을 직접 실행 후',
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.normal,
     //                       fontSize: guidelineText3FontSize,
     //                       color: WHITE_COLOR,
@@ -835,7 +835,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     "'로그인' 버튼 클릭 시, 타 네이버 계정 선택이 가능합니다.",
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.normal,
     //                       fontSize: guidelineText3FontSize,
     //                       color: WHITE_COLOR,
@@ -855,7 +855,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                   child: Text(
     //                     '로그인함으로써 개인정보 처리방침에 동의합니다.',
     //                     style: TextStyle(
-    //                       fontFamily: 'NanumGothic',
+    //                       fontFamily: 'Pretendard',
     //                       fontWeight: FontWeight.normal,
     //                       fontSize: guidelineText1FontSize,
     //                       color: WHITE_COLOR,
@@ -895,7 +895,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                     child: Text(
     //                       '개인정보 처리방침 보기',
     //                       style: TextStyle(
-    //                         fontFamily: 'NanumGothic',
+    //                         fontFamily: 'Pretendard',
     //                         fontWeight: FontWeight.normal,
     //                         fontSize: guidelineText2FontSize,
     //                         color: BLUE49_COLOR,
@@ -925,7 +925,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
     //                     child: Text(
     //                       '관리자 로그인',
     //                       style: TextStyle(
-    //                         fontFamily: 'NanumGothic',
+    //                         fontFamily: 'Pretendard',
     //                         fontWeight: FontWeight.normal,
     //                         fontSize: goToLoginBtnTextFontSize,
     //                         color: WHITE_COLOR, // 텍스트 색상
@@ -1055,7 +1055,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
                           Text(
                             '동대문 의류도매 제로마진 플랫폼',
                             style: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.bold,
                               fontSize: screenTitleTextFontSize,
                               color: WHITE_COLOR,
@@ -1068,7 +1068,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
                           Text(
                             '웨어카노, Wearcano',
                             style: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               fontSize: screenSubTitleTextFontSize,
                               color: WHITE_COLOR,
@@ -1082,7 +1082,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
                           Text(
                             'SNS 버튼 클릭 후, 간편하게 로그인 및 회원가입을 하세요.',
                             style: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               fontSize: guideTextFontSize,
                               color: WHITE_COLOR,
@@ -1146,7 +1146,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
                             '네이버 앱 또는 웹 브라우저 내 로그아웃을 직접 실행 후\n'
                             "'로그인' 버튼 클릭 시, 타 네이버 계정 선택이 가능합니다.",
                             style: TextStyle(
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               fontSize: guidelineText3FontSize,
                               color: WHITE_COLOR,
@@ -1180,7 +1180,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
                             child: Text(
                               '개인정보 처리방침 보기',
                               style: TextStyle(
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.bold,
                                 fontSize: guidelineText1FontSize,
                                 color: BLUE49_COLOR,
@@ -1204,7 +1204,7 @@ class _EasyLoginAosScreenState extends ConsumerState<EasyLoginAosScreen>
                             child: Text(
                               '관리자 로그인',
                               style: TextStyle(
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.normal,
                                 fontSize: goToLoginBtnTextFontSize,
                                 color: WHITE_COLOR,

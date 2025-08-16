@@ -156,7 +156,7 @@ class _ProductDetailOriginalImageScreenState extends ConsumerState<ProductDetail
                 style: TextStyle(
                   color: GRAY98_COLOR,
                   fontSize: pageTextFontSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                 ), // 색상과 크기 설정
               ),
             ),

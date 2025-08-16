@@ -380,7 +380,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                       context: context,
                       ref: ref,
                       title: '마이페이지',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: profileAppBarTitleWidth,
@@ -498,7 +498,7 @@ class _ProfileMainScreenState extends ConsumerState<ProfileMainScreen>
                               text: TextSpan(
                                 text: '* 개인정보 처리방침 관련 세부 내용은 공지사항에서 확인 가능합니다.',
                                 style: TextStyle(
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.normal,
                                   fontSize: guideTextFontSize,
                                   color: BLACK_COLOR,

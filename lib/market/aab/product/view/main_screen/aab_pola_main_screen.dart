@@ -564,7 +564,7 @@ class _AabPolaMainScreenState extends ConsumerState<AabPolaMainScreen>
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_2',
                     // AppBar의 제목을 '폴라티 메인'로 설정
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     leadingType: LeadingType.back,
                     // AppBar의 리딩 타입을 뒤로가기 버튼으로 설정
                     buttonCase: 2, // 버튼 케이스를 2로 설정

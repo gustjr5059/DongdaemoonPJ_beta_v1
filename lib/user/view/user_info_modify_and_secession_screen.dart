@@ -526,7 +526,7 @@ class _UserInfoModifyAndSecessionScreenState
                         context: context,
                         ref: ref,
                         title: '회원정보 수정 및 탈퇴',
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         leadingType: LeadingType.none,
                         buttonCase: 1,
                         appBarTitleWidth: userInfoModifyAppBarTitleWidth,
@@ -615,7 +615,7 @@ class _UserInfoModifyAndSecessionScreenState
                                             // 텍스트 크기 설정
                                             fontWeight: FontWeight.bold,
                                             // 텍스트 굵기 설정
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             // 글꼴 설정
                                             color: BLACK_COLOR, // 텍스트 색상 설정
                                           ),
@@ -637,7 +637,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           "* '성'을 붙여서 이름을 기입해주세요.",
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.normal,
                                             color: GRAY60_COLOR,
                                           ),
@@ -649,7 +649,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           '* 빈칸 없이 최대 20자 이내이며, 비속어는 사용할 수 없습니다.',
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.normal,
                                             color: GRAY60_COLOR,
                                           ),
@@ -667,7 +667,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           '* 예) abc@naver.com, abc@hanmail.net',
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.normal,
                                             color: GRAY60_COLOR,
                                           ),
@@ -685,7 +685,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           '* 예) 010-XXXX-XXXX',
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.normal,
                                             color: GRAY60_COLOR,
                                           ),
@@ -697,7 +697,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           '* 상품 발주 내역 관련 관리자 연락을 위해 휴대폰 번호가 필요합니다.',
                                           style: TextStyle(
                                             fontSize: nameGuideTextFontSize,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.normal,
                                             color: BLACK_COLOR,
                                           ),
@@ -763,7 +763,7 @@ class _UserInfoModifyAndSecessionScreenState
                                             // 텍스트 크기 설정
                                             fontWeight: FontWeight.bold,
                                             // 텍스트 굵기 설정
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             // 글꼴 설정
                                             color: BLACK_COLOR, // 텍스트 색상 설정
                                           ),
@@ -776,7 +776,7 @@ class _UserInfoModifyAndSecessionScreenState
                                           fontSize: subTitleTextFontSize,
                                           // 텍스트 크기 설정
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           // 글꼴 설정
                                           color: BLACK_COLOR, // 텍스트 색상 설정
                                         ),
@@ -811,7 +811,7 @@ class _UserInfoModifyAndSecessionScreenState
                                                       fontSize: userSecessionInfoTextFontSize,
                                                       // 텍스트 크기 설정
                                                       fontWeight: FontWeight.normal,
-                                                      fontFamily: 'NanumGothic',
+                                                      fontFamily: 'Pretendard',
                                                       // 글꼴 설정
                                                       color: BLACK_COLOR, // 텍스트 색상 설정
                                                     ),
@@ -822,7 +822,7 @@ class _UserInfoModifyAndSecessionScreenState
                                                       fontSize: userSecessionInfoTextFontSize,
                                                       // 텍스트 크기 설정
                                                       fontWeight: FontWeight.normal,
-                                                      fontFamily: 'NanumGothic',
+                                                      fontFamily: 'Pretendard',
                                                       // 글꼴 설정
                                                       color: BLACK_COLOR, // 텍스트 색상 설정
                                                     ),
@@ -833,7 +833,7 @@ class _UserInfoModifyAndSecessionScreenState
                                                       fontSize: userSecessionInfoTextFontSize,
                                                       // 텍스트 크기 설정
                                                       fontWeight: FontWeight.normal,
-                                                      fontFamily: 'NanumGothic',
+                                                      fontFamily: 'Pretendard',
                                                       // 글꼴 설정
                                                       color: BLACK_COLOR, // 텍스트 색상 설정
                                                     ),
@@ -1220,7 +1220,7 @@ class _UserInfoModifyAndSecessionScreenState
                 label,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: signUpInfoTextFontSize,
                   color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
@@ -1246,7 +1246,7 @@ class _UserInfoModifyAndSecessionScreenState
                 child: Text(
                   value ?? '',
                   style: TextStyle(
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: signUpInfoDataFontSize,
                     color: BLACK_COLOR,
                   ),
@@ -1338,7 +1338,7 @@ class _UserInfoModifyAndSecessionScreenState
                   child: Text(
                     label,
                     style: TextStyle(
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: signUpInfoTextFontSize,
                       color: BLACK_COLOR,
                       fontWeight: FontWeight.bold,
@@ -1375,7 +1375,7 @@ class _UserInfoModifyAndSecessionScreenState
                         cursorColor: ORANGE56_COLOR,
                         // 커서 색상 설정
                         style: TextStyle(
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: signUpInfoDataFontSize,
                           color: BLACK_COLOR,
                           fontWeight: FontWeight.normal,
@@ -1489,7 +1489,7 @@ class _UserInfoModifyAndSecessionScreenState
                         TextSpan(
                           text: '*  ',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: signUpInfoTextFontSize,
                             color: RED46_COLOR,
                             fontWeight: FontWeight.bold,
@@ -1498,7 +1498,7 @@ class _UserInfoModifyAndSecessionScreenState
                         TextSpan(
                           text: label,
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: signUpInfoTextFontSize,
                             color: BLACK_COLOR,
                             fontWeight: FontWeight.bold,
@@ -1538,7 +1538,7 @@ class _UserInfoModifyAndSecessionScreenState
                         cursorColor: ORANGE56_COLOR,
                         // 커서 색상 설정
                         style: TextStyle(
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: signUpInfoDataFontSize,
                           color: BLACK_COLOR,
                           fontWeight: FontWeight.normal,

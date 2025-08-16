@@ -33,6 +33,28 @@ import 'common/view/splash1_screen.dart';
 import 'firebase_options.dart';
 import 'message/view/message_screen.dart'; // Firebase 초기 설정 관련 패키지 (firebase_cli를 통해 생성된 파일)
 
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/foundation.dart' show debugPrint;
+
+// // 앱 번들에 포함된 폰트 목록(FontManifest.json)을 출력해
+// // Pretendard가 실제로 포함되었는지 확인하는 디버그 유틸리티
+// Future<void> debugPrintFontManifest() async {
+//   try {
+//     final json = await rootBundle.loadString('FontManifest.json');
+//     debugPrint('=== FontManifest ===\n$json');
+//
+//     // 선택: Pretendard 포함 여부만 빠르게 체크
+//     debugPrint(
+//       json.contains('"family":"Pretendard"')
+//           ? '✅ Pretendard FOUND in FontManifest'
+//           : '❌ Pretendard NOT FOUND in FontManifest',
+//     );
+//   } catch (e) {
+//     debugPrint('FontManifest load error: $e');
+//   }
+// }
+
+
 
 // Firebase 초기화 코드
 // (Firebase와 Flutter 프로젝트를 연동하여 Firebase 서비스를 사용할 수 있게 함)
@@ -46,6 +68,9 @@ void main() async {
         DefaultFirebaseOptions.currentPlatform, // 현재 플랫폼에 맞는 Firebase 초기 설정 적용
   );
   print("Firebase 초기화 완료");  // Firebase 초기화 성공 여부 확인
+
+  // // Firebase 초기화 직후, runApp 이전에 FontManifest를 출력
+  // await debugPrintFontManifest();
 
   // 앱이 기기에서 세로 모드(Portrait)만 허용
   await SystemChrome.setPreferredOrientations([

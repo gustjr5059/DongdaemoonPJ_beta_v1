@@ -306,7 +306,7 @@ class _AdminReviewMainScreenState extends ConsumerState<AdminReviewMainScreen>
                       context: context,
                       ref: ref,
                       title: '리뷰 목록(관리자)',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: reviewAppBarTitleWidth,

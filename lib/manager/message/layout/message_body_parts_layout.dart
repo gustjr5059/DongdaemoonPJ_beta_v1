@@ -332,7 +332,7 @@ class _AdminMessageCreateFormScreenState
           '발주 완료한 고객이 없습니다.',
           style: TextStyle(
             fontSize: messageEmptyTextFontSize,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
             color: BLACK_COLOR,
           ),
@@ -353,7 +353,7 @@ class _AdminMessageCreateFormScreenState
                 '발신자:',
                 style: TextStyle(
                   fontSize: ordererDataTitleTextSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
                 ),
@@ -365,7 +365,7 @@ class _AdminMessageCreateFormScreenState
                   '${currentUser.email}',
                   style: TextStyle(
                     fontSize: ordererDataTextSize,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontWeight: FontWeight.normal,
                     color: BLACK_COLOR,
                   ),
@@ -385,7 +385,7 @@ class _AdminMessageCreateFormScreenState
                 '수신자:',
                 style: TextStyle(
                   fontSize: ordererDataTitleTextSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
                 ),
@@ -409,7 +409,7 @@ class _AdminMessageCreateFormScreenState
                           '수신자 선택',
                           style: TextStyle(
                             fontSize: RecipientDataTextSize,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                           ),
                         ),
                         value: selectedReceiver,
@@ -439,7 +439,7 @@ class _AdminMessageCreateFormScreenState
                               receiver.email,
                               style: TextStyle(
                                 fontSize: RecipientDataTextSize,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.normal,
                                 color: BLACK_COLOR,
                               ),
@@ -470,7 +470,7 @@ class _AdminMessageCreateFormScreenState
                 '발주번호:',
                 style: TextStyle(
                   fontSize: ordererDataTitleTextSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
                 ),
@@ -492,7 +492,7 @@ class _AdminMessageCreateFormScreenState
                         '발주번호 선택',
                         style: TextStyle(
                           fontSize: OrderNumberDataTextSize,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                         ),
                       ),
                       value: selectedOrderNumber,
@@ -528,7 +528,7 @@ class _AdminMessageCreateFormScreenState
                                     orderNumber,
                                     style: TextStyle(
                                       fontSize: OrderNumberDataTextSize,
-                                      fontFamily: 'NanumGothic',
+                                      fontFamily: 'Pretendard',
                                       fontWeight: FontWeight.normal,
                                       color: BLACK_COLOR,
                                     ),
@@ -559,7 +559,7 @@ class _AdminMessageCreateFormScreenState
                 '내용:',
                 style: TextStyle(
                   fontSize: ordererDataTitleTextSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontWeight: FontWeight.normal,
                   color: BLACK_COLOR,
                 ),
@@ -581,13 +581,13 @@ class _AdminMessageCreateFormScreenState
                         '내용 선택',
                         style: TextStyle(
                           fontSize: ContentDataTextSize,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                         ),
                       ),
                       value: messageContent,
                       style: TextStyle(
                         fontSize: ContentDataTextSize,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontWeight: FontWeight.normal,
                         color: BLACK_COLOR,
                       ),
@@ -639,7 +639,7 @@ class _AdminMessageCreateFormScreenState
                             '[택배수령] 결제 완료',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -651,7 +651,7 @@ class _AdminMessageCreateFormScreenState
                             '[택배수령] 배송 중',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -663,7 +663,7 @@ class _AdminMessageCreateFormScreenState
                             '[현장수령] 결제 완료',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -675,7 +675,7 @@ class _AdminMessageCreateFormScreenState
                             '[현장수령] 준비 완료',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -687,7 +687,7 @@ class _AdminMessageCreateFormScreenState
                             '[현장수령] 수령 완료',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -699,7 +699,7 @@ class _AdminMessageCreateFormScreenState
                             '환불 메세지',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -711,7 +711,7 @@ class _AdminMessageCreateFormScreenState
                             '직접입력',
                             style: TextStyle(
                               fontSize: ContentDataTextSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -758,7 +758,7 @@ class _AdminMessageCreateFormScreenState
               // 입력 시 자동으로 줄바꿈
               style: TextStyle(
                 fontSize: ContentDataTextSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
               cursorColor: ORANGE56_COLOR, // 커서 색상 설정
               decoration: InputDecoration(
@@ -808,7 +808,7 @@ class _AdminMessageCreateFormScreenState
                     '해당 상품이 없습니다.',
                     style: TextStyle(
                       fontSize: RefundDataTextSize,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontWeight: FontWeight.normal,
                       color: BLACK_COLOR,
                     ),
@@ -824,7 +824,7 @@ class _AdminMessageCreateFormScreenState
                       productOption,
                       style: TextStyle(
                         fontSize: RefundDataTextSize,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontWeight: FontWeight.normal,
                         color: BLACK_COLOR,
                       ),
@@ -840,7 +840,7 @@ class _AdminMessageCreateFormScreenState
                       '환불 신청 상품:',
                       style: TextStyle(
                         fontSize: ordererDataTitleTextSize,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontWeight: FontWeight.normal,
                         color: BLACK_COLOR,
                       ),
@@ -868,7 +868,7 @@ class _AdminMessageCreateFormScreenState
                         initialValue: messageContentText,
                         style: TextStyle(
                           fontSize: RefundDataTextSize,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontWeight: FontWeight.normal,
                           color: BLACK_COLOR,
                         ),
@@ -951,7 +951,7 @@ class _AdminMessageCreateFormScreenState
                     '발송하기',
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: sendingBtnFontSize,
                       color: ORANGE56_COLOR,
                     ),
@@ -1012,7 +1012,7 @@ class _AdminMessageCreateFormScreenState
                 hint: Text(
                   '선택',
                   style: TextStyle(
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: selectDataTextSize,
                   ),
                 ), // 드롭다운 메뉴에서 아무것도 선택되지 않았을 때 표시되는 힌트 텍스트임.
@@ -1249,7 +1249,7 @@ class _AdminMessageListScreenState
                         child: Text(
                           '쪽지 수신자 선택',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: messageRecipientSelectDataTextSize1,
                           ),
                         ),
@@ -1267,7 +1267,7 @@ class _AdminMessageListScreenState
                             receiver.email,
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontSize: messageRecipientSelectDataTextSize2,
                               color: BLACK_COLOR,
                             ),
@@ -1300,7 +1300,7 @@ class _AdminMessageListScreenState
               '현재 쪽지 목록 내 쪽지가 없습니다.',
               style: TextStyle(
                 fontSize: messageEmptyTextFontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.bold,
                 color: BLACK_COLOR,
               ),
@@ -1360,7 +1360,7 @@ class _AdminMessageListScreenState
                                     // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold,
                                     // 텍스트 굵기 설정
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     color:
                                         message['private_email_closed_button'] ==
                                                 true
@@ -1380,7 +1380,7 @@ class _AdminMessageListScreenState
                                         // 텍스트 크기 설정
                                         fontWeight: FontWeight.bold,
                                         // 텍스트 굵기 설정
-                                        fontFamily: 'NanumGothic',
+                                        fontFamily: 'Pretendard',
                                         color: BLACK_COLOR, // 텍스트 색상 설정
                                       ),
                                     ),
@@ -1461,7 +1461,7 @@ class _AdminMessageListScreenState
                                   '삭제', // 버튼 텍스트 설정
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontSize: deleteBtnFontSize,
                                     color: BLACK_COLOR,
                                   ),
@@ -1537,7 +1537,7 @@ class _AdminMessageListScreenState
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: color,
               ),
             ),
@@ -1548,7 +1548,7 @@ class _AdminMessageListScreenState
               value ?? '',
               style: TextStyle(
                 fontSize: fontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: color,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
               ),
@@ -1573,7 +1573,7 @@ class _AdminMessageListScreenState
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
@@ -1585,7 +1585,7 @@ class _AdminMessageListScreenState
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
               textAlign: TextAlign.start,
               softWrap: true,

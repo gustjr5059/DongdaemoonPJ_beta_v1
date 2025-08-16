@@ -485,7 +485,7 @@ class _AagSummerSubMainScreenState extends ConsumerState<AagSummerSubMainScreen>
                       // 참조(ref) 전달
                       title: '여름 섹션      ', // 6칸 빈칸 생성해서 간격 조절
                       // AppBar의 제목을 '여름 섹션'으로 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       boolStoreNameImg: true,
                       titleImageFieldName: 'title_img_7',
                       leadingType: LeadingType.back,

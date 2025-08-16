@@ -114,7 +114,7 @@ class UserInfoWidget extends ConsumerWidget {
               Text(
                 '발주자 정보', // 발주자 정보 제목 텍스트
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: ordererInfoTitleFontSize,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                   color: BLACK_COLOR,
@@ -131,7 +131,7 @@ class UserInfoWidget extends ConsumerWidget {
               Text(
                 '[정보 불일치로 인한 불이익 시 당사가 책임지지 않습니다.]', // 안내문 텍스트
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderRequireNoticeFontSize1,
                   color: GRAY35_COLOR,
                   fontWeight: FontWeight.bold, // 텍스트 색상을 회색으로 설정
@@ -142,7 +142,7 @@ class UserInfoWidget extends ConsumerWidget {
                 '* 정보 변경은 [마이페이지] => [회원정보 수정] 절차로 재진행해주세요.',
                 // 안내문 텍스트
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderRequireNoticeFontSize2, // 텍스트 크기 12
                   color: GRAY35_COLOR,
                 ),
@@ -240,7 +240,7 @@ class UserInfoWidget extends ConsumerWidget {
                 label,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: ordererInfoTextFontSize,
                   color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
@@ -266,7 +266,7 @@ class UserInfoWidget extends ConsumerWidget {
                 child: Text(
                   value ?? '',
                   style: TextStyle(
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: ordererInfoDataFontSize,
                     color: BLACK_COLOR,
                   ),
@@ -502,7 +502,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
             Text(
               '수령자 정보', // 수령자 정보 제목 텍스트
               style: TextStyle(
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontSize: RecipientInfoTitleFontSize,
                 fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                 color: BLACK_COLOR,
@@ -631,7 +631,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                     label, // 셀에 표시될 텍스트
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: recipientInfoTextFontSize,
                       color: BLACK_COLOR,
                     ),
@@ -673,7 +673,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           cursorColor: ORANGE56_COLOR,
                           // 커서 색상 설정
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: recipientInfoDataFontSize,
                             color: BLACK_COLOR,
                             fontWeight: FontWeight.normal,
@@ -781,7 +781,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 label, // 셀에 표시될 텍스트
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: recipientInfoTextFontSize,
                   color: BLACK_COLOR,
                 ),
@@ -805,7 +805,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                         controller.text,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: recipientInfoDataFontSize,
                           color: BLACK_COLOR,
                         ),
@@ -814,7 +814,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                         hintText, // 전달받은 hintText 표시
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: recipientInfoDataFontSize,
                           color: GRAY74_COLOR, // 힌트 텍스트 색상
                         ),
@@ -914,7 +914,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 label, // 셀에 표시될 텍스트
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: recipientInfoTextFontSize,
                   color: BLACK_COLOR,
                 ),
@@ -940,7 +940,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                         controller.text,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: recipientInfoDataFontSize,
                           color: BLACK_COLOR,
                         ),
@@ -968,7 +968,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           buttonText,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: postcodeSearchBtnFontSize,
                             color: ORANGE56_COLOR,
                           ),
@@ -1051,7 +1051,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                 '배송메모', // 셀에 표시될 텍스트
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: recipientInfoTextFontSize,
                   color: BLACK_COLOR,
                 ), // 텍스트를 굵게 설정
@@ -1105,7 +1105,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                           value,
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: recipientInfoDataFontSize,
                             color: BLACK_COLOR,
                           ),
@@ -1190,7 +1190,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
           Text(
             "자주 사용할 수령자 정보는 즐겨찾기 목록에 등록해보세요.\n'즐겨찾기 등록' 버튼 클릭 후 등록 가능합니다.",
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
               color: GRAY62_COLOR,
@@ -1200,7 +1200,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
           Text(
             "'즐겨찾기 선택' 버튼을 클릭해서 등록된 내용을 불러오세요.",
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
               color: GRAY62_COLOR,
@@ -1231,7 +1231,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                     buttonText1,
                     style: TextStyle(
                       fontWeight: FontWeight.bold, // 버튼 텍스트를 굵게 설정함
-                      fontFamily: 'NanumGothic', // 버튼 텍스트의 폰트를 설정함
+                      fontFamily: 'Pretendard', // 버튼 텍스트의 폰트를 설정함
                       fontSize: favoritesSelectBtnFontSize, // 버튼 텍스트의 크기를 설정함
                       color: ORANGE56_COLOR, // 텍스트 색상을 설정함
                     ),
@@ -1307,7 +1307,7 @@ class _RecipientInfoWidgetState extends ConsumerState<RecipientInfoWidget> {
                     buttonText2,
                     style: TextStyle(
                       fontWeight: FontWeight.bold, // 버튼 텍스트를 굵게 설정함
-                      fontFamily: 'NanumGothic', // 버튼 텍스트의 폰트를 설정함
+                      fontFamily: 'Pretendard', // 버튼 텍스트의 폰트를 설정함
                       fontSize: favoritesSelectBtnFontSize, // 버튼 텍스트의 크기를 설정함
                       color: ORANGE56_COLOR, // 텍스트 색상을 설정함
                     ),
@@ -1463,7 +1463,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: recipientInfolistTextDataFontSize2,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               color: BLACK_COLOR,
                             ),
                           ),
@@ -1475,7 +1475,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: recipientInfolistTextDataFontSize1,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               color: GRAY62_COLOR,
                             ),
                           ),
@@ -1487,7 +1487,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: recipientInfolistTextDataFontSize1,
                               fontWeight: FontWeight.normal,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               color: BLACK_COLOR,
                               overflow: TextOverflow.visible, // 넘칠 경우 다음 줄로 넘어감
                             ),
@@ -1500,7 +1500,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: recipientInfolistTextDataFontSize1,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               color: GRAY62_COLOR,
                             ),
                           ),
@@ -1533,7 +1533,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                     '선택',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: 'NanumGothic',
+                                      fontFamily: 'Pretendard',
                                       fontSize: SelectBtnFontSize,
                                       color: ORANGE56_COLOR,
                                     ),
@@ -1562,14 +1562,14 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                         yesText: '예',
                                         // '예' 버튼 텍스트를 설정함
                                         noTextStyle: TextStyle(
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           color: BLACK_COLOR,
                                           // '아니요' 텍스트 색상을 검정색으로 설정함
                                           fontWeight:
                                               FontWeight.bold, // 텍스트를 굵게 설정함
                                         ),
                                         yesTextStyle: TextStyle(
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           color:
                                               RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                           fontWeight:
@@ -1621,7 +1621,7 @@ class RecipientInfoItemsList extends ConsumerWidget {
                                     '삭제',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: 'NanumGothic',
+                                      fontFamily: 'Pretendard',
                                       fontSize: DeleteBtnFontSize,
                                       color: ORANGE56_COLOR,
                                     ),
@@ -1719,7 +1719,7 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
           Text(
             '수령방식 선택',
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: deliveryMethodInfoTitleFontSize,
               fontWeight: FontWeight.bold, // ——— 텍스트 굵게 표시
               color: BLACK_COLOR, // ——— 텍스트 색상을 검은색으로 설정
@@ -1730,7 +1730,7 @@ class DeliveryMethodSelectInfoWidget extends ConsumerWidget {
           Text(
             '현장수령은 매장 방문 후 상품을 직접 수령하는 방식입니다.',
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: deliveryMethodNoticeFontSize,
               color: GRAY35_COLOR, // ——— 텍스트 색상을 회색으로 설정
               fontWeight: FontWeight.normal,
@@ -1887,7 +1887,7 @@ class TotalPaymentWidget extends ConsumerWidget {
           Text(
             '금액 정보', // 결제금액 제목 텍스트
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: priceInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
               color: BLACK_COLOR,
@@ -1974,7 +1974,7 @@ class TotalPaymentWidget extends ConsumerWidget {
                 label,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: ordererInfoTextFontSize,
                   color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
@@ -2000,7 +2000,7 @@ class TotalPaymentWidget extends ConsumerWidget {
                     // 총 결제금액인 경우 텍스트 굵게 설정
                     color: isTotal ? RED46_COLOR : BLACK_COLOR,
                     // 총 결제금액인 경우 텍스트 색상을 빨간색으로 설정
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: ordererInfoDataFontSize,
                   ),
                 ), // 값 표시
@@ -2069,7 +2069,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
           Text(
             '결제 방법', // 결제 방법 제목 텍스트
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: paymentMethodInfoTitleFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
               color: BLACK_COLOR,
@@ -2080,7 +2080,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
           Text(
             "결제 방법은 무조건 계좌이체입니다.", // 설명 텍스트
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
               color: GRAY62_COLOR,
@@ -2089,7 +2089,7 @@ class PaymentMethodInfoWidget extends StatelessWidget {
           Text(
             "'결제하기' 버튼 클릭 후 안내 계좌로 이체해주세요.", // 설명 텍스트
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: orderRequireNoticeFontSize,
               fontWeight: FontWeight.bold, // 텍스트 굵게 설정
               color: GRAY62_COLOR,
@@ -2198,7 +2198,7 @@ class CompleteOrderButton extends ConsumerWidget {
           child: Text(
             '결제는 30,000원 이상일 시, 진행 가능합니다.', // 알림 텍스트
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: orderRequireNoticeFontSize,
               color: GRAY35_COLOR,
               fontWeight: FontWeight.normal, // 텍스트 색상을 회색으로 설정
@@ -2211,7 +2211,7 @@ class CompleteOrderButton extends ConsumerWidget {
           child: Text(
             '발주 요청을 완료함으로써 개인정보 처리방침에 동의합니다.', // 알림 텍스트
             style: TextStyle(
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontSize: guidelineText1FontSize,
               color: GRAY35_COLOR,
               fontWeight: FontWeight.normal, // 텍스트 색상을 회색으로 설정
@@ -2240,7 +2240,7 @@ class CompleteOrderButton extends ConsumerWidget {
             child: Text(
               '개인정보 처리방침 보기',
               style: TextStyle(
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.normal,
                 fontSize: guidelineText2FontSize,
                 color: BLUE49_COLOR,
@@ -2357,7 +2357,7 @@ class CompleteOrderButton extends ConsumerWidget {
                 '결제하기',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: paymentBtnFontSize,
                   color: ORANGE56_COLOR,
                 ),
@@ -2528,7 +2528,7 @@ class OrderListItemWidget extends ConsumerWidget {
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -2542,7 +2542,7 @@ class OrderListItemWidget extends ConsumerWidget {
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: RED46_COLOR, // 텍스트 색상 설정
                     ),
@@ -2559,7 +2559,7 @@ class OrderListItemWidget extends ConsumerWidget {
                   // 텍스트 크기 설정
                   fontWeight: FontWeight.bold,
                   // 텍스트 굵기 설정
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   // 글꼴 설정
                   color: GRAY41_COLOR, // 텍스트 색상 설정
                 ),
@@ -2616,7 +2616,7 @@ class OrderListItemWidget extends ConsumerWidget {
                           // 텍스트 크기 설정
                           fontWeight: FontWeight.bold,
                           // 텍스트 굵기 설정
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           // 글꼴 설정
                           color: WHITE_COLOR, // 텍스트 색상 설정
                         ),
@@ -2708,7 +2708,7 @@ class OrderListItemWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: deleteBtnFontSize, // 텍스트 크기 설정
                           fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                          fontFamily: 'NanumGothic', // 글꼴 설정
+                          fontFamily: 'Pretendard', // 글꼴 설정
                           color: ORANGE56_COLOR, // 텍스트 색상 설정
                         ),
                       ),
@@ -3049,7 +3049,7 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -3063,7 +3063,7 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: GRAY41_COLOR, // 텍스트 색상 설정
                     ),
@@ -3081,7 +3081,7 @@ class _OrderListDetailItemWidgetState
                             // 텍스트 크기 설정
                             fontWeight: FontWeight.bold,
                             // 텍스트 굵기 설정
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             // 글꼴 설정
                             color: GRAY41_COLOR, // 텍스트 색상 설정
                           ),
@@ -3122,7 +3122,7 @@ class _OrderListDetailItemWidgetState
                             fontSize:
                                 orderlistDtInfodeliveryStartDateDataFontSize,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: GRAY41_COLOR,
                           ),
                         );
@@ -3196,7 +3196,7 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -3262,7 +3262,7 @@ class _OrderListDetailItemWidgetState
                       // 텍스트 크기 설정
                       fontWeight: FontWeight.bold,
                       // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
@@ -3338,7 +3338,7 @@ class _OrderListDetailItemWidgetState
                           fontSize:
                               orderlistDtInfoRefundCompletionDateDataFontSize,
                           // 텍스트 크기를 16으로 설정함.
-                          fontFamily: 'NanumGothic', // 글꼴 설정
+                          fontFamily: 'Pretendard', // 글꼴 설정
                         ),
                       ),
                     SizedBox(height: interval1Y),
@@ -3454,7 +3454,7 @@ class _OrderListDetailItemWidgetState
                                             style: TextStyle(
                                               fontSize:
                                                   orderlistDtInfoOriginalPriceDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               color: GRAY60_COLOR,
                                               decoration:
                                                   TextDecoration.lineThrough,
@@ -3467,7 +3467,7 @@ class _OrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize:
                                                       orderlistDtInfoDiscountPriceDataFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
                                                 ),
@@ -3478,7 +3478,7 @@ class _OrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize:
                                                       orderlistDtInfoDiscountPercentDataFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   color: RED46_COLOR,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -3532,7 +3532,7 @@ class _OrderListDetailItemWidgetState
                                                 style: TextStyle(
                                                   fontSize:
                                                       orderlistDtInfoColorTextDataFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
                                                 ),
@@ -3546,7 +3546,7 @@ class _OrderListDetailItemWidgetState
                                             style: TextStyle(
                                               fontSize:
                                                   orderlistDtInfoSizeTextDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               fontWeight: FontWeight.bold,
                                               color: BLACK_COLOR,
                                             ),
@@ -3557,7 +3557,7 @@ class _OrderListDetailItemWidgetState
                                             style: TextStyle(
                                               fontSize:
                                                   orderlistDtInfoCountTextDataFontSize,
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               fontWeight: FontWeight.bold,
                                               color: BLACK_COLOR,
                                             ),
@@ -3620,7 +3620,7 @@ class _OrderListDetailItemWidgetState
                                 '환불',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontSize:
                                       orderlistDtInfoBottomBtnDataFontSize,
                                   color: boolRefundBtn
@@ -3678,7 +3678,7 @@ class _OrderListDetailItemWidgetState
                                 '리뷰 작성',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontSize:
                                       orderlistDtInfoBottomBtnDataFontSize,
                                   color: boolReviewWriteBtn &&
@@ -3708,7 +3708,7 @@ class _OrderListDetailItemWidgetState
                                 '장바구니 담기',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontSize:
                                       orderlistDtInfoBottomBtnDataFontSize,
                                   color: ORANGE56_COLOR,
@@ -3766,7 +3766,7 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             color: isTotal ? BLACK_COLOR : GRAY41_COLOR,
           ),
         ),
@@ -3777,7 +3777,7 @@ Widget _buildAmountRow(BuildContext context, String label, String value,
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
             color: isTotal ? RED46_COLOR : BLACK_COLOR,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
           ),
         ),
       ],
@@ -3799,7 +3799,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: GRAY41_COLOR,
                 ),
               ),
@@ -3808,7 +3808,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: BLACK_COLOR,
                 ),
                 softWrap: true, // 줄바꿈 허용
@@ -3825,7 +3825,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: isLongText ? BLACK_COLOR : GRAY41_COLOR,
                 ),
               ),
@@ -3836,7 +3836,7 @@ Widget _buildRecipientInfoRow(BuildContext context, String label, String value,
                   style: TextStyle(
                     fontSize: fontSize,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     color: BLACK_COLOR,
                   ),
                   textAlign: TextAlign.end,
@@ -3860,7 +3860,7 @@ Widget _buildProductInfoRow(BuildContext context, String label, String value,
         Text(
           label,
           style: TextStyle(
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontSize: fontSize,
             fontWeight: bold ? FontWeight.bold : FontWeight.normal,
             color: BLACK_COLOR,
@@ -3873,7 +3873,7 @@ Widget _buildProductInfoRow(BuildContext context, String label, String value,
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR,
             ),
             textAlign: TextAlign.end,

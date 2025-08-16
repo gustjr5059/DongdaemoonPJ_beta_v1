@@ -333,7 +333,7 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                       context: context,
                       ref: ref,
                       title: '공지사항 상세',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.back,
                       buttonCase: 1,
                       appBarTitleWidth: announceDtAppBarTitleWidth,
@@ -407,8 +407,8 @@ class _AnnounceDetailScreenState extends ConsumerState<AnnounceDetailScreen>
                                     // 텍스트의 폰트 크기를 설정함.
                                     fontSize:
                                         announcementDetailEmptyTextFontSize,
-                                    // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                                    fontFamily: 'NanumGothic',
+                                    // 폰트 패밀리를 'Pretendard'으로 설정함.
+                                    fontFamily: 'Pretendard',
                                     // 폰트 굵기를 'bold'로 설정함.
                                     fontWeight: FontWeight.bold,
                                     // 텍스트 색상을 검은색으로 설정함.

@@ -943,12 +943,12 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
               unselectedFontSize: bottomNavigationIconTextFontSize,
               // 선택되지 않은 아이템의 폰트 크기
               selectedLabelStyle: TextStyle(
-                fontFamily: 'NanumGothic', // 폰트 패밀리 설정
+                fontFamily: 'Pretendard', // 폰트 패밀리 설정
                 fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
                 fontSize: bottomNavigationIconTextFontSize, // 텍스트 크기를 10으로 설정
               ),
               unselectedLabelStyle: TextStyle(
-                fontFamily: 'NanumGothic', // 폰트 패밀리 설정
+                fontFamily: 'Pretendard', // 폰트 패밀리 설정
                 fontWeight: FontWeight.bold, // 텍스트를 bold로 설정
                 fontSize: bottomNavigationIconTextFontSize, // 텍스트 크기를 10으로 설정
               ),
@@ -1082,7 +1082,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                   style: TextStyle(
                                     color: ORANGE56_COLOR,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                   ),
                                 ),
                                 onPressed: () {
@@ -1103,7 +1103,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                       child: Text(
                         '장바구니 담기',
                         style: TextStyle(
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: bottomBtnFontSize,
                           fontWeight: FontWeight.bold,
                           color: WHITE_COLOR,
@@ -1140,7 +1140,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                     // 텍스트 두께
                                     fontWeight: FontWeight.bold,
                                     // 텍스트 폰트
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                   ),
                                 ),
                                 // 확인 버튼 눌렀을 때 실행되는 동작
@@ -1188,7 +1188,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                         '바로 발주',
                         style: TextStyle(
                           // 텍스트 폰트
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           // 텍스트 크기
                           fontSize: bottomBtnFontSize,
                           // 텍스트 두께
@@ -1373,7 +1373,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                         style: TextStyle(
                           fontSize: bottomTextFontSize,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           color: BLACK_COLOR,
                         ),
                       ),
@@ -1388,7 +1388,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                         style: TextStyle(
                           fontSize: bottomTextFontSize,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           color: BLACK_COLOR,
                         ),
                       ),
@@ -1416,7 +1416,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                                   style: TextStyle(
                                     color: ORANGE56_COLOR,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                   ),
                                 ),
                                 onPressed: () {
@@ -1487,7 +1487,7 @@ Widget buildCommonBottomNavigationBar(int selectedIndex, WidgetRef ref,
                         '발주하기',
                         style: TextStyle(
                           // 폰트 패밀리
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           // 텍스트 크기
                           fontSize: bottomBtnFontSize,
                           // 텍스트 두께
@@ -1805,7 +1805,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //                         style: TextStyle(
 //                           fontSize: emailTextFontSize2, // 텍스트 폰트 크기 설정
 //                           color: BLACK_COLOR, // 텍스트 색상 설정
-//                           fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                           fontFamily: 'Pretendard', // 텍스트 폰트 패밀리 설정
 //                           fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
 //                         ),
 //                       );
@@ -1825,7 +1825,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //                             style: TextStyle(
 //                               fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
 //                               color: BLACK_COLOR, // 텍스트 색상 설정
-//                               fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                               fontFamily: 'Pretendard', // 텍스트 폰트 패밀리 설정
 //                               fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
 //                             ),
 //                           );
@@ -1838,7 +1838,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //                             style: TextStyle(
 //                               fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
 //                               color: BLACK_COLOR, // 텍스트 색상 설정
-//                               fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                               fontFamily: 'Pretendard', // 텍스트 폰트 패밀리 설정
 //                               fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
 //                             ),
 //                             children: [
@@ -1847,7 +1847,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //                                 style: TextStyle(
 //                                   fontSize: emailTextFontSize1, // 텍스트 폰트 크기 설정
 //                                   color: BLACK_COLOR, // 텍스트 색상 설정
-//                                   fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+//                                   fontFamily: 'Pretendard', // 텍스트 폰트 패밀리 설정
 //                                   fontWeight: FontWeight.normal, // 텍스트 폰트 굵기 설정
 //                                 ),
 //                               ),
@@ -1946,7 +1946,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //                 //     child: Text(
 //                 //       'DB 생성',
 //                 //       style: TextStyle(
-//                 //         fontFamily: 'NanumGothic',
+//                 //         fontFamily: 'Pretendard',
 //                 //         color: Colors.blue,
 //                 //         fontSize: 18,
 //                 //         fontWeight: FontWeight.bold,
@@ -2043,7 +2043,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
 //                         Text(
 //                           isLoggedIn ? 'Logout' : 'Login',
 //                           style: TextStyle(
-//                             fontFamily: 'NanumGothic',
+//                             fontFamily: 'Pretendard',
 //                             color: GRAY47_COLOR,
 //                             fontSize: logoutTextFontSize,
 //                             fontWeight: FontWeight.bold,
@@ -2155,7 +2155,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                             style: TextStyle(
                               fontSize: emailTextFontSize2,
                               color: BLACK_COLOR,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.bold,
                             ),
                           );
@@ -2176,7 +2176,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                                 style: TextStyle(
                                   fontSize: emailTextFontSize3, // 텍스트 폰트 크기 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
-                                  fontFamily: 'NanumGothic', // 텍스트 폰트 패밀리 설정
+                                  fontFamily: 'Pretendard', // 텍스트 폰트 패밀리 설정
                                   fontWeight: FontWeight.bold, // 텍스트 폰트 굵기 설정
                                 ),
                               );
@@ -2190,7 +2190,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                                   style: TextStyle(
                                     fontSize: emailTextFontSize1,
                                     color: BLACK_COLOR,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.bold,
                                   ),
                                   // textAlign: TextAlign.center,
@@ -2299,7 +2299,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                         //     child: Text(
                         //       'DB 생성',
                         //       style: TextStyle(
-                        //         fontFamily: 'NanumGothic',
+                        //         fontFamily: 'Pretendard',
                         //         color: Colors.blue,
                         //         fontSize: 18,
                         //         fontWeight: FontWeight.bold,
@@ -2399,7 +2399,7 @@ Widget buildCommonDrawer(BuildContext context, WidgetRef ref) {
                                 Text(
                                   isLoggedIn ? 'Logout' : 'Login',
                                   style: TextStyle(
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     color: GRAY47_COLOR,
                                     fontSize: logoutTextFontSize,
                                     fontWeight: FontWeight.bold,
@@ -2486,7 +2486,7 @@ Widget _buildAdminListTile(BuildContext context, String title,
             style: TextStyle(
               fontSize: iconTextFontSize,
               color: BLACK_COLOR,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontWeight: FontWeight.bold,
             ),
             // textAlign: TextAlign.center, // 텍스트 중앙 정렬
@@ -2570,7 +2570,7 @@ Widget _buildListTile(
             style: TextStyle(
               fontSize: iconTextFontSize,
               color: BLACK_COLOR,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontWeight: FontWeight.bold,
             ),
             // textAlign: TextAlign.center, // 텍스트 중앙 정렬

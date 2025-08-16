@@ -456,7 +456,7 @@ class _ReviewCreateDetailScreenState
                                   '에러가 발생했으니, 앱을 재실행해주세요.',
                                   style: TextStyle(
                                     fontSize: reviewEmptyTextFontSize,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.bold,
                                     color: BLACK_COLOR,
                                   ),

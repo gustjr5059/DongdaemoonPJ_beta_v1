@@ -562,7 +562,7 @@ class _AbaPolaMainScreenState extends ConsumerState<AbaPolaMainScreen>
                     // 참조(ref) 전달
                     title: '폴라티 메인      ', // 6칸 빈칸 생성해서 간격 조절
                     // AppBar의 제목을 '폴라티 메인'로 설정
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_27',
                     leadingType: LeadingType.back,

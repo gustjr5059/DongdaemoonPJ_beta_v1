@@ -485,7 +485,7 @@ class _AazWinterSubMainScreenState extends ConsumerState<AazWinterSubMainScreen>
                       // 참조(ref) 전달
                       title: '겨울 섹션      ', // 6칸 빈칸 생성해서 간격 조절
                       // AppBar의 제목을 '겨울 섹션'으로 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       boolStoreNameImg: true,
                       titleImageFieldName: 'title_img_26',
                       leadingType: LeadingType.back,

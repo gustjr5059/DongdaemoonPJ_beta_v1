@@ -46,7 +46,7 @@ class WishlistIconButton extends ConsumerWidget {
                   style: TextStyle(
                     color: ORANGE56_COLOR,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                   ),
                 ),
                 onPressed: () {
@@ -303,7 +303,7 @@ class WishlistItemsList extends ConsumerWidget {
             child: Text('현재 찜 목록이 비어 있습니다.',
               style: TextStyle(
                 fontSize: wishlistEmptyTextFontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.bold,
                 color: BLACK_COLOR,
               ),
@@ -399,7 +399,7 @@ class WishlistItemsList extends ConsumerWidget {
                                           style: TextStyle(
                                             fontSize: wishlistProductNumberFontSize,
                                             fontWeight: FontWeight.bold,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             color: BLACK_COLOR,
                                           ),
                                         ),
@@ -410,7 +410,7 @@ class WishlistItemsList extends ConsumerWidget {
                                           style: TextStyle(
                                             fontSize: wishlistBriefIntroductionFontSize,
                                             fontWeight: FontWeight.bold,
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             color: BLACK_COLOR,
                                           ),
                                           maxLines: 1, // 한 줄로 표시되도록 설정함
@@ -426,7 +426,7 @@ class WishlistItemsList extends ConsumerWidget {
                                               style: TextStyle(
                                                 fontSize: wishlistOriginalPriceFontSize,
                                                 fontWeight: FontWeight.bold,
-                                                fontFamily: 'NanumGothic',
+                                                fontFamily: 'Pretendard',
                                                 color: GRAY42_COLOR,
                                                 decoration: TextDecoration.lineThrough, // 가격에 줄을 긋는 스타일을 적용함
                                               ),
@@ -438,7 +438,7 @@ class WishlistItemsList extends ConsumerWidget {
                                               style: TextStyle(
                                                 fontSize: wishlistDiscountPercentFontSize,
                                                 fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
-                                                fontFamily: 'NanumGothic',
+                                                fontFamily: 'Pretendard',
                                                 color: RED46_COLOR, // 빨간색으로 할인율을 강조함
                                               ),
                                             ),
@@ -450,7 +450,7 @@ class WishlistItemsList extends ConsumerWidget {
                                           style: TextStyle(
                                             fontSize: wishlistDiscountPriceFontSize,
                                             fontWeight: FontWeight.w800, // ExtraBold 스타일을 적용함
-                                            fontFamily: 'NanumGothic',
+                                            fontFamily: 'Pretendard',
                                             color: BLACK_COLOR,
                                           ),
                                         ),
@@ -472,12 +472,12 @@ class WishlistItemsList extends ConsumerWidget {
                                             noText: '아니요', // '아니요' 버튼 텍스트를 설정함
                                             yesText: '예', // '예' 버튼 텍스트를 설정함
                                             noTextStyle: TextStyle(
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               color: BLACK_COLOR, // '아니요' 텍스트 색상을 검정색으로 설정함
                                               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                             ),
                                             yesTextStyle: TextStyle(
-                                              fontFamily: 'NanumGothic',
+                                              fontFamily: 'Pretendard',
                                               color: RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                               fontWeight: FontWeight.bold, // 텍스트를 굵게 설정함
                                             ),
@@ -516,7 +516,7 @@ class WishlistItemsList extends ConsumerWidget {
                                         style: TextStyle(
                                           fontSize: wishlistDeleteBtnFontSize,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           color: BLACK_COLOR, // 버튼 텍스트 색상을 검정색으로 설정함
                                         ),
                                       ),

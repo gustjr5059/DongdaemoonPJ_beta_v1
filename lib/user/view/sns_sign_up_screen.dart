@@ -356,7 +356,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                       context: context,
                       ref: ref,
                       title: '회원가입',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.back,
                       buttonCase: 1,
                       appBarTitleWidth: signUpAppBarTitleWidth,
@@ -391,7 +391,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                                   text: '* ',
                                   style: TextStyle(
                                     fontSize: nameGuideTextFontSize,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.bold,
                                     color: RED46_COLOR,
                                   ),
@@ -400,7 +400,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                                   text: '필수',
                                   style: TextStyle(
                                     fontSize: nameGuideTextFontSize,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.bold,
                                     color: BLACK_COLOR,
                                   ),
@@ -424,7 +424,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                             "* '성'을 붙여서 이름을 기입해주세요.",
                             style: TextStyle(
                               fontSize: nameGuideTextFontSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: GRAY60_COLOR,
                             ),
@@ -436,7 +436,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                             '* 빈칸 없이 최대 20자 이내이며, 비속어는 사용할 수 없습니다.',
                             style: TextStyle(
                               fontSize: nameGuideTextFontSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: GRAY60_COLOR,
                             ),
@@ -450,7 +450,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                             '* 예) abc@naver.com, abc@hanmail.net',
                             style: TextStyle(
                               fontSize: nameGuideTextFontSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: GRAY60_COLOR,
                             ),
@@ -464,7 +464,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                             '* 예) 010-XXXX-XXXX',
                             style: TextStyle(
                               fontSize: nameGuideTextFontSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: GRAY60_COLOR,
                             ),
@@ -476,7 +476,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                             '* 상품 발주 내역 관련 내용 확인을 위해 휴대폰 번호가 필요합니다.',
                             style: TextStyle(
                               fontSize: nameGuideTextFontSize,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.normal,
                               color: BLACK_COLOR,
                             ),
@@ -505,7 +505,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                               '모든 항목 선택',
                               style: TextStyle(
                                 fontSize: allAgreeCheckBoxTextFontSize,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.bold,
                                 color: BLACK_COLOR,
                               ),
@@ -684,7 +684,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
               text,
               style: TextStyle(
                 fontSize: agreeCheckBoxTextFontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.normal,
                 color: BLACK_COLOR,
               ),
@@ -722,7 +722,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
             child: Text(
               '보기',
               style: TextStyle(
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: GRAY83_COLOR,
                 decoration: TextDecoration.underline,
                 decorationColor: GRAY83_COLOR,
@@ -849,7 +849,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         TextSpan(
                           text: '*  ',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: signUpInfoTextFontSize,
                             color: RED46_COLOR,
                             fontWeight: FontWeight.bold,
@@ -858,7 +858,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         TextSpan(
                           text: label,
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: signUpInfoTextFontSize,
                             color: BLACK_COLOR,
                             fontWeight: FontWeight.bold,
@@ -898,7 +898,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         cursorColor: ORANGE56_COLOR,
                         // 커서 색상 설정
                         style: TextStyle(
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: signUpInfoDataFontSize,
                           color: BLACK_COLOR,
                           fontWeight: FontWeight.normal,
@@ -1012,7 +1012,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         TextSpan(
                           text: '*  ',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: signUpInfoTextFontSize,
                             color: RED46_COLOR,
                             fontWeight: FontWeight.bold,
@@ -1021,7 +1021,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         TextSpan(
                           text: label,
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: signUpInfoTextFontSize,
                             color: BLACK_COLOR,
                             fontWeight: FontWeight.bold,
@@ -1061,7 +1061,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                         cursorColor: ORANGE56_COLOR,
                         // 커서 색상 설정
                         style: TextStyle(
-                          fontFamily: 'NanumGothic',
+                          fontFamily: 'Pretendard',
                           fontSize: signUpInfoDataFontSize,
                           color: BLACK_COLOR,
                           fontWeight: FontWeight.normal,
@@ -1170,7 +1170,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                 label,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: signUpInfoTextFontSize,
                   color: BLACK_COLOR,
                 ), // 텍스트 스타일 설정
@@ -1196,7 +1196,7 @@ class _SnsSignUpScreenState extends ConsumerState<SnsSignUpScreen>
                 child: Text(
                   value ?? '',
                   style: TextStyle(
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: signUpInfoDataFontSize,
                     color: BLACK_COLOR,
                   ),

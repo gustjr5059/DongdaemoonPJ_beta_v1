@@ -314,7 +314,7 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                       context: context,
                       ref: ref,
                       title: '공지사항',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: announceAppBarTitleWidth,
@@ -381,8 +381,8 @@ class _AnnounceMainScreenState extends ConsumerState<AnnounceMainScreen>
                                   style: TextStyle(
                                     // 텍스트의 폰트 크기를 설정함.
                                     fontSize: announcementlistEmptyTextFontSize,
-                                    // 폰트 패밀리를 'NanumGothic'으로 설정함.
-                                    fontFamily: 'NanumGothic',
+                                    // 폰트 패밀리를 'Pretendard'으로 설정함.
+                                    fontFamily: 'Pretendard',
                                     // 폰트의 굵기를 'bold'로 설정함.
                                     fontWeight: FontWeight.bold,
                                     // 텍스트 색상을 검은색으로 설정함.

@@ -100,7 +100,7 @@ Widget aabBuildNewProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -170,7 +170,7 @@ Widget aabBuildBestProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -240,7 +240,7 @@ Widget aabBuildSaleProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -310,7 +310,7 @@ Widget aabBuildSpringProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -380,7 +380,7 @@ Widget aabBuildSummerProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -450,7 +450,7 @@ Widget aabBuildAutumnProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -520,7 +520,7 @@ Widget aabBuildWinterProductsSection(WidgetRef ref, BuildContext context) {
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상
             fontSize: SectionTextFontSize, // 텍스트 크기
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -785,7 +785,7 @@ Widget aabBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context
             style: TextStyle(
               color: BLACK_COLOR, // 텍스트 색상 설정
               fontSize: SectionTextFontSize, // 텍스트 크기 설정
-              fontFamily: 'NanumGothic', // 폰트 스타일 설정
+              fontFamily: 'Pretendard', // 폰트 스타일 설정
               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
             ),
           ),
@@ -799,7 +799,7 @@ Widget aabBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context
               style: TextStyle(
                 color: BLACK_COLOR,
                 fontSize: SectionGuideTextFontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.normal,
               ),
             ),
@@ -821,7 +821,7 @@ Widget aabBuildEventPosterImgProductsSection(WidgetRef ref, BuildContext context
           style: TextStyle(
             color: BLACK_COLOR, // 텍스트 색상 설정
             fontSize: SectionTextFontSize, // 텍스트 크기 설정
-            fontFamily: 'NanumGothic', // 폰트 스타일 설정
+            fontFamily: 'Pretendard', // 폰트 스타일 설정
             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
           ),
         ),

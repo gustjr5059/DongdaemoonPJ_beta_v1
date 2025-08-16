@@ -179,7 +179,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
               style: TextStyle(
                 color: ORANGE56_COLOR,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             onPressed: () {
@@ -377,7 +377,7 @@ class _CompletePaymentScreenState extends ConsumerState<CompletePaymentScreen>
                         ref: ref,
                         title: '발주 완료',
                         // 앱바 제목 설정
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         leadingType: LeadingType.none,
                         // 리딩 아이콘 없음
                         buttonCase: 1,

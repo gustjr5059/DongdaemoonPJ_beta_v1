@@ -486,7 +486,7 @@ class _AasSaleSubMainScreenState extends ConsumerState<AasSaleSubMainScreen>
                       // 참조(ref) 전달
                       title: '특가상품 섹션      ', // 6칸 빈칸 생성해서 간격 조절
                       // AppBar의 제목을 '특가상품 섹션'으로 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       boolStoreNameImg: true,
                       titleImageFieldName: 'title_img_19',
                       leadingType: LeadingType.back,

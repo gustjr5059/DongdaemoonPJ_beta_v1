@@ -158,7 +158,7 @@ class _PrivateMessageBodyPartsContentsState
           '현재 쪽지 목록 내 쪽지가 없습니다.',
           style: TextStyle(
             fontSize: messageEmptyTextFontSize,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
             color: BLACK_COLOR,
           ),
@@ -284,7 +284,7 @@ class _PrivateMessageBodyPartsContentsState
                             '삭제', // '삭제' 버튼 텍스트 설정
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontSize: deleteBtnFontSize,
                               color: BLACK_COLOR,
                             ),
@@ -357,7 +357,7 @@ class _PrivateMessageBodyPartsContentsState
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: color,
               ),
             ),
@@ -368,7 +368,7 @@ class _PrivateMessageBodyPartsContentsState
                 value ?? '',
                 style: TextStyle(
                   fontSize: fontSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: color,
                   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 ),
@@ -393,7 +393,7 @@ class _PrivateMessageBodyPartsContentsState
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
@@ -405,7 +405,7 @@ class _PrivateMessageBodyPartsContentsState
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
               textAlign: TextAlign.start,
               softWrap: true,

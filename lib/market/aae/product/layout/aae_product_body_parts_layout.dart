@@ -274,7 +274,7 @@ class AaePriceAndDiscountPercentSortButtons<T extends AaeBaseProductListNotifier
               style: TextStyle(
                 fontSize: sortBtnTextFontSize,
                 color: WHITE_COLOR,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.w800, // ExtraBold
               ),
             ),

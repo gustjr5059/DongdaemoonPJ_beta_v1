@@ -365,7 +365,7 @@ class _RecipientInfoFavoritesSelectScreenState
                       ref: ref,
                       // 참조(ref) 전달
                       title: '즐겨찾기 목록',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // AppBar의 제목을 '즐겨찾기 목록'으로 설정
                       leadingType: LeadingType.back,
                       // 버튼 없음.
@@ -454,7 +454,7 @@ class _RecipientInfoFavoritesSelectScreenState
                                 '현재 수령자 정보가 없습니다.',
                                 style: TextStyle(
                                   fontSize: recipientInfoEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.bold,
                                   color: BLACK_COLOR,
                                 ),

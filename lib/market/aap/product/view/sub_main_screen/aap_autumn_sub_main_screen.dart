@@ -485,7 +485,7 @@ class _AapAutumnSubMainScreenState extends ConsumerState<AapAutumnSubMainScreen>
                       // 참조(ref) 전달
                       title: '가을 섹션      ', // 6칸 빈칸 생성해서 간격 조절
                       // AppBar의 제목을 '가을 섹션'으로 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       boolStoreNameImg: true,
                       titleImageFieldName: 'title_img_16',
                       leadingType: LeadingType.back,

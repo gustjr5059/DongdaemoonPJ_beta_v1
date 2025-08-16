@@ -397,7 +397,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                       ref: ref,
                       // 참조(ref) 전달
                       title: '발주 내역',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // AppBar의 제목을 '발주 목록'로 설정
                       leadingType: LeadingType.none,
                       // 아무 버튼도 없음.
@@ -433,7 +433,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         child: Text(
                           "[안내사항]", // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize1,
                             fontWeight: FontWeight.bold,
                             color: BLACK_COLOR,
@@ -447,7 +447,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         child: Text(
                           "환불 신청, 리뷰 작성은 [발주 내역 상세보기] 버튼 클릭 후 가능합니다.", // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -462,7 +462,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                           "발주상태: 현장수령, 택배수령 별로 상이합니다.",
                           // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -477,7 +477,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                           "현장수령: [상품준비] -> [준비완료] -> [수령완료]",
                           // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -492,7 +492,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                           "택배수령: [발주신청 완료] -> [배송준비] -> [배송 중] -> [배송완료]",
                           // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -506,7 +506,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         child: Text(
                           "발주상태는 관련 운영자 쪽지 수신 시, 변경됩니다.", // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -520,7 +520,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                         child: Text(
                           "배송완료는 배송시작일로부터 최대 3일 소요됩니다.", // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -535,7 +535,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                           "문의사항이 있을 시, [마이페이지] => [문의하기] 절차로 진행해주세요.",
                           // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: orderlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -619,7 +619,7 @@ class _OrderListMainScreenState extends ConsumerState<OrderListMainScreen>
                                 '현재 발주 내역이 없습니다.',
                                 style: TextStyle(
                                   fontSize: orderlistEmptyTextFontSize,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontWeight: FontWeight.bold,
                                   color: BLACK_COLOR,
                                 ),

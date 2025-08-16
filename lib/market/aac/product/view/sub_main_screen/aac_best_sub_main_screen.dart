@@ -484,7 +484,7 @@ class _AacBestSubMainScreenState extends ConsumerState<AacBestSubMainScreen>
                       ref: ref,
                       // 참조(ref) 전달
                       title: '스테디셀러 섹션      ', // 6칸 빈칸 생성해서 간격 조절
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       // AppBar의 제목을 '스테디셀러 섹션'으로 설정
                       boolStoreNameImg: true,
                       titleImageFieldName: 'title_img_3',

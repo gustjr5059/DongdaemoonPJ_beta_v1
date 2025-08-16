@@ -358,7 +358,7 @@ class _PrivateMessageMainScreenState
                       context: context,
                       ref: ref,
                       title: '쪽지 목록',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: messageAppBarTitleWidth,
@@ -433,7 +433,7 @@ class _PrivateMessageMainScreenState
                         child: Text('현재 쪽지 목록 내 쪽지가 없습니다.',
                           style: TextStyle(
                             fontSize: messageEmptyTextFontSize,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontWeight: FontWeight.bold,
                             color: BLACK_COLOR,
                           ),

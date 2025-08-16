@@ -344,7 +344,7 @@ class _WishlistMainScreenState extends ConsumerState<WishlistMainScreen>
                       context: context,
                       ref: ref,
                       title: '찜 목록',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: wishlistAppBarTitleWidth,

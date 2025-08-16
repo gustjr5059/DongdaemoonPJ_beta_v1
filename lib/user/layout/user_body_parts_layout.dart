@@ -153,7 +153,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                     style: TextStyle(
                       fontSize: userInfoCardViewTitleFontSize, // 텍스트 크기 설정
                       fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                      fontFamily: 'NanumGothic', // 글꼴 설정
+                      fontFamily: 'Pretendard', // 글꼴 설정
                       color: BLACK_COLOR, // 텍스트 색상 설정
                     ),
                   ),
@@ -202,7 +202,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                             style: TextStyle(
                               fontSize: userInfoCardViewGuideTextFontSize,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               color: GRAY41_COLOR,
                             ),
                           ),
@@ -303,7 +303,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
           style: TextStyle(
             fontSize: actionBtnTextFontSize,
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
           ),
         ),
       ),
@@ -368,7 +368,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                 style: TextStyle(
                   fontSize: uesrInfoTextFontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: ORANGE56_COLOR, // SNS 텍스트 색상
                 ),
               ),
@@ -378,7 +378,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
                 style: TextStyle(
                   fontSize: uesrInfoTextFontSize,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: GRAY41_COLOR, // 나머지 텍스트 색상
                 ),
               ),
@@ -410,7 +410,7 @@ class UserProfileInfo extends ConsumerWidget { // ConsumerWidget을 상속받아
           style: TextStyle(
             fontSize: uesrInfoTextFontSize, // 레이블 텍스트 크기 설정
             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-            fontFamily: 'NanumGothic', // 글꼴 설정
+            fontFamily: 'Pretendard', // 글꼴 설정
             color: GRAY41_COLOR, // 색상 설정
           ),
         ),
@@ -613,7 +613,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                       style: TextStyle(
                         fontSize: iconTextFontSize, // 텍스트 크기 설정
                         fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                        fontFamily: 'NanumGothic', // 글꼴 설정
+                        fontFamily: 'Pretendard', // 글꼴 설정
                         color: BLACK_COLOR, // 텍스트 색상 설정
                       ),
                     ),

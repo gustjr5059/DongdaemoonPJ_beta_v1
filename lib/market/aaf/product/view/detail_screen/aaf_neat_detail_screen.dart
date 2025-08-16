@@ -445,7 +445,7 @@ class _AafNeatDetailProductScreenState
                       // 참조(ref) 전달
                       title: widget.title,
                       // AppBar의 제목을 '니트 상세'로 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       boolStoreNameImg: true,
                       titleImageFieldName: 'title_img_6',
                       storeNameImageGap: productDtAppBarStoreNameImageGap, // 간격을 지정

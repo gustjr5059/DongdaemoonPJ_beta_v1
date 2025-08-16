@@ -457,7 +457,7 @@ class _OrderMainScreenState extends ConsumerState<OrderMainScreen>
                       context: context,
                       ref: ref,
                       title: '발주 요청',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.back,
                       // 이전화면으로 이동 버튼.
                       buttonCase: 2,

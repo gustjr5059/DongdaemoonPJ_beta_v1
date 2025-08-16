@@ -577,7 +577,7 @@ Widget buildDetailMidCategoryButton({
             style: TextStyle(
               color: BLACK_COLOR, // 텍스트 색상
               fontSize: categoryBtnTextFontSize, // 텍스트 크기
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center, // 텍스트를 중앙 정
@@ -860,7 +860,7 @@ Future<bool> showSubmitAlertDialog(
               title: Text(
                 title,
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: AlertDialogBtnFontSize1, // 텍스트 크기 설정
                 ),
               ), // 제목 표시
@@ -868,7 +868,7 @@ Future<bool> showSubmitAlertDialog(
                   Text(
                     content ?? '',
                     style: TextStyle(
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: AlertDialogBtnFontSize2, // 텍스트 크기 설정
                     ),
                   ), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
@@ -880,7 +880,7 @@ Future<bool> showSubmitAlertDialog(
               title: Text(
                 title,
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: AlertDialogBtnFontSize1, // 텍스트 크기 설정
                 ),
               ), // 제목 표시
@@ -888,7 +888,7 @@ Future<bool> showSubmitAlertDialog(
                   Text(
                     content ?? '',
                     style: TextStyle(
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       fontSize: AlertDialogBtnFontSize2, // 텍스트 크기 설정
                     ),
                   ), // 내용 위젯이 제공되면 그것을 사용하고, 없으면 content 문자열을 표시함
@@ -900,13 +900,13 @@ Future<bool> showSubmitAlertDialog(
               title: Text(
                 'Unsupported Platform',
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                 ),
               ), // '지원되지 않는 플랫폼'이라는 제목 표시
               content: Text(
                 '이 플랫폼은 지원되지 않습니다.',
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                 ),
               ), // '이 플랫폼은 지원되지 않습니다.'라는 내용 표시
               // actions: <Widget>[
@@ -915,7 +915,7 @@ Future<bool> showSubmitAlertDialog(
               //     child: Text(
               //       '확인',
               //       style: TextStyle(
-              //         fontFamily: 'NanumGothic',
+              //         fontFamily: 'Pretendard',
               //       ),
               //     ),
               //     onPressed: () {
@@ -929,7 +929,7 @@ Future<bool> showSubmitAlertDialog(
                     overlayColor: ORANGE_BEIGE_COLOR,
                   ),
                   child: const Text('확인',
-                      style: TextStyle(fontFamily: 'NanumGothic')),
+                      style: TextStyle(fontFamily: 'Pretendard')),
                   onPressed: () => Navigator.of(context).pop(false),
                 ),
               ],
@@ -1015,7 +1015,7 @@ void showCustomSnackBar(BuildContext context, String message, {Duration duration
       content: Text(
         message, // 스낵바에 표시할 메시지
         style: TextStyle(
-          fontFamily: 'NanumGothic', // 폰트 설정
+          fontFamily: 'Pretendard', // 폰트 설정
           fontWeight: FontWeight.bold, // 폰트 굵기 설정
           fontSize: commonSnackBarTextFontSize, // 폰트 크기 설정
           color: WHITE_COLOR, // 텍스트 색상 설정
@@ -1169,7 +1169,7 @@ class NetworkChecker {
             style: TextStyle(
               color: ORANGE56_COLOR,
               fontWeight: FontWeight.bold,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
             ),
           ),
           onPressed: () async {
@@ -1235,7 +1235,7 @@ class NetworkErrorWidget extends StatelessWidget {
             '화면을 불러오지 못했어요.',
             style: TextStyle(
               fontSize: txt1FS,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontWeight: FontWeight.bold,
               color: BLACK_COLOR,
             ),
@@ -1245,7 +1245,7 @@ class NetworkErrorWidget extends StatelessWidget {
             '네트워크 연결 확인 후 다시 시도해주세요.',
             style: TextStyle(
               fontSize: txt2FS,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               fontWeight: FontWeight.normal,
               color: GRAY38_COLOR,
             ),
@@ -1264,7 +1264,7 @@ class NetworkErrorWidget extends StatelessWidget {
               '다시 시도하기',
               style: TextStyle(
                 fontSize: btnFS,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.bold,
                 color: WHITE_COLOR,
               ),
@@ -1307,7 +1307,7 @@ Widget buildCommonErrorIndicator({
             color: color, // 재사용하는 곳에서 설정 가능
             fontSize: fontSize1, // 재사용하는 곳에서 설정 가능
             fontWeight: FontWeight.bold, // 고정된 굵기
-            fontFamily: 'NanumGothic', // 고정된 폰트 패밀리
+            fontFamily: 'Pretendard', // 고정된 폰트 패밀리
           ),
           textAlign: TextAlign.center,
         ),
@@ -1320,7 +1320,7 @@ Widget buildCommonErrorIndicator({
               color: color, // 재사용하는 곳에서 설정 가능
               fontSize: fontSize2, // 재사용하는 곳에서 설정 가능
               fontWeight: FontWeight.normal, // 고정된 굵기
-              fontFamily: 'NanumGothic', // 고정된 폰트 패밀리
+              fontFamily: 'Pretendard', // 고정된 폰트 패밀리
             ),
             textAlign: TextAlign.center,
           ),
@@ -1370,7 +1370,7 @@ class LoginRequiredWidget extends StatelessWidget {
             '로그인 후 이용해주세요.', // 안내 문구
             style: TextStyle(
               fontSize: textFontSize, // 텍스트 크기
-              fontFamily: 'NanumGothic', // 폰트
+              fontFamily: 'Pretendard', // 폰트
               fontWeight: FontWeight.bold, // 굵기
               color: BLACK_COLOR, // 색상
             ),
@@ -1414,7 +1414,7 @@ class LoginRequiredWidget extends StatelessWidget {
               '로그인 하기', // 버튼 텍스트
               style: TextStyle(
                 fontSize: buttonFontSize, // 텍스트 크기
-                fontFamily: 'NanumGothic', // 폰트
+                fontFamily: 'Pretendard', // 폰트
                 fontWeight: FontWeight.bold, // 굵기
                 color: WHITE_COLOR, // 텍스트 색상
               ),

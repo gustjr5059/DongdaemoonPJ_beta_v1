@@ -899,7 +899,7 @@ class ProductInfoDetailScreenNavigation {
                       style: TextStyle(
                         fontSize: DetailDocTextFontSize1,
                         color: BLACK_COLOR, // 텍스트 색상
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 2, // 최대 2줄까지 표시함.
@@ -922,7 +922,7 @@ class ProductInfoDetailScreenNavigation {
                               fontSize: DetailDocTextFontSize2,
                               color: GRAY42_COLOR,
                               // 텍스트 색상
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.lineThrough),
                         ),
@@ -936,7 +936,7 @@ class ProductInfoDetailScreenNavigation {
                             style: TextStyle(
                               fontSize: DetailDocTextFontSize3,
                               color: RED46_COLOR, // 텍스트 색상
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontWeight: FontWeight.w800, // ExtraBold로 설정
                             ),
                           ),
@@ -955,7 +955,7 @@ class ProductInfoDetailScreenNavigation {
                       style: TextStyle(
                         fontSize: DetailDocTextFontSize4,
                         color: BLACK_COLOR, // 텍스트 색상
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontWeight: FontWeight.w800, // ExtraBold로 설정,
                       ),
                     ),
@@ -1315,7 +1315,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
               style: TextStyle(
                 fontSize: productNumberFontSize,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: BLACK_COLOR,
               ), // 글자 크기를 14로 설정
             ),
@@ -1330,7 +1330,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
               style: TextStyle(
                 fontSize: productIntroductionFontSize,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: BLACK_COLOR,
               ),
               maxLines: 2, // 최대 2줄로 표시
@@ -1351,7 +1351,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                 // 색상을 연한 회색으로 설정
                 decorationColor: GRAY38_COLOR,
                 // 취소선 색상을 진한 회색으로 설정
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
           ),
@@ -1368,7 +1368,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                     fontSize: productDiscountPriceFontSize,
                     fontWeight: FontWeight.bold,
                     color: BLACK_COLOR,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                   ),
                 ),
                 SizedBox(width: width1X), // 간격을 추가
@@ -1383,7 +1383,7 @@ Widget buildProductBriefIntroAndPriceInfoSection(
                       fontSize: productDiscountPercentFontSize,
                       fontWeight: FontWeight.w800,
                       color: RED46_COLOR,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                     ),
                   ),
                 Spacer(), // 할인율과의 간격 공간 생성
@@ -1514,7 +1514,7 @@ class _ProductColorAndSizeSelectionState
                     fontSize: colorFontSize,
                     fontWeight: FontWeight.bold,
                     color: BLACK_COLOR,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                   ),
                 ), // '색상' 라벨을 표시.
               ),
@@ -1586,7 +1586,7 @@ class _ProductColorAndSizeSelectionState
                                           fontSize: colorTextSize,
                                           fontWeight: FontWeight.bold,
                                           color: BLACK_COLOR,
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                         ),
                                       ), // 색상의 텍스트 설명을 표시.
                                     ),
@@ -1613,7 +1613,7 @@ class _ProductColorAndSizeSelectionState
                     fontSize: sizeFontSize,
                     fontWeight: FontWeight.bold,
                     color: BLACK_COLOR,
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                   ),
                 ),
               ),
@@ -1646,7 +1646,7 @@ class _ProductColorAndSizeSelectionState
                                       fontSize: sizeTextSize,
                                       fontWeight: FontWeight.bold,
                                       color: BLACK_COLOR,
-                                      fontFamily: 'NanumGothic',
+                                      fontFamily: 'Pretendard',
                                     )), // 사이즈 텍스트를 표시.
                               ))
                           .toList() ??
@@ -1797,7 +1797,7 @@ Widget buildProductAllCountAndPriceSelection(
                         fontSize: selectedColorFontSize,
                         fontWeight: FontWeight.bold,
                         color: BLACK_COLOR,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                       ),
                     ),
                   ),
@@ -1829,7 +1829,7 @@ Widget buildProductAllCountAndPriceSelection(
                       fontSize: selectedColorTextSize,
                       fontWeight: FontWeight.bold,
                       color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                     ),
                   ),
                 ],
@@ -1846,7 +1846,7 @@ Widget buildProductAllCountAndPriceSelection(
                         fontSize: selectedSizeFontSize,
                         fontWeight: FontWeight.bold,
                         color: BLACK_COLOR,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                       ),
                     ),
                   ),
@@ -1858,7 +1858,7 @@ Widget buildProductAllCountAndPriceSelection(
                       fontSize: selectedSizeTextSize,
                       fontWeight: FontWeight.bold,
                       color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                     ),
                   ),
                 ],
@@ -1881,7 +1881,7 @@ Widget buildProductAllCountAndPriceSelection(
                 fontSize: selectedCountTextSize,
                 fontWeight: FontWeight.bold,
                 color: BLACK_COLOR,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             SizedBox(width: width4X),
@@ -1912,7 +1912,7 @@ Widget buildProductAllCountAndPriceSelection(
                       fontSize: selectedCountTextSize,
                       fontWeight: FontWeight.bold,
                       color: BLACK_COLOR,
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                     ),
                   ),
                 ),
@@ -1977,11 +1977,11 @@ Widget buildProductAllCountAndPriceSelection(
                           yesText: '확인',
                           // '확인' 버튼 텍스트
                           noTextStyle: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: BLACK_COLOR, // '취소' 텍스트 색상
                           ),
                           yesTextStyle: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             color: RED46_COLOR, // '확인' 텍스트 색상
                             fontWeight: FontWeight.bold, // 텍스트 굵게
                           ),
@@ -2020,7 +2020,7 @@ Widget buildProductAllCountAndPriceSelection(
                     child: Text(
                       '직접입력',
                       style: TextStyle(
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontSize: directInsertBtnFontSize,
                         fontWeight: FontWeight.bold,
                         color: GRAY40_COLOR,
@@ -2040,7 +2040,7 @@ Widget buildProductAllCountAndPriceSelection(
         child: Text(
           '총 가격 :    ${totalPrice != null ? totalPrice!.toStringAsFixed(0).replaceAllMapped(reg, (match) => '${match[1]},') : ''}원',
           style: TextStyle(
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontSize: selectedAllPriceTextSize,
             fontWeight: FontWeight.bold,
             color: BLACK_COLOR,
@@ -2154,7 +2154,7 @@ class ProductDetailScreenTabs extends ConsumerWidget {
             text,
             style: TextStyle(
               fontSize: _buildTabButtonFontSize,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: isSelected ? BLACK_COLOR : GRAY62_COLOR,
               // 선택된 탭이면 검정색, 아니면 회색
               fontWeight: isSelected
@@ -2386,7 +2386,7 @@ class _ProductInfoContentsState extends ConsumerState<ProductInfoContents> {
         label: Text(
           text, // 전달받은 텍스트를 버튼에 표시함.
           style: TextStyle(
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontSize: expandBtnFontSize, // 텍스트 크기 설정
             fontWeight: FontWeight.bold, // 텍스트 굵기 설정
             color: ORANGE56_COLOR, // 텍스트 색상 설정
@@ -2589,7 +2589,7 @@ class ProductReviewContents extends StatelessWidget {
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.normal, // 라벨 텍스트는 기본 스타일로 표시함
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR, // 텍스트 색상 설정
             ),
           ),
@@ -2599,7 +2599,7 @@ class ProductReviewContents extends StatelessWidget {
             value ?? '',
             style: TextStyle(
               fontSize: fontSize,
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR, // 텍스트 색상 설정
               fontWeight: bold
                   ? FontWeight.bold
@@ -2642,7 +2642,7 @@ class ProductReviewContents extends StatelessWidget {
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.normal, // 라벨 텍스트는 기본 스타일로 표시함
-              fontFamily: 'NanumGothic',
+              fontFamily: 'Pretendard',
               color: BLACK_COLOR, // 텍스트 색상 설정
             ),
           ),
@@ -2653,7 +2653,7 @@ class ProductReviewContents extends StatelessWidget {
               value ?? '',
               style: TextStyle(
                 fontSize: fontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: BLACK_COLOR, // 텍스트 색상 설정
                 fontWeight: bold
                     ? FontWeight.bold
@@ -2772,7 +2772,7 @@ Widget buildSectionTitle(BuildContext context, String title) {
             child: Text(
               title, // 전달받은 제목을 표시함.
               style: TextStyle(
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.bold,
                 fontSize: buildSectionTitleFontSize, // 텍스트 크기 설정
                 color: GRAY85_COLOR, // 텍스트 색상 설정
@@ -2859,7 +2859,7 @@ class ProductInquiryContents extends StatelessWidget {
             child: Text(
               '상품 문의하기',
               style: TextStyle(
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontSize: productInquiryBtnFontSize,
                 fontWeight: FontWeight.bold,
                 color: ORANGE56_COLOR,

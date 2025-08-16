@@ -124,7 +124,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 '정상적으로 발주가 완료되었습니다.', // 발주 완료 제목
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoTitleFontSize,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                   color: BLACK_COLOR,
@@ -134,7 +134,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 '[안내 사항]', // 설명 텍스트
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoFontSize1,
                   fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                   color: BLACK_COLOR,
@@ -144,7 +144,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 '안내 계좌번호로 24시간 이내로 입금 시, 결제완료 처리 됩니다.',
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoFontSize2,
                   fontWeight: FontWeight.normal,
                   color: GRAY62_COLOR,
@@ -153,7 +153,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 '발주 완료 후 24시간 이내로 미입금 시, 해당 발주 요청 건은 취소됩니다.',
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoFontSize2,
                   fontWeight: FontWeight.normal,
                   color: GRAY62_COLOR,
@@ -162,7 +162,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 '발주자와 입금자 성함은 일치해야 합니다.',
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoFontSize2,
                   fontWeight: FontWeight.normal,
                   color: GRAY62_COLOR,
@@ -182,7 +182,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 "요청 실수 등의 문의사항이 있을 시,", // 설명 텍스트
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoFontSize3,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                   color: BLACK_COLOR,
@@ -191,7 +191,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
               Text(
                 "[마이페이지] => [문의하기] 절차로 진행해주세요.", // 설명 텍스트
                 style: TextStyle(
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: orderGuideInfoFontSize3,
                   // fontWeight: FontWeight.bold, // 텍스트 굵게 설정
                   color: BLACK_COLOR,
@@ -221,7 +221,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                     child: Text('홈으로 이동',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontSize: combackHomeBtnFontSize,
                         color: ORANGE56_COLOR,
                       ),
@@ -318,7 +318,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                 label,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   fontSize: updateRequireCompleteInfoTextFontSize,
                   color: BLACK_COLOR,
                 ),  // 텍스트 스타일 설정
@@ -340,7 +340,7 @@ class CompletePaymentInfoWidget extends ConsumerWidget {
                 child: Text(
                   value ?? '', // value가 null일 경우 빈 문자열로 처리
                   style: TextStyle(
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     fontSize: updateRequireCompleteInfoDataFontSize,
                     color: BLACK_COLOR,
                   ),

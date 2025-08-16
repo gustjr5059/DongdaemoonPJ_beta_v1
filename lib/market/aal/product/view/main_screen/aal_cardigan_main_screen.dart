@@ -558,7 +558,7 @@ class _AalCardiganMainScreenState extends ConsumerState<AalCardiganMainScreen>
                     // 참조(ref) 전달
                     title: '가디건 메인      ', // 6칸 빈칸 생성해서 간격 조절
                     // AppBar의 제목을 '가디건 메인'로 설정
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_1',
                     leadingType: LeadingType.back,

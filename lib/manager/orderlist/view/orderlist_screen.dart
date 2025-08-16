@@ -318,7 +318,7 @@ class _AdminOrderlistMainScreenState
                       context: context,
                       ref: ref,
                       title: '발주내역 관리(관리자)',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: orderlistAppBarTitleWidth,

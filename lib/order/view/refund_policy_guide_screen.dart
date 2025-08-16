@@ -95,7 +95,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: refundGuideFontSize1, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                    fontFamily: 'NanumGothic', // 글꼴 설정
+                                    fontFamily: 'Pretendard', // 글꼴 설정
                                     color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                 ),
@@ -107,7 +107,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: refundGuideFontSize2, // 텍스트 크기 설정
                                     fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                                    fontFamily: 'NanumGothic', // 글꼴 설정
+                                    fontFamily: 'Pretendard', // 글꼴 설정
                                     color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                 ),
@@ -118,7 +118,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: refundGuideFontSize2, // 텍스트 크기 설정
                                     fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                                    fontFamily: 'NanumGothic', // 글꼴 설정
+                                    fontFamily: 'Pretendard', // 글꼴 설정
                                     color: BLACK_COLOR, // 텍스트 색상 설정
                                   ),
                                 ),
@@ -151,7 +151,7 @@ class RefundPolicyGuideScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: refundBtnFontSize, // 텍스트 크기 설정
                                       fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                      fontFamily: 'NanumGothic', // 글꼴 설정
+                                      fontFamily: 'Pretendard', // 글꼴 설정
                                       color: Theme.of(context).scaffoldBackgroundColor, // 텍스트 색상 설정
                                     ), // 텍스트 스타일
                                   ),

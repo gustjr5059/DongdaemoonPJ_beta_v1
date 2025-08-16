@@ -105,7 +105,7 @@ class SignUpDocumentDetailBodyPartsLayout extends ConsumerWidget {
           '에러가 발생했으니, 앱을 재실행해주세요.',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontFamily: 'NanumGothic',
+            fontFamily: 'Pretendard',
             fontSize: errorTextFontSize,
             color: BLACK_COLOR,
           ),
@@ -133,7 +133,7 @@ class SignUpDocumentDetailBodyPartsLayout extends ConsumerWidget {
             style: TextStyle(
               fontSize: documentDtlistTitleDataFontSize, // 텍스트 크기 설정
               fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-              fontFamily: 'NanumGothic', // 글꼴 설정
+              fontFamily: 'Pretendard', // 글꼴 설정
               color: BLACK_COLOR, // 텍스트 색상 설정
             ), // 제목의 텍스트 스타일을 설정함
           ),
@@ -161,7 +161,7 @@ class SignUpDocumentDetailBodyPartsLayout extends ConsumerWidget {
             //         style: TextStyle(
             //           fontSize: documentDtlistTextDataFontSize, // 텍스트 크기 설정
             //           fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-            //           fontFamily: 'NanumGothic', // 글꼴 설정
+            //           fontFamily: 'Pretendard', // 글꼴 설정
             //           color: BLACK_COLOR, // 텍스트 색상 설정
             //         ), // 텍스트 스타일을 설정함
             //       );
@@ -176,7 +176,7 @@ class SignUpDocumentDetailBodyPartsLayout extends ConsumerWidget {
                     style: {
                       // body 태그 전체에 대한 스타일
                       "body": Style(
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         fontSize: FontSize(documentDtlistTextDataFontSize),
                         color: BLACK_COLOR,
                       ),

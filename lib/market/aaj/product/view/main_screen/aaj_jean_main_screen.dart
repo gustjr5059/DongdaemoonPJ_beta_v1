@@ -562,7 +562,7 @@ class _AajJeanMainScreenState extends ConsumerState<AajJeanMainScreen>
                     ref: ref,
                     // 참조(ref) 전달
                     title: '청바지 메인      ', // 6칸 빈칸 생성해서 간격 조절
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_10',
                     // AppBar의 제목을 '청바지 메인'로 설정

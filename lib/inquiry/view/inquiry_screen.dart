@@ -333,7 +333,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                       context: context,
                       ref: ref,
                       title: '문의하기',
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       buttonCase: 1,
                       appBarTitleWidth: inquiryAppBarTitleWidth,
@@ -373,7 +373,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize1, // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                  fontFamily: 'NanumGothic', // 글꼴 설정
+                                  fontFamily: 'Pretendard', // 글꼴 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
@@ -387,7 +387,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                                  fontFamily: 'NanumGothic', // 글꼴 설정
+                                  fontFamily: 'Pretendard', // 글꼴 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
@@ -400,7 +400,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                 style: TextStyle(
                                   fontSize: inquiryGuidFontSize2, // 텍스트 크기 설정
                                   fontWeight: FontWeight.normal, // 텍스트 굵기 설정
-                                  fontFamily: 'NanumGothic', // 글꼴 설정
+                                  fontFamily: 'Pretendard', // 글꼴 설정
                                   color: BLACK_COLOR, // 텍스트 색상 설정
                                 ),
                               ),
@@ -451,7 +451,7 @@ class _InquiryMainScreenState extends ConsumerState<InquiryMainScreen>
                                   style: TextStyle(
                                     fontSize: inquiryBtnFontSize, // 텍스트 크기 설정
                                     fontWeight: FontWeight.bold, // 텍스트 굵기 설정
-                                    fontFamily: 'NanumGothic', // 글꼴 설정
+                                    fontFamily: 'Pretendard', // 글꼴 설정
                                     color: WHITE_COLOR, // 텍스트 색상 설정
                                   ), // 텍스트 스타일
                                 ),

@@ -84,7 +84,7 @@ class _SplashErrorScreenState extends State<SplashErrorScreen1>
                             child: Text(
                               '네트워크가 연결되지 않았습니다.\n\n         앱을 재실행 해주세요.',
                               style: TextStyle(
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.bold,
                                 fontSize: errorTextFontSize,
                                 color: RED46_COLOR,

@@ -297,14 +297,14 @@ class CartItemsList extends ConsumerWidget {
                                 yesText: '예',
                                 // '예' 버튼 텍스트를 설정함
                                 noTextStyle: TextStyle(
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   color:
                                   BLACK_COLOR, // '아니요' 텍스트 색상을 검정색으로 설정함
                                   fontWeight:
                                   FontWeight.bold, // 텍스트를 굵게 설정함
                                 ),
                                 yesTextStyle: TextStyle(
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   color:
                                   RED46_COLOR, // '예' 텍스트 색상을 빨간색으로 설정함
                                   fontWeight:
@@ -353,7 +353,7 @@ class CartItemsList extends ConsumerWidget {
                           child: Text('삭제',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontSize: cartlistDeleteBtnFontSize,
                                 color: GRAY40_COLOR,
                               )),
@@ -371,7 +371,7 @@ class CartItemsList extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: cartlistBriefIntroductionFontSize,
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'NanumGothic',
+                        fontFamily: 'Pretendard',
                         color: BLACK_COLOR,
                       ),
                       maxLines: 1, // 한 줄로 표시되도록 설정함
@@ -393,7 +393,7 @@ class CartItemsList extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: cartlistProductNumberFontSize,
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   color: BLACK_COLOR,
                                 ),
                               ),
@@ -442,7 +442,7 @@ class CartItemsList extends ConsumerWidget {
                               '${totalOriginalPrice != null ? numberFormat.format(totalOriginalPrice) : ''}원',
                               style: TextStyle(
                                 fontSize: cartlistOriginalPriceFontSize,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 color: GRAY60_COLOR,
                                 decoration: TextDecoration.lineThrough,
                               ),
@@ -455,7 +455,7 @@ class CartItemsList extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize:
                                     cartlistDiscountPriceFontSize,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.bold,
                                     color: BLACK_COLOR,
                                   ),
@@ -467,7 +467,7 @@ class CartItemsList extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize:
                                     cartlistDiscountPercentFontSize,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     color: RED46_COLOR,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -515,7 +515,7 @@ class CartItemsList extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize:
                                     cartlistSelectedColorTextFontSize,
-                                    fontFamily: 'NanumGothic',
+                                    fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.bold,
                                     color: BLACK_COLOR,
                                   ),
@@ -529,7 +529,7 @@ class CartItemsList extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize:
                                 cartlistSelectedSizeTextFontSize,
-                                fontFamily: 'NanumGothic',
+                                fontFamily: 'Pretendard',
                                 fontWeight: FontWeight.bold,
                                 color: BLACK_COLOR,
                               ),
@@ -575,7 +575,7 @@ class CartItemsList extends ConsumerWidget {
                               fontSize:
                               cartlistUpdateItemQuantityBtnFontSize,
                               // 텍스트 크기 설정
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // 폰트 설정
                               fontWeight: FontWeight.normal,
                               // 글꼴 굵기 설정
@@ -656,12 +656,12 @@ class CartItemsList extends ConsumerWidget {
                                   // '확인' 버튼 텍스트
                                   noTextStyle: TextStyle(
                                     fontFamily:
-                                    'NanumGothic', // '취소' 텍스트 폰트 설정
+                                    'Pretendard', // '취소' 텍스트 폰트 설정
                                     color: BLACK_COLOR, // '취소' 텍스트 색상
                                   ),
                                   yesTextStyle: TextStyle(
                                     fontFamily:
-                                    'NanumGothic', // '확인' 텍스트 폰트 설정
+                                    'Pretendard', // '확인' 텍스트 폰트 설정
                                     color: RED46_COLOR, // '확인' 텍스트 색상 설정
                                     fontWeight:
                                     FontWeight.bold, // 텍스트 굵게 설정
@@ -707,7 +707,7 @@ class CartItemsList extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize:
                                 directInsertBtnFontSize, // 텍스트 크기 설정
-                                fontFamily: 'NanumGothic', // 폰트 설정
+                                fontFamily: 'Pretendard', // 폰트 설정
                                 fontWeight: FontWeight.bold, // 텍스트 굵기 설정
                                 color: GRAY40_COLOR, // 텍스트 색상 설정
                               ),

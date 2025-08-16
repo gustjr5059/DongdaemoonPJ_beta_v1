@@ -402,7 +402,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                       // 참조(ref) 전달
                       title: '장바구니',
                       // AppBar의 제목을 '장바구니'로 설정
-                      fontFamily: 'NanumGothic',
+                      fontFamily: 'Pretendard',
                       leadingType: LeadingType.none,
                       // 버튼 없음.
                       buttonCase: 3,
@@ -441,7 +441,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                         child: Text(
                           "[안내사항]", // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: cartlistGuideTextFontSize1,
                             fontWeight: FontWeight.bold,
                             color: BLACK_COLOR,
@@ -455,7 +455,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                         child: Text(
                           "상점 고유번호: 상품번호 중 앞 세 자리 부분 [예) 'Aaa']", // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: cartlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -470,7 +470,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                           "상점 고유번호가 동일한 상품끼리만 발주 요청이 가능합니다.",
                           // 설명 텍스트
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: cartlistGuideTextFontSize2,
                             fontWeight: FontWeight.normal,
                             color: BLACK_COLOR,
@@ -556,7 +556,7 @@ class _CartMainScreenState extends ConsumerState<CartMainScreen>
                           '현재 장바구니 상품이 없습니다.',
                           style: TextStyle(
                             fontSize: cartlistEmptyTextFontSize,
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontWeight: FontWeight.bold,
                             color: BLACK_COLOR,
                           ),

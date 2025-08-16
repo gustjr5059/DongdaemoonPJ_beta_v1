@@ -266,7 +266,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                         child: Text(
                           '리뷰 작성자 선택',
                           style: TextStyle(
-                            fontFamily: 'NanumGothic',
+                            fontFamily: 'Pretendard',
                             fontSize: reviewWriterSelectDataTextSize1,
                           ),
                         ),
@@ -290,7 +290,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                             email,
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               fontSize: reviewWriterSelectDataTextSize2,
                               color: BLACK_COLOR,
                             ),
@@ -322,7 +322,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
               '현재 리뷰 목록 내 리뷰가 없습니다.',
               style: TextStyle(
                 fontSize: reviewEmptyTextFontSize,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 fontWeight: FontWeight.bold,
                 color: BLACK_COLOR,
               ),
@@ -394,7 +394,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                       // 텍스트 크기 설정
                                       fontWeight: FontWeight.bold,
                                       // 텍스트 굵기 설정
-                                      fontFamily: 'NanumGothic',
+                                      fontFamily: 'Pretendard',
                                       color:
                                           review['private_review_closed_button'] ==
                                                   true
@@ -416,7 +416,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                           // 텍스트 크기 설정
                                           fontWeight: FontWeight.bold,
                                           // 텍스트 굵기 설정
-                                          fontFamily: 'NanumGothic',
+                                          fontFamily: 'Pretendard',
                                           color: BLACK_COLOR, // 텍스트 색상 설정
                                         ),
                                       ),
@@ -497,7 +497,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                     '삭제', // 버튼 텍스트 설정
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: 'NanumGothic',
+                                      fontFamily: 'Pretendard',
                                       fontSize: deleteBtnFontSize,
                                       color: BLACK_COLOR,
                                     ),
@@ -516,7 +516,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                               // 텍스트 크기 설정
                               fontWeight: FontWeight.bold,
                               // 텍스트 굵기 설정
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // 글꼴 설정
                               color: BLACK_COLOR, // 텍스트 색상 설정
                             ),
@@ -651,7 +651,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                 style: TextStyle(
                                                   fontSize:
                                                       reviewOriginalPriceFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   color: GRAY60_COLOR,
                                                   // 텍스트 색상 설정
                                                   decoration: TextDecoration
@@ -670,7 +670,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                         fontSize:
                                                             reviewDiscountPriceFontSize,
                                                         fontFamily:
-                                                            'NanumGothic',
+                                                            'Pretendard',
                                                         color: BLACK_COLOR,
                                                         // 텍스트 색상 설정
                                                         fontWeight:
@@ -682,7 +682,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                     style: TextStyle(
                                                       fontSize:
                                                           reviewDiscountPercentFontSize,
-                                                      fontFamily: 'NanumGothic',
+                                                      fontFamily: 'Pretendard',
                                                       color: RED46_COLOR,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -741,7 +741,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                     style: TextStyle(
                                                       fontSize:
                                                           reviewSelectedColorTextFontSize,
-                                                      fontFamily: 'NanumGothic',
+                                                      fontFamily: 'Pretendard',
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: BLACK_COLOR,
@@ -760,7 +760,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                 style: TextStyle(
                                                   fontSize:
                                                       reviewSelectedSizeTextFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
                                                 ),
@@ -772,7 +772,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                                 style: TextStyle(
                                                   fontSize:
                                                       reviewSelectedCountTextFontSize,
-                                                  fontFamily: 'NanumGothic',
+                                                  fontFamily: 'Pretendard',
                                                   fontWeight: FontWeight.bold,
                                                   color: BLACK_COLOR,
                                                 ),
@@ -795,7 +795,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                               // 텍스트 크기 설정
                               fontWeight: FontWeight.bold,
                               // 텍스트 굵기 설정
-                              fontFamily: 'NanumGothic',
+                              fontFamily: 'Pretendard',
                               // 글꼴 설정
                               color: BLACK_COLOR, // 텍스트 색상 설정
                             ),
@@ -888,7 +888,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                                 _expandedReviews[index] == true ? '접기' : '펼쳐보기',
                                 // 확장 여부에 따라 텍스트 변경
                                 style: TextStyle(
-                                  fontFamily: 'NanumGothic',
+                                  fontFamily: 'Pretendard',
                                   fontSize: reviewExpandedBtnFontSize,
                                   // 텍스트 크기 설정
                                   fontWeight: FontWeight.bold,
@@ -943,7 +943,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
                 color: BLACK_COLOR,
               ),
             ),
@@ -954,7 +954,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                 value ?? '',
                 style: TextStyle(
                   fontSize: fontSize,
-                  fontFamily: 'NanumGothic',
+                  fontFamily: 'Pretendard',
                   color: BLACK_COLOR,
                   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                 ),
@@ -980,7 +980,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
             ),
             // 정보의 라벨을 텍스트로 표시함. 글꼴 크기와 굵기는 파라미터에 따라 설정됨.
@@ -992,7 +992,7 @@ class _AdminReviewListScreenState extends ConsumerState<AdminReviewListScreen> {
                 fontSize: fontSize,
                 color: BLACK_COLOR,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'NanumGothic',
+                fontFamily: 'Pretendard',
               ),
               textAlign: TextAlign.start,
               softWrap: true,

@@ -571,7 +571,7 @@ class _AagOnepieceMainScreenState extends ConsumerState<AagOnepieceMainScreen>
                     // 참조(ref) 전달
                     title: '원피스 메인      ', // 6칸 빈칸 생성해서 간격 조절
                     // AppBar의 제목을 '원피스 메인'로 설정
-                    fontFamily: 'NanumGothic',
+                    fontFamily: 'Pretendard',
                     boolStoreNameImg: true,
                     titleImageFieldName: 'title_img_7',
                     leadingType: LeadingType.back,
