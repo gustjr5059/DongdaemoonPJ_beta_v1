@@ -6,6 +6,9 @@ import '../../announcement/view/announce_screen.dart'; // 공지사항 화면을
 import '../../common/const/colors.dart'; // 공통 색상 상수를 가져옴
 import '../../common/layout/common_body_parts_layout.dart'; // 공통 레이아웃을 가져옴
 import '../../common/layout/common_exception_parts_of_body_layout.dart'; // 공통 예외 처리 레이아웃을 가져옴
+import '../../common/provider/common_state_provider.dart';
+import '../../features/bingo_single/ui/bingo_game_screen.dart';
+import '../../features/wheel_single/ui/wheel_game_screen.dart';
 import '../../inquiry/view/inquiry_screen.dart'; // 문의 화면을 가져옴
 import '../../message/view/message_screen.dart'; // 메시지 화면을 가져옴
 import '../../order/provider/order_all_providers.dart'; // 주문 관련 프로바이더를 가져옴
@@ -455,7 +458,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
 
     return Container(
       width: uesrProfileOptionsCardViewWidth, // 카드뷰의 가로 크기 설정
-      height: uesrProfileOptionsCardViewHeight, // 카드뷰의 세로 크기 설정
+      // height: uesrProfileOptionsCardViewHeight, // 카드뷰의 세로 크기 설정
       child: CommonCardView( // CommonCardView 위젯 반환
         backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 앱 기본 배경색으로 설정함
         elevation: 0, // 그림자 깊이를 설정하지 않음
@@ -517,6 +520,22 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                   title: '회원정보 수정 및 탈퇴', // 회원정보 수정 타이틀 설정
                   onTap: () async { // 클릭 시 실행될 함수 설정
                     await onUserInfoModifyListClick(context, ref); // 회원정보 수정 클릭 시 호출되는 함수 실행
+                  },
+                ),
+                _buildOptionTile(
+                  context,
+                  assetPath: 'asset/img/misc/icon_img/inquiry_icon.png', // 요청대로 동일 아이콘
+                  title: '게임',
+                  onTap: () {
+                    onGameClick(context, ref);
+                  },
+                ),
+                _buildOptionTile(
+                  context,
+                  assetPath: 'asset/img/misc/icon_img/inquiry_icon.png', // 동일 아이콘 사용
+                  title: '빙고게임',
+                  onTap: () {
+                    onBingoClick(context, ref);
                   },
                 ),
             ],
@@ -701,6 +720,25 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
       print('오류: $error');
       showCustomSnackBar(context, '오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
+  }
+
+  void onGameClick(BuildContext context, WidgetRef ref) {
+    // Inquiry처럼 하단 탭 비활성 유지가 필요하면 -1 할당 (선택)
+    ref.read(tabIndexProvider.notifier).state = -1;
+
+    // Inquiry는 navigateToScreenAndRemoveUntil를 쓰지만,
+    // 게임은 "뒤로가기"로 마이페이지로 돌아오는게 자연스러워 일반 push를 권장
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const WheelGameScreen()),
+    );
+  }
+
+  void onBingoClick(BuildContext context, WidgetRef ref) {
+    // 하단 탭 고정 유지하려면 Inquiry처럼 -1 지정 가능(선택)
+    ref.read(tabIndexProvider.notifier).state = -1;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const BingoGameScreen()),
+    );
   }
 }
 // ------ 각 옵션마다 클릭 시, 각 해당 화면으로 이동하는 로직 끝 부분
