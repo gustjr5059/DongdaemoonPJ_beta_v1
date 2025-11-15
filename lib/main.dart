@@ -36,6 +36,17 @@ import 'message/view/message_screen.dart'; // Firebase 초기 설정 관련 패�
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show debugPrint;
 
+
+// ---- 25.11.15 lhs 작업 내용 시작 부분
+// —— Flutter 로컬라이제이션 관련 패키지 및 AppLocalizations 임포트 시작 부분
+// 다국어(i18n) 처리를 위해 필요한 delegate 및 자동 생성된 로컬라이제이션 클래스 임포트임
+// 2025-11-15 lhs
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'features/localization/l10n/app_localizations.dart';
+// —— Flutter 로컬라이제이션 관련 패키지 및 AppLocalizations 임포트 끝 부분
+// ---- 25.11.15 lhs 작업 내용 끝 부분
+
+
 // // 앱 번들에 포함된 폰트 목록(FontManifest.json)을 출력해
 // // Pretendard가 실제로 포함되었는지 확인하는 디버그 유틸리티
 // Future<void> debugPrintFontManifest() async {
@@ -142,14 +153,56 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    // ---- 25.11.15 lhs 작업 내용 시작 부분
+    // ——— MaterialApp 내 다국어(i18n) 설정 및 기존 설정 통합 시작 부분
+    // iOS/Android 시스템 언어에 따라 ko/en 로컬라이제이션을 적용하고,
+    // 기존 디버그 배너, RouteObserver, 홈 화면 설정을 그대로 유지함
+    // 2025-11-15 lhs
     return MaterialApp(
       debugShowCheckedModeBanner: false, // 디버그 배너 숨김
       // 모든 네비게이터 라우트 전환을 관찰하기 위해 RouteObserver 연결
       navigatorObservers: [routeObserver],
+
+      // --- 변경된 내용 시작 부분 - 25.11.15 lhs
+      // 기본 Locale 은 시스템 언어를 따름 (ko / en 자동 선택)
+      // locale 이 null 이거나 지원하지 않는 언어인 경우 한국어(ko)로 fallback 처리
+      localeResolutionCallback: (locale, supportedLocales) {
+        // locale 이 null이면 기본 ko 사용
+        if (locale == null) return const Locale('ko');
+
+        // 지원하는 Locale 목록 안에 시스템 언어 코드가 있으면 해당 Locale 사용
+        for (final supported in supportedLocales) {
+          if (supported.languageCode == locale.languageCode) {
+            return supported;
+          }
+        }
+
+        // 지원하지 않는 언어인 경우 기본 ko 로 fallback
+        return const Locale('ko');
+      },
+
+      // 지원하는 언어 목록
+      // ARB(app_en.arb, app_ko.arb) 기반으로 gen-l10n 이 생성한 목록을 그대로 사용함
+      supportedLocales: AppLocalizations.supportedLocales,
+
+      // 로컬라이제이션 delegate 설정
+      localizationsDelegates: const [
+        AppLocalizations.delegate, // gen-l10n 이 생성한 delegate
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+
+      // 앱 타이틀 (필요 시 실제 앱 이름으로 수정 가능)
+      title: 'Wearcano',
+      // --- 변경된 내용 끝 부분
+
       // Firebase가 연결되어 있으면 SplashScreen1()을 홈 화면으로 설정
       // Firebase가 연결되지 않았거나 네트워크가 끊긴 경우 SplashErrorScreen1()을 홈 화면으로 설정
       home: _isFirebaseConnected ? SplashScreen1() : SplashErrorScreen1(), // Firebase 연결 상태에 따라 화면 전환
     );
+    // ——— MaterialApp 내 다국어(i18n) 설정 및 기존 설정 통합 끝 부분
+    // ---- 25.11.15 lhs 작업 내용 끝 부분
   }
 }
 // ------ 앱 실행할 때 필요한 메인 실행 역할인 MyApp 클래스 내용 끝

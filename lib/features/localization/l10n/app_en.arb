@@ -1,0 +1,80 @@
+
+{
+  "@@locale": "en",
+
+  "home_title": "Home View",
+  "@home_title": {
+    "description": "Title of the home screen"
+  },
+
+  "navigate_to_home_btn": "Go to Home Screen",
+  "@navigate_to_home_btn": {
+    "description": "Button text that navigates to home screen"
+  },
+
+  "network_error_1": "You're not connected to the internet.",
+  "@network_error_1": {
+    "description": "Network error message 1"
+  },
+
+  "network_error_2": "Please restart the app.",
+  "@network_error_2": {
+    "description": "Network error message 2"
+  },
+
+  "qr_loading": "Loading QR code...",
+  "@qr_loading": {
+    "description": "Text shown while QR code is loading"
+  },
+
+  "update_progress_1": "Installing the new version...",
+  "@update_progress_1": {
+    "description": "Message shown while new version is installing"
+  },
+
+  "update_progress_percent": "{value}% completed",
+  "@update_progress_percent": {
+    "description": "Installation progress with percent",
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "example": "96"
+      }
+    }
+  },
+
+  "withdraw_title": "Delete Account",
+  "@withdraw_title": {
+    "description": "Withdraw / delete account title"
+  },
+
+  "withdraw_confirm_message_1": "Are you sure you want to delete your account?",
+  "@withdraw_confirm_message_1": {
+    "description": "First message in withdraw confirmation"
+  },
+
+  "withdraw_confirm_message_2": "All your data will be permanently deleted.",
+  "@withdraw_confirm_message_2": {
+    "description": "Second message in withdraw confirmation"
+  },
+
+  "withdraw_confirm_btn": "Confirm",
+  "@withdraw_confirm_btn": {
+    "description": "Confirm button text in withdraw popup"
+  },
+
+  "signOut_title": "Log Out",
+  "@signOut_title": {
+    "description": "Logout popup title"
+  },
+
+  "signOut_message_1": "You have been logged out.",
+  "@signOut_message_1": {
+    "description": "Message shown after logout"
+  },
+
+  "signOut_confirm_btn": "Confirm",
+  "@signOut_confirm_btn": {
+    "description": "Confirm button text in logout popup"
+  }
+}

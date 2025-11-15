@@ -1,0 +1,12 @@
+
+# arb-dir : 번역 파일 위치
+# output-localization-file : 생성될 Dart 파일 이름
+# output-class : 생성될 클래스 이름 (AppLocalizations)
+# synthetic-package: false 로 두면,
+#생성 파일이 lib/features/localization/l10n/app_localizations.dart 위치에 생김 - 25.11.15 lhs
+arb-dir: lib/features/localization/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+synthetic-package: false
+nullable-getter: false

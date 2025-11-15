@@ -8,6 +8,7 @@ import '../../common/layout/common_body_parts_layout.dart'; // 공통 레이아�
 import '../../common/layout/common_exception_parts_of_body_layout.dart'; // 공통 예외 처리 레이아웃을 가져옴
 import '../../common/provider/common_state_provider.dart';
 import '../../features/bingo_single/ui/bingo_game_screen.dart';
+import '../../features/localization/Presentation/localization_test_screen.dart';
 import '../../features/wheel_single/ui/wheel_game_screen.dart';
 import '../../inquiry/view/inquiry_screen.dart'; // 문의 화면을 가져옴
 import '../../message/view/message_screen.dart'; // 메시지 화면을 가져옴
@@ -522,6 +523,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                     await onUserInfoModifyListClick(context, ref); // 회원정보 수정 클릭 시 호출되는 함수 실행
                   },
                 ),
+                // --- 변경된 내용 시작 부분 - 25.11.10 lhs
                 _buildOptionTile(
                   context,
                   assetPath: 'asset/img/misc/icon_img/inquiry_icon.png', // 요청대로 동일 아이콘
@@ -538,6 +540,17 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                     onBingoClick(context, ref);
                   },
                 ),
+                // --- 변경된 내용 끝 부분
+                // --- 변경된 내용 시작 부분 - 25.11.15 lhs
+                _buildOptionTile(
+                  context,
+                  assetPath: 'asset/img/misc/icon_img/inquiry_icon.png', // 동일 아이콘 사용
+                  title: '다국어 기능',
+                  onTap: () {
+                    onLocalizationClick(context, ref);
+                  },
+                ),
+                // --- 변경된 내용 끝 부분
             ],
           ),
         ),
@@ -722,6 +735,7 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     }
   }
 
+  // 돌림판 게임 화면 이동 클릭 이벤트 함수 - 25.11.10 lhs
   void onGameClick(BuildContext context, WidgetRef ref) {
     // Inquiry처럼 하단 탭 비활성 유지가 필요하면 -1 할당 (선택)
     ref.read(tabIndexProvider.notifier).state = -1;
@@ -733,11 +747,21 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     );
   }
 
+  // 빙고 게임 화면 이동 클릭 이벤트 함수 - 25.11.10 lhs
   void onBingoClick(BuildContext context, WidgetRef ref) {
     // 하단 탭 고정 유지하려면 Inquiry처럼 -1 지정 가능(선택)
     ref.read(tabIndexProvider.notifier).state = -1;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const BingoGameScreen()),
+    );
+  }
+
+  // 다국어 기능 화면 이동 클릭 이벤트 함수 - 25.11.15 lhs
+  void onLocalizationClick(BuildContext context, WidgetRef ref) {
+    // 하단 탭 고정 유지하려면 Inquiry처럼 -1 지정 가능(선택)
+    ref.read(tabIndexProvider.notifier).state = -1;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const LocalizationTestScreen()),
     );
   }
 }

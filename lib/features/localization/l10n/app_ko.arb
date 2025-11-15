@@ -1,0 +1,79 @@
+{
+  "@@locale": "ko",
+
+  "home_title": "홈 화면",
+  "@home_title": {
+    "description": "홈 화면 상단 타이틀"
+  },
+
+  "navigate_to_home_btn": "홈 화면으로 이동",
+  "@navigate_to_home_btn": {
+    "description": "'홈 화면으로 이동' 버튼 텍스트"
+  },
+
+  "network_error_1": "네트워크가 연결되지 않았습니다.",
+  "@network_error_1": {
+    "description": "네트워크 에러 메시지1"
+  },
+
+  "network_error_2": "앱을 재실행 해주세요.",
+  "@network_error_2": {
+    "description": "네트워크 에러 메시지2"
+  },
+
+  "qr_loading": "QR 코드 생성 중...",
+  "@qr_loading": {
+    "description": "QR 코드 생성 중 로딩 메시지"
+  },
+
+  "update_progress_1": "새로운 버전을 설치 중입니다...",
+  "@update_progress_1": {
+    "description": "버전 업데이트 화면 메시지"
+  },
+
+  "update_progress_percent": "{value}% 완료",
+  "@update_progress_percent": {
+    "description": "버전 업데이트 진행률 표시 텍스트",
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "example": "96"
+      }
+    }
+  },
+
+  "withdraw_title": "회원 탈퇴",
+  "@withdraw_title": {
+    "description": "회원 탈퇴 화면/팝업 타이틀"
+  },
+
+  "withdraw_confirm_message_1": "정말 탈퇴하시겠습니까?",
+  "@withdraw_confirm_message_1": {
+    "description": "회원 탈퇴 확인 메시지1"
+  },
+
+  "withdraw_confirm_message_2": "탈퇴 시 모든 데이터가 삭제됩니다.",
+  "@withdraw_confirm_message_2": {
+    "description": "회원 탈퇴 확인 메시지2"
+  },
+
+  "withdraw_confirm_btn": "확인",
+  "@withdraw_confirm_btn": {
+    "description": "회원 탈퇴 팝업 '확인' 버튼 텍스트"
+  },
+
+  "signOut_title": "로그아웃",
+  "@signOut_title": {
+    "description": "로그아웃 팝업 타이틀"
+  },
+
+  "signOut_message_1": "로그아웃 되었습니다.",
+  "@signOut_message_1": {
+    "description": "로그아웃 완료 메시지"
+  },
+
+  "signOut_confirm_btn": "확인",
+  "@signOut_confirm_btn": {
+    "description": "로그아웃 팝업 '확인' 버튼 텍스트"
+  }
+}
