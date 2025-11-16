@@ -7,9 +7,6 @@ import '../../common/const/colors.dart'; // 공통 색상 상수를 가져옴
 import '../../common/layout/common_body_parts_layout.dart'; // 공통 레이아웃을 가져옴
 import '../../common/layout/common_exception_parts_of_body_layout.dart'; // 공통 예외 처리 레이아웃을 가져옴
 import '../../common/provider/common_state_provider.dart';
-import '../../features/bingo_single/ui/bingo_game_screen.dart';
-import '../../features/localization/Presentation/localization_test_screen.dart';
-import '../../features/wheel_single/ui/wheel_game_screen.dart';
 import '../../inquiry/view/inquiry_screen.dart'; // 문의 화면을 가져옴
 import '../../message/view/message_screen.dart'; // 메시지 화면을 가져옴
 import '../../order/provider/order_all_providers.dart'; // 주문 관련 프로바이더를 가져옴
@@ -26,6 +23,12 @@ import '../view/user_info_modify_and_secession_screen.dart'; // 로그인 화면
 import 'dart:io';
 
 import 'login_body_parts_layout.dart'; // 플랫폼을 확인하기 위한 dart:io 라이브러리 추가
+
+import '../../features/bingo_single/ui/bingo_game_screen.dart';
+import '../../features/common/domain/model/on_boarding_page.dart';
+import '../../features/common/presentation/on_boarding_contents_screen.dart';
+import '../../features/localization/presentation/localization_test_screen.dart';
+import '../../features/wheel_single/ui/wheel_game_screen.dart';
 
 
 // ------- 마이페이지 화면 내 회원정보 관련 데이터를 파이어베이스에서 불러와서 UI로 구현하는 UserProfileInfo 클래스 내용 시작 부분
@@ -551,6 +554,16 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
                   },
                 ),
                 // --- 변경된 내용 끝 부분
+                // --- 변경된 내용 시작 부분 - 25.11.16 lhs
+                _buildOptionTile(
+                  context,
+                  assetPath: 'asset/img/misc/icon_img/inquiry_icon.png', // 동일 아이콘 사용
+                  title: '텍스트 공통 컴포넌트 적용 기능',
+                  onTap: () {
+                    onTextComponentsClick(context, ref);
+                  },
+                ),
+                // --- 변경된 내용 끝 부분
             ],
           ),
         ),
@@ -762,6 +775,20 @@ class UserProfileOptions extends ConsumerWidget { // ConsumerWidget을 상속받
     ref.read(tabIndexProvider.notifier).state = -1;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const LocalizationTestScreen()),
+    );
+  }
+
+  // 텍스트 공통 컴포넌트 적용 기능 화면 이동 클릭 이벤트 함수 - 25.11.16 lhs
+  void onTextComponentsClick(BuildContext context, WidgetRef ref) {
+    // 하단 탭 고정 유지하려면 Inquiry처럼 -1 지정 가능(선택)
+    ref.read(tabIndexProvider.notifier).state = -1;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const OnBoardingContentsScreen(
+          // null 대신 실제 enum 값을 전달합니다.
+          onBoardingPage: OnBoardingPage.page1,
+        ),
+      ),
     );
   }
 }

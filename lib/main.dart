@@ -46,6 +46,11 @@ import 'features/localization/l10n/app_localizations.dart';
 // —— Flutter 로컬라이제이션 관련 패키지 및 AppLocalizations 임포트 끝 부분
 // ---- 25.11.15 lhs 작업 내용 끝 부분
 
+// ---- 25.11.16 lhs 작업 내용 시작 부분
+// DeviceSizeScaler를 사용하기 위해 임포트
+import 'features/common/utils/device_size_scaler.dart';
+// ---- 25.11.16 lhs 작업 내용 끝 부분
+
 
 // // 앱 번들에 포함된 폰트 목록(FontManifest.json)을 출력해
 // // Pretendard가 실제로 포함되었는지 확인하는 디버그 유틸리티
@@ -153,6 +158,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+    // ---- 25.11.16 lhs 작업 내용 시작 부분
+    // DeviceSizeScaler 초기화 (앱 실행 시 1회)
+    // [중요] MaterialApp 이전에 context를 사용하여 1회만 호출
+    DeviceSizeScaler.init(context);
+    // ---- 25.11.16 lhs 작업 내용 끝 부분
+
     // ---- 25.11.15 lhs 작업 내용 시작 부분
     // ——— MaterialApp 내 다국어(i18n) 설정 및 기존 설정 통합 시작 부분
     // iOS/Android 시스템 언어에 따라 ko/en 로컬라이제이션을 적용하고,

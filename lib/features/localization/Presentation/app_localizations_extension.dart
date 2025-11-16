@@ -20,8 +20,8 @@ import '../l10n/app_localizations.dart';
 // features/localization/l10n/app_localizations_en.dart : 영어 구현체 (gen-l10n 자동 생성) (필수 파일)
 // features/localization/l10n/app_localizations_ko.dart : 한국어 구현체 (gen-l10n 자동 생성) (필수 파일)
 // l10n.yaml : 다국어용 Dart 코드(app_localizations.dart)를 어떻게, 어디에 생성할지 알려주는 설정 (필수 파일)
-// features/localization/Presentation/app_localizations_extension.dart : context.l10n.xxx 식으로 쓰게 해주는 편의 레이어 (선택 파일이지만 있도록 하기)
-// features/localization/Presentation/localization_test_screen.dart : 다국어가 잘 먹는지 확인하는 샘플 UI 화면 (선택 파일)
+// features/localization/presentation/app_localizations_extension.dart : context.l10n.xxx 식으로 쓰게 해주는 편의 레이어 (선택 파일이지만 있도록 하기)
+// features/localization/presentation/localization_test_screen.dart : 다국어가 잘 먹는지 확인하는 샘플 UI 화면 (선택 파일)
 
 // 다국어 기능 각 파일별을 사용해서 구현되는 흐름:
 // 1. ARB 두 개 (app_en.arb, app_ko.arb)에 “키 이름 – 언어별 문장 데이터”를 작성
